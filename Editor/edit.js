@@ -1,6 +1,8 @@
 
 var data_type = 'items';
 
+var icon_data = []
+
 var meta_data = 0;
 var json_data = 0;
 
@@ -18,11 +20,12 @@ $(function()
     var type = location.search.replace('?', '').split('=')[1];
     if (!type)
         type = "items";
+    data_type = type
 
     // Load up the meta data
     var request = $.ajax(
         {
-            url: type+'-meta.json',
+            url: 'meta/'+type+'.json',
             type: "GET",
             data: {},
             async: false,
@@ -37,7 +40,7 @@ $(function()
 
     request.fail(function(jqXHR, textStatus)
     {
-        console.log(type+'-meta.json');
+        console.log('meta/'+type+'.json');
         console.log(textStatus);
         console.log(jqXHR);
     });
@@ -92,6 +95,14 @@ $(function()
     refresh_table();
     refresh_pages();
 
+    // Top of page display
+    $('#DanTitle').html(data_type+" Data")
+    $('#DanSub').html("Don't forget to save!")
+
+    $("#THEBTN").attr("download", data_type + ".json");
+
+    localStorage.clear();
+
 });
 
 // --------------------------------------------------------------------------------
@@ -119,6 +130,8 @@ refresh_table = function()
 
         var tr = document.createElement('tr');
 
+        // Add function column, copy and delete
+
         for (var idx in meta_data) {
 
             var td = document.createElement('td');
@@ -126,7 +139,10 @@ refresh_table = function()
             var fld = meta_data[idx].field;
 
             if (!json_data[row][fld])
-                json_data[row][fld] = meta_data[idx].default;
+                if (meta_data[idx].default)
+                    json_data[row][fld] = meta_data[idx].default;
+                else
+                    json_data[row][fld] = "";
 
             var a = $('<a href="#" dan-row="' + row
                     +'" dan-fld="'+fld+'">'
@@ -144,15 +160,59 @@ refresh_table = function()
                 //.attr("data-source",)
             }
 
+            if (meta_data[idx].edit == "area")
+            {
+                
+                a.attr("data-type","textarea");
+                //var src = "[";
+                //meta_data[idx].values
+                //.attr("data-source",)
+            }
+
+            if (meta_data[idx].edit == "icon")
+            {
+                a.attr("data-type","typeaheadjs");
+                //a.attr("data-strings",icon_data);
+            }                
+
+            if (meta_data[idx].edit == "select")
+            {
+                //console.log("doingsrc")
+                options = '[{value: "Chapter 1", text: "Chapter 1"},' 
+                            + '{value: "Chapter 2", text: "Chapter 2"},'
+                            + '{value: "Chapter 3", text: "Chapter 3"},'
+                            + '{value: "Chapter 4", text: "Chapter 4"},'
+                            + '{value: "Chapter 5", text: "Chapter 5"},'
+                            + '{value: "Chapter 6", text: "Chapter 6"},'
+                            + '{value: "Chapter 7", text: "Chapter 7"},'
+                            + '{value: "Chapter 8", text: "Chapter 8"},'
+                            + '{value: "Potions", text: "Potions"}'
+                            + ']'
+                a.attr("data-source",options)
+                a.attr("data-type","select");
+            }
+
+            //console.log(icon_data);
+
             // Create as editable
             if (meta_data[idx].edit != "none") {
                 a.editable
                 ({
+                    typeahead: {
+                        name: 'test',
+                        prefetch: 'icons.json'
+                    },
                     success: function (r, v) {
                         return json_edit($(this).attr('dan-row'),$(this).attr('dan-fld'), v);
                     }
                 });
             }
+
+            // if (meta_data[idx].edit == "icon") {
+            //     a.autocomplete({
+            //         source: icon_data
+            //     });
+            // }
 
             // Add to row
             td.appendChild(a[0]);
@@ -184,13 +244,12 @@ refresh_header = function()
     {
         var th = document.createElement('th');
 
-        var col = meta_data[idx].name;
         var fld = meta_data[idx].field;
 
         // Create the header button
         var btn = $('<input style="width:100%;" type="button" dan-fld="' +
                     fld + '" class="ui-button-primary button" value="' +
-                    col + '"/>');
+                    fld + '"/>');
 
         // Define the sort function
         btn.click(function()
@@ -289,7 +348,8 @@ refresh_json = function()
             type: 'application/json'
         });
     url = URL.createObjectURL(blob);
-    return $("#THEBTN").attr("href", url);
+    $("#THEBTN").attr("download", data_type + ".json");
+    $("#THEBTN").attr("href", url);
 };
 
 

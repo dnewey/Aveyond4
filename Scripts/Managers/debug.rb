@@ -114,6 +114,9 @@ class DebugManager
 	def log(msg,type='LOG')
 	    return if !DEBUG
 	    msg = "NIL" if msg == nil
+	    if msg.is_a?(Array)
+	    	msg = msg.join(",")
+	    end
 		out = type + "\t" + msg.to_s
 		File.open(@path, 'a') { |file| file.puts(out) }
 

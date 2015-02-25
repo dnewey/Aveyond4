@@ -16,6 +16,9 @@ class DataManager
 
 	def initialize
 
+    # Create an icon list
+    create_icon_list if DEBUG
+
 		# Load up all the data
 		#@quests = load_json("quests.json")
     @commons = load_data("Data/CommonEvents.rxdata")
@@ -43,6 +46,31 @@ class DataManager
       $data_tilesets      = load_data("Data/Tilesets.rxdata")
       #$data_common_events = load_data("Data/CommonEvents.rxdata")
       #$data_system        = 
+
+  end
+
+  def create_icon_list
+
+    list = Dir.glob('Graphics/Icons/**/*').select{ |e| File.file? e }
+    list.each_index { |i|
+      list[i] = list[i].gsub("Graphics/Icons/","")
+      list[i] = list[i].gsub(".png","")
+    }
+
+
+    File.open('Editor/icons.json', 'w') { |file|
+
+      file.puts("[")
+
+      list.each{ |l|
+        file.puts("\""+l+"\",")
+      }
+
+      file.puts("\"\"")
+
+      file.puts("]")
+
+    }
 
   end
 

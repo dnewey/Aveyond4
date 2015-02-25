@@ -1,0 +1,16 @@
+[
+  {
+    "field": "category",
+    "edit": "select"
+  },
+  {
+    "field": "name",
+    "default": "New Progress",
+    "edit": "text"
+  },
+  {
+    "field": "value",
+    "default": 0,
+    "edit": "text"
+  }
+]

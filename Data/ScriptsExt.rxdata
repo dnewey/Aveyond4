@@ -2893,7 +2893,7 @@ class AudioManager
       stop_bgs
   end     
 
-end" "#==============================================================================
+end" "#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -2910,6 +2910,9 @@ class DataManager
   attr_reader :mapinfos
 
 	def initialize
+
+    # Create an icon list
+    create_icon_list if DEBUG
 
 		# Load up all the data
 		#@quests = load_json("quests.json")
@@ -2941,7 +2944,32 @@ class DataManager
 
   end
 
- end"à#==============================================================================
+  def create_icon_list
+
+    list = Dir.glob('Graphics/Icons/**/*').select{ |e| File.file? e }
+    list.each_index { |i|
+      list[i] = list[i].gsub("Graphics/Icons/","")
+      list[i] = list[i].gsub(".png","")
+    }
+
+
+    File.open('Editor/icons.json', 'w') { |file|
+
+      file.puts("[")
+
+      list.each{ |l|
+        file.puts("\""+l+"\",")
+      }
+
+      file.puts("\"\"")
+
+      file.puts("]")
+
+    }
+
+  end
+
+ end"#==============================================================================
 # ** Debug
 #==============================================================================
 
@@ -3057,6 +3085,9 @@ class DebugManager
 	def log(msg,type='LOG')
 	    return if !DEBUG
 	    msg = "NIL" if msg == nil
+	    if msg.is_a?(Array)
+	    	msg = msg.join(",")
+	    end
 		out = type + "\t" + msg.to_s
 		File.open(@path, 'a') { |file| file.puts(out) }
 
@@ -9344,7 +9375,7 @@ class Game_Troop
     end
   end
 end
-"ë<#==============================================================================
+"ç<#==============================================================================
 # ** Game_Party
 #------------------------------------------------------------------------------
 #  This class handles the party. It includes information on amount of gold 
@@ -9367,7 +9398,7 @@ class Game_Party
   #--------------------------------------------------------------------------
   def initialize
     
-        @all_actors = []
+    @all_actors = []
     (1..10).each{ |a|
       @all_actors[a] = Game_Actor.new(a)
     }

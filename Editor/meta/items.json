@@ -1,0 +1,34 @@
+[
+  {
+    "field": "category",
+    "edit": "select"
+  },
+  {
+    "field": "id",
+    "default": 0,
+    "edit": "none"
+  },
+  {
+    "field": "icon",
+    "edit": "icon"
+  },
+  {
+    "field": "name",
+    "default": "New Item",
+    "edit": "text"
+  },
+  {
+    "field": "description",
+    "edit": "area"
+  },
+  {
+    "field": "price",
+    "default": 0,
+    "edit": "text"
+  },
+  {
+    "field": "action",
+    "default": "",
+    "edit": "text"
+  }
+]
