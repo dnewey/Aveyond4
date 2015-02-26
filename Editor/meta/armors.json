@@ -11,18 +11,14 @@
     "edit": "area"
   },
   {
-    "field": "scope",
-    "edit": "skillscoper"
-  },
-  {
-    "field": "animation"
+    "field": "slot"
   },
   {
     "field": "stats",
     "edit": "area"
   },
   {
-    "field": "action",
+    "field": "effect",
     "edit": "area"
   },
   {

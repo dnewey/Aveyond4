@@ -4,31 +4,24 @@
     "edit": "select"
   },
   {
-    "field": "id",
-    "default": 0,
-    "edit": "none"
-  },
-  {
-    "field": "icon",
-    "edit": "icon"
+    "field": "id"
   },
   {
     "field": "name",
-    "default": "New Item",
-    "edit": "text"
+    "default": "New Item"
   },
   {
     "field": "description",
     "edit": "area"
   },
   {
-    "field": "price",
-    "default": 0,
-    "edit": "text"
+    "field": "price"
   },
   {
-    "field": "action",
-    "default": "",
-    "edit": "text"
+    "field": "action"
+  },
+  {
+    "field": "icon",
+    "edit": "icon"
   }
 ]

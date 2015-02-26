@@ -1,0 +1,18 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "name",
+    "default": "New Skill"
+  }
+  {
+    "field": "music"
+  },
+  {
+    "field": "tint"
+  },
+  {
+    "field": "weather"
+  }
+]

@@ -5,6 +5,7 @@ var icon_data = []
 
 var meta_data = 0;
 var json_data = 0;
+var filter_data = 0;
 
 var tbl_offset = 0;
 var tbl_sorting = "";
@@ -81,10 +82,9 @@ $(function()
 
     $('#dan-filter').keyup(function ()
     {
-        tbl_filter = $('#dan-filter').val();
-        console.log($('#dan-filter').val());
-        refresh_table();
+        filterby($('#dan-filter').val());
     });
+
     $('#dan-create').click(function ()
     {
         console.log("CR");
@@ -96,12 +96,14 @@ $(function()
     refresh_pages();
 
     // Top of page display
-    $('#DanTitle').html(data_type+" Data")
+    $('#DanTitle').html(data_type.titleize()+" Data")
     $('#DanSub').html("Don't forget to save!")
 
     $("#THEBTN").attr("download", data_type + ".json");
 
     localStorage.clear();
+
+    $('.tip').tipr();
 
 });
 
@@ -115,18 +117,11 @@ refresh_table = function()
 
     var fragment = document.createDocumentFragment();
 
-    var count = 0;
-    var row = 0;
-    var skip = 0;
-    while (row < json_data.length)
+
+    for (var row = tbl_offset; row < tbl_offset + tbl_per_page; row++)
     {
-        row = tbl_offset + count + skip;
-        //console.log(tbl_filter);
-        if (json_data[row].name == tbl_filter)
-        {
-            skip +=1;
-            continue;
-        }
+        if (row >= json_data.length)
+            break;
 
         var tr = document.createElement('tr');
 
@@ -155,18 +150,12 @@ refresh_table = function()
             {
                 a.attr("data-value",0);
                 a.attr("data-type","select");
-                //var src = "[";
-                //meta_data[idx].values
-                //.attr("data-source",)
             }
 
             if (meta_data[idx].edit == "area")
             {
                 
                 a.attr("data-type","textarea");
-                //var src = "[";
-                //meta_data[idx].values
-                //.attr("data-source",)
             }
 
             if (meta_data[idx].edit == "icon")
@@ -208,22 +197,12 @@ refresh_table = function()
                 });
             }
 
-            // if (meta_data[idx].edit == "icon") {
-            //     a.autocomplete({
-            //         source: icon_data
-            //     });
-            // }
-
             // Add to row
             td.appendChild(a[0]);
             tr.appendChild(td);
         }
 
         fragment.appendChild(tr);
-
-        count += 1;
-        if (count > tbl_per_page)
-             break;
     }
 
     // Add to table body
@@ -302,6 +281,18 @@ json_edit = function(row,fld, val)
 };
 
 // --------------------------------------------------------------------------------
+// Build filter data
+// --------------------------------------------------------------------------------
+filterby = function(flt)
+{
+    json_data.sort(function(a,b)
+    {
+        return string_similarity(a.name,flt) < string_similarity(b.name,flt);
+    });    
+    refresh_table();
+}
+
+// --------------------------------------------------------------------------------
 // Initialize
 // --------------------------------------------------------------------------------
 json_create = function()
@@ -321,6 +312,9 @@ json_create = function()
 
 
     json_data.push(obj);
+
+    // Sort by reverse id to show latest added, and go page 1
+
 
     refresh_json();
     refresh_pages();
@@ -391,4 +385,52 @@ sort_table = function(col)
     refresh_table();
 };
 
+// --------------------------------------------------------------------------------
+// Initialize
+// --------------------------------------------------------------------------------
 
+var get_bigrams, string_similarity;
+
+get_bigrams = function(string) {
+  var i, s, v, _i, _ref;
+  s = string.toLowerCase();
+  v = new Array(s.length - 1);
+  for (i = _i = 0, _ref = v.length; _i <= _ref; i = _i += 1) {
+    v[i] = s.slice(i, i + 2);
+  }
+  return v;
+};
+
+string_similarity = function(str1, str2) {
+  var hit_count, pairs1, pairs2, union, x, y, _i, _j, _len, _len1;
+  if (str1.length > 0 && str2.length > 0) {
+    pairs1 = get_bigrams(str1);
+    pairs2 = get_bigrams(str2);
+    union = pairs1.length + pairs2.length;
+    hit_count = 0;
+    for (_i = 0, _len = pairs1.length; _i < _len; _i++) {
+      x = pairs1[_i];
+      for (_j = 0, _len1 = pairs2.length; _j < _len1; _j++) {
+        y = pairs2[_j];
+        if (x === y) {
+          hit_count++;
+        }
+      }
+    }
+    if (hit_count > 0) {
+      return (2.0 * hit_count) / union;
+    }
+  }
+  return 0.0;
+};
+
+
+
+String.prototype.titleize = function() {
+  var words = this.split(' ')
+  var array = []
+  for (var i=0; i<words.length; ++i) {
+    array.push(words[i].charAt(0).toUpperCase() + words[i].toLowerCase().slice(1))
+  }
+  return array.join(' ')
+}

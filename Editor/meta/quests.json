@@ -1,0 +1,22 @@
+[
+  {
+    "field": "category",
+    "edit": "select"
+  },
+  {
+    "field": "id"
+  },
+  {
+    "field": "namescription"
+  },
+  {
+    "field": "description",
+    "edit": "area"
+  },
+  {
+    "field": "category2"
+  },
+  {
+    "field": "req"
+  }
+]

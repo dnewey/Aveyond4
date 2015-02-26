@@ -1,0 +1,20 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "name",
+    "default": "New Enemy"
+  },
+  {
+    "field": "stats",
+    "edit": "area"
+  },
+  {
+    "field": "loot"
+  },
+  {
+    "field": "icon",
+    "edit": "icon"
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "name"
+  },
+  {
+    "field": "profile",
+    "edit": "area"
+  },
+  {
+    "field": "weapons"
+  },
+  {
+    "field": "armor"
+  },
+  {
+    "field": "statratings"
+  }
+]

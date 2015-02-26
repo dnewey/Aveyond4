@@ -11,10 +11,6 @@
     "edit": "area"
   },
   {
-    "field": "scope",
-    "edit": "skillscoper"
-  },
-  {
     "field": "animation"
   },
   {
@@ -22,7 +18,7 @@
     "edit": "area"
   },
   {
-    "field": "action",
+    "field": "effect",
     "edit": "area"
   },
   {

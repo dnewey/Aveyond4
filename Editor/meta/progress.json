@@ -4,13 +4,9 @@
     "edit": "select"
   },
   {
-    "field": "name",
-    "default": "New Progress",
-    "edit": "text"
+    "field": "id"
   },
   {
-    "field": "value",
-    "default": 0,
-    "edit": "text"
+    "field": "value"
   }
 ]
