@@ -106,17 +106,17 @@ class Interpreter
   #--------------------------------------------------------------------------
   def command_203
     # If in battle
-    if $game_temp.in_battle
-      # Continue
-      return true
-    end
+    # if $game_temp.in_battle
+    #   # Continue
+    #   return true
+    # end
     # If already scrolling
-    if $game_map.scrolling?
+    if $map.scrolling?
       # End
       return false
     end
     # Start scroll
-    $game_map.start_scroll(@parameters[0], @parameters[1], @parameters[2])
+    $map.start_scroll(@parameters[0], @parameters[1], @parameters[2])
     # Continue
     return true
   end

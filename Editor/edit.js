@@ -4,7 +4,7 @@ var data_type = 'items';
 var icon_data = []
 
 var meta_data = 0;
-var json_data = 0;
+var json_data = [];
 var filter_data = 0;
 
 var tbl_offset = 0;
@@ -54,7 +54,7 @@ $(function()
         file = 'json/'+type+'('+idx+').json';
         if (idx == 0)
         {
-            file = 'json/items.json';
+            file = 'json/'+type+'.json';
         }
         //console.log(file);
         var request = $.ajax(
@@ -302,9 +302,6 @@ json_create = function()
     {
         var fld = meta_data[idx].field;
         var val = meta_data[idx].default;
-
-        if (fld == "id")
-            val = json_data.length;
 
         obj[fld] = val;
         console.log(obj);

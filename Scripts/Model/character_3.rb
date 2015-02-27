@@ -11,22 +11,18 @@ class Game_Character
   #     turn_enabled : a flag permits direction change on that spot
   #--------------------------------------------------------------------------
   def move_down(turn_enabled = true)
+
     # Turn down
     if turn_enabled
       turn_down
     end
     # If passable
     if passable?(@x, @y, 2)
+
       # Turn down
       turn_down
       # Update coordinates
       @y += 1
-      # If player on world map, check for wrapping
-      if self == $game_player && WORLD_MAPS.include?($game_map.map_id)
-        if @y >= $game_map.height - 10
-          $game_player.moveto(@x, 11)
-        end
-      end
       # Increase steps
       increase_steps
     # If impassable
@@ -50,12 +46,6 @@ class Game_Character
       turn_left
       # Update coordinates
       @x -= 1
-      # If player on world map, check for wrapping
-      if self == $game_player && WORLD_MAPS.include?($game_map.map_id)
-        if @x <= 10
-          $game_player.moveto($game_map.width - 11, @y)
-        end
-      end
       # Increase steps
       increase_steps
     # If impassable
@@ -79,12 +69,6 @@ class Game_Character
       turn_right
       # Update coordinates
       @x += 1
-      # If player on world map, check for wrapping
-      if self == $game_player && WORLD_MAPS.include?($game_map.map_id)
-        if @x >= $game_map.width - 10
-          $game_player.moveto(11, @y)
-        end
-      end
       # Increase steps
       increase_steps
     # If impassable
@@ -108,12 +92,6 @@ class Game_Character
       turn_up
       # Update coordinates
       @y -= 1
-      # If player on world map, check for wrapping
-      if self == $game_player && WORLD_MAPS.include?($game_map.map_id)
-        if @y <= 10
-          $game_player.moveto(@x, $game_map.height - 11)
-        end
-      end
       # Increase steps
       increase_steps
     # If impassable
@@ -218,8 +196,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_toward_player
     # Get difference in player coordinates
-    sx = @x - $game_player.x
-    sy = @y - $game_player.y
+    sx = @x - $player.x
+    sy = @y - $player.y
     # If coordinates are equal
     if sx == 0 and sy == 0
       return
@@ -253,8 +231,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_away_from_player
     # Get difference in player coordinates
-    sx = @x - $game_player.x
-    sy = @y - $game_player.y
+    sx = @x - $player.x
+    sy = @y - $player.y
     # If coordinates are equal
     if sx == 0 and sy == 0
       return
@@ -468,8 +446,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def turn_toward_player
     # Get difference in player coordinates
-    sx = @x - $game_player.x
-    sy = @y - $game_player.y
+    sx = @x - $player.x
+    sy = @y - $player.y
     # If coordinates are equal
     if sx == 0 and sy == 0
       return
@@ -489,8 +467,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def turn_away_from_player
     # Get difference in player coordinates
-    sx = @x - $game_player.x
-    sy = @y - $game_player.y
+    sx = @x - $player.x
+    sy = @y - $player.y
     # If coordinates are equal
     if sx == 0 and sy == 0
       return

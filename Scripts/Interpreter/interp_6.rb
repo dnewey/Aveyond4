@@ -104,24 +104,7 @@ class Interpreter
       end
     end
   end
-  #--------------------------------------------------------------------------
-  # * Name Input Processing
-  #--------------------------------------------------------------------------
-  def command_303
-    # If not invalid actors
-    if $data_actors[@parameters[0]] != nil
-      # Set battle abort flag
-      $game_temp.battle_abort = true
-      # Set name input calling flag
-      $game_temp.name_calling = true
-      $game_temp.name_actor_id = @parameters[0]
-      $game_temp.name_max_char = @parameters[1]
-    end
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
+
   #--------------------------------------------------------------------------
   # * Change HP
   #--------------------------------------------------------------------------
@@ -219,35 +202,7 @@ class Interpreter
     # Continue
     return true
   end
-  #--------------------------------------------------------------------------
-  # * Change Parameters
-  #--------------------------------------------------------------------------
-  def command_317
-    # Get operate value
-    value = operate_value(@parameters[2], @parameters[3], @parameters[4])
-    # Get actor
-    actor = $game_actors[@parameters[0]]
-    # Change parameters
-    if actor != nil
-      case @parameters[1]
-      when 0  # MaxHP
-        actor.maxhp += value
-      when 1  # MaxSP
-        actor.maxsp += value
-      when 2  # strength
-        actor.str += value
-      when 3  # dexterity
-        actor.dex += value
-      when 4  # agility
-        actor.agi += value
-      when 5  # intelligence
-        actor.int += value
-      end
-    end
-    
-    # Continue
-    return true
-  end
+
   #--------------------------------------------------------------------------
   # * Change Skills
   #--------------------------------------------------------------------------
@@ -278,51 +233,5 @@ class Interpreter
     # Continue
     return true
   end
-  #--------------------------------------------------------------------------
-  # * Change Actor Name
-  #--------------------------------------------------------------------------
-  def command_320
-    # Get actor
-    actor = $game_actors[@parameters[0]]
-    # Change name
-    if actor != nil
-      actor.name = @parameters[1]
-      # Shaz - if actor #20, this is the person speaking
-      # easier than a call to Script: $game_system.name = ...
-      $game_system.name = @parameters[1] if actor.id == 20
-    end
-    
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Actor Class
-  #--------------------------------------------------------------------------
-  def command_321
-    # Get actor
-    actor = $game_actors[@parameters[0]]
-    # Change class
-    if actor != nil
-      actor.class_id = @parameters[1]
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Actor Graphic
-  #--------------------------------------------------------------------------
-  def command_322
-    # Get actor
-    actor = $game_actors[@parameters[0]]
-    # Change graphic
-    if actor != nil
-      actor.set_graphic(@parameters[1], @parameters[2], @parameters[3], @parameters[4])
-      $data_actors[actor.id].character_name = $game_actors[@parameters[0]].character_name        
-    end
-    # Refresh player
-    $game_player.refresh
-    
-    # Continue
-    return true
-  end
+
 end

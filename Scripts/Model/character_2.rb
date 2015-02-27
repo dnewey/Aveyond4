@@ -10,8 +10,9 @@ class Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
+
     # Mouse pathfinding
-    run_path if @runpath == true
+    #run_path if @runpath == true
     
     # Branch with jumping, moving, and stopping
     if jumping?

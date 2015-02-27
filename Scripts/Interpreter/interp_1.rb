@@ -60,7 +60,7 @@ class Interpreter
     clear
     
     # Remember map ID
-    @map_id = $game_map.map_id
+    @map_id = $map.map_id
     
     # Remember event ID
     @event_id = event_id
@@ -80,7 +80,7 @@ class Interpreter
   # * Current event (as event, not id)
   #--------------------------------------------------------------------------
   def event
-    return $game_map.events[@event_id]
+    return $map.events[@event_id]
   end
   
   #--------------------------------------------------------------------------
@@ -96,25 +96,25 @@ class Interpreter
   def setup_starting_event
     
     # Refresh map if necessary
-    if $game_map.need_refresh
-      $game_map.refresh
+    if $map.need_refresh
+      $map.refresh
     end
     
     # If common event call is reserved
-    if $game_temp.common_event_id > 0
+    if $temp.common_event_id > 0
       
       # Set up event
-      setup($data_common_events[$game_temp.common_event_id].list, 0)
+      setup($data.commons[$temp.common_event_id].list, 0)
       
       # Release reservation
-      $game_temp.common_event_id = 0
+      $temp.common_event_id = 0
       
       return
       
     end
     
     # Loop (map events)
-    for event in $game_map.events.values
+    for event in $map.events.values
       
       # If running event is found
       if event.starting
@@ -135,20 +135,6 @@ class Interpreter
         
         return
         
-      end
-      
-    end
-    
-    # Loop (common events)
-    
-    for common_event in $data_common_events.compact
-      
-      # If trigger is auto run, and condition switch is ON
-      if common_event.trigger == 1 and
-         $game_switches[common_event.switch_id] == true
-        # Set up event
-        setup(common_event.list, 0)
-        return
       end
       
     end
@@ -177,7 +163,7 @@ class Interpreter
       end
       
       # If map is different than event startup time
-      if $game_map.map_id != @map_id
+      if $map.map_id != @map_id
         # Change event ID to 0
         @event_id = 0
       end
@@ -210,12 +196,12 @@ class Interpreter
       if @move_route_waiting
 
         # If player is forcing move route
-        if $game_player.move_route_forcing
+        if $player.move_route_forcing
           return
         end
         
         # Loop (map events)
-        for event in $game_map.events.values
+        for event in $map.events.values
           
           # If this event is forcing move route
           if event.move_route_forcing
@@ -244,19 +230,21 @@ class Interpreter
       end
       
       # If an action forcing battler exists
-      if $game_temp.forcing_battler != nil
-        return
-      end
+      # cut cut cut cut
+      # if $game_temp.forcing_battler != nil
+      #   return
+      # end
       
       # If a call flag is set for each type of screen
-      if $game_temp.battle_calling or
-         $game_temp.shop_calling or
-         $game_temp.name_calling or
-         $game_temp.menu_calling or
-         $game_temp.save_calling or
-         $game_temp.gameover
-        return
-      end
+      # cut cut cut
+      # if $game_temp.battle_calling or
+      #    $game_temp.shop_calling or
+      #    $game_temp.name_calling or
+      #    $game_temp.menu_calling or
+      #    $game_temp.save_calling or
+      #    $game_temp.gameover
+      #   return
+      # end
       
       # If list of event commands is empty
       if @list == nil
@@ -303,7 +291,7 @@ class Interpreter
       
       # Change value of variables
       $game_variables[@button_input_variable_id] = n
-      $game_map.need_refresh = true
+      $map.need_refresh = true
       
       # End button input
       @button_input_variable_id = 0
@@ -352,7 +340,7 @@ class Interpreter
       # Shaz - do this to all actors in the party, including reserve
       for i in 0..10
         actor = $game_actors[i]
-        yield actor if actor != nil && $game_player.is_present(actor.id)
+        yield actor if actor != nil && $player.is_present(actor.id)
       end
       
     # If single actor
@@ -429,7 +417,7 @@ class Interpreter
         # Shaz - do this to all actors in the party, including reserve
         for i in 0..10
           actor = $game_actors[i]
-          yield actor if actor != nil && $game_player.is_present(actor.id)
+          yield actor if actor != nil && $player.is_present(actor.id)
         end
         
       # If single actor (N exposed)

@@ -21,7 +21,7 @@ class Game_Character
   attr_reader   :tile_id                  # tile ID (invalid if 0)
   attr_reader   :character_name           # character file name
   attr_reader   :character_hue            # character hue
-  attr_reader   :opacity                  # opacity level
+  attr_accessor   :opacity                  # opacity level
   attr_reader   :blend_type               # blending method
   
   
@@ -61,7 +61,6 @@ class Game_Character
     @tile_id = 0
     @character_name = ""
     @character_hue = 0
-    @opacity = 255
     @blend_type = 0
     @direction = 2
     @pattern = 0
@@ -102,6 +101,8 @@ class Game_Character
     
     # for climbing
     @climbing = false
+
+    @opacity = 255
   end
   #--------------------------------------------------------------------------
   # * Determine if Moving
@@ -182,18 +183,18 @@ class Game_Character
    
     # Special handling for world map
     # (we use terrain tags and vehicle type, not tileset passability)
-    if WORLD_MAPS.include?($map.map_id)
-      check_terrain(x, y, d)
-      if @state
-        # if terrain is okay, we can move there if there's not an event
-        # or the event is the target and we're on foot
-        # (dragon and ship cannot go to a forest/mountain entrance)
-        evt = $map.event_at(x, y)
-        return true if (x == tx && y == ty) || 
-          evt == nil || VEHICLE_EVENTS.include?(evt.id) || evt.through
-      end
-      return false
-    end
+    # if WORLD_MAPS.include?($map.map_id)
+    #   check_terrain(x, y, d)
+    #   if @state
+    #     # if terrain is okay, we can move there if there's not an event
+    #     # or the event is the target and we're on foot
+    #     # (dragon and ship cannot go to a forest/mountain entrance)
+    #     evt = $map.event_at(x, y)
+    #     return true if (x == tx && y == ty) || 
+    #       evt == nil || VEHICLE_EVENTS.include?(evt.id) || evt.through
+    #   end
+    #   return false
+    # end
     
     # Able to leave current tile in desired direction?
     # SHAZ: for counter, must be old, counter, new, in a straight line
@@ -217,7 +218,7 @@ class Game_Character
           # If through is OFF
           unless event.through
             # If self is event
-            if self != $game_player
+            if self != $player
               return false
             end
             # With self as the player and partner graphic as character
@@ -233,9 +234,9 @@ class Game_Character
     #  return false
     #end      
     # If player coordinates are consistent with move destination
-    if $game_player.x == new_x && $game_player.y == new_y && self != $game_player
+    if $player.x == new_x && $player.y == new_y && self != $player
       # If through is OFF
-      unless $game_player.through
+      unless $player.through
         # If your own graphic is the character
         if @character_name != ""
           return false
@@ -252,11 +253,11 @@ class Game_Character
     # Get direction
     x = @x
     y = @y
-    return true if @x == $game_player.x and @y == $game_player.y
-    d = 2 if @x == $game_player.x and @y == $game_player.y - 1
-    d = 8 if @x == $game_player.x and @y == $game_player.y + 1
-    d = 4 if @y == $game_player.y and @x == $game_player.x + 1
-    d = 6 if @y == $game_player.y and @x == $game_player.x - 1
+    return true if @x == $player.x and @y == $player.y
+    d = 2 if @x == $player.x and @y == $player.y - 1
+    d = 8 if @x == $player.x and @y == $player.y + 1
+    d = 4 if @y == $player.y and @x == $player.x + 1
+    d = 6 if @y == $player.y and @x == $player.x - 1
     return false if d == nil
     
     # Get new coordinates
@@ -414,9 +415,9 @@ class Game_Character
   #   @state (true=passable tile, false=unpassable tile)
   #--------------------------------------------------------------------------
   def check_terrain(tx=-1, ty=-1, d=0)
-    d = d > 0 ? d : $game_player.direction
-    x = tx >= 0 ? tx : $game_player.x
-    y = ty >= 0 ? ty : $game_player.y
+    d = d > 0 ? d : $player.direction
+    x = tx >= 0 ? tx : $player.x
+    y = ty >= 0 ? ty : $player.y
     terrain_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     terrain_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)    
     @state = false

@@ -43,33 +43,39 @@ class Game_World
     # Make viewports
     # agf - make viewport shorter to allow for HUD
     @viewport1 = Viewport.new(0, 0, 640, 448)
+
     @viewport2 = Viewport.new(0, 0, 640, 480)
     @viewport3 = Viewport.new(0, 0, 640, 480)
     @viewport2.z = 200
     @viewport3.z = 5000
 
 
+
+
+
     
     # Make tilemap
     @tilemap = Tilemap.new(@viewport1)
 
-    @tilemap.map_data = $map.data
-    @tilemap.priorities = $map.priorities
     # Make panorama plane
     @panorama = Plane.new(@viewport1)
     @panorama.z = -1000
+
     # Make fog plane
     @fog = Plane.new(@viewport1)
     @fog.z = 3000
+
     # Make character sprites
-    @character_sprites = []
-    for i in $map.events.keys.sort
-      sprite = Sprite_Character.new(@viewport1, $map.events[i])
-      @character_sprites.push(sprite)
-    end
-    @character_sprites.push(Sprite_Character.new(@viewport1, $player))
+    # @character_sprites = []
+    # for i in $map.events.keys.sort
+    #   sprite = Sprite_Character.new(@viewport1, $map.events[i])
+    #   @character_sprites.push(sprite)
+    # end
+    # @character_sprites.push(Sprite_Character.new(@viewport1, $player))
+
     # Make weather
-    @weather = RPG::Weather.new(@viewport1)
+
+    #@weather = RPG::Weather.new(@viewport1)
 
     # Frame update
     #update
@@ -103,13 +109,22 @@ class Game_World
   end
 
   def refresh_tileset
-      @tilemap.tileset = RPG::Cache.tileset($map.tileset_name)
+      @tilemap.tileset = RPG::Cache.tileset($map.tileset.tileset_name)
       @tilemap.priorities = $map.priorities
       for i in 0..6
-        autotile_name = $map.autotile_names[i]
+        autotile_name = $map.tileset.autotile_names[i]
         @tilemap.autotiles[i] = RPG::Cache.autotile(autotile_name)
       end
       $map.new_tileset = false
+      @tilemap.map_data = $map.data
+      @tilemap.priorities = $map.priorities
+
+      @character_sprites = []
+    for i in $map.events.keys.sort
+      sprite = Sprite_Character.new(@viewport1, $map.events[i])
+      @character_sprites.push(sprite)
+    end
+    @character_sprites.push(Sprite_Character.new(@viewport1, $player))
 
   end
 
@@ -146,22 +161,26 @@ class Game_World
   #--------------------------------------------------------------------------
   def update
 
+
+
     update_screen
 
     # if swapping tilesets
     if $map.new_tileset == true
       refresh_tileset
     end
+
+
     
     # If panorama is different from current one
-    if @panorama_name != $map.panorama_name or @panorama_hue != $map.panorama_hue
-      refresh_panorama
-    end
+    # if @panorama_name != $map.panorama_name or @panorama_hue != $map.panorama_hue
+    #   refresh_panorama
+    # end
 
-    # If fog is different than current fog
-    if @fog_name != $map.fog_name or @fog_hue != $map.fog_hue
-      refresh_fog
-    end
+    # # If fog is different than current fog
+    # if @fog_name != $map.fog_name or @fog_hue != $map.fog_hue
+    #   refresh_fog
+    # end
 
 
 
@@ -176,32 +195,32 @@ class Game_World
     @tilemap.oy = $map.display_y / 4
     @tilemap.update
     # Update panorama plane
-    @panorama.ox = 0 # $map.display_x / 8
-    @panorama.oy = 0 # $map.display_y / 8
+    #@panorama.ox = 0 # $map.display_x / 8
+    #@panorama.oy = 0 # $map.display_y / 8
     # Update fog plane
-    @fog.zoom_x = $map.fog_zoom / 100.0
-    @fog.zoom_y = $map.fog_zoom / 100.0
-    @fog.opacity = $map.fog_opacity
-    @fog.blend_type = $map.fog_blend_type
-    @fog.ox = $map.display_x / 4 + $map.fog_ox
-    @fog.oy = $map.display_y / 4 + $map.fog_oy
-    @fog.tone = $map.fog_tone
-    # Update character sprites
+    # @fog.zoom_x = $map.fog_zoom / 100.0
+    # @fog.zoom_y = $map.fog_zoom / 100.0
+    # @fog.opacity = $map.fog_opacity
+    # @fog.blend_type = $map.fog_blend_type
+    # @fog.ox = $map.display_x / 4 + $map.fog_ox
+    # @fog.oy = $map.display_y / 4 + $map.fog_oy
+    # @fog.tone = $map.fog_tone
+    # # Update character sprites
     for sprite in @character_sprites
       # only update if in range (anti-lag)
-      sprite.update if in_range?(sprite.character)
+      sprite.update# if in_range?(sprite.character)
     end
     # Update weather graphic
-    @weather.type = $game_screen.weather_type
-    @weather.max = $game_screen.weather_max
-    @weather.ox = $map.display_x / 4
-    @weather.oy = $map.display_y / 4
-    @weather.update
+    # @weather.type = $game_screen.weather_type
+    # @weather.max = $game_screen.weather_max
+    # @weather.ox = $map.display_x / 4
+    # @weather.oy = $map.display_y / 4
+    # @weather.update
     # Set screen color tone and shake position
-    @viewport1.tone = $game_screen.tone
-    @viewport1.ox = $game_screen.shake
+    #@viewport1.tone = $game_screen.tone
+    #@viewport1.ox = $game_screen.shake
     # Set screen flash color
-    @viewport3.color = $game_screen.flash_color
+    #@viewport3.color = $game_screen.flash_color
     # Update viewports
     @viewport1.update
     @viewport3.update

@@ -239,7 +239,7 @@ class Interpreter
     # If main map event and event ID are valid
     if @main and @event_id > 0
       # Unlock event
-      $game_map.events[@event_id].unlock
+      $map.events[@event_id].unlock
     end
   end
   #--------------------------------------------------------------------------
@@ -267,12 +267,12 @@ class Interpreter
     # Branch by parameter
     case parameter
     when -1  # player
-      return $game_player
+      return $player
     when 0  # this event
-      events = $game_map.events
+      events = $map.events
       return events == nil ? nil : events[@event_id]
     else  # specific event
-      events = $game_map.events
+      events = $map.events
       return events == nil ? nil : events[parameter]
     end
   end

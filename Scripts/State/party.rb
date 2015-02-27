@@ -21,14 +21,14 @@ class Game_Party
   #--------------------------------------------------------------------------
   def initialize
     
-    @all_actors = []
-    (1..10).each{ |a|
-      @all_actors[a] = Game_Actor.new(a)
+    @all_actors = {}
+    $data.actors.each{ |k,v|
+      @all_actors[k] = Game_Actor.new(k)
     }
     
     
     # Create actor array
-    @actors = []
+    @active = []
     @reserve = [] # list of reserve actors
     # Initialize amount of gold and steps
     @gold = 0
@@ -50,10 +50,10 @@ class Game_Party
   # * Initial Party Setup
   #--------------------------------------------------------------------------
   def setup_starting_members
-    @actors = []
-    for i in $data_system.party_members
-      @actors.push(@all_actors[i])
-    end
+    #@actors = []
+    #for i in $data_system.party_members
+      @active.push("boyle")
+    #end
     @reserve = []
   end
  
@@ -300,6 +300,7 @@ class Game_Party
   # * Slip Damage Check (for map)
   #--------------------------------------------------------------------------
   def check_map_slip_damage
+    return 0
     for actor in @actors
       if actor.hp > 0 and actor.slip_damage?
         actor.hp -= [actor.maxhp / 100, 1].max
@@ -311,6 +312,7 @@ class Game_Party
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Random Selection of Target Actor
   #     hp0 : limited to actors with 0 HP

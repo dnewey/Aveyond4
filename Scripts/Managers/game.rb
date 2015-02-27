@@ -32,10 +32,6 @@ class GameManager
       $map           = Game_Map.new
       $map.setup($data.system.start_map_id)
 
-      # View
-      $world         = Game_World.new # Spriteset and screen
-      #$game_hud           = Game_Hud.new
-      
       # Set up initial map position
       
       $player.moveto($data.system.start_x, $data.system.start_y)
@@ -55,12 +51,22 @@ class GameManager
 
 
      def update
+
+       # log_sys 'start update'
           $keyboard.update
           $mouse.update
           $debug.update
+
+          
+          #log_err 'gfx'
+
           Graphics.update
+          #log_err 'in'
           Input.update
+          #log_err 'scn'
           $scene.update
+
+         # log_sys 'update_done'
      end
 
 

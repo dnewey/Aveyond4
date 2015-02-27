@@ -258,7 +258,7 @@ class Interpreter
       end
     when 2  # self switch
       if @event_id > 0
-        key = [$game_map.map_id, @event_id, @parameters[1]]
+        key = [$map.map_id, @event_id, @parameters[1]]
         if @parameters[2] == 0
           result = ($game_self_switches[key] == true)
         else
@@ -419,7 +419,7 @@ class Interpreter
     # If event ID is valid
     if @event_id > 0
       # Erase event
-      $game_map.events[@event_id].erase
+      $map.events[@event_id].erase
     end
     # Advance index
     @index += 1
@@ -431,7 +431,7 @@ class Interpreter
   #--------------------------------------------------------------------------
   def command_117
     # Get common event
-    common_event = $data_common_events[@parameters[0]]
+    common_event = $data.commons[@parameters[0]]
     # If common event is valid
     if common_event != nil
       # Make child interpreter

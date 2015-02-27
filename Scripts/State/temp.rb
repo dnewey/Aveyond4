@@ -42,8 +42,8 @@ class Game_Temp
   # FROM SYSTEM - TO BE CUT
     
   # move out of here, to map perhaps
-  attr_accessor :map_interpreter          # map event interpreter
-  attr_reader   :battle_interpreter       # battle event interpreter
+  #attr_accessor :map_interpreter          # map event interpreter
+  #attr_reader   :battle_interpreter       # battle event interpreter
     
   # Possibly useful, maybe move
   # These could be flags? or options somewhere
@@ -57,6 +57,7 @@ class Game_Temp
   #--------------------------------------------------------------------------
   def initialize
 
+    @common_event_id = 0
     
     @in_battle = false
     @battle_calling = false

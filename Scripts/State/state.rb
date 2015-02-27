@@ -8,8 +8,11 @@ module Av
 			@flags = []
 			@vars = {}
 
+			# Event modifiers
 			@states = {} # Event states
 			@locs = {}
+			@deleted = []
+			@disabled = []
 
 		end
 
@@ -60,7 +63,7 @@ module Av
 		end
 
 		def loc!(e)
-			@locs[[$map.id,e]] = {:x=>e.x,:y=>e.y,:d=>e.direction}
+			@locs[[$map.id,e]] = [e.x,e.y]
 		end
 
 		def loc?(e)
@@ -69,6 +72,22 @@ module Av
 
 		def getloc(e)
 			return @locs[[$map.id,e]]
+		end
+
+		def delete!(e)
+			@deleted.push([$map.id,e])
+		end
+
+		def delete?(e)
+			return @deleted.include?([$map.id,e])
+		end
+
+		def disable!(e)
+			@disabled.push([$map.id,e])
+		end
+
+		def disable?(e)
+			return @disabled.include?([$map.id,e])
 		end
 
 	end

@@ -42,16 +42,18 @@ class Sprite_Character < RPG::Sprite
         self.oy = 32
       # If tile ID value is invalid
       else
-        self.bitmap = RPG::Cache.character(@character.character_name,
-          @character.character_hue)
+        self.bitmap = RPG::Cache.character("boyle",0)#@character.character_name,
+          #@character.character_hue)
         @cw = bitmap.width / 4
         @ch = bitmap.height / 4
         self.ox = @cw / 2
         self.oy = @ch
       end
     end
+
     # Set visible situation
     self.visible = (not @character.transparent)
+    
     # If graphic is character
     if @tile_id == 0
       # Set rectangular transfer
@@ -59,15 +61,17 @@ class Sprite_Character < RPG::Sprite
       sy = (@character.direction - 2) / 2 * @ch
       self.src_rect.set(sx, sy, @cw, @ch)
     end
+
     # Set sprite coordinates
     self.x = @character.screen_x
-    if @name == "BOTTOM" or @name == "#"
-      self.y = @character.screen_y
-    elsif @name == "TOP"
-      self.y = @character.screen_y - 16
-    else
+    #if @name == "BOTTOM" or @name == "#"
+    #  self.y = @character.screen_y
+    #elsif @name == "TOP"
+    #  self.y = @character.screen_y - 16
+    #else
       self.y = @character.screen_y - 8
-    end
+    #end
+    #log_err(@character.screen_y) if @character == $player
     self.z = @character.screen_z(@ch)
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity

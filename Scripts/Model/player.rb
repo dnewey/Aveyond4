@@ -242,6 +242,7 @@ class Game_Player < Game_Character
   # * Same Position Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_here(triggers)
+    return false
     result = false
     # If event is running
     if $game_system.map_interpreter.running?
@@ -266,9 +267,11 @@ class Game_Player < Game_Character
   def check_event_trigger_there(triggers)
     result = false
     # If event is running
-    if $game_system.map_interpreter.running?
+    if $map.interpreter.running?
       return result
     end
+
+
     # Calculate front event coordinates
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
@@ -277,6 +280,8 @@ class Game_Player < Game_Character
       # If event coordinates and triggers are consistent
       if event.x == new_x and event.y == new_y and
          triggers.include?(event.trigger) and event.list.size > 1
+
+
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
           event.start
@@ -313,7 +318,7 @@ class Game_Player < Game_Character
   def check_event_trigger_touch(x, y)
     result = false
     # If event is running
-    if $game_system.map_interpreter.running?
+    if $map.interpreter.running?
       return result
     end
     # All event loops
@@ -333,103 +338,106 @@ class Game_Player < Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
+    # if $map.busy? or $hud.busy
+    #return
+
     # Unless Interpretter Running, Forcing a Route or Message Showing
-    unless $game_system.map_interpreter.running? or
-           @move_route_forcing or $game_temp.message_window_showing
+    # unless false# $game_system.map_interpreter.running? or
+    #        #@move_route_forcing or $game_temp.message_window_showing
            
-      # Find Path If Mouse Triggered
-      if Mouse.trigger?(0) && Mouse.grid != nil
+    #   # Find Path If Mouse Triggered
+    #   if Mouse.trigger?(0) && Mouse.grid != nil
 
-        # Check if mouse is over HUD on map 
-        screen_x,screen_y = Mouse.pos
+    #     # Check if mouse is over HUD on map 
+    #     screen_x,screen_y = Mouse.pos
         
-        # don't let user move player if below 448 px on screen
-        if screen_y > 448
-          if $game_system.menu_disabled
-            $game_system.se_play($data_system.buzzer_se)
-            return false
-          end
+    #     # don't let user move player if below 448 px on screen
+    #     if screen_y > 448
+    #       if $game_system.menu_disabled
+    #         $game_system.se_play($data_system.buzzer_se)
+    #         return false
+    #       end
           
-          if screen_x < 32 
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_End.new (2)
-          elsif screen_x < 64
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_Menu.new
-          elsif screen_x < 96
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_Save.new
-          elsif screen_x < 128
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_Journal.new(2)
-          elsif screen_x < 160
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_Item.new(2)
-          elsif screen_x < 192
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_Options.new(3)
-          elsif screen_x < 224
-            $game_system.se_play($data_system.decision_se)
-            $scene = Scene_FAQ.new(2)       
-          elsif screen_x > 235
-            i = ((screen_x - 236) / 100).to_i
-            if i < $party.actors.size
-              $party.actor_lineup
-              $game_system.se_play($data_system.decision_se)
-              $scene = Scene_Equip.new($party.actors[i].id - 1, 0, 2)
-            end
-          end          
+    #       if screen_x < 32 
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_End.new (2)
+    #       elsif screen_x < 64
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_Menu.new
+    #       elsif screen_x < 96
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_Save.new
+    #       elsif screen_x < 128
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_Journal.new(2)
+    #       elsif screen_x < 160
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_Item.new(2)
+    #       elsif screen_x < 192
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_Options.new(3)
+    #       elsif screen_x < 224
+    #         $game_system.se_play($data_system.decision_se)
+    #         $scene = Scene_FAQ.new(2)       
+    #       elsif screen_x > 235
+    #         i = ((screen_x - 236) / 100).to_i
+    #         if i < $party.actors.size
+    #           $party.actor_lineup
+    #           $game_system.se_play($data_system.decision_se)
+    #           $scene = Scene_Equip.new($party.actors[i].id - 1, 0, 2)
+    #         end
+    #       end          
                     
-          return false
+    #       return false
           
-        end     
+    #     end     
         
-        # Gets Mouse X & Y
-        mx, my = *Mouse.grid
+    #     # Gets Mouse X & Y
+    #     mx, my = *Mouse.grid
         
-        # Turn Character in direction
-        newd_x = (@x - mx).abs
-        newd_y = (@y - my).abs
+    #     # Turn Character in direction
+    #     newd_x = (@x - mx).abs
+    #     newd_y = (@y - my).abs
         
-        if @x > mx 
-            turn_left if newd_x >= newd_y 
-        elsif @x < mx
-            turn_right if newd_x >= newd_y 
-        end  
+    #     if @x > mx 
+    #         turn_left if newd_x >= newd_y 
+    #     elsif @x < mx
+    #         turn_right if newd_x >= newd_y 
+    #     end  
             
-        if @y > my
-            turn_up if newd_x < newd_y 
-        elsif @y < my
-            turn_down if newd_x < newd_y 
-        end 
+    #     if @y > my
+    #         turn_up if newd_x < newd_y 
+    #     elsif @y < my
+    #         turn_down if newd_x < newd_y 
+    #     end 
         
-        check_terrain(-1, -1) if WORLD_MAPS.include?($map.map_id)
+    #     check_terrain(-1, -1) if WORLD_MAPS.include?($map.map_id)
 
-        # Run Pathfinding
-        evt = $map.lowest_event_at(mx, my)
-        if evt == nil
-          find_path(mx, my, false)
-          @eventarray = @runpath ? $map.events_at(mx, my) : nil
-        else
-          find_path(evt.x, evt.y, false)
-          @eventarray = [evt]
-        end
+    #     # Run Pathfinding
+    #     evt = $map.lowest_event_at(mx, my)
+    #     if evt == nil
+    #       find_path(mx, my, false)
+    #       @eventarray = @runpath ? $map.events_at(mx, my) : nil
+    #     else
+    #       find_path(evt.x, evt.y, false)
+    #       @eventarray = [evt]
+    #     end
         
-        # If Event At Grid Location
-        unless @eventarray.nil?
-          @eventarray.each do |event|
-            # If Event Autostart
-            if !event.mouse_autostart
-              # Set Autostart Event Flag
-              #@mouse_event_autostarter = event.id
-              @eventarray.delete(event)
-            end
-          end
-          @eventarray = nil if @eventarray.size == 0
-        end
+    #     # If Event At Grid Location
+    #     unless @eventarray.nil?
+    #       @eventarray.each do |event|
+    #         # If Event Autostart
+    #         if !event.mouse_autostart
+    #           # Set Autostart Event Flag
+    #           #@mouse_event_autostarter = event.id
+    #           @eventarray.delete(event)
+    #         end
+    #       end
+    #       @eventarray = nil if @eventarray.size == 0
+    #     end
         
-      end
-    end
+    #   end
+    # end
     
     if @move_route_forcing == true
       clear_path
@@ -437,16 +445,16 @@ class Game_Player < Game_Character
     end
 
     # Clear path if any direction keys pressed
-    $game_player.clear_path if Input.dir4 != 0
+    #$player.clear_path if Input.dir4 != 0
     
     # Remember whether or not moving in local variables
     last_moving = moving?
     # If moving, event running, move route forcing, and message window
     # display are all not occurring
-    unless moving? or $game_system.map_interpreter.running? or
-           @move_route_forcing or $game_temp.message_window_showing
+    unless moving? #or $game_system.map_interpreter.running? or
+          # @move_route_forcing or $game_temp.message_window_showing
       # Move player in the direction the directional button is being pressed
-      $mouse_sprite.visible = false if Input.dir4 != 0
+      #$mouse_sprite.visible = false if Input.dir4 != 0
       case Input.dir4
       when 2
         move_down
@@ -464,44 +472,34 @@ class Game_Player < Game_Character
     super
     # If character moves down and is positioned lower than the center
     # of the screen
-    if @real_y > last_real_y and @real_y - $map.display_y > CENTER_Y
-      # Scroll map down
-      $map.scroll_down(@real_y - last_real_y)
-    end
-    # If character moves left and is positioned more let on-screen than
-    # center
-    if @real_x < last_real_x and @real_x - $map.display_x < CENTER_X
-      # Scroll map left
-      $map.scroll_left(last_real_x - @real_x)
-    end
-    # If character moves right and is positioned more right on-screen than
-    # center
-    if @real_x > last_real_x and @real_x - $map.display_x > CENTER_X
-      # Scroll map right
-      $map.scroll_right(@real_x - last_real_x)
-    end
-    # If character moves up and is positioned higher than the center
-    # of the screen
-    if @real_y < last_real_y and @real_y - $map.display_y < CENTER_Y
-      # Scroll map up
-      $map.scroll_up(last_real_y - @real_y)
-    end
+    # if @real_y > last_real_y and @real_y - $map.display_y > CENTER_Y
+    #   # Scroll map down
+    #   $map.scroll_down(@real_y - last_real_y)
+    # end
+    # # If character moves left and is positioned more let on-screen than
+    # # center
+    # if @real_x < last_real_x and @real_x - $map.display_x < CENTER_X
+    #   # Scroll map left
+    #   $map.scroll_left(last_real_x - @real_x)
+    # end
+    # # If character moves right and is positioned more right on-screen than
+    # # center
+    # if @real_x > last_real_x and @real_x - $map.display_x > CENTER_X
+    #   # Scroll map right
+    #   $map.scroll_right(@real_x - last_real_x)
+    # end
+    # # If character moves up and is positioned higher than the center
+    # # of the screen
+    # if @real_y < last_real_y and @real_y - $map.display_y < CENTER_Y
+    #   # Scroll map up
+    #   $map.scroll_up(last_real_y - @real_y)
+    # end
     # If not moving
     unless moving?
       # If player was moving last time
       if last_moving
         # Event determinant is via touch of same position event
         result = check_event_trigger_here([1,2])
-        # If event which started does not exist
-        if result == false
-          # Disregard if debug mode is ON and ctrl key was pressed
-          unless DEBUG and Input.press?(Input::CTRL)
-            # Encounter countdown
-            if @encounter_count > 0
-              @encounter_count -= 1
-            end
-          end
-        end
       end
       # If C button was pressed
       if Input.trigger?(Input::C)

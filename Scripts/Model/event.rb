@@ -13,72 +13,78 @@ class Game_Event < Game_Character
   attr_reader   :trigger                  # trigger
   attr_reader   :list                     # list of event commands
   attr_reader   :starting                 # starting flag
-  attr_reader   :name                     # agf - name of event
-  attr_reader   :pages                    # shaz - for monster loot
   
-  # for mouse system
-  attr_reader   :erased
-  attr_accessor :mouse_autostart
-  attr_accessor :mouse_cursor_icon
-  attr_accessor :mouse_cursor_desc
+  attr_reader   :name
+      
   #--------------------------------------------------------------------------
   # * Object Initialization
-  #     map_id : map ID
   #     event  : event (RPG::Event)
   #--------------------------------------------------------------------------
-  def initialize(map_id, event)
+  def initialize(event)
     super()
-    @map_id = map_id
-    
-    # Check for cloned event
-    clone_map = nil
-    clone_event = nil
-    if event && event.pages[0].list != nil && event.pages[0].list[0].code == 108
-      event.pages[0].list[0].parameters.to_s.downcase.gsub!(/clone (.*) (.*)/) do
-        clone_map = $1.to_i
-        clone_event = $2.to_i
-      end
-    end
+
     @event = event
-    if clone_map != nil && clone_event != nil
-      e = $game_temp.clone_event(clone_map, clone_event)
-      @event.id = event.id
-      @event.name = event.name
-      @event.x = event.x
-      @event.y = event.y
-      @event.pages = Array.new(e.pages)
-    end
+    @id = event.id
     
-    @id = event.id # @event.id
-    @event.id = event.id
     @erased = false
+    @disabled = $state.disable?(@id)
+    @deleted = $state.delete?(@id)
+
     @starting = false
     @through = true
-    @name = event.name # agf init name # @event.name
-    @pages = @event.pages 
+
+    # Name breakdown
+    name = @event.name
+    if name.include?('::')
+      name = name.delete('::')
+      clone = name
+    end
+    if name == '' || name == '#'
+      @icon = nil
+      @name = 'nil'
+    else
+      data = name.split('#').first.split('.')
+      if data.size > 1
+        @icon = data[0].strip
+        @name = data[1].strip
+      else
+        @icon = @name = data[0].strip
+      end
+    end   
     
-    # New savelocs
-    # if !$game_system.event_positions.has_key?([map_id, @id])
+    # Set pages from clone or event
+    if clone
+      @pages = $data.clones[clone]
+    else
+      @pages = @event.pages 
+    end
+
+    # Restore saved location if relevant
+    if $state.loc?(@id)
+      loc = $state.getloc(@id)
+      moveto(loc[0],loc[1])
+    else
       moveto(@event.x, @event.y)
-    # else
-    #   mvx, mvy, mvdir = $game_system.event_positions[[map_id, @id]]
-    #   moveto(mvx, mvy)
-    #   @direction = mvdir if mvdir != nil
-    #   @stop_count = 0
-    # end
-
-
+    end
+    
     refresh
   end
+
   #--------------------------------------------------------------------------
   # * Clear Starting Flag
   #--------------------------------------------------------------------------
   def clear_starting
     @starting = false
   end
+
+  def icon
+    return nil if @erased || @disabled || @deleted
+    return @icon
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Over Trigger
-  #    (whether or not same position is starting condition)
+  #    is this event under player
   #--------------------------------------------------------------------------
   def over_trigger?
     # If not through situation with character as graphic
@@ -87,45 +93,32 @@ class Game_Event < Game_Character
       return false
     end
     # If this position on the map is impassable
-    unless $game_map.passable?(@x, @y, 0)
+    unless $map.passable?(@x, @y, 0)
       # Starting determinant is face
       return false
     end
     # Starting determinant is same position
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Start Event
   #--------------------------------------------------------------------------
   def start  
-    #clear the name message box
-    $game_system.name = ""
-    # If list of event commands is not empty
-    if @list && @list.size > 1
-      @starting = true
-    end
+    return if @erased || @deleted || @disabled
+    return if !@list || @list.size < 1
+    @starting = true    
   end
-  #--------------------------------------------------------------------------
-  # * Temporarily Erase
-  #--------------------------------------------------------------------------
-  def erase
-    @erased = true
-    refresh
+
+  def find_page
+    return nil if @erased || @deleted
+    @pages.reverse.find { |page| 
+      conditions_met?(page) 
+    } 
   end
-  #--------------------------------------------------------------------------
-  # * Refresh
-  #--------------------------------------------------------------------------
-  def refresh
-    # Initialize local variable: new_page
-    new_page = nil
-    
-    # If not temporarily erased
-    unless @erased
-      # Check in order of large event pages
-      for page in @event.pages.reverse
-        
-        condition_failed = false
-        
+
+  def conditions_met?(page)
+      
         # DANHAX - check super conditions
         page.list.each{ |line|
       
@@ -134,42 +127,52 @@ class Game_Event < Game_Character
             if comment[0] == '?'[0]
               data = comment.split(' ')
               if !condition_applies?(data)
-                condition_failed = true
-                break
+                return false
               end
             end
-          end
-        
+          end        
         }  
-        
-        next if condition_failed
-        
-        # If survived then switch the page
-        
-        # Set local variable: new_page
-        new_page = page
-        # Remove loop
-        break
-      end
-    end
-    
-    setup_new_page(new_page)
-    
+
+        return true
   end
+
+  #--------------------------------------------------------------------------
+  # * Refresh
+  #--------------------------------------------------------------------------
+  def refresh
+    new_page = find_page
+    setup_page(new_page) if new_page != @page
+  end
+
   
-  def setup_new_page(new_page)
-        # If event page is the same as last time
-    if new_page == @page
-      # End method
-      return
-    end
+  
+  def setup_page(new_page)
+
     # Set @page as current event page
     @page = new_page
+    if @page
+      setup_page_settings
+      read_comment_data
+    else
+      clear_page_settings
+    end
+
     # Clear starting flag
     clear_starting
-    # If no page fulfills conditions
-    if @page == nil
-      # Set each instance variable
+    
+    # If trigger is [parallel process]
+    if @trigger == 4
+      @interpreter = Interpreter.new
+    end
+
+    # Auto event start determinant
+    check_event_trigger_auto
+
+
+  end
+  
+
+  def clear_page_settings
       @tile_id = 0
       @character_name = ""
       @character_hue = 0
@@ -178,9 +181,9 @@ class Game_Event < Game_Character
       @trigger = nil
       @list = nil
       @interpreter = nil
-      # End method
-      return
-    end
+  end
+
+  def setup_page_settings
     # Set each instance variable
     @tile_id = @page.graphic.tile_id
     @character_name = @page.graphic.character_name
@@ -210,38 +213,41 @@ class Game_Event < Game_Character
     @trigger = @page.trigger
     @list = @page.list
     @interpreter = nil
-    # If trigger is [parallel process]
-    if @trigger == 4
-      # Create parallel process interpreter
-      @interpreter = Interpreter.new
-    end
-    # Auto event start determinant
-    check_event_trigger_auto
-    
-    # Set up mouse variables
-    @mouse_autostart = [0, 1, 2].include?(@trigger)
-    @mouse_cursor_icon = MouseCursor::Event_Cursor
-    @mouse_cursor_desc = nil
+
   end
   
-  
+  def read_comment_data
+    comment_data = []
+
+    @list.each{ |line|
+      next if line.code != 108
+      if line.parameters[0].include?('#')
+        comment_data.push(line.parameters[0].split(" "))
+      end
+    }
+
+    comment_data.each{ |data|
+      case data[0]
+
+        when '#opacity'
+          log_info(data[1])
+          self.opacity = data[1].to_i
+
+      end
+    }
+
+  end
   
   #--------------------------------------------------------------------------
   # * Touch Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_touch(x, y)
-    # If event is running
-    if $game_system.map_interpreter.running?
-      return
-    end
-    # If trigger is [touch from event] and consistent with player coordinates
-    if @trigger == 2 and x == $game_player.x and y == $game_player.y
-      # If starting determinant other than jumping is front event
-      if not jumping? and not over_trigger?
-        start
-      end
+    return if $map.interpreter.running?
+    if @trigger == 2 and x == $player.x and y == $player.y 
+      start if not jumping? and not over_trigger?
     end
   end
+
   #--------------------------------------------------------------------------
   # * Automatic Event Starting Determinant
   #--------------------------------------------------------------------------
@@ -254,10 +260,11 @@ class Game_Event < Game_Character
       end
     end
     # If trigger is [auto run]
-    if @trigger == 3
+    if @trigger == 3 || @event.name == 'AUTORUN'
       start
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -265,6 +272,7 @@ class Game_Event < Game_Character
     super
     # Automatic event starting determinant
     check_event_trigger_auto
+
     # If parallel process is valid
     if @interpreter != nil
       # If not running
@@ -275,19 +283,34 @@ class Game_Event < Game_Character
       # Update interpreter
       @interpreter.update
     end
+
   end
     
   #--------------------------------------------------------------------------
   # * Save Position
   #--------------------------------------------------------------------------
-  def save_pos(x = @x, y = @y, dir = @direction)
-    $game_system.event_positions[[$game_map.map_id, @event.id]] = [x, y, dir]
+  def saveloc
+    $state.loc!(@event.id)
   end
-    
+
+    #--------------------------------------------------------------------------
+  # * Temporarily Erase
   #--------------------------------------------------------------------------
-  # * Forget Position
-  #--------------------------------------------------------------------------
-  def forget_pos
-    $game_system.event_positions.delete([$game_map.map_id, @event.id])
+  def erase
+    @erased = true
+    refresh
   end
+
+  def disable
+    @disabled = true
+    $state.disable!(@id)
+    refresh
+  end
+
+  def delete
+    @deleted = true
+    $state.delete!(@id)
+    refresh
+  end
+
 end

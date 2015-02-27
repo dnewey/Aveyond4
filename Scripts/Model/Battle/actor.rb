@@ -13,46 +13,43 @@ class Game_Actor < Game_Battler
   # * Public Instance Variables
   #--------------------------------------------------------------------------
   attr_reader   :name                     # name
+  
   attr_reader   :character_name           # character file name
-  attr_reader   :character_hue            # character hue
-  attr_reader   :class_id                 # class ID
-  attr_reader   :weapon_id                # weapon ID
-  attr_reader   :armor1_id                # shield ID
-  attr_reader   :armor2_id                # helmet ID
-  attr_reader   :armor3_id                # body armor ID
-  attr_reader   :armor4_id                # accessory ID
+
+  # Equipment
+  attr_reader   :weapon                # weapon ID
+  
+  attr_reader   :armor                # shield ID
+  attr_reader   :boots                # helmet ID
+  attr_reader   :trinket                # body armor ID
+  attr_reader   :bonus                # accessory ID
+
   attr_reader   :level                    # level
   attr_reader   :exp                      # EXP
+  
   attr_reader   :skills                   # skills
-  attr_reader   :leader                   # (bool) is character leader?
+  
   attr_reader   :actor_id
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
   def initialize(actor_id)
     super()
-    setup(actor_id)
-  end
-  #--------------------------------------------------------------------------
-  # * Setup
-  #     actor_id : actor ID
-  #--------------------------------------------------------------------------
-  def setup(actor_id)
-    actor = $data.actors[actor_id]
+    actor_data = $data.actors[actor_id]
     @actor_id = actor_id
-    @name = actor.name
-    @character_name = actor.character_name
-    @character_hue = actor.character_hue
-    @battler_name = actor.battler_name
-    @battler_hue = actor.battler_hue
-    @class_id = actor.class_id
-    @weapon_id = actor.weapon_id
-    @armor1_id = actor.armor1_id
-    @armor2_id = actor.armor2_id
-    @armor3_id = actor.armor3_id
-    @armor4_id = actor.armor4_id
-    @level = actor.initial_level
+
+    @name = actor_data.name
+    @character_name = actor_id
+    
+    # @weapon_id = actor.weapon_id
+    # @armor1_id = actor.armor1_id
+    # @armor2_id = actor.armor2_id
+    # @armor3_id = actor.armor3_id
+    # @armor4_id = actor.armor4_id
+    
+    @level = 1
     @exp_list = Array.new(101)
     make_exp_list
     @exp = @exp_list[@level]
@@ -67,21 +64,9 @@ class Game_Actor < Game_Battler
     @dex_plus = 0
     @agi_plus = 0
     @int_plus = 0
-    @leader = 0
-    # Learn skill
-    for i in 1..@level
-      for j in $data_classes[@class_id].learnings
-        if j.level == i
-          learn_skill(j.skill_id)
-        end
-      end
-    end
-    # Update auto state
-    update_auto_state(nil, $data_armors[@armor1_id])
-    update_auto_state(nil, $data_armors[@armor2_id])
-    update_auto_state(nil, $data_armors[@armor3_id])
-    update_auto_state(nil, $data_armors[@armor4_id])
+
   end
+
   #--------------------------------------------------------------------------
   # * Get Actor ID
   #--------------------------------------------------------------------------
@@ -98,6 +83,7 @@ class Game_Actor < Game_Battler
   # * Calculate EXP
   #--------------------------------------------------------------------------
   def make_exp_list
+    return
     actor = $data_actors[@actor_id]
     @exp_list[1] = 0
     pow_i = 2.4 + actor.exp_inflation / 100.0
@@ -191,12 +177,14 @@ class Game_Actor < Game_Battler
   # * Get Basic Maximum HP
   #--------------------------------------------------------------------------
   def base_maxhp
+    return 0
     return $data_actors[@actor_id].parameters[0, @level]
   end
   #--------------------------------------------------------------------------
   # * Get Basic Maximum SP
   #--------------------------------------------------------------------------
   def base_maxsp
+    return 0
     return $data_actors[@actor_id].parameters[1, @level]
   end
   #--------------------------------------------------------------------------

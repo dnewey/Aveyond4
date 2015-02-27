@@ -35,6 +35,10 @@ class Game_Map
   attr_accessor :transition_processing    # transition processing flag
   attr_accessor :transition_name          # transition file name
   
+
+  attr_accessor :new_tileset
+
+  attr_reader :interpreter
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -43,6 +47,8 @@ class Game_Map
     @map_id = 0
     @display_x = 0
     @display_y = 0
+
+        @interpreter = Interpreter.new(0,true)
   end
   
   #--------------------------------------------------------------------------
@@ -57,10 +63,8 @@ class Game_Map
     
     # Load map from file and set @map
     @map = load_data(sprintf("Data/Map%03d.rxdata", @map_id))
-    @map_name = $data.mapinfos[$map.map_id].name 
-    
-    #@map_name = $data.mapinfos[@map_id].name 
-    
+    @map_name = $data.mapinfos[map_id].name 
+        
     # Hold onto the tileset
     @tileset = $data.tilesets[@map.tileset_id]
     
@@ -81,16 +85,8 @@ class Game_Map
     # Set map event data
     @events = {}
     for i in @map.events.keys
-      @events[i] = Game_Event.new(@map_id, @map.events[i])
+      @events[i] = Game_Event.new(@map.events[i])
     end
-    
-    # Set common event data
-    @common_events = {}
-    for i in 1...$data.commons.size
-      @common_events[i] = Game_CommonEvent.new(i)
-    end
-    # Why we holding all these common events???
-    
     
     # Initialize all fog information
     @fog_ox = 0
@@ -107,7 +103,7 @@ class Game_Map
     @scroll_speed = 4
         
     # Clear player path for mouse pathfinding
-    $player.clear_path
+    #$player.clear_path
     
   end
 
@@ -172,11 +168,8 @@ class Game_Map
       for event in @events.values
         event.refresh
       end
-      # Refresh all common events
-      for common_event in @triggered_common_events.values #@common_events.values
-        common_event.refresh
-      end
     end
+
     # Clear refresh request flag
     @need_refresh = false
   end
@@ -210,6 +203,7 @@ class Game_Map
   def scroll_up(distance)
     @display_y = [@display_y - distance, 0].max
   end
+
   #--------------------------------------------------------------------------
   # * Determine Valid Coordinates
   #     x          : x-coordinate
@@ -218,6 +212,7 @@ class Game_Map
   def valid?(x, y)
     return (x >= 0 and x < width and y >= 0 and y < height)
   end
+
   #--------------------------------------------------------------------------
   # * Determine if Passable
   #     x          : x-coordinate
@@ -391,8 +386,10 @@ class Game_Map
   #--------------------------------------------------------------------------
   def update
 
+    @interpreter.update
+
     # GET IT WORKING BETTER
-    return
+    #return
 
 
 
@@ -421,32 +418,32 @@ class Game_Map
     # Update map event
     for event in @events.values
       # event must be in range to be updated (anti-lag)
-      if (event.inrange_map and event.event.name != ANTI_LAG_EVENT_NAME) or
-        [3,4].include?event.trigger
+      #if (event.inrange_map and event.event.name != ANTI_LAG_EVENT_NAME) or
+      #  [3,4].include?event.trigger
         event.update
-      end
+      #end
     end
     
     # Manage fog scrolling
-    @fog_ox -= @fog_sx / 8.0
-    @fog_oy -= @fog_sy / 8.0
+   # @fog_ox -= @fog_sx / 8.0
+   # @fog_oy -= @fog_sy / 8.0
     
     # Manage change in fog color tone
-    if @fog_tone_duration >= 1
-      d = @fog_tone_duration
-      target = @fog_tone_target
-      @fog_tone.red = (@fog_tone.red * (d - 1) + target.red) / d
-      @fog_tone.green = (@fog_tone.green * (d - 1) + target.green) / d
-      @fog_tone.blue = (@fog_tone.blue * (d - 1) + target.blue) / d
-      @fog_tone.gray = (@fog_tone.gray * (d - 1) + target.gray) / d
-      @fog_tone_duration -= 1
-    end
-    # Manage change in fog opacity level
-    if @fog_opacity_duration >= 1
-      d = @fog_opacity_duration
-      @fog_opacity = (@fog_opacity * (d - 1) + @fog_opacity_target) / d
-      @fog_opacity_duration -= 1
-    end
+    # if @fog_tone_duration >= 1
+    #   d = @fog_tone_duration
+    #   target = @fog_tone_target
+    #   @fog_tone.red = (@fog_tone.red * (d - 1) + target.red) / d
+    #   @fog_tone.green = (@fog_tone.green * (d - 1) + target.green) / d
+    #   @fog_tone.blue = (@fog_tone.blue * (d - 1) + target.blue) / d
+    #   @fog_tone.gray = (@fog_tone.gray * (d - 1) + target.gray) / d
+    #   @fog_tone_duration -= 1
+    # end
+    # # Manage change in fog opacity level
+    # if @fog_opacity_duration >= 1
+    #   d = @fog_opacity_duration
+    #   @fog_opacity = (@fog_opacity * (d - 1) + @fog_opacity_target) / d
+    #   @fog_opacity_duration -= 1
+    # end
   end
   
   #--------------------------------------------------------------------------
