@@ -43,7 +43,6 @@ class Interpreter
     @event_id = 0                     # event ID
     @message_waiting = false          # waiting for message to end
     @move_route_waiting = false       # waiting for move completion
-    @button_input_variable_id = 0     # button input variable ID
     @wait_count = 0                   # wait count
     @child_interpreter = nil          # child interpreter
     @branch = {}                      # branch data
@@ -215,37 +214,13 @@ class Interpreter
         
       end
       
-      # If waiting for button input
-      if @button_input_variable_id > 0
-        # Run button input processing
-        input_button
-        return
-      end
-      
       # If waiting
       if @wait_count > 0
         # Decrease wait count
         @wait_count -= 1
         return
       end
-      
-      # If an action forcing battler exists
-      # cut cut cut cut
-      # if $game_temp.forcing_battler != nil
-      #   return
-      # end
-      
-      # If a call flag is set for each type of screen
-      # cut cut cut
-      # if $game_temp.battle_calling or
-      #    $game_temp.shop_calling or
-      #    $game_temp.name_calling or
-      #    $game_temp.menu_calling or
-      #    $game_temp.save_calling or
-      #    $game_temp.gameover
-      #   return
-      # end
-      
+
       # If list of event commands is empty
       if @list == nil
         
@@ -272,33 +247,7 @@ class Interpreter
       
     end
   end
-  
-  #--------------------------------------------------------------------------
-  # * Button Input
-  #--------------------------------------------------------------------------
-  def input_button
-    
-    # Determine pressed button
-    n = 0
-    for i in 1..18
-      if Input.trigger?(i)
-        n = i
-      end
-    end
-    
-    # If button was pressed
-    if n > 0
-      
-      # Change value of variables
-      $game_variables[@button_input_variable_id] = n
-      $map.need_refresh = true
-      
-      # End button input
-      @button_input_variable_id = 0
-      
-    end
-    
-  end
+
   #--------------------------------------------------------------------------
   # * Setup Choices
   #--------------------------------------------------------------------------
@@ -320,6 +269,7 @@ class Interpreter
     $game_temp.choice_proc = Proc.new { |n| @branch[current_indent] = n }
     
   end
+
   #--------------------------------------------------------------------------
   # * Actor Iterator (consider all party members)
   #     parameter : if 1 or more, ID; if 0, all

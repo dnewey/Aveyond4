@@ -26,6 +26,7 @@ class Game_World
     @tone_duration = 0
     @flash_color = Color.new(0, 0, 0, 0)
     @flash_duration = 0
+
     @shake_power = 0
     @shake_speed = 0
     @shake_duration = 0
@@ -43,14 +44,10 @@ class Game_World
     # Make viewports
     # agf - make viewport shorter to allow for HUD
     @viewport1 = Viewport.new(0, 0, 640, 448)
-
     @viewport2 = Viewport.new(0, 0, 640, 480)
     @viewport3 = Viewport.new(0, 0, 640, 480)
     @viewport2.z = 200
     @viewport3.z = 5000
-
-
-
 
 
     
@@ -65,22 +62,8 @@ class Game_World
     @fog = Plane.new(@viewport1)
     @fog.z = 3000
 
-    # Make character sprites
-    # @character_sprites = []
-    # for i in $map.events.keys.sort
-    #   sprite = Sprite_Character.new(@viewport1, $map.events[i])
-    #   @character_sprites.push(sprite)
-    # end
-    # @character_sprites.push(Sprite_Character.new(@viewport1, $player))
-
-    # Make weather
-
-    #@weather = RPG::Weather.new(@viewport1)
-
-    # Frame update
-    #update
-
   end
+
   #--------------------------------------------------------------------------
   # * Dispose
   #--------------------------------------------------------------------------
@@ -91,21 +74,18 @@ class Game_World
       @tilemap.autotiles[i].dispose
     end
     @tilemap.dispose
-    # Dispose of panorama plane
     @panorama.dispose
-    # Dispose of fog plane
     @fog.dispose
-    # Dispose of character sprites
     for sprite in @character_sprites
       sprite.dispose
     end
-    # Dispose of weather
     @weather.dispose
 
     # Dispose of viewports
     @viewport1.dispose
     @viewport2.dispose
     @viewport3.dispose
+
   end
 
   def refresh_tileset
@@ -161,15 +141,12 @@ class Game_World
   #--------------------------------------------------------------------------
   def update
 
-
-
     update_screen
 
     # if swapping tilesets
     if $map.new_tileset == true
       refresh_tileset
     end
-
 
     
     # If panorama is different from current one
@@ -241,6 +218,7 @@ class Game_World
       @tone = @tone_target.clone
     end
   end
+
   #--------------------------------------------------------------------------
   # * Start Flashing
   #     color : color
@@ -250,22 +228,18 @@ class Game_World
     @flash_color = color.clone
     @flash_duration = duration
   end
+
   #--------------------------------------------------------------------------
   # * Start Shaking
-  #     power : strength
-  #     speed : speed
-  #     duration : time
   #--------------------------------------------------------------------------
   def start_shake(power, speed, duration)
     @shake_power = power
     @shake_speed = speed
     @shake_duration = duration
   end
+
   #--------------------------------------------------------------------------
   # * Set Weather
-  #     type : type
-  #     power : strength
-  #     duration : time
   #--------------------------------------------------------------------------
   def weather(type, power, duration)
     @weather_type_target = type
@@ -283,6 +257,7 @@ class Game_World
       @weather_max = @weather_max_target
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------

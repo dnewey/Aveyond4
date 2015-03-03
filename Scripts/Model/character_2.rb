@@ -22,6 +22,7 @@ class Game_Character
     else
       update_stop
     end
+
     # If animation count exceeds maximum value
     # * Maximum value is move speed * 1 taken from basic value 18
     if @anime_count > 18 - @move_speed * 2
@@ -67,6 +68,7 @@ class Game_Character
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update (jump)
   #--------------------------------------------------------------------------
@@ -77,6 +79,7 @@ class Game_Character
     @real_x = (@real_x * @jump_count + @x * 128) / (@jump_count + 1)
     @real_y = (@real_y * @jump_count + @y * 128) / (@jump_count + 1)
   end
+
   #--------------------------------------------------------------------------
   # * Update frame (move)
   #--------------------------------------------------------------------------
@@ -113,6 +116,7 @@ class Game_Character
       @anime_count += 1
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update (stop)
   #--------------------------------------------------------------------------
@@ -133,6 +137,7 @@ class Game_Character
       @stop_count += 1
     end
   end
+  
   #--------------------------------------------------------------------------
   # * Move Type : Random
   #--------------------------------------------------------------------------

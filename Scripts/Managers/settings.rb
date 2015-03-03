@@ -24,7 +24,7 @@ class SettingsManager
 
     # Defaults
     @music = false
-    @sound = false
+    @sound = true
     @window = false
     @effects = false
     @mouse = false

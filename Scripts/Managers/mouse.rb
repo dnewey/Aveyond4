@@ -19,7 +19,6 @@ class MouseManager
   
   def position() @pos; end
   def grid() @pos.map{ |i| i = (i + $map.display_x / 4) / 32 } end
-
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
         
   #--------------------------------------------------------------------------

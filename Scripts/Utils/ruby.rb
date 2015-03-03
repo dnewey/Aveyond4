@@ -24,6 +24,13 @@ class Bitmap
 
 end
 
+class Fixnum
+	def odd?
+		return self % 2 == 1
+	end
+end
+
+
 class Sprite
 	def hide
 		self.visible = false

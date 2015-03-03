@@ -31,6 +31,8 @@ APPFOLDER = "Aveyond 4"
       $debug = DebugManager.new
       $DEBUG = true
 
+      $audio = AudioManager.new
+
       # Install font here?
       $keyboard = KeyboardManager.new
       $mouse = MouseManager.new

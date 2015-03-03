@@ -35,6 +35,7 @@ class DebugManager
 		@timer = 120
 
 		# Prepare log
+		@previous_text = ""
 		@console_text = ""
 		@console_sprite = Sprite.new(@viewport)
 		@console_sprite.move(20,400)
@@ -69,6 +70,12 @@ class DebugManager
 
 		# Hide console
 		return @console_sprite.hide if $keyboard.press?(192)
+
+
+		if $keyboard.press?(18)
+			@console_text = @previous_text
+			refresh_console
+		end
 									
 		# Check console input
 		console_chars.each{ |c|
@@ -85,6 +92,7 @@ class DebugManager
 			rescue Exception => e
 			 	log_scr("Console FAIL: "+e.class.to_s+" --- '" + @console_text + "'")		      
 		    end
+		    @previous_text = @console_text
 			@console_text = ""
 			refresh_console
 		end

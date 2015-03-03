@@ -1,8 +1,5 @@
 #==============================================================================
 # ** Game_Map
-#------------------------------------------------------------------------------
-#  This class handles the map. It includes scrolling and passable determining
-#  functions. Refer to "$map" for the instance of this class.
 #==============================================================================
 
 class Game_Map
@@ -10,8 +7,7 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Public Instance Variables
   #--------------------------------------------------------------------------
-  attr_reader   :tileset
-  
+  attr_reader   :tileset  
   
   # keep these
   attr_reader   :passages                 # passage table
@@ -30,12 +26,10 @@ class Game_Map
   
   
   attr_reader   :map_name                 # name of the map
-  
-  
+    
   attr_accessor :transition_processing    # transition processing flag
   attr_accessor :transition_name          # transition file name
   
-
   attr_accessor :new_tileset
 
   attr_reader :interpreter
@@ -48,7 +42,7 @@ class Game_Map
     @display_x = 0
     @display_y = 0
 
-        @interpreter = Interpreter.new(0,true)
+    @interpreter = Interpreter.new(0,true)
   end
   
   #--------------------------------------------------------------------------
@@ -67,13 +61,10 @@ class Game_Map
         
     # Hold onto the tileset
     @tileset = $data.tilesets[@map.tileset_id]
-    
-    # set tile set information in opening instance variables
-    tileset = $data.tilesets[@map.tileset_id]
         
-    @passages = tileset.passages
-    @priorities = tileset.priorities
-    @terrain_tags = tileset.terrain_tags
+    @passages = @tileset.passages
+    @priorities = @tileset.priorities
+    @terrain_tags = @tileset.terrain_tags
     
     # Initialize displayed coordinates
     @display_x = 0
@@ -120,12 +111,14 @@ class Game_Map
   def map_id
     return @map_id
   end
+
   #--------------------------------------------------------------------------
   # * Get Width
   #--------------------------------------------------------------------------
   def width
     return @map.width
   end
+
   #--------------------------------------------------------------------------
   # * Get Height
   #--------------------------------------------------------------------------
@@ -144,6 +137,7 @@ class Game_Map
   # * Automatically Change Background Music and Backround Sound
   #--------------------------------------------------------------------------
   def autoplay
+    # Zones!
     if @map.autoplay_bgm
       $game_system.bgm_play(@map.bgm)
     end
@@ -182,6 +176,7 @@ class Game_Map
     # agf - changed 15 to 14.  Determines bottom of map.
     @display_y = [@display_y + distance, (self.height - 14) * 128].min
   end
+
   #--------------------------------------------------------------------------
   # * Scroll Left
   #     distance : scroll distance
@@ -189,6 +184,7 @@ class Game_Map
   def scroll_left(distance)
     @display_x = [@display_x - distance, 0].max
   end
+
   #--------------------------------------------------------------------------
   # * Scroll Right
   #     distance : scroll distance
@@ -274,6 +270,7 @@ class Game_Map
     # passable
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Determine Thicket
   #     x          : x-coordinate
@@ -292,6 +289,7 @@ class Game_Map
     end
     return false
   end
+
   #--------------------------------------------------------------------------
   # * Determine Counter
   #     x          : x-coordinate
@@ -310,6 +308,7 @@ class Game_Map
     end
     return false
   end
+
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #     x          : x-coordinate
@@ -328,6 +327,7 @@ class Game_Map
     end
     return 0
   end
+
   #--------------------------------------------------------------------------
   # * Get Designated Position Event ID
   #     x          : x-coordinate
@@ -340,6 +340,7 @@ class Game_Map
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Start Scroll
   #     direction : scroll direction
@@ -351,36 +352,15 @@ class Game_Map
     @scroll_rest = distance * 128
     @scroll_speed = speed
   end
+  
   #--------------------------------------------------------------------------
   # * Determine if Scrolling
   #--------------------------------------------------------------------------
   def scrolling?
     return @scroll_rest > 0
   end
-  #--------------------------------------------------------------------------
-  # * Start Changing Fog Color Tone
-  #     tone     : color tone
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_fog_tone_change(tone, duration)
-    @fog_tone_target = tone.clone
-    @fog_tone_duration = duration
-    if @fog_tone_duration == 0
-      @fog_tone = @fog_tone_target.clone
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Start Changing Fog Opacity Level
-  #     opacity  : opacity level
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_fog_opacity_change(opacity, duration)
-    @fog_opacity_target = opacity * 1.0
-    @fog_opacity_duration = duration
-    if @fog_opacity_duration == 0
-      @fog_opacity = @fog_opacity_target
-    end
-  end
+
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -485,4 +465,5 @@ class Game_Map
     end
     return evt
   end
+
 end

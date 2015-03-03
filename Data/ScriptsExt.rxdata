@@ -1,4 +1,4 @@
-[?"Ü	#==============================================================================
+[?"ÿ	#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -30,6 +30,8 @@ APPFOLDER = "Aveyond 4"
 
       $debug = DebugManager.new
       $DEBUG = true
+
+      $audio = AudioManager.new
 
       # Install font here?
       $keyboard = KeyboardManager.new
@@ -160,7 +162,7 @@ def quest_done?()
 
 end
 
-"ó,#==============================================================================
+"ª'#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -205,7 +207,6 @@ class Interpreter
     @event_id = 0                     # event ID
     @message_waiting = false          # waiting for message to end
     @move_route_waiting = false       # waiting for move completion
-    @button_input_variable_id = 0     # button input variable ID
     @wait_count = 0                   # wait count
     @child_interpreter = nil          # child interpreter
     @branch = {}                      # branch data
@@ -377,37 +378,13 @@ class Interpreter
         
       end
       
-      # If waiting for button input
-      if @button_input_variable_id > 0
-        # Run button input processing
-        input_button
-        return
-      end
-      
       # If waiting
       if @wait_count > 0
         # Decrease wait count
         @wait_count -= 1
         return
       end
-      
-      # If an action forcing battler exists
-      # cut cut cut cut
-      # if $game_temp.forcing_battler != nil
-      #   return
-      # end
-      
-      # If a call flag is set for each type of screen
-      # cut cut cut
-      # if $game_temp.battle_calling or
-      #    $game_temp.shop_calling or
-      #    $game_temp.name_calling or
-      #    $game_temp.menu_calling or
-      #    $game_temp.save_calling or
-      #    $game_temp.gameover
-      #   return
-      # end
-      
+
       # If list of event commands is empty
       if @list == nil
         
@@ -434,33 +411,7 @@ class Interpreter
       
     end
   end
-  
-  #--------------------------------------------------------------------------
-  # * Button Input
-  #--------------------------------------------------------------------------
-  def input_button
-    
-    # Determine pressed button
-    n = 0
-    for i in 1..18
-      if Input.trigger?(i)
-        n = i
-      end
-    end
-    
-    # If button was pressed
-    if n > 0
-      
-      # Change value of variables
-      $game_variables[@button_input_variable_id] = n
-      $map.need_refresh = true
-      
-      # End button input
-      @button_input_variable_id = 0
-      
-    end
-    
-  end
+
   #--------------------------------------------------------------------------
   # * Setup Choices
   #--------------------------------------------------------------------------
@@ -482,6 +433,7 @@ class Interpreter
     $game_temp.choice_proc = Proc.new { |n| @branch[current_indent] = n }
     
   end
+
   #--------------------------------------------------------------------------
   # * Actor Iterator (consider all party members)
   #     parameter : if 1 or more, ID; if 0, all
@@ -895,7 +847,7 @@ class Interpreter
     return value
   end
 end
-"R>#==============================================================================
+"²6#==============================================================================
 # ** Interpreter (part 3)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -1067,52 +1019,6 @@ class Interpreter
     end
     # If it doen't meet the condition: command skip
     return command_skip
-  end
-  #--------------------------------------------------------------------------
-  # * Input Number
-  #--------------------------------------------------------------------------
-  def command_103
-    # If text has been set to message_text
-    if $game_temp.message_text != nil
-      # End
-      return false
-    end
-    # Set message end waiting flag and callback
-    @message_waiting = true
-    $game_temp.message_proc = Proc.new { @message_waiting = false }
-    # Number input setup
-    $game_temp.message_text = ""
-    $game_temp.num_input_start = 0
-    $game_temp.num_input_variable_id = @parameters[0]
-    $game_temp.num_input_digits_max = @parameters[1]
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Text Options
-  #--------------------------------------------------------------------------
-  def command_104
-    # If message is showing
-    if $game_temp.message_window_showing
-      # End
-      return false
-    end
-    # Change each option
-    $game_system.message_position = @parameters[0]
-    $game_system.message_frame = @parameters[1]
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Button Input Processing
-  #--------------------------------------------------------------------------
-  def command_105
-    # Set variable ID for button input
-    @button_input_variable_id = @parameters[0]
-    # Advance index
-    @index += 1
-    # End
-    return false
   end
   #--------------------------------------------------------------------------
   # * Wait
@@ -1309,20 +1215,7 @@ class Interpreter
     # Continue
     return true
   end
-  #--------------------------------------------------------------------------
-  # * Erase Event
-  #--------------------------------------------------------------------------
-  def command_116
-    # If event ID is valid
-    if @event_id > 0
-      # Erase event
-      $map.events[@event_id].erase
-    end
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
+
   #--------------------------------------------------------------------------
   # * Call Common Event
   #--------------------------------------------------------------------------
@@ -1372,8 +1265,8 @@ class Interpreter
       temp_index += 1
     end
   end
-end
-"è)#==============================================================================
+
+end"*#==============================================================================
 # ** Interpreter (part 4)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -1381,203 +1274,7 @@ end
 #==============================================================================
 
 class Interpreter
-  #--------------------------------------------------------------------------
-  # * Control Switches
-  #--------------------------------------------------------------------------
-  def command_121
-    # Loop for group control
-    for i in @parameters[0] .. @parameters[1]
-      # Change switch
-      $game_switches[i] = (@parameters[2] == 0)
-    end
-    # Refresh map
-    $game_map.need_refresh = true
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Control Variables
-  #--------------------------------------------------------------------------
-  def command_122
-    # Initialize value
-    value = 0
-    # Branch with operand
-    case @parameters[3]
-    when 0  # invariable
-      value = @parameters[4]
-    when 1  # variable
-      value = $game_variables[@parameters[4]]
-    when 2  # random number
-      value = @parameters[4] + rand(@parameters[5] - @parameters[4] + 1)
-    when 3  # item
-      value = $game_party.item_number(@parameters[4])
-    when 4  # actor
-      actor = $game_actors[@parameters[4]]
-      if actor != nil
-        case @parameters[5]
-        when 0  # level
-          value = actor.level
-        when 1  # EXP
-          value = actor.exp
-        when 2  # HP
-          value = actor.hp
-        when 3  # SP
-          value = actor.sp
-        when 4  # MaxHP
-          value = actor.maxhp
-        when 5  # MaxSP
-          value = actor.maxsp
-        when 6  # strength
-          value = actor.str
-        when 7  # dexterity
-          value = actor.dex
-        when 8  # agility
-          value = actor.agi
-        when 9  # intelligence
-          value = actor.int
-        when 10  # attack power
-          value = actor.atk
-        when 11  # physical defense
-          value = actor.pdef
-        when 12  # magic defense
-          value = actor.mdef
-        when 13  # evasion
-          value = actor.eva
-        end
-      end
-    when 5  # enemy
-      enemy = $game_troop.enemies[@parameters[4]]
-      if enemy != nil
-        case @parameters[5]
-        when 0  # HP
-          value = enemy.hp
-        when 1  # SP
-          value = enemy.sp
-        when 2  # MaxHP
-          value = enemy.maxhp
-        when 3  # MaxSP
-          value = enemy.maxsp
-        when 4  # strength
-          value = enemy.str
-        when 5  # dexterity
-          value = enemy.dex
-        when 6  # agility
-          value = enemy.agi
-        when 7  # intelligence
-          value = enemy.int
-        when 8  # attack power
-          value = enemy.atk
-        when 9  # physical defense
-          value = enemy.pdef
-        when 10  # magic defense
-          value = enemy.mdef
-        when 11  # evasion correction
-          value = enemy.eva
-        end
-      end
-    when 6  # character
-      character = get_character(@parameters[4])
-      if character != nil
-        case @parameters[5]
-        when 0  # x-coordinate
-          value = character.x
-        when 1  # y-coordinate
-          value = character.y
-        when 2  # direction
-          value = character.direction
-        when 3  # screen x-coordinate
-          value = character.screen_x
-        when 4  # screen y-coordinate
-          value = character.screen_y
-        when 5  # terrain tag
-          value = character.terrain_tag
-        end
-      end
-    when 7  # other
-      case @parameters[4]
-      when 0  # map ID
-        value = $game_map.map_id
-      when 1  # number of party members
-        value = $game_party.actors.size
-      when 2  # gold
-        value = $game_party.gold
-      when 3  # steps
-        value = $game_party.steps
-      when 4  # play time
-        value = Graphics.frame_count / Graphics.frame_rate
-      when 5  # timer
-        value = $game_system.timer / Graphics.frame_rate
-      when 6  # save count
-        value = $game_system.save_count
-      end
-    end
-    # Loop for group control
-    for i in @parameters[0] .. @parameters[1]
-      # Branch with control
-      case @parameters[2]
-      when 0  # substitute
-        $game_variables[i] = value
-      when 1  # add
-        $game_variables[i] += value
-      when 2  # subtract
-        $game_variables[i] -= value
-      when 3  # multiply
-        $game_variables[i] *= value
-      when 4  # divide
-        if value != 0
-          $game_variables[i] /= value
-        end
-      when 5  # remainder
-        if value != 0
-          $game_variables[i] %= value
-        end
-      end
-      # Maximum limit check
-      if $game_variables[i] > 99999999
-        $game_variables[i] = 99999999
-      end
-      # Minimum limit check
-      if $game_variables[i] < -99999999
-        $game_variables[i] = -99999999
-      end
-    end
-    # Refresh map
-    $game_map.need_refresh = true
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Control Self Switch
-  #--------------------------------------------------------------------------
-  def command_123
-    # If event ID is valid
-    if @event_id > 0
-      # Make a self switch key
-      key = [$game_map.map_id, @event_id, @parameters[0]]
-      # Change self switches
-      $game_self_switches[key] = (@parameters[1] == 0)
-    end
-    # Refresh map
-    $game_map.need_refresh = true
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Control Timer
-  #--------------------------------------------------------------------------
-  def command_124
-    # If started
-    if @parameters[0] == 0
-      $game_system.timer = @parameters[1] * Graphics.frame_rate
-      $game_system.timer_working = true
-    end
-    # If stopped
-    if @parameters[0] == 1
-      $game_system.timer_working = false
-    end
-    # Continue
-    return true
-  end
+  
   #--------------------------------------------------------------------------
   # * Change Gold
   #--------------------------------------------------------------------------
@@ -1620,28 +1317,6 @@ class Interpreter
     value = operate_value(@parameters[1], @parameters[2], @parameters[3])
     # Increase / decrease armor
     $game_party.gain_armor(@parameters[0], value)
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Party Member
-  #--------------------------------------------------------------------------
-  def command_129
-    # Get actor
-    actor = $game_actors[@parameters[0]]
-    # If actor is valid
-    if actor != nil
-      # Branch with control
-      if @parameters[1] == 0
-        if @parameters[2] == 1
-          $game_actors[@parameters[0]].setup(@parameters[0])
-        end
-        $game_party.add_actor(@parameters[0])
-      else
-        $game_party.remove_actor(@parameters[0])
-      end
-    end
-    
     # Continue
     return true
   end
@@ -1702,7 +1377,7 @@ class Interpreter
     return true
   end
 end
-";#==============================================================================
+"õ:#==============================================================================
 # ** Interpreter (part 5)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -2131,9 +1806,7 @@ class Interpreter
   # * Play SE
   #--------------------------------------------------------------------------
   def command_250
-    # Play SE
-    $game_system.se_play(@parameters[0])
-    # Continue
+    $audio.play_se(@parameters[0])
     return true
   end
   #--------------------------------------------------------------------------
@@ -2383,7 +2056,7 @@ class Interpreter
   end
 
 end
-"9##==============================================================================
+"£#==============================================================================
 # ** Interpreter (part 7)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -2391,248 +2064,6 @@ end
 #==============================================================================
 
 class Interpreter
-  #--------------------------------------------------------------------------
-  # * Change Enemy HP
-  #--------------------------------------------------------------------------
-  def command_331
-    # Get operate value
-    value = operate_value(@parameters[1], @parameters[2], @parameters[3])
-    # Process with iterator
-    iterate_enemy(@parameters[0]) do |enemy|
-      # If HP is not 0
-      if enemy.hp > 0
-        # Change HP (if death is not permitted then change HP to 1)
-        if @parameters[4] == false and enemy.hp + value <= 0
-          enemy.hp = 1
-        else
-          enemy.hp += value
-        end
-      end
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Enemy SP
-  #--------------------------------------------------------------------------
-  def command_332
-    # Get operate value
-    value = operate_value(@parameters[1], @parameters[2], @parameters[3])
-    # Process with iterator
-    iterate_enemy(@parameters[0]) do |enemy|
-      # Change SP
-      enemy.sp += value
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Enemy State
-  #--------------------------------------------------------------------------
-  def command_333
-    # Process with iterator
-    iterate_enemy(@parameters[0]) do |enemy|
-      # If [regard HP 0] state option is valid
-      if $data_states[@parameters[2]].zero_hp
-        # Clear immortal flag
-        enemy.immortal = false
-      end
-      # Change
-      if @parameters[1] == 0
-        enemy.add_state(@parameters[2])
-      else
-        enemy.remove_state(@parameters[2])
-      end
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Enemy Recover All
-  #--------------------------------------------------------------------------
-  def command_334
-    # Process with iterator
-    iterate_enemy(@parameters[0]) do |enemy|
-      # Recover all
-      enemy.recover_all
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Enemy Appearance
-  #--------------------------------------------------------------------------
-  def command_335
-    # Get enemy
-    enemy = $game_troop.enemies[@parameters[0]]
-    # Clear hidden flag
-    if enemy != nil
-      enemy.hidden = false
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Enemy Transform
-  #--------------------------------------------------------------------------
-  def command_336
-    # Get enemy
-    enemy = $game_troop.enemies[@parameters[0]]
-    # Transform processing
-    if enemy != nil
-      enemy.transform(@parameters[1])
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Show Battle Animation
-  #--------------------------------------------------------------------------
-  def command_337
-    # Process with iterator
-    iterate_battler(@parameters[0], @parameters[1]) do |battler|
-      # If battler exists
-      if battler.exist?
-        # Set animation ID
-        battler.animation_id = @parameters[2]
-      end
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Deal Damage
-  #--------------------------------------------------------------------------
-  def command_338
-    # Get operate value
-    value = operate_value(0, @parameters[2], @parameters[3])
-    # Process with iterator
-    iterate_battler(@parameters[0], @parameters[1]) do |battler|
-      # If battler exists
-      if battler.exist?
-        # Change HP
-        battler.hp -= value
-        # If in battle
-        if $game_temp.in_battle
-          # Set damage
-          battler.damage = value
-          battler.damage_pop = true
-        end
-      end
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Force Action
-  #--------------------------------------------------------------------------
-  def command_339
-    # Ignore if not in battle
-    unless $game_temp.in_battle
-      return true
-    end
-    # Ignore if number of turns = 0
-    if $game_temp.battle_turn == 0
-      return true
-    end
-    # Process with iterator (For convenience, this process won't be repeated)
-    iterate_battler(@parameters[0], @parameters[1]) do |battler|
-      # If battler exists
-      if battler.exist?
-        # Set action
-        battler.current_action.kind = @parameters[2]
-        if battler.current_action.kind == 0
-          battler.current_action.basic = @parameters[3]
-        else
-          battler.current_action.skill_id = @parameters[3]
-        end
-        # Set action target
-        if @parameters[4] == -2
-          if battler.is_a?(Game_Enemy)
-            battler.current_action.decide_last_target_for_enemy
-          else
-            battler.current_action.decide_last_target_for_actor
-          end
-        elsif @parameters[4] == -1
-          if battler.is_a?(Game_Enemy)
-            battler.current_action.decide_random_target_for_enemy
-          else
-            battler.current_action.decide_random_target_for_actor
-          end
-        elsif @parameters[4] >= 0
-          battler.current_action.target_index = @parameters[4]
-        end
-        # Set force flag
-        battler.current_action.forcing = true
-        # If action is valid and [run now]
-        if battler.current_action.valid? and @parameters[5] == 1
-          # Set battler being forced into action
-          $game_temp.forcing_battler = battler
-          # Advance index
-          @index += 1
-          # End
-          return false
-        end
-      end
-    end
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Abort Battle
-  #--------------------------------------------------------------------------
-  def command_340
-    # Set battle abort flag
-    $game_temp.battle_abort = true
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
-  #--------------------------------------------------------------------------
-  # * Call Menu Screen
-  #--------------------------------------------------------------------------
-  def command_351
-    # Set battle abort flag
-    $game_temp.battle_abort = true
-    # Set menu calling flag
-    $game_temp.menu_calling = true
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
-  #--------------------------------------------------------------------------
-  # * Call Save Screen
-  #--------------------------------------------------------------------------
-  def command_352
-    # Set battle abort flag
-    $game_temp.battle_abort = true
-    # Set save calling flag
-    $game_temp.save_calling = true
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
-  #--------------------------------------------------------------------------
-  # * Game Over
-  #--------------------------------------------------------------------------
-  def command_353
-    # Set game over flag
-    $game_temp.gameover = true
-    # End
-    return false
-  end
-  #--------------------------------------------------------------------------
-  # * Return to Title Screen
-  #--------------------------------------------------------------------------
-  def command_354
-    # Set return to title screen flag
-    $game_temp.to_title = true
-    # End
-    return false
-  end
   #--------------------------------------------------------------------------
   # * Script
   #--------------------------------------------------------------------------
@@ -2997,7 +2428,7 @@ class DataManager
 
   end
 
- end"r#==============================================================================
+ end"#==============================================================================
 # ** Debug
 #==============================================================================
 
@@ -3034,6 +2465,7 @@ class DebugManager
 		@timer = 120
 
 		# Prepare log
+		@previous_text = ""
 		@console_text = ""
 		@console_sprite = Sprite.new(@viewport)
 		@console_sprite.move(20,400)
@@ -3068,6 +2500,12 @@ class DebugManager
 
 		# Hide console
 		return @console_sprite.hide if $keyboard.press?(192)
+
+
+		if $keyboard.press?(18)
+			@console_text = @previous_text
+			refresh_console
+		end
 									
 		# Check console input
 		console_chars.each{ |c|
@@ -3084,6 +2522,7 @@ class DebugManager
 			rescue Exception => e
 			 	log_scr("Console FAIL: "+e.class.to_s+" --- '" + @console_text + "'")		      
 		    end
+		    @previous_text = @console_text
 			@console_text = ""
 			refresh_console
 		end
@@ -3467,7 +2906,7 @@ class KeyboardManager
 
   end
 
-end"Ý#============================================================================== 
+end"Û#============================================================================== 
 # ** Modules.Mouse Input (7.0)              By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -3488,7 +2927,6 @@ class MouseManager
   
   def position() @pos; end
   def grid() @pos.map{ |i| i = (i + $map.display_x / 4) / 32 } end
-
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
         
   #--------------------------------------------------------------------------
@@ -3544,7 +2982,7 @@ class NanoManager
 		return @nanos.select{ |n| n.parent == object }.empty?
 	end
 
-end"~#==============================================================================
+end"}#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -3570,7 +3008,7 @@ class SettingsManager
 
     # Defaults
     @music = false
-    @sound = false
+    @sound = true
     @window = false
     @effects = false
     @mouse = false
@@ -3910,7 +3348,7 @@ end
 
   $mouse_sprite = Sprite_Mouse.new
   $mouse_sprite.visible = true
-"¥:#==============================================================================
+"ß2#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -4092,21 +3530,6 @@ class Game_Character
     if @through
       return true
     end
-   
-    # Special handling for world map
-    # (we use terrain tags and vehicle type, not tileset passability)
-    # if WORLD_MAPS.include?($map.map_id)
-    #   check_terrain(x, y, d)
-    #   if @state
-    #     # if terrain is okay, we can move there if there's not an event
-    #     # or the event is the target and we're on foot
-    #     # (dragon and ship cannot go to a forest/mountain entrance)
-    #     evt = $map.event_at(x, y)
-    #     return true if (x == tx && y == ty) || 
-    #       evt == nil || VEHICLE_EVENTS.include?(evt.id) || evt.through
-    #   end
-    #   return false
-    # end
     
     # Able to leave current tile in desired direction?
     # SHAZ: for counter, must be old, counter, new, in a straight line
@@ -4115,11 +3538,13 @@ class Game_Character
       new_x - x == x - tx && new_y - y == y - ty)
       return false
     end
+
     # Able to enter adjoining tile in current direction?
     unless $map.passable?(new_x, new_y, 10 - d) ||
       (step == 2 && $map.counter?(new_x, new_y))
       return false
     end
+
     # SHAZ - ignore events sitting on a counter next to the destination
     if step != 2 || !$map.counter?(new_x, new_y)          
       # Loop all events
@@ -4141,10 +3566,7 @@ class Game_Character
         end
       end
     end
-    # agf = if on world map, don't allow to go through events.
-    #if WORLD_MAPS.include?($map.map_id) && @state == false
-    #  return false
-    #end      
+
     # If player coordinates are consistent with move destination
     if $player.x == new_x && $player.y == new_y && self != $player
       # If through is OFF
@@ -4156,6 +3578,7 @@ class Game_Character
       end
     end
     return true
+
   end
   
   #--------------------------------------------------------------------------
@@ -4202,6 +3625,7 @@ class Game_Character
 
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Lock
   #--------------------------------------------------------------------------
@@ -4218,12 +3642,14 @@ class Game_Character
     # Set locked flag
     @locked = true
   end
+
   #--------------------------------------------------------------------------
   # * Determine if Locked
   #--------------------------------------------------------------------------
   def lock?
     return @locked
   end
+
   #--------------------------------------------------------------------------
   # * Unlock
   #--------------------------------------------------------------------------
@@ -4244,10 +3670,9 @@ class Game_Character
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Move to Designated Position
-  #     x : x-coordinate
-  #     y : y-coordinate
   #--------------------------------------------------------------------------
   def moveto(x, y)
     @x = x % $map.width
@@ -4256,6 +3681,7 @@ class Game_Character
     @real_y = @y * 128
     @prelock_direction = 0
   end
+
   #--------------------------------------------------------------------------
   # * Get Screen X-Coordinates
   #--------------------------------------------------------------------------
@@ -4263,6 +3689,7 @@ class Game_Character
     # Get screen coordinates from real coordinates and map display position
     return (@real_x - $map.display_x + 3) / 4 + 16
   end
+
   #--------------------------------------------------------------------------
   # * Get Screen Y-Coordinates
   #--------------------------------------------------------------------------
@@ -4282,11 +3709,15 @@ class Game_Character
   #     height : character height
   #--------------------------------------------------------------------------
   def screen_z(height = 0)
-    # If display flag on closest surface is ON
+
+    # Some sort of below character here
+
+
     if @always_on_top
       # 999, unconditional
       return 999
     end
+
     # Get screen coordinates from real coordinates and map display position
     z = (@real_y - $map.display_y + 3) / 4 + 32
     # If tile
@@ -4298,7 +3729,9 @@ class Game_Character
       # If height exceeds 32, then add 31
       return z + ((height > 32) ? 31 : 0)
     end
+
   end
+
   #--------------------------------------------------------------------------
   # * Get Thicket Depth
   #--------------------------------------------------------------------------
@@ -4314,36 +3747,16 @@ class Game_Character
       return 0
     end
   end
+
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #--------------------------------------------------------------------------
   def terrain_tag
     return $map.terrain_tag(@x, @y)
   end
-  #--------------------------------------------------------------------------
-  # * Check the terrain for the vehicle
-  #   @terrain (0=none, 1=river, 2=ocean, 3=dock, 4=ground)
-  #   @vehicle (0=foot, 1=canoe, 2=boat, 3=dragon)
-  #   @state (true=passable tile, false=unpassable tile)
-  #--------------------------------------------------------------------------
-  def check_terrain(tx=-1, ty=-1, d=0)
-    d = d > 0 ? d : $player.direction
-    x = tx >= 0 ? tx : $player.x
-    y = ty >= 0 ? ty : $player.y
-    terrain_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
-    terrain_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)    
-    @state = false
-    #@vehicle = $game_variables[VEHICLE_VARIABLE]
-    @terrain = $map.terrain_tag(terrain_x, terrain_y)
-    @state = true if @vehicle == 0 && @terrain == 4  #foot & ground
-    @state = true if @vehicle == 0 && @terrain == 3  #foot & dock
-    @state = true if @vehicle == 2 && @terrain == 2  #boat & water
-    @state = true if @vehicle == 3 && @terrain != 5  #dragon & air (cannot fly
-                                                     #outside island crater
-    @state = true if @terrain == 0                   #no terrain
-  end
+
 end
-"*.#==============================================================================
+"6.#==============================================================================
 # ** Game_Character (part 2)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -4367,6 +3780,7 @@ class Game_Character
     else
       update_stop
     end
+
     # If animation count exceeds maximum value
     # * Maximum value is move speed * 1 taken from basic value 18
     if @anime_count > 18 - @move_speed * 2
@@ -4412,6 +3826,7 @@ class Game_Character
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update (jump)
   #--------------------------------------------------------------------------
@@ -4422,6 +3837,7 @@ class Game_Character
     @real_x = (@real_x * @jump_count + @x * 128) / (@jump_count + 1)
     @real_y = (@real_y * @jump_count + @y * 128) / (@jump_count + 1)
   end
+
   #--------------------------------------------------------------------------
   # * Update frame (move)
   #--------------------------------------------------------------------------
@@ -4458,6 +3874,7 @@ class Game_Character
       @anime_count += 1
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update (stop)
   #--------------------------------------------------------------------------
@@ -4478,6 +3895,7 @@ class Game_Character
       @stop_count += 1
     end
   end
+  
   #--------------------------------------------------------------------------
   # * Move Type : Random
   #--------------------------------------------------------------------------
@@ -5336,7 +4754,7 @@ end
 #     return [false, nil, nil]        
 #   end
 # end
-""#==============================================================================
+"¦!#==============================================================================
 # ** Game_Event
 #------------------------------------------------------------------------------
 #  This class deals with events. It handles functions including event page 
@@ -5370,6 +4788,9 @@ class Game_Event < Game_Character
 
     @starting = false
     @through = true
+
+    @width = 1
+    @height = 1
 
     # Name breakdown
     name = @event.name
@@ -5420,16 +4841,24 @@ class Game_Event < Game_Character
     return @icon
   end
 
+  def collide?(x,y)
+    return false if x < @x
+    return false if y < @y
+    return false if x > @x + @width - 1
+    return false if y > @y + @height - 1
+    return true
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Over Trigger
   #    is this event under player
   #--------------------------------------------------------------------------
   def over_trigger?
     # If not through situation with character as graphic
-    if @character_name != "" and not @through
+    #if @character_name != "" and not @through
       # Starting determinant is face
-      return false
-    end
+    #  return false
+    #end
     # If this position on the map is impassable
     unless $map.passable?(@x, @y, 0)
       # Starting determinant is face
@@ -5568,35 +4997,28 @@ class Game_Event < Game_Character
       case data[0]
 
         when '#opacity'
-          log_info(data[1])
           self.opacity = data[1].to_i
+        when '#width'
+          @width = data[1].to_i
+        when '#height'
+          @height = data[1].to_i
 
       end
     }
 
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Touch Event Starting Determinant
-  #--------------------------------------------------------------------------
-  def check_event_trigger_touch(x, y)
-    return if $map.interpreter.running?
-    if @trigger == 2 and x == $player.x and y == $player.y 
-      start if not jumping? and not over_trigger?
-    end
   end
 
   #--------------------------------------------------------------------------
   # * Automatic Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_auto
-    # If trigger is [touch from event] and consistent with player coordinates
-    if @trigger == 2 and @x == $game_player.x and @y == $game_player.y
-      # If starting determinant other than jumping is same position event
-      if not jumping? and over_trigger?
-        start
-      end
-    end
+    # # If trigger is [touch from event] and consistent with player coordinates
+    # if @trigger == 2 and @x == $player.x and @y == $player.y
+    #   # If starting determinant other than jumping is same position event
+    #   if not jumping? and over_trigger?
+    #     start
+    #   end
+    # end
     # If trigger is [auto run]
     if @trigger == 3 || @event.name == 'AUTORUN'
       start
@@ -5651,7 +5073,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"PA#==============================================================================
+end"Ê=#==============================================================================
 # ** Game_Map
 #------------------------------------------------------------------------------
 #  This class handles the map. It includes scrolling and passable determining
@@ -5701,7 +5123,7 @@ class Game_Map
     @display_x = 0
     @display_y = 0
 
-        @interpreter = Interpreter.new(0,true)
+    @interpreter = Interpreter.new(0,true)
   end
   
   #--------------------------------------------------------------------------
@@ -5773,12 +5195,14 @@ class Game_Map
   def map_id
     return @map_id
   end
+
   #--------------------------------------------------------------------------
   # * Get Width
   #--------------------------------------------------------------------------
   def width
     return @map.width
   end
+
   #--------------------------------------------------------------------------
   # * Get Height
   #--------------------------------------------------------------------------
@@ -5797,6 +5221,7 @@ class Game_Map
   # * Automatically Change Background Music and Backround Sound
   #--------------------------------------------------------------------------
   def autoplay
+    # Zones!
     if @map.autoplay_bgm
       $game_system.bgm_play(@map.bgm)
     end
@@ -5835,6 +5260,7 @@ class Game_Map
     # agf - changed 15 to 14.  Determines bottom of map.
     @display_y = [@display_y + distance, (self.height - 14) * 128].min
   end
+
   #--------------------------------------------------------------------------
   # * Scroll Left
   #     distance : scroll distance
@@ -5842,6 +5268,7 @@ class Game_Map
   def scroll_left(distance)
     @display_x = [@display_x - distance, 0].max
   end
+
   #--------------------------------------------------------------------------
   # * Scroll Right
   #     distance : scroll distance
@@ -5927,6 +5354,7 @@ class Game_Map
     # passable
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Determine Thicket
   #     x          : x-coordinate
@@ -5945,6 +5373,7 @@ class Game_Map
     end
     return false
   end
+
   #--------------------------------------------------------------------------
   # * Determine Counter
   #     x          : x-coordinate
@@ -5963,6 +5392,7 @@ class Game_Map
     end
     return false
   end
+
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #     x          : x-coordinate
@@ -5981,6 +5411,7 @@ class Game_Map
     end
     return 0
   end
+
   #--------------------------------------------------------------------------
   # * Get Designated Position Event ID
   #     x          : x-coordinate
@@ -5993,6 +5424,7 @@ class Game_Map
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Start Scroll
   #     direction : scroll direction
@@ -6010,30 +5442,8 @@ class Game_Map
   def scrolling?
     return @scroll_rest > 0
   end
-  #--------------------------------------------------------------------------
-  # * Start Changing Fog Color Tone
-  #     tone     : color tone
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_fog_tone_change(tone, duration)
-    @fog_tone_target = tone.clone
-    @fog_tone_duration = duration
-    if @fog_tone_duration == 0
-      @fog_tone = @fog_tone_target.clone
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Start Changing Fog Opacity Level
-  #     opacity  : opacity level
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_fog_opacity_change(opacity, duration)
-    @fog_opacity_target = opacity * 1.0
-    @fog_opacity_duration = duration
-    if @fog_opacity_duration == 0
-      @fog_opacity = @fog_opacity_target
-    end
-  end
+
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -6138,6 +5548,7 @@ class Game_Map
     end
     return evt
   end
+
 end
 "
 
@@ -6350,7 +5761,7 @@ class Message
   end
 
 end
-">_#==============================================================================
+"Ç_#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -6365,6 +5776,14 @@ class Game_Player < Game_Character
   CENTER_X = (320 - 16) * 4   # Center screen x-coordinate * 4
   # agf - change from 240 to 224 to allow for fixed HUD
   CENTER_Y = (224 - 16) * 4   # Center screen y-coordinate * 4
+
+
+
+  def initialize
+    super
+    @character_name = "boyle"
+  end
+
   #--------------------------------------------------------------------------
   # * Passable Determinants
   #     x : x-coordinate
@@ -6594,16 +6013,16 @@ class Game_Player < Game_Character
   # * Same Position Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_here(triggers)
-    return false
     result = false
     # If event is running
-    if $game_system.map_interpreter.running?
+    if $map.interpreter.running?
       return result
     end
     # All event loops
     for event in $map.events.values
       # If event coordinates and triggers are consistent
-      if event.x == @x and event.y == @y and triggers.include?(event.trigger)
+      if event.collide?(@x,@y) and triggers.include?(event.trigger)
+      #if event.x == @x and event.y == @y and triggers.include?(event.trigger)
         # If starting determinant is same position event (other than jumping)
         if not event.jumping? and event.over_trigger?
           event.start
@@ -6668,6 +6087,7 @@ class Game_Player < Game_Character
   # * Touch Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_touch(x, y)
+    log_err 'trying'
     result = false
     # If event is running
     if $map.interpreter.running?
@@ -11001,7 +10421,42 @@ class Sprite_Textbox < Widget
   def visible?() return @state != :closed end
 
 end
-"  class Array
+"Ümodule Graphics
+ 
+  @fps, @fps_tmp = 0, []
+ 
+  class << self
+    
+    attr_reader :fps
+    
+    alias fps_update update unless method_defined?(:fps_update)
+    def update
+	  t = Time.now
+	  fps_update
+	  @fps_tmp[frame_count % frame_rate] = Time.now != t
+	  @fps = 0
+	  frame_rate.times {|i| @fps += 1 if @fps_tmp[i]}
+	  fps_sprite.src_rect.y = @fps * 16
+    end
+    
+    def fps_sprite
+	  if !@fps_sprite or @fps_sprite.disposed?
+	    @fps_sprite = Sprite.new
+	    @fps_sprite.z = 0x7FFFFFFF
+	    @fps_sprite.x = 616
+	    @fps_sprite.bitmap = Bitmap.new(24, 16*120)
+	    #@fps_sprite.bitmap.font.name = "Arial"
+	    @fps_sprite.bitmap.font.size = 16
+	    @fps_sprite.bitmap.font.color.set(255, 255, 255)
+	    @fps_sprite.bitmap.fill_rect(@fps_sprite.bitmap.rect, Color.new(0, 0, 0))
+	    120.times {|i| @fps_sprite.bitmap.draw_text(0, i*16, 24, 16, "% 3d"%i, 1)}
+	    @fps_sprite.src_rect.height = 16
+	  end
+	  return @fps_sprite
+    end
+    
+  end
+end"@ class Array
  	def count
  		return length
  	end
@@ -11026,6 +10481,13 @@ class Bitmap
 	end
 
 end
+
+class Fixnum
+	def odd?
+		return self % 2 == 1
+	end
+end
+
 
 class Sprite
 	def hide
@@ -11341,7 +10803,7 @@ class Sprite_Battler < RPG::Sprite
     self.z = @battler.screen_z
   end
 end
-"è#==============================================================================
+"E#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -11349,10 +10811,9 @@ end
 #==============================================================================
 
 class Sprite_Character < RPG::Sprite
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-  attr_accessor :character                # character
+
+  attr_accessor :character     
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     viewport  : viewport
@@ -11363,6 +10824,7 @@ class Sprite_Character < RPG::Sprite
     @character = character
     update
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -11370,22 +10832,23 @@ class Sprite_Character < RPG::Sprite
     super
     # If tile ID, file name, or hue are different from current ones
     if @tile_id != @character.tile_id or
-       @character_name != @character.character_name or
-       @character_hue != @character.character_hue
+       @character_name != @character.character_name
       # Remember tile ID, file name, and hue
       @tile_id = @character.tile_id
       @character_name = @character.character_name
-      @character_hue = @character.character_hue
+
       # If tile ID value is valid
       if @tile_id >= 384
-        self.bitmap = RPG::Cache.tile($game_map.tileset_name,
-          @tile_id, @character.character_hue)
+        self.bitmap = RPG::Cache.tile($map.tileset.name,@tile_id, 0)
         self.src_rect.set(0, 0, 32, 32)
         self.ox = 16
         self.oy = 32
       # If tile ID value is invalid
       else
-        self.bitmap = RPG::Cache.character("boyle",0)#@character.character_name,
+        #self.bitmap = RPG::Cache.character(@character.character_name,0)#@character.character_name,
+        #if self == $player
+          self.bitmap = RPG::Cache.character("boyle",0)#@character.character_name,
+        #end
           #@character.character_hue)
         @cw = bitmap.width / 4
         @ch = bitmap.height / 4
@@ -11395,7 +10858,7 @@ class Sprite_Character < RPG::Sprite
     end
 
     # Set visible situation
-    self.visible = (not @character.transparent)
+    self.visible = !@character.transparent
     
     # If graphic is character
     if @tile_id == 0
@@ -11407,63 +10870,24 @@ class Sprite_Character < RPG::Sprite
 
     # Set sprite coordinates
     self.x = @character.screen_x
-    #if @name == "BOTTOM" or @name == "#"
-    #  self.y = @character.screen_y
-    #elsif @name == "TOP"
-    #  self.y = @character.screen_y - 16
-    #else
-      self.y = @character.screen_y - 8
-    #end
-    #log_err(@character.screen_y) if @character == $player
+    self.y = @character.screen_y
     self.z = @character.screen_z(@ch)
+    
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity
     self.blend_type = @character.blend_type
     self.bush_depth = @character.bush_depth
+    
     # Animation
-    if @character.animation_id != 0
-      animation = $data_animations[@character.animation_id]
-      animation(animation, true)
-      @character.animation_id = 0
-    end
+    # if @character.animation_id != 0
+    #   animation = $data_animations[@character.animation_id]
+    #   animation(animation, true)
+    #   @character.animation_id = 0
+    # end
+
   end
 end
-"Ümodule Graphics
- 
-  @fps, @fps_tmp = 0, []
- 
-  class << self
-    
-    attr_reader :fps
-    
-    alias fps_update update unless method_defined?(:fps_update)
-    def update
-	  t = Time.now
-	  fps_update
-	  @fps_tmp[frame_count % frame_rate] = Time.now != t
-	  @fps = 0
-	  frame_rate.times {|i| @fps += 1 if @fps_tmp[i]}
-	  fps_sprite.src_rect.y = @fps * 16
-    end
-    
-    def fps_sprite
-	  if !@fps_sprite or @fps_sprite.disposed?
-	    @fps_sprite = Sprite.new
-	    @fps_sprite.z = 0x7FFFFFFF
-	    @fps_sprite.x = 616
-	    @fps_sprite.bitmap = Bitmap.new(24, 16*120)
-	    #@fps_sprite.bitmap.font.name = "Arial"
-	    @fps_sprite.bitmap.font.size = 16
-	    @fps_sprite.bitmap.font.color.set(255, 255, 255)
-	    @fps_sprite.bitmap.fill_rect(@fps_sprite.bitmap.rect, Color.new(0, 0, 0))
-	    120.times {|i| @fps_sprite.bitmap.draw_text(0, i*16, 24, 16, "% 3d"%i, 1)}
-	    @fps_sprite.src_rect.height = 16
-	  end
-	  return @fps_sprite
-    end
-    
-  end
-end"þ#==============================================================================
+" #==============================================================================
 # Game_Interface
 #==============================================================================
 
@@ -11477,7 +10901,7 @@ class Game_Hud
   #--------------------------------------------------------------------------
   def initialize
 
-    @winder = Window_Item.new
+    #@winder = Window_Item.new
     
     # Hud
     @screen = nil
@@ -11507,7 +10931,7 @@ class Game_Hud
   #--------------------------------------------------------------------------  
   def update
 
-    @winder.update
+   # @winder.update
     return
     
     if !@screen
@@ -11525,7 +10949,7 @@ class Game_Hud
     
   end
   
-end"¶%#==============================================================================
+end"##==============================================================================
 # ** Spriteset_Map
 #------------------------------------------------------------------------------
 #  This class brings together map screen sprites, tilemaps, etc.
@@ -11553,6 +10977,7 @@ class Game_World
     @tone_duration = 0
     @flash_color = Color.new(0, 0, 0, 0)
     @flash_duration = 0
+
     @shake_power = 0
     @shake_speed = 0
     @shake_duration = 0
@@ -11570,14 +10995,10 @@ class Game_World
     # Make viewports
     # agf - make viewport shorter to allow for HUD
     @viewport1 = Viewport.new(0, 0, 640, 448)
-
     @viewport2 = Viewport.new(0, 0, 640, 480)
     @viewport3 = Viewport.new(0, 0, 640, 480)
     @viewport2.z = 200
     @viewport3.z = 5000
-
-
-
 
 
     
@@ -11592,22 +11013,8 @@ class Game_World
     @fog = Plane.new(@viewport1)
     @fog.z = 3000
 
-    # Make character sprites
-    # @character_sprites = []
-    # for i in $map.events.keys.sort
-    #   sprite = Sprite_Character.new(@viewport1, $map.events[i])
-    #   @character_sprites.push(sprite)
-    # end
-    # @character_sprites.push(Sprite_Character.new(@viewport1, $player))
-
-    # Make weather
-
-    #@weather = RPG::Weather.new(@viewport1)
-
-    # Frame update
-    #update
-
   end
+
   #--------------------------------------------------------------------------
   # * Dispose
   #--------------------------------------------------------------------------
@@ -11618,21 +11025,18 @@ class Game_World
       @tilemap.autotiles[i].dispose
     end
     @tilemap.dispose
-    # Dispose of panorama plane
     @panorama.dispose
-    # Dispose of fog plane
     @fog.dispose
-    # Dispose of character sprites
     for sprite in @character_sprites
       sprite.dispose
     end
-    # Dispose of weather
     @weather.dispose
 
     # Dispose of viewports
     @viewport1.dispose
     @viewport2.dispose
     @viewport3.dispose
+
   end
 
   def refresh_tileset
@@ -11688,15 +11092,12 @@ class Game_World
   #--------------------------------------------------------------------------
   def update
 
-
-
     update_screen
 
     # if swapping tilesets
     if $map.new_tileset == true
       refresh_tileset
     end
-
 
     
     # If panorama is different from current one
@@ -11768,6 +11169,7 @@ class Game_World
       @tone = @tone_target.clone
     end
   end
+
   #--------------------------------------------------------------------------
   # * Start Flashing
   #     color : color
@@ -11777,22 +11179,18 @@ class Game_World
     @flash_color = color.clone
     @flash_duration = duration
   end
+
   #--------------------------------------------------------------------------
   # * Start Shaking
-  #     power : strength
-  #     speed : speed
-  #     duration : time
   #--------------------------------------------------------------------------
   def start_shake(power, speed, duration)
     @shake_power = power
     @shake_speed = speed
     @shake_duration = duration
   end
+
   #--------------------------------------------------------------------------
   # * Set Weather
-  #     type : type
-  #     power : strength
-  #     duration : time
   #--------------------------------------------------------------------------
   def weather(type, power, duration)
     @weather_type_target = type
@@ -11810,6 +11208,7 @@ class Game_World
       @weather_max = @weather_max_target
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------

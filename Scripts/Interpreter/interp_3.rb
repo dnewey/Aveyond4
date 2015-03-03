@@ -172,52 +172,6 @@ class Interpreter
     return command_skip
   end
   #--------------------------------------------------------------------------
-  # * Input Number
-  #--------------------------------------------------------------------------
-  def command_103
-    # If text has been set to message_text
-    if $game_temp.message_text != nil
-      # End
-      return false
-    end
-    # Set message end waiting flag and callback
-    @message_waiting = true
-    $game_temp.message_proc = Proc.new { @message_waiting = false }
-    # Number input setup
-    $game_temp.message_text = ""
-    $game_temp.num_input_start = 0
-    $game_temp.num_input_variable_id = @parameters[0]
-    $game_temp.num_input_digits_max = @parameters[1]
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Text Options
-  #--------------------------------------------------------------------------
-  def command_104
-    # If message is showing
-    if $game_temp.message_window_showing
-      # End
-      return false
-    end
-    # Change each option
-    $game_system.message_position = @parameters[0]
-    $game_system.message_frame = @parameters[1]
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Button Input Processing
-  #--------------------------------------------------------------------------
-  def command_105
-    # Set variable ID for button input
-    @button_input_variable_id = @parameters[0]
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
-  #--------------------------------------------------------------------------
   # * Wait
   #--------------------------------------------------------------------------
   def command_106
@@ -412,20 +366,7 @@ class Interpreter
     # Continue
     return true
   end
-  #--------------------------------------------------------------------------
-  # * Erase Event
-  #--------------------------------------------------------------------------
-  def command_116
-    # If event ID is valid
-    if @event_id > 0
-      # Erase event
-      $map.events[@event_id].erase
-    end
-    # Advance index
-    @index += 1
-    # End
-    return false
-  end
+
   #--------------------------------------------------------------------------
   # * Call Common Event
   #--------------------------------------------------------------------------
@@ -475,4 +416,5 @@ class Interpreter
       temp_index += 1
     end
   end
+
 end

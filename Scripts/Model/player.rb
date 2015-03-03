@@ -13,6 +13,14 @@ class Game_Player < Game_Character
   CENTER_X = (320 - 16) * 4   # Center screen x-coordinate * 4
   # agf - change from 240 to 224 to allow for fixed HUD
   CENTER_Y = (224 - 16) * 4   # Center screen y-coordinate * 4
+
+
+
+  def initialize
+    super
+    @character_name = "boyle"
+  end
+
   #--------------------------------------------------------------------------
   # * Passable Determinants
   #     x : x-coordinate
@@ -242,16 +250,16 @@ class Game_Player < Game_Character
   # * Same Position Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_here(triggers)
-    return false
     result = false
     # If event is running
-    if $game_system.map_interpreter.running?
+    if $map.interpreter.running?
       return result
     end
     # All event loops
     for event in $map.events.values
       # If event coordinates and triggers are consistent
-      if event.x == @x and event.y == @y and triggers.include?(event.trigger)
+      if event.collide?(@x,@y) and triggers.include?(event.trigger)
+      #if event.x == @x and event.y == @y and triggers.include?(event.trigger)
         # If starting determinant is same position event (other than jumping)
         if not event.jumping? and event.over_trigger?
           event.start
@@ -312,10 +320,12 @@ class Game_Player < Game_Character
     end
     return result
   end
+
   #--------------------------------------------------------------------------
   # * Touch Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_touch(x, y)
+    log_err 'trying'
     result = false
     # If event is running
     if $map.interpreter.running?
@@ -334,6 +344,7 @@ class Game_Player < Game_Character
     end
     return result
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -453,17 +464,11 @@ class Game_Player < Game_Character
     # display are all not occurring
     unless moving? #or $game_system.map_interpreter.running? or
           # @move_route_forcing or $game_temp.message_window_showing
-      # Move player in the direction the directional button is being pressed
-      #$mouse_sprite.visible = false if Input.dir4 != 0
       case Input.dir4
-      when 2
-        move_down
-      when 4
-        move_left
-      when 6
-        move_right
-      when 8
-        move_up
+        when 2; move_down
+        when 4; move_left
+        when 6; move_right
+        when 8; move_up
       end
     end
     # Remember coordinates in local variables
@@ -553,108 +558,5 @@ class Game_Player < Game_Character
     #exit_vehicle if $game_variables[VEHICLE_VARIABLE] != 0 and Input.trigger?(Input::C)
       
   end
-  #--------------------------------------------------------------------------
-  # * Enter a vehicle
-  #--------------------------------------------------------------------------        
-  def enter_vehicle(type)
-    
-    $game_system.menu_disabled = true
-    $game_system.save_disabled = true    
-    
-    if type == "ship"
-      @through = true                         # move character into ship
-      move_forward                            
-      @through = false                        
-      #$game_variables[VEHICLE_VARIABLE] = 2   # Set vehicle to ship
-      @step_anime = true                      # Animate ship
-      @terrain = 2                            # Set terrain to water
-      @move_speed = 4 if @move_speed < 4      # Increase movement speed
-      #$game_switches[IN_SHIP_SWITCH] = true   # Hide ship event on map    
-      Audio.bgm_play("Audio/BGM/" + IN_SHIP_BGM, 100, 100) if $bgm_playing == true #play music    
 
-    elsif type == "airship"
-      #$game_variables[VEHICLE_VARIABLE] = 3       # Set vehicle to airship
-      #$game_switches[IN_AIRSHIP_SWITCH] = true    # Hide airship event on map  
-      @move_speed = 5 if @move_speed < 5          # Increase movement speed
-      @always_on_top = true                       # Show vechicle above things on map
-      @step_anime = true                          # Animate airship
-      Audio.bgm_play("Audio/BGM/" + IN_AIRSHIP_BGM, 100, 100) if $bgm_playing == true #play music
-    end
-    
-    # Display vehicle
-    $game_player.change_vehicle(type)    
-    $game_player.refresh
-    $map.refresh
-    
-    return true
-    
-  end
-
-  #--------------------------------------------------------------------------
-  # * Exit a vehicle
-  #--------------------------------------------------------------------------        
-  def exit_vehicle(force_exit = false)
-    
-    # FIX
-    return 
-    
-    
-    
-    # only exit ship at dock or airship on the ground
-    if (@terrain == 3 && $game_switches[IN_SHIP_SWITCH]) || 
-       ($map.terrain_tag(@x,@y) == 4 && $game_switches[IN_AIRSHIP_SWITCH] && 
-       $map.event_at(@x,@y) == nil) || 
-       force_exit
-      
-      # In ship
-      if $game_variables[VEHICLE_VARIABLE] == 2     
-        boat = $map.events[SHIP_EVENT]         #get ship event
-        boat.moveto(@x, @y)                         #move ship event to player's x, y coords
-        boat.direction = @direction                 #set direction of ship
-        boat.save_pos()
-        #$game_switches[IN_SHIP_SWITCH] = false      #show ship at dock    
-        #$game_variables[BOAT_X_VARIABLE] = @x       #set ship x coord
-        #$game_variables[BOAT_Y_VARIABLE] = @y       #set ship y coord          
-        
-        # Save player disembark coordinates and direction
-        #$game_variables[PLAYER_DIR_VARIABLE] = @direction
-        #$game_variables[PLAYER_X_VARIABLE] = @x + (@direction == 4 ? -1 : @direction == 6 ? 1 : 0)
-        #$game_variables[PLAYER_Y_VARIABLE] = @y + (@direction == 8 ? -1 : @direction == 2 ? 1 : 0)
-      
-        # move away from vehicle
-        @through = true
-        move_forward 
-        @through = false
-     
-      # In airship
-      elsif $game_variables[VEHICLE_VARIABLE] == 3 
-        if (!Mouse.trigger?(0) || Mouse.grid == nil) || ($mouse_x == nil || $mouse_y == nil) || ($mouse_x == x && $mouse_y == y)
-           dragon = $map.events[AIRSHIP_EVENT]  # get airship event
-           dragon.moveto(x, y)                       # move airship to player's x, y coords
-           dragon.save_pos()
-           $game_switches[IN_AIRSHIP_SWITCH] = false # show airship event
-           $game_variables[AIRSHIP_X_VARIABLE] = x   # set airship x coord
-           $game_variables[AIRSHIP_X_VARIABLE] = y   # set airship y coord
-           @always_on_top = false
-        else
-          return
-        end
-      end
-      
-      $game_variables[VEHICLE_VARIABLE] = 0   # Set vehicle to foot
-      @terrain = 4                            # Set terrain to ground
-      @move_speed = 4                         # Set movement speed
-      $game_player.restore_leader             # display leader graphic
-      @step_anime = false                     # don't animate player while not in motion
-      Audio.bgm_play("Audio/BGM/" + ON_GROUND_BGM, 100, 100) if $bgm_playing == true #play music
-     
-      $game_player.refresh  
-      $map.refresh    
-    
-      $game_system.menu_disabled = false    
-      $game_system.save_disabled = false       
-  
-    end
-      
-  end 
 end

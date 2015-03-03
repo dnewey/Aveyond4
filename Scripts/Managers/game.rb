@@ -17,10 +17,7 @@ class GameManager
 
      def quick_start
 
-      log_sys "QUICK START"
-
       # Game State Objects
-      # Merge temp and system
       $temp = Game_Temp.new
       $progress = Av::Progress.new
       $state = Av::State.new
@@ -52,21 +49,13 @@ class GameManager
 
      def update
 
-       # log_sys 'start update'
           $keyboard.update
           $mouse.update
           $debug.update
-
-          
-          #log_err 'gfx'
-
           Graphics.update
-          #log_err 'in'
           Input.update
-          #log_err 'scn'
           $scene.update
 
-         # log_sys 'update_done'
      end
 
 

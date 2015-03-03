@@ -1,14 +1,9 @@
 #==============================================================================
 # ** Game_Battler (part 1)
-#------------------------------------------------------------------------------
-#  This class deals with battlers. It's used as a superclass for the Game_Actor
-#  and Game_Enemy classes.
 #==============================================================================
 
 class Game_Battler
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
+ 
   attr_reader   :battler_name             # battler file name
   attr_reader   :battler_hue              # battler hue
   attr_reader   :hp                       # HP

@@ -180,21 +180,6 @@ class Game_Character
     if @through
       return true
     end
-   
-    # Special handling for world map
-    # (we use terrain tags and vehicle type, not tileset passability)
-    # if WORLD_MAPS.include?($map.map_id)
-    #   check_terrain(x, y, d)
-    #   if @state
-    #     # if terrain is okay, we can move there if there's not an event
-    #     # or the event is the target and we're on foot
-    #     # (dragon and ship cannot go to a forest/mountain entrance)
-    #     evt = $map.event_at(x, y)
-    #     return true if (x == tx && y == ty) || 
-    #       evt == nil || VEHICLE_EVENTS.include?(evt.id) || evt.through
-    #   end
-    #   return false
-    # end
     
     # Able to leave current tile in desired direction?
     # SHAZ: for counter, must be old, counter, new, in a straight line
@@ -203,11 +188,13 @@ class Game_Character
       new_x - x == x - tx && new_y - y == y - ty)
       return false
     end
+
     # Able to enter adjoining tile in current direction?
     unless $map.passable?(new_x, new_y, 10 - d) ||
       (step == 2 && $map.counter?(new_x, new_y))
       return false
     end
+
     # SHAZ - ignore events sitting on a counter next to the destination
     if step != 2 || !$map.counter?(new_x, new_y)          
       # Loop all events
@@ -229,10 +216,7 @@ class Game_Character
         end
       end
     end
-    # agf = if on world map, don't allow to go through events.
-    #if WORLD_MAPS.include?($map.map_id) && @state == false
-    #  return false
-    #end      
+
     # If player coordinates are consistent with move destination
     if $player.x == new_x && $player.y == new_y && self != $player
       # If through is OFF
@@ -244,6 +228,7 @@ class Game_Character
       end
     end
     return true
+
   end
   
   #--------------------------------------------------------------------------
@@ -290,6 +275,7 @@ class Game_Character
 
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Lock
   #--------------------------------------------------------------------------
@@ -306,12 +292,14 @@ class Game_Character
     # Set locked flag
     @locked = true
   end
+
   #--------------------------------------------------------------------------
   # * Determine if Locked
   #--------------------------------------------------------------------------
   def lock?
     return @locked
   end
+
   #--------------------------------------------------------------------------
   # * Unlock
   #--------------------------------------------------------------------------
@@ -332,10 +320,9 @@ class Game_Character
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Move to Designated Position
-  #     x : x-coordinate
-  #     y : y-coordinate
   #--------------------------------------------------------------------------
   def moveto(x, y)
     @x = x % $map.width
@@ -344,6 +331,7 @@ class Game_Character
     @real_y = @y * 128
     @prelock_direction = 0
   end
+
   #--------------------------------------------------------------------------
   # * Get Screen X-Coordinates
   #--------------------------------------------------------------------------
@@ -351,6 +339,7 @@ class Game_Character
     # Get screen coordinates from real coordinates and map display position
     return (@real_x - $map.display_x + 3) / 4 + 16
   end
+
   #--------------------------------------------------------------------------
   # * Get Screen Y-Coordinates
   #--------------------------------------------------------------------------
@@ -370,11 +359,15 @@ class Game_Character
   #     height : character height
   #--------------------------------------------------------------------------
   def screen_z(height = 0)
-    # If display flag on closest surface is ON
+
+    # Some sort of below character here
+
+
     if @always_on_top
       # 999, unconditional
       return 999
     end
+
     # Get screen coordinates from real coordinates and map display position
     z = (@real_y - $map.display_y + 3) / 4 + 32
     # If tile
@@ -386,7 +379,9 @@ class Game_Character
       # If height exceeds 32, then add 31
       return z + ((height > 32) ? 31 : 0)
     end
+
   end
+
   #--------------------------------------------------------------------------
   # * Get Thicket Depth
   #--------------------------------------------------------------------------
@@ -402,32 +397,12 @@ class Game_Character
       return 0
     end
   end
+
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #--------------------------------------------------------------------------
   def terrain_tag
     return $map.terrain_tag(@x, @y)
   end
-  #--------------------------------------------------------------------------
-  # * Check the terrain for the vehicle
-  #   @terrain (0=none, 1=river, 2=ocean, 3=dock, 4=ground)
-  #   @vehicle (0=foot, 1=canoe, 2=boat, 3=dragon)
-  #   @state (true=passable tile, false=unpassable tile)
-  #--------------------------------------------------------------------------
-  def check_terrain(tx=-1, ty=-1, d=0)
-    d = d > 0 ? d : $player.direction
-    x = tx >= 0 ? tx : $player.x
-    y = ty >= 0 ? ty : $player.y
-    terrain_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
-    terrain_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)    
-    @state = false
-    #@vehicle = $game_variables[VEHICLE_VARIABLE]
-    @terrain = $map.terrain_tag(terrain_x, terrain_y)
-    @state = true if @vehicle == 0 && @terrain == 4  #foot & ground
-    @state = true if @vehicle == 0 && @terrain == 3  #foot & dock
-    @state = true if @vehicle == 2 && @terrain == 2  #boat & water
-    @state = true if @vehicle == 3 && @terrain != 5  #dragon & air (cannot fly
-                                                     #outside island crater
-    @state = true if @terrain == 0                   #no terrain
-  end
+
 end

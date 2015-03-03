@@ -1,16 +1,9 @@
 #==============================================================================
 # ** Game_Temp
-#------------------------------------------------------------------------------
-#  This class handles temporary data that is not included with save data.
-#  Refer to "$game_temp" for the instance of this class.
 #==============================================================================
 
 class Game_Temp
   
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-    
   # Put in map where it can be used
   attr_accessor :common_event_id          # common event ID  
   

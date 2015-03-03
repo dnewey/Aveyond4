@@ -12,7 +12,7 @@ class Game_Hud
   #--------------------------------------------------------------------------
   def initialize
 
-    @winder = Window_Item.new
+    #@winder = Window_Item.new
     
     # Hud
     @screen = nil
@@ -42,7 +42,7 @@ class Game_Hud
   #--------------------------------------------------------------------------  
   def update
 
-    @winder.update
+   # @winder.update
     return
     
     if !@screen

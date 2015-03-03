@@ -9,9 +9,7 @@ class Game_Battler
 end
 
 class Game_Actor < Game_Battler
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
+ 
   attr_reader   :name                     # name
   
   attr_reader   :character_name           # character file name
@@ -73,12 +71,14 @@ class Game_Actor < Game_Battler
   def id
     return @actor_id
   end
+
   #--------------------------------------------------------------------------
   # * Get Index
   #--------------------------------------------------------------------------
   def index
     return $game_party.actors.index(self)
   end
+
   #--------------------------------------------------------------------------
   # * Calculate EXP
   #--------------------------------------------------------------------------
@@ -96,6 +96,7 @@ class Game_Actor < Game_Battler
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Get Element Revision Value
   #     element_id : element ID
@@ -120,12 +121,14 @@ class Game_Actor < Game_Battler
     # End Method
     return result
   end
+
   #--------------------------------------------------------------------------
   # * Get State Effectiveness
   #--------------------------------------------------------------------------
   def state_ranks
     return $data_classes[@class_id].state_ranks
   end
+
   #--------------------------------------------------------------------------
   # * Determine State Guard
   #     state_id : state ID
@@ -141,6 +144,7 @@ class Game_Actor < Game_Battler
     end
     return false
   end
+  
   #--------------------------------------------------------------------------
   # * Get Normal Attack Element
   #--------------------------------------------------------------------------

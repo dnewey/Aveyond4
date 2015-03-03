@@ -427,9 +427,7 @@ class Interpreter
   # * Play SE
   #--------------------------------------------------------------------------
   def command_250
-    # Play SE
-    $game_system.se_play(@parameters[0])
-    # Continue
+    $audio.play_se(@parameters[0])
     return true
   end
   #--------------------------------------------------------------------------

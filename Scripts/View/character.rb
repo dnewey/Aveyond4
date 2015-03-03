@@ -6,10 +6,9 @@
 #==============================================================================
 
 class Sprite_Character < RPG::Sprite
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-  attr_accessor :character                # character
+
+  attr_accessor :character     
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     viewport  : viewport
@@ -20,6 +19,7 @@ class Sprite_Character < RPG::Sprite
     @character = character
     update
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -27,22 +27,23 @@ class Sprite_Character < RPG::Sprite
     super
     # If tile ID, file name, or hue are different from current ones
     if @tile_id != @character.tile_id or
-       @character_name != @character.character_name or
-       @character_hue != @character.character_hue
+       @character_name != @character.character_name
       # Remember tile ID, file name, and hue
       @tile_id = @character.tile_id
       @character_name = @character.character_name
-      @character_hue = @character.character_hue
+
       # If tile ID value is valid
       if @tile_id >= 384
-        self.bitmap = RPG::Cache.tile($game_map.tileset_name,
-          @tile_id, @character.character_hue)
+        self.bitmap = RPG::Cache.tile($map.tileset.name,@tile_id, 0)
         self.src_rect.set(0, 0, 32, 32)
         self.ox = 16
         self.oy = 32
       # If tile ID value is invalid
       else
-        self.bitmap = RPG::Cache.character("boyle",0)#@character.character_name,
+        #self.bitmap = RPG::Cache.character(@character.character_name,0)#@character.character_name,
+        #if self == $player
+          self.bitmap = RPG::Cache.character("boyle",0)#@character.character_name,
+        #end
           #@character.character_hue)
         @cw = bitmap.width / 4
         @ch = bitmap.height / 4
@@ -52,7 +53,7 @@ class Sprite_Character < RPG::Sprite
     end
 
     # Set visible situation
-    self.visible = (not @character.transparent)
+    self.visible = !@character.transparent
     
     # If graphic is character
     if @tile_id == 0
@@ -64,24 +65,20 @@ class Sprite_Character < RPG::Sprite
 
     # Set sprite coordinates
     self.x = @character.screen_x
-    #if @name == "BOTTOM" or @name == "#"
-    #  self.y = @character.screen_y
-    #elsif @name == "TOP"
-    #  self.y = @character.screen_y - 16
-    #else
-      self.y = @character.screen_y - 8
-    #end
-    #log_err(@character.screen_y) if @character == $player
+    self.y = @character.screen_y
     self.z = @character.screen_z(@ch)
+    
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity
     self.blend_type = @character.blend_type
     self.bush_depth = @character.bush_depth
+    
     # Animation
-    if @character.animation_id != 0
-      animation = $data_animations[@character.animation_id]
-      animation(animation, true)
-      @character.animation_id = 0
-    end
+    # if @character.animation_id != 0
+    #   animation = $data_animations[@character.animation_id]
+    #   animation(animation, true)
+    #   @character.animation_id = 0
+    # end
+
   end
 end

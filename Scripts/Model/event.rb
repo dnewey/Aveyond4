@@ -33,6 +33,9 @@ class Game_Event < Game_Character
     @starting = false
     @through = true
 
+    @width = 1
+    @height = 1
+
     # Name breakdown
     name = @event.name
     if name.include?('::')
@@ -82,16 +85,24 @@ class Game_Event < Game_Character
     return @icon
   end
 
+  def collide?(x,y)
+    return false if x < @x
+    return false if y < @y
+    return false if x > @x + @width - 1
+    return false if y > @y + @height - 1
+    return true
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Over Trigger
   #    is this event under player
   #--------------------------------------------------------------------------
   def over_trigger?
     # If not through situation with character as graphic
-    if @character_name != "" and not @through
+    #if @character_name != "" and not @through
       # Starting determinant is face
-      return false
-    end
+    #  return false
+    #end
     # If this position on the map is impassable
     unless $map.passable?(@x, @y, 0)
       # Starting determinant is face
@@ -163,11 +174,11 @@ class Game_Event < Game_Character
     # If trigger is [parallel process]
     if @trigger == 4
       @interpreter = Interpreter.new
+      @interpreter.setup(@list, @event.id)
     end
 
     # Auto event start determinant
     check_event_trigger_auto
-
 
   end
   
@@ -187,7 +198,6 @@ class Game_Event < Game_Character
     # Set each instance variable
     @tile_id = @page.graphic.tile_id
     @character_name = @page.graphic.character_name
-    @character_hue = @page.graphic.character_hue
     if @original_direction != @page.graphic.direction
       @direction = @page.graphic.direction
       @original_direction = @direction
@@ -230,35 +240,28 @@ class Game_Event < Game_Character
       case data[0]
 
         when '#opacity'
-          log_info(data[1])
           self.opacity = data[1].to_i
+        when '#width'
+          @width = data[1].to_i
+        when '#height'
+          @height = data[1].to_i
 
       end
     }
 
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Touch Event Starting Determinant
-  #--------------------------------------------------------------------------
-  def check_event_trigger_touch(x, y)
-    return if $map.interpreter.running?
-    if @trigger == 2 and x == $player.x and y == $player.y 
-      start if not jumping? and not over_trigger?
-    end
   end
 
   #--------------------------------------------------------------------------
   # * Automatic Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_auto
-    # If trigger is [touch from event] and consistent with player coordinates
-    if @trigger == 2 and @x == $game_player.x and @y == $game_player.y
-      # If starting determinant other than jumping is same position event
-      if not jumping? and over_trigger?
-        start
-      end
-    end
+    # # If trigger is [touch from event] and consistent with player coordinates
+    # if @trigger == 2 and @x == $player.x and @y == $player.y
+    #   # If starting determinant other than jumping is same position event
+    #   if not jumping? and over_trigger?
+    #     start
+    #   end
+    # end
     # If trigger is [auto run]
     if @trigger == 3 || @event.name == 'AUTORUN'
       start
@@ -275,12 +278,6 @@ class Game_Event < Game_Character
 
     # If parallel process is valid
     if @interpreter != nil
-      # If not running
-      unless @interpreter.running?
-        # Set up event
-        @interpreter.setup(@list, @event.id)
-      end
-      # Update interpreter
       @interpreter.update
     end
 
@@ -293,7 +290,7 @@ class Game_Event < Game_Character
     $state.loc!(@event.id)
   end
 
-    #--------------------------------------------------------------------------
+  #--------------------------------------------------------------------------
   # * Temporarily Erase
   #--------------------------------------------------------------------------
   def erase
