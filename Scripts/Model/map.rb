@@ -391,8 +391,6 @@ class Game_Map
     # GET IT WORKING BETTER
     #return
 
-
-
     # Refresh map if necessary
     if $map.need_refresh
       refresh

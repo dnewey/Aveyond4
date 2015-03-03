@@ -48,6 +48,7 @@ class DataManager
     @zones = load_json("zones",ZoneData)
 
     @clones = load_clones
+    @funcs = load_funcs
 
 		# Convert to json
     @commons = load_data("Data/CommonEvents.rxdata")
@@ -84,6 +85,32 @@ class DataManager
     }
 
     return clones
+
+  end
+
+  def load_funcs
+
+    funcs = {}
+    map = load_data("Data/Map002.rxdata")
+
+    map.events.each{ |k,ev|
+      
+      ev.pages.each{ |p|
+        name = ''
+        p.list.each{ |cmd|
+          if cmd.code == 108 && cmd.parameters[0].include?("%")
+            name = cmd.parameters[0]
+          end
+        }
+        next if !name
+        funcs[name] = p.list
+      }
+
+      log_err(funcs)
+      
+    }
+
+    return funcs
 
   end
 

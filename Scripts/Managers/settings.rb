@@ -14,19 +14,13 @@ class SettingsManager
   attr_accessor :debug_fps
   
 
-
   # In settings
   attr_accessor :last_file_index          # last save file no.
-
-
 
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
   def initialize
-
-
-
 
     # Defaults
     @music = false
@@ -35,13 +29,12 @@ class SettingsManager
     @effects = false
     @mouse = false
 
-
-
+    # Debug options - keys 1-9
     @debug_skip_title = true
-    @debug_fps = 40
+    @debug_show_fps = 40
         
     # Load from settings file real quick   
-    File.open('settingstest.txt').each do |line|
+    File.open($appdata+'\settings.txt', "r").each do |line|
       dta = line.split(" ")
       val = dta[1]
       if val.to_i.to_s == val
@@ -62,7 +55,7 @@ class SettingsManager
   # * Get/Set Settings
   #--------------------------------------------------------------------------
   def save() 
-    File.open('settingstest.txt', 'w') { |file|  
+    File.open($appdata+'\settings.txt', 'w') { |file|  
       # Write some stats      
       self.instance_variables.each{ |var|
         next if !DEBUG && var.to_s.include?("debug")

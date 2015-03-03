@@ -10,38 +10,47 @@ def log_ev(msg) $debug.log(msg,'EVENT') end
 
 class DebugManager
 
+	DEBUG_TIME = 240
+
 	INFO_COLOR = Color.new(220,171,1,120)
 	SCRIPT_COLOR = Color.new(128,0,64,120)
 	ERROR_COLOR = Color.new(202,0,0,120)
 	SYSTEM_COLOR = Color.new(128,0,128,120)
 	EVENT_COLOR = Color.new(0,128,128,120)
 
-	INPUT_COLOR = Color.new(0,0,0,120)
+	INPUT_COLOR = Color.new(0,0,0,160)
 
-	def initialize
+	def initialize		
 		return if !DEBUG
+
+		# Prepare log file
 		@path = $appdata + "\\log.txt"
 		File.open(@path, 'w') { |file| }	
 		
+		# Prepare on screen log
 		@viewport = Viewport.new(0,0,640,480)
-		@viewport.z = 999
+		@viewport.z = 9999
 		
 		@sprites = []
 		@timer = 120
 
-		@console_state = :closed
-		@console_text = "a"
+		# Prepare log
+		@console_text = ""
 		@console_sprite = Sprite.new(@viewport)
-		@console_sprite.x = 20
-		@console_sprite.y = 400
-		@console_sprite.visible = false
+		@console_sprite.move(20,400)
+		@console_sprite.hide
 		refresh_console
 
 	end
-
-	KeyState = Win32API.new("user32","ToUnicode",['i'],'i')
+	
 
 	def update
+
+		if Input.press?(Input::B)
+			@timer = 0
+		end
+
+		# Fade away sprites
 		@timer -= 1
 		if !@sprites.empty? && @timer < 20
 			@sprites.each{ |s| s.opacity = @timer * 12.6 }
@@ -50,55 +59,48 @@ class DebugManager
 			@sprites.each{ |s| s.dispose }.clear
 		end		
 
-		# Check console opener
-		case @console_state
+		# Debug keys
+		debug_keys
 
-			when :closed
-				if $keyboard.press?(192) # "`"
-					@console_state = :open
-					@console_sprite.visible = true
-				end
+		# If console not showing
+		if !@console_sprite.visible
+			$keyboard.press?(192) ? @console_sprite.show : return
+		end
 
-			when :open
+		# Hide console
+		return @console_sprite.hide if $keyboard.press?(192)
+									
+		# Check console input
+		console_chars.each{ |c|
+			if $keyboard.hold?(c)
+				@console_text += $keyboard.to_char(c)
+				refresh_console
+			end
+		}
 
-				if $keyboard.press?(192) # "`"
-					@console_state = :closed
-					@console_sprite.visible = false
-					return
-				end
+		# Check inputs now
+		if Input.trigger?(Input::C)
+			begin
+				eval(@console_text)
+			rescue Exception => e
+			 	log_scr("Console FAIL: "+e.class.to_s+" --- '" + @console_text + "'")		      
+		    end
+			@console_text = ""
+			refresh_console
+		end
 
-				chars = (48..57).to_a
-				chars += (65..90).to_a
-				chars += (186..222).to_a
-				chars += [32]
+		if $keyboard.press?(8)
+			@console_text.chop!
+			refresh_console
+		end
 
-				chars.each{ |c|
-					if $keyboard.press?(c) # "`"
-						@console_text += $keyboard.to_char(c)
-						refresh_console
-						#@console_state = :open
-					end
-				}
+	end
 
-				# Check inputs now
-				if Input.trigger?(Input::C)
-					begin
-					eval(@console_text)
-					rescue Exception => e
+	def debug_keys
 
-					  log_scr("Console FAIL: "+e.class.to_s+" --- '" + @console_text + "'")
-				      
-				    end
-
-					@console_text = ""
-					refresh_console
-				end
-
-				if $keyboard.press?(8)
-					@console_text.chop!
-					refresh_console
-				end
-
+		if $keyboard.press?(48)
+			log_info "1 - Toggle Superspeed"
+			log_info "2 - Do something else"
 		end
 
 	end
@@ -107,15 +109,27 @@ class DebugManager
 		@console_sprite.bitmap = Bitmap.new(600,30)
 		@console_sprite.bitmap.font.size = 22
 		@console_sprite.bitmap.font.bold = true
-		@console_sprite.bitmap.fill_rect(0,0,600,@console_sprite.bitmap.height,Color.new(0,0,0,200))
+		@console_sprite.bitmap.fill(INPUT_COLOR)
 		@console_sprite.bitmap.draw_text(8,0,600,24,@console_text)
+	end
+
+	def console_chars
+		chars = (48..57).to_a
+		chars += (65..90).to_a
+		chars += (186..222).to_a
+		chars += [32]
+		return chars
 	end
 
 	def log(msg,type='LOG')
 	    return if !DEBUG
+
 	    msg = "NIL" if msg == nil
 	    if msg.is_a?(Array)
-	    	msg = msg.join(",")
+	    	msg = "Array: "+msg.join(", ")
+	    end
+	    if msg.is_a?(Hash)
+
 	    end
 		out = type + "\t" + msg.to_s
 		File.open(@path, 'a') { |file| file.puts(out) }
@@ -146,7 +160,7 @@ class DebugManager
 		@sprites.push(spr)
 
 		# Reset log display
-		@timer = 120
+		@timer = DEBUG_TIME
 		@sprites.each{ |s| s.opacity = 255 }
 
 	end

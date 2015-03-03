@@ -29,6 +29,7 @@ APPFOLDER = "Aveyond 4"
       Dir.mkdir($appdata) if !File.exists?($appdata) 
 
       $debug = DebugManager.new
+      $DEBUG = true
 
       # Install font here?
       $keyboard = KeyboardManager.new
