@@ -5,6 +5,7 @@
  	def sample
       self[rand(length)]
   	end
+
  end
 
  class String

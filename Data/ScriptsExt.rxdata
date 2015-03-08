@@ -1,4 +1,4 @@
-[?"ˇ	#==============================================================================
+[="ˇ	#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -122,47 +122,7 @@ def condition_applies?(cond)
 
     return true
 
-  end">
-
-
-def flag(name)
-	$state.flag!(name)
-end
-
-def unflag(name)
-	$state.unflag!(name)
-end
-
-def var(name,val)
-
-end
-
-def incvar(name,amount=1)
-
-end
-
-def decvar(name,amount=1)
-
-end
-
-
-def add_quest(name)
-
-end
-
-def end_quest(name)
-
-end
-
-def quest_active?()
-
-end
-
-def quest_done?()
-
-end
-
-"™'#==============================================================================
+  end"™'#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -847,7 +807,7 @@ class Interpreter
     return value
   end
 end
-"≤6#==============================================================================
+"´*#==============================================================================
 # ** Interpreter (part 3)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -855,105 +815,43 @@ end
 #==============================================================================
 
 class Interpreter
+
+  def next_event_code
+    @list[@index+1].code
+  end
+
   #--------------------------------------------------------------------------
   # * Show Text
   #--------------------------------------------------------------------------
   def command_101
-    # If other text has been set to message_text
-    if $game_temp.message_text != nil
-      # End
-      return false
+
+    message = []
+    message.push(@list[@index].parameters[0])
+    while next_event_code == 401
+      @index += 1
+      message.push(@list[@index].parameters[0])
     end
+
+    message = message.join(' ')
+
+    # If there is a choice next, add it
+    if next_event_code == 102
+      @index+=1
+      while next_event_code == 402
+
+      end
+    end
+
+    $hud.message.start(message)
     
     # Return mouse to default cursor
-    $mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
+    #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
     
-    # Set message end waiting flag and callback
-    @message_waiting = true
-    $game_temp.message_event = @event_id
-    $game_temp.message_proc = Proc.new { @message_waiting = false }
-    # Set message text on first line
-    $game_temp.message_text = @list[@index].parameters[0] + "\n"
-    line_count = 1
-    # Loop
-    loop do
-      # If next event command text is on the second line or after
-      if @list[@index + 1].code == 401
-        # Add the second line or after to message_text
-        $game_temp.message_text += @list[@index + 1].parameters[0] + "\n"
-        line_count += 1
-      # If the next event command is show text
-      elsif @list[@index + 1].code == 101
-        # If the text contains the \inc code
-        if @list[@index + 1].parameters[0].index(/\\[Ii][Nn][Cc]/) != nil
-          $game_temp.message_text += @list[@index + 1].parameters[0] + "\n"
-          $game_temp.message_text.sub!(/\\[Ii][Nn][Cc]/) { "" }
-        else
-          return true
-        end
-      # If event command is not on the second line or after
-      else
-        # If next event command is show choices
-        if @list[@index + 1].code == 102
-          # Advance index
-          @index += 1
-          
-          # skip this one, it was already shown?
-          if $game_temp.skip_next_choices > 0
-            $game_temp.skip_next_choices -= 1
-          else
-            # Choices setup
-            $game_temp.choice_start = line_count
-            setup_choices(@list[@index].parameters)
-          end
-        # If next event command is input number
-        elsif @list[@index + 1].code == 103
-          # If number input window fits on screen
-          if line_count < 4
-            # Advance index
-            @index += 1
-            # Number input setup
-            $game_temp.num_input_start = line_count
-            $game_temp.num_input_variable_id = @list[@index].parameters[0]
-            $game_temp.num_input_digits_max = @list[@index].parameters[1]
-          end
-        end
-        # Continue
-        return true
-      end
-      # Advance index
-      @index += 1
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Show Choices
-  #--------------------------------------------------------------------------
-  def command_102
-    # If text has been set to message_text
-    if $game_temp.message_text != nil
-      # End
-      return false
-    end
-    
-    if $game_temp.skip_next_choices > 0
-      # skip this one, it is part of another
-      $game_temp.skip_next_choices -= 1
-      @offset += 4
-      @index += 1
-      return false
-    else
-      @offset = 0
-    end
-    # Set message end waiting flag and callback
-    @message_waiting = true
-    $game_temp.message_proc = Proc.new { @message_waiting = false }
-    # Choices setup
-    $game_temp.message_text = ""
-    $game_temp.choice_start = 0
-    setup_choices(@parameters)
     # Continue
-    return true    
+    return true
+
   end
+  
   #--------------------------------------------------------------------------
   # * Setup Choices
   #--------------------------------------------------------------------------
@@ -992,6 +890,7 @@ class Interpreter
     current_indent = @list[@index].indent
     $game_temp.choice_proc = Proc.new { |n| @branch[current_indent] = n }
   end
+
   #--------------------------------------------------------------------------
   # * When [**]
   #--------------------------------------------------------------------------
@@ -1006,20 +905,7 @@ class Interpreter
     # If it doesn't meet the condition: command skip
     return command_skip
   end
-  #--------------------------------------------------------------------------
-  # * When Cancel
-  #--------------------------------------------------------------------------
-  def command_403
-    # If choices are cancelled
-    if @cancel_flag
-      # Delete branch data
-      @branch.delete(@list[@index].indent)
-      # Continue
-      return true
-    end
-    # If it doen't meet the condition: command skip
-    return command_skip
-  end
+
   #--------------------------------------------------------------------------
   # * Wait
   #--------------------------------------------------------------------------
@@ -1029,6 +915,7 @@ class Interpreter
     # Continue
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Conditional Branch
   #--------------------------------------------------------------------------
@@ -2245,7 +2132,7 @@ end"ã
     end
   end
   
-end"8#==============================================================================
+end" #==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -2352,8 +2239,6 @@ class DataManager
         next if !name
         funcs[name] = p.list
       }
-
-      log_err(funcs)
       
     }
 
@@ -2729,7 +2614,7 @@ class FileManager
   end
   
 end
-"≈#==============================================================================
+"%#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -2748,18 +2633,17 @@ class GameManager
 
      def quick_start
 
-      log_sys "QUICK START"
-
       # Game State Objects
-      # Merge temp and system
       $temp = Game_Temp.new
       $progress = Av::Progress.new
       $state = Av::State.new
+
+      $player        = Game_Player.new
       $party = Game_Party.new
 
       # Model
 
-      $player        = Game_Player.new
+      
       $map           = Game_Map.new
       $map.setup($data.system.start_map_id)
 
@@ -2769,6 +2653,8 @@ class GameManager
       $player.refresh
       $map.autoplay
       $map.update
+
+      $hud = Game_Hud.new
 
       # Switch to map screen
       $scene = Scene_Map.new
@@ -2783,21 +2669,14 @@ class GameManager
 
      def update
 
-       # log_sys 'start update'
           $keyboard.update
           $mouse.update
           $debug.update
-
-          
-          #log_err 'gfx'
-
+          $hud.update
           Graphics.update
-          #log_err 'in'
           Input.update
-          #log_err 'scn'
           $scene.update
 
-         # log_sys 'update_done'
      end
 
 
@@ -3050,40 +2929,6 @@ class SettingsManager
 
   def conclude
     @window = Win32API.new('Utils', "IsFullScreen", ["V"], "I").call
-  end
-
-end"Á#==============================================================================
-# ** Game_CommonEvent
-#------------------------------------------------------------------------------
-#  This class handles common events. It includes execution of parallel process
-#  event. This class is used within the Game_Map class ($game_map).
-#==============================================================================
-
-class Game_CommonEvent
-  #--------------------------------------------------------------------------
-  # * Object Initialization
-  #     common_event_id : common event ID
-  #--------------------------------------------------------------------------
-  def initialize(common_event_id)
-    @common_event_id = common_event_id
-  end
-  #--------------------------------------------------------------------------
-  # * Get Name
-  #--------------------------------------------------------------------------
-  def name
-    return $data.commons[@common_event_id].name
-  end
-  #--------------------------------------------------------------------------
-  # * Get Trigger
-  #--------------------------------------------------------------------------
-  def trigger
-    return $data.commons[@common_event_id].trigger
-  end
-  #--------------------------------------------------------------------------
-  # * Get List of Event Commands
-  #--------------------------------------------------------------------------
-  def list
-    return $data.commons[@common_event_id].list
   end
 
 end"ª
@@ -4754,7 +4599,7 @@ end
 #     return [false, nil, nil]        
 #   end
 # end
-"¶!#==============================================================================
+" #==============================================================================
 # ** Game_Event
 #------------------------------------------------------------------------------
 #  This class deals with events. It handles functions including event page 
@@ -4855,10 +4700,10 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def over_trigger?
     # If not through situation with character as graphic
-    #if @character_name != "" and not @through
+    if @character_name != "" and not @through
       # Starting determinant is face
-    #  return false
-    #end
+      return false
+    end
     # If this position on the map is impassable
     unless $map.passable?(@x, @y, 0)
       # Starting determinant is face
@@ -4930,11 +4775,11 @@ class Game_Event < Game_Character
     # If trigger is [parallel process]
     if @trigger == 4
       @interpreter = Interpreter.new
+      @interpreter.setup(@list, @event.id)
     end
 
     # Auto event start determinant
     check_event_trigger_auto
-
 
   end
   
@@ -4954,7 +4799,6 @@ class Game_Event < Game_Character
     # Set each instance variable
     @tile_id = @page.graphic.tile_id
     @character_name = @page.graphic.character_name
-    @character_hue = @page.graphic.character_hue
     if @original_direction != @page.graphic.direction
       @direction = @page.graphic.direction
       @original_direction = @direction
@@ -5035,12 +4879,6 @@ class Game_Event < Game_Character
 
     # If parallel process is valid
     if @interpreter != nil
-      # If not running
-      unless @interpreter.running?
-        # Set up event
-        @interpreter.setup(@list, @event.id)
-      end
-      # Update interpreter
       @interpreter.update
     end
 
@@ -5053,7 +4891,7 @@ class Game_Event < Game_Character
     $state.loc!(@event.id)
   end
 
-    #--------------------------------------------------------------------------
+  #--------------------------------------------------------------------------
   # * Temporarily Erase
   #--------------------------------------------------------------------------
   def erase
@@ -5073,11 +4911,8 @@ class Game_Event < Game_Character
     refresh
   end
 
-end" =#==============================================================================
+end"y<#==============================================================================
 # ** Game_Map
-#------------------------------------------------------------------------------
-#  This class handles the map. It includes scrolling and passable determining
-#  functions. Refer to "$map" for the instance of this class.
 #==============================================================================
 
 class Game_Map
@@ -5085,8 +4920,7 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Public Instance Variables
   #--------------------------------------------------------------------------
-  attr_reader   :tileset
-  
+  attr_reader   :tileset  
   
   # keep these
   attr_reader   :passages                 # passage table
@@ -5105,12 +4939,10 @@ class Game_Map
   
   
   attr_reader   :map_name                 # name of the map
-  
-  
+    
   attr_accessor :transition_processing    # transition processing flag
   attr_accessor :transition_name          # transition file name
   
-
   attr_accessor :new_tileset
 
   attr_reader :interpreter
@@ -5142,13 +4974,10 @@ class Game_Map
         
     # Hold onto the tileset
     @tileset = $data.tilesets[@map.tileset_id]
-    
-    # set tile set information in opening instance variables
-    tileset = $data.tilesets[@map.tileset_id]
         
-    @passages = tileset.passages
-    @priorities = tileset.priorities
-    @terrain_tags = tileset.terrain_tags
+    @passages = @tileset.passages
+    @priorities = @tileset.priorities
+    @terrain_tags = @tileset.terrain_tags
     
     # Initialize displayed coordinates
     @display_x = 0
@@ -5436,6 +5265,7 @@ class Game_Map
     @scroll_rest = distance * 128
     @scroll_speed = speed
   end
+  
   #--------------------------------------------------------------------------
   # * Determine if Scrolling
   #--------------------------------------------------------------------------
@@ -5550,218 +5380,7 @@ class Game_Map
   end
 
 end
-"
-
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-# CCOA'S UNIVERSAL MESSAGE SYSTEM (UMS) CONSTANTS
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-
-# modes
-NORMAL_MODE        = 0
-FIT_WINDOW_TO_TEXT = 1
-
-#text modes
-ONE_LETTER_AT_A_TIME = 0
-ALL_AT_ONCE          = 1
-
-# skip modes
-WRITE_FASTER = 0
-WRITE_ALL    = 1
-
-# justifications
-RIGHT  = 0
-CENTER = 1
-LEFT   = 2
-
-# positions for extra objects (face graphics, choice box, etc)
-ABOVE  = 0  # place the object above the top of the message box
-CENTER = 1  # center the object vertically inside the message box
-BOTTOM = 2  # place the bottom of the object on the bottom of the message box
-SIDE   = 3  # to the side of the message box (which side depends on justification)
-
-# comic type
-TALK1   = 0
-TALK2   = 1
-THOUGHT = 2
-
-class Message
-
-  
-  # for Ccoa's UMS
-  attr_accessor :ums_mode # what mode the UMS is in
-  attr_accessor :text_skip # whether or not text skip is activated
-  attr_accessor :skip_mode # write the text faster while C is pressed, or just skip to the end
-  attr_accessor :write_speed # frame delay between characters
-  
-  attr_accessor :text_mode # write one letter at a time, or all at once?
-  
-  attr_accessor :window_height # default height of message window
-  attr_accessor :window_width # default width of message window
-  attr_accessor :window_justification # default justification of window
-  
-  attr_accessor :face_graphic # current face graphic
-  attr_accessor :face_graphic_justification # justification of face graphic
-  attr_accessor :face_graphic_position # position of face graphic
-  
-  attr_accessor :shadowed_text # whether or not to draw a shadow behind the text
-  attr_accessor :shadow_color # the shadow color
-  
-  attr_accessor :choice_justification # where the choice window is located
-  attr_accessor :choice_position # prefered position of choice window
-  
-  attr_accessor :message_event # what event to center the text over (0 player, -1 to not)
-  
-  attr_accessor :comic_enabled # using "talk" icons?
-  attr_accessor :comic_style   # what type of comic image to use
-  
-  attr_accessor :name # the text for the name window
-  attr_accessor :name_window # should the name window be visible?
-  
-  attr_accessor :font # the name of the font
-  attr_accessor :font_color # the name of the (permanent) font color
-  
-  attr_accessor :text_justification # the justification of the window text
-  
-  attr_accessor :show_pause # whether or not to show the pause icon
-  
-  attr_accessor :shake # the amount of shake for the window
-  
-  attr_accessor :sound_effect # SE to play with each letter
-  
-  attr_accessor :slave_windows # hash of slave windows
-  attr_accessor :indy_windows  # hash of independent windows
-  
-  attr_accessor :animated_faces # are the faces animated?
-  attr_accessor :animation_pause # how long do I wait between animation loops?
-  attr_accessor :face_frame_width # how many pixels wide is each face frame
-  attr_accessor :resting_face  # postext for waiting face graphic
-  attr_accessor :resting_animation_pause # how long to wait for resting graphic
-  
-  attr_accessor :windowskin # what windowskin to use for messages
-  attr_accessor :back_opacity # back opacity of windowskin
-  attr_accessor :opacity # opacity of windowskin
-  
-  attr_accessor :window_image # image used behind window
-  
-  attr_reader :shortcuts  # user-defined shortcuts
-      
-  # for Ccoa's UMS
-  attr_accessor :num_choices
-  attr_accessor :skip_next_choices
-
-
-  attr_accessor :message_text             # message text
-  attr_accessor :message_proc             # message callback (Proc)
-  attr_accessor :message_event            # event triggering message
-  
-  attr_accessor :choice_start             # show choices: opening line
-  attr_accessor :choice_max               # show choices: number of items
-  attr_accessor :choice_cancel_type       # show choices: cancel
-  attr_accessor :choice_proc              # show choices: callback (Proc)  
-  
-  attr_accessor :message_window_showing   # message window showing
-
-
-
-  # Somewhere to put these
-  attr_accessor :message_position         # text option: positioning
-  attr_accessor :message_frame            # text option: window frame
-
-
-
-
-  def initialize
-
-
-    
-    # Set up Ccoa's UMS
-    @ums_mode = FIT_WINDOW_TO_TEXT #NORMAL_MODE
-    
-    @skip_mode = WRITE_ALL
-    @text_skip = true
-    @write_speed = 1
-    
-    @text_mode = ONE_LETTER_AT_A_TIME
-    
-    @window_height = 128
-    @window_width = 480
-    @window_justification = CENTER
-    
-    @face_graphic = ""
-    @face_graphic_justification = LEFT
-    @face_graphic_position = CENTER
-    
-    @shadowed_text = true
-    @shadow_color = Color.new(0, 0, 0, 100)
-    
-    @choice_justification = RIGHT
-    @choice_position = SIDE
-    
-    @message_event = -1
-    
-    @comic_enabled = true
-    @comic_style = TALK1
-    
-    @name = ""
-    @name_window = true
-    
-    @font = "Verdana"
-    @font_color = nil
-    
-    @text_justification = LEFT
-    
-    @show_pause = true
-    
-    @shake = 0
-    
-    @sound_effect = ""
-    
-    @slave_windows = {}
-    @indy_windows  = {}
-    
-    @animated_faces = false
-    @animation_pause = 80
-    @face_frame_width = 100
-    @resting_face = ""
-    @resting_animation_pause = 80
-    
-    @windowskin = ""
-    @opacity = 255
-    @back_opacity = 160
-    
-    @window_image = nil
-    
-    @used_codes = ['\v', '\n', '\c', '\g', '\skip', '\m', '\height', '\width', 
-                   '\jr', '\jc', '\jl', '\face', '\fl', '\fr', '\b', '\i', '\s',
-                   '\e', '\t1', '\t2', '\th', '\nm', '\font', '\p', '\w', '\ws',
-                   '\oa', '\oi', '\os', '\ow', '\tl', '\tr', '\tc', '\ignr', 
-                   '\shk', '\slv', '\ind', '\inc']
-                   
-    @shortcuts = {}
-    
-         
-    @skip_next_choices = 0
-    @num_choices = 1
-
-
-
-
-        @message_text = nil
-    @message_proc = nil
-    @message_event = -1
-    @choice_start = 99
-    @choice_max = 0
-    @choice_cancel_type = 0
-    @choice_proc = nil
-    @message_window_showing = false
-    
-
-  end
-
-end
-"«_#==============================================================================
+"üM#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -5823,13 +5442,12 @@ class Game_Player < Game_Character
     super
     # If move route is not forcing
     unless @move_route_forcing
-      # Increase steps
-      $party.increase_steps
-      # Number of steps are an even number
-      if $party.steps % 2 == 0
+      
+      # NOT USING STEPS, GET RID OF THIS PUT SLIP ELSEWHERE
+     # if $party.steps % 2 == 0
         # Slip damage check
-        $party.check_map_slip_damage
-      end
+      #  $party.check_map_slip_damage
+      #end
     end
   end
  
@@ -6042,16 +5660,20 @@ class Game_Player < Game_Character
       return result
     end
 
+    log_info 'trying'
+
 
     # Calculate front event coordinates
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+    
     # All event loops
     for event in $map.events.values
       # If event coordinates and triggers are consistent
       if event.x == new_x and event.y == new_y and
          triggers.include?(event.trigger) and event.list.size > 1
 
+         log_err "TRYINGHERE"
 
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
@@ -6061,33 +5683,36 @@ class Game_Player < Game_Character
       end
     end
     # If fitting event is not found
-    if result == false
-      # If front tile is a counter
-      if $map.counter?(new_x, new_y)
-        # Calculate 1 tile inside coordinates
-        new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
-        new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
-        # All event loops
-        for event in $map.events.values
-          # If event coordinates and triggers are consistent
-          if event.x == new_x and event.y == new_y and
-             triggers.include?(event.trigger) and event.list.size > 1
-            # If starting determinant is front event (other than jumping)
-            if not event.jumping? and not event.over_trigger?
-              event.start
-              result = true
-            end
-          end
-        end
-      end
-    end
+
+    # COUNTER CHECK
+
+    # if result == false
+    #   # If front tile is a counter
+    #   if $map.counter?(new_x, new_y)
+    #     # Calculate 1 tile inside coordinates
+    #     new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
+    #     new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+    #     # All event loops
+    #     for event in $map.events.values
+    #       # If event coordinates and triggers are consistent
+    #       if event.x == new_x and event.y == new_y and
+    #          triggers.include?(event.trigger) and event.list.size > 1
+    #         # If starting determinant is front event (other than jumping)
+    #         if not event.jumping? and not event.over_trigger?
+    #           event.start
+    #           result = true
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
     return result
   end
+
   #--------------------------------------------------------------------------
   # * Touch Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_touch(x, y)
-    log_err 'trying'
     result = false
     # If event is running
     if $map.interpreter.running?
@@ -6106,6 +5731,7 @@ class Game_Player < Game_Character
     end
     return result
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -6225,17 +5851,11 @@ class Game_Player < Game_Character
     # display are all not occurring
     unless moving? #or $game_system.map_interpreter.running? or
           # @move_route_forcing or $game_temp.message_window_showing
-      # Move player in the direction the directional button is being pressed
-      #$mouse_sprite.visible = false if Input.dir4 != 0
       case Input.dir4
-      when 2
-        move_down
-      when 4
-        move_left
-      when 6
-        move_right
-      when 8
-        move_up
+        when 2; move_down
+        when 4; move_left
+        when 6; move_right
+        when 8; move_up
       end
     end
     # Remember coordinates in local variables
@@ -6325,119 +5945,14 @@ class Game_Player < Game_Character
     #exit_vehicle if $game_variables[VEHICLE_VARIABLE] != 0 and Input.trigger?(Input::C)
       
   end
-  #--------------------------------------------------------------------------
-  # * Enter a vehicle
-  #--------------------------------------------------------------------------        
-  def enter_vehicle(type)
-    
-    $game_system.menu_disabled = true
-    $game_system.save_disabled = true    
-    
-    if type == "ship"
-      @through = true                         # move character into ship
-      move_forward                            
-      @through = false                        
-      #$game_variables[VEHICLE_VARIABLE] = 2   # Set vehicle to ship
-      @step_anime = true                      # Animate ship
-      @terrain = 2                            # Set terrain to water
-      @move_speed = 4 if @move_speed < 4      # Increase movement speed
-      #$game_switches[IN_SHIP_SWITCH] = true   # Hide ship event on map    
-      Audio.bgm_play("Audio/BGM/" + IN_SHIP_BGM, 100, 100) if $bgm_playing == true #play music    
 
-    elsif type == "airship"
-      #$game_variables[VEHICLE_VARIABLE] = 3       # Set vehicle to airship
-      #$game_switches[IN_AIRSHIP_SWITCH] = true    # Hide airship event on map  
-      @move_speed = 5 if @move_speed < 5          # Increase movement speed
-      @always_on_top = true                       # Show vechicle above things on map
-      @step_anime = true                          # Animate airship
-      Audio.bgm_play("Audio/BGM/" + IN_AIRSHIP_BGM, 100, 100) if $bgm_playing == true #play music
-    end
-    
-    # Display vehicle
-    $game_player.change_vehicle(type)    
-    $game_player.refresh
-    $map.refresh
-    
-    return true
-    
-  end
-
-  #--------------------------------------------------------------------------
-  # * Exit a vehicle
-  #--------------------------------------------------------------------------        
-  def exit_vehicle(force_exit = false)
-    
-    # FIX
-    return 
-    
-    
-    
-    # only exit ship at dock or airship on the ground
-    if (@terrain == 3 && $game_switches[IN_SHIP_SWITCH]) || 
-       ($map.terrain_tag(@x,@y) == 4 && $game_switches[IN_AIRSHIP_SWITCH] && 
-       $map.event_at(@x,@y) == nil) || 
-       force_exit
-      
-      # In ship
-      if $game_variables[VEHICLE_VARIABLE] == 2     
-        boat = $map.events[SHIP_EVENT]         #get ship event
-        boat.moveto(@x, @y)                         #move ship event to player's x, y coords
-        boat.direction = @direction                 #set direction of ship
-        boat.save_pos()
-        #$game_switches[IN_SHIP_SWITCH] = false      #show ship at dock    
-        #$game_variables[BOAT_X_VARIABLE] = @x       #set ship x coord
-        #$game_variables[BOAT_Y_VARIABLE] = @y       #set ship y coord          
-        
-        # Save player disembark coordinates and direction
-        #$game_variables[PLAYER_DIR_VARIABLE] = @direction
-        #$game_variables[PLAYER_X_VARIABLE] = @x + (@direction == 4 ? -1 : @direction == 6 ? 1 : 0)
-        #$game_variables[PLAYER_Y_VARIABLE] = @y + (@direction == 8 ? -1 : @direction == 2 ? 1 : 0)
-      
-        # move away from vehicle
-        @through = true
-        move_forward 
-        @through = false
-     
-      # In airship
-      elsif $game_variables[VEHICLE_VARIABLE] == 3 
-        if (!Mouse.trigger?(0) || Mouse.grid == nil) || ($mouse_x == nil || $mouse_y == nil) || ($mouse_x == x && $mouse_y == y)
-           dragon = $map.events[AIRSHIP_EVENT]  # get airship event
-           dragon.moveto(x, y)                       # move airship to player's x, y coords
-           dragon.save_pos()
-           $game_switches[IN_AIRSHIP_SWITCH] = false # show airship event
-           $game_variables[AIRSHIP_X_VARIABLE] = x   # set airship x coord
-           $game_variables[AIRSHIP_X_VARIABLE] = y   # set airship y coord
-           @always_on_top = false
-        else
-          return
-        end
-      end
-      
-      $game_variables[VEHICLE_VARIABLE] = 0   # Set vehicle to foot
-      @terrain = 4                            # Set terrain to ground
-      @move_speed = 4                         # Set movement speed
-      $game_player.restore_leader             # display leader graphic
-      @step_anime = false                     # don't animate player while not in motion
-      Audio.bgm_play("Audio/BGM/" + ON_GROUND_BGM, 100, 100) if $bgm_playing == true #play music
-     
-      $game_player.refresh  
-      $map.refresh    
-    
-      $game_system.menu_disabled = false    
-      $game_system.save_disabled = false       
-  
-    end
-      
-  end 
 end
-"#==============================================================================
+"r#==============================================================================
 # ** Game_BattleAction
-#------------------------------------------------------------------------------
-#  This class handles actions in battle. It's used within the Game_Battler 
-#  class.
 #==============================================================================
 
 class Game_BattleAction
+
   #--------------------------------------------------------------------------
   # * Public Instance Variables
   #--------------------------------------------------------------------------
@@ -6460,6 +5975,7 @@ class Game_BattleAction
   def initialize
     clear
   end
+
   #--------------------------------------------------------------------------
   # * Clear
   #--------------------------------------------------------------------------
@@ -6477,12 +5993,14 @@ class Game_BattleAction
     @swap_id = 0
     
   end
+
   #--------------------------------------------------------------------------
   # * Determine Validity
   #--------------------------------------------------------------------------
   def valid?
     return (not (@kind == 0 and @basic == 3))
   end
+  
   #--------------------------------------------------------------------------
   # * Determine if for One Ally
   #--------------------------------------------------------------------------
@@ -6497,6 +6015,7 @@ class Game_BattleAction
     end
     return false
   end
+  
   #--------------------------------------------------------------------------
   # * Determine if for One Ally (HP 0)
   #--------------------------------------------------------------------------
@@ -6586,7 +6105,7 @@ class Game_BattleAction
     end
   end
 end
-"‘[#==============================================================================
+"&[#==============================================================================
 # ** Game_Actor
 #------------------------------------------------------------------------------
 #  This class handles the actor. It's used within the Game_Actors class
@@ -6597,9 +6116,7 @@ class Game_Battler
 end
 
 class Game_Actor < Game_Battler
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
+ 
   attr_reader   :name                     # name
   
   attr_reader   :character_name           # character file name
@@ -6661,12 +6178,14 @@ class Game_Actor < Game_Battler
   def id
     return @actor_id
   end
+
   #--------------------------------------------------------------------------
   # * Get Index
   #--------------------------------------------------------------------------
   def index
     return $game_party.actors.index(self)
   end
+
   #--------------------------------------------------------------------------
   # * Calculate EXP
   #--------------------------------------------------------------------------
@@ -6684,6 +6203,7 @@ class Game_Actor < Game_Battler
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Get Element Revision Value
   #     element_id : element ID
@@ -6708,12 +6228,14 @@ class Game_Actor < Game_Battler
     # End Method
     return result
   end
+
   #--------------------------------------------------------------------------
   # * Get State Effectiveness
   #--------------------------------------------------------------------------
   def state_ranks
     return $data_classes[@class_id].state_ranks
   end
+
   #--------------------------------------------------------------------------
   # * Determine State Guard
   #     state_id : state ID
@@ -6729,6 +6251,7 @@ class Game_Actor < Game_Battler
     end
     return false
   end
+  
   #--------------------------------------------------------------------------
   # * Get Normal Attack Element
   #--------------------------------------------------------------------------
@@ -7198,31 +6721,25 @@ class Game_Actor < Game_Battler
     end
   end
 end
-"J2#==============================================================================
+"ﬂ+#==============================================================================
 # ** Game_Battler (part 1)
-#------------------------------------------------------------------------------
-#  This class deals with battlers. It's used as a superclass for the Game_Actor
-#  and Game_Enemy classes.
 #==============================================================================
 
+# STATS
+
 class Game_Battler
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
+ 
   attr_reader   :battler_name             # battler file name
-  attr_reader   :battler_hue              # battler hue
+
   attr_reader   :hp                       # HP
-  attr_reader   :sp                       # SP
+  attr_reader   :mp                       # MP
+
   attr_reader   :states                   # states
-  attr_accessor :hidden                   # hidden flag
+
   attr_accessor :immortal                 # immortal flag
-  attr_accessor :damage_pop               # damage display flag
-  attr_accessor :damage                   # damage value
+
+
   attr_accessor :critical                 # critical flag
-  attr_accessor :animation_id             # animation ID
-  attr_accessor :animation_hit            # animation hit flag
-  attr_accessor :white_flash              # white flash flag
-  attr_accessor :blink                    # blink flag
   
   attr_accessor :collapsing               # collapsing
   
@@ -7231,17 +6748,16 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def initialize
     @battler_name = ""
-    @battler_hue = 0
     @hp = 0
     @sp = 0
     @states = []
     @states_turn = {}
+
     @maxhp_plus = 0
     @maxsp_plus = 0
     @str_plus = 0
-    @dex_plus = 0
-    @agi_plus = 0
-    @int_plus = 0
+    @def_plus = 0
+
     @hidden = false
     @immortal = false
     @damage_pop = false
@@ -7254,6 +6770,7 @@ class Game_Battler
     @collapsing = false
     @current_action = Game_BattleAction.new
   end
+
   #--------------------------------------------------------------------------
   # * Get Current Experience Points
   #--------------------------------------------------------------------------
@@ -7267,6 +6784,7 @@ class Game_Battler
   def next_exp 
     return @exp_list[@level+1] > 0 ? @exp_list[@level+1] - @exp_list[@level] : 0 
   end
+
   #--------------------------------------------------------------------------
   # * Get Maximum HP
   #--------------------------------------------------------------------------
@@ -7278,6 +6796,7 @@ class Game_Battler
     n = [[Integer(n), 1].max, 999999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Maximum SP
   #--------------------------------------------------------------------------
@@ -7289,6 +6808,7 @@ class Game_Battler
     n = [[Integer(n), 0].max, 9999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Strength (STR)
   #--------------------------------------------------------------------------
@@ -7300,6 +6820,7 @@ class Game_Battler
     n = [[Integer(n), 1].max, 999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Dexterity (DEX)
   #--------------------------------------------------------------------------
@@ -7311,28 +6832,7 @@ class Game_Battler
     n = [[Integer(n), 1].max, 999].min
     return n
   end
-  #--------------------------------------------------------------------------
-  # * Get Agility (AGI)
-  #--------------------------------------------------------------------------
-  def agi
-    n = [[base_agi + @agi_plus, 1].max, 999].min
-    for i in @states
-      n *= $data_states[i].agi_rate / 100.0
-    end
-    n = [[Integer(n), 1].max, 999].min
-    return n
-  end
-  #--------------------------------------------------------------------------
-  # * Get Intelligence (INT)
-  #--------------------------------------------------------------------------
-  def int
-    n = [[base_int + @int_plus, 1].max, 999].min
-    for i in @states
-      n *= $data_states[i].int_rate / 100.0
-    end
-    n = [[Integer(n), 1].max, 999].min
-    return n
-  end
+
   #--------------------------------------------------------------------------
   # * Set Maximum HP
   #     maxhp : new maximum HP
@@ -7342,6 +6842,7 @@ class Game_Battler
     @maxhp_plus = [[@maxhp_plus, -9999].max, 9999].min
     @hp = [@hp, self.maxhp].min
   end
+
   #--------------------------------------------------------------------------
   # * Set Maximum SP
   #     maxsp : new maximum SP
@@ -7540,22 +7041,21 @@ class Game_Battler
     return RPG::Cache.battler(@battler_name, @battler_hue).height
   end
 end
-"Ñ*#==============================================================================
+"†)#==============================================================================
 # ** Game_Battler (part 2)
-#------------------------------------------------------------------------------
-#  This class deals with battlers. It's used as a superclass for the Game_Actor
-#  and Game_Enemy classes.
 #==============================================================================
+# STATES
 
 class Game_Battler
+ 
   #--------------------------------------------------------------------------
   # * Check State
   #     state_id : state ID
   #--------------------------------------------------------------------------
   def state?(state_id)
-    # Return true if the applicable state is added.
     return @states.include?(state_id)
   end
+
   #--------------------------------------------------------------------------
   # * Determine if a state is full or not.
   #     state_id : state ID
@@ -7847,12 +7347,12 @@ class Game_Battler
     return effective
   end
 end
-"Ÿ9#==============================================================================
+"59#==============================================================================
 # ** Game_Battler (part 3)
-#------------------------------------------------------------------------------
-#  This class deals with battlers. It's used as a superclass for the Game_Actor
-#  and Game_Enemy classes.
 #==============================================================================
+# Skills and results
+
+
 
 class Game_Battler
   #--------------------------------------------------------------------------
@@ -8265,11 +7765,8 @@ class Game_Battler
       
   end
 end
-"w0#==============================================================================
+"Õ/#==============================================================================
 # ** Game_Enemy
-#------------------------------------------------------------------------------
-#  This class handles enemies. It's used within the Game_Troop class
-#  ($game_troop).
 #==============================================================================
 
 class Game_Enemy < Game_Battler
@@ -8718,24 +8215,13 @@ class Scene_Base
   end
 
 end
-"å#==============================================================================
+"0
+#==============================================================================
 # ** Scene_Map
-#------------------------------------------------------------------------------
-# „ÄÄThis class handles the scene-related elements of the map, such as setting up 
-#   the message window and calling various menus that would change the "Scene". 
-#   Other duties, such as processing of map graphics and map events, are handled 
-#   by the Game_Map class and its member objects. 
 #==============================================================================
 
-
-class Scene_Map < Scene_Base
+class Scene_Map < Scene_Base  
   
-  
-  #--------------------------------------------------------------------------
-  # * Properties
-  #   Global variables so the gold and help window can be controlled 
-  #   on the map.
-  #--------------------------------------------------------------------------
   attr_accessor :hud_window
    
   #--------------------------------------------------------------------------
@@ -8754,10 +8240,10 @@ class Scene_Map < Scene_Base
     @world.dispose
     @hud.dispose
     
-    if $scene.is_a?(Scene_Title)
-      Graphics.transition
-      Graphics.freeze
-    end
+    # if $scene.is_a?(Scene_Title)
+    #   Graphics.transition
+    #   Graphics.freeze
+    # end
 
   end
 
@@ -8817,18 +8303,7 @@ class Scene_Map < Scene_Base
 
     # Location on the map to teleport to
     $player.moveto($temp.player_new_x, $temp.player_new_y)
-
-    # Direction the player should face
-    case $temp.player_new_direction
-    when 2  # Down
-      $player.turn_down
-    when 4  # Left
-      $player.turn_left
-    when 6  # Right
-      $player.turn_right
-    when 8  # Up
-      $player.turn_up
-    end
+    $player.direction = $temp.player_new_direction
 
     $player.straighten
     $map.update
@@ -8838,8 +8313,7 @@ class Scene_Map < Scene_Base
       Graphics.transition(20)
     end
 
-    $map.autoplay
-    
+    $map.autoplay    
 
     # AUTO SAVING
 
@@ -8851,317 +8325,132 @@ class Scene_Map < Scene_Base
     
   end
 
-end"˙<#==============================================================================
+end"#==============================================================================
 # ** Game_Party
-#------------------------------------------------------------------------------
-#  This class handles the party. It includes information on amount of gold 
-#  and items. Refer to "$game_party" for the instance of this class.
 #==============================================================================
 
 class Game_Party
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
+
   attr_accessor :actors                   # actors
   attr_accessor :reserve                  # reserve party
+
   attr_reader   :gold                     # amount of gold
-  attr_reader   :steps                    # number of steps
-  attr_reader   :lineup                   # active party + reserve
 
   attr_accessor :all_actors
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
-    
-    @all_actors = {}
-    $data.actors.each{ |k,v|
-      @all_actors[k] = Game_Actor.new(k)
-    }
-    
-    
+
+    # Create all actors    
+    @actors = {}
+    $data.actors.each{ |k,v| @actors[k] = Game_Actor.new(k) }    
+
     # Create actor array
     @active = []
-    @reserve = [] # list of reserve actors
-    # Initialize amount of gold and steps
+    @reserve = []
+
+    # Initialize amount of gold
     @gold = 0
-    @steps = 0
+
+
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
     @weapons = {}
     @armors = {}
-    @lineup = []
-
     
     # TEMP DISABLE
-    setup_starting_members
-    
+    set_active("boyle")
 
   end
 
-  #--------------------------------------------------------------------------
-  # * Initial Party Setup
-  #--------------------------------------------------------------------------
-  def setup_starting_members
-    #@actors = []
-    #for i in $data_system.party_members
-      @active.push("boyle")
-    #end
-    @reserve = []
-  end
- 
-  #--------------------------------------------------------------------------
-  # * Refresh Party Members
-  #--------------------------------------------------------------------------
-  def refresh
-    # Actor objects split from @all_actors right after loading game data
-    # Avoid this problem by resetting the actors each time data is loaded.
-    new_actors = []
-    for i in 0...@actors.size
-      if $data_actors[@actors[i].id] != nil
-        new_actors.push(@all_actors[@actors[i].id])
-      end
-    end
-    @actors = new_actors
-    
-    $game_party.reserve = []
-    for i in 0..LAST_ACTOR_ID
-      actor = @all_actors[i]
-      if actor != nil && $game_player.is_present(actor.id) && 
-        !$game_party.actors.include?(actor)
-        $game_party.reserve.push actor
-      end
-    end
-
-    $game_map.need_hud_refresh = true # Shaz
-  end
   #--------------------------------------------------------------------------
   # * Getting Maximum Level
   #--------------------------------------------------------------------------
   def max_level
     return @actors.max_by(&:level)
   end
+
   #--------------------------------------------------------------------------
   # * Add an Actor
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
-  def add_actor(actor_id)
-    # Get actor
-    actor = @all_actors[actor_id]
-    # If the party has less than 4 members and this actor is not in the party
-    if @actors.size < 4 and not @actors.include?(actor)
-      # Add actor
-      @actors.push(actor)
-      # Refresh player
-      $game_player.refresh
+  def set_active(actor)
+
+    if @active.size < 4 and not @actors.include?(actor)
+      
+      @active.push(actor)
+      
+      $player.refresh
     end
-    # If the actor is not in the main party, put them in reserve
-    if !@actors.include?(actor)
+   if !@active.include?(actor)
       @reserve.push(actor)
     end
-    $game_switches[actor_id] = true
-    $game_map.need_hud_refresh = true # Shaz
+
   end
-  #--------------------------------------------------------------------------
-  # ‚óè Add an Actor in the Reserve Party
-  #     actor_id : actor ID
-  #--------------------------------------------------------------------------
-  def add_reserve(actor_id)
-    actor = @all_actors[actor_id]
+
+  def set_reserve(actor)
     @reserve.push(actor)
-    $game_switches[actor_id] = true
   end
-  #--------------------------------------------------------------------------
-  # * Remove Actor
-  #     actor_id : actor ID
-  #--------------------------------------------------------------------------
-  def remove_actor(actor_id)
-    # Delete actor
-    @actors.delete(@all_actors[actor_id])
-    @reserve.delete(@all_actors[actor_id])
-    $game_switches[actor_id] = false
-    # Refresh player
-    $game_player.refresh
-    $game_map.need_hud_refresh = true # Shaz
+
+  def back_to_pavillion(actor)
+    @actors.delete(actor)
+    @reserve.delete(actor)
   end
-  #--------------------------------------------------------------------------
-  # * Gain Gold (or lose)
-  #     n : amount of gold
-  #--------------------------------------------------------------------------
-  def gain_gold(n)
-    @gold = [[@gold + n, 0].max, 9999999].min
-    $game_map.need_hud_refresh = true # Shaz
-  end
-  #--------------------------------------------------------------------------
-  # * Lose Gold
-  #     n : amount of gold
-  #--------------------------------------------------------------------------
-  def lose_gold(n)
-    # Reverse the numerical value and call it gain_gold
-    gain_gold(-n)
-    $game_map.need_hud_refresh = true # Shaz
-  end
-  #--------------------------------------------------------------------------
-  # * Increase Steps
-  #--------------------------------------------------------------------------
-  def increase_steps
-    @steps = [@steps + 1, 9999999].min
-  end
+
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
-  #     item_id : item ID
   #--------------------------------------------------------------------------
-  def item_number(item_id)
-    # If quantity data is in the hash, use it. If not, return 0
-    return @items.include?(item_id) ? @items[item_id] : 0
+  def add_item(id,n) add(@items,id,n) end
+  def lose_item(item,n) add(@items,id,n) end
+  def item_number(id) count(@items,id) end
+  def has_item?(id) count(type,id) > 0 end
+
+
+
+  def add(type,id,number)
+    type.has_key?(id) ? type[id] += number : type[id] = number
   end
-  #--------------------------------------------------------------------------
-  # * Get Number of Weapons Possessed
-  #     weapon_id : weapon ID
-  #--------------------------------------------------------------------------
-  def weapon_number(weapon_id)
-    # If quantity data is in the hash, use it. If not, return 0
-    return @weapons.include?(weapon_id) ? @weapons[weapon_id] : 0
+
+  def count(type,id)
+    return type.has_key?(id) ? type[id] : 0
   end
-  #--------------------------------------------------------------------------
-  # * Get Amount of Armor Possessed
-  #     armor_id : armor ID
-  #--------------------------------------------------------------------------
-  def armor_number(armor_id)
-    # If quantity data is in the hash, use it. If not, return 0
-    return @armors.include?(armor_id) ? @armors[armor_id] : 0
-  end
-  #--------------------------------------------------------------------------
-  # * Gain Items (or lose)
-  #     item_id : item ID
-  #     n       : quantity
-  #--------------------------------------------------------------------------
-  def gain_item(item_id, n)
-    # Update quantity data in the hash.
-    if item_id > 0
-      @items[item_id] = [[item_number(item_id) + n, 0].max, 99].min
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Gain Weapons (or lose)
-  #     weapon_id : weapon ID
-  #     n         : quantity
-  #--------------------------------------------------------------------------
-  def gain_weapon(weapon_id, n)
-    # Update quantity data in the hash.
-    if weapon_id > 0
-      @weapons[weapon_id] = [[weapon_number(weapon_id) + n, 0].max, 99].min
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Gain Armor (or lose)
-  #     armor_id : armor ID
-  #     n        : quantity
-  #--------------------------------------------------------------------------
-  def gain_armor(armor_id, n)
-    # Update quantity data in the hash.
-    if armor_id > 0
-      @armors[armor_id] = [[armor_number(armor_id) + n, 0].max, 99].min
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Lose Items
-  #     item_id : item ID
-  #     n       : quantity
-  #--------------------------------------------------------------------------
-  def lose_item(item_id, n)
-    # Reverse the numerical value and call it gain_item
-    gain_item(item_id, -n)
-  end
-  #--------------------------------------------------------------------------
-  # * Lose Weapons
-  #     weapon_id : weapon ID
-  #     n         : quantity
-  #--------------------------------------------------------------------------
-  def lose_weapon(weapon_id, n)
-    # Reverse the numerical value and call it gain_weapon
-    gain_weapon(weapon_id, -n)
-  end
-  #--------------------------------------------------------------------------
-  # * Lose Armor
-  #     armor_id : armor ID
-  #     n        : quantity
-  #--------------------------------------------------------------------------
-  def lose_armor(armor_id, n)
-    # Reverse the numerical value and call it gain_armor
-    gain_armor(armor_id, -n)
-  end
-  #--------------------------------------------------------------------------
-  # * Determine if Item is Usable
-  #     item_id : item ID
-  #--------------------------------------------------------------------------
-  def item_can_use?(item_id)
-    # If item quantity is 0
-    if item_number(item_id) == 0
-      # Unusable
-      return false
-    end
-    # Get usable time
-    occasion = $data_items[item_id].occasion
-    # If in battle
-    if $game_temp.in_battle
-      # If useable time is 0 (normal) or 1 (only battle) it's usable
-      return (occasion == 0 or occasion == 1)
-    end
-    # If useable time is 0 (normal) or 2 (only menu) it's usable
-    return (occasion == 0 or occasion == 2)
-  end
+
+  
+
   #--------------------------------------------------------------------------
   # * Clear All Member Actions
   #--------------------------------------------------------------------------
   def clear_actions
-    # Clear All Member Actions
     for actor in @actors
       actor.current_action.clear
     end
   end
-  #--------------------------------------------------------------------------
-  # * Determine if Command is Inputable
-  #--------------------------------------------------------------------------
-  def inputable?
-    # Return true if input is possible for one person as well
-    for actor in @actors
-      if actor.inputable?
-        return true
-      end
-    end
-    return false
-  end
+
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead
   #--------------------------------------------------------------------------
   def all_dead?
-    # If number of party members is 0
-    if $game_party.actors.size == 0
-      return false
+    return false if @active.empty?
+    for actor in @active
+      return false if @actors[actor].hp > 0
     end
-    # If an actor is in the party with 0 or more HP
-    for actor in @actors
-      if actor.hp > 0
-        return false
-      end
-    end
-    # All members dead
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Slip Damage Check (for map)
   #--------------------------------------------------------------------------
   def check_map_slip_damage
-    return 0
-    for actor in @actors
+    for actor in @active + @reserve
       if actor.hp > 0 and actor.slip_damage?
         actor.hp -= [actor.maxhp / 100, 1].max
         if actor.hp == 0
-          $game_system.se_play($data_system.actor_collapse_se)
+          $audio.play_se($data_system.actor_collapse_se)
         end
-        $game_screen.start_flash(Color.new(255,0,0,128), 4)
-        $game_temp.gameover = $game_party.all_dead?
+        $map.world.start_flash(Color.new(255,0,0,128), 4)
+        $temp.gameover = $party.all_dead?
       end
     end
   end
@@ -9194,12 +8483,14 @@ class Game_Party
     # Spin the roulette, choose an actor
     return roulette[rand(roulette.size)]
   end
+
   #--------------------------------------------------------------------------
   # * Random Selection of Target Actor (HP 0)
   #--------------------------------------------------------------------------
   def random_target_actor_hp0
     return random_target_actor(true)
   end
+  
   #--------------------------------------------------------------------------
   # * Smooth Selection of Target Actor
   #     actor_index : actor index
@@ -9223,20 +8514,10 @@ class Game_Party
   #--------------------------------------------------------------------------
   # ‚óè check if actor is in party
   #--------------------------------------------------------------------------  
-  def has_actor?(actor_id)
-    @actors.each {|a| return true if a.id == actor_id}
-    return false
+  def has_actor?(actor)
+    return @active.include?(actor)
   end
-  
-  #--------------------------------------------------------------------------
-  # ‚óè check if actors are in party
-  #--------------------------------------------------------------------------  
-  def has_actors?(*ids)
-    i = ids.size
-    @actors.each {|a| i -= 1 if ids.include?(a.id)}
-    return i == 0
-  end
-  
+
   #--------------------------------------------------------------------------
   # ‚óè check if all actors are 'normal' state
   #--------------------------------------------------------------------------  
@@ -9424,19 +8705,13 @@ module Av
 
 	end
 
-end"U#==============================================================================
+end"∫
+#==============================================================================
 # ** Game_Temp
-#------------------------------------------------------------------------------
-#  This class handles temporary data that is not included with save data.
-#  Refer to "$game_temp" for the instance of this class.
 #==============================================================================
 
 class Game_Temp
   
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-    
   # Put in map where it can be used
   attr_accessor :common_event_id          # common event ID  
   
@@ -10456,13 +9731,14 @@ end
     end
     
   end
-end"@ class Array
+end"B class Array
  	def count
  		return length
  	end
  	def sample
       self[rand(length)]
   	end
+
  end
 
  class String
@@ -10887,13 +10163,13 @@ class Sprite_Character < RPG::Sprite
 
   end
 end
-" #==============================================================================
+":#==============================================================================
 # Game_Interface
 #==============================================================================
 
 class Game_Hud
   
-  attr_accessor :chatting, :screen, :menu
+  attr_accessor :message, :screen, :menu
   attr_accessor :trans
   
   #--------------------------------------------------------------------------
@@ -10903,13 +10179,10 @@ class Game_Hud
 
     #@winder = Window_Item.new
     
-    # Hud
-    @screen = nil
-    @chatting = nil
-    @menu = nil
-    
-    # Custom transfer system
-    @trans = nil
+      @screen = Ui_Screen.new
+      @message = Ui_Message.new
+      @menu = Ui_Menu.new
+      @trans = Ui_Trans.new
         
   end
   
@@ -10920,7 +10193,7 @@ class Game_Hud
     return false
     return if !@screen
     return true if @screen.busy? || 
-                    @chatting.busy? ||
+                    @message.busy? ||
                     @menu.busy? ||
                     @trans.busy?
     return false
@@ -10931,18 +10204,8 @@ class Game_Hud
   #--------------------------------------------------------------------------  
   def update
 
-   # @winder.update
-    return
-    
-    if !@screen
-      @screen = Ui_Screen.new 
-      @chatting = Ui_Chatting.new 
-      @menu = Ui_Menu.new 
-      @trans = Ui_Trans.new 
-    end
-
     @screen.update
-    @chatting.update
+    @message.update
     @menu.update
 
     @trans.update
@@ -11254,228 +10517,434 @@ class Game_World
   end
 
 end
-"=#==============================================================================
-# Ui_Chat
+"#==============================================================================
+# Ui_Base
 #==============================================================================
 
-class Ui_Chatting #< Layer
+class Ui_Base
+  
+  #--------------------------------------------------------------------------
+  # Everything
+  #--------------------------------------------------------------------------
+  def initialize(z) 
+  	@all = [] 
+  	#@viewport = Viewport.new()
+  	#@viewport.z = z
+  end  
 
-  attr_accessor :rh
+  def add(elements) 
+  	[*elements].each{ |e| @all.push(e) } 
+  end
+
+  def elements() 
+  	return @all 
+  end
+
+  def clear() 
+    @all.each{ |e| e.dispose  } 
+    @all = []
+  end  
+
+  def hide() @all.each{ |e| e.hide } end
+  def show() @all.each{ |e| e.show } end
+  def update() end
+  
+end
+"˚#==============================================================================
+# Ui_Menu
+#==============================================================================
+
+class Ui_Menu < Ui_Base
+  
+  def initialize
+    super(1111)
+  end
+
+end"¡%#==============================================================================
+# Ui_Message
+#==============================================================================
+
+class Ui_Message < Ui_Base
+
+  # Consts
+  MIN_WIDTH = 200
+  MAX_WIDTH = 500
+  TAB_WIDTH = 35
+
+  SPACING = 5
+  LINE_HEIGHT = 22
+
+  SPEED_1 = 0
+  SPEED_2 = 1
+  SPEED_3 = 2
+  SPEED_4 = 3
+  SPEED_5 = 4
   
   #--------------------------------------------------------------------------
   # Prepare
   #--------------------------------------------------------------------------
   def initialize
-    #super(500)
-
-    #self.rect.height -= 210
-    #@rh = self.rect.height
-    #self.do(pingpong("rh",-200,1000))
+    super(500)
 
     # Create the pieces but do nothing besides
-
     @state = :idle
 
     # Hold on to the convo
-    @convo = nil
+    @text = ""
 
     # This line data
     @name = ''
 
+    @scratch = Bitmap.new(400,50)
+
+    # Hold the textbox, 
+    #@text_viewport
+
+    @lines = []
+
+
+
+    # Settings
+    @font = nil
+    @bold = true
+    @italic = true
+    @color = nil
+
+    # Text display
+    @text_delay = SPEED_3
+    @wait_frames = 0
+    @next_char = 0
+    
+    @line_idx = nil
+    @word_idx = nil
+    @char_idx = nil
+
+    @width = 0
+    @height = 0
+
     # Setup sprites
-    #@plane = add(Plane.new)
-    #@plane.bitmap = Cache.menu("wallpaper")
-    #@plane.do(repeat(go("ox",2000,500,:circ_in)))
-    #@plane.do(repeat(go("oy",20,500)))
-    #@plane.do(pingpong("zoom_x",0.1,500,:quad_in_out))
-    #@plane.do(pingpong("zoom_y",0.1,500,:quad_in_out))
+    @textbox = Sprite.new
+    @namebox = Sprite.new
 
-    #@btn = add(Widget_Clicker.new())
-    #@btn.width = 150
-    #@btn.height = 150
-    
-    #@btn.x = 272
-    #@btn.y = 208
+    @next = Sprite.new
+    @face = Sprite.new
 
-    # @label = add(Widget_SuperLabel.new)
-    
-    # @label.x = 272
-    # @label.y = 208
-    # @label.text = "TESTERLAEL"
-
-    #btn.opacity = 0
-    #@btn.do(pingpong("width",200,500,:quad_in_out))
-    #@btn.do(pingpong("height",100,1500,:linear))
-
-    #@btn.tone = Tone.new(0,255,0)
-
-    @box = add(Sprite_Superbox.new)
-    @box.x = 16
-    @box.y = 490#290
-    #@box.opacity = 0
+    @text_sprite = Sprite.new
+    @word_sprite = Sprite.new    
     
   end
   
   #--------------------------------------------------------------------------
-  # Show Convo
+  # Frame Update
   #--------------------------------------------------------------------------
-  def start_convo(data)
-
-    log_append(data)
-        
-    # TRASH THE CONVO HERE
-    @convo = []
-    data.each{ |line| 
-    
-      if line.include?(":")
-
-        line_data = line.split(':')               
-        speaker = line_data[0]
-        @convo.push([speaker,line_data[1]])
-
-      end
-    
-    }
-
-    # slide in
-    @box.do(go("y",-200,500,:quad_in_out))
-    @state = :convo
-    #start_line
-
-  end
-  
-  #--------------------------------------------------------------------------
-  # Show Convo
-  #--------------------------------------------------------------------------
-  def start_line
-
-    log_append("STARTLINE")
-      
-    # Get next line
-    line = @convo.shift
-    return start_conclude if line == nil
-    @name = line[0]    
-    @text = line[1]
-
-    #change_sprite = false
-
-      #@active = :b
-      #@active_box = @box
-      #@active_sprite = @sprite_b
-
-      # Get event
-      # if @name.to_i.to_s == @name
-      #   ev = getev(@name.to_i)
-      # elsif @name == 'this'
-      #   ev = getev(eid)
-      # elsif @presets.include?(@name)
-      #   ev=nil
-      #   change_sprite = true
-      #   @talker_b = @presets[@name][0]
-      #   @index_b = @presets[@name][1]
-      # else
-      #   ev = event_by_name(@name)
-      # end
-
-      # if ev != nil && (@talker_b != ev)
-      #   change_sprite = true
-      #   @talker_b = ev#.character_name
-      #   #@index_b = ev.character_index
-      # end
-
-
-    #@active_box.set_style(back) if back != nil
-
-    # Slide previous character out
-    # Only slide out if necessary
-    #if change_sprite
-    #  start_prep_out  
-    #else
-     @box.start_text(@text) 
-    #end  
-        
-  end
-
-  #--------------------------------------------------------------------------
-  # Show Convo
-  #--------------------------------------------------------------------------
-  def start_prep_out        
-    if @active == :a
-      return start_prep_in if @sprite_a.x < -90
-      @active_sprite.quad_x(-95)
-    else
-      return start_prep_in if @sprite_b.x > 500
-      @active_sprite.quad_x(580)
-    end
-    @state = :prep_out    
-  end
-
-  #--------------------------------------------------------------------------
-  # Show Convo
-  #--------------------------------------------------------------------------
-  def start_prep_in
-    # if @active == :a
-    #   spr = $world.sprite_for(@talker_a)
-    #   @sprite_a.from_spr(spr)
-    #   #@sprite_a.from_char(@talker_a,@index_a,2,true)
-    #   @sprite_a.quad_x(5)
-    # else
-      #spr = $world.sprite_for(@talker_b)
-      #@sprite_b.from_spr(spr) if @name != 'rovert'
-      #@sprite_b.from_char(@talker_b,@index_b,2,true) if @name == 'rovert'
-      #@sprite_b.quad_x(480)
-    # end
-    @state = :prep_in   
-  end
-
-
-  #--------------------------------------------------------------------------
-  # Show Convo
-  #--------------------------------------------------------------------------
-  def start_conclude
-    #@sprite_a.quad_x(-95)
-    #@sprite_b.quad_x(580)
-    @box.do(go("y",200,500,:quad_in_out))
-    log_append("CONCLUDE!")
-    @state = :conclude
-  end
-    
-  #--------------------------------------------------------------------------
-  # Update
-  #--------------------------------------------------------------------------
-  def update  
+  def update
     super
-
-    #@btn.from_skin("wskin")
-
-    #self.rect.height = @rh
     
+#~     if Input.press?(:SHIFT)
+#~       @state = :closing
+#~       @show_next = false
+#~     end      
+    
+    # Skip to end of this text
+    if Input.trigger?(Input::C) && @state = :texting
+      @skip_all = true
+    end
+
     case @state
 
-      when :idle
-        return
+      when :closed
+        #nothing
 
-      when :prep_out        
-        start_prep_in if @active_sprite.quad_done?
+      when :opening
+        @state = :texting if self.zoom_y == 1.0
 
-      when :prep_in
-        start_talk if @active_sprite.quad_done?
+      when :closing
 
-      when :convo
-        
-        if !@box.busy?          
-          start_line
-          @box.do(sequence(go("y",-20,100,:quad_in_out),go("y",20,100,:quad_in_out)))
+
+      when :texting
+        @next_char -= 1
+        if @next_char <= 0
+          update_message
         end
+        
+      when :waiting
+        update_waiting
 
-      when :conclude
-        #if @active_sprite.quad_done?
-        log_append("IDLE")
-          @state = :idle
-        #end
+        # Choices in here too
+
+      when :pausing
+        check_input_next
+      when :done
+        check_input_done
+        
+    end
+
+    # skipping
+    while @state == :texting && @skip_all
+      @next_char > 0 ? @next_char -= 1 : update_message
+    end
+
+  end
+  
+  #--------------------------------------------------------------------------
+  # Show Convo
+  #--------------------------------------------------------------------------
+  def start(text, choices = nil)
+
+    text_data = text.split(":")
+
+    # Find speaker name, use to get face / event
+    speaker = text_data[0]
+
+    # Prepare the words to be written
+    @lines = split_text(text_data[1])    
+
+    # Now of the height? How many lines are there?
+    @width = max_width
+    @height = @lines.count * (LINE_HEIGHT)
+
+    # Prepare the sprites
+    @text_sprite.bitmap = Bitmap.new(@width,@height)
+
+    @line_idx = -1
+    @word_idx = -1
+
+    @word_sprite.x = -1
+
+    next_line
+    next_word
+
+
+
+    # Start text
+    @state = :texting
+
+        
+  end
+
+  #--------------------------------------------------------------------------
+  # * Update Message
+  #--------------------------------------------------------------------------
+  def update_message
+    
+    # if the current word is empty, get the next one and see if it fits
+    next_word if @char_idx == @word.length
+        
+    # if not texting then don't go
+    return unless @state == :texting
+            
+    # Add the next character to the final word
+    @char_idx += 1
+    #@line_data[@line_data.size-1] += @word.slice!(0,1)
+    
+    # Redraw the word, last char small?
+    redraw_word
+
+    # Play a lovely character sound
+    #sound(:text_char) if $settings.value('text_sound') 
+    
+    # Wait before drawing another character
+    @next_char = @text_delay
+    
+    # AUTO PAUSE AFTER SENTENCE HERE
+    #(@wait_frames = @text_delay * 5; @state = :waiting) if @word.empty? && @dodotpause && @wordlength > 1
+    
+
+  end
+
+  def redraw_word
+    @word_sprite.bitmap.clear
+    txt = @word[0..@char_idx-1]
+    size = @scratch.text_size(txt)
+    @word_sprite.bitmap.draw_text(0,0,300,LINE_HEIGHT,txt)
+    # Half draw the final
+    @word_sprite.bitmap.draw_text(size.width,0,100,LINE_HEIGHT,@word[@char_idx])
+  end
+
+  #--------------------------------------------------------------------------
+  # * Pop down a line
+  #--------------------------------------------------------------------------
+  def next_line
+    @line_idx += 1
+    if @line_idx >= @lines.count
+      @state = :done
+    else
+      @word_idx = -1
+      @word_sprite.x = 0
+      @word_sprite.y += LINE_HEIGHT
+      next_word
+    end
+  end
+
+    #--------------------------------------------------------------------------
+  # * Next word
+  #--------------------------------------------------------------------------
+  def next_word
+
+    # blit last word onto the main bmp
+
+
+    @word_idx += 1
+    @char_idx = 0
+    
+    if @word_idx >= @lines[@line_idx].count
+      return next_line
+    end
+
+    @word = @lines[@line_idx][@word_idx]
+    @wordlength = @word.length
+
+    # CHECK FOR COMMANDS
+    if @word[0]=='$'
+      cmd = @word.split(".")
+      wrd = cmd[0]
+
+      # check for command words
+      case wrd
+      
+        when "$n" # New line
+          next_line
+          
+        when "$w" # wait quarter second or custom
+          @wait_frames = cmd.size > 1 ? cmd[1].to_i : 15
+          @state = :waiting
+                    
+        when "$sp"
+          if cmd[1] == 'n' || cmd[1] == 'r'
+            @text_delay = @normal_speed
+          else
+            @text_delay = cmd[1].to_i
+          end
+          
+        when "$fl"
+          color = cmd.size > 1 ? Colors.get(cmd[1].to_sym) : Colors.get(:black)
+          $world.do_flash(color,15)         
+          
+        when "$s" # play sound
+          Audio.se_play("Audio/SE/"+cmd[1]) 
+          
+        when "$m"
+          
+          case cmd[1]
+            when 'stop'
+              @bkp = RPG::BGM.last
+              Audio.bgm_stop            
+            when 'fade'
+              @bkp = RPG::BGM.last
+              Audio.bgm_fade(750)          
+            when 'resume'
+              Audio.bgm_play("Audio/BGM/"+@bkp.name,@bkp.volume,@bkp.pitch,@bkp.pos)            
+            else
+              Audio.bgm_play("Audio/BGM/"+cmd[1])            
+          end
+          
+        when "$nw" # @^ (No wait for input)
+          @state = :closing
+          @show_next = false
+          
+        when "$end"
+          @state = :closing
+          @show_next = false
+          
+      end
+        
+      update_waiting while @state == :waiting
+      next_word
 
     end
-    
+
+  end  
+
+  #--------------------------------------------------------------------------
+  # * Update waiting
+  #--------------------------------------------------------------------------
+  def update_waiting
+    @wait_frames -= 1
+    @wait_frames = 0 if @skip_all #|| Graphics.frame_rate == 120
+    @state = :texting if (@wait_frames < 1)
+  end
+
+  #--------------------------------------------------------------------------
+  # * Wait for input after text is done
+  #--------------------------------------------------------------------------
+  def check_input_done
+    if Input.trigger?(Input::C)
+      #sound(:text_next)
+      #self.slide_zy(0.0)
+      @state = :closing
+      @next_sprite.hide
+      
+      @text_sprite.clear
+    end
+  end
+
+  #--------------------------------------------------------------------------
+  # Calculate size
+  #--------------------------------------------------------------------------
+  def word_width(word)
+      return TAB_WIDTH if word == "$t"
+      return 0 if word.include?("$")
+      return @scratch.text_size(word).width
+  end
+
+  def max_width
+    max = 0
+    @lines.each{ |line|
+      width = line.inject(0) { |t,w| t + word_width(w) }
+      max = width if width > max
+    }
+    return max
+  end
+
+  def split_text(text)
+
+    # Split all text into lines
+    # Then calc widths and that
+
+    total_width = text.split(" ").inject(0) { |t, w| t + word_width(w) }
+
+    # use total width to split into lines
+
+    # If there is a forced newline, there will be no autosizing
+    if text.include?("$n")
+      return text.split("$n").map { |i| i = i.split(" ") }  
+    end
+
+    # If less than split width, just one line
+    if total_width < MIN_WIDTH
+      reutrn [text.split(" ")]
+    end
+
+    # If width is less than max * 2, we are splitting at the first word after half point
+    if total_width < MAX_WIDTH * 2
+      limit = total_width / 2
+      cursor = 0
+      lines = [[]]
+      text.split(" ").each{ |word|
+        lines[-1].push(word)
+        cursor += word_width(word)
+        if cursor >= limit
+          lines.push([])
+          cursor = 0
+        end
+      }
+      return lines
+    end
+
+    # Else we are autosizing max width
+    lines = [[]]
+    limit = MAX_WIDTH
+    cursor = 0
+    text.split(" ").each{ |word|
+      cursor += word_width(word)
+      if cursor > limit
+        cursor = 0
+        lines.push([])
+      end
+      lines[-1].push(word)
+    }
+    return lines
+
   end
 
   #--------------------------------------------------------------------------
@@ -11484,156 +10953,29 @@ class Ui_Chatting #< Layer
   def clear() end
   def busy?() return @state != :idle end
 
-end"?#==============================================================================
-# Ui_Menu
-#==============================================================================
-
-class Ui_Menu #< Layer
-  
-  #--------------------------------------------------------------------------
-  # Prepare
-  #--------------------------------------------------------------------------
-  def initialize
-    #super
-
-    # Create the pieces but do nothing besides
-
-    @state = :idle
-
-    # Pages
-    @pages = []
-    @pages.push Page_Party.new
-    @pages.push Page_Gossip.new
-    @pages.push Page_Items.new
-    @pages.push Page_Quests.new
-    @pages.push Page_Status.new
-    @pages.push Page_System.new
-
-    @pages.each{ |v| v.close }
-
-    @current = @pages[0]
-
-    # Background
-    @plane = add(Plane.new)
-    @plane.bitmap = Cache.menu("wallpaper")
-    @plane.do(pingpong("zoom_x",1.0,5000,:quad_in_out))
-    @plane.visible = false
-    
-    # Tabs
-    @tabs = add(Widget_Menu.new)
-    (0..4).each{ |b|
-      btn = @tabs.add(Widget_Label.new)
-      log_append(btn.inspect)
-      btn.skin = 'skin-red'
-      btn.text = "Btn " + b.to_s
-      btn.font = Fonts.get('title')
-      btn.refresh
-    }
-    @tabs.layout_horiz(5,5)
-
-    @tabs.on_select = Proc.new{ self.show_page(@tabs.idx) }
-
-    @bar = add(Widget_Bugbox.new)
-    @bar.from_menu("bottom-bar")
-    @bar.name = "bottom-bar"
-    @bar.autosize
-    @bar.snap_bottom
-    #@bar.refresh
-    @bar.hide
-
-    @bartext = add(Widget_Label.new)
-    @bartext.fix_width = 544
-    @bartext.text = "THIS IS THE TEXT"
-    @bartext.z = @bar.z + 1
-    @bartext.x = 0
-    @bartext.y = @bar.y + 15
-    @bartext.align = :center
-    @bartext.refresh
-    @bartext.hide
-
-    close
-
-  end
-
-  def show_page(idx)
-    @current.close
-    @pages[idx].open
-
-    case idx
-    when 0
-      @bartext.text = "View party and that"
-    else
-      @bartext.text = "Misc"
-    end
-    @bartext.refresh
-    
-  end
-
-  #--------------------------------------------------------------------------
-  # Update
-  #--------------------------------------------------------------------------
- 
-  def open
-    @state = :open
-    @bar.show
-    @bartext.show
-    @plane.visible = true
-    @tabs.show
-    @pages.each{ |v| v.open }
-    @tabs.activate
-  end
-
-  def close
-   # log_append "CLOSE"
-    @state = :idle
-    @bar.hide
-    @bartext.hide
-    @tabs.hide
-    @plane.visible = false
-     @pages.each{ |v| v.close }
-  end
-      
-  #--------------------------------------------------------------------------
-  # Update
-  #--------------------------------------------------------------------------
-  def update  
-    super
-
-    @pages.each{ |v| v.update }
-    #@list.update
-
-    return if @state == :idle    
-    close if key_cancel?   
-    
-    case @state
-
-      when :idle
-        return
-
-    end
-    
-  end
-
-  #--------------------------------------------------------------------------
-  # Misc
-  #--------------------------------------------------------------------------
-  def busy?() return @state != :idle end
-
-end"¸#==============================================================================
+end"!#==============================================================================
 # Ui_Screen
 #==============================================================================
 
-class Ui_Screen #< Layer
+class Ui_Screen < Ui_Base
   
-
+	def initialize
+		super(1111)
+	end
 
 
     def busy?() return false end
 
-end"#==============================================================================
+end" #==============================================================================
 # Ui_Trans
 #==============================================================================
 
-class Ui_Trans #< Layer
-      def busy?() return false end
+class Ui_Trans < Ui_Base
+
+	def initialize
+		super(1111)
+	end
+
+    def busy?() return false end
+    	
 end

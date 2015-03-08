@@ -105,8 +105,6 @@ class DataManager
         next if !name
         funcs[name] = p.list
       }
-
-      log_err(funcs)
       
     }
 

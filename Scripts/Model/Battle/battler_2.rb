@@ -1,6 +1,7 @@
 #==============================================================================
 # ** Game_Battler (part 2)
 #==============================================================================
+# STATES
 
 class Game_Battler
  
@@ -9,9 +10,9 @@ class Game_Battler
   #     state_id : state ID
   #--------------------------------------------------------------------------
   def state?(state_id)
-    # Return true if the applicable state is added.
     return @states.include?(state_id)
   end
+
   #--------------------------------------------------------------------------
   # * Determine if a state is full or not.
   #     state_id : state ID

@@ -99,10 +99,10 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def over_trigger?
     # If not through situation with character as graphic
-    #if @character_name != "" and not @through
+    if @character_name != "" and not @through
       # Starting determinant is face
-    #  return false
-    #end
+      return false
+    end
     # If this position on the map is impassable
     unless $map.passable?(@x, @y, 0)
       # Starting determinant is face

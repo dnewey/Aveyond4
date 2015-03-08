@@ -21,11 +21,13 @@ class GameManager
       $temp = Game_Temp.new
       $progress = Av::Progress.new
       $state = Av::State.new
+
+      $player        = Game_Player.new
       $party = Game_Party.new
 
       # Model
 
-      $player        = Game_Player.new
+      
       $map           = Game_Map.new
       $map.setup($data.system.start_map_id)
 
@@ -35,6 +37,8 @@ class GameManager
       $player.refresh
       $map.autoplay
       $map.update
+
+      $hud = Game_Hud.new
 
       # Switch to map screen
       $scene = Scene_Map.new
@@ -52,6 +56,7 @@ class GameManager
           $keyboard.update
           $mouse.update
           $debug.update
+          $hud.update
           Graphics.update
           Input.update
           $scene.update

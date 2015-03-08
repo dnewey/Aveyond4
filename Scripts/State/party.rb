@@ -8,7 +8,6 @@ class Game_Party
   attr_accessor :reserve                  # reserve party
 
   attr_reader   :gold                     # amount of gold
-  attr_reader   :steps                    # number of steps
 
   attr_accessor :all_actors
 
@@ -25,9 +24,9 @@ class Game_Party
     @active = []
     @reserve = []
 
-    # Initialize amount of gold and steps
+    # Initialize amount of gold
     @gold = 0
-    @steps = 0
+
 
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
@@ -35,7 +34,7 @@ class Game_Party
     @armors = {}
     
     # TEMP DISABLE
-    add_actor("boyle")
+    set_active("boyle")
 
   end
 
@@ -50,11 +49,11 @@ class Game_Party
   # * Add an Actor
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
-  def add_actor(actor)
+  def set_active(actor)
 
     if @active.size < 4 and not @actors.include?(actor)
       
-      @ctive.push(actor)
+      @active.push(actor)
       
       $player.refresh
     end
@@ -64,140 +63,34 @@ class Game_Party
 
   end
 
-  #--------------------------------------------------------------------------
-  # ● Add an Actor in the Reserve Party
-  #     actor_id : actor ID
-  #--------------------------------------------------------------------------
-  def add_reserve(actor)
+  def set_reserve(actor)
     @reserve.push(actor)
   end
 
-  #--------------------------------------------------------------------------
-  # * Remove Actor
-  #     actor_id : actor ID
-  #--------------------------------------------------------------------------
-  def remove_actor(actor)
+  def back_to_pavillion(actor)
     @actors.delete(actor)
     @reserve.delete(actor)
-  end
-
- def add_gold(n)
-    @gold += n
-    $game_map.need_hud_refresh = true # Shaz
-  end
-
- def remove_gold(n)
-    gain_gold(-n)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Increase Steps
-  #--------------------------------------------------------------------------
-  def increase_steps
-    @steps += 1
   end
 
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
-  def item_number(item)
-    return @items.has_key?(item) ? @items[item] : 0
+  def add_item(id,n) add(@items,id,n) end
+  def lose_item(item,n) add(@items,id,n) end
+  def item_number(id) count(@items,id) end
+  def has_item?(id) count(type,id) > 0 end
+
+
+
+  def add(type,id,number)
+    type.has_key?(id) ? type[id] += number : type[id] = number
   end
 
-  #--------------------------------------------------------------------------
-  # * Get Number of Weapons Possessed
-  #     weapon_id : weapon ID
-  #--------------------------------------------------------------------------
-  def weapon_number(weapon)
-    return @weapons.has_key?(weapon) ? @weapons[weapon] : 0
+  def count(type,id)
+    return type.has_key?(id) ? type[id] : 0
   end
 
-  #--------------------------------------------------------------------------
-  # * Get Amount of Armor Possessed
-  #     armor_id : armor ID
-  #--------------------------------------------------------------------------
-  def armor_number(armor)
-    return @armors.has_key?(armor) ? @armors[armor] : 0
-  end
-
-  #--------------------------------------------------------------------------
-  # * Gain Items (or lose)
-  #--------------------------------------------------------------------------
-  def add_item(item, n)
-    @items[item] = [[item_number(item) + n, 0].max, 99].min
-  end
-
-  #--------------------------------------------------------------------------
-  # * Gain Weapons (or lose)
-  #     weapon_id : weapon ID
-  #     n         : quantity
-  #--------------------------------------------------------------------------
-  def gain_weapon(weapon_id, n)
-    # Update quantity data in the hash.
-    if weapon_id > 0
-      @weapons[weapon_id] = [[weapon_number(weapon_id) + n, 0].max, 99].min
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * Gain Armor (or lose)
-  #     armor_id : armor ID
-  #     n        : quantity
-  #--------------------------------------------------------------------------
-  def gain_armor(armor_id, n)
-    # Update quantity data in the hash.
-    if armor_id > 0
-      @armors[armor_id] = [[armor_number(armor_id) + n, 0].max, 99].min
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * Lose Items
-  #     item_id : item ID
-  #     n       : quantity
-  #--------------------------------------------------------------------------
-  def lose_item(item_id, n)
-    # Reverse the numerical value and call it gain_item
-    gain_item(item_id, -n)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Lose Weapons
-  #     weapon_id : weapon ID
-  #     n         : quantity
-  #--------------------------------------------------------------------------
-  def lose_weapon(weapon_id, n)
-    # Reverse the numerical value and call it gain_weapon
-    gain_weapon(weapon_id, -n)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Lose Armor
-  #     armor_id : armor ID
-  #     n        : quantity
-  #--------------------------------------------------------------------------
-  def lose_armor(armor_id, n)
-    # Reverse the numerical value and call it gain_armor
-    gain_armor(armor_id, -n)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Determine if Item is Usable
-  #     item_id : item ID
-  #--------------------------------------------------------------------------
-  def item_can_use?(item)
-    return false if item_number(item) == 0
-      
-    # Get usable time
-    occasion = $data.items[item_id].occasion
-    # If in battle
-    if $game_temp.in_battle
-      # If useable time is 0 (normal) or 1 (only battle) it's usable
-      return (occasion == 0 or occasion == 1)
-    end
-    # If useable time is 0 (normal) or 2 (only menu) it's usable
-    return (occasion == 0 or occasion == 2)
-  end
+  
 
   #--------------------------------------------------------------------------
   # * Clear All Member Actions

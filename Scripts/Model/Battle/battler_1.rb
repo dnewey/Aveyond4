@@ -2,22 +2,21 @@
 # ** Game_Battler (part 1)
 #==============================================================================
 
+# STATS
+
 class Game_Battler
  
   attr_reader   :battler_name             # battler file name
-  attr_reader   :battler_hue              # battler hue
+
   attr_reader   :hp                       # HP
-  attr_reader   :sp                       # SP
+  attr_reader   :mp                       # MP
+
   attr_reader   :states                   # states
-  attr_accessor :hidden                   # hidden flag
+
   attr_accessor :immortal                 # immortal flag
-  attr_accessor :damage_pop               # damage display flag
-  attr_accessor :damage                   # damage value
+
+
   attr_accessor :critical                 # critical flag
-  attr_accessor :animation_id             # animation ID
-  attr_accessor :animation_hit            # animation hit flag
-  attr_accessor :white_flash              # white flash flag
-  attr_accessor :blink                    # blink flag
   
   attr_accessor :collapsing               # collapsing
   
@@ -26,17 +25,16 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def initialize
     @battler_name = ""
-    @battler_hue = 0
     @hp = 0
     @sp = 0
     @states = []
     @states_turn = {}
+
     @maxhp_plus = 0
     @maxsp_plus = 0
     @str_plus = 0
-    @dex_plus = 0
-    @agi_plus = 0
-    @int_plus = 0
+    @def_plus = 0
+
     @hidden = false
     @immortal = false
     @damage_pop = false
@@ -49,6 +47,7 @@ class Game_Battler
     @collapsing = false
     @current_action = Game_BattleAction.new
   end
+
   #--------------------------------------------------------------------------
   # * Get Current Experience Points
   #--------------------------------------------------------------------------
@@ -62,6 +61,7 @@ class Game_Battler
   def next_exp 
     return @exp_list[@level+1] > 0 ? @exp_list[@level+1] - @exp_list[@level] : 0 
   end
+
   #--------------------------------------------------------------------------
   # * Get Maximum HP
   #--------------------------------------------------------------------------
@@ -73,6 +73,7 @@ class Game_Battler
     n = [[Integer(n), 1].max, 999999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Maximum SP
   #--------------------------------------------------------------------------
@@ -84,6 +85,7 @@ class Game_Battler
     n = [[Integer(n), 0].max, 9999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Strength (STR)
   #--------------------------------------------------------------------------
@@ -95,6 +97,7 @@ class Game_Battler
     n = [[Integer(n), 1].max, 999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Dexterity (DEX)
   #--------------------------------------------------------------------------
@@ -106,28 +109,7 @@ class Game_Battler
     n = [[Integer(n), 1].max, 999].min
     return n
   end
-  #--------------------------------------------------------------------------
-  # * Get Agility (AGI)
-  #--------------------------------------------------------------------------
-  def agi
-    n = [[base_agi + @agi_plus, 1].max, 999].min
-    for i in @states
-      n *= $data_states[i].agi_rate / 100.0
-    end
-    n = [[Integer(n), 1].max, 999].min
-    return n
-  end
-  #--------------------------------------------------------------------------
-  # * Get Intelligence (INT)
-  #--------------------------------------------------------------------------
-  def int
-    n = [[base_int + @int_plus, 1].max, 999].min
-    for i in @states
-      n *= $data_states[i].int_rate / 100.0
-    end
-    n = [[Integer(n), 1].max, 999].min
-    return n
-  end
+
   #--------------------------------------------------------------------------
   # * Set Maximum HP
   #     maxhp : new maximum HP
@@ -137,6 +119,7 @@ class Game_Battler
     @maxhp_plus = [[@maxhp_plus, -9999].max, 9999].min
     @hp = [@hp, self.maxhp].min
   end
+
   #--------------------------------------------------------------------------
   # * Set Maximum SP
   #     maxsp : new maximum SP

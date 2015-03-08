@@ -6,105 +6,43 @@
 #==============================================================================
 
 class Interpreter
+
+  def next_event_code
+    @list[@index+1].code
+  end
+
   #--------------------------------------------------------------------------
   # * Show Text
   #--------------------------------------------------------------------------
   def command_101
-    # If other text has been set to message_text
-    if $game_temp.message_text != nil
-      # End
-      return false
+
+    message = []
+    message.push(@list[@index].parameters[0])
+    while next_event_code == 401
+      @index += 1
+      message.push(@list[@index].parameters[0])
     end
+
+    message = message.join(' ')
+
+    # If there is a choice next, add it
+    if next_event_code == 102
+      @index+=1
+      while next_event_code == 402
+
+      end
+    end
+
+    $hud.message.start(message)
     
     # Return mouse to default cursor
-    $mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
+    #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
     
-    # Set message end waiting flag and callback
-    @message_waiting = true
-    $game_temp.message_event = @event_id
-    $game_temp.message_proc = Proc.new { @message_waiting = false }
-    # Set message text on first line
-    $game_temp.message_text = @list[@index].parameters[0] + "\n"
-    line_count = 1
-    # Loop
-    loop do
-      # If next event command text is on the second line or after
-      if @list[@index + 1].code == 401
-        # Add the second line or after to message_text
-        $game_temp.message_text += @list[@index + 1].parameters[0] + "\n"
-        line_count += 1
-      # If the next event command is show text
-      elsif @list[@index + 1].code == 101
-        # If the text contains the \inc code
-        if @list[@index + 1].parameters[0].index(/\\[Ii][Nn][Cc]/) != nil
-          $game_temp.message_text += @list[@index + 1].parameters[0] + "\n"
-          $game_temp.message_text.sub!(/\\[Ii][Nn][Cc]/) { "" }
-        else
-          return true
-        end
-      # If event command is not on the second line or after
-      else
-        # If next event command is show choices
-        if @list[@index + 1].code == 102
-          # Advance index
-          @index += 1
-          
-          # skip this one, it was already shown?
-          if $game_temp.skip_next_choices > 0
-            $game_temp.skip_next_choices -= 1
-          else
-            # Choices setup
-            $game_temp.choice_start = line_count
-            setup_choices(@list[@index].parameters)
-          end
-        # If next event command is input number
-        elsif @list[@index + 1].code == 103
-          # If number input window fits on screen
-          if line_count < 4
-            # Advance index
-            @index += 1
-            # Number input setup
-            $game_temp.num_input_start = line_count
-            $game_temp.num_input_variable_id = @list[@index].parameters[0]
-            $game_temp.num_input_digits_max = @list[@index].parameters[1]
-          end
-        end
-        # Continue
-        return true
-      end
-      # Advance index
-      @index += 1
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Show Choices
-  #--------------------------------------------------------------------------
-  def command_102
-    # If text has been set to message_text
-    if $game_temp.message_text != nil
-      # End
-      return false
-    end
-    
-    if $game_temp.skip_next_choices > 0
-      # skip this one, it is part of another
-      $game_temp.skip_next_choices -= 1
-      @offset += 4
-      @index += 1
-      return false
-    else
-      @offset = 0
-    end
-    # Set message end waiting flag and callback
-    @message_waiting = true
-    $game_temp.message_proc = Proc.new { @message_waiting = false }
-    # Choices setup
-    $game_temp.message_text = ""
-    $game_temp.choice_start = 0
-    setup_choices(@parameters)
     # Continue
-    return true    
+    return true
+
   end
+  
   #--------------------------------------------------------------------------
   # * Setup Choices
   #--------------------------------------------------------------------------
@@ -143,6 +81,7 @@ class Interpreter
     current_indent = @list[@index].indent
     $game_temp.choice_proc = Proc.new { |n| @branch[current_indent] = n }
   end
+
   #--------------------------------------------------------------------------
   # * When [**]
   #--------------------------------------------------------------------------
@@ -157,20 +96,7 @@ class Interpreter
     # If it doesn't meet the condition: command skip
     return command_skip
   end
-  #--------------------------------------------------------------------------
-  # * When Cancel
-  #--------------------------------------------------------------------------
-  def command_403
-    # If choices are cancelled
-    if @cancel_flag
-      # Delete branch data
-      @branch.delete(@list[@index].indent)
-      # Continue
-      return true
-    end
-    # If it doen't meet the condition: command skip
-    return command_skip
-  end
+
   #--------------------------------------------------------------------------
   # * Wait
   #--------------------------------------------------------------------------
@@ -180,6 +106,7 @@ class Interpreter
     # Continue
     return true
   end
+
   #--------------------------------------------------------------------------
   # * Conditional Branch
   #--------------------------------------------------------------------------

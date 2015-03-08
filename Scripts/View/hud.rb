@@ -4,7 +4,7 @@
 
 class Game_Hud
   
-  attr_accessor :chatting, :screen, :menu
+  attr_accessor :message, :screen, :menu
   attr_accessor :trans
   
   #--------------------------------------------------------------------------
@@ -14,13 +14,10 @@ class Game_Hud
 
     #@winder = Window_Item.new
     
-    # Hud
-    @screen = nil
-    @chatting = nil
-    @menu = nil
-    
-    # Custom transfer system
-    @trans = nil
+      @screen = Ui_Screen.new
+      @message = Ui_Message.new
+      @menu = Ui_Menu.new
+      @trans = Ui_Trans.new
         
   end
   
@@ -31,7 +28,7 @@ class Game_Hud
     return false
     return if !@screen
     return true if @screen.busy? || 
-                    @chatting.busy? ||
+                    @message.busy? ||
                     @menu.busy? ||
                     @trans.busy?
     return false
@@ -42,18 +39,8 @@ class Game_Hud
   #--------------------------------------------------------------------------  
   def update
 
-   # @winder.update
-    return
-    
-    if !@screen
-      @screen = Ui_Screen.new 
-      @chatting = Ui_Chatting.new 
-      @menu = Ui_Menu.new 
-      @trans = Ui_Trans.new 
-    end
-
     @screen.update
-    @chatting.update
+    @message.update
     @menu.update
 
     @trans.update

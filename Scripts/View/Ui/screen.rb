@@ -2,9 +2,11 @@
 # Ui_Screen
 #==============================================================================
 
-class Ui_Screen #< Layer
+class Ui_Screen < Ui_Base
   
-
+	def initialize
+		super(1111)
+	end
 
 
     def busy?() return false end

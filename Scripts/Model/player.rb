@@ -60,13 +60,12 @@ class Game_Player < Game_Character
     super
     # If move route is not forcing
     unless @move_route_forcing
-      # Increase steps
-      $party.increase_steps
-      # Number of steps are an even number
-      if $party.steps % 2 == 0
+      
+      # NOT USING STEPS, GET RID OF THIS PUT SLIP ELSEWHERE
+     # if $party.steps % 2 == 0
         # Slip damage check
-        $party.check_map_slip_damage
-      end
+      #  $party.check_map_slip_damage
+      #end
     end
   end
  
@@ -279,16 +278,20 @@ class Game_Player < Game_Character
       return result
     end
 
+    log_info 'trying'
+
 
     # Calculate front event coordinates
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+    
     # All event loops
     for event in $map.events.values
       # If event coordinates and triggers are consistent
       if event.x == new_x and event.y == new_y and
          triggers.include?(event.trigger) and event.list.size > 1
 
+         log_err "TRYINGHERE"
 
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
@@ -298,26 +301,29 @@ class Game_Player < Game_Character
       end
     end
     # If fitting event is not found
-    if result == false
-      # If front tile is a counter
-      if $map.counter?(new_x, new_y)
-        # Calculate 1 tile inside coordinates
-        new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
-        new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
-        # All event loops
-        for event in $map.events.values
-          # If event coordinates and triggers are consistent
-          if event.x == new_x and event.y == new_y and
-             triggers.include?(event.trigger) and event.list.size > 1
-            # If starting determinant is front event (other than jumping)
-            if not event.jumping? and not event.over_trigger?
-              event.start
-              result = true
-            end
-          end
-        end
-      end
-    end
+
+    # COUNTER CHECK
+
+    # if result == false
+    #   # If front tile is a counter
+    #   if $map.counter?(new_x, new_y)
+    #     # Calculate 1 tile inside coordinates
+    #     new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
+    #     new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+    #     # All event loops
+    #     for event in $map.events.values
+    #       # If event coordinates and triggers are consistent
+    #       if event.x == new_x and event.y == new_y and
+    #          triggers.include?(event.trigger) and event.list.size > 1
+    #         # If starting determinant is front event (other than jumping)
+    #         if not event.jumping? and not event.over_trigger?
+    #           event.start
+    #           result = true
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
     return result
   end
 
@@ -325,7 +331,6 @@ class Game_Player < Game_Character
   # * Touch Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_touch(x, y)
-    log_err 'trying'
     result = false
     # If event is running
     if $map.interpreter.running?
