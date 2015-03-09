@@ -190,6 +190,11 @@ class Interpreter
       if @message_waiting
         return
       end
+
+      # Misc hud busy
+      if $hud && $hud.busy?
+        return
+      end
       
       # If waiting for move to end
       if @move_route_waiting

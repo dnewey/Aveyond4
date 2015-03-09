@@ -24,9 +24,7 @@ class Game_Hud
   #--------------------------------------------------------------------------
   # Good beans
   #--------------------------------------------------------------------------
-  def busy?() 
-    return false
-    return if !@screen
+  def busy?
     return true if @screen.busy? || 
                     @message.busy? ||
                     @menu.busy? ||

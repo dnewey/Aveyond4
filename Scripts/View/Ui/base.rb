@@ -9,12 +9,14 @@ class Ui_Base
   #--------------------------------------------------------------------------
   def initialize(z) 
   	@all = [] 
-  	#@viewport = Viewport.new()
-  	#@viewport.z = z
+  	@viewport = Viewport.new(0,0,640,480)
+  	@viewport.z = z
   end  
 
-  def add(elements) 
-  	[*elements].each{ |e| @all.push(e) } 
+  def add_sprite 
+  	spr = Sprite.new(@viewport)
+  	@all.push(spr)
+  	return spr
   end
 
   def elements() 
@@ -29,5 +31,9 @@ class Ui_Base
   def hide() @all.each{ |e| e.hide } end
   def show() @all.each{ |e| e.show } end
   def update() end
+
+  def busy?
+  	false
+  end
   
 end

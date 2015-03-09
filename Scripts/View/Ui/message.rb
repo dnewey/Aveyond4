@@ -9,8 +9,8 @@ class Ui_Message < Ui_Base
   MAX_WIDTH = 500
   TAB_WIDTH = 35
 
-  SPACING = 5
-  LINE_HEIGHT = 22
+  SPACING = 7
+  LINE_HEIGHT = 32
 
   SPEED_1 = 0
   SPEED_2 = 1
@@ -52,6 +52,9 @@ class Ui_Message < Ui_Base
     @text_delay = SPEED_3
     @wait_frames = 0
     @next_char = 0
+
+    @cx = 0
+    @cy = 0
     
     @line_idx = nil
     @word_idx = nil
@@ -61,14 +64,19 @@ class Ui_Message < Ui_Base
     @height = 0
 
     # Setup sprites
-    @textbox = Sprite.new
-    @namebox = Sprite.new
+    @textbox = add_sprite
+    @textbox.x = 250
+    @textbox.y = 150
+    #@namebox = add(Sprite.new)
 
-    @next = Sprite.new
-    @face = Sprite.new
+    #@next = add(Sprite.new)
+    #@face = add(Sprite.new)
+    #@tail = add(Sprite.new)
 
-    @text_sprite = Sprite.new
-    @word_sprite = Sprite.new    
+    @window_bmp = nil
+    @text_bmp = nil
+
+    @scratch.font.size = 30
     
   end
   
@@ -84,7 +92,7 @@ class Ui_Message < Ui_Base
 #~     end      
     
     # Skip to end of this text
-    if Input.trigger?(Input::C) && @state = :texting
+    if Input.trigger?(Input::C) && @state == :texting
       @skip_all = true
     end
 
@@ -97,13 +105,15 @@ class Ui_Message < Ui_Base
         @state = :texting if self.zoom_y == 1.0
 
       when :closing
-
+        @state = :idle
 
       when :texting
         @next_char -= 1
         if @next_char <= 0
+          #log_err "DOING"
           update_message
         end
+        redraw
         
       when :waiting
         update_waiting
@@ -118,9 +128,9 @@ class Ui_Message < Ui_Base
     end
 
     # skipping
-    while @state == :texting && @skip_all
-      @next_char > 0 ? @next_char -= 1 : update_message
-    end
+    # while @state == :texting && @skip_all
+    #   @next_char > 0 ? @next_char -= 1 : update_message
+    # end
 
   end
   
@@ -128,6 +138,9 @@ class Ui_Message < Ui_Base
   # Show Convo
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
+
+    # Clear out the previous word
+    @word = nil
 
     text_data = text.split(":")
 
@@ -141,18 +154,27 @@ class Ui_Message < Ui_Base
     @width = max_width
     @height = @lines.count * (LINE_HEIGHT)
 
-    # Prepare the sprites
-    @text_sprite.bitmap = Bitmap.new(@width,@height)
+    # Position the textbox wherever it best fits
 
-    @line_idx = -1
+    # Prepare the sprites
+    @textbox.bitmap = Bitmap.new(@width,@height)
+
+    @text_bmp = Bitmap.new(@width,@height)
+
+    @window_bmp = Bitmap.new(@width,@height)
+    @window_bmp.fill(Color.new(0,0,0,200))
+
+
+    @scratch.font.size = 30
+    @text_bmp.font.size = 30
+    @textbox.bitmap.font.size = 30
+
+
+    @line_idx = 0
     @word_idx = -1
 
-    @word_sprite.x = -1
-
-    next_line
-    next_word
-
-
+    @cx = 0
+    @cy = 0
 
     # Start text
     @state = :texting
@@ -164,9 +186,10 @@ class Ui_Message < Ui_Base
   # * Update Message
   #--------------------------------------------------------------------------
   def update_message
+
     
     # if the current word is empty, get the next one and see if it fits
-    next_word if @char_idx == @word.length
+    next_word if @word == nil || @char_idx > @word.length
         
     # if not texting then don't go
     return unless @state == :texting
@@ -176,7 +199,7 @@ class Ui_Message < Ui_Base
     #@line_data[@line_data.size-1] += @word.slice!(0,1)
     
     # Redraw the word, last char small?
-    redraw_word
+    #redraw
 
     # Play a lovely character sound
     #sound(:text_char) if $settings.value('text_sound') 
@@ -190,13 +213,25 @@ class Ui_Message < Ui_Base
 
   end
 
-  def redraw_word
-    @word_sprite.bitmap.clear
+  def redraw
+
+    @textbox.bitmap.clear
+    @textbox.bitmap.blt(0,0,@window_bmp,@window_bmp.rect)
+
+    @textbox.bitmap.blt(0,0,@text_bmp,@text_bmp.rect)
+
+    return if @word == nil
+
+    #txt = @word[0..@char_idx-1]
     txt = @word[0..@char_idx-1]
     size = @scratch.text_size(txt)
-    @word_sprite.bitmap.draw_text(0,0,300,LINE_HEIGHT,txt)
+    @textbox.bitmap.font.color = Color.new(255,255,255,255)
+    @textbox.bitmap.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
     # Half draw the final
-    @word_sprite.bitmap.draw_text(size.width,0,100,LINE_HEIGHT,@word[@char_idx])
+    return if @char_idx >= @word.length
+    @textbox.bitmap.font.color = Color.new(255,255,255,100)
+    @textbox.bitmap.draw_text(@cx+size.width,@cy-4,100,LINE_HEIGHT,@word.split('')[@char_idx])
+
   end
 
   #--------------------------------------------------------------------------
@@ -204,13 +239,13 @@ class Ui_Message < Ui_Base
   #--------------------------------------------------------------------------
   def next_line
     @line_idx += 1
+    @word = nil
     if @line_idx >= @lines.count
       @state = :done
     else
-      @word_idx = -1
-      @word_sprite.x = 0
-      @word_sprite.y += LINE_HEIGHT
-      next_word
+      @word_idx = 0
+      @cy += LINE_HEIGHT
+      @cx = 0
     end
   end
 
@@ -220,20 +255,40 @@ class Ui_Message < Ui_Base
   def next_word
 
     # blit last word onto the main bmp
+    if @word != nil
 
+      txt = @word[0..@char_idx]
+      @text_bmp.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
+
+      # Step cursor
+      @cx += word_width(@word)
+
+      # Check for end bold
+      if @word[-1] == '*'[0]
+        bold(false)
+      end
+
+    end
 
     @word_idx += 1
     @char_idx = 0
     
     if @word_idx >= @lines[@line_idx].count
-      return next_line
+      next_line
+      return if @line_idx >= @lines.count
     end
 
     @word = @lines[@line_idx][@word_idx]
-    @wordlength = @word.length
+
+    if @word[0] == '*'[0]
+      bold(true)
+    end
+
+    # Remove characters
+    @word.delete!('*^')
 
     # CHECK FOR COMMANDS
-    if @word[0]=='$'
+    if @word.include?('$')
       cmd = @word.split(".")
       wrd = cmd[0]
 
@@ -259,7 +314,8 @@ class Ui_Message < Ui_Base
           $world.do_flash(color,15)         
           
         when "$s" # play sound
-          Audio.se_play("Audio/SE/"+cmd[1]) 
+          #log_err("TRYPLAYIT")
+          #Audio.se_play("Audio/SE/"+cmd[1]) 
           
         when "$m"
           
@@ -287,6 +343,7 @@ class Ui_Message < Ui_Base
       end
         
       update_waiting while @state == :waiting
+      @word = nil
       next_word
 
     end
@@ -310,9 +367,7 @@ class Ui_Message < Ui_Base
       #sound(:text_next)
       #self.slide_zy(0.0)
       @state = :closing
-      @next_sprite.hide
-      
-      @text_sprite.clear
+      @textbox.bitmap.clear
     end
   end
 
@@ -320,9 +375,12 @@ class Ui_Message < Ui_Base
   # Calculate size
   #--------------------------------------------------------------------------
   def word_width(word)
+
+      # Gotta switch bold on and off here
+
       return TAB_WIDTH if word == "$t"
       return 0 if word.include?("$")
-      return @scratch.text_size(word).width
+      return @scratch.text_size(word.delete('*^')).width + SPACING
   end
 
   def max_width
@@ -350,7 +408,7 @@ class Ui_Message < Ui_Base
 
     # If less than split width, just one line
     if total_width < MIN_WIDTH
-      reutrn [text.split(" ")]
+      return [text.split(" ")]
     end
 
     # If width is less than max * 2, we are splitting at the first word after half point
@@ -384,6 +442,12 @@ class Ui_Message < Ui_Base
     return lines
 
   end
+
+  def bold(val)
+    @text_bmp.font.bold = val
+    @textbox.bitmap.font.bold = val
+  end
+
 
   #--------------------------------------------------------------------------
   # Misc

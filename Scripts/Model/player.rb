@@ -278,9 +278,6 @@ class Game_Player < Game_Character
       return result
     end
 
-    log_info 'trying'
-
-
     # Calculate front event coordinates
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
@@ -291,7 +288,6 @@ class Game_Player < Game_Character
       if event.x == new_x and event.y == new_y and
          triggers.include?(event.trigger) and event.list.size > 1
 
-         log_err "TRYINGHERE"
 
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
@@ -354,8 +350,9 @@ class Game_Player < Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
-    # if $map.busy? or $hud.busy
-    #return
+    if $hud.busy?
+      return
+    end
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
     # unless false# $game_system.map_interpreter.running? or
