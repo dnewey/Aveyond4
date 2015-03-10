@@ -29,11 +29,11 @@ class GameManager
 
       
       $map           = Game_Map.new
-      $map.setup($data.system.start_map_id)
+      $map.setup(2)#$data.system.start_map_id)
 
       # Set up initial map position
       
-      $player.moveto($data.system.start_x, $data.system.start_y)
+      $player.moveto(10,10)#XP - VX $data.system.start_x, $data.system.start_y)
       $player.refresh
       $map.autoplay
       $map.update

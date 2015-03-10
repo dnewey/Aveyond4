@@ -5,7 +5,7 @@
 #  class and automatically changes sprite conditions.
 #==============================================================================
 
-class Sprite_Character < RPG::Sprite
+class Sprite_Character < Sprite
 
   attr_accessor :character     
 

@@ -2,6 +2,13 @@
 # ** Game_Map
 #==============================================================================
 
+# class RPG::Tileset
+#   def passages
+#     return flags
+#   end
+# end
+
+
 class Game_Map
   
   #--------------------------------------------------------------------------
@@ -44,6 +51,10 @@ class Game_Map
 
     @interpreter = Interpreter.new(0,true)
   end
+
+  def id
+    return @map_id
+  end
   
   #--------------------------------------------------------------------------
   # * Setup
@@ -62,9 +73,9 @@ class Game_Map
     # Hold onto the tileset
     @tileset = $data.tilesets[@map.tileset_id]
         
-    @passages = @tileset.passages
-    @priorities = @tileset.priorities
-    @terrain_tags = @tileset.terrain_tags
+    @passages = @tileset.passages 
+    @priorities = @tileset.passages#@tileset.priorities
+    @terrain_tags = @tileset.passages#@tileset.terrain_tags
     
     # Initialize displayed coordinates
     @display_x = 0

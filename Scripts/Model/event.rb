@@ -207,8 +207,8 @@ class Game_Event < Game_Character
       @pattern = @page.graphic.pattern
       @original_pattern = @pattern
     end
-    @opacity = @page.graphic.opacity
-    @blend_type = @page.graphic.blend_type
+    #XP - VX @opacity = @page.graphic.opacity
+    #XP - VX @blend_type = @page.graphic.blend_type
     @move_type = @page.move_type
     @move_speed = @page.move_speed
     @move_frequency = @page.move_frequency
@@ -219,7 +219,7 @@ class Game_Event < Game_Character
     @step_anime = @page.step_anime
     @direction_fix = @page.direction_fix
     @through = @page.through
-    @always_on_top = @page.always_on_top
+    #XP - VX @always_on_top = @page.always_on_top
     @trigger = @page.trigger
     @list = @page.list
     @interpreter = nil

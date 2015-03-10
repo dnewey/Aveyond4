@@ -1,4 +1,5 @@
-[="ÿ	#==============================================================================
+[A"u
+#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -23,8 +24,14 @@ APPFOLDER = "Aveyond 4"
 
   def aveyond4
 
+      #if ACE_MODE
+        #Graphics.resize_screen(800,480) 
+      #end
+
+      Graphics.frame_rate = 60
+
       # User Data folder
-      Win32API.new('Utils', "AVSetEnv", ["V"], "I").call          
+      Win32API.new('System/Utils', "AVSetEnv", ["V"], "I").call          
       $appdata = ENV['AV_APPDATA'] + "\\" + APPFOLDER
       Dir.mkdir($appdata) if !File.exists?($appdata) 
 
@@ -2137,7 +2144,7 @@ end"‹
     end
   end
   
-end" #==============================================================================
+end"!#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -2192,7 +2199,7 @@ class DataManager
 		# Convert to json
     @commons = load_data("Data/CommonEvents.rxdata")
     @tilesets = load_data("Data/Tilesets.rxdata")
-    @system = load_data("Data/System.rxdata")
+    #@system = load_data("Data/System.rxdata")
     @mapinfos = load_data("Data/MapInfos.rxdata")
 
 	end
@@ -2619,7 +2626,7 @@ class FileManager
   end
   
 end
-"%#==============================================================================
+"7#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -2650,11 +2657,11 @@ class GameManager
 
       
       $map           = Game_Map.new
-      $map.setup($data.system.start_map_id)
+      $map.setup(2)#$data.system.start_map_id)
 
       # Set up initial map position
       
-      $player.moveto($data.system.start_x, $data.system.start_y)
+      $player.moveto(10,10)#XP - VX $data.system.start_x, $data.system.start_y)
       $player.refresh
       $map.autoplay
       $map.update
@@ -4604,7 +4611,7 @@ end
 #     return [false, nil, nil]        
 #   end
 # end
-"ð #==============================================================================
+"!#==============================================================================
 # ** Game_Event
 #------------------------------------------------------------------------------
 #  This class deals with events. It handles functions including event page 
@@ -4813,8 +4820,8 @@ class Game_Event < Game_Character
       @pattern = @page.graphic.pattern
       @original_pattern = @pattern
     end
-    @opacity = @page.graphic.opacity
-    @blend_type = @page.graphic.blend_type
+    #XP - VX @opacity = @page.graphic.opacity
+    #XP - VX @blend_type = @page.graphic.blend_type
     @move_type = @page.move_type
     @move_speed = @page.move_speed
     @move_frequency = @page.move_frequency
@@ -4825,7 +4832,7 @@ class Game_Event < Game_Character
     @step_anime = @page.step_anime
     @direction_fix = @page.direction_fix
     @through = @page.through
-    @always_on_top = @page.always_on_top
+    #XP - VX @always_on_top = @page.always_on_top
     @trigger = @page.trigger
     @list = @page.list
     @interpreter = nil
@@ -4916,9 +4923,16 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"y<#==============================================================================
+end"=#==============================================================================
 # ** Game_Map
 #==============================================================================
+
+# class RPG::Tileset
+#   def passages
+#     return flags
+#   end
+# end
+
 
 class Game_Map
   
@@ -4962,6 +4976,10 @@ class Game_Map
 
     @interpreter = Interpreter.new(0,true)
   end
+
+  def id
+    return @map_id
+  end
   
   #--------------------------------------------------------------------------
   # * Setup
@@ -4980,9 +4998,9 @@ class Game_Map
     # Hold onto the tileset
     @tileset = $data.tilesets[@map.tileset_id]
         
-    @passages = @tileset.passages
-    @priorities = @tileset.priorities
-    @terrain_tags = @tileset.terrain_tags
+    @passages = @tileset.passages 
+    @priorities = @tileset.passages#@tileset.priorities
+    @terrain_tags = @tileset.passages#@tileset.terrain_tags
     
     # Initialize displayed coordinates
     @display_x = 0
@@ -9733,6 +9751,298 @@ end
     end
     
   end
+end"O# Fullscreen++ v2.2 for VX and VXace by Zeus81
+# Free for non commercial and commercial use
+# Licence : http://creativecommons.org/licenses/by-sa/3.0/
+# Contact : zeusex81@gmail.com
+# (fr) Manuel d'utilisation : http://pastebin.com/raw.php?i=1TQfMnVJ
+# (en) User Guide           : http://pastebin.com/raw.php?i=EgnWt9ur
+ 
+ if ACE_MODE
+
+
+class << Graphics
+  Disable_VX_Fullscreen = false
+ 
+  CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
+  GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
+  GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
+  GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
+  GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
+  FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
+  FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
+  ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
+  SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
+  SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
+  SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
+  ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
+  SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
+  UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
+  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
+  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
+  CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
+  DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
+ 
+  unless method_defined?(:zeus_fullscreen_update)
+    HWND     = FindWindow.call('RGSS Player', 0)
+    BackHWND = CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0)
+    alias zeus_fullscreen_resize_screen resize_screen
+    alias zeus_fullscreen_update        update
+  end
+private
+  def initialize_fullscreen_rects
+    @borders_size    ||= borders_size
+    @fullscreen_rect ||= screen_rect
+    @workarea_rect   ||= workarea_rect
+  end
+  def borders_size
+    GetWindowRect.call(HWND, wrect = [0, 0, 0, 0].pack('l4'))
+    GetClientRect.call(HWND, crect = [0, 0, 0, 0].pack('l4'))
+    wrect, crect = wrect.unpack('l4'), crect.unpack('l4')
+    Rect.new(0, 0, wrect[2]-wrect[0]-crect[2], wrect[3]-wrect[1]-crect[3])
+  end
+  def screen_rect
+    Rect.new(0, 0, GetSystemMetrics.call(0), GetSystemMetrics.call(1))
+  end
+  def workarea_rect
+    SystemParametersInfo.call(0x30, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
+    rect = rect.unpack('l4')
+    Rect.new(rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1])
+  end
+  def hide_borders() SetWindowLong.call(HWND, -16, 0x14000000) end
+  def show_borders() SetWindowLong.call(HWND, -16, 0x14CA0000) end
+  def hide_back()    ShowWindow.call(BackHWND, 0)              end
+  def show_back
+    ShowWindow.call(BackHWND, 3)
+    UpdateWindow.call(BackHWND)
+    dc    = GetDC.call(BackHWND)
+    rect  = [0, 0, @fullscreen_rect.width, @fullscreen_rect.height].pack('l4')
+    brush = CreateSolidBrush.call(0)
+    FillRect.call(dc, rect, brush)
+    ReleaseDC.call(BackHWND, dc)
+    DeleteObject.call(brush)
+  end
+  def resize_window(w, h)
+    if @fullscreen
+      x, y, z = (@fullscreen_rect.width-w)/2, (@fullscreen_rect.height-h)/2, -1
+    else
+      w += @borders_size.width
+      h += @borders_size.height
+      x = @workarea_rect.x + (@workarea_rect.width  - w) / 2
+      y = @workarea_rect.y + (@workarea_rect.height - h) / 2
+      z = -2
+    end
+    SetWindowPos.call(HWND, z, x, y, w, h, 0)
+  end
+  def release_alt
+    inputs = [1,18,2, 1,164,2, 1,165,2].pack('LSx2Lx16'*3)
+    SendInput.call(3, inputs, 28)
+  end
+public
+  def load_fullscreen_settings
+    buffer = [].pack('x256')
+    section = 'Fullscreen++'
+    filename = './Game.ini'
+    get_option = Proc.new do |key, default_value|
+      l = GetPrivateProfileString.call(section, key, default_value, buffer, buffer.size, filename)
+      buffer[0, l]
+    end
+    @fullscreen       = get_option.call('Fullscreen'     , '0') == '1'
+    @fullscreen_ratio = get_option.call('FullscreenRatio', '0').to_i
+    @windowed_ratio   = get_option.call('WindowedRatio'  , '1').to_i
+    toggle_vx_fullscreen if Disable_VX_Fullscreen and vx_fullscreen?
+    fullscreen? ? fullscreen_mode : windowed_mode
+  end
+  def save_fullscreen_settings
+    section = 'Fullscreen++'
+    filename = './Game.ini'
+    set_option = Proc.new do |key, value|
+      WritePrivateProfileString.call(section, key, value.to_s, filename)
+    end
+    set_option.call('Fullscreen'     , @fullscreen ? '1' : '0')
+    set_option.call('FullscreenRatio', @fullscreen_ratio)
+    set_option.call('WindowedRatio'  , @windowed_ratio)
+  end
+  def fullscreen?
+    @fullscreen or vx_fullscreen?
+  end
+  def vx_fullscreen?
+    rect = screen_rect
+    rect.width == 640 and rect.height == 480
+  end
+  def toggle_fullscreen
+    fullscreen? ? windowed_mode : fullscreen_mode
+  end
+  def toggle_vx_fullscreen
+    windowed_mode if @fullscreen and !vx_fullscreen?
+    inputs = [1,18,0, 1,13,0, 1,13,2, 1,18,2].pack('LSx2Lx16'*4)
+    SendInput.call(4, inputs, 28)
+    zeus_fullscreen_update
+    self.ratio += 0 # refresh window size
+  end
+  def vx_fullscreen_mode
+    return if vx_fullscreen?
+    toggle_vx_fullscreen
+  end
+  def fullscreen_mode
+    return if vx_fullscreen?
+    initialize_fullscreen_rects
+    show_back
+    hide_borders
+    @fullscreen = true
+    self.ratio += 0 # refresh window size
+  end
+  def windowed_mode
+    toggle_vx_fullscreen if vx_fullscreen?
+    initialize_fullscreen_rects
+    hide_back
+    show_borders
+    @fullscreen = false
+    self.ratio += 0 # refresh window size
+  end
+  def toggle_ratio
+    return if vx_fullscreen?
+    self.ratio += 1
+  end
+  def ratio
+    return 1 if vx_fullscreen?
+    @fullscreen ? @fullscreen_ratio : @windowed_ratio
+  end
+  def ratio=(r)
+    return if vx_fullscreen?
+    initialize_fullscreen_rects
+    r = 0 if r < 0
+    if @fullscreen
+      @fullscreen_ratio = r
+      w_max, h_max = @fullscreen_rect.width, @fullscreen_rect.height
+    else
+      @windowed_ratio = r
+      w_max = @workarea_rect.width  - @borders_size.width
+      h_max = @workarea_rect.height - @borders_size.height
+    end
+    if r == 0
+      w, h = w_max, w_max * height / width
+      h, w = h_max, h_max * width / height if h > h_max
+    else
+      w, h = width * r, height * r
+      return self.ratio = 0 if w > w_max or h > h_max
+    end
+    resize_window(w, h)
+    save_fullscreen_settings
+  end
+  def update
+    release_alt if Disable_VX_Fullscreen and Input.trigger?(Input::ALT)
+    zeus_fullscreen_update
+    toggle_fullscreen if Input.trigger?(Input::F5)
+    toggle_ratio      if Input.trigger?(Input::F6)
+  end
+  def resize_screen(width, height)
+    zeus_fullscreen_resize_screen(width, height)
+    self.ratio += 0 # refresh window size
+  end
+end
+Graphics.load_fullscreen_settings
+
+
+end"module RPG
+  class Tileset
+    def initialize
+      @id = 0
+      @name = ""
+      @tileset_name = ""
+      @autotile_names = [""]*7
+      @panorama_name = ""
+      @panorama_hue = 0
+      @fog_name = ""
+      @fog_hue = 0
+      @fog_opacity = 64
+      @fog_blend_type = 0
+      @fog_zoom = 200
+      @fog_sx = 0
+      @fog_sy = 0
+      @battleback_name = ""
+      @passages = Table.new(384)
+      @priorities = Table.new(384)
+      @priorities[0] = 5
+      @terrain_tags = Table.new(384)
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :tileset_name
+    attr_accessor :autotile_names
+    attr_accessor :panorama_name
+    attr_accessor :panorama_hue
+    attr_accessor :fog_name
+    attr_accessor :fog_hue
+    attr_accessor :fog_opacity
+    attr_accessor :fog_blend_type
+    attr_accessor :fog_zoom
+    attr_accessor :fog_sx
+    attr_accessor :fog_sy
+    attr_accessor :battleback_name
+    attr_accessor :passages
+    attr_accessor :priorities
+    attr_accessor :terrain_tags
+  end
+end"'
+if ACE_MODE
+
+	# Have to eval this or it crashes in xp mode
+	# FOR NOW
+
+	# Add /" to line 23 for the x90
+
+	# maximal width
+	eval "width = 853
+	# maximal height
+	height = 480
+
+	# Do not edit
+	wt, ht = width.divmod(32), height.divmod(32)
+	#wt.last + ht.last == 0 || fail('Incorrect width or height')
+	wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
+	w, h = wh.(width, height)
+	ww, hh = wh.(width, height, 32)
+	www, hhh = wh.(wt.first.succ, ht.first.succ)
+	base = 0x10000000  # fixed?
+	mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
+	mod.(0x195F, \"\x90\" * 5)  # ???   
+	mod.(0x19A4, h)
+	mod.(0x19A9, w)
+	mod.(0x1A56, h)
+	mod.(0x1A5B, w)
+	mod.(0x20F6, w)
+	mod.(0x20FF, w)
+	mod.(0x2106, h)
+	mod.(0x210F, h)
+	# speed up y?
+	#mod.(0x1C5E3, h)
+	#mod.(0x1C5E8, w)
+	zero = [0].pack ?l
+	mod.(0x1C5E3, zero)
+	mod.(0x1C5E8, zero)
+	mod.(0x1F477, h)
+	mod.(0x1F47C, w)
+	mod.(0x211FF, hh)
+	mod.(0x21204, ww)
+	mod.(0x21D7D, hhh[0])
+	mod.(0x21E01, www[0])
+	mod.(0x10DEA8, h)
+	mod.(0x10DEAD, w)
+	mod.(0x10DEDF, h)
+	mod.(0x10DEF0, w)
+	mod.(0x10DF14, h)
+	mod.(0x10DF18, w)
+	mod.(0x10DF48, h)
+	mod.(0x10DF4C, w)
+	mod.(0x10E6A7, w)
+	mod.(0x10E6C3, h)
+	mod.(0x10EEA9, w)
+	mod.(0x10EEB9, h)
+	Graphics.resize_screen width, height
+	GC.start"
+
+
 end"B class Array
  	def count
  		return length
@@ -9916,179 +10226,399 @@ def execute_spellcheck
     end  
 
     
-  end"n#==============================================================================
-# ** Sprite_Battler
+  end"^ #==============================================================================
+# Tilemap Class
 #------------------------------------------------------------------------------
-#  This sprite is used to display the battler.It observes the Game_Character
-#  class and automatically changes sprite conditions.
+# Script by SephirothSpawn
 #==============================================================================
 
-class Sprite_Battler < RPG::Sprite
+class Game_Map
   #--------------------------------------------------------------------------
-  # * Public Instance Variables
+  attr_reader   :map
+  attr_accessor :tilemap_tone
+  attr_accessor :tilemap_plane
+  attr_accessor :tilemap_zoom_x
+  attr_accessor :tilemap_zoom_y
+  attr_accessor :tilemap_tile_width
+  attr_accessor :tilemap_tile_height
   #--------------------------------------------------------------------------
-  attr_accessor :battler                  # battler
-  #--------------------------------------------------------------------------
-  # * Object Initialization
-  #     viewport : viewport
-  #     battler  : battler (Game_Battler)
-  #--------------------------------------------------------------------------
-  def initialize(viewport, battler = nil)
-    super(viewport)
-    @battler = battler
-    @battler_visible = false
+  alias seph_tilemap_gmap_init initialize
+  def initialize
+    seph_tilemap_gmap_init
+    @tilemap_tone        = nil
+    @tilemap_plane       = false
+    @tilemap_zoom_x      = 1.0
+    @tilemap_zoom_y      = 1.0
+    @tilemap_tile_width  = 32
+    @tilemap_tile_height = 32
   end
   #--------------------------------------------------------------------------
-  # * Dispose
+end
+
+
+class Tilemap
+  #--------------------------------------------------------------------------
+  Animated_Autotiles_Frames = 15
+  #--------------------------------------------------------------------------
+  Autotiles = [
+    [ [27, 28, 33, 34], [ 5, 28, 33, 34], [27,  6, 33, 34], [ 5,  6, 33, 34],
+      [27, 28, 33, 12], [ 5, 28, 33, 12], [27,  6, 33, 12], [ 5,  6, 33, 12] ],
+    [ [27, 28, 11, 34], [ 5, 28, 11, 34], [27,  6, 11, 34], [ 5,  6, 11, 34],
+      [27, 28, 11, 12], [ 5, 28, 11, 12], [27,  6, 11, 12], [ 5,  6, 11, 12] ],
+    [ [25, 26, 31, 32], [25,  6, 31, 32], [25, 26, 31, 12], [25,  6, 31, 12],
+      [15, 16, 21, 22], [15, 16, 21, 12], [15, 16, 11, 22], [15, 16, 11, 12] ],
+    [ [29, 30, 35, 36], [29, 30, 11, 36], [ 5, 30, 35, 36], [ 5, 30, 11, 36],
+      [39, 40, 45, 46], [ 5, 40, 45, 46], [39,  6, 45, 46], [ 5,  6, 45, 46] ],
+    [ [25, 30, 31, 36], [15, 16, 45, 46], [13, 14, 19, 20], [13, 14, 19, 12],
+      [17, 18, 23, 24], [17, 18, 11, 24], [41, 42, 47, 48], [ 5, 42, 47, 48] ],
+    [ [37, 38, 43, 44], [37,  6, 43, 44], [13, 18, 19, 24], [13, 14, 43, 44],
+      [37, 42, 43, 48], [17, 18, 47, 48], [13, 18, 43, 48], [ 1,  2,  7,  8] ]
+  ]
+  #--------------------------------------------------------------------------
+  attr_reader   :layers
+  attr_accessor :tileset
+  attr_accessor :autotiles
+  attr_accessor :map_data
+  attr_accessor :flash_data
+  attr_accessor :priorities
+  attr_accessor :visible
+  attr_accessor :ox
+  attr_accessor :oy
+  #--------------------------------------------------------------------------
+  def initialize(viewport, map = $map.map)
+    @layers = []
+    for l in 0...3
+      layer = ($map.tilemap_plane ?
+      Plane.new(viewport) : Sprite.new(viewport))
+      layer.bitmap = Bitmap.new(map.width * 32, map.height * 32)
+      layer.z = l * 150
+      layer.zoom_x = $map.tilemap_zoom_x
+      layer.zoom_y = $map.tilemap_zoom_y
+      if (tone = $map.tilemap_tone).is_a?(Tone)
+        layer.tone = tone
+      end
+      @layers << layer
+    end
+    @tileset    = nil  # Refers to Map Tileset Name
+    @autotiles  = []   # Refers to Tileset Auto-Tiles (Actual Auto-Tiles)
+    @map_data   = nil  # Refers to 3D Array Of Tile Settings
+    @flash_data = nil  # Refers to 3D Array of Tile Flashdata
+    @priorities = nil  # Refers to Tileset Priorities
+    @visible    = true # Refers to Tilest Visibleness
+    @ox         = 0    # Bitmap Offsets
+    @oy         = 0    # bitmap Offsets
+    @data       = nil  # Acts As Refresh Flag
+    @map         = map
+    @tone        = $map.tilemap_tone
+    @plane       = $map.tilemap_plane
+    @zoom_x      = $map.tilemap_zoom_x
+    @zoom_y      = $map.tilemap_zoom_y
+    @tile_width  = $map.tilemap_tile_width
+    @tile_height = $map.tilemap_tile_height
+  end
   #--------------------------------------------------------------------------
   def dispose
-    if self.bitmap != nil
-      self.bitmap.dispose
+    for layer in @layers
+      layer.dispose
     end
-    super
   end
-  #--------------------------------------------------------------------------
-  # * Frame Update
   #--------------------------------------------------------------------------
   def update
-    super
-    # If battler is nil
-    if @battler == nil
-      self.bitmap = nil
-      loop_animation(nil)
-      return
+    unless @data == @map_data && @tile_width == $map.tilemap_tile_width &&
+           @tile_height == $map.tilemap_tile_height
+      refresh
     end
-    
-    # If file name or hue are different than current ones
-    # battler is enemy
-    if battler.is_a?(Game_Enemy) or BATTLER_TYPE == 0
-      if @battler.battler_name != @battler_name or @battler.battler_hue != @battler_hue
-        # Get and set bitmap
-        @battler_name = @battler.battler_name
-        @battler_hue = @battler.battler_hue
-        self.bitmap = RPG::Cache.battler(@battler_name, @battler_hue)       
-        @width = bitmap.width
-        @height = bitmap.height
-        self.ox = @width / 2
-        self.oy = @height
-        # Change opacity level to 0 when dead or hidden
-        if @battler.dead? or @battler.hidden
-          self.opacity = 0
-        end
-      end
-    # battler is actor
-    else
-      if @battler.character_name != @battler_name or @battler.character_hue != @battler_hue
-        # Get and set bitmap
-        @battler_name = @battler.character_name
-        @battler_hue = @battler.character_hue
-        # Get character bitmap
-        self.bitmap = RPG::Cache.character(@battler_name, @battler_hue)       
-        @width = bitmap.width / 4 
-        @height = bitmap.height / 4 
-        self.ox = @width / 2
-        self.oy = @height
-        # Set rectangle for character (x, y, width, height)
-        self.src_rect.set(0, @height*BATTLER_DIRECTION, @width, @height)        
-        # Change opacity level to 0 when dead or hidden
-        if @battler.dead? or @battler.hidden
-          self.opacity = 0
-        end
-      end      
-    end
-    
-    # shaz - don't make fallen battlers invisible
-    if @battler.is_a?(Game_Actor) && @battler.collapsing && @_collapse_duration == 0
-      self.blend_type = 1
-      self.color.set(255, 255, 255, 255)
-      self.opacity = 150
-      @battler.collapsing = false
-      @battler_visible = false
-    end
-    # If animation ID is different than current one
-    if @battler.damage == nil and
-       @battler.state_animation_id != @state_animation_id
-      @state_animation_id = @battler.state_animation_id
-      loop_animation($data_animations[@state_animation_id])
-    end
-    # If actor which should be displayed
-    if @battler.is_a?(Game_Actor) and @battler_visible
-      # Bring opacity level down a bit when not in main phase
-      if $game_temp.battle_main_phase
-        self.opacity += 3 if self.opacity < 255
-      else
-        self.opacity -= 3 if self.opacity > 207
+    unless @tone == $map.tilemap_tone
+      @tone = $map.tilemap_tone
+      @tone = Tone.new(0, 0, 0, 0) if @tone.nil?
+      for layer in @layers
+        layer.tone = @tone
+        layer.tone = @tone
       end
     end
-    # Blink
-    if @battler.blink
-      blink_on
-    else
-      blink_off
-    end
-    # If invisible
-    unless @battler_visible
-      # Appear
-      if not @battler.hidden and not @battler.dead? and
-         (@battler.damage == nil or @battler.damage_pop)
-        appear
-        @battler_visible = true
+    unless @zoom_x == $map.tilemap_zoom_x
+      @zoom_x = $map.tilemap_zoom_x
+      for layer in @layers
+        layer.zoom_x = @zoom_x
+        layer.zoom_x = @zoom_x
       end
     end
-    # If visible
-    if @battler_visible
-      # Escape
-      if @battler.hidden
-        $game_system.se_play($data_system.escape_se)
-        escape
-        @battler_visible = false
-      end
-      # White flash
-      if @battler.white_flash
-        whiten
-        @battler.white_flash = false
-      end
-      # Animation
-      if @battler.animation_id != 0
-        animation = $data_animations[@battler.animation_id]
-        animation(animation, @battler.animation_hit)
-        @battler.animation_id = 0
-      end
-      # Damage
-      if @battler.damage_pop
-        damage(@battler.damage, @battler.critical)
-        @battler.damage = nil
-        @battler.critical = false
-        @battler.damage_pop = false
-      end
-      # Collapse
-      if @battler.damage == nil and @battler.dead?
-        if @battler.is_a?(Game_Enemy)
-          $game_system.se_play($data_system.enemy_collapse_se)
-        else
-          $game_system.se_play($data_system.actor_collapse_se)
-        end
-        collapse
-        if @battler.is_a?(Game_Actor)
-          @battler.collapsing = true
-        end
-        @battler_visible = false
+    unless @zoom_y == $map.tilemap_zoom_y
+      @zoom_y = $map.tilemap_zoom_y
+      for layer in @layers
+        layer.zoom_y = @zoom_y
+        layer.zoom_y = @zoom_y
       end
     end
-    # Set sprite coordinates
-    self.x = @battler.screen_x
-    self.y = @battler.screen_y
-    self.z = @battler.screen_z
+    for layer in @layers
+      layer.ox = @ox
+      layer.oy = @oy
+    end
+    if Graphics.frame_count % Animated_Autotiles_Frames == 0
+      #refresh_autotiles # Cache the frames or something
+    end
   end
-end
-"E#==============================================================================
+  #--------------------------------------------------------------------------
+  def refresh
+    @data = @map_data
+    for p in 0..5
+      for z in 0...@map_data.zsize
+        for x in 0...@map_data.xsize
+          for y in 0...@map_data.ysize
+            id = @map_data[x, y, z]
+            next if id == 0
+            next unless p == @priorities[id]
+            p = 2 if p > 2
+            id < 384 ? draw_autotile(x, y, p, id) : draw_tile(x, y, p, id)
+          end
+        end
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  def refresh_autotiles
+    autotile_locations = Table.new(@map_data.xsize, @map_data.ysize,
+      @map_data.zsize)
+    for p in 0..5
+      for z in 0...@map_data.zsize
+        for x in 0...@map_data.xsize
+          for y in 0...@map_data.ysize
+            id = @map_data[x, y, z]
+            next if id == 0
+            next unless p == @priorities[id]
+            p = 2 if p > 2
+            if id < 384
+              next unless @autotiles[id / 48 - 1].width / 96 > 1
+              draw_autotile(x, y, p, id)
+              autotile_locations[x, y, z] = 1
+            else
+              if autotile_locations[x, y, z] == 1
+                draw_tile(x, y, p, id)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  #--------------------------------------------------------------------------
+  def draw_tile(x, y, z, id)
+    rect = Rect.new((id - 384) % 8 * 32, (id - 384) / 8 * 32, 32, 32)
+    x *= @tile_width
+    y *= @tile_height
+    if @tile_width == 32 && @tile_height == 32
+      @layers[z].bitmap.blt(x, y, @tileset, rect)
+    else
+      dest_rect = Rect.new(x, y, @tile_width, @tile_height)
+      @layers[z].bitmap.stretch_blt(dest_rect, @tileset, rect)
+    end
+  end
+  #--------------------------------------------------------------------------
+  def draw_autotile(x, y, z, tile_id)
+    autotile = @autotiles[tile_id / 48 - 1]
+    tile_id %= 48
+    bitmap = Bitmap.new(32, 32)
+    tiles = Autotiles[tile_id / 8][tile_id % 8]
+    frames = autotile.width / 96
+    anim = (Graphics.frame_count / Animated_Autotiles_Frames) % frames * 96
+    for i in 0...4
+      tile_position = tiles[i] - 1
+      src_rect = Rect.new(tile_position % 6 * 16 + anim,
+        tile_position / 6 * 16, 16, 16)
+      bitmap.blt(i % 2 * 16, i / 2 * 16, autotile, src_rect)
+    end
+    x *= @tile_width
+    y *= @tile_height
+    if @tile_width == 32 && @tile_height == 32
+      @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, 32, 32))
+    else
+      dest_rect = Rect.new(x, y, @tile_width, @tile_height)
+      @layers[z].bitmap.stretch_blt(dest_rect, bitmap, Rect.new(0, 0, 32, 32))
+    end
+  end
+  #--------------------------------------------------------------------------
+  def bitmap
+    bitmap = Bitmap.new(@layers[0].bitmap.width, @layers[0].bitmap.height)
+    for layer in @layers
+      bitmap.blt(0, 0, layer.bitmap, Rect.new(0, 0, 
+        bitmap.width, bitmap.height))
+    end
+    return bitmap
+  end
+  #--------------------------------------------------------------------------
+end"²# #==============================================================================
+# # ** Sprite_Battler
+# #------------------------------------------------------------------------------
+# #  This sprite is used to display the battler.It observes the Game_Character
+# #  class and automatically changes sprite conditions.
+# #==============================================================================
+
+# class Sprite_Battler < RPG::Sprite
+#   #--------------------------------------------------------------------------
+#   # * Public Instance Variables
+#   #--------------------------------------------------------------------------
+#   attr_accessor :battler                  # battler
+#   #--------------------------------------------------------------------------
+#   # * Object Initialization
+#   #     viewport : viewport
+#   #     battler  : battler (Game_Battler)
+#   #--------------------------------------------------------------------------
+#   def initialize(viewport, battler = nil)
+#     super(viewport)
+#     @battler = battler
+#     @battler_visible = false
+#   end
+#   #--------------------------------------------------------------------------
+#   # * Dispose
+#   #--------------------------------------------------------------------------
+#   def dispose
+#     if self.bitmap != nil
+#       self.bitmap.dispose
+#     end
+#     super
+#   end
+#   #--------------------------------------------------------------------------
+#   # * Frame Update
+#   #--------------------------------------------------------------------------
+#   def update
+#     super
+#     # If battler is nil
+#     if @battler == nil
+#       self.bitmap = nil
+#       loop_animation(nil)
+#       return
+#     end
+    
+#     # If file name or hue are different than current ones
+#     # battler is enemy
+#     if battler.is_a?(Game_Enemy) or BATTLER_TYPE == 0
+#       if @battler.battler_name != @battler_name or @battler.battler_hue != @battler_hue
+#         # Get and set bitmap
+#         @battler_name = @battler.battler_name
+#         @battler_hue = @battler.battler_hue
+#         self.bitmap = RPG::Cache.battler(@battler_name, @battler_hue)       
+#         @width = bitmap.width
+#         @height = bitmap.height
+#         self.ox = @width / 2
+#         self.oy = @height
+#         # Change opacity level to 0 when dead or hidden
+#         if @battler.dead? or @battler.hidden
+#           self.opacity = 0
+#         end
+#       end
+#     # battler is actor
+#     else
+#       if @battler.character_name != @battler_name or @battler.character_hue != @battler_hue
+#         # Get and set bitmap
+#         @battler_name = @battler.character_name
+#         @battler_hue = @battler.character_hue
+#         # Get character bitmap
+#         self.bitmap = RPG::Cache.character(@battler_name, @battler_hue)       
+#         @width = bitmap.width / 4 
+#         @height = bitmap.height / 4 
+#         self.ox = @width / 2
+#         self.oy = @height
+#         # Set rectangle for character (x, y, width, height)
+#         self.src_rect.set(0, @height*BATTLER_DIRECTION, @width, @height)        
+#         # Change opacity level to 0 when dead or hidden
+#         if @battler.dead? or @battler.hidden
+#           self.opacity = 0
+#         end
+#       end      
+#     end
+    
+#     # shaz - don't make fallen battlers invisible
+#     if @battler.is_a?(Game_Actor) && @battler.collapsing && @_collapse_duration == 0
+#       self.blend_type = 1
+#       self.color.set(255, 255, 255, 255)
+#       self.opacity = 150
+#       @battler.collapsing = false
+#       @battler_visible = false
+#     end
+#     # If animation ID is different than current one
+#     if @battler.damage == nil and
+#        @battler.state_animation_id != @state_animation_id
+#       @state_animation_id = @battler.state_animation_id
+#       loop_animation($data_animations[@state_animation_id])
+#     end
+#     # If actor which should be displayed
+#     if @battler.is_a?(Game_Actor) and @battler_visible
+#       # Bring opacity level down a bit when not in main phase
+#       if $game_temp.battle_main_phase
+#         self.opacity += 3 if self.opacity < 255
+#       else
+#         self.opacity -= 3 if self.opacity > 207
+#       end
+#     end
+#     # Blink
+#     if @battler.blink
+#       blink_on
+#     else
+#       blink_off
+#     end
+#     # If invisible
+#     unless @battler_visible
+#       # Appear
+#       if not @battler.hidden and not @battler.dead? and
+#          (@battler.damage == nil or @battler.damage_pop)
+#         appear
+#         @battler_visible = true
+#       end
+#     end
+#     # If visible
+#     if @battler_visible
+#       # Escape
+#       if @battler.hidden
+#         $game_system.se_play($data_system.escape_se)
+#         escape
+#         @battler_visible = false
+#       end
+#       # White flash
+#       if @battler.white_flash
+#         whiten
+#         @battler.white_flash = false
+#       end
+#       # Animation
+#       if @battler.animation_id != 0
+#         animation = $data_animations[@battler.animation_id]
+#         animation(animation, @battler.animation_hit)
+#         @battler.animation_id = 0
+#       end
+#       # Damage
+#       if @battler.damage_pop
+#         damage(@battler.damage, @battler.critical)
+#         @battler.damage = nil
+#         @battler.critical = false
+#         @battler.damage_pop = false
+#       end
+#       # Collapse
+#       if @battler.damage == nil and @battler.dead?
+#         if @battler.is_a?(Game_Enemy)
+#           $game_system.se_play($data_system.enemy_collapse_se)
+#         else
+#           $game_system.se_play($data_system.actor_collapse_se)
+#         end
+#         collapse
+#         if @battler.is_a?(Game_Actor)
+#           @battler.collapsing = true
+#         end
+#         @battler_visible = false
+#       end
+#     end
+#     # Set sprite coordinates
+#     self.x = @battler.screen_x
+#     self.y = @battler.screen_y
+#     self.z = @battler.screen_z
+#   end
+# end
+"@#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
 #  class and automatically changes sprite conditions.
 #==============================================================================
 
-class Sprite_Character < RPG::Sprite
+class Sprite_Character < Sprite
 
   attr_accessor :character     
 
@@ -10212,7 +10742,7 @@ class Game_Hud
     
   end
   
-end"##==============================================================================
+end"A$#==============================================================================
 # ** Spriteset_Map
 #------------------------------------------------------------------------------
 #  This class brings together map screen sprites, tilemaps, etc.
@@ -10257,9 +10787,15 @@ class Game_World
     
     # Make viewports
     # agf - make viewport shorter to allow for HUD
-    @viewport1 = Viewport.new(0, 0, 640, 448)
-    @viewport2 = Viewport.new(0, 0, 640, 480)
-    @viewport3 = Viewport.new(0, 0, 640, 480)
+    if ACE_MODE
+    @viewport1 = Viewport.new(0, 0, Graphics.width, Graphics.height)         # Was 448 for hud
+    @viewport2 = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport3 = Viewport.new(0, 0, Graphics.width, Graphics.height)
+  else
+        @viewport1 = Viewport.new(0, 0, 640,448)         # Was 448 for hud
+    @viewport2 = Viewport.new(0, 0, 640,480)
+    @viewport3 = Viewport.new(0, 0, 640,480)
+  end
     @viewport2.z = 200
     @viewport3.z = 5000
 
@@ -10566,7 +11102,7 @@ class Ui_Menu < Ui_Base
     super(1111)
   end
 
-end"‹+#==============================================================================
+end"S+#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -10854,10 +11390,6 @@ class Ui_Message < Ui_Base
 
     # Remove characters
     @word.delete!('*^')
-
-    @wordlength = @word.length
-
-    log_sys(@word)
 
     # CHECK FOR COMMANDS
     if @word.include?('$')

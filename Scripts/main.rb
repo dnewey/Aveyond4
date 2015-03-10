@@ -23,8 +23,14 @@ APPFOLDER = "Aveyond 4"
 
   def aveyond4
 
+      #if ACE_MODE
+        #Graphics.resize_screen(800,480) 
+      #end
+
+      Graphics.frame_rate = 60
+
       # User Data folder
-      Win32API.new('Utils', "AVSetEnv", ["V"], "I").call          
+      Win32API.new('System/Utils', "AVSetEnv", ["V"], "I").call          
       $appdata = ENV['AV_APPDATA'] + "\\" + APPFOLDER
       Dir.mkdir($appdata) if !File.exists?($appdata) 
 

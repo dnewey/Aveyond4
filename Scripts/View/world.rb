@@ -43,9 +43,15 @@ class Game_World
     
     # Make viewports
     # agf - make viewport shorter to allow for HUD
-    @viewport1 = Viewport.new(0, 0, 640, 448)
-    @viewport2 = Viewport.new(0, 0, 640, 480)
-    @viewport3 = Viewport.new(0, 0, 640, 480)
+    if ACE_MODE
+    @viewport1 = Viewport.new(0, 0, Graphics.width, Graphics.height)         # Was 448 for hud
+    @viewport2 = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport3 = Viewport.new(0, 0, Graphics.width, Graphics.height)
+  else
+        @viewport1 = Viewport.new(0, 0, 640,448)         # Was 448 for hud
+    @viewport2 = Viewport.new(0, 0, 640,480)
+    @viewport3 = Viewport.new(0, 0, 640,480)
+  end
     @viewport2.z = 200
     @viewport3.z = 5000
 

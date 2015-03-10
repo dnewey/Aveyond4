@@ -53,7 +53,7 @@ class DataManager
 		# Convert to json
     @commons = load_data("Data/CommonEvents.rxdata")
     @tilesets = load_data("Data/Tilesets.rxdata")
-    @system = load_data("Data/System.rxdata")
+    #@system = load_data("Data/System.rxdata")
     @mapinfos = load_data("Data/MapInfos.rxdata")
 
 	end
