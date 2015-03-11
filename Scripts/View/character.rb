@@ -40,11 +40,10 @@ class Sprite_Character < Sprite
         self.oy = 32
       # If tile ID value is invalid
       else
-        #self.bitmap = RPG::Cache.character(@character.character_name,0)#@character.character_name,
-        #if self == $player
-          self.bitmap = RPG::Cache.character("boyle",0)#@character.character_name,
-        #end
-          #@character.character_hue)
+        self.bitmap = RPG::Cache.character(@character.character_name,0)
+        if @character == $player
+          self.bitmap = RPG::Cache.character("boyle",0)
+        end
         @cw = bitmap.width / 4
         @ch = bitmap.height / 4
         self.ox = @cw / 2
@@ -70,7 +69,6 @@ class Sprite_Character < Sprite
     
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity
-    self.blend_type = @character.blend_type
     self.bush_depth = @character.bush_depth
     
     # Animation

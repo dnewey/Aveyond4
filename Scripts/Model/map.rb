@@ -23,6 +23,13 @@ class Game_Map
     
   attr_accessor :display_x                # display x-coordinate * 128
   attr_accessor :display_y                # display y-coordinate * 128
+  
+  attr_accessor :target_x
+  attr_accessor :target_y
+
+  attr_accessor :target
+
+
   attr_accessor :need_refresh             # refresh request flag
   
   attr_reader   :events                   # events
@@ -80,6 +87,11 @@ class Game_Map
     # Initialize displayed coordinates
     @display_x = 0
     @display_y = 0
+
+    @target_x = 0
+    @target_y = 0
+
+    @target = nil
     
     # Clear refresh request flag
     @need_refresh = false
@@ -386,24 +398,48 @@ class Game_Map
     if $map.need_refresh
       refresh
     end
-    # If scrolling
-    if @scroll_rest > 0
-      # Change from scroll speed to distance in map coordinates
-      distance = 2 ** @scroll_speed
-      # Execute scrolling
-      case @scroll_direction
-      when 2  # Down
-        scroll_down(distance)
-      when 4  # Left
-        scroll_left(distance)
-      when 6  # Right
-        scroll_right(distance)
-      when 8  # Up
-        scroll_up(distance)
-      end
-      # Subtract distance scrolled
-      @scroll_rest -= distance
+
+    @target = $player if @target == nil
+
+    if @target != nil
+    @target_x = @target.real_x- (128 * 9.5)
+    @target_y = @target.real_y- (128 * 7)
+
+
+    if @target_x > @display_x
+      @display_x += (@target_x-@display_x) * 0.2
     end
+    if @target_x < @display_x
+      @display_x -= (@display_x-@target_x) * 0.2
+    end
+
+    if @target_y > @display_y
+      @display_y += 3
+    end
+    if @target_y < @display_y
+      @display_y -= 3
+    end
+  end
+
+
+    # If scrolling
+    # if @scroll_rest > 0
+    #   # Change from scroll speed to distance in map coordinates
+    #   distance = 2 ** @scroll_speed
+    #   # Execute scrolling
+    #   case @scroll_direction
+    #   when 2  # Down
+    #     scroll_down(distance)
+    #   when 4  # Left
+    #     scroll_left(distance)
+    #   when 6  # Right
+    #     scroll_right(distance)
+    #   when 8  # Up
+    #     scroll_up(distance)
+    #   end
+    #   # Subtract distance scrolled
+    #   @scroll_rest -= distance
+    # end
     # Update map event
     for event in @events.values
       # event must be in range to be updated (anti-lag)

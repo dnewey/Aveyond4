@@ -13,7 +13,20 @@ class GameManager
         $scene = Scene_Splash.new    
       end
 
+        Font.default_size = 22
+        Font.default_outline = false
+        Font.default_shadow = true
+        Font.default_name = "Consolas"
+
      end
+
+     def width
+      return Graphics.width
+    end
+
+    def height
+      return Graphics.height
+    end
 
      def quick_start
 

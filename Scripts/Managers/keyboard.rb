@@ -2,6 +2,17 @@
 # ** Keyboard Manager
 #==============================================================================
 
+VK_BS = 8
+VK_TAB = 9
+VK_ENTER = 13
+VK_ESC = 27
+VK_TILDE = 192
+
+VK_LEFT = 37
+VK_UP = 38
+VK_RIGHT = 39
+VK_DOWN = 40
+
 class KeyboardManager
 
 	KeyState = Win32API.new("user32","GetKeyState",['i'],'i')
@@ -66,7 +77,7 @@ class KeyboardManager
       when 56; shift ? '*' : '8'
       when 57; shift ? '(' : '9'
 
-      when 65..90; key.chr.downcase
+      when 65..90; shift ? key.chr.upcase : key.chr.downcase
 
       when 186; shift ? ':' : ';' 
       when 187; shift ? '+' : '=' 

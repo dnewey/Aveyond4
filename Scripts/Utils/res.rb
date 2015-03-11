@@ -2,12 +2,12 @@
 if ACE_MODE
 
 	# Have to eval this or it crashes in xp mode
-	# FOR NOW
+	# FOR NOW 853,480
 
 	# Add /" to line 23 for the x90
 
 	# maximal width
-	eval "width = 853
+	eval "width = 640
 	# maximal height
 	height = 480
 

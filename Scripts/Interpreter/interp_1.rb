@@ -47,6 +47,10 @@ class Interpreter
     @child_interpreter = nil          # child interpreter
     @branch = {}                      # branch data
   end
+
+  def this
+    return $map.events[@event_id]
+  end
   
   #--------------------------------------------------------------------------
   # * Event Setup

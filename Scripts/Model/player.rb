@@ -350,7 +350,7 @@ class Game_Player < Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
-    if $hud.busy?
+    if $hud.busy? || $debug.busy?
       return
     end
 
@@ -476,6 +476,9 @@ class Game_Player < Game_Character
     # Remember coordinates in local variables
     last_real_x = @real_x
     last_real_y = @real_y
+
+    #$map.target_x = @real_x - (128 * 9.5)
+    #$map.target_y = @real_y- (128 * 7)
     super
     # If character moves down and is positioned lower than the center
     # of the screen

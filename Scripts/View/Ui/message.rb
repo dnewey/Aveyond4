@@ -41,11 +41,10 @@ class Ui_Message < Ui_Base
     @lines = []
 
 
-
     # Settings
     @font = nil
-    @bold = true
-    @italic = true
+    @bold = false
+    @italic = false
     @color = nil
 
     # Text display
@@ -186,7 +185,6 @@ class Ui_Message < Ui_Base
   # * Update Message
   #--------------------------------------------------------------------------
   def update_message
-
     
     # if the current word is empty, get the next one and see if it fits
     next_word if @word == nil || @char_idx > @word.length
@@ -263,11 +261,6 @@ class Ui_Message < Ui_Base
       # Step cursor
       @cx += word_width(@word)
 
-      # Check for end bold
-      if @word[-1] == '*'[0]
-        bold(false)
-      end
-
     end
 
     @word_idx += 1
@@ -279,10 +272,6 @@ class Ui_Message < Ui_Base
     end
 
     @word = @lines[@line_idx][@word_idx]
-
-    if @word[0] == '*'[0]
-      bold(true)
-    end
 
     # Remove characters
     @word.delete!('*^')
@@ -297,6 +286,12 @@ class Ui_Message < Ui_Base
       
         when "$n" # New line
           next_line
+
+        when "$b"
+          bold
+
+        when "$i"
+          italic
           
         when "$w" # wait quarter second or custom
           @wait_frames = cmd.size > 1 ? cmd[1].to_i : 15
@@ -375,12 +370,9 @@ class Ui_Message < Ui_Base
   # Calculate size
   #--------------------------------------------------------------------------
   def word_width(word)
-
-      # Gotta switch bold on and off here
-
       return TAB_WIDTH if word == "$t"
       return 0 if word.include?("$")
-      return @scratch.text_size(word.delete('*^')).width + SPACING
+      return @scratch.text_size(word).width + SPACING
   end
 
   def max_width
@@ -443,11 +435,25 @@ class Ui_Message < Ui_Base
 
   end
 
-  def bold(val)
-    @text_bmp.font.bold = val
-    @textbox.bitmap.font.bold = val
+  def bold(val=nil)
+    if val == nil
+      @bold = !@bold  
+    else
+      @bold = val
+    end
+    @text_bmp.font.bold = @bold
+    @textbox.bitmap.font.bold = @bold
   end
 
+  def italic(val=nil)
+    if val == nil
+      @italic = !@italic
+    else
+      @italic = val
+    end
+    @text_bmp.font.italic = @italic
+    @textbox.bitmap.font.italic = @italic
+  end
 
   #--------------------------------------------------------------------------
   # Misc

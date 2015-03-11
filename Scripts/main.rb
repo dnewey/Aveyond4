@@ -34,8 +34,14 @@ APPFOLDER = "Aveyond 4"
       $appdata = ENV['AV_APPDATA'] + "\\" + APPFOLDER
       Dir.mkdir($appdata) if !File.exists?($appdata) 
 
+      begin
+
       $debug = DebugManager.new
       $DEBUG = true
+
+      rescue StandardError => e
+        p e.inspect
+      end
 
       $audio = AudioManager.new
 
@@ -49,13 +55,14 @@ APPFOLDER = "Aveyond 4"
       $settings = SettingsManager.new
       $files = FileManager.new
 
-      $game = GameManager.new
+      $game = GameManager.new  
 
       # Call main method as long as $scene is effective      
       $game.update until $game.quit?
       
       # Set the windowed mode for next time
       $settings.conclude
+
       
   rescue ScriptError => e
 
