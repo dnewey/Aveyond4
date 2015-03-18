@@ -2,10 +2,10 @@
 # ** Nano Manager
 #==============================================================================
 
-class NanoManager
+class TweenManager
 
 	def initialize
-		@nanos = []
+		@tweens = []
 		@last = Time.now
 	end
 
@@ -15,25 +15,25 @@ class NanoManager
 		delta = ((Time.now - @last) * 1000).to_i
 		@last = Time.now
 
-		@nanos.delete_if{ |n| n == nil || n.done? }
-	    @nanos.each{ |n| n.update(delta) }
+		@tweens.delete_if{ |n| n == nil || n.done? }
+	    @tweens.each{ |n| n.update(delta) }
 
 	end
 
-	def register(nano)
-		@nanos.push(nano)
+	def register(tween)
+		@tweens.push(tween)
 	end
 
 	def clear(object)
-		@nanos.delete_if{ |n| n.parent == object } 
+		@tweens.delete_if{ |n| n.parent == object } 
 	end
 
 	def clear_all
-		@nanos.clear
+		@tweens.clear
 	end
 
 	def done?(object)
-		return @nanos.select{ |n| n.parent == object }.empty?
+		return @tweens.select{ |n| n.parent == object }.empty?
 	end
 
 end

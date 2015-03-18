@@ -1178,7 +1178,7 @@ class Interpreter
     return true
   end
 end
-"õ:#==============================================================================
+"ì8#==============================================================================
 # ** Interpreter (part 5)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -1281,25 +1281,7 @@ class Interpreter
     # Continue
     return true
   end
-  #--------------------------------------------------------------------------
-  # * Scroll Map
-  #--------------------------------------------------------------------------
-  def command_203
-    # If in battle
-    # if $game_temp.in_battle
-    #   # Continue
-    #   return true
-    # end
-    # If already scrolling
-    if $map.scrolling?
-      # End
-      return false
-    end
-    # Start scroll
-    $map.start_scroll(@parameters[0], @parameters[1], @parameters[2])
-    # Continue
-    return true
-  end
+
   #--------------------------------------------------------------------------
   # * Change Map Settings
   #--------------------------------------------------------------------------
@@ -1857,7 +1839,7 @@ class Interpreter
   end
 
 end
-"£#==============================================================================
+" #==============================================================================
 # ** Interpreter (part 7)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -1889,13 +1871,26 @@ class Interpreter
     # Evaluation
     result = eval(script)
 
+  rescue Exception => e
+
+    line = e.message.split(":")[1].to_i      
+    log_scr e.inspect
+
+    lc = 0
+      script.split("\n").each{ |s|
+        if lc == line
+          s = "---> "+s
+        end
+        log_scr s
+        lc+=1
+      }
+
     # Continue
     return true
      
   end
 end
-"Ë
-#==============================================================================
+"R#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1920,22 +1915,14 @@ APPFOLDER = "Aveyond 4"
 
   def aveyond4
 
-      #if ACE_MODE
-        #Graphics.resize_screen(800,480) 
-      #end
-
-      Graphics.frame_rate = 60
-
       # User Data folder
       Win32API.new('System/Utils', "AVSetEnv", ["V"], "I").call          
       $appdata = ENV['AV_APPDATA'] + "\\" + APPFOLDER
       Dir.mkdir($appdata) if !File.exists?($appdata) 
 
+      # Who will debug the debug?
       begin
-
-      $debug = DebugManager.new
-      $DEBUG = true
-
+        $debug = DebugManager.new
       rescue StandardError => e
         p e.inspect
       end
@@ -1947,7 +1934,7 @@ APPFOLDER = "Aveyond 4"
       $mouse = MouseManager.new
 
       $data = DataManager.new
-      $nanos = NanoManager.new
+      $tweens = TweenManager.new
 
       $settings = SettingsManager.new
       $files = FileManager.new
@@ -1960,23 +1947,6 @@ APPFOLDER = "Aveyond 4"
       # Set the windowed mode for next time
       $settings.conclude
 
-      
-  rescue ScriptError => e
-
-    line = e.message.split(":")[1].to_i      
-    log_err e.inspect
-    log_err "------------------"
-    
-    e.backtrace.each{ |location|
-      line_num = location.split(":")[1]
-      script_name = location.split(":")[0].split("/").last
-      method = location.split(":")[2]
-      next if method == nil
-      loc_err = "Line " + line_num + ", in "+script_name+ ", "+method.to_s
-      loc_err = "Game Start" if script_name.include?("{0128")
-      log_err("#{loc_err}")
-    }     
-    
   rescue StandardError => e
       
     line = e.message.split(":")[1].to_i      
@@ -2080,8 +2050,7 @@ class AudioManager
       stop_bgs
   end     
 
-end"‹	
- module RPG
+end"
   module Cache
 
     def self.animation(filename, hue)
@@ -2163,8 +2132,92 @@ end"‹
       GC.start
     end
   end
-  
-end"!#==============================================================================
+
+
+
+module RPG
+  module Cache
+
+    def self.animation(filename, hue)
+      self.load_bitmap("Graphics/Animations/", filename, hue)
+    end
+    def self.autotile(filename)
+      self.load_bitmap("Graphics/Autotiles/", filename)
+    end
+    def self.character(filename, hue)
+      self.load_bitmap("Graphics/Characters/", filename, hue)
+    end
+    def self.cursor(filename)
+      self.load_bitmap("Graphics/Cursors/", filename)
+    end
+    def self.face(filename)
+      self.load_bitmap("Graphics/Faces/", filename)
+    end
+    def self.fog(filename, hue)
+      self.load_bitmap("Graphics/Fogs/", filename, hue)
+    end
+    def self.icon(filename)
+      self.load_bitmap("Graphics/Icons/", filename)
+    end
+    def self.menu(filename)
+      self.load_bitmap("Graphics/Menus/", filename)
+    end
+    def self.panorama(filename, hue)
+      self.load_bitmap("Graphics/Panoramas/", filename, hue)
+    end
+    def self.picture(filename)
+      self.load_bitmap("Graphics/Pictures/", filename)
+    end
+    def self.tileset(filename)
+      self.load_bitmap("Graphics/Tilesets/", filename)
+    end
+    def self.title(filename)
+      self.load_bitmap("Graphics/Titles/", filename)
+    end
+    def self.windowskin(filename)
+      self.load_bitmap("Graphics/Windowskins/", filename)
+    end
+    def self.tile(filename, tile_id, hue)
+      key = [filename, tile_id, hue]
+      if not @cache.include?(key) or @cache[key].disposed?
+        @cache[key] = Bitmap.new(32, 32)
+        x = (tile_id - 384) % 8 * 32
+        y = (tile_id - 384) / 8 * 32
+        rect = Rect.new(x, y, 32, 32)
+        @cache[key].blt(0, 0, self.tileset(filename), rect)
+        @cache[key].hue_change(hue)
+      end
+      @cache[key]
+    end
+
+    @cache = {}
+    def self.load_bitmap(folder_name, filename, hue = 0)
+      path = folder_name + filename
+      if not @cache.include?(path) or @cache[path].disposed?
+        if filename != ""
+          @cache[path] = Bitmap.new(path)
+        else
+          @cache[path] = Bitmap.new(32, 32)
+        end
+      end
+      if hue == 0
+        @cache[path]
+      else
+        key = [path, hue]
+        if not @cache.include?(key) or @cache[key].disposed?
+          @cache[key] = @cache[path].clone
+          @cache[key].hue_change(hue)
+        end
+        @cache[key]
+      end
+    end
+
+    def self.clear
+      @cache = {}
+      GC.start
+    end
+  end
+end" #==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -2219,7 +2272,7 @@ class DataManager
 		# Convert to json
     @commons = load_data("Data/CommonEvents.rxdata")
     @tilesets = load_data("Data/Tilesets.rxdata")
-    #@system = load_data("Data/System.rxdata")
+    @system = load_data("Data/System.rxdata")
     @mapinfos = load_data("Data/MapInfos.rxdata")
 
 	end
@@ -2345,7 +2398,7 @@ class DataManager
 
   end
 
- end"E#==============================================================================
+ end"X#==============================================================================
 # ** Debug
 #==============================================================================
 
@@ -2369,6 +2422,8 @@ class DebugManager
 
 	def initialize		
 		return if !DEBUG
+
+		$DEBUG = true
 
 		# Prepare log file
 		@path = $appdata + "\\log.txt"
@@ -2556,7 +2611,7 @@ class FileManager
   end
   
 end
-"<#==============================================================================
+"q#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -2564,76 +2619,87 @@ class GameManager
 
 	def initialize
 
-      # Make scene object (title screen)
-      if DEBUG && $settings.debug_skip_title
-        quick_start
-      else
-        $scene = Scene_Splash.new    
-      end
+    # Setup font
+    Font.default_size = 22
+    Font.default_name = "Consolas"
 
-        Font.default_size = 22
-        Font.default_outline = false
-        Font.default_shadow = true
-        Font.default_name = "Consolas"
-
-     end
-
-     def width
-      return Graphics.width
+    if ACE_MODE
+      Font.default_outline = false
+      Font.default_shadow = true
     end
 
-    def height
-      return Graphics.height
+    Graphics.frame_rate = 60
+    set_rez(720,480)
+
+    @scenes = []
+
+    # Make scene object (title screen)
+    if DEBUG && $settings.debug_skip_title
+      quick_start
+    else
+      $scene = Scene_Splash.new    
     end
 
-     def quick_start
+  end
 
-      # Game State Objects
-      $temp = Game_Temp.new
-      $progress = Av::Progress.new
-      $state = Av::State.new
+   def width
+    return Graphics.width
+  end
 
-      $player        = Game_Player.new
-      $party = Game_Party.new
+  def height
+    return Graphics.height
+  end
 
-      # Model
+   def quick_start
 
-      
-      $map           = Game_Map.new
-      $map.setup(2)#$data.system.start_map_id)
+    # Game State Objects
+    $temp = Game_Temp.new
+    $progress = Av::Progress.new
+    $state = Av::State.new
 
-      # Set up initial map position
-      
-      $player.moveto(10,10)#XP - VX $data.system.start_x, $data.system.start_y)
-      $player.refresh
-      $map.autoplay
-      $map.update
+    $player = Game_Player.new
+    $party = Game_Party.new
 
-      $hud = Game_Hud.new
+    # Model    
+    $map = Game_Map.new
+    $map.setup($data.system.start_map_id)
 
-      # Switch to map screen
-      $scene = Scene_Map.new
+    # Set up initial map position    
+    $player.moveto($data.system.start_x, $data.system.start_y)
+    $player.refresh
+    $map.autoplay
+    $map.update
 
-    end
+    $hud = Game_Hud.new
 
+    # Switch to map screen
+    push_scene(Scene_Map.new)
 
-     def quit?
-      return false
-    end
+  end
 
+  def push_scene(scene)
+    @scenes.unshift(scene)
+  end
 
-     def update
+  def pop_scene
+    @scenes.shift.terminate
+  end
 
-          $keyboard.update
-          $mouse.update
-          $debug.update
-          $hud.update
-          Graphics.update
-          Input.update
-          $scene.update
+  def quit?
+    return false
+  end
 
-     end
+  def update
 
+    $keyboard.update
+    $mouse.update
+    $debug.update
+    $hud.update
+    Graphics.update
+    Input.update
+    @scenes[0].update
+
+  end
 
   def flip_window
     
@@ -2648,9 +2714,6 @@ class GameManager
     end
 
   end
-
-  
-
 
 end" "#==============================================================================
 # ** Keyboard Manager
@@ -2789,14 +2852,14 @@ class MouseManager
     
   end
 
-end"È#==============================================================================
+end"Ò#==============================================================================
 # ** Nano Manager
 #==============================================================================
 
-class NanoManager
+class TweenManager
 
 	def initialize
-		@nanos = []
+		@tweens = []
 		@last = Time.now
 	end
 
@@ -2806,25 +2869,25 @@ class NanoManager
 		delta = ((Time.now - @last) * 1000).to_i
 		@last = Time.now
 
-		@nanos.delete_if{ |n| n == nil || n.done? }
-	    @nanos.each{ |n| n.update(delta) }
+		@tweens.delete_if{ |n| n == nil || n.done? }
+	    @tweens.each{ |n| n.update(delta) }
 
 	end
 
-	def register(nano)
-		@nanos.push(nano)
+	def register(tween)
+		@tweens.push(tween)
 	end
 
 	def clear(object)
-		@nanos.delete_if{ |n| n.parent == object } 
+		@tweens.delete_if{ |n| n.parent == object } 
 	end
 
 	def clear_all
-		@nanos.clear
+		@tweens.clear
 	end
 
 	def done?(object)
-		return @nanos.select{ |n| n.parent == object }.empty?
+		return @tweens.select{ |n| n.parent == object }.empty?
 	end
 
 end"}#==============================================================================
@@ -5386,7 +5449,7 @@ class Game_Troop
     end
   end
 end
-"ß2#==============================================================================
+"á2#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -5459,7 +5522,7 @@ class Game_Character
     @original_direction = 2
     @original_pattern = 0
     @move_type = 0
-    @move_speed = 3
+    @move_speed = 5#3
     @move_frequency = 6
     @move_route = nil
     @move_route_index = 0
@@ -6154,7 +6217,7 @@ class Game_Character
     @stop_count = 0
   end
 end
-">#==============================================================================
+">#==============================================================================
 # ** Game_Character (part 3)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -6183,8 +6246,8 @@ class Game_Character
       increase_steps
     # If impassable
     else
-      # Determine if touch event is triggered
-      check_event_trigger_touch(@x, @y+1)
+      # Determine if touch event is triggered IF ENEMY ONLY
+      #check_event_trigger_touch(@x, @y+1)
     end
   end
   #--------------------------------------------------------------------------
@@ -6207,7 +6270,7 @@ class Game_Character
     # If impassable
     else
       # Determine if touch event is triggered
-      check_event_trigger_touch(@x-1, @y)
+      #check_event_trigger_touch(@x-1, @y)
     end
   end
   #--------------------------------------------------------------------------
@@ -6230,7 +6293,7 @@ class Game_Character
     # If impassable
     else
       # Determine if touch event is triggered
-      check_event_trigger_touch(@x+1, @y)
+     # check_event_trigger_touch(@x+1, @y)
     end
   end
   #--------------------------------------------------------------------------
@@ -6253,7 +6316,7 @@ class Game_Character
     # If impassable
     else
       # Determine if touch event is triggered
-      check_event_trigger_touch(@x, @y-1)
+     # check_event_trigger_touch(@x, @y-1)
     end
   end
   #--------------------------------------------------------------------------
@@ -6792,7 +6855,7 @@ end
 #     return [false, nil, nil]        
 #   end
 # end
-"!#==============================================================================
+"S!#==============================================================================
 # ** Game_Event
 #------------------------------------------------------------------------------
 #  This class deals with events. It handles functions including event page 
@@ -7039,9 +7102,12 @@ class Game_Event < Game_Character
           @width = data[1].to_i
         when '#height'
           @height = data[1].to_i
+        when '#gfx'
+          @character_name += "X/" + data[1]
 
       end
     }
+    
 
   end
 
@@ -7104,7 +7170,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"¬?#==============================================================================
+end"Ü2#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -7142,8 +7208,7 @@ class Game_Map
   
   attr_reader   :fog_ox                   # fog x-coordinate starting point
   attr_reader   :fog_oy                   # fog y-coordinate starting point
-  attr_reader   :fog_tone                 # fog color tone
-  
+
   
   attr_reader   :map_name                 # name of the map
     
@@ -7211,16 +7276,8 @@ class Game_Map
     # Initialize all fog information
     @fog_ox = 0
     @fog_oy = 0
-    @fog_tone = Tone.new(0, 0, 0, 0)
-    @fog_tone_target = Tone.new(0, 0, 0, 0)
-    @fog_tone_duration = 0
     @fog_opacity_duration = 0
     @fog_opacity_target = 0
-    
-    # Initialize scroll information
-    @scroll_direction = 2
-    @scroll_rest = 0
-    @scroll_speed = 4
         
     # Clear player path for mouse pathfinding
     #$player.clear_path
@@ -7297,38 +7354,6 @@ class Game_Map
     @need_refresh = false
   end
   
-  #--------------------------------------------------------------------------
-  # * Scroll Down
-  #     distance : scroll distance
-  #--------------------------------------------------------------------------
-  def scroll_down(distance)
-    # agf - changed 15 to 14.  Determines bottom of map.
-    @display_y = [@display_y + distance, (self.height - 14) * 128].min
-  end
-
-  #--------------------------------------------------------------------------
-  # * Scroll Left
-  #     distance : scroll distance
-  #--------------------------------------------------------------------------
-  def scroll_left(distance)
-    @display_x = [@display_x - distance, 0].max
-  end
-
-  #--------------------------------------------------------------------------
-  # * Scroll Right
-  #     distance : scroll distance
-  #--------------------------------------------------------------------------
-  def scroll_right(distance)
-    @display_x = [@display_x + distance, (self.width - 20) * 128].min
-  end
-  #--------------------------------------------------------------------------
-  # * Scroll Up
-  #     distance : scroll distance
-  #--------------------------------------------------------------------------
-  def scroll_up(distance)
-    @display_y = [@display_y - distance, 0].max
-  end
-
   #--------------------------------------------------------------------------
   # * Determine Valid Coordinates
   #     x          : x-coordinate
@@ -7471,26 +7496,6 @@ class Game_Map
   end
 
   #--------------------------------------------------------------------------
-  # * Start Scroll
-  #     direction : scroll direction
-  #     distance  : scroll distance
-  #     speed     : scroll speed
-  #--------------------------------------------------------------------------
-  def start_scroll(direction, distance, speed)
-    @scroll_direction = direction
-    @scroll_rest = distance * 128
-    @scroll_speed = speed
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Determine if Scrolling
-  #--------------------------------------------------------------------------
-  def scrolling?
-    return @scroll_rest > 0
-  end
-
-
-  #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
@@ -7525,27 +7530,9 @@ class Game_Map
     if @target_y < @display_y
       @display_y -= 3
     end
+
   end
 
-
-    # If scrolling
-    # if @scroll_rest > 0
-    #   # Change from scroll speed to distance in map coordinates
-    #   distance = 2 ** @scroll_speed
-    #   # Execute scrolling
-    #   case @scroll_direction
-    #   when 2  # Down
-    #     scroll_down(distance)
-    #   when 4  # Left
-    #     scroll_left(distance)
-    #   when 6  # Right
-    #     scroll_right(distance)
-    #   when 8  # Up
-    #     scroll_up(distance)
-    #   end
-    #   # Subtract distance scrolled
-    #   @scroll_rest -= distance
-    # end
     # Update map event
     for event in @events.values
       # event must be in range to be updated (anti-lag)
@@ -7559,16 +7546,6 @@ class Game_Map
    # @fog_ox -= @fog_sx / 8.0
    # @fog_oy -= @fog_sy / 8.0
     
-    # Manage change in fog color tone
-    # if @fog_tone_duration >= 1
-    #   d = @fog_tone_duration
-    #   target = @fog_tone_target
-    #   @fog_tone.red = (@fog_tone.red * (d - 1) + target.red) / d
-    #   @fog_tone.green = (@fog_tone.green * (d - 1) + target.green) / d
-    #   @fog_tone.blue = (@fog_tone.blue * (d - 1) + target.blue) / d
-    #   @fog_tone.gray = (@fog_tone.gray * (d - 1) + target.gray) / d
-    #   @fog_tone_duration -= 1
-    # end
     # # Manage change in fog opacity level
     # if @fog_opacity_duration >= 1
     #   d = @fog_opacity_duration
@@ -7620,7 +7597,7 @@ class Game_Map
   end
 
 end
-"ÇM#==============================================================================
+"ÞI#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -8102,30 +8079,7 @@ class Game_Player < Game_Character
     #$map.target_x = @real_x - (128 * 9.5)
     #$map.target_y = @real_y- (128 * 7)
     super
-    # If character moves down and is positioned lower than the center
-    # of the screen
-    # if @real_y > last_real_y and @real_y - $map.display_y > CENTER_Y
-    #   # Scroll map down
-    #   $map.scroll_down(@real_y - last_real_y)
-    # end
-    # # If character moves left and is positioned more let on-screen than
-    # # center
-    # if @real_x < last_real_x and @real_x - $map.display_x < CENTER_X
-    #   # Scroll map left
-    #   $map.scroll_left(last_real_x - @real_x)
-    # end
-    # # If character moves right and is positioned more right on-screen than
-    # # center
-    # if @real_x > last_real_x and @real_x - $map.display_x > CENTER_X
-    #   # Scroll map right
-    #   $map.scroll_right(@real_x - last_real_x)
-    # end
-    # # If character moves up and is positioned higher than the center
-    # # of the screen
-    # if @real_y < last_real_y and @real_y - $map.display_y < CENTER_Y
-    #   # Scroll map up
-    #   $map.scroll_up(last_real_y - @real_y)
-    # end
+   
     # If not moving
     unless moving?
       # If player was moving last time
@@ -8228,7 +8182,7 @@ class Scene_Base
   end
 
 end
-"0
+"X
 #==============================================================================
 # ** Scene_Map
 #==============================================================================
@@ -8244,6 +8198,9 @@ class Scene_Map < Scene_Base
 
     @hud = Game_Hud.new
     @world = Game_World.new
+
+    $hud = @hud
+    $world = @world
             
   end
   
@@ -9893,7 +9850,7 @@ end
 Graphics.load_fullscreen_settings
 
 
-end"module RPG
+end"­module RPG
   class Tileset
     def initialize
       @id = 0
@@ -9933,64 +9890,216 @@ end"module RPG
     attr_accessor :priorities
     attr_accessor :terrain_tags
   end
-end"/
-if ACE_MODE
+end
 
-	# Have to eval this or it crashes in xp mode
-	# FOR NOW 853,480
+module RPG
+  class System
+    def initialize
+      @magic_number = 0
+      @party_members = [1]
+      @elements = [nil, ""]
+      @switches = [nil, ""]
+      @variables = [nil, ""]
+      @windowskin_name = ""
+      @title_name = ""
+      @gameover_name = ""
+      @battle_transition = ""
+      @title_bgm = RPG::AudioFile.new
+      @battle_bgm = RPG::AudioFile.new
+      @battle_end_me = RPG::AudioFile.new
+      @gameover_me = RPG::AudioFile.new
+      @cursor_se = RPG::AudioFile.new("", 80)
+      @decision_se = RPG::AudioFile.new("", 80)
+      @cancel_se = RPG::AudioFile.new("", 80)
+      @buzzer_se = RPG::AudioFile.new("", 80)
+      @equip_se = RPG::AudioFile.new("", 80)
+      @shop_se = RPG::AudioFile.new("", 80)
+      @save_se = RPG::AudioFile.new("", 80)
+      @load_se = RPG::AudioFile.new("", 80)
+      @battle_start_se = RPG::AudioFile.new("", 80)
+      @escape_se = RPG::AudioFile.new("", 80)
+      @actor_collapse_se = RPG::AudioFile.new("", 80)
+      @enemy_collapse_se = RPG::AudioFile.new("", 80)
+      @words = RPG::System::Words.new
+      @test_battlers = []
+      @test_troop_id = 1
+      @start_map_id = 1
+      @start_x = 0
+      @start_y = 0
+      @battleback_name = ""
+      @battler_name = ""
+      @battler_hue = 0
+      @edit_map_id = 1
+    end
+    attr_accessor :magic_number
+    attr_accessor :party_members
+    attr_accessor :elements
+    attr_accessor :switches
+    attr_accessor :variables
+    attr_accessor :windowskin_name
+    attr_accessor :title_name
+    attr_accessor :gameover_name
+    attr_accessor :battle_transition
+    attr_accessor :title_bgm
+    attr_accessor :battle_bgm
+    attr_accessor :battle_end_me
+    attr_accessor :gameover_me
+    attr_accessor :cursor_se
+    attr_accessor :decision_se
+    attr_accessor :cancel_se
+    attr_accessor :buzzer_se
+    attr_accessor :equip_se
+    attr_accessor :shop_se
+    attr_accessor :save_se
+    attr_accessor :load_se
+    attr_accessor :battle_start_se
+    attr_accessor :escape_se
+    attr_accessor :actor_collapse_se
+    attr_accessor :enemy_collapse_se
+    attr_accessor :words
+    attr_accessor :test_battlers
+    attr_accessor :test_troop_id
+    attr_accessor :start_map_id
+    attr_accessor :start_x
+    attr_accessor :start_y
+    attr_accessor :battleback_name
+    attr_accessor :battler_name
+    attr_accessor :battler_hue
+    attr_accessor :edit_map_id
+  end
+end
 
-	# Add /" to line 23 for the x90
+module RPG
+  class System
+    class Words
+      def initialize
+        @gold = ""
+        @hp = ""
+        @sp = ""
+        @str = ""
+        @dex = ""
+        @agi = ""
+        @int = ""
+        @atk = ""
+        @pdef = ""
+        @mdef = ""
+        @weapon = ""
+        @armor1 = ""
+        @armor2 = ""
+        @armor3 = ""
+        @armor4 = ""
+        @attack = ""
+        @skill = ""
+        @guard = ""
+        @item = ""
+        @equip = ""
+      end
+      attr_accessor :gold
+      attr_accessor :hp
+      attr_accessor :sp
+      attr_accessor :str
+      attr_accessor :dex
+      attr_accessor :agi
+      attr_accessor :int
+      attr_accessor :atk
+      attr_accessor :pdef
+      attr_accessor :mdef
+      attr_accessor :weapon
+      attr_accessor :armor1
+      attr_accessor :armor2
+      attr_accessor :armor3
+      attr_accessor :armor4
+      attr_accessor :attack
+      attr_accessor :skill
+      attr_accessor :guard
+      attr_accessor :item
+      attr_accessor :equip
+    end
+  end
+end
 
-	# maximal width
-	eval "width = 640
-	# maximal height
-	height = 480
+module RPG
+  class System
+    class TestBattler
+      def initialize
+        @actor_id = 1
+        @level = 1
+        @weapon_id = 0
+        @armor1_id = 0
+        @armor2_id = 0
+        @armor3_id = 0
+        @armor4_id = 0
+      end
+      attr_accessor :actor_id
+      attr_accessor :level
+      attr_accessor :weapon_id
+      attr_accessor :armor1_id
+      attr_accessor :armor2_id
+      attr_accessor :armor3_id
+      attr_accessor :armor4_id
+    end
+  end
+end
 
-	# Do not edit
-	wt, ht = width.divmod(32), height.divmod(32)
-	#wt.last + ht.last == 0 || fail('Incorrect width or height')
-	wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
-	w, h = wh.(width, height)
-	ww, hh = wh.(width, height, 32)
-	www, hhh = wh.(wt.first.succ, ht.first.succ)
-	base = 0x10000000  # fixed?
-	mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
-	mod.(0x195F, \"\x90\" * 5)  # ???   
-	mod.(0x19A4, h)
-	mod.(0x19A9, w)
-	mod.(0x1A56, h)
-	mod.(0x1A5B, w)
-	mod.(0x20F6, w)
-	mod.(0x20FF, w)
-	mod.(0x2106, h)
-	mod.(0x210F, h)
-	# speed up y?
-	#mod.(0x1C5E3, h)
-	#mod.(0x1C5E8, w)
-	zero = [0].pack ?l
-	mod.(0x1C5E3, zero)
-	mod.(0x1C5E8, zero)
-	mod.(0x1F477, h)
-	mod.(0x1F47C, w)
-	mod.(0x211FF, hh)
-	mod.(0x21204, ww)
-	mod.(0x21D7D, hhh[0])
-	mod.(0x21E01, www[0])
-	mod.(0x10DEA8, h)
-	mod.(0x10DEAD, w)
-	mod.(0x10DEDF, h)
-	mod.(0x10DEF0, w)
-	mod.(0x10DF14, h)
-	mod.(0x10DF18, w)
-	mod.(0x10DF48, h)
-	mod.(0x10DF4C, w)
-	mod.(0x10E6A7, w)
-	mod.(0x10E6C3, h)
-	mod.(0x10EEA9, w)
-	mod.(0x10EEB9, h)
-	Graphics.resize_screen width, height
-	GC.start"
 
+"€if ACE_MODE
+  
+  def set_rez(width,height)
+
+    eval "
+
+    # Do not edit
+    wt, ht = width.divmod(32), height.divmod(32)
+    #wt.last + ht.last == 0 || fail('Incorrect width or height')
+    wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
+    w, h = wh.(width, height)
+    ww, hh = wh.(width, height, 32)
+    www, hhh = wh.(wt.first.succ, ht.first.succ)
+    base = 0x10000000  # fixed?
+    mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
+    mod.(0x195F, \"\x90\" * 5)  # ???   
+    mod.(0x19A4, h)
+    mod.(0x19A9, w)
+    mod.(0x1A56, h)
+    mod.(0x1A5B, w)
+    mod.(0x20F6, w)
+    mod.(0x20FF, w)
+    mod.(0x2106, h)
+    mod.(0x210F, h)
+    # speed up y?
+    #mod.(0x1C5E3, h)
+    #mod.(0x1C5E8, w)
+    zero = [0].pack ?l
+    mod.(0x1C5E3, zero)
+    mod.(0x1C5E8, zero)
+    mod.(0x1F477, h)
+    mod.(0x1F47C, w)
+    mod.(0x211FF, hh)
+    mod.(0x21204, ww)
+    mod.(0x21D7D, hhh[0])
+    mod.(0x21E01, www[0])
+    mod.(0x10DEA8, h)
+    mod.(0x10DEAD, w)
+    mod.(0x10DEDF, h)
+    mod.(0x10DEF0, w)
+    mod.(0x10DF14, h)
+    mod.(0x10DF18, w)
+    mod.(0x10DF48, h)
+    mod.(0x10DF4C, w)
+    mod.(0x10E6A7, w)
+    mod.(0x10E6C3, h)
+    mod.(0x10EEA9, w)
+    mod.(0x10EEB9, h)
+    Graphics.resize_screen width, height
+    GC.start"
+
+  end
+
+else
+
+  def set_rez(x,y)
+    log_err "Can't resize in XP mode"
+  end
 
 end"B class Array
  	def count
@@ -10037,17 +10146,14 @@ class Sprite
 		self.x = x
 		self.y = y
 	end
-end"^ #==============================================================================
+end"³#==============================================================================
 # Tilemap Class
 #------------------------------------------------------------------------------
 # Script by SephirothSpawn
 #==============================================================================
 
 class Game_Map
-  #--------------------------------------------------------------------------
-  attr_reader   :map
-  attr_accessor :tilemap_tone
-  attr_accessor :tilemap_plane
+  attr_reader :map
   attr_accessor :tilemap_zoom_x
   attr_accessor :tilemap_zoom_y
   attr_accessor :tilemap_tile_width
@@ -10056,8 +10162,6 @@ class Game_Map
   alias seph_tilemap_gmap_init initialize
   def initialize
     seph_tilemap_gmap_init
-    @tilemap_tone        = nil
-    @tilemap_plane       = false
     @tilemap_zoom_x      = 1.0
     @tilemap_zoom_y      = 1.0
     @tilemap_tile_width  = 32
@@ -10097,18 +10201,18 @@ class Tilemap
   attr_accessor :oy
   #--------------------------------------------------------------------------
   def initialize(viewport, map = $map.map)
+
+    @tile_width  = $map.tilemap_tile_width
+    @tile_height = $map.tilemap_tile_height
+
     @layers = []
     for l in 0...3
-      layer = ($map.tilemap_plane ?
-      Plane.new(viewport) : Sprite.new(viewport))
-      layer.bitmap = Bitmap.new(map.width * 32, map.height * 32)
+      layer = Sprite.new(viewport)
+      layer.bitmap = Bitmap.new(map.width * @tile_width, map.height * @tile_height)
       layer.z = l * 150
       layer.zoom_x = $map.tilemap_zoom_x
       layer.zoom_y = $map.tilemap_zoom_y
-      if (tone = $map.tilemap_tone).is_a?(Tone)
-        layer.tone = tone
-      end
-      @layers << layer
+      @layers.push(layer)
     end
     @tileset    = nil  # Refers to Map Tileset Name
     @autotiles  = []   # Refers to Tileset Auto-Tiles (Actual Auto-Tiles)
@@ -10120,12 +10224,8 @@ class Tilemap
     @oy         = 0    # bitmap Offsets
     @data       = nil  # Acts As Refresh Flag
     @map         = map
-    @tone        = $map.tilemap_tone
-    @plane       = $map.tilemap_plane
     @zoom_x      = $map.tilemap_zoom_x
     @zoom_y      = $map.tilemap_zoom_y
-    @tile_width  = $map.tilemap_tile_width
-    @tile_height = $map.tilemap_tile_height
   end
   #--------------------------------------------------------------------------
   def dispose
@@ -10137,15 +10237,7 @@ class Tilemap
   def update
     unless @data == @map_data && @tile_width == $map.tilemap_tile_width &&
            @tile_height == $map.tilemap_tile_height
-      refresh
-    end
-    unless @tone == $map.tilemap_tone
-      @tone = $map.tilemap_tone
-      @tone = Tone.new(0, 0, 0, 0) if @tone.nil?
-      for layer in @layers
-        layer.tone = @tone
-        layer.tone = @tone
-      end
+           refresh
     end
     unless @zoom_x == $map.tilemap_zoom_x
       @zoom_x = $map.tilemap_zoom_x
@@ -10214,38 +10306,43 @@ class Tilemap
   end
   #--------------------------------------------------------------------------
   def draw_tile(x, y, z, id)
-    rect = Rect.new((id - 384) % 8 * 32, (id - 384) / 8 * 32, 32, 32)
+    rect = Rect.new((id - 384) % 8 * @tile_width, (id - 384) / 8 * @tile_height, @tile_width, @tile_height)
     x *= @tile_width
     y *= @tile_height
-    if @tile_width == 32 && @tile_height == 32
+    #if @tile_width == 32 && @tile_height == 32
       @layers[z].bitmap.blt(x, y, @tileset, rect)
-    else
-      dest_rect = Rect.new(x, y, @tile_width, @tile_height)
-      @layers[z].bitmap.stretch_blt(dest_rect, @tileset, rect)
-    end
+    #else
+    #  dest_rect = Rect.new(x, y, @tile_width, @tile_height)
+    #  @layers[z].bitmap.stretch_blt(dest_rect, @tileset, rect)
+    #end
   end
   #--------------------------------------------------------------------------
   def draw_autotile(x, y, z, tile_id)
     autotile = @autotiles[tile_id / 48 - 1]
+    return if autotile == nil
     tile_id %= 48
-    bitmap = Bitmap.new(32, 32)
+    bitmap = Bitmap.new(@tile_width, @tile_height)
     tiles = Autotiles[tile_id / 8][tile_id % 8]
-    frames = autotile.width / 96
-    anim = (Graphics.frame_count / Animated_Autotiles_Frames) % frames * 96
+    frames = autotile.width / @tile_width*3
+    anim = (Graphics.frame_count / Animated_Autotiles_Frames) % frames * (@tile_width*3)
+
+    hw = @tile_width/2
+    hh = @tile_height/2
+
     for i in 0...4
       tile_position = tiles[i] - 1
-      src_rect = Rect.new(tile_position % 6 * 16 + anim,
-        tile_position / 6 * 16, 16, 16)
-      bitmap.blt(i % 2 * 16, i / 2 * 16, autotile, src_rect)
+      src_rect = Rect.new(tile_position % 6 * hw + anim,
+        tile_position / 6 * hh, hw, hh)
+      bitmap.blt(i % 2 * hw, i / 2 * hh, autotile, src_rect)
     end
     x *= @tile_width
     y *= @tile_height
-    if @tile_width == 32 && @tile_height == 32
-      @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, 32, 32))
-    else
-      dest_rect = Rect.new(x, y, @tile_width, @tile_height)
-      @layers[z].bitmap.stretch_blt(dest_rect, bitmap, Rect.new(0, 0, 32, 32))
-    end
+    #if @tile_width == 32 && @tile_height == 32
+      @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, @tile_width, @tile_height))
+    #else
+    #  dest_rect = Rect.new(x, y, @tile_width, @tile_height)
+    #  @layers[z].bitmap.stretch_blt(dest_rect, bitmap, Rect.new(0, 0, 32, 32))
+    #end
   end
   #--------------------------------------------------------------------------
   def bitmap
@@ -10717,7 +10814,7 @@ end"²# #======================================================================
 #     self.z = @battler.screen_z
 #   end
 # end
-"º
+"°
 #==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
@@ -10754,15 +10851,15 @@ class Sprite_Character < Sprite
 
       # If tile ID value is valid
       if @tile_id >= 384
-        self.bitmap = RPG::Cache.tile($map.tileset.name,@tile_id, 0)
+        self.bitmap = Cache.tile($map.tileset.name,@tile_id, 0)
         self.src_rect.set(0, 0, 32, 32)
         self.ox = 16
         self.oy = 32
       # If tile ID value is invalid
       else
-        self.bitmap = RPG::Cache.character(@character.character_name,0)
+        self.bitmap = Cache.character(@character.character_name,0)
         if @character == $player
-          self.bitmap = RPG::Cache.character("boyle",0)
+          self.bitmap = Cache.character("Player/boy",0)
         end
         @cw = bitmap.width / 4
         @ch = bitmap.height / 4
@@ -10896,7 +10993,7 @@ class Ui_Menu < Ui_Base
     super(1111)
   end
 
-end"é+#==============================================================================
+end"S*#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -10940,9 +11037,6 @@ class Ui_Message < Ui_Base
 
 
     # Settings
-    @font = nil
-    @bold = false
-    @italic = false
     @color = nil
 
     # Text display
@@ -10967,7 +11061,7 @@ class Ui_Message < Ui_Base
     #@namebox = add(Sprite.new)
 
     #@next = add(Sprite.new)
-    #@face = add(Sprite.new)
+    @face = add_sprite
     #@tail = add(Sprite.new)
 
     @window_bmp = nil
@@ -11044,6 +11138,12 @@ class Ui_Message < Ui_Base
     # Find speaker name, use to get face / event
     speaker = text_data[0]
 
+    # TODO - add actor name to this check
+    # Get face if exists
+    if $data.actors.keys.include?(speaker[0..2])
+      @face.bitmap = Cache.face(speaker)
+    end
+
     # Prepare the words to be written
     @lines = split_text(text_data[1])    
 
@@ -11092,10 +11192,6 @@ class Ui_Message < Ui_Base
             
     # Add the next character to the final word
     @char_idx += 1
-    #@line_data[@line_data.size-1] += @word.slice!(0,1)
-    
-    # Redraw the word, last char small?
-    #redraw
 
     # Play a lovely character sound
     #sound(:text_char) if $settings.value('text_sound') 
@@ -11118,15 +11214,21 @@ class Ui_Message < Ui_Base
 
     return if @word == nil
 
+    @scratch.font.bold = @word.include?("*")
+    @scratch.font.italic = @word.include?("^")
+
+    @textbox.bitmap.font.bold = @word.include?("*")
+    @textbox.bitmap.font.italic = @word.include?("^")
+
     #txt = @word[0..@char_idx-1]
-    txt = @word[0..@char_idx-1]
+    txt = @word.delete('*^')[0..@char_idx-1]
     size = @scratch.text_size(txt)
     @textbox.bitmap.font.color = Color.new(255,255,255,255)
     @textbox.bitmap.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
     # Half draw the final
     return if @char_idx >= @word.length
     @textbox.bitmap.font.color = Color.new(255,255,255,100)
-    @textbox.bitmap.draw_text(@cx+size.width,@cy-4,100,LINE_HEIGHT,@word.split('')[@char_idx])
+    @textbox.bitmap.draw_text(@cx+size.width,@cy-4,100,LINE_HEIGHT,@word.delete('*^').split('')[@char_idx])
 
   end
 
@@ -11153,7 +11255,12 @@ class Ui_Message < Ui_Base
     # blit last word onto the main bmp
     if @word != nil
 
-      txt = @word[0..@char_idx]
+      @text_bmp.font.bold = @word.include?('*')
+      @text_bmp.font.italic = @word.include?('^')
+
+      txt = @word.delete('*^')[0..@char_idx]
+
+
       @text_bmp.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
 
       # Step cursor
@@ -11171,9 +11278,6 @@ class Ui_Message < Ui_Base
 
     @word = @lines[@line_idx][@word_idx]
 
-    # Remove characters
-    @word.delete!('*^')
-
     # CHECK FOR COMMANDS
     if @word.include?('$')
       cmd = @word.split(".")
@@ -11184,12 +11288,6 @@ class Ui_Message < Ui_Base
       
         when "$n" # New line
           next_line
-
-        when "$b"
-          bold
-
-        when "$i"
-          italic
           
         when "$w" # wait quarter second or custom
           @wait_frames = cmd.size > 1 ? cmd[1].to_i : 15
@@ -11201,11 +11299,7 @@ class Ui_Message < Ui_Base
           else
             @text_delay = cmd[1].to_i
           end
-          
-        when "$fl"
-          color = cmd.size > 1 ? Colors.get(cmd[1].to_sym) : Colors.get(:black)
-          $world.do_flash(color,15)         
-          
+                    
         when "$s" # play sound
           #log_err("TRYPLAYIT")
           #Audio.se_play("Audio/SE/"+cmd[1]) 
@@ -11214,15 +11308,11 @@ class Ui_Message < Ui_Base
           
           case cmd[1]
             when 'stop'
-              @bkp = RPG::BGM.last
               Audio.bgm_stop            
             when 'fade'
-              @bkp = RPG::BGM.last
-              Audio.bgm_fade(750)          
-            when 'resume'
-              Audio.bgm_play("Audio/BGM/"+@bkp.name,@bkp.volume,@bkp.pitch,@bkp.pos)            
+              Audio.bgm_fade(750)                   
             else
-              Audio.bgm_play("Audio/BGM/"+cmd[1])            
+              Audio.bgm_play(cmd[1])            
           end
           
         when "$nw" # @^ (No wait for input)
@@ -11270,7 +11360,9 @@ class Ui_Message < Ui_Base
   def word_width(word)
       return TAB_WIDTH if word == "$t"
       return 0 if word.include?("$")
-      return @scratch.text_size(word).width + SPACING
+      @scratch.font.bold = word.include?('*')
+      @scratch.font.italic = word.include?('^')
+      return @scratch.text_size(word.delete('*^')).width + SPACING
   end
 
   def max_width
@@ -11333,26 +11425,6 @@ class Ui_Message < Ui_Base
 
   end
 
-  def bold(val=nil)
-    if val == nil
-      @bold = !@bold  
-    else
-      @bold = val
-    end
-    @text_bmp.font.bold = @bold
-    @textbox.bitmap.font.bold = @bold
-  end
-
-  def italic(val=nil)
-    if val == nil
-      @italic = !@italic
-    else
-      @italic = val
-    end
-    @text_bmp.font.italic = @italic
-    @textbox.bitmap.font.italic = @italic
-  end
-
   #--------------------------------------------------------------------------
   # Misc
   #--------------------------------------------------------------------------
@@ -11384,7 +11456,7 @@ class Ui_Trans < Ui_Base
 
     def busy?() return false end
     	
-end"A$#==============================================================================
+end" #==============================================================================
 # ** Spriteset_Map
 #------------------------------------------------------------------------------
 #  This class brings together map screen sprites, tilemaps, etc.
@@ -11396,7 +11468,6 @@ class Game_World
   # Screen attrs
   attr_reader   :tone                     # color tone
   attr_reader   :flash_color              # flash color
-  attr_reader   :shake                    # shake positioning
   attr_reader   :weather_type             # weather type
   attr_reader   :weather_max              # max number of weather sprites
   
@@ -11413,12 +11484,6 @@ class Game_World
     @flash_color = Color.new(0, 0, 0, 0)
     @flash_duration = 0
 
-    @shake_power = 0
-    @shake_speed = 0
-    @shake_duration = 0
-    @shake_direction = 1
-    @shake = 0
-    
     # weather in map data
     @weather_type = 0
     @weather_max = 0.0
@@ -11481,11 +11546,12 @@ class Game_World
   end
 
   def refresh_tileset
-      @tilemap.tileset = RPG::Cache.tileset($map.tileset.tileset_name)
+      @tilemap.tileset = Cache.tileset($map.tileset.tileset_name)#+'-big')
       @tilemap.priorities = $map.priorities
       for i in 0..6
         autotile_name = $map.tileset.autotile_names[i]
-        @tilemap.autotiles[i] = RPG::Cache.autotile(autotile_name)
+        next if autotile_name == ''
+        @tilemap.autotiles[i] = Cache.autotile(autotile_name)#+'-big')
       end
       $map.new_tileset = false
       @tilemap.map_data = $map.data
@@ -11508,7 +11574,7 @@ class Game_World
         @panorama.bitmap = nil
       end
       if @panorama_name != ""
-        @panorama.bitmap = RPG::Cache.panorama(@panorama_name, @panorama_hue)
+        @panorama.bitmap = Cache.panorama(@panorama_name, @panorama_hue)
       end
       Graphics.frame_reset
   end
@@ -11522,7 +11588,7 @@ class Game_World
         @fog.bitmap = nil
       end
       if @fog_name != ""
-        @fog.bitmap = RPG::Cache.fog(@fog_name, @fog_hue)
+        @fog.bitmap = Cache.fog(@fog_name, @fog_hue)
       end
       Graphics.frame_reset
   end
@@ -11554,18 +11620,15 @@ class Game_World
 
 
 
-
-
-
-
-
     # Update tilemap
     @tilemap.ox = $map.display_x / 4
     @tilemap.oy = $map.display_y / 4
     @tilemap.update
+
     # Update panorama plane
     #@panorama.ox = 0 # $map.display_x / 8
     #@panorama.oy = 0 # $map.display_y / 8
+
     # Update fog plane
     # @fog.zoom_x = $map.fog_zoom / 100.0
     # @fog.zoom_y = $map.fog_zoom / 100.0
@@ -11621,14 +11684,6 @@ class Game_World
     @flash_duration = duration
   end
 
-  #--------------------------------------------------------------------------
-  # * Start Shaking
-  #--------------------------------------------------------------------------
-  def start_shake(power, speed, duration)
-    @shake_power = power
-    @shake_speed = speed
-    @shake_duration = duration
-  end
 
   #--------------------------------------------------------------------------
   # * Set Weather
@@ -11667,23 +11722,7 @@ class Game_World
       @flash_color.alpha = @flash_color.alpha * (d - 1) / d
       @flash_duration -= 1
     end
-    if @shake_duration >= 1 or @shake != 0
-      delta = (@shake_power * @shake_speed * @shake_direction) / 10.0
-      if @shake_duration <= 1 and @shake * (@shake + delta) < 0
-        @shake = 0
-      else
-        @shake += delta
-      end
-      if @shake > @shake_power * 2
-        @shake_direction = -1
-      end
-      if @shake < - @shake_power * 2
-        @shake_direction = 1
-      end
-      if @shake_duration >= 1
-        @shake_duration -= 1
-      end
-    end
+
     if @weather_duration >= 1
       d = @weather_duration
       @weather_max = (@weather_max * (d - 1) + @weather_max_target) / d

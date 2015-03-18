@@ -13,6 +13,9 @@ class Scene_Map < Scene_Base
 
     @hud = Game_Hud.new
     @world = Game_World.new
+
+    $hud = @hud
+    $world = @world
             
   end
   
@@ -21,11 +24,6 @@ class Scene_Map < Scene_Base
 
     @world.dispose
     @hud.dispose
-    
-    # if $scene.is_a?(Scene_Title)
-    #   Graphics.transition
-    #   Graphics.freeze
-    # end
 
   end
 
@@ -44,22 +42,6 @@ class Scene_Map < Scene_Base
       return # if not transferring
 
       # transfer_player
-      
-      # if $game_temp.transition_processing
-      #   break
-      # end
-    #end   
-
-    if $temp.transition_processing
-      $temp.transition_processing = false
-
-      if $temp.transition_name == ""
-        Graphics.transition(20)
-      else
-        Graphics.transition(40, "Graphics/Transitions/" +
-          $temp.transition_name)
-      end
-    end
 
     # Open Menu at player's request
     unless $map.interpreter.running? or $hud.busy?
@@ -89,11 +71,6 @@ class Scene_Map < Scene_Base
 
     $player.straighten
     $map.update
-
-    if $temp.transition_processing
-      $temp.transition_processing = false
-      Graphics.transition(20)
-    end
 
     $map.autoplay    
 

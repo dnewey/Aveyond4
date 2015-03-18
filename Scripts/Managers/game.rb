@@ -6,76 +6,87 @@ class GameManager
 
 	def initialize
 
-      # Make scene object (title screen)
-      if DEBUG && $settings.debug_skip_title
-        quick_start
-      else
-        $scene = Scene_Splash.new    
-      end
+    # Setup font
+    Font.default_size = 22
+    Font.default_name = "Consolas"
 
-        Font.default_size = 22
-        Font.default_outline = false
-        Font.default_shadow = true
-        Font.default_name = "Consolas"
-
-     end
-
-     def width
-      return Graphics.width
+    if ACE_MODE
+      Font.default_outline = false
+      Font.default_shadow = true
     end
 
-    def height
-      return Graphics.height
+    Graphics.frame_rate = 60
+    set_rez(720,480)
+
+    @scenes = []
+
+    # Make scene object (title screen)
+    if DEBUG && $settings.debug_skip_title
+      quick_start
+    else
+      $scene = Scene_Splash.new    
     end
 
-     def quick_start
+  end
 
-      # Game State Objects
-      $temp = Game_Temp.new
-      $progress = Av::Progress.new
-      $state = Av::State.new
+   def width
+    return Graphics.width
+  end
 
-      $player        = Game_Player.new
-      $party = Game_Party.new
+  def height
+    return Graphics.height
+  end
 
-      # Model
+   def quick_start
 
-      
-      $map           = Game_Map.new
-      $map.setup(2)#$data.system.start_map_id)
+    # Game State Objects
+    $temp = Game_Temp.new
+    $progress = Av::Progress.new
+    $state = Av::State.new
 
-      # Set up initial map position
-      
-      $player.moveto(10,10)#XP - VX $data.system.start_x, $data.system.start_y)
-      $player.refresh
-      $map.autoplay
-      $map.update
+    $player = Game_Player.new
+    $party = Game_Party.new
 
-      $hud = Game_Hud.new
+    # Model    
+    $map = Game_Map.new
+    $map.setup($data.system.start_map_id)
 
-      # Switch to map screen
-      $scene = Scene_Map.new
+    # Set up initial map position    
+    $player.moveto($data.system.start_x, $data.system.start_y)
+    $player.refresh
+    $map.autoplay
+    $map.update
 
-    end
+    $hud = Game_Hud.new
 
+    # Switch to map screen
+    push_scene(Scene_Map.new)
 
-     def quit?
-      return false
-    end
+  end
 
+  def push_scene(scene)
+    @scenes.unshift(scene)
+  end
 
-     def update
+  def pop_scene
+    @scenes.shift.terminate
+  end
 
-          $keyboard.update
-          $mouse.update
-          $debug.update
-          $hud.update
-          Graphics.update
-          Input.update
-          $scene.update
+  def quit?
+    return false
+  end
 
-     end
+  def update
 
+    $keyboard.update
+    $mouse.update
+    $debug.update
+    $hud.update
+    Graphics.update
+    Input.update
+    @scenes[0].update
+
+  end
 
   def flip_window
     
@@ -90,8 +101,5 @@ class GameManager
     end
 
   end
-
-  
-
 
 end

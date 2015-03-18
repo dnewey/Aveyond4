@@ -23,22 +23,14 @@ APPFOLDER = "Aveyond 4"
 
   def aveyond4
 
-      #if ACE_MODE
-        #Graphics.resize_screen(800,480) 
-      #end
-
-      Graphics.frame_rate = 60
-
       # User Data folder
       Win32API.new('System/Utils', "AVSetEnv", ["V"], "I").call          
       $appdata = ENV['AV_APPDATA'] + "\\" + APPFOLDER
       Dir.mkdir($appdata) if !File.exists?($appdata) 
 
+      # Who will debug the debug?
       begin
-
-      $debug = DebugManager.new
-      $DEBUG = true
-
+        $debug = DebugManager.new
       rescue StandardError => e
         p e.inspect
       end
@@ -50,7 +42,7 @@ APPFOLDER = "Aveyond 4"
       $mouse = MouseManager.new
 
       $data = DataManager.new
-      $nanos = NanoManager.new
+      $tweens = TweenManager.new
 
       $settings = SettingsManager.new
       $files = FileManager.new
@@ -63,23 +55,6 @@ APPFOLDER = "Aveyond 4"
       # Set the windowed mode for next time
       $settings.conclude
 
-      
-  rescue ScriptError => e
-
-    line = e.message.split(":")[1].to_i      
-    log_err e.inspect
-    log_err "------------------"
-    
-    e.backtrace.each{ |location|
-      line_num = location.split(":")[1]
-      script_name = location.split(":")[0].split("/").last
-      method = location.split(":")[2]
-      next if method == nil
-      loc_err = "Line " + line_num + ", in "+script_name+ ", "+method.to_s
-      loc_err = "Game Start" if script_name.include?("{0128")
-      log_err("#{loc_err}")
-    }     
-    
   rescue StandardError => e
       
     line = e.message.split(":")[1].to_i      

@@ -30,6 +30,20 @@ class Interpreter
     # Evaluation
     result = eval(script)
 
+  rescue Exception => e
+
+    line = e.message.split(":")[1].to_i      
+    log_scr e.inspect
+
+    lc = 0
+      script.split("\n").each{ |s|
+        if lc == line
+          s = "---> "+s
+        end
+        log_scr s
+        lc+=1
+      }
+
     # Continue
     return true
      

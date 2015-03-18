@@ -10,10 +10,13 @@
     "edit": "area"
   },
   {
-    "field": "weapons"
+    "field": "armor"
   },
   {
-    "field": "armor"
+    "field": "actions"
+  },
+  {
+    "field": "resource"
   },
   {
     "field": "statratings"

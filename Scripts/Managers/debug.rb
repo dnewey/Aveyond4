@@ -23,6 +23,8 @@ class DebugManager
 	def initialize		
 		return if !DEBUG
 
+		$DEBUG = true
+
 		# Prepare log file
 		@path = $appdata + "\\log.txt"
 		File.open(@path, 'w') { |file| }	
