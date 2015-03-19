@@ -73,6 +73,10 @@ class Game_Event < Game_Character
     refresh
   end
 
+  def at?(x,y)
+    return self.x == x && self.y == y
+  end
+
   #--------------------------------------------------------------------------
   # * Clear Starting Flag
   #--------------------------------------------------------------------------
@@ -184,9 +188,7 @@ class Game_Event < Game_Character
   
 
   def clear_page_settings
-      @tile_id = 0
       @character_name = ""
-      @character_hue = 0
       @move_type = 0
       @through = true
       @trigger = nil
@@ -196,7 +198,6 @@ class Game_Event < Game_Character
 
   def setup_page_settings
     # Set each instance variable
-    @tile_id = @page.graphic.tile_id
     @character_name = @page.graphic.character_name
     if @original_direction != @page.graphic.direction
       @direction = @page.graphic.direction

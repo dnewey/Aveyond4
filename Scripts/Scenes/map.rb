@@ -11,10 +11,10 @@ class Scene_Map < Scene_Base
   #--------------------------------------------------------------------------
   def start
 
-    @hud = Game_Hud.new
+    @hud = Ui_Screen.new
     @world = Game_World.new
 
-    $hud = @hud
+    $hud = @screen
     $world = @world
             
   end

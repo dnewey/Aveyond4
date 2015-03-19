@@ -66,12 +66,14 @@ class Tilemap
       layer.zoom_y = $map.tilemap_zoom_y
       @layers.push(layer)
     end
-    @tileset    = nil  # Refers to Map Tileset Name
+    @tileset    = nil  # Refers to Map Tileset PNG
     @autotiles  = []   # Refers to Tileset Auto-Tiles (Actual Auto-Tiles)
+
     @map_data   = nil  # Refers to 3D Array Of Tile Settings
-    @flash_data = nil  # Refers to 3D Array of Tile Flashdata
+
     @priorities = nil  # Refers to Tileset Priorities
     @visible    = true # Refers to Tilest Visibleness
+    
     @ox         = 0    # Bitmap Offsets
     @oy         = 0    # bitmap Offsets
     @data       = nil  # Acts As Refresh Flag
@@ -161,12 +163,7 @@ class Tilemap
     rect = Rect.new((id - 384) % 8 * @tile_width, (id - 384) / 8 * @tile_height, @tile_width, @tile_height)
     x *= @tile_width
     y *= @tile_height
-    #if @tile_width == 32 && @tile_height == 32
-      @layers[z].bitmap.blt(x, y, @tileset, rect)
-    #else
-    #  dest_rect = Rect.new(x, y, @tile_width, @tile_height)
-    #  @layers[z].bitmap.stretch_blt(dest_rect, @tileset, rect)
-    #end
+    @layers[z].bitmap.blt(x, y, @tileset, rect)
   end
   #--------------------------------------------------------------------------
   def draw_autotile(x, y, z, tile_id)
@@ -189,12 +186,7 @@ class Tilemap
     end
     x *= @tile_width
     y *= @tile_height
-    #if @tile_width == 32 && @tile_height == 32
-      @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, @tile_width, @tile_height))
-    #else
-    #  dest_rect = Rect.new(x, y, @tile_width, @tile_height)
-    #  @layers[z].bitmap.stretch_blt(dest_rect, bitmap, Rect.new(0, 0, 32, 32))
-    #end
+    @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, @tile_width, @tile_height))
   end
   #--------------------------------------------------------------------------
   def bitmap

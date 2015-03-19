@@ -11,72 +11,41 @@ end
 class Game_Actor < Game_Battler
  
   attr_reader   :name                     # name
-  
-  attr_reader   :character_name           # character file name
-
-  # Equipment
-  attr_reader   :weapon                # weapon ID
-  
-  attr_reader   :armor                # shield ID
-  attr_reader   :boots                # helmet ID
-  attr_reader   :trinket                # body armor ID
-  attr_reader   :bonus                # accessory ID
 
   attr_reader   :level                    # level
   attr_reader   :exp                      # EXP
   
   attr_reader   :skills                   # skills
-  
-  attr_reader   :actor_id
+
 
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
-  def initialize(actor_id)
+  def initialize(id)
     super()
+
     actor_data = $data.actors[actor_id]
-    @actor_id = actor_id
+    @id = actor_id
 
     @name = actor_data.name
-    @character_name = actor_id
+
+
+    @equips = [] # extrapolate from data, combine weapon and armors!
+    actor_data.slots.split(" | ").each{ |s|
+      #@equips.
+    }
     
-    # @weapon_id = actor.weapon_id
-    # @armor1_id = actor.armor1_id
-    # @armor2_id = actor.armor2_id
-    # @armor3_id = actor.armor3_id
-    # @armor4_id = actor.armor4_id
-    
+    @skills = []
+    actor_data.slots.split(" | ").each{ |s|
+
+    }
+
     @level = 1
     @exp_list = Array.new(101)
     make_exp_list
     @exp = @exp_list[@level]
-    @skills = []
-    @hp = maxhp
-    @sp = maxsp
-    @states = []
-    @states_turn = {}
-    @maxhp_plus = 0
-    @maxsp_plus = 0
-    @str_plus = 0
-    @dex_plus = 0
-    @agi_plus = 0
-    @int_plus = 0
 
-  end
-
-  #--------------------------------------------------------------------------
-  # * Get Actor ID
-  #--------------------------------------------------------------------------
-  def id
-    return @actor_id
-  end
-
-  #--------------------------------------------------------------------------
-  # * Get Index
-  #--------------------------------------------------------------------------
-  def index
-    return $game_party.actors.index(self)
   end
 
   #--------------------------------------------------------------------------
@@ -121,51 +90,8 @@ class Game_Actor < Game_Battler
     # End Method
     return result
   end
-
-  #--------------------------------------------------------------------------
-  # * Get State Effectiveness
-  #--------------------------------------------------------------------------
-  def state_ranks
-    return $data_classes[@class_id].state_ranks
-  end
-
-  #--------------------------------------------------------------------------
-  # * Determine State Guard
-  #     state_id : state ID
-  #--------------------------------------------------------------------------
-  def state_guard?(state_id)
-    for i in [@armor1_id, @armor2_id, @armor3_id, @armor4_id]
-      armor = $data_armors[i]
-      if armor != nil
-        if armor.guard_state_set.include?(state_id)
-          return true
-        end
-      end
-    end
-    return false
-  end
   
-  #--------------------------------------------------------------------------
-  # * Get Normal Attack Element
-  #--------------------------------------------------------------------------
-  def element_set
-    weapon = $data_weapons[@weapon_id]
-    return weapon != nil ? weapon.element_set : []
-  end
-  #--------------------------------------------------------------------------
-  # * Get Normal Attack State Change (+)
-  #--------------------------------------------------------------------------
-  def plus_state_set
-    weapon = $data_weapons[@weapon_id]
-    return weapon != nil ? weapon.plus_state_set : []
-  end
-  #--------------------------------------------------------------------------
-  # * Get Normal Attack State Change (-)
-  #--------------------------------------------------------------------------
-  def minus_state_set
-    weapon = $data_weapons[@weapon_id]
-    return weapon != nil ? weapon.minus_state_set : []
-  end
+
   #--------------------------------------------------------------------------
   # * Get Maximum HP
   #--------------------------------------------------------------------------
@@ -177,20 +103,21 @@ class Game_Actor < Game_Battler
     n = [[Integer(n), 1].max, 9999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Maximum HP
   #--------------------------------------------------------------------------
   def base_maxhp
-    return 0
     return $data_actors[@actor_id].parameters[0, @level]
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Maximum SP
   #--------------------------------------------------------------------------
   def base_maxsp
-    return 0
     return $data_actors[@actor_id].parameters[1, @level]
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Strength
   #--------------------------------------------------------------------------
@@ -208,57 +135,7 @@ class Game_Actor < Game_Battler
     n += armor4 != nil ? armor4.str_plus : 0
     return [[n, 1].max, 999].min
   end
-  #--------------------------------------------------------------------------
-  # * Get Basic Dexterity
-  #--------------------------------------------------------------------------
-  def base_dex
-    n = $data_actors[@actor_id].parameters[3, @level]
-    weapon = $data_weapons[@weapon_id]
-    armor1 = $data_armors[@armor1_id]
-    armor2 = $data_armors[@armor2_id]
-    armor3 = $data_armors[@armor3_id]
-    armor4 = $data_armors[@armor4_id]
-    n += weapon != nil ? weapon.dex_plus : 0
-    n += armor1 != nil ? armor1.dex_plus : 0
-    n += armor2 != nil ? armor2.dex_plus : 0
-    n += armor3 != nil ? armor3.dex_plus : 0
-    n += armor4 != nil ? armor4.dex_plus : 0
-    return [[n, 1].max, 999].min
-  end
-  #--------------------------------------------------------------------------
-  # * Get Basic Agility
-  #--------------------------------------------------------------------------
-  def base_agi
-    n = $data_actors[@actor_id].parameters[4, @level]
-    weapon = $data_weapons[@weapon_id]
-    armor1 = $data_armors[@armor1_id]
-    armor2 = $data_armors[@armor2_id]
-    armor3 = $data_armors[@armor3_id]
-    armor4 = $data_armors[@armor4_id]
-    n += weapon != nil ? weapon.agi_plus : 0
-    n += armor1 != nil ? armor1.agi_plus : 0
-    n += armor2 != nil ? armor2.agi_plus : 0
-    n += armor3 != nil ? armor3.agi_plus : 0
-    n += armor4 != nil ? armor4.agi_plus : 0
-    return [[n, 1].max, 999].min
-  end
-  #--------------------------------------------------------------------------
-  # * Get Basic Intelligence
-  #--------------------------------------------------------------------------
-  def base_int
-    n = $data_actors[@actor_id].parameters[5, @level]
-    weapon = $data_weapons[@weapon_id]
-    armor1 = $data_armors[@armor1_id]
-    armor2 = $data_armors[@armor2_id]
-    armor3 = $data_armors[@armor3_id]
-    armor4 = $data_armors[@armor4_id]
-    n += weapon != nil ? weapon.int_plus : 0
-    n += armor1 != nil ? armor1.int_plus : 0
-    n += armor2 != nil ? armor2.int_plus : 0
-    n += armor3 != nil ? armor3.int_plus : 0
-    n += armor4 != nil ? armor4.int_plus : 0
-    return [[n, 1].max, 999].min
-  end
+
   #--------------------------------------------------------------------------
   # * Get Basic Attack Power
   #--------------------------------------------------------------------------
@@ -266,6 +143,7 @@ class Game_Actor < Game_Battler
     weapon = $data_weapons[@weapon_id]
     return weapon != nil ? weapon.atk : 0
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Physical Defense
   #--------------------------------------------------------------------------
@@ -282,6 +160,7 @@ class Game_Actor < Game_Battler
     pdef5 = armor4 != nil ? armor4.pdef : 0
     return pdef1 + pdef2 + pdef3 + pdef4 + pdef5
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Magic Defense
   #--------------------------------------------------------------------------
@@ -299,6 +178,7 @@ class Game_Actor < Game_Battler
     mdef5 = armor4 != nil ? armor4.mdef : 0
     return mdef1 + mdef2 + mdef3 + mdef4 + mdef5
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Evasion Correction
   #--------------------------------------------------------------------------
@@ -313,54 +193,7 @@ class Game_Actor < Game_Battler
     eva4 = armor4 != nil ? armor4.eva : 0
     return eva1 + eva2 + eva3 + eva4
   end
-  #--------------------------------------------------------------------------
-  # * Get Offensive Animation ID for Normal Attacks
-  #--------------------------------------------------------------------------
-  def animation1_id
-    weapon = $data_weapons[@weapon_id]
-    return weapon != nil ? weapon.animation1_id : 0
-  end
-  #--------------------------------------------------------------------------
-  # * Get Target Animation ID for Normal Attacks
-  #--------------------------------------------------------------------------
-  def animation2_id
-    weapon = $data_weapons[@weapon_id]
-    if weapon != nil
-      return weapon.animation2_id
-    end
-    return weapon != nil ? weapon.animation2_id : 4 # Default hit animation 0
-  end
-  #--------------------------------------------------------------------------
-  # * Get Class Name
-  #--------------------------------------------------------------------------
-  def class_name
-    return $data_classes[@class_id].name
-  end
-  #--------------------------------------------------------------------------
-  # * Get EXP String
-  #--------------------------------------------------------------------------
-  def exp_s
-    return @exp_list[@level+1] > 0 ? @exp.to_s : "-------"
-  end
-  #--------------------------------------------------------------------------
-  # * Get Previous Level EXP String
-  #--------------------------------------------------------------------------
-  def prev_exp_s
-    return @exp_list[@level] > 0 ? @exp_list[@level].to_s : "-------"
-  end
-  #--------------------------------------------------------------------------
-  # * Get Next Level EXP String
-  #--------------------------------------------------------------------------
-  def next_exp_s
-    return @exp_list[@level+1] > 0 ? @exp_list[@level+1].to_s : "-------"
-  end
-  #--------------------------------------------------------------------------
-  # * Get Until Next Level EXP String
-  #--------------------------------------------------------------------------
-  def next_rest_exp_s
-    return @exp_list[@level+1] > 0 ?
-      (@exp_list[@level+1] - @exp).to_s : "-------"
-  end
+
   #--------------------------------------------------------------------------
   # * Update Auto State
   #     old_armor : unequipped armor
@@ -376,25 +209,7 @@ class Game_Actor < Game_Battler
       add_state(new_armor.auto_state_id, true)
     end
   end
-  #--------------------------------------------------------------------------
-  # * Determine Fixed Equipment
-  #     equip_type : type of equipment
-  #--------------------------------------------------------------------------
-  def equip_fix?(equip_type)
-    case equip_type
-    when 0  # Weapon
-      return $data_actors[@actor_id].weapon_fix
-    when 1  # Shield
-      return $data_actors[@actor_id].armor1_fix
-    when 2  # Head
-      return $data_actors[@actor_id].armor2_fix
-    when 3  # Body
-      return $data_actors[@actor_id].armor3_fix
-    when 4  # Accessory
-      return $data_actors[@actor_id].armor4_fix
-    end
-    return false
-  end
+
   #--------------------------------------------------------------------------
   # * Change Equipment
   #     equip_type : type of equipment
@@ -437,25 +252,22 @@ class Game_Actor < Game_Battler
         $game_party.lose_armor(id, 1)
       end
     end
-    
-    # ensure autostate hasn't been incorrectly removed if > 1 item gives that state
-    update_auto_state(nil, $data_armors[@armor1_id])
-    update_auto_state(nil, $data_armors[@armor2_id])
-    update_auto_state(nil, $data_armors[@armor3_id])
-    update_auto_state(nil, $data_armors[@armor4_id])
+
   end
+
   #--------------------------------------------------------------------------
-  # * Determine if Equippable
-  #     item : item
+  # * Replace this with can_equip_wep?
   #--------------------------------------------------------------------------
   def equippable?(item)
+
     # If weapon
-    if item.is_a?(RPG::Weapon)
+    if item.is_a?(WeaponData)
       # If included among equippable weapons in current class
       if $data_classes[@class_id].weapon_set.include?(item.id)
         return true
       end
     end
+
     # If armor
     if item.is_a?(RPG::Armor)
       # If included among equippable armor in current class
@@ -465,6 +277,7 @@ class Game_Actor < Game_Battler
     end
     return false
   end
+
   #--------------------------------------------------------------------------
   # * Change EXP
   #     exp : new EXP
@@ -489,6 +302,7 @@ class Game_Actor < Game_Battler
     @hp = [@hp, self.maxhp].min
     @sp = [@sp, self.maxsp].min
   end
+
   #--------------------------------------------------------------------------
   # * Change Level
   #     level : new level
@@ -498,9 +312,8 @@ class Game_Actor < Game_Battler
     level = [[level, $data_actors[@actor_id].final_level].min, 1].max
     # Change EXP
     self.exp = @exp_list[level]
-    # Shaz: Refresh game hud
-    $game_map.need_hud_refresh = true
   end
+
   #--------------------------------------------------------------------------
   # * Learn Skill
   #     skill_id : skill ID
@@ -511,6 +324,7 @@ class Game_Actor < Game_Battler
       @skills.sort!
     end
   end
+
   #--------------------------------------------------------------------------
   # * Forget Skill
   #     skill_id : skill ID
@@ -518,6 +332,7 @@ class Game_Actor < Game_Battler
   def forget_skill(skill_id)
     @skills.delete(skill_id)
   end
+
   #--------------------------------------------------------------------------
   # * Determine if Finished Learning Skill
   #     skill_id : skill ID
@@ -525,92 +340,5 @@ class Game_Actor < Game_Battler
   def skill_learn?(skill_id)
     return @skills.include?(skill_id)
   end
-  #--------------------------------------------------------------------------
-  # * Determine if Skill can be Used
-  #     skill_id : skill ID
-  #--------------------------------------------------------------------------
-  def skill_can_use?(skill_id)
-    if not skill_learn?(skill_id)
-      return false
-    end
-    return super
-  end
-  #--------------------------------------------------------------------------
-  # * Change Name
-  #     name : new name
-  #--------------------------------------------------------------------------
-  def name=(name)
-    @name = name
-    # shaz: update game HUD
-    $game_map.need_hud_refresh = true
-  end
-  #--------------------------------------------------------------------------
-  # * Change Class ID
-  #     class_id : new class ID
-  #--------------------------------------------------------------------------
-  def class_id=(class_id)
-    if $data_classes[class_id] != nil
-      @class_id = class_id
-      # Remove items that are no longer equippable
-      unless equippable?($data_weapons[@weapon_id])
-        equip(0, 0)
-      end
-      unless equippable?($data_armors[@armor1_id])
-        equip(1, 0)
-      end
-      unless equippable?($data_armors[@armor2_id])
-        equip(2, 0)
-      end
-      unless equippable?($data_armors[@armor3_id])
-        equip(3, 0)
-      end
-      unless equippable?($data_armors[@armor4_id])
-        equip(4, 0)
-      end
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Change Graphics
-  #     character_name : new character file name
-  #     character_hue  : new character hue
-  #     battler_name   : new battler file name
-  #     battler_hue    : new battler hue
-  #--------------------------------------------------------------------------
-  def set_graphic(character_name, character_hue, battler_name, battler_hue)
-    @character_name = character_name
-    @character_hue = character_hue
-    @battler_name = character_name #battler_name agf
-    @battler_hue = character_hue #battler_hue agf
-    # shaz: update game HUD
-    $game_map.need_hud_refresh = true
-  end
-  #--------------------------------------------------------------------------
-  # * Get Battle Screen X-Coordinate
-  #--------------------------------------------------------------------------
-  def screen_x
-    # Return after calculating x-coordinate by order of members in party
-    #agf**
-    if self.index != nil
-      return [BATTLER_1_X_POS, BATTLER_2_X_POS, BATTLER_3_X_POS, BATTLER_4_X_POS][self.index]     
-    else
-      return 0
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Get Battle Screen Y-Coordinate
-  #--------------------------------------------------------------------------
-  def screen_y
-    return [BATTLER_1_Y_POS, BATTLER_2_Y_POS, BATTLER_3_Y_POS, BATTLER_4_Y_POS][self.index]
-  end
-  #--------------------------------------------------------------------------
-  # * Get Battle Screen Z-Coordinate
-  #--------------------------------------------------------------------------
-  def screen_z
-    # Return after calculating z-coordinate by order of members in party
-    if self.index != nil
-      return 4 - self.index
-    else
-      return 0
-    end
-  end
+
 end

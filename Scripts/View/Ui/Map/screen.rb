@@ -5,10 +5,16 @@
 class Ui_Screen < Ui_Base
   
 	def initialize
-		super(1111)
+		@message = Ui_Message.new        
+	end
+
+	def update
+		@message.update
 	end
 
 
-    def busy?() return false end
+    def busy?() 
+    	return @message.busy?
+    end
 
 end

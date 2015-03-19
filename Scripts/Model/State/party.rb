@@ -27,7 +27,6 @@ class Game_Party
     # Initialize amount of gold
     @gold = 0
 
-
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
     @weapons = {}
@@ -54,8 +53,7 @@ class Game_Party
     if @active.size < 4 and not @actors.include?(actor)
       
       @active.push(actor)
-      
-      $player.refresh
+
     end
    if !@active.include?(actor)
       @reserve.push(actor)
@@ -90,26 +88,11 @@ class Game_Party
     return type.has_key?(id) ? type[id] : 0
   end
 
-  
-
-  #--------------------------------------------------------------------------
-  # * Clear All Member Actions
-  #--------------------------------------------------------------------------
-  def clear_actions
-    for actor in @actors
-      actor.current_action.clear
-    end
-  end
-
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead
   #--------------------------------------------------------------------------
   def all_dead?
-    return false if @active.empty?
-    for actor in @active
-      return false if @actors[actor].hp > 0
-    end
-    return true
+    return @active.select{ |a| @actors[a].hp > 0}.empty?
   end
 
   #--------------------------------------------------------------------------

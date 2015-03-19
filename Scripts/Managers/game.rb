@@ -16,7 +16,7 @@ class GameManager
     end
 
     Graphics.frame_rate = 60
-    set_rez(720,480)
+    set_rez(640,480)
 
     @scenes = []
 
@@ -50,14 +50,7 @@ class GameManager
     # Model    
     $map = Game_Map.new
     $map.setup($data.system.start_map_id)
-
-    # Set up initial map position    
     $player.moveto($data.system.start_x, $data.system.start_y)
-    $player.refresh
-    $map.autoplay
-    $map.update
-
-    $hud = Game_Hud.new
 
     # Switch to map screen
     push_scene(Scene_Map.new)
@@ -81,7 +74,6 @@ class GameManager
     $keyboard.update
     $mouse.update
     $debug.update
-    $hud.update
     Graphics.update
     Input.update
     @scenes[0].update

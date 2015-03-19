@@ -17,6 +17,8 @@ class Game_World
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
+
+    @map = nil
     
     # INit screen
     
@@ -89,7 +91,6 @@ class Game_World
 
   def refresh_tileset
       @tilemap.tileset = Cache.tileset($map.tileset.tileset_name)#+'-big')
-      @tilemap.priorities = $map.priorities
       for i in 0..6
         autotile_name = $map.tileset.autotile_names[i]
         next if autotile_name == ''
@@ -97,9 +98,10 @@ class Game_World
       end
       $map.new_tileset = false
       @tilemap.map_data = $map.data
-      @tilemap.priorities = $map.priorities
+      @tilemap.priorities = $map.tileset.priorities
 
       @character_sprites = []
+
     for i in $map.events.keys.sort
       sprite = Sprite_Character.new(@viewport1, $map.events[i])
       @character_sprites.push(sprite)
@@ -217,17 +219,6 @@ class Game_World
   end
 
   #--------------------------------------------------------------------------
-  # * Start Flashing
-  #     color : color
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_flash(color, duration)
-    @flash_color = color.clone
-    @flash_duration = duration
-  end
-
-
-  #--------------------------------------------------------------------------
   # * Set Weather
   #--------------------------------------------------------------------------
   def weather(type, power, duration)
@@ -258,11 +249,6 @@ class Game_World
       @tone.blue = (@tone.blue * (d - 1) + @tone_target.blue) / d
       @tone.gray = (@tone.gray * (d - 1) + @tone_target.gray) / d
       @tone_duration -= 1
-    end
-    if @flash_duration >= 1
-      d = @flash_duration
-      @flash_color.alpha = @flash_color.alpha * (d - 1) / d
-      @flash_duration -= 1
     end
 
     if @weather_duration >= 1

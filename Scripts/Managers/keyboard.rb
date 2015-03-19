@@ -5,7 +5,9 @@
 VK_BS = 8
 VK_TAB = 9
 VK_ENTER = 13
+VK_SHIFT = 16
 VK_ESC = 27
+VK_SPACE = 32
 VK_TILDE = 192
 
 VK_LEFT = 37
@@ -61,7 +63,7 @@ class KeyboardManager
 
   def to_char(key)
 
-    shift = Input.press?(Input::SHIFT)
+    shift = $input.shift?
 
     case key
 

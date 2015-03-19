@@ -26,20 +26,10 @@ class Sprite_Character < Sprite
   def update
     super
     # If tile ID, file name, or hue are different from current ones
-    if @tile_id != @character.tile_id or
-       @character_name != @character.character_name
-      # Remember tile ID, file name, and hue
-      @tile_id = @character.tile_id
+    if @character_name != @character.character_name
+     
       @character_name = @character.character_name
 
-      # If tile ID value is valid
-      if @tile_id >= 384
-        self.bitmap = Cache.tile($map.tileset.name,@tile_id, 0)
-        self.src_rect.set(0, 0, 32, 32)
-        self.ox = 16
-        self.oy = 32
-      # If tile ID value is invalid
-      else
         self.bitmap = Cache.character(@character.character_name,0)
         if @character == $player
           self.bitmap = Cache.character("Player/boy",0)
@@ -48,19 +38,17 @@ class Sprite_Character < Sprite
         @ch = bitmap.height / 4
         self.ox = @cw / 2
         self.oy = @ch
+
       end
-    end
+
 
     # Set visible situation
     self.visible = !@character.transparent
     
-    # If graphic is character
-    if @tile_id == 0
-      # Set rectangular transfer
-      sx = @character.pattern * @cw
-      sy = (@character.direction - 2) / 2 * @ch
-      self.src_rect.set(sx, sy, @cw, @ch)
-    end
+    sx = @character.pattern * @cw
+    sy = (@character.direction - 2) / 2 * @ch
+    self.src_rect.set(sx, sy, @cw, @ch)
+
 
     # Set sprite coordinates
     self.x = @character.screen_x

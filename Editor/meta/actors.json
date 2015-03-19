@@ -19,6 +19,9 @@
     "field": "resource"
   },
   {
+    "field": "slots"
+  },
+  {
     "field": "statratings"
   }
 ]

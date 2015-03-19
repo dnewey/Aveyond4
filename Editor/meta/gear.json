@@ -7,11 +7,11 @@
     "default": "New Skill"
   },
   {
-    "field": "description",
-    "edit": "area"
+    "field": "slot",
   },
   {
-    "field": "slot"
+    "field": "description",
+    "edit": "area"
   },
   {
     "field": "stats",
