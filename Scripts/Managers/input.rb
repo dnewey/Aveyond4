@@ -14,7 +14,11 @@ class InputManager
 
 	def action?
 		return $keyboard.press?(VK_ENTER) ||
-			   $keyboard.press?(VK_SPACE)
+			   $keyboard.press?(VK_SPACE) 
+	end
+
+	def click?
+		return $keyboard.press?(VK_LBUTTON)
 	end
 
 	def cancel?

@@ -17,7 +17,6 @@ class Game_Actor < Game_Battler
   
   attr_reader   :skills                   # skills
 
-
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     actor_id : actor ID
@@ -25,8 +24,8 @@ class Game_Actor < Game_Battler
   def initialize(id)
     super()
 
-    actor_data = $data.actors[actor_id]
-    @id = actor_id
+    actor_data = $data.actors[id]
+    @id = id
 
     @name = actor_data.name
 

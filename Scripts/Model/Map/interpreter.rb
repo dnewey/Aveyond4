@@ -6,6 +6,8 @@
 #==============================================================================
 
 class Interpreter
+
+  attr_accessor :common_event_id
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -15,6 +17,8 @@ class Interpreter
   def initialize(depth = 0, main = false)
     @depth = depth
     @main = main
+
+    @common_event_id = 0
     
     # Depth goes up to level 100
     if depth > 100
@@ -104,13 +108,13 @@ class Interpreter
     end
     
     # If common event call is reserved
-    if $temp.common_event_id > 0
+    if @common_event_id > 0
       
       # Set up event
-      setup($data.commons[$temp.common_event_id].list, 0)
+      setup($data.commons[@common_event_id].list, 0)
       
       # Release reservation
-      $temp.common_event_id = 0
+      @common_event_id = 0
       
       return
       

@@ -2,25 +2,27 @@
 # ** Scene_Map
 #==============================================================================
 
-class Scene_Map < Scene_Base  
-  
-  attr_accessor :hud_window
+class Scene_Map
    
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
-  def start
+  def initialize
 
     @hud = Ui_Screen.new
     @world = Game_World.new
 
-    $hud = @screen
+        $map = Game_Map.new
+
+    $map.setup($data.system.start_map_id)
+    $player.moveto($data.system.start_x, $data.system.start_y)
+
+    $hud = @hud
     $world = @world
             
   end
   
   def terminate
-    super
 
     @world.dispose
     @hud.dispose
@@ -32,16 +34,11 @@ class Scene_Map < Scene_Base
   #--------------------------------------------------------------------------
   def update
 
-      $map.update      
-      $player.update
+    $map.update      
+    $player.update
 
-      @world.update
-      @hud.update
-
-
-      return # if not transferring
-
-      # transfer_player
+    @world.update
+    @hud.update
 
     # Open Menu at player's request
     unless $map.interpreter.running? or $hud.busy?
@@ -49,38 +46,6 @@ class Scene_Map < Scene_Base
       # Check inputs
         
     end
-    
-  end
-
-  #--------------------------------------------------------------------------
-  # * Teleport the Player
-  #--------------------------------------------------------------------------
-  def transfer_player
-   
-    $temp.player_transferring = false
-    $player.clear_path
-
-    # Map to teleport to 
-    if $map.map_id != $temp.player_new_map_id
-      $map.setup($game_temp.player_new_map_id)      
-    end
-
-    # Location on the map to teleport to
-    $player.moveto($temp.player_new_x, $temp.player_new_y)
-    $player.direction = $temp.player_new_direction
-
-    $player.straighten
-    $map.update
-
-    $map.autoplay    
-
-    # AUTO SAVING
-
-    # autosave your game (but not on the ending map)
-   # if !ENDING_MAPS.include?($game_map.map_id)
-   #   save = Scene_Save.new(1)
-   #   save.autosave      
-   # end
     
   end
 

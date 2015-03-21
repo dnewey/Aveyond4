@@ -8,9 +8,22 @@
 
 class Game_Player < Game_Character
 
+  attr_accessor :player_transferring      # player place movement flag
+  attr_accessor :player_new_map_id        # player destination: map ID
+  attr_accessor :player_new_x             # player destination: x-coordinate
+  attr_accessor :player_new_y             # player destination: y-coordinate
+  attr_accessor :player_new_direction     # player destination: direction
+  
+
   def initialize
     super
     @character_name = "boyle"
+
+    @player_transferring = false
+    @player_new_map_id = 0
+    @player_new_x = 0
+    @player_new_y = 0
+    @player_new_direction = 0
   end
 
   #--------------------------------------------------------------------------
@@ -21,22 +34,6 @@ class Game_Player < Game_Character
       return true
     end
     super
-  end
-
-  #--------------------------------------------------------------------------
-  # * Increaase Steps
-  #--------------------------------------------------------------------------
-  def increase_steps
-    super
-    # If move route is not forcing
-    unless @move_route_forcing
-      
-      # NOT USING STEPS, GET RID OF THIS PUT SLIP ELSEWHERE
-     # if $party.steps % 2 == 0
-        # Slip damage check
-      #  $party.check_map_slip_damage
-      #end
-    end
   end
 
   #--------------------------------------------------------------------------
@@ -95,26 +92,28 @@ class Game_Player < Game_Character
 
     # COUNTER CHECK
 
-    # if result == false
-    #   # If front tile is a counter
-    #   if $map.counter?(new_x, new_y)
-    #     # Calculate 1 tile inside coordinates
-    #     new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
-    #     new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
-    #     # All event loops
-    #     for event in $map.events.values
-    #       # If event coordinates and triggers are consistent
-    #       if event.x == new_x and event.y == new_y and
-    #          triggers.include?(event.trigger) and event.list.size > 1
-    #         # If starting determinant is front event (other than jumping)
-    #         if not event.jumping? and not event.over_trigger?
-    #           event.start
-    #           result = true
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
+    if result == false
+
+      # If front tile is a counter
+      if $map.counter?(new_x, new_y)
+        # Calculate 1 tile inside coordinates
+        new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
+        new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+        # All event loops
+        for event in $map.events.values
+          # If event coordinates and triggers are consistent
+          if event.x == new_x and event.y == new_y and
+             triggers.include?(event.trigger) and event.list.size > 1
+            # If starting determinant is front event (other than jumping)
+            if not event.jumping? and not event.over_trigger?
+              event.start
+              result = true
+            end
+          end
+        end
+      end
+    end
+
     return result
   end
 
@@ -151,28 +150,16 @@ class Game_Player < Game_Character
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 
-    if $input.action?
+
+    if $input.click?
 
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        log_info([mx,my])
+        log_info($map.display_x)
         
         # Turn Character in direction
-        newd_x = (@x - mx).abs
-        newd_y = (@y - my).abs
-        
-        if @x > mx 
-            turn_left if newd_x >= newd_y 
-        elsif @x < mx
-            turn_right if newd_x >= newd_y 
-        end  
-            
-        if @y > my
-            turn_up if newd_x < newd_y 
-        elsif @y < my
-            turn_down if newd_x < newd_y 
-        end 
+        turn_toward_pos(mx,my)
         
         # Run Pathfinding
         evt = $map.lowest_event_at(mx, my)
@@ -271,6 +258,38 @@ class Game_Player < Game_Character
     end
     
 
+  end
+
+  #--------------------------------------------------------------------------
+  # * Teleport the Player
+  #--------------------------------------------------------------------------
+  def transfer_player
+   
+    $temp.player_transferring = false
+    $player.clear_path
+
+    # Map to teleport to 
+    if $map.map_id != $temp.player_new_map_id
+      $map.setup($game_temp.player_new_map_id)      
+    end
+
+    # Location on the map to teleport to
+    $player.moveto($temp.player_new_x, $temp.player_new_y)
+    $player.direction = $temp.player_new_direction
+
+    $player.straighten
+    $map.update
+
+    $map.autoplay    
+
+    # AUTO SAVING
+
+    # autosave your game (but not on the ending map)
+   # if !ENDING_MAPS.include?($game_map.map_id)
+   #   save = Scene_Save.new(1)
+   #   save.autosave      
+   # end
+    
   end
 
 end

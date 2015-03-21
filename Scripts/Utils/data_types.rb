@@ -41,8 +41,10 @@ class ActorData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :profile
-	attr_reader :weapons
 	attr_reader :armor
+	attr_reader :actions
+	attr_reader :resource
+	attr_reader :slots
 	attr_reader :statratings
 end
 

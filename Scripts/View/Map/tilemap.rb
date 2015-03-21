@@ -81,12 +81,14 @@ class Tilemap
     @zoom_x      = $map.tilemap_zoom_x
     @zoom_y      = $map.tilemap_zoom_y
   end
+  
   #--------------------------------------------------------------------------
   def dispose
-    for layer in @layers
-      layer.dispose
-    end
+    @tileset.dispose
+    @autotiles.each{ |a| a.dispose }    
+    @layers.each{ |l| l.dispose }
   end
+
   #--------------------------------------------------------------------------
   def update
     unless @data == @map_data && @tile_width == $map.tilemap_tile_width &&

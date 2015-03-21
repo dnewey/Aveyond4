@@ -41,7 +41,7 @@ class Game_Party
   # * Getting Maximum Level
   #--------------------------------------------------------------------------
   def max_level
-    return @actors.max_by(&:level)
+    return @actors.max_by(&:level).level
   end
 
   #--------------------------------------------------------------------------

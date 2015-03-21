@@ -1,33 +1,4 @@
-[A"P
-
-def condition_applies?(cond)
-      # cond is [code,data1.....]
-
-    case cond[0]
-
-      # Flag
-      when '?flag'
-          return false if !flag?(cond[1])
-              
-        # Progress
-      when '?progress'
-        return false if !progress?(cond[1])
-
-      # Active Quest
-      when '?active'
-        return false if !on_quest?(cond[1])
-         when '?quest'
-        return false if !on_quest?(cond[1])  
-              
-        # Item Check
-      when '?item'
-        return false if !$game_party.has_item?(cond[1].to_i)
-
-    end
-
-    return true
-
-  end"È#==============================================================================
+[B"Æ#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -55,7 +26,6 @@ def aveyond4
     $tweens = TweenManager.new
     $settings = SettingsManager.new
     $files = FileManager.new
-
     $game = GameManager.new  
 
     # Call main method as long as $scene is effective      
@@ -87,7 +57,36 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"ê#==============================================================================
+end"P
+
+def condition_applies?(cond)
+      # cond is [code,data1.....]
+
+    case cond[0]
+
+      # Flag
+      when '?flag'
+          return false if !flag?(cond[1])
+              
+        # Progress
+      when '?progress'
+        return false if !progress?(cond[1])
+
+      # Active Quest
+      when '?active'
+        return false if !on_quest?(cond[1])
+         when '?quest'
+        return false if !on_quest?(cond[1])  
+              
+        # Item Check
+      when '?item'
+        return false if !$game_party.has_item?(cond[1].to_i)
+
+    end
+
+    return true
+
+  end"ê#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -725,13 +724,17 @@ class FileManager
   end
   
 end
-"ã#==============================================================================
+"I#==============================================================================
 # ** Game Manager
 #==============================================================================
 
 class GameManager
 
+  attr_reader :width, :height
+
 	def initialize
+
+    $game = self
 
     # Setup font
     Font.default_size = 22
@@ -743,45 +746,35 @@ class GameManager
     end
 
     Graphics.frame_rate = 60
-    set_rez(640,480)
+    resize(850,480)
 
     @scenes = []
 
+    # Game State Objects
+    $progress = Av::Progress.new
+    $state = Av::State.new
+    $party = Game_Party.new
+    $player = Game_Player.new
+
+    # Model    
+    $map = Game_Map.new
+
+    $map.setup($data.system.start_map_id)
+    $player.moveto($data.system.start_x, $data.system.start_y)
+
     # Make scene object (title screen)
     if DEBUG && $settings.debug_skip_title
-      quick_start
+      push_scene(Scene_Map.new)    
     else
-      $scene = Scene_Splash.new    
+      push_scene(Scene_Splash.new)
     end
 
   end
 
-   def width
-    return Graphics.width
-  end
-
-  def height
-    return Graphics.height
-  end
-
-   def quick_start
-
-    # Game State Objects
-    $temp = Game_Temp.new
-    $progress = Av::Progress.new
-    $state = Av::State.new
-
-    $player = Game_Player.new
-    $party = Game_Party.new
-
-    # Model    
-    $map = Game_Map.new
-    $map.setup($data.system.start_map_id)
-    $player.moveto($data.system.start_x, $data.system.start_y)
-
-    # Switch to map screen
-    push_scene(Scene_Map.new)
-
+  def resize(w,h)
+    @width = w
+    @height = h
+    set_rez(w,h)
   end
 
   def push_scene(scene)
@@ -808,20 +801,14 @@ class GameManager
   end
 
   def flip_window
-    
-    # Check for keyboard events
-    $showm = Win32API.new 'user32', 'keybd_event', %w(l l l l), ''
-    
-    if false
-      $showm.call(18,0,0,0)
-      $showm.call(13,0,0,0)
-      $showm.call(13,0,2,0)
-      $showm.call(18,0,2,0)
-    end
-
+    showm = Win32API.new('user32', 'keybd_event', %w(l l l l), '')
+    showm.call(18,0,0,0)
+    showm.call(13,0,0,0)
+    showm.call(13,0,2,0)
+    showm.call(18,0,2,0)
   end
 
-end"|#============================================================================== 
+end"¹#============================================================================== 
 # ** Input
 #==============================================================================
 
@@ -837,7 +824,11 @@ class InputManager
 
 	def action?
 		return $keyboard.press?(VK_ENTER) ||
-			   $keyboard.press?(VK_SPACE)
+			   $keyboard.press?(VK_SPACE) 
+	end
+
+	def click?
+		return $keyboard.press?(VK_LBUTTON)
 	end
 
 	def cancel?
@@ -852,9 +843,12 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"#==============================================================================
+end"0#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
+
+
+VK_LBUTTON = 1
 
 VK_BS = 8
 VK_TAB = 9
@@ -953,7 +947,7 @@ class KeyboardManager
 
   end
 
-end"ê#============================================================================== 
+end"î#============================================================================== 
 # ** Modules.Mouse Input (7.0)              By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -981,7 +975,7 @@ class MouseManager
   def grid() 
     x = (@pos[0] + $map.display_x / 128) / 32
     y = (@pos[1] + $map.display_y / 128) / 32
-    [x.to_i-11,y.to_i-9]
+    return [x.to_i,y.to_i]
   end
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
         
@@ -995,6 +989,7 @@ class MouseManager
     Cursor_Pos.call(pos)
     Scr2cli.call(@hwnd, pos) 
     @pos = pos.unpack('ll')
+
 
     # Update sprite pos
     @sprite.x = @pos[0]
@@ -1189,7 +1184,7 @@ class SettingsManager
     @window = Win32API.new('Utils', "IsFullScreen", ["V"], "I").call
   end
 
-end"ß6#==============================================================================
+end"@.#==============================================================================
 # ** Game_Actor
 #------------------------------------------------------------------------------
 #  This class handles the actor. It's used within the Game_Actors class
@@ -1202,43 +1197,35 @@ end
 class Game_Actor < Game_Battler
  
   attr_reader   :name                     # name
-  
-  attr_reader   :character_name           # character file name
-
-  # Equipment
-  attr_reader   :weapon                # weapon ID
-  
-  attr_reader   :armor                # shield ID
-  attr_reader   :boots                # helmet ID
-  attr_reader   :trinket                # body armor ID
-  attr_reader   :bonus                # accessory ID
 
   attr_reader   :level                    # level
   attr_reader   :exp                      # EXP
   
   attr_reader   :skills                   # skills
-  
-  attr_reader   :actor_id
 
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
-  def initialize(actor_id)
+  def initialize(id)
     super()
 
-    actor_data = $data.actors[actor_id]
-    @actor_id = actor_id
+    actor_data = $data.actors[id]
+    @id = id
 
     @name = actor_data.name
-    @character_name = actor_id
+
+
+    @equips = [] # extrapolate from data, combine weapon and armors!
+    actor_data.slots.split(" | ").each{ |s|
+      #@equips.
+    }
     
-    # @weapon_id = actor.weapon_id
-    # @armor1_id = actor.armor1_id
-    # @armor2_id = actor.armor2_id
-    # @armor3_id = actor.armor3_id
-    # @armor4_id = actor.armor4_id
-    
+    @skills = []
+    actor_data.slots.split(" | ").each{ |s|
+
+    }
+
     @level = 1
     @exp_list = Array.new(101)
     make_exp_list
@@ -1289,20 +1276,6 @@ class Game_Actor < Game_Battler
     return result
   end
   
-  #--------------------------------------------------------------------------
-  # * Get Normal Attack State Change (+)
-  #--------------------------------------------------------------------------
-  def plus_state_set
-    weapon = $data_weapons[@weapon_id]
-    return weapon != nil ? weapon.plus_state_set : []
-  end
-  #--------------------------------------------------------------------------
-  # * Get Normal Attack State Change (-)
-  #--------------------------------------------------------------------------
-  def minus_state_set
-    weapon = $data_weapons[@weapon_id]
-    return weapon != nil ? weapon.minus_state_set : []
-  end
 
   #--------------------------------------------------------------------------
   # * Get Maximum HP
@@ -1315,18 +1288,21 @@ class Game_Actor < Game_Battler
     n = [[Integer(n), 1].max, 9999].min
     return n
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Maximum HP
   #--------------------------------------------------------------------------
   def base_maxhp
     return $data_actors[@actor_id].parameters[0, @level]
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Maximum SP
   #--------------------------------------------------------------------------
   def base_maxsp
     return $data_actors[@actor_id].parameters[1, @level]
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Strength
   #--------------------------------------------------------------------------
@@ -1352,6 +1328,7 @@ class Game_Actor < Game_Battler
     weapon = $data_weapons[@weapon_id]
     return weapon != nil ? weapon.atk : 0
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Physical Defense
   #--------------------------------------------------------------------------
@@ -1368,6 +1345,7 @@ class Game_Actor < Game_Battler
     pdef5 = armor4 != nil ? armor4.pdef : 0
     return pdef1 + pdef2 + pdef3 + pdef4 + pdef5
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Magic Defense
   #--------------------------------------------------------------------------
@@ -1385,6 +1363,7 @@ class Game_Actor < Game_Battler
     mdef5 = armor4 != nil ? armor4.mdef : 0
     return mdef1 + mdef2 + mdef3 + mdef4 + mdef5
   end
+
   #--------------------------------------------------------------------------
   # * Get Basic Evasion Correction
   #--------------------------------------------------------------------------
@@ -1398,32 +1377,6 @@ class Game_Actor < Game_Battler
     eva3 = armor3 != nil ? armor3.eva : 0
     eva4 = armor4 != nil ? armor4.eva : 0
     return eva1 + eva2 + eva3 + eva4
-  end
-
-  #--------------------------------------------------------------------------
-  # * Get EXP String
-  #--------------------------------------------------------------------------
-  def exp_s
-    return @exp_list[@level+1] > 0 ? @exp.to_s : "-------"
-  end
-  #--------------------------------------------------------------------------
-  # * Get Previous Level EXP String
-  #--------------------------------------------------------------------------
-  def prev_exp_s
-    return @exp_list[@level] > 0 ? @exp_list[@level].to_s : "-------"
-  end
-  #--------------------------------------------------------------------------
-  # * Get Next Level EXP String
-  #--------------------------------------------------------------------------
-  def next_exp_s
-    return @exp_list[@level+1] > 0 ? @exp_list[@level+1].to_s : "-------"
-  end
-  #--------------------------------------------------------------------------
-  # * Get Until Next Level EXP String
-  #--------------------------------------------------------------------------
-  def next_rest_exp_s
-    return @exp_list[@level+1] > 0 ?
-      (@exp_list[@level+1] - @exp).to_s : "-------"
   end
 
   #--------------------------------------------------------------------------
@@ -1509,6 +1462,7 @@ class Game_Actor < Game_Battler
     end
     return false
   end
+
   #--------------------------------------------------------------------------
   # * Change EXP
   #     exp : new EXP
@@ -1533,6 +1487,7 @@ class Game_Actor < Game_Battler
     @hp = [@hp, self.maxhp].min
     @sp = [@sp, self.maxsp].min
   end
+
   #--------------------------------------------------------------------------
   # * Change Level
   #     level : new level
@@ -1544,8 +1499,6 @@ class Game_Actor < Game_Battler
     self.exp = @exp_list[level]
   end
 
-
-
   #--------------------------------------------------------------------------
   # * Learn Skill
   #     skill_id : skill ID
@@ -1556,6 +1509,7 @@ class Game_Actor < Game_Battler
       @skills.sort!
     end
   end
+
   #--------------------------------------------------------------------------
   # * Forget Skill
   #     skill_id : skill ID
@@ -1563,6 +1517,7 @@ class Game_Actor < Game_Battler
   def forget_skill(skill_id)
     @skills.delete(skill_id)
   end
+
   #--------------------------------------------------------------------------
   # * Determine if Finished Learning Skill
   #     skill_id : skill ID
@@ -1728,7 +1683,7 @@ class Game_Battle
   end
 
 end
-  "4Q#==============================================================================
+  "áP#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -1756,9 +1711,10 @@ class Game_Battler
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
-    @battler_name = ""
+
     @hp = 0
     @sp = 0
+
     @states = []
     @states_turn = {}
 
@@ -1767,12 +1723,9 @@ class Game_Battler
     @str_plus = 0
     @def_plus = 0
 
-    @immortal = false
 
     @damage = nil
     @critical = false
-
-    @enemy_id = enmo #nil for player
 
     # Current action, remembers for next time also
     @skill_id = 0
@@ -2352,7 +2305,7 @@ class Game_Battler
   end
 
 end
-" "«“#==============================================================================
+" "O•#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -2414,7 +2367,7 @@ class Game_Character
     @original_pattern = 0
 
     @move_type = 0
-    @move_speed = 5#3
+    @move_speed = 3
     @move_frequency = 6
     @move_route = nil
     @move_route_index = 0
@@ -2427,6 +2380,7 @@ class Game_Character
     @always_on_top = false
     @anime_count = 0
     @stop_count = 0 #how long has paused for between steps
+
     @jump_count = 0
     @jump_peak = 0
     @wait_count = 0
@@ -2622,9 +2576,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #--------------------------------------------------------------------------
-  def terrain_tag
-    return $map.terrain_tag(@x, @y)
-  end
+  def terrain_tag() return $map.terrain_tag(@x, @y) end
 
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -3474,6 +3426,24 @@ class Game_Character
     end
   end
 
+  def turn_toward_pos(x,y)
+
+    sx = @x - x
+    sy = @y - y
+
+    # If coordinates are equal
+    return if sx == 0 and sy == 0
+
+    # If horizontal distance is longer
+    if sx.abs > sy.abs
+      # Turn to the right or left towards event
+      sx > 0 ? turn_left : turn_right
+    # If vertical distance is longer
+    else
+      # Turn up or down towards event
+      sy > 0 ? turn_up : turn_down
+    end
+  end
   #   #--------------------------------------------------------------------------
 #   # * Frame Update (run_path)
 #   #--------------------------------------------------------------------------
@@ -3896,7 +3866,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"1X#==============================================================================
+end"bX#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -3904,6 +3874,8 @@ end"1X#========================================================================
 #==============================================================================
 
 class Interpreter
+
+  attr_accessor :common_event_id
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -3913,6 +3885,8 @@ class Interpreter
   def initialize(depth = 0, main = false)
     @depth = depth
     @main = main
+
+    @common_event_id = 0
     
     # Depth goes up to level 100
     if depth > 100
@@ -4002,13 +3976,13 @@ class Interpreter
     end
     
     # If common event call is reserved
-    if $temp.common_event_id > 0
+    if @common_event_id > 0
       
       # Set up event
-      setup($data.commons[$temp.common_event_id].list, 0)
+      setup($data.commons[@common_event_id].list, 0)
       
       # Release reservation
-      $temp.common_event_id = 0
+      @common_event_id = 0
       
       return
       
@@ -4664,7 +4638,7 @@ class Interpreter
   end
 
 end
-"’#==============================================================================
+"•#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -4678,20 +4652,11 @@ class Game_Map
   # Drawing
   attr_accessor :display_x                # display x-coordinate * 128 # camera pos
   attr_accessor :display_y                # display y-coordinate * 128
-  
-  # Camera
-  attr_accessor :target_x
-  attr_accessor :target_y
   attr_accessor :target
 
   attr_accessor :need_refresh             # refresh request flag
-  
-  attr_reader   :fog_ox                   # fog x-coordinate starting point
-  attr_reader   :fog_oy                   # fog y-coordinate starting point
 
-  
   attr_reader   :map_name                 # name of the map
-
 
   attr_reader :interpreter
 
@@ -4700,16 +4665,10 @@ class Game_Map
   # Try to cut this
   attr_reader :events
 
-  # used slackly in world
-  attr_accessor :new_tileset
-  
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
-    @id = 0
-    @display_x = 0
-    @display_y = 0
     @interpreter = Interpreter.new(0,true)
   end
   
@@ -4718,7 +4677,6 @@ class Game_Map
   #     map_id : map ID
   #--------------------------------------------------------------------------
   def setup(id)
-    @new_tileset = true
     
     # Put map ID in @map_id memory
     @id = id
@@ -4728,39 +4686,30 @@ class Game_Map
     @map_name = $data.mapinfos[id].name 
         
     # Hold onto the tileset
-    @tileset = $data.tilesets[@map.tileset_id]
-        
+    @tileset = $data.tilesets[@map.tileset_id]        
     @passages = @tileset.passages 
-    @priorities = @tileset.priorities
-    @terrain_tags = @tileset.terrain_tags
     
     # Initialize displayed coordinates
     @display_x = 0
     @display_y = 0
-
-    @target_x = 0
-    @target_y = 0
-
-    # Camera
     @target = nil
     
     @need_refresh = false
     
     # Set map event data
     @events = {}
-    for i in @map.events.keys
+    @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
+    }
+
+        # Zones!
+    if @map.autoplay_bgm
+      $game_system.bgm_play(@map.bgm)
     end
-    
-    # Initialize all fog information
-    @fog_ox = 0
-    @fog_oy = 0
-    @fog_opacity_duration = 0
-    @fog_opacity_target = 0
-        
-    # Clear player path for mouse pathfinding
-    $player.clear_path
-    
+    if @map.autoplay_bgs
+      $game_system.bgs_play(@map.bgs)
+    end
+
   end
 
   #--------------------------------------------------------------------------
@@ -4770,26 +4719,57 @@ class Game_Map
   def width() return @map.width end
   def height() return @map.height end
   def data() return @map.data end
-  
-  #--------------------------------------------------------------------------
-  # * Automatically Change Background Music and Backround Sound
-  #--------------------------------------------------------------------------
-  def autoplay
-    # Zones!
-    if @map.autoplay_bgm
-      $game_system.bgm_play(@map.bgm)
-    end
-    if @map.autoplay_bgs
-      $game_system.bgs_play(@map.bgs)
-    end
-  end
 
   #--------------------------------------------------------------------------
-  # * Refresh
+  # * Frame Update
   #--------------------------------------------------------------------------
-  def refresh
-    @events.values.each{ |e| e.refresh }
-    @need_refresh = false
+  def update
+
+    @interpreter.update
+
+    # Anti lag here
+    @events.values.each{ |e| e.update }
+
+    # Refresh map if necessary
+    if @need_refresh
+      @events.values.each{ |e| e.refresh }
+      @need_refresh = false
+    end
+
+    # Camera update
+    @target = $player
+
+    # Camera update, maybe split to camera class
+    if @target != nil
+
+      @target_x = @target.real_x- (128 * 9.5)
+      @target_y = @target.real_y- (128 * 7)
+
+      if @target_x != @display_x
+        @display_x += (@target_x-@display_x) * 0.5
+      end
+
+      if @target_y != @display_y
+        @display_y += (@target_y-@display_y) * 0.5
+      end
+
+      @display_x = @target_x
+      @display_y = @target_y
+
+    end
+
+    # Limit cam to screen
+    @display_x = 0 if @display_x < 0
+    @display_y = 0 if @display_y < 0
+
+    w = ($map.width * 32) - $game.width
+    h = ($map.height * 32) - $game.height
+
+    @display_x = w if @display_x > 0
+    @display_y = w if @display_y > 0
+
+
+
   end
 
   #--------------------------------------------------------------------------
@@ -4814,7 +4794,7 @@ class Game_Map
       return false if @passages[tile_id] & 0x0f == 0x0f
         
       # If priorities other than that are 0
-      return true if @priorities[tile_id] == 0
+      return true if @tileset.priorities[tile_id] == 0
 
     }
 
@@ -4825,78 +4805,25 @@ class Game_Map
 
   #--------------------------------------------------------------------------
   # * Determine Thicket
-
   #--------------------------------------------------------------------------
   def bush?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x40 == 0x40 }.empty? end
   def counter?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x80 == 0x80 }.empty? end
-
   def terrain_tag(x, y)
-    [2,1,0].each{ |i| return @terrain_tags[data[x, y, i]] if data[x, y, i] != nil }
+    [2,1,0].each{ |i| return @tileset.terrain_tags[data[x, y, i]] if data[x, y, i] != nil }
     return 0
   end
 
   #--------------------------------------------------------------------------
-  # * Frame Update
-  #--------------------------------------------------------------------------
-  def update
-
-    @interpreter.update
-
-    # Refresh map if necessary
-    refresh if $map.need_refresh
-
-    # Camera update, maybe split to camera class
-    @target = $player if @target == nil
-
-    if @target != nil
-    @target_x = @target.real_x- (128 * 9.5)
-    @target_y = @target.real_y- (128 * 7)
-
-    if @target_x > @display_x
-      @display_x += (@target_x-@display_x) * 0.2
-    end
-    if @target_x < @display_x
-      @display_x -= (@display_x-@target_x) * 0.2
-    end
-
-    if @target_y > @display_y
-      @display_y += 3
-    end
-    if @target_y < @display_y
-      @display_y -= 3
-    end
-
-  end
-
-    # Anti lag here
-    @events.values.each{ |e| e.update }
-    
-    # Manage fog scrolling
-   # @fog_ox -= @fog_sx / 8.0
-   # @fog_oy -= @fog_sy / 8.0
-    
-    # # Manage change in fog opacity level
-    # if @fog_opacity_duration >= 1
-    #   d = @fog_opacity_duration
-    #   @fog_opacity = (@fog_opacity * (d - 1) + @fog_opacity_target) / d
-    #   @fog_opacity_duration -= 1
-    # end
-
-  end
-  
-  def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
-
-  #--------------------------------------------------------------------------
   # * Event At
   #--------------------------------------------------------------------------
+  def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
   def event_at(x, y) @events.values.find{ |e| e.at?(x,y) } end
   def events_at(x, y) @events.values.select{ |e| e.at?(x,y) } end
   def lowest_event_at(x, y) events_at(x,y).min_by{ |e| e.y } end
-
   def starting_events() @events.values.select{ |e| e.starting } end
 
 end
-" ##==============================================================================
+"é$#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -4906,9 +4833,22 @@ end
 
 class Game_Player < Game_Character
 
+  attr_accessor :player_transferring      # player place movement flag
+  attr_accessor :player_new_map_id        # player destination: map ID
+  attr_accessor :player_new_x             # player destination: x-coordinate
+  attr_accessor :player_new_y             # player destination: y-coordinate
+  attr_accessor :player_new_direction     # player destination: direction
+  
+
   def initialize
     super
     @character_name = "boyle"
+
+    @player_transferring = false
+    @player_new_map_id = 0
+    @player_new_x = 0
+    @player_new_y = 0
+    @player_new_direction = 0
   end
 
   #--------------------------------------------------------------------------
@@ -4919,22 +4859,6 @@ class Game_Player < Game_Character
       return true
     end
     super
-  end
-
-  #--------------------------------------------------------------------------
-  # * Increaase Steps
-  #--------------------------------------------------------------------------
-  def increase_steps
-    super
-    # If move route is not forcing
-    unless @move_route_forcing
-      
-      # NOT USING STEPS, GET RID OF THIS PUT SLIP ELSEWHERE
-     # if $party.steps % 2 == 0
-        # Slip damage check
-      #  $party.check_map_slip_damage
-      #end
-    end
   end
 
   #--------------------------------------------------------------------------
@@ -4978,12 +4902,12 @@ class Game_Player < Game_Character
     # All event loops
     for event in $map.events.values
       # If event coordinates and triggers are consistent
-      if event.x == new_x and event.y == new_y and
+      if event.at?(new_x,new_y) &&
          triggers.include?(event.trigger) and event.list.size > 1
 
 
         # If starting determinant is front event (other than jumping)
-        if not event.jumping? and not event.over_trigger?
+        if !event.jumping? and !event.over_trigger?
           event.start
           result = true
         end
@@ -4993,26 +4917,28 @@ class Game_Player < Game_Character
 
     # COUNTER CHECK
 
-    # if result == false
-    #   # If front tile is a counter
-    #   if $map.counter?(new_x, new_y)
-    #     # Calculate 1 tile inside coordinates
-    #     new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
-    #     new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
-    #     # All event loops
-    #     for event in $map.events.values
-    #       # If event coordinates and triggers are consistent
-    #       if event.x == new_x and event.y == new_y and
-    #          triggers.include?(event.trigger) and event.list.size > 1
-    #         # If starting determinant is front event (other than jumping)
-    #         if not event.jumping? and not event.over_trigger?
-    #           event.start
-    #           result = true
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
+    if result == false
+
+      # If front tile is a counter
+      if $map.counter?(new_x, new_y)
+        # Calculate 1 tile inside coordinates
+        new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
+        new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+        # All event loops
+        for event in $map.events.values
+          # If event coordinates and triggers are consistent
+          if event.x == new_x and event.y == new_y and
+             triggers.include?(event.trigger) and event.list.size > 1
+            # If starting determinant is front event (other than jumping)
+            if not event.jumping? and not event.over_trigger?
+              event.start
+              result = true
+            end
+          end
+        end
+      end
+    end
+
     return result
   end
 
@@ -5020,15 +4946,15 @@ class Game_Player < Game_Character
   # * Touch Event Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_touch(x, y)
+        
+    return false if $map.interpreter.running?
+      
     result = false
-    # If event is running
-    if $map.interpreter.running?
-      return result
-    end
+
     # All event loops
     for event in $map.events.values
       # If event coordinates and triggers are consistent
-      if event.x == x and event.y == y and [1,2].include?(event.trigger)
+      if event.at?(x,y) and [1,2].include?(event.trigger)
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
           event.start
@@ -5049,28 +4975,16 @@ class Game_Player < Game_Character
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 
-    if $input.action?
+
+    if $input.click?
 
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        log_info([mx,my])
+        log_info($map.display_x)
         
         # Turn Character in direction
-        newd_x = (@x - mx).abs
-        newd_y = (@y - my).abs
-        
-        if @x > mx 
-            turn_left if newd_x >= newd_y 
-        elsif @x < mx
-            turn_right if newd_x >= newd_y 
-        end  
-            
-        if @y > my
-            turn_up if newd_x < newd_y 
-        elsif @y < my
-            turn_down if newd_x < newd_y 
-        end 
+        turn_toward_pos(mx,my)
         
         # Run Pathfinding
         evt = $map.lowest_event_at(mx, my)
@@ -5171,8 +5085,40 @@ class Game_Player < Game_Character
 
   end
 
+  #--------------------------------------------------------------------------
+  # * Teleport the Player
+  #--------------------------------------------------------------------------
+  def transfer_player
+   
+    $temp.player_transferring = false
+    $player.clear_path
+
+    # Map to teleport to 
+    if $map.map_id != $temp.player_new_map_id
+      $map.setup($game_temp.player_new_map_id)      
+    end
+
+    # Location on the map to teleport to
+    $player.moveto($temp.player_new_x, $temp.player_new_y)
+    $player.direction = $temp.player_new_direction
+
+    $player.straighten
+    $map.update
+
+    $map.autoplay    
+
+    # AUTO SAVING
+
+    # autosave your game (but not on the ending map)
+   # if !ENDING_MAPS.include?($game_map.map_id)
+   #   save = Scene_Save.new(1)
+   #   save.autosave      
+   # end
+    
+  end
+
 end
-"ù#==============================================================================
+"‹#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -5201,7 +5147,6 @@ class Game_Party
     # Initialize amount of gold
     @gold = 0
 
-
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
     @weapons = {}
@@ -5216,7 +5161,7 @@ class Game_Party
   # * Getting Maximum Level
   #--------------------------------------------------------------------------
   def max_level
-    return @actors.max_by(&:level)
+    return @actors.max_by(&:level).level
   end
 
   #--------------------------------------------------------------------------
@@ -5263,26 +5208,11 @@ class Game_Party
     return type.has_key?(id) ? type[id] : 0
   end
 
-  
-
-  #--------------------------------------------------------------------------
-  # * Clear All Member Actions
-  #--------------------------------------------------------------------------
-  def clear_actions
-    for actor in @actors
-      actor.current_action.clear
-    end
-  end
-
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead
   #--------------------------------------------------------------------------
   def all_dead?
-    return false if @active.empty?
-    for actor in @active
-      return false if @actors[actor].hp > 0
-    end
-    return true
+    return @active.select{ |a| @actors[a].hp > 0}.empty?
   end
 
   #--------------------------------------------------------------------------
@@ -5551,91 +5481,12 @@ module Av
 
 	end
 
-end"õ#==============================================================================
-# ** Game_Temp
-#==============================================================================
-
-class Game_Temp
-  
-  # Put in map where it can be used
-  attr_accessor :common_event_id          # common event ID  
-
-  # Put this elsewhere, could open with shop
-  attr_accessor :shop_goods               # list of shop goods
-  
-  # This can surely go elsewhere, in player or map
-  attr_accessor :player_transferring      # player place movement flag
-  attr_accessor :player_new_map_id        # player destination: map ID
-  attr_accessor :player_new_x             # player destination: x-coordinate
-  attr_accessor :player_new_y             # player destination: y-coordinate
-  attr_accessor :player_new_direction     # player destination: direction
-  
-  #--------------------------------------------------------------------------
-  # * Object Initialization
-  #--------------------------------------------------------------------------
-  def initialize
-
-    @common_event_id = 0
-    @shop_goods = nil
-    
-    @player_transferring = false
-    @player_new_map_id = 0
-    @player_new_x = 0
-    @player_new_y = 0
-    @player_new_direction = 0
-    
-  end
-
-end
-"‡#==============================================================================
-# ** Scene_Base
-#------------------------------------------------------------------------------
-#  This is a super class of all scenes within the game.
-#==============================================================================
-
-MENU_TRANSPARENCY = 200
-
-class Scene_Base
-  
-  #--------------------------------------------------------------------------
-  # * Main
-  #--------------------------------------------------------------------------
-  def initialize    
-    Graphics.transition#(transtime)
-    Input.update
-    start
-  end
-
-  def start
-    #overriide
-  end
-    
-  def terminate
-    Graphics.freeze    
-  end
-
-  #--------------------------------------------------------------------------
-  # * Fade Out All Sounds and Graphics
-  #--------------------------------------------------------------------------
-  def fadeout_all(time = 1000)
-    RPG::BGM.fade(time)
-    RPG::BGS.fade(time)
-    RPG::ME.fade(time)
-    Graphics.fadeout(time * Graphics.frame_rate / 1000)
-    RPG::BGM.stop
-    RPG::BGS.stop
-    RPG::ME.stop
-  end
-
-end
-"é	#==============================================================================
+end"¸	#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
-class Scene_Battle < Scene_Base  
+class Scene_Battle
   
-  attr_accessor :hud_window
-   
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
@@ -5734,29 +5585,31 @@ class Scene_Battle < Scene_Base
     
   end
 
-end"#==============================================================================
+end"¶#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
-class Scene_Map < Scene_Base  
-  
-  attr_accessor :hud_window
+class Scene_Map
    
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
-  def start
+  def initialize
 
     @hud = Ui_Screen.new
     @world = Game_World.new
 
-    $hud = @screen
+        $map = Game_Map.new
+
+    $map.setup($data.system.start_map_id)
+    $player.moveto($data.system.start_x, $data.system.start_y)
+
+    $hud = @hud
     $world = @world
             
   end
   
   def terminate
-    super
 
     @world.dispose
     @hud.dispose
@@ -5768,16 +5621,11 @@ class Scene_Map < Scene_Base
   #--------------------------------------------------------------------------
   def update
 
-      $map.update      
-      $player.update
+    $map.update      
+    $player.update
 
-      @world.update
-      @hud.update
-
-
-      return # if not transferring
-
-      # transfer_player
+    @world.update
+    @hud.update
 
     # Open Menu at player's request
     unless $map.interpreter.running? or $hud.busy?
@@ -5788,39 +5636,7 @@ class Scene_Map < Scene_Base
     
   end
 
-  #--------------------------------------------------------------------------
-  # * Teleport the Player
-  #--------------------------------------------------------------------------
-  def transfer_player
-   
-    $temp.player_transferring = false
-    $player.clear_path
-
-    # Map to teleport to 
-    if $map.map_id != $temp.player_new_map_id
-      $map.setup($game_temp.player_new_map_id)      
-    end
-
-    # Location on the map to teleport to
-    $player.moveto($temp.player_new_x, $temp.player_new_y)
-    $player.direction = $temp.player_new_direction
-
-    $player.straighten
-    $map.update
-
-    $map.autoplay    
-
-    # AUTO SAVING
-
-    # autosave your game (but not on the ending map)
-   # if !ENDING_MAPS.include?($game_map.map_id)
-   #   save = Scene_Save.new(1)
-   #   save.autosave      
-   # end
-    
-  end
-
-end" "»
+end" " "è
 class ItemData
 	attr_reader :id
 	attr_reader :name
@@ -5863,8 +5679,10 @@ class ActorData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :profile
-	attr_reader :weapons
 	attr_reader :armor
+	attr_reader :actions
+	attr_reader :resource
+	attr_reader :slots
 	attr_reader :statratings
 end
 
@@ -5886,7 +5704,1000 @@ end
 class QuestData
 	attr_reader :id
 end
-"~#==============================================================================
+"ï»¿# Bitmap Export v5.4 for XP, VX and VXace by Zeus81
+# Free for commercial use
+# Licence : http://creativecommons.org/licenses/by/4.0/
+# Contact : zeusex81@gmail.com
+# How to Use :
+#   - exporting bitmap :
+#       bitmap.export(filename)
+#    or bitmap.save(filename)
+#
+#   - serialize bitmap :
+#       open(filename, 'wb') {|file| Marshal.dump(bitmap, file)}
+#       bitmap = open(filename, 'rb') {|file| Marshal.load(file)}
+#   or
+#       save_data(bitmap, filename)
+#       bitmap = load_data(filename)
+#
+#  - snapshot :
+#      Graphics.export(filename)
+#   or Graphics.save(filename)
+#   or Graphics.snapshot(filename)
+#   Here filename is optional, and will be replaced by datetime if omitted. 
+ 
+$imported ||= {}
+$imported[:Zeus_Bitmap_Export] = __FILE__
+ 
+def xp?() false end; alias vx? xp?; alias vxace? xp?
+RUBY_VERSION == '1.8.1' ? defined?(Hangup) ?
+def xp?() true  end : def vx?() true  end : def vxace?() true  end
+ 
+class String
+  alias getbyte  []
+  alias setbyte  []=
+  alias bytesize size
+end unless vxace?
+ 
+class Font
+  def marshal_dump()     end
+  def marshal_load(dump) end
+end
+ 
+class Bitmap
+  RtlMoveMemory = Win32API.new('kernel32', 'RtlMoveMemory', 'ppi', 'i')
+  def last_row_address
+    return 0 if disposed?
+    RtlMoveMemory.call(buf=[0].pack('L'), __id__*2+16, 4)
+    RtlMoveMemory.call(buf, buf.unpack('L')[0]+8 , 4)
+    RtlMoveMemory.call(buf, buf.unpack('L')[0]+16, 4)
+    buf.unpack('L')[0]
+  end
+  def bytesize
+    width * height * 4
+  end
+  def get_data
+    data = [].pack('x') * bytesize
+    RtlMoveMemory.call(data, last_row_address, data.bytesize)
+    data
+  end
+  def set_data(data)
+    RtlMoveMemory.call(last_row_address, data, data.bytesize)
+  end
+  def get_data_ptr
+    data = String.new
+    RtlMoveMemory.call(data.__id__*2, [vxace? ? 0x6005 : 0x2007].pack('L'), 4)
+    RtlMoveMemory.call(data.__id__*2+8, [bytesize,last_row_address].pack('L2'), 8)
+    def data.free() RtlMoveMemory.call(__id__*2, String.new, 16) end
+    return data unless block_given?
+    yield data ensure data.free
+  end
+  def _dump(level)
+    get_data_ptr do |data|
+      dump = Marshal.dump([width, height, Zlib::Deflate.deflate(data, 9)])
+      dump.force_encoding('UTF-8') if vxace?
+      dump
+    end
+  end
+  def self._load(dump)
+    width, height, data = *Marshal.load(dump)
+    data.replace(Zlib::Inflate.inflate(data))
+    bitmap = new(width, height)
+    bitmap.set_data(data)
+    bitmap
+  end
+  def export(filename)
+    case format=File.extname(filename)
+    when '.bmp'; export_bmp(filename)
+    when '.png'; export_png(filename)
+    when ''    ; export_png("#{filename}.png")
+    else         print("Export format '#{format}' not supported.")
+    end
+  end
+  alias save export
+  def export_bmp(filename)
+    get_data_ptr do |data|
+      File.open(filename, 'wb') do |file|
+        file.write(['BM',data.bytesize+54,0,54,40,width,height,
+                    1,32,0,data.bytesize,0,0,0,0].pack('a2L6S2L6'))
+        file.write(data)
+      end
+    end
+  end
+  def export_png(filename)
+    data, i = get_data, 0
+    if vxace?
+      (0).step(data.bytesize-4, 4) do |i|
+        byte2 = data.getbyte(i)
+        data.setbyte(i, data.getbyte(i+2))
+        data.setbyte(i+2, byte2)
+      end
+    else
+      (0).step(data.bytesize-4, 4) do |i|
+        data[i,3] = data[i,3].reverse!
+      end
+    end
+    deflate = Zlib::Deflate.new(9)
+      null_char, w4 = [].pack('x'), width*4
+      (data.bytesize-w4).step(0, -w4) {|i| deflate << null_char << data[i,w4]}
+      data.replace(deflate.finish)
+    deflate.close
+    File.open(filename, 'wb') do |file|
+      def file.write_chunk(chunk)
+        write([chunk.bytesize-4].pack('N'))
+        write(chunk)
+        write([Zlib.crc32(chunk)].pack('N'))
+      end
+      file.write("\211PNG\r\n\32\n")
+      file.write_chunk(['IHDR',width,height,8,6,0,0,0].pack('a4N2C5'))
+      file.write_chunk(data.insert(0, 'IDAT'))
+      file.write_chunk('IEND')
+    end
+  end
+end
+ 
+module Graphics
+  if xp?
+    FindWindow             = Win32API.new('user32', 'FindWindow'            , 'pp'       , 'i')
+    GetDC                  = Win32API.new('user32', 'GetDC'                 , 'i'        , 'i')
+    ReleaseDC              = Win32API.new('user32', 'ReleaseDC'             , 'ii'       , 'i')
+    BitBlt                 = Win32API.new('gdi32' , 'BitBlt'                , 'iiiiiiiii', 'i')
+    CreateCompatibleBitmap = Win32API.new('gdi32' , 'CreateCompatibleBitmap', 'iii'      , 'i')
+    CreateCompatibleDC     = Win32API.new('gdi32' , 'CreateCompatibleDC'    , 'i'        , 'i')
+    DeleteDC               = Win32API.new('gdi32' , 'DeleteDC'              , 'i'        , 'i')
+    DeleteObject           = Win32API.new('gdi32' , 'DeleteObject'          , 'i'        , 'i')
+    GetDIBits              = Win32API.new('gdi32' , 'GetDIBits'             , 'iiiiipi'  , 'i')
+    SelectObject           = Win32API.new('gdi32' , 'SelectObject'          , 'ii'       , 'i')
+    def self.snap_to_bitmap
+      bitmap  = Bitmap.new(width, height)
+      info    = [40,width,height,1,32,0,0,0,0,0,0].pack('LllSSLLllLL')
+      hDC     = GetDC.call(hwnd)
+      bmp_hDC = CreateCompatibleDC.call(hDC)
+      bmp_hBM = CreateCompatibleBitmap.call(hDC, width, height)
+      bmp_obj = SelectObject.call(bmp_hDC, bmp_hBM)
+      BitBlt.call(bmp_hDC, 0, 0, width, height, hDC, 0, 0, 0xCC0020)
+      GetDIBits.call(bmp_hDC, bmp_hBM, 0, height, bitmap.last_row_address, info, 0)
+      SelectObject.call(bmp_hDC, bmp_obj)
+      DeleteObject.call(bmp_hBM)
+      DeleteDC.call(bmp_hDC)
+      ReleaseDC.call(hwnd, hDC)
+      bitmap
+    end
+  end
+  class << self
+    def hwnd() @hwnd ||= FindWindow.call('RGSS Player', nil) end
+    def width()  640 end unless method_defined?(:width)
+    def height() 480 end unless method_defined?(:height)
+    def export(filename=Time.now.strftime("snapshot %Y-%m-%d %Hh%Mm%Ss #{frame_count}"))
+      bitmap = snap_to_bitmap
+      bitmap.export(filename)
+      bitmap.dispose
+    end
+    alias save     export
+    alias snapshot export
+  end
+end"O# Fullscreen++ v2.2 for VX and VXace by Zeus81
+# Free for non commercial and commercial use
+# Licence : http://creativecommons.org/licenses/by-sa/3.0/
+# Contact : zeusex81@gmail.com
+# (fr) Manuel d'utilisation : http://pastebin.com/raw.php?i=1TQfMnVJ
+# (en) User Guide           : http://pastebin.com/raw.php?i=EgnWt9ur
+ 
+ if ACE_MODE
+
+
+class << Graphics
+  Disable_VX_Fullscreen = false
+ 
+  CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
+  GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
+  GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
+  GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
+  GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
+  FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
+  FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
+  ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
+  SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
+  SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
+  SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
+  ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
+  SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
+  UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
+  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
+  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
+  CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
+  DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
+ 
+  unless method_defined?(:zeus_fullscreen_update)
+    HWND     = FindWindow.call('RGSS Player', 0)
+    BackHWND = CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0)
+    alias zeus_fullscreen_resize_screen resize_screen
+    alias zeus_fullscreen_update        update
+  end
+private
+  def initialize_fullscreen_rects
+    @borders_size    ||= borders_size
+    @fullscreen_rect ||= screen_rect
+    @workarea_rect   ||= workarea_rect
+  end
+  def borders_size
+    GetWindowRect.call(HWND, wrect = [0, 0, 0, 0].pack('l4'))
+    GetClientRect.call(HWND, crect = [0, 0, 0, 0].pack('l4'))
+    wrect, crect = wrect.unpack('l4'), crect.unpack('l4')
+    Rect.new(0, 0, wrect[2]-wrect[0]-crect[2], wrect[3]-wrect[1]-crect[3])
+  end
+  def screen_rect
+    Rect.new(0, 0, GetSystemMetrics.call(0), GetSystemMetrics.call(1))
+  end
+  def workarea_rect
+    SystemParametersInfo.call(0x30, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
+    rect = rect.unpack('l4')
+    Rect.new(rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1])
+  end
+  def hide_borders() SetWindowLong.call(HWND, -16, 0x14000000) end
+  def show_borders() SetWindowLong.call(HWND, -16, 0x14CA0000) end
+  def hide_back()    ShowWindow.call(BackHWND, 0)              end
+  def show_back
+    ShowWindow.call(BackHWND, 3)
+    UpdateWindow.call(BackHWND)
+    dc    = GetDC.call(BackHWND)
+    rect  = [0, 0, @fullscreen_rect.width, @fullscreen_rect.height].pack('l4')
+    brush = CreateSolidBrush.call(0)
+    FillRect.call(dc, rect, brush)
+    ReleaseDC.call(BackHWND, dc)
+    DeleteObject.call(brush)
+  end
+  def resize_window(w, h)
+    if @fullscreen
+      x, y, z = (@fullscreen_rect.width-w)/2, (@fullscreen_rect.height-h)/2, -1
+    else
+      w += @borders_size.width
+      h += @borders_size.height
+      x = @workarea_rect.x + (@workarea_rect.width  - w) / 2
+      y = @workarea_rect.y + (@workarea_rect.height - h) / 2
+      z = -2
+    end
+    SetWindowPos.call(HWND, z, x, y, w, h, 0)
+  end
+  def release_alt
+    inputs = [1,18,2, 1,164,2, 1,165,2].pack('LSx2Lx16'*3)
+    SendInput.call(3, inputs, 28)
+  end
+public
+  def load_fullscreen_settings
+    buffer = [].pack('x256')
+    section = 'Fullscreen++'
+    filename = './Game.ini'
+    get_option = Proc.new do |key, default_value|
+      l = GetPrivateProfileString.call(section, key, default_value, buffer, buffer.size, filename)
+      buffer[0, l]
+    end
+    @fullscreen       = get_option.call('Fullscreen'     , '0') == '1'
+    @fullscreen_ratio = get_option.call('FullscreenRatio', '0').to_i
+    @windowed_ratio   = get_option.call('WindowedRatio'  , '1').to_i
+    toggle_vx_fullscreen if Disable_VX_Fullscreen and vx_fullscreen?
+    fullscreen? ? fullscreen_mode : windowed_mode
+  end
+  def save_fullscreen_settings
+    section = 'Fullscreen++'
+    filename = './Game.ini'
+    set_option = Proc.new do |key, value|
+      WritePrivateProfileString.call(section, key, value.to_s, filename)
+    end
+    set_option.call('Fullscreen'     , @fullscreen ? '1' : '0')
+    set_option.call('FullscreenRatio', @fullscreen_ratio)
+    set_option.call('WindowedRatio'  , @windowed_ratio)
+  end
+  def fullscreen?
+    @fullscreen or vx_fullscreen?
+  end
+  def vx_fullscreen?
+    rect = screen_rect
+    rect.width == 640 and rect.height == 480
+  end
+  def toggle_fullscreen
+    fullscreen? ? windowed_mode : fullscreen_mode
+  end
+  def toggle_vx_fullscreen
+    windowed_mode if @fullscreen and !vx_fullscreen?
+    inputs = [1,18,0, 1,13,0, 1,13,2, 1,18,2].pack('LSx2Lx16'*4)
+    SendInput.call(4, inputs, 28)
+    zeus_fullscreen_update
+    self.ratio += 0 # refresh window size
+  end
+  def vx_fullscreen_mode
+    return if vx_fullscreen?
+    toggle_vx_fullscreen
+  end
+  def fullscreen_mode
+    return if vx_fullscreen?
+    initialize_fullscreen_rects
+    show_back
+    hide_borders
+    @fullscreen = true
+    self.ratio += 0 # refresh window size
+  end
+  def windowed_mode
+    toggle_vx_fullscreen if vx_fullscreen?
+    initialize_fullscreen_rects
+    hide_back
+    show_borders
+    @fullscreen = false
+    self.ratio += 0 # refresh window size
+  end
+  def toggle_ratio
+    return if vx_fullscreen?
+    self.ratio += 1
+  end
+  def ratio
+    return 1 if vx_fullscreen?
+    @fullscreen ? @fullscreen_ratio : @windowed_ratio
+  end
+  def ratio=(r)
+    return if vx_fullscreen?
+    initialize_fullscreen_rects
+    r = 0 if r < 0
+    if @fullscreen
+      @fullscreen_ratio = r
+      w_max, h_max = @fullscreen_rect.width, @fullscreen_rect.height
+    else
+      @windowed_ratio = r
+      w_max = @workarea_rect.width  - @borders_size.width
+      h_max = @workarea_rect.height - @borders_size.height
+    end
+    if r == 0
+      w, h = w_max, w_max * height / width
+      h, w = h_max, h_max * width / height if h > h_max
+    else
+      w, h = width * r, height * r
+      return self.ratio = 0 if w > w_max or h > h_max
+    end
+    resize_window(w, h)
+    save_fullscreen_settings
+  end
+  def update
+    release_alt if Disable_VX_Fullscreen and Input.trigger?(Input::ALT)
+    zeus_fullscreen_update
+    toggle_fullscreen if Input.trigger?(Input::F5)
+    toggle_ratio      if Input.trigger?(Input::F6)
+  end
+  def resize_screen(width, height)
+    zeus_fullscreen_resize_screen(width, height)
+    self.ratio += 0 # refresh window size
+  end
+end
+Graphics.load_fullscreen_settings
+
+
+end"€if ACE_MODE
+  
+  def set_rez(width,height)
+
+    eval "
+
+    # Do not edit
+    wt, ht = width.divmod(32), height.divmod(32)
+    #wt.last + ht.last == 0 || fail('Incorrect width or height')
+    wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
+    w, h = wh.(width, height)
+    ww, hh = wh.(width, height, 32)
+    www, hhh = wh.(wt.first.succ, ht.first.succ)
+    base = 0x10000000  # fixed?
+    mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
+    mod.(0x195F, \"\x90\" * 5)  # ???   
+    mod.(0x19A4, h)
+    mod.(0x19A9, w)
+    mod.(0x1A56, h)
+    mod.(0x1A5B, w)
+    mod.(0x20F6, w)
+    mod.(0x20FF, w)
+    mod.(0x2106, h)
+    mod.(0x210F, h)
+    # speed up y?
+    #mod.(0x1C5E3, h)
+    #mod.(0x1C5E8, w)
+    zero = [0].pack ?l
+    mod.(0x1C5E3, zero)
+    mod.(0x1C5E8, zero)
+    mod.(0x1F477, h)
+    mod.(0x1F47C, w)
+    mod.(0x211FF, hh)
+    mod.(0x21204, ww)
+    mod.(0x21D7D, hhh[0])
+    mod.(0x21E01, www[0])
+    mod.(0x10DEA8, h)
+    mod.(0x10DEAD, w)
+    mod.(0x10DEDF, h)
+    mod.(0x10DEF0, w)
+    mod.(0x10DF14, h)
+    mod.(0x10DF18, w)
+    mod.(0x10DF48, h)
+    mod.(0x10DF4C, w)
+    mod.(0x10E6A7, w)
+    mod.(0x10E6C3, h)
+    mod.(0x10EEA9, w)
+    mod.(0x10EEB9, h)
+    Graphics.resize_screen width, height
+    GC.start"
+
+  end
+
+else
+
+  def set_rez(x,y)
+    log_err "Can't resize in XP mode"
+  end
+
+end"­module RPG
+  class Tileset
+    def initialize
+      @id = 0
+      @name = ""
+      @tileset_name = ""
+      @autotile_names = [""]*7
+      @panorama_name = ""
+      @panorama_hue = 0
+      @fog_name = ""
+      @fog_hue = 0
+      @fog_opacity = 64
+      @fog_blend_type = 0
+      @fog_zoom = 200
+      @fog_sx = 0
+      @fog_sy = 0
+      @battleback_name = ""
+      @passages = Table.new(384)
+      @priorities = Table.new(384)
+      @priorities[0] = 5
+      @terrain_tags = Table.new(384)
+    end
+    attr_accessor :id
+    attr_accessor :name
+    attr_accessor :tileset_name
+    attr_accessor :autotile_names
+    attr_accessor :panorama_name
+    attr_accessor :panorama_hue
+    attr_accessor :fog_name
+    attr_accessor :fog_hue
+    attr_accessor :fog_opacity
+    attr_accessor :fog_blend_type
+    attr_accessor :fog_zoom
+    attr_accessor :fog_sx
+    attr_accessor :fog_sy
+    attr_accessor :battleback_name
+    attr_accessor :passages
+    attr_accessor :priorities
+    attr_accessor :terrain_tags
+  end
+end
+
+module RPG
+  class System
+    def initialize
+      @magic_number = 0
+      @party_members = [1]
+      @elements = [nil, ""]
+      @switches = [nil, ""]
+      @variables = [nil, ""]
+      @windowskin_name = ""
+      @title_name = ""
+      @gameover_name = ""
+      @battle_transition = ""
+      @title_bgm = RPG::AudioFile.new
+      @battle_bgm = RPG::AudioFile.new
+      @battle_end_me = RPG::AudioFile.new
+      @gameover_me = RPG::AudioFile.new
+      @cursor_se = RPG::AudioFile.new("", 80)
+      @decision_se = RPG::AudioFile.new("", 80)
+      @cancel_se = RPG::AudioFile.new("", 80)
+      @buzzer_se = RPG::AudioFile.new("", 80)
+      @equip_se = RPG::AudioFile.new("", 80)
+      @shop_se = RPG::AudioFile.new("", 80)
+      @save_se = RPG::AudioFile.new("", 80)
+      @load_se = RPG::AudioFile.new("", 80)
+      @battle_start_se = RPG::AudioFile.new("", 80)
+      @escape_se = RPG::AudioFile.new("", 80)
+      @actor_collapse_se = RPG::AudioFile.new("", 80)
+      @enemy_collapse_se = RPG::AudioFile.new("", 80)
+      @words = RPG::System::Words.new
+      @test_battlers = []
+      @test_troop_id = 1
+      @start_map_id = 1
+      @start_x = 0
+      @start_y = 0
+      @battleback_name = ""
+      @battler_name = ""
+      @battler_hue = 0
+      @edit_map_id = 1
+    end
+    attr_accessor :magic_number
+    attr_accessor :party_members
+    attr_accessor :elements
+    attr_accessor :switches
+    attr_accessor :variables
+    attr_accessor :windowskin_name
+    attr_accessor :title_name
+    attr_accessor :gameover_name
+    attr_accessor :battle_transition
+    attr_accessor :title_bgm
+    attr_accessor :battle_bgm
+    attr_accessor :battle_end_me
+    attr_accessor :gameover_me
+    attr_accessor :cursor_se
+    attr_accessor :decision_se
+    attr_accessor :cancel_se
+    attr_accessor :buzzer_se
+    attr_accessor :equip_se
+    attr_accessor :shop_se
+    attr_accessor :save_se
+    attr_accessor :load_se
+    attr_accessor :battle_start_se
+    attr_accessor :escape_se
+    attr_accessor :actor_collapse_se
+    attr_accessor :enemy_collapse_se
+    attr_accessor :words
+    attr_accessor :test_battlers
+    attr_accessor :test_troop_id
+    attr_accessor :start_map_id
+    attr_accessor :start_x
+    attr_accessor :start_y
+    attr_accessor :battleback_name
+    attr_accessor :battler_name
+    attr_accessor :battler_hue
+    attr_accessor :edit_map_id
+  end
+end
+
+module RPG
+  class System
+    class Words
+      def initialize
+        @gold = ""
+        @hp = ""
+        @sp = ""
+        @str = ""
+        @dex = ""
+        @agi = ""
+        @int = ""
+        @atk = ""
+        @pdef = ""
+        @mdef = ""
+        @weapon = ""
+        @armor1 = ""
+        @armor2 = ""
+        @armor3 = ""
+        @armor4 = ""
+        @attack = ""
+        @skill = ""
+        @guard = ""
+        @item = ""
+        @equip = ""
+      end
+      attr_accessor :gold
+      attr_accessor :hp
+      attr_accessor :sp
+      attr_accessor :str
+      attr_accessor :dex
+      attr_accessor :agi
+      attr_accessor :int
+      attr_accessor :atk
+      attr_accessor :pdef
+      attr_accessor :mdef
+      attr_accessor :weapon
+      attr_accessor :armor1
+      attr_accessor :armor2
+      attr_accessor :armor3
+      attr_accessor :armor4
+      attr_accessor :attack
+      attr_accessor :skill
+      attr_accessor :guard
+      attr_accessor :item
+      attr_accessor :equip
+    end
+  end
+end
+
+module RPG
+  class System
+    class TestBattler
+      def initialize
+        @actor_id = 1
+        @level = 1
+        @weapon_id = 0
+        @armor1_id = 0
+        @armor2_id = 0
+        @armor3_id = 0
+        @armor4_id = 0
+      end
+      attr_accessor :actor_id
+      attr_accessor :level
+      attr_accessor :weapon_id
+      attr_accessor :armor1_id
+      attr_accessor :armor2_id
+      attr_accessor :armor3_id
+      attr_accessor :armor4_id
+    end
+  end
+end
+
+
+"V class Array
+ 	def count
+ 		return length
+ 	end
+ 	def sample
+      self[rand(length)]
+  	end
+
+ end
+
+ class String
+  def is_integer?
+    self.to_i.to_s == self
+  end
+end
+
+class FalseClass; def to_i; 0 end end
+class TrueClass; def to_i; 1 end end
+
+class Bitmap
+
+	def fill(color)
+		self.fill_rect(0,0,self.width,self.height,color)
+	end
+
+	def windowskin(skin)
+		src = Cache.windowskin(skin)
+		dest = rect.dup
+		dest.x += 3
+		dest.y += 3
+		dest.width -= 6
+		dest.height -= 6
+		stretch_blt(dest,src,Rect.new(0,0,128,128),210)
+
+		w = 16
+		h = 16
+		sx = 128
+		sy = 0
+
+		o = 255
+
+		# CORNERS
+	    blt(0,0,src,Rect.new(sx,sy,w,h),o) # top left
+	    blt(width-w,0,src,Rect.new(sx+48,sy,w,h),o) # top right
+	    blt(0,height-h,src,Rect.new(sx,sy+48,w,h),o) # bottom left
+	    blt(width-w,height-h,src,Rect.new(sx+48,sy+48,w,h),o) # bottom right
+	    
+	    #dest_rect, bmp, src_rect
+
+	   #  # Middle
+	   #stretch_blt(Rect.new(w,h,width-16,height-16),src,Rect.new(sx+16,0,w,h),o)
+
+	   #  # left side
+	   stretch_blt(Rect.new(0,h,w,height-32),src,Rect.new(sx,h+16,w,h),o)
+
+	   #  # Right
+	     stretch_blt(Rect.new(width-w,h,w,height-32),src,Rect.new(sx+48,h,w,h),o)
+
+	   #  #top
+	   stretch_blt(Rect.new(w,0,width-32,h),src,Rect.new(sx+16,0,w,h),o)
+
+	   # #bottom
+	   stretch_blt(Rect.new(w,height-h,width-32,h),src,Rect.new(sx+16,h+32,w,h),o)
+
+
+	end
+
+end
+
+class Fixnum
+	def odd?
+		return self % 2 == 1
+	end
+end
+
+class Sprite
+	def hide
+		self.visible = false
+	end
+	def show
+		self.visible = true
+	end
+	def move(x,y)
+		self.x = x
+		self.y = y
+	end
+end"T/# Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
+# Free for commercial use
+# Licence : http://creativecommons.org/licenses/by/4.0/
+# Contact : zeusex81@gmail.com
+#
+# How to Use :
+#   Graphics.play_movie( filename, cancellable, fit_to_screen )
+#   - filename = path of the video file.
+#   - cancellable = true if you want to allow the player to stop the video
+#                   by pressing Enter or Escape, false otherwise.
+#                   This option can be omitted and default value is true.
+#   - fit_to_screen = true if you want the video to be stretched to fit the screen in
+#                     case it doesn't match, false if you just want it to be centered.
+#                     If you're using scripts like Fullscreen++ true is recommended.
+#                     This option can be omitted and default value is true.
+#   ex : Graphics.play_movie( "Movies/prout.avi", true, true )
+#   or   Graphics.play_movie( "Movies/prout.avi" )
+#
+# Codec choice :
+#   I haven't tested all of them but I guess wmv9 (standard) would be a good choice.
+#   You can find a list of codecs installed by default on windows here :
+#   http://support.microsoft.com/kb/899113
+#
+# Background Image :
+#   You can choose the background image of the player (in case your video doesn't fill all the space).
+#   It will automatically load the image named "ZeusVideoPlayer" if found in Pictures folder (the extension doesn't matter).
+#   If not found it will be black.
+#
+# Known bugs :
+#  - With some video codecs stretching to fit screen doesn't work in fullscreen mode.
+#  - When switching fullscreen mode during playback the display can freeze.
+#  - Sometimes the display doesn't render when playing a video for the second time.
+#  - Weird behaviour in fullscreen mode.
+#
+# ZVP_OldAviMode :
+#   Just bellow you can enable this mode by setting the variable to true.
+#   Advantages :
+#     - More stable, no known bugs.
+#   Drawbacks :
+#     - It can only play avi files.
+#     - You must use vfw codecs for video, and windows defaults vfw codecs are very limited.
+#       Exhaustive list : MS RLE, MS Video 1, Cinepak, iyuv. And they all sucks.
+#       Any other codec will require to be installed on user side to ensure that it's supported.
+#       But if it's not a problem then you can find very nice vfw codecs on the internet, eg x264vfw.
+#     - You must use acm codecs for audio.
+#       Windows defaults : mp3, pcm.
+#       You can also find better codecs like aac acm.
+ 
+module Graphics
+  ZVP_OldAviMode = false
+end
+ 
+$imported ||= {}
+$imported[:Zeus_Video_Player] = __FILE__
+ 
+def xp?() false end ; 
+def vx?() false end ; 
+def vxace?() false end
+  
+RUBY_VERSION == '1.8.1' ? defined?(Hangup) ?
+def xp?() true  end : def vx?() true  end : def vxace?() true  end
+ 
+Cache = RPG::Cache if xp?
+ 
+class String
+  alias getbyte  []
+  alias setbyte  []=
+  alias bytesize size
+end unless vxace?
+ 
+module Zeus
+  module Encode # 1.1
+    MultiByteToWideChar = Win32API.new('kernel32', 'MultiByteToWideChar', 'iipipi'  , 'i')
+    WideCharToMultiByte = Win32API.new('kernel32', 'WideCharToMultiByte', 'iipipipp', 'i')
+    CodePages = {
+      'ANSI'=>0, 'OEM'=>1, 'MAC'=>2, 'THREAD_ANSI'=>3, 'SYMBOL'=>42,
+      'WINDOWS874'=>874, 'SHIFT_JIS'=>932, 'BIG5'=>950, 'WINDOWS1250'=>1250,
+      'WINDOWS1251'=>1251, 'WINDOWS1252'=>1252, 'WINDOWS1253'=>1253,
+      'WINDOWS1254'=>1254, 'WINDOWS1255'=>1255, 'WINDOWS1256'=>1256,
+      'WINDOWS1257'=>1257, 'WINDOWS1258'=>1258, 'US_ASCII'=>20127,
+      'ISO8859_1'=>28591, 'ISO8859_2'=>28592, 'ISO8859_3'=>28593,
+      'ISO8859_4'=>28594, 'ISO8859_5'=>28595, 'ISO8859_6'=>28596,
+      'ISO8859_7'=>28597, 'ISO8859_8'=>28598, 'ISO8859_9'=>28599,
+      'ISO8859_13'=>28603, 'ISO8859_15'=>28605, 'ISO8859_8I'=>38598,
+      'ISO2022_JP'=>50220, 'ISO2022_KR'=>50225, 'ISO2022_CN'=>50227,
+      'EUC_JP'=>51932, 'EUC_CN'=>51936, 'EUC_KR'=>51949, 'GB2312'=>52936,
+      'UTF7'=>65000, 'UTF8'=>65001, 'UTF16'=>-1
+    }
+    def self.encode(str, from, to, dchar=nil, dflag=nil)
+      if from != -1
+        l = MultiByteToWideChar.call(from, 0, str, str.bytesize, nil, 0)
+        utf16 = [].pack('x') * (l*2)
+        MultiByteToWideChar.call(from, 0, str, str.bytesize, utf16, l)
+      else utf16 = str
+      end
+      if to != -1
+        l = WideCharToMultiByte.call(to, 0, utf16, utf16.bytesize/2, nil, 0, dchar, dflag)
+        str = [].pack('x') * l
+        WideCharToMultiByte.call(to, 0, utf16, utf16.bytesize/2, str, l, dchar, dflag)
+      else str = utf16
+      end
+      case to
+      when 20127; str.force_encoding('US-ASCII')
+      when 65001; str.force_encoding('UTF-8')
+      when    -1; str.force_encoding('UTF-16LE')
+      end if vxace?
+      str
+    rescue raise($!, $!.message, caller(vxace? ? 2 : 1))
+    end
+    def self.method_missing(method, str, *options)
+      from, to = *method.to_s.upcase.split('_TO_', 2).map! {|s| CodePages[s]}
+      super unless from and to
+      encode(str, from, to, *options)
+    rescue raise($!, $!.message, caller(vxace? ? 2 : 1))
+    end
+  end
+end
+ 
+module Graphics
+  DefWindowProc       = Win32API.new('user32', 'DefWindowProc'      , 'iiii', 'i')
+  DestroyWindow       = Win32API.new('user32', 'DestroyWindow'      , 'i'   , 'i')
+  EnableWindow        = Win32API.new('user32', 'EnableWindow'       , 'ii'  , 'i')
+  FindWindow          = Win32API.new('user32', 'FindWindow'         , 'pp'  , 'i')
+  GetClientRect       = Win32API.new('user32', 'GetClientRect'      , 'ip'  , 'i')
+  GetForegroundWindow = Win32API.new('user32', 'GetForegroundWindow', ''    , 'i')
+  GetMessage          = Win32API.new('user32', 'GetMessage'         , 'piii', 'i')
+  GetWindowLong       = Win32API.new('user32', 'GetWindowLong'      , 'ii'  , 'i')
+  PostMessage         = Win32API.new('user32', 'PostMessage'        , 'iiii', 'i')
+  RedrawWindow        = Win32API.new('user32', 'RedrawWindow'       , 'ipii', 'i')
+  SetWindowLong       = Win32API.new('user32', 'SetWindowLong'      , 'iii' , 'i')
+  MciGetErrorString   = Win32API.new('winmm' , 'mciGetErrorStringW' , 'ipi' , 'i')
+  MciSendString       = Win32API.new('winmm' , 'mciSendStringW'     , 'ppii', 'i')
+  class << self
+    def hwnd() @hwnd ||= FindWindow.call('RGSS Player', nil) end
+    def play_movie(filename, cancellable = true, fit_to_screen = true)
+      @zvp ||= {:buffer => [].pack('x') * 256}
+      @zvp[:filename] = Dir["#{filename}.*"][0] || filename
+      @zvp[:cancellable] = cancellable
+      @zvp[:fit_to_screen] = fit_to_screen
+      return unless open_video_player
+      back_sprite = Sprite.new
+      back_sprite.z = 0x7FFF_FFFF
+      begin
+        cached = true
+        back_sprite.bitmap = Cache.picture('ZeusVideoPlayer')
+        back_sprite.zoom_x = width  / back_sprite.bitmap.width.to_f
+        back_sprite.zoom_y = height / back_sprite.bitmap.height.to_f
+      rescue
+        cached = false
+        back_sprite.bitmap = Bitmap.new(1, 1)
+        back_sprite.bitmap.set_pixel(0, 0, Color.new(0,0,0))
+        back_sprite.zoom_x = width
+        back_sprite.zoom_y = height
+      end
+      frame_reset
+      update
+      update_video_player
+      back_sprite.bitmap.dispose unless cached
+      back_sprite.dispose
+    ensure
+      close_video_player
+    end
+    def width()  640 end unless method_defined?(:width)
+    def height() 480 end unless method_defined?(:height)
+  private
+    def mci(command)
+      error = mci_silent(command)
+      return true if error == 0
+      MciGetErrorString.call(error, @zvp[:buffer], @zvp[:buffer].bytesize/2)
+      print(mci_result, "\nCommand : ", command)
+      return false
+    end
+    def mci_silent(command)
+      command = Zeus::Encode.utf8_to_utf16("#{command}\0")
+      MciSendString.call(command, @zvp[:buffer], @zvp[:buffer].bytesize/2, hwnd)
+    end
+    def mci_result
+      str = Zeus::Encode.utf16_to_utf8(@zvp[:buffer])
+      str[0, str.index("\0")]
+    end
+    def open_video_player(position=0)
+      if ZVP_OldAviMode
+        return false unless mci("open \"#{@zvp[:filename]}\" type AVIVideo alias ZeusVideoPlayer")
+        return false unless mci("window ZeusVideoPlayer handle #{hwnd}")
+        return false unless mci("play ZeusVideoPlayer from #{position} notify")
+      else
+        return false unless mci("open \"#{@zvp[:filename]}\" type MPEGVideo style Child parent #{hwnd} alias ZeusVideoPlayer")
+        return false unless mci("play ZeusVideoPlayer from #{position} notify")
+        return false unless mci('status ZeusVideoPlayer window handle')
+        @zvp[:hwnd] = mci_result.to_i
+        EnableWindow.call(@zvp[:hwnd], 0)
+        style = GetWindowLong.call(hwnd, -16) #GWL_STYLE
+        SetWindowLong.call(hwnd, -16, style | 0x02000000) #WS_CLIPCHILDREN
+      end
+      return true
+    end
+    def close_video_player
+      if !ZVP_OldAviMode and @zvp[:hwnd]
+        DestroyWindow.call(@zvp[:hwnd])
+        @zvp[:hwnd] = nil
+      end
+      mci_silent('stop ZeusVideoPlayer')
+      mci_silent('close ZeusVideoPlayer')
+    end
+    def resize_video_player
+      if mci_silent('where ZeusVideoPlayer source') == 0
+        x, y, w, h = *mci_result.split(' ', 4).map! {|s| s.to_i}
+        GetClientRect.call(hwnd, @zvp[:buffer])
+        client_w, client_h = *@zvp[:buffer].unpack('x8L2')
+        if @zvp[:fit_to_screen]
+          ratio = w / h.to_f
+          w, h = client_w, (client_w / ratio).round
+          h, w = client_h, (client_h * ratio).round if h > client_h
+        end
+        x, y = (client_w-w)/2, (client_h-h)/2
+        window = ZVP_OldAviMode ? 'destination' : 'window'
+        mci_silent("put ZeusVideoPlayer #{window} at #{x} #{y} #{w} #{h}")
+      end
+      RedrawWindow.call(@zvp[:hwnd] || hwnd, nil, 0, 0)
+    end
+    def update_video_player
+      focus = false
+      loop do
+        GetMessage.call(@zvp[:buffer], 0, 0, 0)
+        DefWindowProc.call(*msg = @zvp[:buffer].unpack('L4'))
+        if focus != (GetForegroundWindow.call == hwnd)
+          focus = !focus
+          mci_silent("#{focus ? 'resume' : 'pause'} ZeusVideoPlayer")
+          resize_video_player
+        end
+        next unless focus
+        Input.update
+        if Input.trigger?(Input::B) or Input.trigger?(Input::C)
+          mci_silent('stop ZeusVideoPlayer') if @zvp[:cancellable]
+        elsif Input.trigger?(Input::F5) or Input.trigger?(Input::F6)
+          if $imported[:Zeus_Fullscreen] and !vx_fullscreen?
+            update
+            resize_video_player
+          end
+        end
+        case msg[1]
+        when 0x0012 #WM_QUIT
+          exit
+        when 0x0100 #WM_KEYDOWN
+          next if msg[3][30] == 1
+          case msg[2]
+          when 0x70, 0x7B #VK_F1, VK_F12
+            focus = false
+            mci_silent('pause ZeusVideoPlayer')
+            PostMessage.call(*msg)
+            update
+          end
+        when 0x0104 #WM_SYSKEYDOWN
+          next if msg[2] != 0x0D or msg[3][30] == 1
+          next if $imported[:Zeus_Fullscreen] and Disable_VX_Fullscreen
+          if ZVP_OldAviMode
+            PostMessage.call(*msg)
+            update
+            resize_video_player
+          else
+            next if mci_silent('status ZeusVideoPlayer position') != 0
+            position = mci_result.to_i
+            close_video_player
+            PostMessage.call(*msg)
+            update
+            break unless open_video_player(position)
+            resize_video_player
+          end
+        else
+          mci_silent('status ZeusVideoPlayer length')
+          length = mci_result.to_i
+          mci_silent('status ZeusVideoPlayer position')
+          break if mci_result.to_i >= length
+          mci_silent('status ZeusVideoPlayer mode')
+          break if mci_result == 'stopped'
+        end
+      end
+    end
+    if xp?
+      alias anti_hangup_update_video_player update_video_player
+      def update_video_player
+        anti_hangup_update_video_player
+      rescue Hangup
+        retry
+      end
+    end
+  end
+end"Lif !ACE_MODE
+	class Font
+		attr_accessor :outline, :shadow
+	end
+end"~#==============================================================================
 # ** Console
 #==============================================================================
 
@@ -6361,787 +7172,7 @@ def execute_spellcheck
     end  
 
     
-  end"O# Fullscreen++ v2.2 for VX and VXace by Zeus81
-# Free for non commercial and commercial use
-# Licence : http://creativecommons.org/licenses/by-sa/3.0/
-# Contact : zeusex81@gmail.com
-# (fr) Manuel d'utilisation : http://pastebin.com/raw.php?i=1TQfMnVJ
-# (en) User Guide           : http://pastebin.com/raw.php?i=EgnWt9ur
- 
- if ACE_MODE
-
-
-class << Graphics
-  Disable_VX_Fullscreen = false
- 
-  CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
-  GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
-  GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
-  GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
-  GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
-  FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
-  FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
-  ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
-  SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
-  SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
-  SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
-  ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
-  SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
-  UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
-  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
-  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
-  CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
-  DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
- 
-  unless method_defined?(:zeus_fullscreen_update)
-    HWND     = FindWindow.call('RGSS Player', 0)
-    BackHWND = CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0)
-    alias zeus_fullscreen_resize_screen resize_screen
-    alias zeus_fullscreen_update        update
-  end
-private
-  def initialize_fullscreen_rects
-    @borders_size    ||= borders_size
-    @fullscreen_rect ||= screen_rect
-    @workarea_rect   ||= workarea_rect
-  end
-  def borders_size
-    GetWindowRect.call(HWND, wrect = [0, 0, 0, 0].pack('l4'))
-    GetClientRect.call(HWND, crect = [0, 0, 0, 0].pack('l4'))
-    wrect, crect = wrect.unpack('l4'), crect.unpack('l4')
-    Rect.new(0, 0, wrect[2]-wrect[0]-crect[2], wrect[3]-wrect[1]-crect[3])
-  end
-  def screen_rect
-    Rect.new(0, 0, GetSystemMetrics.call(0), GetSystemMetrics.call(1))
-  end
-  def workarea_rect
-    SystemParametersInfo.call(0x30, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
-    rect = rect.unpack('l4')
-    Rect.new(rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1])
-  end
-  def hide_borders() SetWindowLong.call(HWND, -16, 0x14000000) end
-  def show_borders() SetWindowLong.call(HWND, -16, 0x14CA0000) end
-  def hide_back()    ShowWindow.call(BackHWND, 0)              end
-  def show_back
-    ShowWindow.call(BackHWND, 3)
-    UpdateWindow.call(BackHWND)
-    dc    = GetDC.call(BackHWND)
-    rect  = [0, 0, @fullscreen_rect.width, @fullscreen_rect.height].pack('l4')
-    brush = CreateSolidBrush.call(0)
-    FillRect.call(dc, rect, brush)
-    ReleaseDC.call(BackHWND, dc)
-    DeleteObject.call(brush)
-  end
-  def resize_window(w, h)
-    if @fullscreen
-      x, y, z = (@fullscreen_rect.width-w)/2, (@fullscreen_rect.height-h)/2, -1
-    else
-      w += @borders_size.width
-      h += @borders_size.height
-      x = @workarea_rect.x + (@workarea_rect.width  - w) / 2
-      y = @workarea_rect.y + (@workarea_rect.height - h) / 2
-      z = -2
-    end
-    SetWindowPos.call(HWND, z, x, y, w, h, 0)
-  end
-  def release_alt
-    inputs = [1,18,2, 1,164,2, 1,165,2].pack('LSx2Lx16'*3)
-    SendInput.call(3, inputs, 28)
-  end
-public
-  def load_fullscreen_settings
-    buffer = [].pack('x256')
-    section = 'Fullscreen++'
-    filename = './Game.ini'
-    get_option = Proc.new do |key, default_value|
-      l = GetPrivateProfileString.call(section, key, default_value, buffer, buffer.size, filename)
-      buffer[0, l]
-    end
-    @fullscreen       = get_option.call('Fullscreen'     , '0') == '1'
-    @fullscreen_ratio = get_option.call('FullscreenRatio', '0').to_i
-    @windowed_ratio   = get_option.call('WindowedRatio'  , '1').to_i
-    toggle_vx_fullscreen if Disable_VX_Fullscreen and vx_fullscreen?
-    fullscreen? ? fullscreen_mode : windowed_mode
-  end
-  def save_fullscreen_settings
-    section = 'Fullscreen++'
-    filename = './Game.ini'
-    set_option = Proc.new do |key, value|
-      WritePrivateProfileString.call(section, key, value.to_s, filename)
-    end
-    set_option.call('Fullscreen'     , @fullscreen ? '1' : '0')
-    set_option.call('FullscreenRatio', @fullscreen_ratio)
-    set_option.call('WindowedRatio'  , @windowed_ratio)
-  end
-  def fullscreen?
-    @fullscreen or vx_fullscreen?
-  end
-  def vx_fullscreen?
-    rect = screen_rect
-    rect.width == 640 and rect.height == 480
-  end
-  def toggle_fullscreen
-    fullscreen? ? windowed_mode : fullscreen_mode
-  end
-  def toggle_vx_fullscreen
-    windowed_mode if @fullscreen and !vx_fullscreen?
-    inputs = [1,18,0, 1,13,0, 1,13,2, 1,18,2].pack('LSx2Lx16'*4)
-    SendInput.call(4, inputs, 28)
-    zeus_fullscreen_update
-    self.ratio += 0 # refresh window size
-  end
-  def vx_fullscreen_mode
-    return if vx_fullscreen?
-    toggle_vx_fullscreen
-  end
-  def fullscreen_mode
-    return if vx_fullscreen?
-    initialize_fullscreen_rects
-    show_back
-    hide_borders
-    @fullscreen = true
-    self.ratio += 0 # refresh window size
-  end
-  def windowed_mode
-    toggle_vx_fullscreen if vx_fullscreen?
-    initialize_fullscreen_rects
-    hide_back
-    show_borders
-    @fullscreen = false
-    self.ratio += 0 # refresh window size
-  end
-  def toggle_ratio
-    return if vx_fullscreen?
-    self.ratio += 1
-  end
-  def ratio
-    return 1 if vx_fullscreen?
-    @fullscreen ? @fullscreen_ratio : @windowed_ratio
-  end
-  def ratio=(r)
-    return if vx_fullscreen?
-    initialize_fullscreen_rects
-    r = 0 if r < 0
-    if @fullscreen
-      @fullscreen_ratio = r
-      w_max, h_max = @fullscreen_rect.width, @fullscreen_rect.height
-    else
-      @windowed_ratio = r
-      w_max = @workarea_rect.width  - @borders_size.width
-      h_max = @workarea_rect.height - @borders_size.height
-    end
-    if r == 0
-      w, h = w_max, w_max * height / width
-      h, w = h_max, h_max * width / height if h > h_max
-    else
-      w, h = width * r, height * r
-      return self.ratio = 0 if w > w_max or h > h_max
-    end
-    resize_window(w, h)
-    save_fullscreen_settings
-  end
-  def update
-    release_alt if Disable_VX_Fullscreen and Input.trigger?(Input::ALT)
-    zeus_fullscreen_update
-    toggle_fullscreen if Input.trigger?(Input::F5)
-    toggle_ratio      if Input.trigger?(Input::F6)
-  end
-  def resize_screen(width, height)
-    zeus_fullscreen_resize_screen(width, height)
-    self.ratio += 0 # refresh window size
-  end
-end
-Graphics.load_fullscreen_settings
-
-
-end"­module RPG
-  class Tileset
-    def initialize
-      @id = 0
-      @name = ""
-      @tileset_name = ""
-      @autotile_names = [""]*7
-      @panorama_name = ""
-      @panorama_hue = 0
-      @fog_name = ""
-      @fog_hue = 0
-      @fog_opacity = 64
-      @fog_blend_type = 0
-      @fog_zoom = 200
-      @fog_sx = 0
-      @fog_sy = 0
-      @battleback_name = ""
-      @passages = Table.new(384)
-      @priorities = Table.new(384)
-      @priorities[0] = 5
-      @terrain_tags = Table.new(384)
-    end
-    attr_accessor :id
-    attr_accessor :name
-    attr_accessor :tileset_name
-    attr_accessor :autotile_names
-    attr_accessor :panorama_name
-    attr_accessor :panorama_hue
-    attr_accessor :fog_name
-    attr_accessor :fog_hue
-    attr_accessor :fog_opacity
-    attr_accessor :fog_blend_type
-    attr_accessor :fog_zoom
-    attr_accessor :fog_sx
-    attr_accessor :fog_sy
-    attr_accessor :battleback_name
-    attr_accessor :passages
-    attr_accessor :priorities
-    attr_accessor :terrain_tags
-  end
-end
-
-module RPG
-  class System
-    def initialize
-      @magic_number = 0
-      @party_members = [1]
-      @elements = [nil, ""]
-      @switches = [nil, ""]
-      @variables = [nil, ""]
-      @windowskin_name = ""
-      @title_name = ""
-      @gameover_name = ""
-      @battle_transition = ""
-      @title_bgm = RPG::AudioFile.new
-      @battle_bgm = RPG::AudioFile.new
-      @battle_end_me = RPG::AudioFile.new
-      @gameover_me = RPG::AudioFile.new
-      @cursor_se = RPG::AudioFile.new("", 80)
-      @decision_se = RPG::AudioFile.new("", 80)
-      @cancel_se = RPG::AudioFile.new("", 80)
-      @buzzer_se = RPG::AudioFile.new("", 80)
-      @equip_se = RPG::AudioFile.new("", 80)
-      @shop_se = RPG::AudioFile.new("", 80)
-      @save_se = RPG::AudioFile.new("", 80)
-      @load_se = RPG::AudioFile.new("", 80)
-      @battle_start_se = RPG::AudioFile.new("", 80)
-      @escape_se = RPG::AudioFile.new("", 80)
-      @actor_collapse_se = RPG::AudioFile.new("", 80)
-      @enemy_collapse_se = RPG::AudioFile.new("", 80)
-      @words = RPG::System::Words.new
-      @test_battlers = []
-      @test_troop_id = 1
-      @start_map_id = 1
-      @start_x = 0
-      @start_y = 0
-      @battleback_name = ""
-      @battler_name = ""
-      @battler_hue = 0
-      @edit_map_id = 1
-    end
-    attr_accessor :magic_number
-    attr_accessor :party_members
-    attr_accessor :elements
-    attr_accessor :switches
-    attr_accessor :variables
-    attr_accessor :windowskin_name
-    attr_accessor :title_name
-    attr_accessor :gameover_name
-    attr_accessor :battle_transition
-    attr_accessor :title_bgm
-    attr_accessor :battle_bgm
-    attr_accessor :battle_end_me
-    attr_accessor :gameover_me
-    attr_accessor :cursor_se
-    attr_accessor :decision_se
-    attr_accessor :cancel_se
-    attr_accessor :buzzer_se
-    attr_accessor :equip_se
-    attr_accessor :shop_se
-    attr_accessor :save_se
-    attr_accessor :load_se
-    attr_accessor :battle_start_se
-    attr_accessor :escape_se
-    attr_accessor :actor_collapse_se
-    attr_accessor :enemy_collapse_se
-    attr_accessor :words
-    attr_accessor :test_battlers
-    attr_accessor :test_troop_id
-    attr_accessor :start_map_id
-    attr_accessor :start_x
-    attr_accessor :start_y
-    attr_accessor :battleback_name
-    attr_accessor :battler_name
-    attr_accessor :battler_hue
-    attr_accessor :edit_map_id
-  end
-end
-
-module RPG
-  class System
-    class Words
-      def initialize
-        @gold = ""
-        @hp = ""
-        @sp = ""
-        @str = ""
-        @dex = ""
-        @agi = ""
-        @int = ""
-        @atk = ""
-        @pdef = ""
-        @mdef = ""
-        @weapon = ""
-        @armor1 = ""
-        @armor2 = ""
-        @armor3 = ""
-        @armor4 = ""
-        @attack = ""
-        @skill = ""
-        @guard = ""
-        @item = ""
-        @equip = ""
-      end
-      attr_accessor :gold
-      attr_accessor :hp
-      attr_accessor :sp
-      attr_accessor :str
-      attr_accessor :dex
-      attr_accessor :agi
-      attr_accessor :int
-      attr_accessor :atk
-      attr_accessor :pdef
-      attr_accessor :mdef
-      attr_accessor :weapon
-      attr_accessor :armor1
-      attr_accessor :armor2
-      attr_accessor :armor3
-      attr_accessor :armor4
-      attr_accessor :attack
-      attr_accessor :skill
-      attr_accessor :guard
-      attr_accessor :item
-      attr_accessor :equip
-    end
-  end
-end
-
-module RPG
-  class System
-    class TestBattler
-      def initialize
-        @actor_id = 1
-        @level = 1
-        @weapon_id = 0
-        @armor1_id = 0
-        @armor2_id = 0
-        @armor3_id = 0
-        @armor4_id = 0
-      end
-      attr_accessor :actor_id
-      attr_accessor :level
-      attr_accessor :weapon_id
-      attr_accessor :armor1_id
-      attr_accessor :armor2_id
-      attr_accessor :armor3_id
-      attr_accessor :armor4_id
-    end
-  end
-end
-
-
-"€if ACE_MODE
-  
-  def set_rez(width,height)
-
-    eval "
-
-    # Do not edit
-    wt, ht = width.divmod(32), height.divmod(32)
-    #wt.last + ht.last == 0 || fail('Incorrect width or height')
-    wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
-    w, h = wh.(width, height)
-    ww, hh = wh.(width, height, 32)
-    www, hhh = wh.(wt.first.succ, ht.first.succ)
-    base = 0x10000000  # fixed?
-    mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
-    mod.(0x195F, \"\x90\" * 5)  # ???   
-    mod.(0x19A4, h)
-    mod.(0x19A9, w)
-    mod.(0x1A56, h)
-    mod.(0x1A5B, w)
-    mod.(0x20F6, w)
-    mod.(0x20FF, w)
-    mod.(0x2106, h)
-    mod.(0x210F, h)
-    # speed up y?
-    #mod.(0x1C5E3, h)
-    #mod.(0x1C5E8, w)
-    zero = [0].pack ?l
-    mod.(0x1C5E3, zero)
-    mod.(0x1C5E8, zero)
-    mod.(0x1F477, h)
-    mod.(0x1F47C, w)
-    mod.(0x211FF, hh)
-    mod.(0x21204, ww)
-    mod.(0x21D7D, hhh[0])
-    mod.(0x21E01, www[0])
-    mod.(0x10DEA8, h)
-    mod.(0x10DEAD, w)
-    mod.(0x10DEDF, h)
-    mod.(0x10DEF0, w)
-    mod.(0x10DF14, h)
-    mod.(0x10DF18, w)
-    mod.(0x10DF48, h)
-    mod.(0x10DF4C, w)
-    mod.(0x10E6A7, w)
-    mod.(0x10E6C3, h)
-    mod.(0x10EEA9, w)
-    mod.(0x10EEB9, h)
-    Graphics.resize_screen width, height
-    GC.start"
-
-  end
-
-else
-
-  def set_rez(x,y)
-    log_err "Can't resize in XP mode"
-  end
-
-end"B class Array
- 	def count
- 		return length
- 	end
- 	def sample
-      self[rand(length)]
-  	end
-
- end
-
- class String
-  def is_integer?
-    self.to_i.to_s == self
-  end
-end
-
-class FalseClass; def to_i; 0 end end
-class TrueClass; def to_i; 1 end end
-
-class Bitmap
-
-	def fill(color)
-		self.fill_rect(0,0,self.width,self.height,color)
-	end
-
-end
-
-class Fixnum
-	def odd?
-		return self % 2 == 1
-	end
-end
-
-
-class Sprite
-	def hide
-		self.visible = false
-	end
-	def show
-		self.visible = true
-	end
-	def move(x,y)
-		self.x = x
-		self.y = y
-	end
-end"T/# Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
-# Free for commercial use
-# Licence : http://creativecommons.org/licenses/by/4.0/
-# Contact : zeusex81@gmail.com
-#
-# How to Use :
-#   Graphics.play_movie( filename, cancellable, fit_to_screen )
-#   - filename = path of the video file.
-#   - cancellable = true if you want to allow the player to stop the video
-#                   by pressing Enter or Escape, false otherwise.
-#                   This option can be omitted and default value is true.
-#   - fit_to_screen = true if you want the video to be stretched to fit the screen in
-#                     case it doesn't match, false if you just want it to be centered.
-#                     If you're using scripts like Fullscreen++ true is recommended.
-#                     This option can be omitted and default value is true.
-#   ex : Graphics.play_movie( "Movies/prout.avi", true, true )
-#   or   Graphics.play_movie( "Movies/prout.avi" )
-#
-# Codec choice :
-#   I haven't tested all of them but I guess wmv9 (standard) would be a good choice.
-#   You can find a list of codecs installed by default on windows here :
-#   http://support.microsoft.com/kb/899113
-#
-# Background Image :
-#   You can choose the background image of the player (in case your video doesn't fill all the space).
-#   It will automatically load the image named "ZeusVideoPlayer" if found in Pictures folder (the extension doesn't matter).
-#   If not found it will be black.
-#
-# Known bugs :
-#  - With some video codecs stretching to fit screen doesn't work in fullscreen mode.
-#  - When switching fullscreen mode during playback the display can freeze.
-#  - Sometimes the display doesn't render when playing a video for the second time.
-#  - Weird behaviour in fullscreen mode.
-#
-# ZVP_OldAviMode :
-#   Just bellow you can enable this mode by setting the variable to true.
-#   Advantages :
-#     - More stable, no known bugs.
-#   Drawbacks :
-#     - It can only play avi files.
-#     - You must use vfw codecs for video, and windows defaults vfw codecs are very limited.
-#       Exhaustive list : MS RLE, MS Video 1, Cinepak, iyuv. And they all sucks.
-#       Any other codec will require to be installed on user side to ensure that it's supported.
-#       But if it's not a problem then you can find very nice vfw codecs on the internet, eg x264vfw.
-#     - You must use acm codecs for audio.
-#       Windows defaults : mp3, pcm.
-#       You can also find better codecs like aac acm.
- 
-module Graphics
-  ZVP_OldAviMode = false
-end
- 
-$imported ||= {}
-$imported[:Zeus_Video_Player] = __FILE__
- 
-def xp?() false end ; 
-def vx?() false end ; 
-def vxace?() false end
-  
-RUBY_VERSION == '1.8.1' ? defined?(Hangup) ?
-def xp?() true  end : def vx?() true  end : def vxace?() true  end
- 
-Cache = RPG::Cache if xp?
- 
-class String
-  alias getbyte  []
-  alias setbyte  []=
-  alias bytesize size
-end unless vxace?
- 
-module Zeus
-  module Encode # 1.1
-    MultiByteToWideChar = Win32API.new('kernel32', 'MultiByteToWideChar', 'iipipi'  , 'i')
-    WideCharToMultiByte = Win32API.new('kernel32', 'WideCharToMultiByte', 'iipipipp', 'i')
-    CodePages = {
-      'ANSI'=>0, 'OEM'=>1, 'MAC'=>2, 'THREAD_ANSI'=>3, 'SYMBOL'=>42,
-      'WINDOWS874'=>874, 'SHIFT_JIS'=>932, 'BIG5'=>950, 'WINDOWS1250'=>1250,
-      'WINDOWS1251'=>1251, 'WINDOWS1252'=>1252, 'WINDOWS1253'=>1253,
-      'WINDOWS1254'=>1254, 'WINDOWS1255'=>1255, 'WINDOWS1256'=>1256,
-      'WINDOWS1257'=>1257, 'WINDOWS1258'=>1258, 'US_ASCII'=>20127,
-      'ISO8859_1'=>28591, 'ISO8859_2'=>28592, 'ISO8859_3'=>28593,
-      'ISO8859_4'=>28594, 'ISO8859_5'=>28595, 'ISO8859_6'=>28596,
-      'ISO8859_7'=>28597, 'ISO8859_8'=>28598, 'ISO8859_9'=>28599,
-      'ISO8859_13'=>28603, 'ISO8859_15'=>28605, 'ISO8859_8I'=>38598,
-      'ISO2022_JP'=>50220, 'ISO2022_KR'=>50225, 'ISO2022_CN'=>50227,
-      'EUC_JP'=>51932, 'EUC_CN'=>51936, 'EUC_KR'=>51949, 'GB2312'=>52936,
-      'UTF7'=>65000, 'UTF8'=>65001, 'UTF16'=>-1
-    }
-    def self.encode(str, from, to, dchar=nil, dflag=nil)
-      if from != -1
-        l = MultiByteToWideChar.call(from, 0, str, str.bytesize, nil, 0)
-        utf16 = [].pack('x') * (l*2)
-        MultiByteToWideChar.call(from, 0, str, str.bytesize, utf16, l)
-      else utf16 = str
-      end
-      if to != -1
-        l = WideCharToMultiByte.call(to, 0, utf16, utf16.bytesize/2, nil, 0, dchar, dflag)
-        str = [].pack('x') * l
-        WideCharToMultiByte.call(to, 0, utf16, utf16.bytesize/2, str, l, dchar, dflag)
-      else str = utf16
-      end
-      case to
-      when 20127; str.force_encoding('US-ASCII')
-      when 65001; str.force_encoding('UTF-8')
-      when    -1; str.force_encoding('UTF-16LE')
-      end if vxace?
-      str
-    rescue raise($!, $!.message, caller(vxace? ? 2 : 1))
-    end
-    def self.method_missing(method, str, *options)
-      from, to = *method.to_s.upcase.split('_TO_', 2).map! {|s| CodePages[s]}
-      super unless from and to
-      encode(str, from, to, *options)
-    rescue raise($!, $!.message, caller(vxace? ? 2 : 1))
-    end
-  end
-end
- 
-module Graphics
-  DefWindowProc       = Win32API.new('user32', 'DefWindowProc'      , 'iiii', 'i')
-  DestroyWindow       = Win32API.new('user32', 'DestroyWindow'      , 'i'   , 'i')
-  EnableWindow        = Win32API.new('user32', 'EnableWindow'       , 'ii'  , 'i')
-  FindWindow          = Win32API.new('user32', 'FindWindow'         , 'pp'  , 'i')
-  GetClientRect       = Win32API.new('user32', 'GetClientRect'      , 'ip'  , 'i')
-  GetForegroundWindow = Win32API.new('user32', 'GetForegroundWindow', ''    , 'i')
-  GetMessage          = Win32API.new('user32', 'GetMessage'         , 'piii', 'i')
-  GetWindowLong       = Win32API.new('user32', 'GetWindowLong'      , 'ii'  , 'i')
-  PostMessage         = Win32API.new('user32', 'PostMessage'        , 'iiii', 'i')
-  RedrawWindow        = Win32API.new('user32', 'RedrawWindow'       , 'ipii', 'i')
-  SetWindowLong       = Win32API.new('user32', 'SetWindowLong'      , 'iii' , 'i')
-  MciGetErrorString   = Win32API.new('winmm' , 'mciGetErrorStringW' , 'ipi' , 'i')
-  MciSendString       = Win32API.new('winmm' , 'mciSendStringW'     , 'ppii', 'i')
-  class << self
-    def hwnd() @hwnd ||= FindWindow.call('RGSS Player', nil) end
-    def play_movie(filename, cancellable = true, fit_to_screen = true)
-      @zvp ||= {:buffer => [].pack('x') * 256}
-      @zvp[:filename] = Dir["#{filename}.*"][0] || filename
-      @zvp[:cancellable] = cancellable
-      @zvp[:fit_to_screen] = fit_to_screen
-      return unless open_video_player
-      back_sprite = Sprite.new
-      back_sprite.z = 0x7FFF_FFFF
-      begin
-        cached = true
-        back_sprite.bitmap = Cache.picture('ZeusVideoPlayer')
-        back_sprite.zoom_x = width  / back_sprite.bitmap.width.to_f
-        back_sprite.zoom_y = height / back_sprite.bitmap.height.to_f
-      rescue
-        cached = false
-        back_sprite.bitmap = Bitmap.new(1, 1)
-        back_sprite.bitmap.set_pixel(0, 0, Color.new(0,0,0))
-        back_sprite.zoom_x = width
-        back_sprite.zoom_y = height
-      end
-      frame_reset
-      update
-      update_video_player
-      back_sprite.bitmap.dispose unless cached
-      back_sprite.dispose
-    ensure
-      close_video_player
-    end
-    def width()  640 end unless method_defined?(:width)
-    def height() 480 end unless method_defined?(:height)
-  private
-    def mci(command)
-      error = mci_silent(command)
-      return true if error == 0
-      MciGetErrorString.call(error, @zvp[:buffer], @zvp[:buffer].bytesize/2)
-      print(mci_result, "\nCommand : ", command)
-      return false
-    end
-    def mci_silent(command)
-      command = Zeus::Encode.utf8_to_utf16("#{command}\0")
-      MciSendString.call(command, @zvp[:buffer], @zvp[:buffer].bytesize/2, hwnd)
-    end
-    def mci_result
-      str = Zeus::Encode.utf16_to_utf8(@zvp[:buffer])
-      str[0, str.index("\0")]
-    end
-    def open_video_player(position=0)
-      if ZVP_OldAviMode
-        return false unless mci("open \"#{@zvp[:filename]}\" type AVIVideo alias ZeusVideoPlayer")
-        return false unless mci("window ZeusVideoPlayer handle #{hwnd}")
-        return false unless mci("play ZeusVideoPlayer from #{position} notify")
-      else
-        return false unless mci("open \"#{@zvp[:filename]}\" type MPEGVideo style Child parent #{hwnd} alias ZeusVideoPlayer")
-        return false unless mci("play ZeusVideoPlayer from #{position} notify")
-        return false unless mci('status ZeusVideoPlayer window handle')
-        @zvp[:hwnd] = mci_result.to_i
-        EnableWindow.call(@zvp[:hwnd], 0)
-        style = GetWindowLong.call(hwnd, -16) #GWL_STYLE
-        SetWindowLong.call(hwnd, -16, style | 0x02000000) #WS_CLIPCHILDREN
-      end
-      return true
-    end
-    def close_video_player
-      if !ZVP_OldAviMode and @zvp[:hwnd]
-        DestroyWindow.call(@zvp[:hwnd])
-        @zvp[:hwnd] = nil
-      end
-      mci_silent('stop ZeusVideoPlayer')
-      mci_silent('close ZeusVideoPlayer')
-    end
-    def resize_video_player
-      if mci_silent('where ZeusVideoPlayer source') == 0
-        x, y, w, h = *mci_result.split(' ', 4).map! {|s| s.to_i}
-        GetClientRect.call(hwnd, @zvp[:buffer])
-        client_w, client_h = *@zvp[:buffer].unpack('x8L2')
-        if @zvp[:fit_to_screen]
-          ratio = w / h.to_f
-          w, h = client_w, (client_w / ratio).round
-          h, w = client_h, (client_h * ratio).round if h > client_h
-        end
-        x, y = (client_w-w)/2, (client_h-h)/2
-        window = ZVP_OldAviMode ? 'destination' : 'window'
-        mci_silent("put ZeusVideoPlayer #{window} at #{x} #{y} #{w} #{h}")
-      end
-      RedrawWindow.call(@zvp[:hwnd] || hwnd, nil, 0, 0)
-    end
-    def update_video_player
-      focus = false
-      loop do
-        GetMessage.call(@zvp[:buffer], 0, 0, 0)
-        DefWindowProc.call(*msg = @zvp[:buffer].unpack('L4'))
-        if focus != (GetForegroundWindow.call == hwnd)
-          focus = !focus
-          mci_silent("#{focus ? 'resume' : 'pause'} ZeusVideoPlayer")
-          resize_video_player
-        end
-        next unless focus
-        Input.update
-        if Input.trigger?(Input::B) or Input.trigger?(Input::C)
-          mci_silent('stop ZeusVideoPlayer') if @zvp[:cancellable]
-        elsif Input.trigger?(Input::F5) or Input.trigger?(Input::F6)
-          if $imported[:Zeus_Fullscreen] and !vx_fullscreen?
-            update
-            resize_video_player
-          end
-        end
-        case msg[1]
-        when 0x0012 #WM_QUIT
-          exit
-        when 0x0100 #WM_KEYDOWN
-          next if msg[3][30] == 1
-          case msg[2]
-          when 0x70, 0x7B #VK_F1, VK_F12
-            focus = false
-            mci_silent('pause ZeusVideoPlayer')
-            PostMessage.call(*msg)
-            update
-          end
-        when 0x0104 #WM_SYSKEYDOWN
-          next if msg[2] != 0x0D or msg[3][30] == 1
-          next if $imported[:Zeus_Fullscreen] and Disable_VX_Fullscreen
-          if ZVP_OldAviMode
-            PostMessage.call(*msg)
-            update
-            resize_video_player
-          else
-            next if mci_silent('status ZeusVideoPlayer position') != 0
-            position = mci_result.to_i
-            close_video_player
-            PostMessage.call(*msg)
-            update
-            break unless open_video_player(position)
-            resize_video_player
-          end
-        else
-          mci_silent('status ZeusVideoPlayer length')
-          length = mci_result.to_i
-          mci_silent('status ZeusVideoPlayer position')
-          break if mci_result.to_i >= length
-          mci_silent('status ZeusVideoPlayer mode')
-          break if mci_result == 'stopped'
-        end
-      end
-    end
-    if xp?
-      alias anti_hangup_update_video_player update_video_player
-      def update_video_player
-        anti_hangup_update_video_player
-      rescue Hangup
-        retry
-      end
-    end
-  end
-end"Lif !ACE_MODE
-	class Font
-		attr_accessor :outline, :shadow
-	end
-end"	#==============================================================================
+  end"Í#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -7170,8 +7201,7 @@ class Sprite_Character < Sprite
     super
     # If tile ID, file name, or hue are different from current ones
     if @character_name != @character.character_name
-      # Remember tile ID, file name, and hue
-      
+     
       @character_name = @character.character_name
 
         self.bitmap = Cache.character(@character.character_name,0)
@@ -7189,9 +7219,9 @@ class Sprite_Character < Sprite
     # Set visible situation
     self.visible = !@character.transparent
     
-      sx = @character.pattern * @cw
-      sy = (@character.direction - 2) / 2 * @ch
-      self.src_rect.set(sx, sy, @cw, @ch)
+    sx = @character.pattern * @cw
+    sy = (@character.direction - 2) / 2 * @ch
+    self.src_rect.set(sx, sy, @cw, @ch)
 
 
     # Set sprite coordinates
@@ -7212,7 +7242,7 @@ class Sprite_Character < Sprite
 
   end
 end
-"ß#==============================================================================
+"#==============================================================================
 # Tilemap Class
 #------------------------------------------------------------------------------
 # Script by SephirothSpawn
@@ -7295,12 +7325,14 @@ class Tilemap
     @zoom_x      = $map.tilemap_zoom_x
     @zoom_y      = $map.tilemap_zoom_y
   end
+  
   #--------------------------------------------------------------------------
   def dispose
-    for layer in @layers
-      layer.dispose
-    end
+    @tileset.dispose
+    @autotiles.each{ |a| a.dispose }    
+    @layers.each{ |l| l.dispose }
   end
+
   #--------------------------------------------------------------------------
   def update
     unless @data == @map_data && @tile_width == $map.tilemap_tile_width &&
@@ -7412,7 +7444,7 @@ class Tilemap
     return bitmap
   end
   #--------------------------------------------------------------------------
-end"‚ #==============================================================================
+end"Ç#==============================================================================
 # ** Spriteset_Map
 #------------------------------------------------------------------------------
 #  This class brings together map screen sprites, tilemaps, etc.
@@ -7439,8 +7471,6 @@ class Game_World
     @tone = Tone.new(0, 0, 0, 0)
     @tone_target = Tone.new(0, 0, 0, 0)
     @tone_duration = 0
-    @flash_color = Color.new(0, 0, 0, 0)
-    @flash_duration = 0
 
     # weather in map data
     @weather_type = 0
@@ -7448,26 +7478,18 @@ class Game_World
     @weather_type_target = 0
     @weather_max_target = 0.0
     @weather_duration = 0
-
     
     # Make viewports
-    # agf - make viewport shorter to allow for HUD
-    if ACE_MODE
-    @viewport1 = Viewport.new(0, 0, Graphics.width, Graphics.height)         # Was 448 for hud
-    @viewport2 = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport3 = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  else
-        @viewport1 = Viewport.new(0, 0, 640,448)         # Was 448 for hud
-    @viewport2 = Viewport.new(0, 0, 640,480)
-    @viewport3 = Viewport.new(0, 0, 640,480)
-  end
+    @viewport1 = Viewport.new(0, 0, $game.width, $game.height)   
+    @viewport2 = Viewport.new(0, 0, $game.width, $game.height)
+    @viewport3 = Viewport.new(0, 0, $game.width, $game.height)
+
     @viewport2.z = 200
     @viewport3.z = 5000
-
-
     
     # Make tilemap
     @tilemap = Tilemap.new(@viewport1)
+    @tileset_id = 0
 
     # Make panorama plane
     @panorama = Plane.new(@viewport1)
@@ -7483,17 +7505,13 @@ class Game_World
   # * Dispose
   #--------------------------------------------------------------------------
   def dispose
-    # Dispose of tilemap
-    @tilemap.tileset.dispose
-    for i in 0..6
-      @tilemap.autotiles[i].dispose
-    end
+
+    # Dispose of tilemap    
     @tilemap.dispose
     @panorama.dispose
     @fog.dispose
-    for sprite in @character_sprites
-      sprite.dispose
-    end
+
+    @character_sprites.each{ |s| s.dispose }
     @weather.dispose
 
     # Dispose of viewports
@@ -7504,18 +7522,18 @@ class Game_World
   end
 
   def refresh_tileset
+    @tileset_id = $map.tileset_id
       @tilemap.tileset = Cache.tileset($map.tileset.tileset_name)#+'-big')
       for i in 0..6
         autotile_name = $map.tileset.autotile_names[i]
         next if autotile_name == ''
         @tilemap.autotiles[i] = Cache.autotile(autotile_name)#+'-big')
       end
-      $map.new_tileset = false
       @tilemap.map_data = $map.data
       @tilemap.priorities = $map.tileset.priorities
 
       @character_sprites = []
-      
+
     for i in $map.events.keys.sort
       sprite = Sprite_Character.new(@viewport1, $map.events[i])
       @character_sprites.push(sprite)
@@ -7525,28 +7543,26 @@ class Game_World
   end
 
   def refresh_panorama
-      @panorama_name = $map.panorama_name
-      @panorama_hue = $map.panorama_hue
+      @panorama_name = $map.tileset.panorama_name
       if @panorama.bitmap != nil
         @panorama.bitmap.dispose
         @panorama.bitmap = nil
       end
       if @panorama_name != ""
-        @panorama.bitmap = Cache.panorama(@panorama_name, @panorama_hue)
+        @panorama.bitmap = Cache.panorama(@panorama_name)
       end
       Graphics.frame_reset
   end
 
 
   def refresh_fog
-      @fog_name = $map.fog_name
-      @fog_hue = $map.fog_hue
+      @fog_name = $map.tileset.fog_name
       if @fog.bitmap != nil
         @fog.bitmap.dispose
         @fog.bitmap = nil
       end
       if @fog_name != ""
-        @fog.bitmap = Cache.fog(@fog_name, @fog_hue)
+        @fog.bitmap = Cache.fog(@fog_name)
       end
       Graphics.frame_reset
   end
@@ -7557,26 +7573,10 @@ class Game_World
   #--------------------------------------------------------------------------
   def update
 
-    update_screen
-
-    # if swapping tilesets
-    if $map.new_tileset == true
-      refresh_tileset
-    end
-
-    
-    # If panorama is different from current one
-    # if @panorama_name != $map.panorama_name or @panorama_hue != $map.panorama_hue
-    #   refresh_panorama
-    # end
-
-    # # If fog is different than current fog
-    # if @fog_name != $map.fog_name or @fog_hue != $map.fog_hue
-    #   refresh_fog
-    # end
-
-
-
+    # check for changes
+    refresh_tileset if $map.tileset_id != @tileset_id
+    refresh_panorama if @panorama_name != $map.tileset.panorama_name
+    refresh_fog if @fog_name != $map.tileset.fog_name
 
     # Update tilemap
     @tilemap.ox = $map.display_x / 4
@@ -7584,33 +7584,55 @@ class Game_World
     @tilemap.update
 
     # Update panorama plane
-    #@panorama.ox = 0 # $map.display_x / 8
-    #@panorama.oy = 0 # $map.display_y / 8
+    @panorama.ox = 0 # $map.display_x / 8
+    @panorama.oy = 0 # $map.display_y / 8
 
     # Update fog plane
-    # @fog.zoom_x = $map.fog_zoom / 100.0
-    # @fog.zoom_y = $map.fog_zoom / 100.0
-    # @fog.opacity = $map.fog_opacity
-    # @fog.blend_type = $map.fog_blend_type
-    # @fog.ox = $map.display_x / 4 + $map.fog_ox
-    # @fog.oy = $map.display_y / 4 + $map.fog_oy
-    # @fog.tone = $map.fog_tone
+    @fog.zoom_x = $map.tileset.fog_zoom / 100.0
+    @fog.zoom_y = $map.tileset.fog_zoom / 100.0
+    @fog.opacity = $map.tileset.fog_opacity
+    @fog.ox = $map.display_x / 4
+    @fog.oy = $map.display_y / 4
+    
+
     # # Update character sprites
-    for sprite in @character_sprites
-      # only update if in range (anti-lag)
-      sprite.update# if in_range?(sprite.character)
+    @character_sprites.each{ |s|
+      s.update
+    }
+
+    if @tone_duration >= 1
+      d = @tone_duration
+      @tone.red = (@tone.red * (d - 1) + @tone_target.red) / d
+      @tone.green = (@tone.green * (d - 1) + @tone_target.green) / d
+      @tone.blue = (@tone.blue * (d - 1) + @tone_target.blue) / d
+      @tone.gray = (@tone.gray * (d - 1) + @tone_target.gray) / d
+      @tone_duration -= 1
     end
+
+    if @weather_duration >= 1
+      d = @weather_duration
+      @weather_max = (@weather_max * (d - 1) + @weather_max_target) / d
+      @weather_duration -= 1
+      if @weather_duration == 0
+        @weather_type = @weather_type_target
+      end
+    end
+
     # Update weather graphic
     # @weather.type = $game_screen.weather_type
     # @weather.max = $game_screen.weather_max
     # @weather.ox = $map.display_x / 4
     # @weather.oy = $map.display_y / 4
     # @weather.update
+
     # Set screen color tone and shake position
-    #@viewport1.tone = $game_screen.tone
+    @viewport1.tone = @tone
+    
+
+
     #@viewport1.ox = $game_screen.shake
-    # Set screen flash color
-    #@viewport3.color = $game_screen.flash_color
+
+
     # Update viewports
     @viewport1.update
     @viewport3.update
@@ -7633,17 +7655,6 @@ class Game_World
   end
 
   #--------------------------------------------------------------------------
-  # * Start Flashing
-  #     color : color
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_flash(color, duration)
-    @flash_color = color.clone
-    @flash_duration = duration
-  end
-
-
-  #--------------------------------------------------------------------------
   # * Set Weather
   #--------------------------------------------------------------------------
   def weather(type, power, duration)
@@ -7663,36 +7674,8 @@ class Game_World
     end
   end
 
-  #--------------------------------------------------------------------------
-  # * Frame Update
-  #--------------------------------------------------------------------------
-  def update_screen
-    if @tone_duration >= 1
-      d = @tone_duration
-      @tone.red = (@tone.red * (d - 1) + @tone_target.red) / d
-      @tone.green = (@tone.green * (d - 1) + @tone_target.green) / d
-      @tone.blue = (@tone.blue * (d - 1) + @tone_target.blue) / d
-      @tone.gray = (@tone.gray * (d - 1) + @tone_target.gray) / d
-      @tone_duration -= 1
-    end
-    if @flash_duration >= 1
-      d = @flash_duration
-      @flash_color.alpha = @flash_color.alpha * (d - 1) / d
-      @flash_duration -= 1
-    end
-
-    if @weather_duration >= 1
-      d = @weather_duration
-      @weather_max = (@weather_max * (d - 1) + @weather_max_target) / d
-      @weather_duration -= 1
-      if @weather_duration == 0
-        @weather_type = @weather_type_target
-      end
-    end
-  end
-
 end
-"F#==============================================================================
+"W#==============================================================================
 # Ui_Base
 #==============================================================================
 
@@ -7703,7 +7686,7 @@ class Ui_Base
   #--------------------------------------------------------------------------
   def initialize(z) 
   	@all = [] 
-  	@viewport = Viewport.new(0,0,640,480)
+  	@viewport = Viewport.new(0,0,$game.width,$game.height)
   	@viewport.z = z
   end  
 
@@ -7731,7 +7714,7 @@ class Ui_Base
   end
   
 end
-"S*#==============================================================================
+"?,#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -7743,7 +7726,9 @@ class Ui_Message < Ui_Base
   TAB_WIDTH = 35
 
   SPACING = 7
-  LINE_HEIGHT = 32
+  LINE_HEIGHT = 29#6
+  PADDING_X = 16
+  PADDING_Y = 12
 
   SPEED_1 = 0
   SPEED_2 = 1
@@ -7794,18 +7779,19 @@ class Ui_Message < Ui_Base
 
     # Setup sprites
     @textbox = add_sprite
-    @textbox.x = 250
+    @textbox.x = 50
     @textbox.y = 150
     #@namebox = add(Sprite.new)
 
     #@next = add(Sprite.new)
     @face = add_sprite
+    @face.z += 10
     #@tail = add(Sprite.new)
 
     @window_bmp = nil
     @text_bmp = nil
 
-    @scratch.font.size = 30
+    
     
   end
   
@@ -7868,6 +7854,9 @@ class Ui_Message < Ui_Base
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
+    @scratch.font.size =28
+    @scratch.font.name = "Calibri"
+
     # Clear out the previous word
     @word = nil
 
@@ -7889,6 +7878,15 @@ class Ui_Message < Ui_Base
     @width = max_width
     @height = @lines.count * (LINE_HEIGHT)
 
+    # Add padding
+    @width += PADDING_X * 2
+    @height += PADDING_Y * 2
+
+    @width += @face.width
+
+    @face.x = max_width + @textbox.x + PADDING_X + PADDING_X
+    @face.y = @textbox.y + @height - @face.height - PADDING_Y
+
     # Position the textbox wherever it best fits
 
     # Prepare the sprites
@@ -7897,19 +7895,25 @@ class Ui_Message < Ui_Base
     @text_bmp = Bitmap.new(@width,@height)
 
     @window_bmp = Bitmap.new(@width,@height)
-    @window_bmp.fill(Color.new(0,0,0,200))
 
 
-    @scratch.font.size = 30
-    @text_bmp.font.size = 30
-    @textbox.bitmap.font.size = 30
+
+    @window_bmp.windowskin("windowskin1")
+
+
+    @scratch.font.size =28
+    @text_bmp.font.size = 28
+    @textbox.bitmap.font.size = 28
+
+    @text_bmp.font.name = "Calibri"
+    @textbox.bitmap.font.name = "Calibri"
 
 
     @line_idx = 0
     @word_idx = -1
 
-    @cx = 0
-    @cy = 0
+    @cx = PADDING_X
+    @cy = PADDING_Y
 
     # Start text
     @state = :texting
@@ -7981,7 +7985,7 @@ class Ui_Message < Ui_Base
     else
       @word_idx = 0
       @cy += LINE_HEIGHT
-      @cx = 0
+      @cx = PADDING_X
     end
   end
 
@@ -8015,6 +8019,8 @@ class Ui_Message < Ui_Base
     end
 
     @word = @lines[@line_idx][@word_idx]
+
+    return if @word == nil
 
     # CHECK FOR COMMANDS
     if @word.include?('$')
@@ -8084,7 +8090,7 @@ class Ui_Message < Ui_Base
   # * Wait for input after text is done
   #--------------------------------------------------------------------------
   def check_input_done
-    if Input.trigger?(Input::C)
+    if $input.action? || $input.click?
       #sound(:text_next)
       #self.slide_zy(0.0)
       @state = :closing
@@ -8109,7 +8115,7 @@ class Ui_Message < Ui_Base
       width = line.inject(0) { |t,w| t + word_width(w) }
       max = width if width > max
     }
-    return max
+    return max - SPACING
   end
 
   def split_text(text)
@@ -8169,11 +8175,13 @@ class Ui_Message < Ui_Base
   def clear() end
   def busy?() return @state != :idle end
 
-end"t#==============================================================================
+end"‹#==============================================================================
 # Ui_Screen
 #==============================================================================
 
 class Ui_Screen < Ui_Base
+
+	attr_reader :message
   
 	def initialize
 		@message = Ui_Message.new        
@@ -8182,7 +8190,6 @@ class Ui_Screen < Ui_Base
 	def update
 		@message.update
 	end
-
 
     def busy?() 
     	return @message.busy?
@@ -8614,7 +8621,30 @@ class Widget < Sprite
   
   
 end
-"#==============================================================================
+"Z#==============================================================================
+# The magical list
+#==============================================================================
+
+# Draw item depends on type, ItemData, WeaponData etc
+# All action external to the list
+
+# Scrollbar is part of list?
+# Made up of multiple sprites
+
+class List
+      
+  #--------------------------------------------------------------------------
+  # * Init
+  #--------------------------------------------------------------------------
+  def initialize()
+
+  	@parent = nil
+
+  	@items = []
+
+  end
+
+ end"#==============================================================================
 # Widget_Bugbox
 #==============================================================================
 

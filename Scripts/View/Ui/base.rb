@@ -9,7 +9,7 @@ class Ui_Base
   #--------------------------------------------------------------------------
   def initialize(z) 
   	@all = [] 
-  	@viewport = Viewport.new(0,0,640,480)
+  	@viewport = Viewport.new(0,0,$game.width,$game.height)
   	@viewport.z = z
   end  
 

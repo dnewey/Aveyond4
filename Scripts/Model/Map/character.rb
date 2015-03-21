@@ -60,7 +60,7 @@ class Game_Character
     @original_pattern = 0
 
     @move_type = 0
-    @move_speed = 5#3
+    @move_speed = 3
     @move_frequency = 6
     @move_route = nil
     @move_route_index = 0
@@ -73,6 +73,7 @@ class Game_Character
     @always_on_top = false
     @anime_count = 0
     @stop_count = 0 #how long has paused for between steps
+
     @jump_count = 0
     @jump_peak = 0
     @wait_count = 0
@@ -268,9 +269,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #--------------------------------------------------------------------------
-  def terrain_tag
-    return $map.terrain_tag(@x, @y)
-  end
+  def terrain_tag() return $map.terrain_tag(@x, @y) end
 
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -1120,6 +1119,24 @@ class Game_Character
     end
   end
 
+  def turn_toward_pos(x,y)
+
+    sx = @x - x
+    sy = @y - y
+
+    # If coordinates are equal
+    return if sx == 0 and sy == 0
+
+    # If horizontal distance is longer
+    if sx.abs > sy.abs
+      # Turn to the right or left towards event
+      sx > 0 ? turn_left : turn_right
+    # If vertical distance is longer
+    else
+      # Turn up or down towards event
+      sy > 0 ? turn_up : turn_down
+    end
+  end
   #   #--------------------------------------------------------------------------
 #   # * Frame Update (run_path)
 #   #--------------------------------------------------------------------------

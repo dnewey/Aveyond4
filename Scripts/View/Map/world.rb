@@ -25,8 +25,6 @@ class Game_World
     @tone = Tone.new(0, 0, 0, 0)
     @tone_target = Tone.new(0, 0, 0, 0)
     @tone_duration = 0
-    @flash_color = Color.new(0, 0, 0, 0)
-    @flash_duration = 0
 
     # weather in map data
     @weather_type = 0
@@ -34,26 +32,18 @@ class Game_World
     @weather_type_target = 0
     @weather_max_target = 0.0
     @weather_duration = 0
-
     
     # Make viewports
-    # agf - make viewport shorter to allow for HUD
-    if ACE_MODE
-    @viewport1 = Viewport.new(0, 0, Graphics.width, Graphics.height)         # Was 448 for hud
-    @viewport2 = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport3 = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  else
-        @viewport1 = Viewport.new(0, 0, 640,448)         # Was 448 for hud
-    @viewport2 = Viewport.new(0, 0, 640,480)
-    @viewport3 = Viewport.new(0, 0, 640,480)
-  end
+    @viewport1 = Viewport.new(0, 0, $game.width, $game.height)   
+    @viewport2 = Viewport.new(0, 0, $game.width, $game.height)
+    @viewport3 = Viewport.new(0, 0, $game.width, $game.height)
+
     @viewport2.z = 200
     @viewport3.z = 5000
-
-
     
     # Make tilemap
     @tilemap = Tilemap.new(@viewport1)
+    @tileset_id = 0
 
     # Make panorama plane
     @panorama = Plane.new(@viewport1)
@@ -69,17 +59,13 @@ class Game_World
   # * Dispose
   #--------------------------------------------------------------------------
   def dispose
-    # Dispose of tilemap
-    @tilemap.tileset.dispose
-    for i in 0..6
-      @tilemap.autotiles[i].dispose
-    end
+
+    # Dispose of tilemap    
     @tilemap.dispose
     @panorama.dispose
     @fog.dispose
-    for sprite in @character_sprites
-      sprite.dispose
-    end
+
+    @character_sprites.each{ |s| s.dispose }
     @weather.dispose
 
     # Dispose of viewports
@@ -90,13 +76,13 @@ class Game_World
   end
 
   def refresh_tileset
+    @tileset_id = $map.tileset_id
       @tilemap.tileset = Cache.tileset($map.tileset.tileset_name)#+'-big')
       for i in 0..6
         autotile_name = $map.tileset.autotile_names[i]
         next if autotile_name == ''
         @tilemap.autotiles[i] = Cache.autotile(autotile_name)#+'-big')
       end
-      $map.new_tileset = false
       @tilemap.map_data = $map.data
       @tilemap.priorities = $map.tileset.priorities
 
@@ -111,28 +97,26 @@ class Game_World
   end
 
   def refresh_panorama
-      @panorama_name = $map.panorama_name
-      @panorama_hue = $map.panorama_hue
+      @panorama_name = $map.tileset.panorama_name
       if @panorama.bitmap != nil
         @panorama.bitmap.dispose
         @panorama.bitmap = nil
       end
       if @panorama_name != ""
-        @panorama.bitmap = Cache.panorama(@panorama_name, @panorama_hue)
+        @panorama.bitmap = Cache.panorama(@panorama_name)
       end
       Graphics.frame_reset
   end
 
 
   def refresh_fog
-      @fog_name = $map.fog_name
-      @fog_hue = $map.fog_hue
+      @fog_name = $map.tileset.fog_name
       if @fog.bitmap != nil
         @fog.bitmap.dispose
         @fog.bitmap = nil
       end
       if @fog_name != ""
-        @fog.bitmap = Cache.fog(@fog_name, @fog_hue)
+        @fog.bitmap = Cache.fog(@fog_name)
       end
       Graphics.frame_reset
   end
@@ -143,26 +127,10 @@ class Game_World
   #--------------------------------------------------------------------------
   def update
 
-    update_screen
-
-    # if swapping tilesets
-    if $map.new_tileset == true
-      refresh_tileset
-    end
-
-    
-    # If panorama is different from current one
-    # if @panorama_name != $map.panorama_name or @panorama_hue != $map.panorama_hue
-    #   refresh_panorama
-    # end
-
-    # # If fog is different than current fog
-    # if @fog_name != $map.fog_name or @fog_hue != $map.fog_hue
-    #   refresh_fog
-    # end
-
-
-
+    # check for changes
+    refresh_tileset if $map.tileset_id != @tileset_id
+    refresh_panorama if @panorama_name != $map.tileset.panorama_name
+    refresh_fog if @fog_name != $map.tileset.fog_name
 
     # Update tilemap
     @tilemap.ox = $map.display_x / 4
@@ -170,33 +138,55 @@ class Game_World
     @tilemap.update
 
     # Update panorama plane
-    #@panorama.ox = 0 # $map.display_x / 8
-    #@panorama.oy = 0 # $map.display_y / 8
+    @panorama.ox = 0 # $map.display_x / 8
+    @panorama.oy = 0 # $map.display_y / 8
 
     # Update fog plane
-    # @fog.zoom_x = $map.fog_zoom / 100.0
-    # @fog.zoom_y = $map.fog_zoom / 100.0
-    # @fog.opacity = $map.fog_opacity
-    # @fog.blend_type = $map.fog_blend_type
-    # @fog.ox = $map.display_x / 4 + $map.fog_ox
-    # @fog.oy = $map.display_y / 4 + $map.fog_oy
-    # @fog.tone = $map.fog_tone
+    @fog.zoom_x = $map.tileset.fog_zoom / 100.0
+    @fog.zoom_y = $map.tileset.fog_zoom / 100.0
+    @fog.opacity = $map.tileset.fog_opacity
+    @fog.ox = $map.display_x / 4
+    @fog.oy = $map.display_y / 4
+    
+
     # # Update character sprites
-    for sprite in @character_sprites
-      # only update if in range (anti-lag)
-      sprite.update# if in_range?(sprite.character)
+    @character_sprites.each{ |s|
+      s.update
+    }
+
+    if @tone_duration >= 1
+      d = @tone_duration
+      @tone.red = (@tone.red * (d - 1) + @tone_target.red) / d
+      @tone.green = (@tone.green * (d - 1) + @tone_target.green) / d
+      @tone.blue = (@tone.blue * (d - 1) + @tone_target.blue) / d
+      @tone.gray = (@tone.gray * (d - 1) + @tone_target.gray) / d
+      @tone_duration -= 1
     end
+
+    if @weather_duration >= 1
+      d = @weather_duration
+      @weather_max = (@weather_max * (d - 1) + @weather_max_target) / d
+      @weather_duration -= 1
+      if @weather_duration == 0
+        @weather_type = @weather_type_target
+      end
+    end
+
     # Update weather graphic
     # @weather.type = $game_screen.weather_type
     # @weather.max = $game_screen.weather_max
     # @weather.ox = $map.display_x / 4
     # @weather.oy = $map.display_y / 4
     # @weather.update
+
     # Set screen color tone and shake position
-    #@viewport1.tone = $game_screen.tone
+    @viewport1.tone = @tone
+    
+
+
     #@viewport1.ox = $game_screen.shake
-    # Set screen flash color
-    #@viewport3.color = $game_screen.flash_color
+
+
     # Update viewports
     @viewport1.update
     @viewport3.update
@@ -235,29 +225,6 @@ class Game_World
     if @weather_duration == 0
       @weather_type = @weather_type_target
       @weather_max = @weather_max_target
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * Frame Update
-  #--------------------------------------------------------------------------
-  def update_screen
-    if @tone_duration >= 1
-      d = @tone_duration
-      @tone.red = (@tone.red * (d - 1) + @tone_target.red) / d
-      @tone.green = (@tone.green * (d - 1) + @tone_target.green) / d
-      @tone.blue = (@tone.blue * (d - 1) + @tone_target.blue) / d
-      @tone.gray = (@tone.gray * (d - 1) + @tone_target.gray) / d
-      @tone_duration -= 1
-    end
-
-    if @weather_duration >= 1
-      d = @weather_duration
-      @weather_max = (@weather_max * (d - 1) + @weather_max_target) / d
-      @weather_duration -= 1
-      if @weather_duration == 0
-        @weather_type = @weather_type_target
-      end
     end
   end
 

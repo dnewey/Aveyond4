@@ -10,7 +10,9 @@ class Ui_Message < Ui_Base
   TAB_WIDTH = 35
 
   SPACING = 7
-  LINE_HEIGHT = 32
+  LINE_HEIGHT = 29#6
+  PADDING_X = 16
+  PADDING_Y = 12
 
   SPEED_1 = 0
   SPEED_2 = 1
@@ -61,18 +63,19 @@ class Ui_Message < Ui_Base
 
     # Setup sprites
     @textbox = add_sprite
-    @textbox.x = 250
+    @textbox.x = 50
     @textbox.y = 150
     #@namebox = add(Sprite.new)
 
     #@next = add(Sprite.new)
     @face = add_sprite
+    @face.z += 10
     #@tail = add(Sprite.new)
 
     @window_bmp = nil
     @text_bmp = nil
 
-    @scratch.font.size = 30
+    
     
   end
   
@@ -135,6 +138,9 @@ class Ui_Message < Ui_Base
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
+    @scratch.font.size =28
+    @scratch.font.name = "Calibri"
+
     # Clear out the previous word
     @word = nil
 
@@ -156,6 +162,15 @@ class Ui_Message < Ui_Base
     @width = max_width
     @height = @lines.count * (LINE_HEIGHT)
 
+    # Add padding
+    @width += PADDING_X * 2
+    @height += PADDING_Y * 2
+
+    @width += @face.width
+
+    @face.x = max_width + @textbox.x + PADDING_X + PADDING_X
+    @face.y = @textbox.y + @height - @face.height - PADDING_Y
+
     # Position the textbox wherever it best fits
 
     # Prepare the sprites
@@ -164,19 +179,25 @@ class Ui_Message < Ui_Base
     @text_bmp = Bitmap.new(@width,@height)
 
     @window_bmp = Bitmap.new(@width,@height)
-    @window_bmp.fill(Color.new(0,0,0,200))
 
 
-    @scratch.font.size = 30
-    @text_bmp.font.size = 30
-    @textbox.bitmap.font.size = 30
+
+    @window_bmp.windowskin("windowskin1")
+
+
+    @scratch.font.size =28
+    @text_bmp.font.size = 28
+    @textbox.bitmap.font.size = 28
+
+    @text_bmp.font.name = "Calibri"
+    @textbox.bitmap.font.name = "Calibri"
 
 
     @line_idx = 0
     @word_idx = -1
 
-    @cx = 0
-    @cy = 0
+    @cx = PADDING_X
+    @cy = PADDING_Y
 
     # Start text
     @state = :texting
@@ -248,7 +269,7 @@ class Ui_Message < Ui_Base
     else
       @word_idx = 0
       @cy += LINE_HEIGHT
-      @cx = 0
+      @cx = PADDING_X
     end
   end
 
@@ -282,6 +303,8 @@ class Ui_Message < Ui_Base
     end
 
     @word = @lines[@line_idx][@word_idx]
+
+    return if @word == nil
 
     # CHECK FOR COMMANDS
     if @word.include?('$')
@@ -351,7 +374,7 @@ class Ui_Message < Ui_Base
   # * Wait for input after text is done
   #--------------------------------------------------------------------------
   def check_input_done
-    if Input.trigger?(Input::C)
+    if $input.action? || $input.click?
       #sound(:text_next)
       #self.slide_zy(0.0)
       @state = :closing
@@ -376,7 +399,7 @@ class Ui_Message < Ui_Base
       width = line.inject(0) { |t,w| t + word_width(w) }
       max = width if width > max
     }
-    return max
+    return max - SPACING
   end
 
   def split_text(text)

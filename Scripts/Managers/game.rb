@@ -4,7 +4,11 @@
 
 class GameManager
 
+  attr_reader :width, :height
+
 	def initialize
+
+    $game = self
 
     # Setup font
     Font.default_size = 22
@@ -16,45 +20,35 @@ class GameManager
     end
 
     Graphics.frame_rate = 60
-    set_rez(640,480)
+    resize(850,480)
 
     @scenes = []
 
+    # Game State Objects
+    $progress = Av::Progress.new
+    $state = Av::State.new
+    $party = Game_Party.new
+    $player = Game_Player.new
+
+    # Model    
+    $map = Game_Map.new
+
+    $map.setup($data.system.start_map_id)
+    $player.moveto($data.system.start_x, $data.system.start_y)
+
     # Make scene object (title screen)
     if DEBUG && $settings.debug_skip_title
-      quick_start
+      push_scene(Scene_Map.new)    
     else
-      $scene = Scene_Splash.new    
+      push_scene(Scene_Splash.new)
     end
 
   end
 
-   def width
-    return Graphics.width
-  end
-
-  def height
-    return Graphics.height
-  end
-
-   def quick_start
-
-    # Game State Objects
-    $temp = Game_Temp.new
-    $progress = Av::Progress.new
-    $state = Av::State.new
-
-    $player = Game_Player.new
-    $party = Game_Party.new
-
-    # Model    
-    $map = Game_Map.new
-    $map.setup($data.system.start_map_id)
-    $player.moveto($data.system.start_x, $data.system.start_y)
-
-    # Switch to map screen
-    push_scene(Scene_Map.new)
-
+  def resize(w,h)
+    @width = w
+    @height = h
+    set_rez(w,h)
   end
 
   def push_scene(scene)
@@ -81,17 +75,11 @@ class GameManager
   end
 
   def flip_window
-    
-    # Check for keyboard events
-    $showm = Win32API.new 'user32', 'keybd_event', %w(l l l l), ''
-    
-    if false
-      $showm.call(18,0,0,0)
-      $showm.call(13,0,0,0)
-      $showm.call(13,0,2,0)
-      $showm.call(18,0,2,0)
-    end
-
+    showm = Win32API.new('user32', 'keybd_event', %w(l l l l), '')
+    showm.call(18,0,0,0)
+    showm.call(13,0,0,0)
+    showm.call(13,0,2,0)
+    showm.call(18,0,2,0)
   end
 
 end
