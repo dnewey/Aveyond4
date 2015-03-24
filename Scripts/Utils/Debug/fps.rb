@@ -26,7 +26,7 @@ module Graphics
 	  if !@fps_sprite or @fps_sprite.disposed?
 	    @fps_sprite = Sprite.new
 	    @fps_sprite.z = 9999
-	    @fps_sprite.x = 600
+	    @fps_sprite.x = $game.width-50
 	    @fps_sprite.y = 6
 	    @fps_sprite.bitmap = Bitmap.new(30, 30*62)
 	    @fps_sprite.bitmap.font.size = 28
@@ -43,7 +43,7 @@ module Graphics
 	  if !@back_sprite or @back_sprite.disposed?
 	    @back_sprite = Sprite.new
 	    @back_sprite.z = 9997
-	    @back_sprite.x = 600
+	    @back_sprite.x = $game.width-50
 	    @back_sprite.y = 6
 	    @back_sprite.bitmap = Bitmap.new(30, 30)
 	  end

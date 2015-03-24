@@ -25,6 +25,8 @@ class Game_Map
   # Try to cut this
   attr_reader :events
 
+  attr_reader :map
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -62,7 +64,7 @@ class Game_Map
       @events[i] = Game_Event.new(@map.events[i])
     }
 
-        # Zones!
+    # Zones!
     if @map.autoplay_bgm
       $game_system.bgm_play(@map.bgm)
     end
@@ -125,8 +127,8 @@ class Game_Map
     w = ($map.width * 32) - $game.width
     h = ($map.height * 32) - $game.height
 
-    @display_x = w if @display_x > 0
-    @display_y = w if @display_y > 0
+    #@display_x = w if @display_x > w
+    #@display_y = w if @display_y > h
 
 
 

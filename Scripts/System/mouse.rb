@@ -15,11 +15,10 @@ class MouseManager
   def initialize
     @pos = [0,0]
     @hwnd = Findwindow.call(nil, "Aveyond")
-
     @sprite = Sprite.new()
     @sprite.z = 10100
     @sprite.ox = 4
-
+    change_cursor("Default")
   end
   
   def position() @pos; end
@@ -41,19 +40,16 @@ class MouseManager
     Scr2cli.call(@hwnd, pos) 
     @pos = pos.unpack('ll')
 
-
     # Update sprite pos
     @sprite.x = @pos[0]
     @sprite.y = @pos[1]
 
-    #ShowCursor.call(on_screen?.to_i) # on_screen && mouse_mode
+    ShowCursor.call(0)#on_screen?.to_i) # on_screen && mouse_mode
     
   end
 
   def change_cursor(c)
-
     @sprite.bitmap = Cache.cursor(c)
-
   end
 
 end
@@ -64,8 +60,6 @@ end
 
 class Sprite_Mouse < Sprite
 
-
-     
   #--------------------------------------------------------------------------
   # ** Frame Update : Update Event Cursors
   #--------------------------------------------------------------------------

@@ -145,7 +145,7 @@ class Game_Player < Game_Character
   #--------------------------------------------------------------------------
   def update
 
-    return if ($hud && $hud.busy?) || $debug.busy?
+    return if ($scene.busy?) || $debug.busy?
     return if $map.interpreter.running? or @move_route_forcing 
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
@@ -184,7 +184,7 @@ class Game_Player < Game_Character
     end
 
     # Clear path if any direction keys pressed
-    $player.clear_path if $input.dir4 != 0
+    clear_path if $input.dir4 != 0
     
     # Remember whether or not moving in local variables
     last_moving = moving?

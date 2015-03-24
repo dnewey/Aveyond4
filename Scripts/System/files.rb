@@ -88,12 +88,13 @@ class FileManager
   #--------------------------------------------------------------------------
   def make_save_contents
     contents = {}
-    contents[:journal]       = $journal
-    contents[:flags]         = $flags
-    contents[:switches]      = $switches
-    contents[:variables]     = $variables
-    contents[:states]        = $states
-    contents[:harvey]        = $harvey
+    contents[:state]       = $state
+    contents[:progress]         = $progress
+    contents[:party]      = $party
+    contents[:battle]     = $battle
+
+    contents[:map]        = $map
+    contents[:player]        = $player
     contents
   end
   

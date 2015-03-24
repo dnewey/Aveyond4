@@ -29,7 +29,6 @@ class Game_Actor < Game_Battler
 
     @name = actor_data.name
 
-
     @equips = [] # extrapolate from data, combine weapon and armors!
     actor_data.slots.split(" | ").each{ |s|
       #@equips.

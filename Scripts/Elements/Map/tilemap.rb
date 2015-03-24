@@ -4,28 +4,9 @@
 # Script by SephirothSpawn
 #==============================================================================
 
-class Game_Map
-  attr_reader :map
-  attr_accessor :tilemap_zoom_x
-  attr_accessor :tilemap_zoom_y
-  attr_accessor :tilemap_tile_width
-  attr_accessor :tilemap_tile_height
+class Tilemap2
   #--------------------------------------------------------------------------
-  alias seph_tilemap_gmap_init initialize
-  def initialize
-    seph_tilemap_gmap_init
-    @tilemap_zoom_x      = 1.0
-    @tilemap_zoom_y      = 1.0
-    @tilemap_tile_width  = 32
-    @tilemap_tile_height = 32
-  end
-  #--------------------------------------------------------------------------
-end
-
-
-class Tilemap
-  #--------------------------------------------------------------------------
-  Animated_Autotiles_Frames = 15
+  Animated_Autotiles_Frames = 60
   #--------------------------------------------------------------------------
   Autotiles = [
     [ [27, 28, 33, 34], [ 5, 28, 33, 34], [27,  6, 33, 34], [ 5,  6, 33, 34],
@@ -46,7 +27,6 @@ class Tilemap
   attr_accessor :tileset
   attr_accessor :autotiles
   attr_accessor :map_data
-  attr_accessor :flash_data
   attr_accessor :priorities
   attr_accessor :visible
   attr_accessor :ox
@@ -54,16 +34,15 @@ class Tilemap
   #--------------------------------------------------------------------------
   def initialize(viewport, map = $map.map)
 
-    @tile_width  = $map.tilemap_tile_width
-    @tile_height = $map.tilemap_tile_height
+    @tile_width  = 32
+    @tile_height = 32
+
 
     @layers = []
     for l in 0...3
       layer = Sprite.new(viewport)
-      layer.bitmap = Bitmap.new(map.width * @tile_width, map.height * @tile_height)
+      layer.bitmap = Bitmap.new($map.width * @tile_width, $map.height * @tile_height)
       layer.z = l * 150
-      layer.zoom_x = $map.tilemap_zoom_x
-      layer.zoom_y = $map.tilemap_zoom_y
       @layers.push(layer)
     end
     @tileset    = nil  # Refers to Map Tileset PNG
@@ -78,8 +57,7 @@ class Tilemap
     @oy         = 0    # bitmap Offsets
     @data       = nil  # Acts As Refresh Flag
     @map         = map
-    @zoom_x      = $map.tilemap_zoom_x
-    @zoom_y      = $map.tilemap_zoom_y
+
   end
   
   #--------------------------------------------------------------------------
@@ -89,33 +67,31 @@ class Tilemap
     @layers.each{ |l| l.dispose }
   end
 
+  def refresh_tileset(map)
+      @tileset = Cache.tileset(map.tileset.tileset_name)#+'-big')
+      i = 0 
+      map.tileset.autotile_names.each{ |a|
+        next if a == ''
+        @autotiles[i] = Cache.autotile(a)#+'-big')
+        i+=1
+      }
+      @map_data = map.data
+      @priorities = map.tileset.priorities
+  end
+
   #--------------------------------------------------------------------------
   def update
-    unless @data == @map_data && @tile_width == $map.tilemap_tile_width &&
-           @tile_height == $map.tilemap_tile_height
+    unless @data == @map_data #&& @tile_width == $map.tilemap_tile_width &&
+           #@tile_height == $map.tilemap_tile_height
            refresh
-    end
-    unless @zoom_x == $map.tilemap_zoom_x
-      @zoom_x = $map.tilemap_zoom_x
-      for layer in @layers
-        layer.zoom_x = @zoom_x
-        layer.zoom_x = @zoom_x
-      end
-    end
-    unless @zoom_y == $map.tilemap_zoom_y
-      @zoom_y = $map.tilemap_zoom_y
-      for layer in @layers
-        layer.zoom_y = @zoom_y
-        layer.zoom_y = @zoom_y
-      end
     end
     for layer in @layers
       layer.ox = @ox
       layer.oy = @oy
     end
-    if Graphics.frame_count % Animated_Autotiles_Frames == 0
-      #refresh_autotiles # Cache the frames or something
-    end
+    # if Graphics.frame_count % Animated_Autotiles_Frames == 0
+    #   refresh_autotiles # Cache the frames or something
+    # end
   end
   #--------------------------------------------------------------------------
   def refresh
@@ -136,6 +112,7 @@ class Tilemap
   end
   #--------------------------------------------------------------------------
   def refresh_autotiles
+
     autotile_locations = Table.new(@map_data.xsize, @map_data.ysize,
       @map_data.zsize)
     for p in 0..5
@@ -147,6 +124,7 @@ class Tilemap
             next unless p == @priorities[id]
             p = 2 if p > 2
             if id < 384
+              #next if @autotiles[id / 48 - 1] == nil
               next unless @autotiles[id / 48 - 1].width / 96 > 1
               draw_autotile(x, y, p, id)
               autotile_locations[x, y, z] = 1
@@ -190,14 +168,4 @@ class Tilemap
     y *= @tile_height
     @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, @tile_width, @tile_height))
   end
-  #--------------------------------------------------------------------------
-  def bitmap
-    bitmap = Bitmap.new(@layers[0].bitmap.width, @layers[0].bitmap.height)
-    for layer in @layers
-      bitmap.blt(0, 0, layer.bitmap, Rect.new(0, 0, 
-        bitmap.width, bitmap.height))
-    end
-    return bitmap
-  end
-  #--------------------------------------------------------------------------
 end

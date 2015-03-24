@@ -20,21 +20,15 @@ class GameManager
     end
 
     Graphics.frame_rate = 60
-    resize(850,480)
+    resize(853,480)
 
     @scenes = []
 
     # Game State Objects
-    $progress = Av::Progress.new
-    $state = Av::State.new
+    $progress = Progress.new
+    $state = State.new
     $party = Game_Party.new
-    $player = Game_Player.new
-
-    # Model    
-    $map = Game_Map.new
-
-    $map.setup($data.system.start_map_id)
-    $player.moveto($data.system.start_x, $data.system.start_y)
+    $battle = Game_Battle.new    
 
     # Make scene object (title screen)
     if DEBUG && $settings.debug_skip_title
@@ -48,15 +42,20 @@ class GameManager
   def resize(w,h)
     @width = w
     @height = h
-    set_rez(w,h)
+    if ACE_MODE
+    Graphics.resize_screen(w,h)
+    end
+    #set_rez(w,h)
   end
 
   def push_scene(scene)
+    $scene = scene
     @scenes.unshift(scene)
   end
 
   def pop_scene
     @scenes.shift.terminate
+    $scene = @scenes[0]
   end
 
   def quit?
@@ -68,6 +67,7 @@ class GameManager
     $keyboard.update
     $mouse.update
     $debug.update
+    $tweens.update
     Graphics.update
     Input.update
     @scenes[0].update

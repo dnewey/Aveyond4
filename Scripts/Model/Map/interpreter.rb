@@ -175,7 +175,7 @@ class Interpreter
       return if @message_waiting
 
       # Misc hud busy
-      return if $hud && $hud.busy?
+      return if $scene.busy?
 
       # If waiting for move to end
       if @move_route_waiting
@@ -349,7 +349,7 @@ class Interpreter
       end
     end
 
-    $hud.message.start(message)
+    $scene.message.start(message)
     
     # Return mouse to default cursor
     #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)

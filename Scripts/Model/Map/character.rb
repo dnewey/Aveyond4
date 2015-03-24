@@ -11,6 +11,7 @@ class Game_Character
   # * Public Instance Variables
   #--------------------------------------------------------------------------
   attr_reader   :id                       # ID
+  
   attr_reader   :x                        # map x-coordinate (logical)
   attr_reader   :y                        # map y-coordinate (logical)
   attr_reader   :real_x                   # map x-coordinate (real * 128) # For precision

@@ -2,7 +2,7 @@
 # Ui_Message
 #==============================================================================
 
-class Ui_Message < Ui_Base
+class Ui_Message
 
   # Consts
   MIN_WIDTH = 200
@@ -24,7 +24,6 @@ class Ui_Message < Ui_Base
   # Prepare
   #--------------------------------------------------------------------------
   def initialize
-    super(500)
 
     # Create the pieces but do nothing besides
     @state = :idle
@@ -62,13 +61,13 @@ class Ui_Message < Ui_Base
     @height = 0
 
     # Setup sprites
-    @textbox = add_sprite
+    @textbox = Sprite.new($vp_ui)
     @textbox.x = 50
     @textbox.y = 150
     #@namebox = add(Sprite.new)
 
     #@next = add(Sprite.new)
-    @face = add_sprite
+    @face = Sprite.new($vp_ui)
     @face.z += 10
     #@tail = add(Sprite.new)
 
@@ -83,7 +82,6 @@ class Ui_Message < Ui_Base
   # Frame Update
   #--------------------------------------------------------------------------
   def update
-    super
     
 #~     if Input.press?(:SHIFT)
 #~       @state = :closing

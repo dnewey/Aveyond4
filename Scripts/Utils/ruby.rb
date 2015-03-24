@@ -65,6 +65,13 @@ class Bitmap
 
 	end
 
+	def vert(src)
+    	blt(0,0,src,Rect.new(0,0,src.width,10)) # top left
+    	blt(0,height-10,src,Rect.new(0,src.height-10,src.width,10)) # bottom right
+    
+    	stretch_blt(Rect.new(0,10,10,height-20),src,Rect.new(0,10,10,10))
+	end
+
 end
 
 class Fixnum
@@ -83,5 +90,13 @@ class Sprite
 	def move(x,y)
 		self.x = x
 		self.y = y
+	end
+
+	def width
+		return self.bitmap.width
+	end
+
+	def height 
+		return self.bitmap.height
 	end
 end

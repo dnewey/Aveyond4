@@ -2,20 +2,20 @@
 # Ui_Screen
 #==============================================================================
 
-class Ui_Screen < Ui_Base
+class Ui_Screen
 
-	attr_reader :message
+	#attr_reader :message
   
 	def initialize
-		@message = Ui_Message.new        
+		#@message = Ui_Message.new        
 	end
 
 	def update
-		@message.update
+		#@message.update
 	end
 
     def busy?() 
-    	return @message.busy?
+    	return false#@message.busy?
     end
 
 end

@@ -7,17 +7,40 @@ class Scene_Battle
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
-  def start
+  def initialize
 
-    @hud = Game_Hud.new
-    @world = Game_World.new
+    Graphics.freeze
 
-    @battle = Game_Battle.new
+    @vp = Viewport.new(0, 0, $game.width, $game.height)
+
+    @vp.z = 6000  
+    @bg = Sprite.new(@vp)
+    @bg.z = -100
+    @bg.bitmap = Cache.menu("tempback")
+
+    @map = Game_Map.new()
+    @map.setup(25)
+
+    @tilemap = Tilemap2.new(@vp,@map.map) 
+    #@tilemap.z = 500
+
+    @tilemap.refresh_tileset(@map)
+    @tilemap.update
+
+    @character_sprites = []
+
+    # for i in @map.events.keys.sort
+    #   sprite = Sprite_Character.new(@vp_main, @map.events[i])
+    #   @character_sprites.push(sprite)
+    # end
+
+    # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
+
+    Graphics.transition(50,'Graphics/System/trans')  
             
   end
   
   def terminate
-    super
 
     @world.dispose
     @hud.dispose
@@ -28,77 +51,8 @@ class Scene_Battle
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
-
-      $map.update      
-      $player.update
-
-      @world.update
-      @hud.update
-
-
-      return # if not transferring
-
-      # transfer_player
-      
-      # if $game_temp.transition_processing
-      #   break
-      # end
-    #end   
-
-    if $temp.transition_processing
-      $temp.transition_processing = false
-
-      if $temp.transition_name == ""
-        Graphics.transition(20)
-      else
-        Graphics.transition(40, "Graphics/Transitions/" +
-          $temp.transition_name)
-      end
-    end
-
-    # Open Menu at player's request
-    unless $map.interpreter.running? or $hud.busy?
-
-      # Check inputs
-        
-    end
-    
-  end
-
-  #--------------------------------------------------------------------------
-  # * Teleport the Player
-  #--------------------------------------------------------------------------
-  def transfer_player
-   
-    $temp.player_transferring = false
-    $player.clear_path
-
-    # Map to teleport to 
-    if $map.map_id != $temp.player_new_map_id
-      $map.setup($game_temp.player_new_map_id)      
-    end
-
-    # Location on the map to teleport to
-    $player.moveto($temp.player_new_x, $temp.player_new_y)
-    $player.direction = $temp.player_new_direction
-
-    $player.straighten
-    $map.update
-
-    if $temp.transition_processing
-      $temp.transition_processing = false
-      Graphics.transition(20)
-    end
-
-    $map.autoplay    
-
-    # AUTO SAVING
-
-    # autosave your game (but not on the ending map)
-   # if !ENDING_MAPS.include?($game_map.map_id)
-   #   save = Scene_Save.new(1)
-   #   save.autosave      
-   # end
+    @tilemap.update
+     
     
   end
 
