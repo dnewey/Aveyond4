@@ -53,8 +53,11 @@ class EnemyData
 end
 
 class ZoneData
+	attr_reader :id
 	attr_reader :bgm
 	attr_reader :bgs
+	attr_reader :tint
+	attr_reader :weather
 end
 
 class ProgressData

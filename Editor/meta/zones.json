@@ -3,11 +3,10 @@
     "field": "id"
   },
   {
-    "field": "name",
-    "default": "New Skill"
-  }
+    "field": "bgm"
+  },
   {
-    "field": "music"
+    "field": "bgs"
   },
   {
     "field": "tint"

@@ -3,6 +3,8 @@
 #==============================================================================
 
 class Game_Map
+
+  # Keep the zone? 
   
   #--------------------------------------------------------------------------
   # * Public Instance Variables
@@ -64,14 +66,39 @@ class Game_Map
       @events[i] = Game_Event.new(@map.events[i])
     }
 
-    # Zones!
-    if @map.autoplay_bgm
-      $game_system.bgm_play(@map.bgm)
-    end
-    if @map.autoplay_bgs
-      $game_system.bgs_play(@map.bgs)
-    end
+    # Disregard if battle map? or use battle zone?
+    # Or various battle zones?
 
+    # What is the zone
+    autoplay = false
+    newzone = get_zone(@id)
+    if newzone != @zone.id
+
+      @zone = $data.zones[newzone]
+      log_info "Changing Zone: #{newzone}"
+
+      if @zone.id == "@clear"
+        $audio.bgm_stop
+        $audio.bgs_stop
+        autoplay = true
+      elsif @zone.id == "@nil"
+        # Play nothing do nothing
+        autoplay = true
+      else
+        # Play music from the zone
+        $audio.play(@zone.bgm)
+        $audio.play(@zone.bgs)
+        # Init tints and that
+      end
+
+    end
+    
+    # If a null or clear zone
+    if autoplay
+      $audio.bgm_play(@map.bgm) if @map.autoplay_bgm
+      $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
+    end
+    
   end
 
   #--------------------------------------------------------------------------
@@ -144,6 +171,13 @@ class Game_Map
     # Change direction (0,2,4,6,8,10) to obstacle bit (0,1,2,4,8,0)
     bit = (1 << (d / 2 - 1)) & 0x0f
 
+    # Loop in all events
+    events.values.each{ |e| 
+      if e != self_event and e.at?(x,y)
+         return false if !(e.through || e.above || e.below)
+      end
+    }
+
     # Loop searches in order from top of layer
     [2, 1, 0].each{ |i|
 
@@ -183,5 +217,20 @@ class Game_Map
   def events_at(x, y) @events.values.select{ |e| e.at?(x,y) } end
   def lowest_event_at(x, y) events_at(x,y).min_by{ |e| e.y } end
   def starting_events() @events.values.select{ |e| e.starting } end
+
+
+  #--------------------------------------------------------------------------
+  # Find the zone name for this map
+  #--------------------------------------------------------------------------
+  def get_zone(id)
+    return $data.mapinfos[id].name if $data.mapinfos[id].name.include?('@')
+    return map_zone_or_nil(id)
+  end
+
+  def map_zone_or_nil(id)
+    return $data.mapinfos[id].name if $data.mapinfos[id].name.include?('@')
+    return '@nil' if $data.mapinfos[id].parent_id == 0
+    return map_zone_or_nil($data.mapinfos[id].parent_id)
+  end
 
 end

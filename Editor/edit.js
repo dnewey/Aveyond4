@@ -5,6 +5,8 @@ var icon_data = []
 
 var meta_data = 0;
 var json_data = [];
+
+var filter_by = "id"
 var filter_data = 0;
 
 var tbl_offset = 0;
@@ -95,6 +97,8 @@ $(function()
     refresh_table();
     refresh_pages();
 
+    refresh_filterby();
+
     // Top of page display
     $('#DanTitle').html(data_type.titleize()+" Data")
     $('#DanSub').html("Don't forget to save!")
@@ -164,18 +168,41 @@ refresh_table = function()
                 //a.attr("data-strings",icon_data);
             }                
 
+            if (meta_data[idx].edit == "chapter")
+            {
+                options = '[{value: "chapter 1", text: "chapter 1"},' 
+                            + '{value: "chapter 2", text: "chapter 2"},'
+                            + '{value: "chapter 3", text: "chapter 3"},'
+                            + '{value: "chapter 4", text: "chapter 4"},'
+                            + '{value: "chapter 5", text: "chapter 5"},'
+                            + '{value: "chapter 6", text: "chapter 6"},'
+                            + '{value: "chapter 7", text: "chapter 7"},'
+                            + '{value: "chapter 8", text: "chapter 8"},'
+                            + '{value: "other", text: "other"}'
+                            + ']'
+                a.attr("data-source",options)
+                a.attr("data-type","select");
+            }
+
             if (meta_data[idx].edit == "select")
             {
-                //console.log("doingsrc")
-                options = '[{value: "Chapter 1", text: "Chapter 1"},' 
-                            + '{value: "Chapter 2", text: "Chapter 2"},'
-                            + '{value: "Chapter 3", text: "Chapter 3"},'
-                            + '{value: "Chapter 4", text: "Chapter 4"},'
-                            + '{value: "Chapter 5", text: "Chapter 5"},'
-                            + '{value: "Chapter 6", text: "Chapter 6"},'
-                            + '{value: "Chapter 7", text: "Chapter 7"},'
-                            + '{value: "Chapter 8", text: "Chapter 8"},'
-                            + '{value: "Potions", text: "Potions"}'
+                options = '[{value: "items", text: "items"},' 
+                            + '{value: "cures", text: "cures"},'
+                            + '{value: "battle", text: "battle"},'
+                            + '{value: "keys", text: "keys"},'
+                            + '{value: "other", text: "other"}'
+                            + ']'
+                a.attr("data-source",options)
+                a.attr("data-type","select");
+            }
+
+            if (meta_data[idx].edit == "geartype")
+            {
+                options = '[{value: "weapon", text: "weapon"},' 
+                            + '{value: "misc", text: "misc"},'
+                            + '{value: "armor", text: "armor"},'
+                            + '{value: "helm", text: "helm"},'
+                            + '{value: "acc", text: "acc"},'
                             + ']'
                 a.attr("data-source",options)
                 a.attr("data-type","select");
@@ -274,6 +301,35 @@ refresh_pages = function()
 // --------------------------------------------------------------------------------
 // Initialize
 // --------------------------------------------------------------------------------
+refresh_filterby = function()
+{
+    // Clear the head
+    $('#dan-filter-by').html('');
+
+    // Add th for each col
+    for (var idx in meta_data)
+    {
+        var fld = meta_data[idx].field;
+
+        // Create the header button
+        var op = $('<option value="' +
+                    fld + '">' +
+                    fld + '</option>');
+
+        // Define the sort function
+        $('#dan-filter-by').on("change",function()
+        {
+            filter_by =  $('#dan-filter-by').val();
+        });
+
+        // Add the button to the html
+        $('#dan-filter-by').append(op);
+    }
+};
+
+// --------------------------------------------------------------------------------
+// Initialize
+// --------------------------------------------------------------------------------
 json_edit = function(row,fld, val)
 {
     json_data[row][fld] = val;
@@ -287,7 +343,7 @@ filterby = function(flt)
 {
     json_data.sort(function(a,b)
     {
-        return string_similarity(a.name,flt) < string_similarity(b.name,flt);
+        return string_similarity(a[filter_by],flt) < string_similarity(b[filter_by],flt);
     });    
     refresh_table();
 }

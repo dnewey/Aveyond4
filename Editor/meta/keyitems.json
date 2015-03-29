@@ -1,0 +1,21 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "name",
+    "default": "New Item"
+  },
+  {
+    "field": "description",
+    "edit": "area"
+  },
+  {
+    "field": "icon",
+    "edit": "icon"
+  },
+  {
+    "field": "chapter",
+    "edit": "chapter"
+  }
+]

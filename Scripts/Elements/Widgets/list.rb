@@ -42,11 +42,8 @@ class List
   	@dynamo = Sprite.new(vp)
 
   	@scroll_base = Sprite.new(vp)
-
   	@scroll_up = Button.new(vp)
-
   	@scroll_down = Button.new(vp)
-
   	@scroll_btn = Sprite.new(vp)
 
   end

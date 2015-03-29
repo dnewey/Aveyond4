@@ -7,7 +7,7 @@ class Progress
 	def initialize
 		@quests = []
 		@complete = []
-		@progress = []
+		@progress = 0
 	end
 
 	def add_quest(q)

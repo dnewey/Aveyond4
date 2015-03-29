@@ -3,51 +3,150 @@
 #==============================================================================
 
 # Hold battle state
-
 # Phases
-# :start - introduction seq
-# :command - choose actions
+
+# :none
+
+# :introduction - introduction seq
+
+# :enemy_cmd
+# :party_cmd
+# :actor_cmd - choose actions
+
 # :main - perform actions
+
 # :victory - player wins
 # :defeat - enemy wins
 
 class Game_Battle
 
 	def initialize
-
-		@phase = :start
+		@phase = :none
 		@enemies = []
-
 	end
 
-	def start_phase_2
+  def add(enemy)
+    @enemies.push(Game_Enemy.new(enemy))
+  end
 
-		# Player command inputs section
-		@phase = :command
+  def start
+    $game.push_scene(Scene_Battle.new) # Set up the visuals and that
+    change_phase(:introduction)
+  end
 
-		@idx = -1
+  def win?
+    return false
+  end
 
-		next_actor
+  def update
+    case @phase
+      when :introduction
+        update_phase_introduction
+      when :enemy_cmd
+        update_phase_enemy_cmd
+      when :party_cmd
+        update_phase_party_cmd
+      when :actor_cmd
+        update_phase_actor_cmd
+      when :map
+        update_phase_main
+      when :victory
+        update_phase_victory
+      when :defeat
+        update_phase_defeat
+    end
+  end
 
-		# that's about it?
-		# show the ui? how?
+  def change_phase(ph)
+    @phase = ph
+    case @phase
+      when :introduction
+        start_phase_introduction
+      when :enemy_cmd
+        start_phase_enemy_cmd
+      when :party_cmd
+        start_phase_party_cmd
+      when :actor_cmd
+        start_phase_actor_cmd
+      when :map
+        start_phase_main
+      when :victory
+        start_phase_victory
+      when :defeat
+        start_phase_defeat
+    end
+  end
 
-		$party.clear_actions
+  def start_phase_introduction
 
-	end
+  end
 
-	def update_phase_2
-		# awaiting inputs?
-	end
+  def update_phase_introduction
 
-	def start_phase_3
+  end
 
-	end
+  def start_phase_enemy_cmd
+
+  end
+
+  def update_phase_enemy_cmd
+
+  end
+
+	def start_phase_party_cmd
+
+  end
+
+  def update_phase_party_cmd
+
+  end
+
+  def start_phase_actor_cmd
+
+  end
+
+  def update_phase_actor_cmd
+
+    # Player command inputs section
+    @phase = :command
+
+    @idx = -1
+
+    next_actor
+
+    # that's about it?
+    # show the ui? how?
+
+    $party.clear_actions
+
+  end
+
+  def start_phase_main
+
+  end
+
+  def update_phase_main
+
+  end
+
+  def start_phase_victory
+
+  end
+
+  def update_phase_victory
+
+  end
+
+  def start_phase_defeat
+
+  end
+
+  def update_phase_defeat
+
+  end
 
 
-
-
-
+  # CHOOSING TARGETS
 
 	  #--------------------------------------------------------------------------
   # * Determine if for One Ally

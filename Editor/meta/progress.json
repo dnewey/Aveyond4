@@ -1,7 +1,7 @@
 [
   {
-    "field": "category",
-    "edit": "select"
+    "field": "chapter",
+    "edit": "chapter"
   },
   {
     "field": "id"

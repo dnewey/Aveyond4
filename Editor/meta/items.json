@@ -1,9 +1,5 @@
 [
   {
-    "field": "category",
-    "edit": "select"
-  },
-  {
     "field": "id"
   },
   {
@@ -23,5 +19,12 @@
   {
     "field": "icon",
     "edit": "icon"
+  },
+  {
+    "field": "category",
+    "edit": "select"
+  },
+  {
+    "field": "note"
   }
 ]

@@ -46,6 +46,9 @@ class Game_Battler
     @skill_id = 0
     @item_id = 0
     @target_index = -1
+    @action_selected = false
+
+    @linked_char = 0 # will be set during battle
 
   end
 

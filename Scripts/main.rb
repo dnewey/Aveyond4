@@ -26,6 +26,7 @@ def aveyond4
     $tweens = TweenManager.new
     $settings = SettingsManager.new
     $files = FileManager.new
+    $battle = Game_Battle.new
     $game = GameManager.new  
 
     # Call main method as long as $scene is effective      

@@ -1,22 +1,19 @@
 [
   {
-    "field": "category",
-    "edit": "select"
-  },
-  {
     "field": "id"
   },
   {
-    "field": "namescription"
+    "field": "name"
   },
   {
     "field": "description",
     "edit": "area"
   },
   {
-    "field": "category2"
+    "field": "req"
   },
   {
-    "field": "req"
+    "field": "chapter",
+    "edit": "chapter"
   }
 ]

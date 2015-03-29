@@ -33,10 +33,12 @@ class DebugMenu
 			when :main
 				add("General Settings",Proc.new{ page(:settings) })
 				add("Debug Settings",Proc.new{ page(:debug) })
+				add("Progress: #{$progress.progress}",nil) if !$progress.nil?
 				@esc = Proc.new{ hide }
 			when :settings
 				add("Toggle Fullscreen",Proc.new{ $game.toggle })
 				@esc = Proc.new{ page(:main) }
+
 		end
 		refresh
 	end
@@ -112,6 +114,7 @@ class DebugMenu
 
 
 	def show
+		page(:main)
 		@mnu_sprite.show
 		@idx_sprite.show
 		@text_sprite.show

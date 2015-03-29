@@ -8,22 +8,19 @@
 
 class Game_Player < Game_Character
 
-  attr_accessor :player_transferring      # player place movement flag
-  attr_accessor :player_new_map_id        # player destination: map ID
-  attr_accessor :player_new_x             # player destination: x-coordinate
-  attr_accessor :player_new_y             # player destination: y-coordinate
-  attr_accessor :player_new_direction     # player destination: direction
-  
+  attr_accessor :transferring      # player place movement flag
 
   def initialize
     super
     @character_name = "boyle"
 
-    @player_transferring = false
-    @player_new_map_id = 0
-    @player_new_x = 0
-    @player_new_y = 0
-    @player_new_direction = 0
+    @transferring = false
+    @xfer_data = nil
+  end
+
+  def queue_xfer(map,x,y,dir)
+    @transferring = true
+    @xfer_data = [map,x,y,dir]
   end
 
   #--------------------------------------------------------------------------
@@ -146,7 +143,9 @@ class Game_Player < Game_Character
   def update
 
     return if ($scene.busy?) || $debug.busy?
-    return if $map.interpreter.running? or @move_route_forcing 
+    return if $map.interpreter.running? or @move_route_forcing
+
+    transfer_player if @transferring 
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 
@@ -265,22 +264,18 @@ class Game_Player < Game_Character
   #--------------------------------------------------------------------------
   def transfer_player
    
-    $temp.player_transferring = false
+    @transferring = false
     $player.clear_path
 
     # Map to teleport to 
-    if $map.map_id != $temp.player_new_map_id
-      $map.setup($game_temp.player_new_map_id)      
+    if $map.id != @xfer_data[0]
+      $map.setup(@xfer_data[0])      
     end
 
     # Location on the map to teleport to
-    $player.moveto($temp.player_new_x, $temp.player_new_y)
-    $player.direction = $temp.player_new_direction
-
-    $player.straighten
-    $map.update
-
-    $map.autoplay    
+    $player.moveto(@xfer_data[1],@xfer_data[2])
+    $player.direction = @xfer_data[3]
+    $player.straighten  
 
     # AUTO SAVING
 

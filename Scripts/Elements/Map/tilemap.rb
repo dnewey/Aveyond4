@@ -37,6 +37,9 @@ class Tilemap2
     @tile_width  = 32
     @tile_height = 32
 
+    @nxu = 30
+    @animo = 0
+
 
     @layers = []
     for l in 0...3
@@ -81,20 +84,48 @@ class Tilemap2
 
   #--------------------------------------------------------------------------
   def update
-    unless @data == @map_data #&& @tile_width == $map.tilemap_tile_width &&
+    #unless @data == @map_data #&& @tile_width == $map.tilemap_tile_width &&
            #@tile_height == $map.tilemap_tile_height
            refresh
-    end
+    #end
     for layer in @layers
       layer.ox = @ox
       layer.oy = @oy
     end
-    # if Graphics.frame_count % Animated_Autotiles_Frames == 0
-    #   refresh_autotiles # Cache the frames or something
-    # end
+    @nxu -= 1
+    if @nxu ==0
+      @animo+=1
+      @anmio = 0 if @animo > 2
+    @nxu = 10
+    #  refresh
+      #refresh_autotiles # Cache the frames or something
+    end
   end
-  #--------------------------------------------------------------------------
+  
   def refresh
+    @data = @map_data
+    for p in 0..5
+    p = 0
+      for z in 0...@map_data.zsize
+        for x in $player.x-5...$player.x+5
+          for y in $player.y-5...$player.y+5
+            id = @map_data[x, y, z]
+            next if id == 0
+            next unless p == @priorities[id]
+            p = 2 if p > 2
+            id < 384 ? draw_autotile(x, y, p, id) : draw_tile(x, y, p, id)
+          end
+        end
+      end
+    end
+  end
+
+
+
+
+
+  #--------------------------------------------------------------------------
+  def refreshXXX
     @data = @map_data
     for p in 0..5
       for z in 0...@map_data.zsize
@@ -153,7 +184,7 @@ class Tilemap2
     bitmap = Bitmap.new(@tile_width, @tile_height)
     tiles = Autotiles[tile_id / 8][tile_id % 8]
     frames = autotile.width / @tile_width*3
-    anim = (Graphics.frame_count / Animated_Autotiles_Frames) % frames * (@tile_width*3)
+    anim = @animo*96#(Graphics.frame_count / Animated_Autotiles_Frames) % frames * (@tile_width*3)
 
     hw = @tile_width/2
     hh = @tile_height/2

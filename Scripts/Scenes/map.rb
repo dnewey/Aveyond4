@@ -27,7 +27,8 @@ class Scene_Map
     @vp_main = Viewport.new(0, 0, $game.width, $game.height)   
 
     # Make tilemap
-    @tilemap = Tilemap2.new(@vp_main)    
+    @tilemap = Tilemap.new(@vp_main)    
+
     #@panorama = Plane.new(@vp_main,-1000)
     #@fog = Plane.new(@vp_main,3000)
 
@@ -161,7 +162,17 @@ class Scene_Map
   #--------------------------------------------------------------------------
   def refresh_tileset
     @tileset_id = $map.tileset_id
-    @tilemap.refresh_tileset(@map)
+    
+          @tileset_id = $map.tileset_id
+          @tilemap.tileset = Cache.tileset(@map.tileset.tileset_name)#+'-big')
+      i = 0 
+      @map.tileset.autotile_names.each{ |a|
+        next if a == ''
+        @tilemap.autotiles[i] = Cache.autotile(a)#+'-big')
+        i+=1
+      }
+      @tilemap.map_data = @map.data
+      @tilemap.priorities = @map.tileset.priorities
 
     @character_sprites.each{ |s| s.dispose }
     @character_sprites = []

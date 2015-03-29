@@ -20,7 +20,8 @@ class GameManager
     end
 
     Graphics.frame_rate = 60
-    resize(853,480)
+    #resize(853,480)
+    resize(640,480)
 
     @scenes = []
 

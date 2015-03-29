@@ -4,7 +4,7 @@
 
 class Game_Party
 
-  attr_accessor :actors                   # actors
+  attr_accessor :active                  # actors
   attr_accessor :reserve                  # reserve party
 
   attr_reader   :gold                     # amount of gold
@@ -33,7 +33,10 @@ class Game_Party
     @armors = {}
     
     # TEMP DISABLE
-    set_active("boyle")
+    set_active("boy")
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
 
   end
 
@@ -44,20 +47,24 @@ class Game_Party
     return @actors.max_by(&:level).level
   end
 
+  def get(actor)
+    return @actors[actor]
+  end
+
   #--------------------------------------------------------------------------
   # * Add an Actor
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
   def set_active(actor)
 
-    if @active.size < 4 and not @actors.include?(actor)
+    # if @active.size < 4 and not @actors.include?(actor)
       
       @active.push(actor)
 
-    end
-   if !@active.include?(actor)
-      @reserve.push(actor)
-    end
+    # end
+   # if !@active.include?(actor)
+   #    @reserve.push(actor)
+   #  end
 
   end
 

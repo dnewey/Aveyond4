@@ -443,41 +443,23 @@ class Interpreter
   def command_201
 
     # If transferring player, showing message, or processing transition
-    if $game_temp.player_transferring or
-       $game_temp.message_window_showing or
-       $game_temp.transition_processing
-      # End
-      return false
-    end
-
-    # Set transferring player flag
-    $game_temp.player_transferring = true
+    return false if $player.transferring || $scene.busy?
+    
     # If appointment method is [direct appointment]
-    if @parameters[0] == 0
-      # Set player move destination
-      $game_temp.player_new_map_id = @parameters[1]
-      $game_temp.player_new_x = @parameters[2]
-      $game_temp.player_new_y = @parameters[3]
-      $game_temp.player_new_direction = @parameters[4]
-    # If appointment method is [appoint with variables]
-    else
-      # Set player move destination
-      $game_temp.player_new_map_id = $game_variables[@parameters[1]]
-      $game_temp.player_new_x = $game_variables[@parameters[2]]
-      $game_temp.player_new_y = $game_variables[@parameters[3]]
-      $game_temp.player_new_direction = @parameters[4]
-    end
-
+    $player.queue_xfer(@parameters[1],@parameters[2],@parameters[3],@parameters[4])
+    
     # Advance index
     @index += 1
-    # If fade is set
-    if @parameters[5] == 0
-      # Prepare for transition
-      Graphics.freeze
-      # Set transition processing flag
-      $game_temp.transition_processing = true
-      $game_temp.transition_name = ""
-    end
+
+    # If fade is set <---- CUT
+    # if @parameters[5] == 0
+    #   # Prepare for transition
+    #   Graphics.freeze
+    #   # Set transition processing flag
+    #   $game_temp.transition_processing = true
+    #   $game_temp.transition_name = ""
+    # end
+
     # End
     return false
   end

@@ -10,6 +10,7 @@ end
 
 class Game_Actor < Game_Battler
  
+  attr_reader :id 
   attr_reader   :name                     # name
 
   attr_reader   :level                    # level

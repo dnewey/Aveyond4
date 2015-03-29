@@ -15,6 +15,9 @@ class Game_Event < Game_Character
   attr_reader   :starting                 # starting flag
   
   attr_reader   :name
+
+  attr_reader :above
+  attr_reader :below
       
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -32,6 +35,8 @@ class Game_Event < Game_Character
 
     @starting = false
     @through = true
+    @above = false
+    @below = false
 
     @width = 1
     @height = 1
@@ -240,6 +245,10 @@ class Game_Event < Game_Character
     comment_data.each{ |data|
       case data[0]
 
+        when '#above'
+          @above = true
+        when '#below'
+          @below = true
         when '#opacity'
           self.opacity = data[1].to_i
         when '#width'

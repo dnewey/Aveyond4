@@ -3,19 +3,21 @@
     "field": "id"
   },
   {
-    "field": "name",
-    "default": "New Skill"
+    "field": "name"
   },
   {
-    "field": "slot",
+    "field": "slot"
+  },
+  {
+    "field": "type",
+    "edit": "geartype"
   },
   {
     "field": "description",
     "edit": "area"
   },
   {
-    "field": "stats",
-    "edit": "area"
+    "field": "stats"
   },
   {
     "field": "effect",
@@ -24,5 +26,8 @@
   {
     "field": "icon",
     "edit": "icon"
+  },
+  {
+    "field": "source"
   }
 ]

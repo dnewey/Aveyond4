@@ -13,7 +13,6 @@ class DataBox
 
 end
 
-
 class Mnu_File
 
 	def initialize(vp)
@@ -32,6 +31,10 @@ class Mnu_File
 
 		@list.setup(data)
 
+		@tabs = Tabs.new(vp)
+		@tabs.push(:weapons,'Tabs/weps')
+		@tabs.push(:armors,'Tabs/arms')
+
 	end
 
 	def dispose
@@ -39,13 +42,13 @@ class Mnu_File
 		@char.dispose
 
 		@list.dispose
+		@tabs.dispose
 
 	end
 
 	def update
-
 		@list.update
-
+		@tabs.update
 	end
 
 end
