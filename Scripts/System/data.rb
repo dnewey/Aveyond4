@@ -34,7 +34,7 @@ class DataManager
 
     # Load up json data
     
-    @items = load_json("items",ItemData) + load_json("keyitems",ItemData)
+    @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
     @weapons = load_json("weapons",WeaponData)
     @armors = load_json("armors",ArmorData)
 

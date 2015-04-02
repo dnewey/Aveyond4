@@ -25,6 +25,7 @@ class Sprite_Character < Sprite
   #--------------------------------------------------------------------------
   def update
     super
+
     # If tile ID, file name, or hue are different from current ones
     if @character_name != @character.character_name
      

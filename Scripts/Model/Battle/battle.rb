@@ -23,6 +23,8 @@ class Game_Battle
 	def initialize
 		@phase = :none
 		@enemies = []
+
+    @actor_index = 0
 	end
 
   def add(enemy)
@@ -79,40 +81,65 @@ class Game_Battle
 
   def start_phase_introduction
 
+    # Prepare something
+
   end
 
   def update_phase_introduction
+
+    # After some time, move on to enemy_cmd
+
+    change_phase(:enemy_cmd)
 
   end
 
   def start_phase_enemy_cmd
 
+    # Select skills for each enemy
+
+
+    change_phase(:party_cmd)
+
   end
 
   def update_phase_enemy_cmd
-
+    # Not used
   end
 
 	def start_phase_party_cmd
+    
+    # Show the visuals!
+
+    change_phase(:actor_cmd)
 
   end
 
   def update_phase_party_cmd
-
+    # Not used
   end
 
   def start_phase_actor_cmd
+    # What is this even for?    
+    @actor_idx = 0
+
+    # Open the ui
+    $scene.hud.open_actor_cmd($party.actor(@actor_idx))
+
+  end
+
+  def actor_skill_select(cmd)
+
+  end
+
+  def actor_skill_cancel
 
   end
 
   def update_phase_actor_cmd
 
     # Player command inputs section
-    @phase = :command
-
-    @idx = -1
-
-    next_actor
+    
+    
 
     # that's about it?
     # show the ui? how?
@@ -121,13 +148,20 @@ class Game_Battle
 
   end
 
+  
+
   def start_phase_main
+
+    # Prep list of actions
 
   end
 
   def update_phase_main
 
   end
+
+
+
 
   def start_phase_victory
 
@@ -144,6 +178,8 @@ class Game_Battle
   def update_phase_defeat
 
   end
+
+
 
 
   # CHOOSING TARGETS

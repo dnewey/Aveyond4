@@ -23,6 +23,8 @@ class Scene_Map
     $player = @player
     @player.moveto($data.system.start_x, $data.system.start_y)
 
+    @map.target = @player
+
     # Make viewports - Also in the scene
     @vp_main = Viewport.new(0, 0, $game.width, $game.height)   
 

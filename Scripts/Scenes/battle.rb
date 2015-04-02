@@ -2,6 +2,8 @@
 # ** Scene_Map
 #==============================================================================
 
+# Could hold phase here
+
 class Scene_Battle
   
   #--------------------------------------------------------------------------
@@ -15,56 +17,81 @@ class Scene_Battle
     @vp_hud = Viewport.new(0, 0, $game.width, $game.height)
 
     @vp.z = 6000  
-    @vp_hud.z = 7000
+    @vp_hud.z = 75000
 
-    @bg = Sprite.new(@vp)
+        @bg = Sprite.new(@vp)
     @bg.z = -100
     @bg.bitmap = Cache.menu("tempback")
 
     @map = Game_Map.new()
-    @map.setup(25)
+    @map.setup(26)
+
+
+    @player = Game_Player.new
+    $player = @player
+    @player.moveto(5,5)
+
+        @map.update
+        @player.update
+        @map.update
+
+        #@map.target = @player
 
     @tilemap = Tilemap.new(@vp) 
     #@tilemap.z = 500
 
-    refresh_tileset
+    
     @tilemap.update
+
+    refresh_tileset
 
     @hud = BattleHud.new(@vp_hud)
 
-    @character_sprites = []
-
-    # Will there be any sprites? Maybe if they have the name ###
-    # Otherwise create as battler sprites
-    # Which are what exactly?
-    # Just sprites, just make them all as sprites, assign the idle animation
-
-    # for i in @map.events.keys.sort
-    #   sprite = Sprite_Character.new(@vp_main, @map.events[i])
-    #   @character_sprites.push(sprite)
-    # end
-
     # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
+
+    # Prepare characters
+    (1..4).each{ |c|
+      @map.events[c].direction = 4
+    }
+
 
     Graphics.transition(50,'Graphics/System/trans')  
             
   end
   
   def terminate
-    @world.dispose
+    @character_sprites.each{ |s| s.dispose }
     
   end
 
   def busy?
-    return true
+    return false
   end
 
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+
+
+    @player.update
+
     $battle.update
-    @tilemap.update    
+        @tilemap.ox = @map.display_x / 4
+    @tilemap.oy = @map.display_y / 4
+    @tilemap.update
+
+    @map.display_x = 0
+    @map.display_y = 0
+
+    # Update character sprites
+    @character_sprites.each{ |s|
+      #log_info s.character.character_name
+      s.update
+      #s.x = 50
+      #s.y = 50
+    }
+
   end
 
 
@@ -87,12 +114,16 @@ class Scene_Battle
       @tilemap.priorities = @map.tileset.priorities
 
     #@character_sprites.each{ |s| s.dispose }
-    # @character_sprites = []
+     @character_sprites = []
 
-    # for i in @map.events.keys.sort
-    #   sprite = Sprite_Character.new(@vp_main, @map.events[i])
-    #   @character_sprites.push(sprite)
-    # end
+    for i in @map.events.keys.sort
+      sprite = Sprite_Character.new(@vp_hud, @map.events[i])
+      @character_sprites.push(sprite)
+      sprite.x = 50
+      sprite.y = 50
+    end
+
+    @character_sprites.push(Sprite_Character.new(@vp_hud, @player))
 
     # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
 

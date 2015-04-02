@@ -2,6 +2,8 @@
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
+# Handle all inputs?
+
 class BattleHud
 
 	def initialize(vp)
@@ -15,6 +17,8 @@ class BattleHud
 		}
 
 		# Skill selector
+		# Or put this in scene
+		@actor_cmd = ActorCmd.new
 
 		# Pointer
 
@@ -22,15 +26,15 @@ class BattleHud
 
 	end
 
+	def open_actor_cmd(actor)
+		@actor_cmd.open(actor)
+	end
+
+	def 
+
 	def update
 
-		# Check for party member changes
-
-		# Check for skill select changes
-
-		# Check for pointer changes - pointer is char id
-
-		# Check for message changes haha
+		@actor_cmd.update
 
 	end
 

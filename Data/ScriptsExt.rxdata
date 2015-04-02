@@ -1,4 +1,4 @@
-[N"Æ#==============================================================================
+[T"å#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -26,6 +26,7 @@ def aveyond4
     $tweens = TweenManager.new
     $settings = SettingsManager.new
     $files = FileManager.new
+    $battle = Game_Battle.new
     $game = GameManager.new  
 
     # Call main method as long as $scene is effective      
@@ -57,7 +58,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"Í#==============================================================================
+end"Ï#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -84,6 +85,7 @@ class Sprite_Character < Sprite
   #--------------------------------------------------------------------------
   def update
     super
+
     # If tile ID, file name, or hue are different from current ones
     if @character_name != @character.character_name
      
@@ -127,7 +129,20 @@ class Sprite_Character < Sprite
 
   end
 end
-"A
+"c
+
+
+class MapWrap < Tilemap
+
+	def initalize
+
+	end
+
+	def refresh_tileset
+
+	end
+
+end"A
 
 
 # Other things of this nature will reside within thine"!*# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -406,7 +421,7 @@ end
 # end
 # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # # SCRIPT END
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"q#==============================================================================
+# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"­#==============================================================================
 # Tilemap Class
 #------------------------------------------------------------------------------
 # Script by SephirothSpawn
@@ -444,6 +459,9 @@ class Tilemap2
 
     @tile_width  = 32
     @tile_height = 32
+
+    @nxu = 30
+    @animo = 0
 
 
     @layers = []
@@ -489,20 +507,48 @@ class Tilemap2
 
   #--------------------------------------------------------------------------
   def update
-    unless @data == @map_data #&& @tile_width == $map.tilemap_tile_width &&
+    #unless @data == @map_data #&& @tile_width == $map.tilemap_tile_width &&
            #@tile_height == $map.tilemap_tile_height
            refresh
-    end
+    #end
     for layer in @layers
       layer.ox = @ox
       layer.oy = @oy
     end
-    # if Graphics.frame_count % Animated_Autotiles_Frames == 0
-    #   refresh_autotiles # Cache the frames or something
-    # end
+    @nxu -= 1
+    if @nxu ==0
+      @animo+=1
+      @anmio = 0 if @animo > 2
+    @nxu = 10
+    #  refresh
+      #refresh_autotiles # Cache the frames or something
+    end
   end
-  #--------------------------------------------------------------------------
+  
   def refresh
+    @data = @map_data
+    for p in 0..5
+    p = 0
+      for z in 0...@map_data.zsize
+        for x in $player.x-5...$player.x+5
+          for y in $player.y-5...$player.y+5
+            id = @map_data[x, y, z]
+            next if id == 0
+            next unless p == @priorities[id]
+            p = 2 if p > 2
+            id < 384 ? draw_autotile(x, y, p, id) : draw_tile(x, y, p, id)
+          end
+        end
+      end
+    end
+  end
+
+
+
+
+
+  #--------------------------------------------------------------------------
+  def refreshXXX
     @data = @map_data
     for p in 0..5
       for z in 0...@map_data.zsize
@@ -561,7 +607,7 @@ class Tilemap2
     bitmap = Bitmap.new(@tile_width, @tile_height)
     tiles = Autotiles[tile_id / 8][tile_id % 8]
     frames = autotile.width / @tile_width*3
-    anim = (Graphics.frame_count / Animated_Autotiles_Frames) % frames * (@tile_width*3)
+    anim = @animo*96#(Graphics.frame_count / Animated_Autotiles_Frames) % frames * (@tile_width*3)
 
     hw = @tile_width/2
     hh = @tile_height/2
@@ -1088,7 +1134,7 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end"G#==============================================================================
+end"A#==============================================================================
 # The magical list
 #==============================================================================
 
@@ -1132,11 +1178,8 @@ class List
   	@dynamo = Sprite.new(vp)
 
   	@scroll_base = Sprite.new(vp)
-
   	@scroll_up = Button.new(vp)
-
   	@scroll_down = Button.new(vp)
-
   	@scroll_btn = Sprite.new(vp)
 
   end
@@ -1340,6 +1383,83 @@ class List
   	}
 
   	@sprites[0].do(go("opacity",-255,dur,ease))
+
+  end
+
+ end"„#==============================================================================
+# Tabs
+#==============================================================================
+
+# Horizontal list of sorts
+# Image based only
+# Drawn to single sprite
+
+class Tabs < Sprite
+
+  SPACING = 5
+
+  #--------------------------------------------------------------------------
+  # * Init
+  #--------------------------------------------------------------------------
+  def initialize(vp)
+    super(vp)
+
+  	#@parent = nil
+    @names = []
+  	@gfx = []
+
+    @ranges = []
+
+  	@tab_idx = 0
+
+  end
+
+  def push(name,gfx)
+    @names.push(name)
+    @gfx.push(Cache.menu(gfx))
+    refresh
+  end
+
+  def dispose
+  	
+  end
+
+  def refresh
+
+    # Calc width
+    width = @gfx.inject(0){ |t,b| t += b.width + SPACING } - SPACING
+    height = @gfx[0].height#@gfx.max_by{ |b| b.height }
+
+    self.bitmap = Bitmap.new(width,height)
+
+    # Draw the tabs
+    cx = 0
+    @gfx.each{ |b|
+      self.bitmap.blt(cx,0,b,b.rect)
+      cx += b.width + SPACING
+    }
+
+  end
+
+  def update
+
+  	# Check inputs and that
+  	if $keyboard.press?(VK_RIGHT)
+      @idx += 1
+      refresh      
+  	end
+
+  	if $keyboard.press?(VK_LEFT) #&& @dynamo.done?
+      @idx -= 1
+      refresh  
+  	end
+
+    pos = $mouse.position
+
+    # Check mouseover
+    # @sprites.each_index{ |i|
+      
+    # }
 
   end
 
@@ -3543,6 +3663,77 @@ class Widget_Bar < Widget
     
   end
   
+end"7
+class ActorCmd
+
+	def initialize
+
+	end
+
+end"
+# Update self perhamps? Disregard else
+# Uses $battle and that's it
+
+class BattleHud
+
+	def initialize(vp)
+
+		# Bottom bar
+		@chars = []
+		idx = 0
+		$party.active.each{ |char|
+			@chars.push(CharView.new(vp,$party.get(char),idx))
+			idx += 1
+		}
+
+		# Skill selector
+
+		# Pointer
+
+		# Message
+
+	end
+
+	def update
+
+		# Check for party member changes
+
+		# Check for skill select changes
+
+		# Check for pointer changes - pointer is char id
+
+		# Check for message changes haha
+
+	end
+
+end"Ð
+# Actor view, show portrait, hp etc
+
+class CharView
+
+	def initialize(vp,char,id)
+
+		@port = Sprite.new(vp)
+		@port.bitmap = Cache.face(char.id)
+
+		@port.x = id * 150
+		@port.y = 380
+
+	end
+
+end"“
+class SkillCmd
+
+	def initialize(vp)
+
+		@icons = []
+
+		
+		@text = Sprite.new
+		@text.bitmap = Cache.menu("battle/text.png")
+
+	end
+
 end"*,#==============================================================================
 # Ui_Message
 #==============================================================================
@@ -4022,7 +4213,7 @@ class Ui_Screen
     	return false#@message.busy?
     end
 
-end"#==============================================================================
+end"#==============================================================================
 # ** Mnu_File
 #==============================================================================
 
@@ -4036,7 +4227,6 @@ class DataBox
 	end
 
 end
-
 
 class Mnu_File
 
@@ -4056,6 +4246,10 @@ class Mnu_File
 
 		@list.setup(data)
 
+		@tabs = Tabs.new(vp)
+		@tabs.push(:weapons,'Tabs/weps')
+		@tabs.push(:armors,'Tabs/arms')
+
 	end
 
 	def dispose
@@ -4063,13 +4257,13 @@ class Mnu_File
 		@char.dispose
 
 		@list.dispose
+		@tabs.dispose
 
 	end
 
 	def update
-
 		@list.update
-
+		@tabs.update
 	end
 
 end" " "†#==============================================================================
@@ -4096,7 +4290,7 @@ class Part_Char
 
 	end
 
-end" " ">.#==============================================================================
+end" " "R.#==============================================================================
 # ** Game_Actor
 #------------------------------------------------------------------------------
 #  This class handles the actor. It's used within the Game_Actors class
@@ -4108,6 +4302,7 @@ end
 
 class Game_Actor < Game_Battler
  
+  attr_reader :id 
   attr_reader   :name                     # name
 
   attr_reader   :level                    # level
@@ -4438,56 +4633,179 @@ class Game_Actor < Game_Battler
   end
 
 end
-"t#==============================================================================
+"H#==============================================================================
 # ** Game_Battle
 #==============================================================================
 
 # Hold battle state
-
 # Phases
-# :start - introduction seq
-# :command - choose actions
+
+# :none
+
+# :introduction - introduction seq
+
+# :enemy_cmd
+# :party_cmd
+# :actor_cmd - choose actions
+
 # :main - perform actions
+
 # :victory - player wins
 # :defeat - enemy wins
 
 class Game_Battle
 
 	def initialize
-
-		@phase = :start
+		@phase = :none
 		@enemies = []
 
+    @actor_index = 0
 	end
 
-	def start_phase_2
+  def add(enemy)
+    @enemies.push(Game_Enemy.new(enemy))
+  end
 
-		# Player command inputs section
-		@phase = :command
+  def start
+    $game.push_scene(Scene_Battle.new) # Set up the visuals and that
+    change_phase(:introduction)
+  end
 
-		@idx = -1
+  def win?
+    return false
+  end
 
-		next_actor
+  def update
+    case @phase
+      when :introduction
+        update_phase_introduction
+      when :enemy_cmd
+        update_phase_enemy_cmd
+      when :party_cmd
+        update_phase_party_cmd
+      when :actor_cmd
+        update_phase_actor_cmd
+      when :map
+        update_phase_main
+      when :victory
+        update_phase_victory
+      when :defeat
+        update_phase_defeat
+    end
+  end
 
-		# that's about it?
-		# show the ui? how?
+  def change_phase(ph)
+    @phase = ph
+    case @phase
+      when :introduction
+        start_phase_introduction
+      when :enemy_cmd
+        start_phase_enemy_cmd
+      when :party_cmd
+        start_phase_party_cmd
+      when :actor_cmd
+        start_phase_actor_cmd
+      when :map
+        start_phase_main
+      when :victory
+        start_phase_victory
+      when :defeat
+        start_phase_defeat
+    end
+  end
 
-		$party.clear_actions
+  def start_phase_introduction
 
-	end
+    # Prepare something
 
-	def update_phase_2
-		# awaiting inputs?
-	end
+  end
 
-	def start_phase_3
+  def update_phase_introduction
 
-	end
+    # After some time, move on to enemy_cmd
+
+    change_phase(:enemy_cmd)
+
+  end
+
+  def start_phase_enemy_cmd
+
+    # Select skills for each enemy
+
+
+    change_phase(:party_cmd)
+
+  end
+
+  def update_phase_enemy_cmd
+    # Not used
+  end
+
+	def start_phase_party_cmd
+    
+    # Not really used, skip ahead to actor cmd
+    @actor_index = 0
+
+    change_phase(:actor_cmd)
+
+  end
+
+  def update_phase_party_cmd
+    # Not used
+  end
+
+  def start_phase_actor_cmd
+    # What is this even for?    
+  end
+
+  def update_phase_actor_cmd
+
+    # Player command inputs section
+    
+    @idx = -1
+
+    next_actor
+
+    # that's about it?
+    # show the ui? how?
+
+    $party.clear_actions
+
+  end
+
+  
+
+  def start_phase_main
+
+    # Prep list of actions
+
+  end
+
+  def update_phase_main
+
+  end
 
 
 
 
+  def start_phase_victory
 
+  end
+
+  def update_phase_victory
+
+  end
+
+  def start_phase_defeat
+
+  end
+
+  def update_phase_defeat
+
+  end
+
+
+  # CHOOSING TARGETS
 
 	  #--------------------------------------------------------------------------
   # * Determine if for One Ally
@@ -4594,7 +4912,7 @@ class Game_Battle
   end
 
 end
-  "áP#==============================================================================
+  "3Q#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -4642,6 +4960,9 @@ class Game_Battler
     @skill_id = 0
     @item_id = 0
     @target_index = -1
+    @action_selected = false
+
+    @linked_char = 0 # will be set during battle
 
   end
 
@@ -5216,7 +5537,16 @@ class Game_Battler
   end
 
 end
-" "S•#==============================================================================
+"O
+
+
+class Game_Enemy < Game_Battler
+
+	def initialize(e)
+
+	end
+
+end"S•#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -6462,7 +6792,7 @@ class Game_Character
 
 
 end
-"?!#==============================================================================
+"õ!#==============================================================================
 # ** Game_Event
 #------------------------------------------------------------------------------
 #  This class deals with events. It handles functions including event page 
@@ -6479,6 +6809,9 @@ class Game_Event < Game_Character
   attr_reader   :starting                 # starting flag
   
   attr_reader   :name
+
+  attr_reader :above
+  attr_reader :below
       
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -6496,6 +6829,8 @@ class Game_Event < Game_Character
 
     @starting = false
     @through = true
+    @above = false
+    @below = false
 
     @width = 1
     @height = 1
@@ -6704,6 +7039,10 @@ class Game_Event < Game_Character
     comment_data.each{ |data|
       case data[0]
 
+        when '#above'
+          @above = true
+        when '#below'
+          @below = true
         when '#opacity'
           self.opacity = data[1].to_i
         when '#width'
@@ -6778,7 +7117,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"^X#==============================================================================
+end"™U#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -7223,41 +7562,23 @@ class Interpreter
   def command_201
 
     # If transferring player, showing message, or processing transition
-    if $game_temp.player_transferring or
-       $game_temp.message_window_showing or
-       $game_temp.transition_processing
-      # End
-      return false
-    end
-
-    # Set transferring player flag
-    $game_temp.player_transferring = true
+    return false if $player.transferring || $scene.busy?
+    
     # If appointment method is [direct appointment]
-    if @parameters[0] == 0
-      # Set player move destination
-      $game_temp.player_new_map_id = @parameters[1]
-      $game_temp.player_new_x = @parameters[2]
-      $game_temp.player_new_y = @parameters[3]
-      $game_temp.player_new_direction = @parameters[4]
-    # If appointment method is [appoint with variables]
-    else
-      # Set player move destination
-      $game_temp.player_new_map_id = $game_variables[@parameters[1]]
-      $game_temp.player_new_x = $game_variables[@parameters[2]]
-      $game_temp.player_new_y = $game_variables[@parameters[3]]
-      $game_temp.player_new_direction = @parameters[4]
-    end
-
+    $player.queue_xfer(@parameters[1],@parameters[2],@parameters[3],@parameters[4])
+    
     # Advance index
     @index += 1
-    # If fade is set
-    if @parameters[5] == 0
-      # Prepare for transition
-      Graphics.freeze
-      # Set transition processing flag
-      $game_temp.transition_processing = true
-      $game_temp.transition_name = ""
-    end
+
+    # If fade is set <---- CUT
+    # if @parameters[5] == 0
+    #   # Prepare for transition
+    #   Graphics.freeze
+    #   # Set transition processing flag
+    #   $game_temp.transition_processing = true
+    #   $game_temp.transition_name = ""
+    # end
+
     # End
     return false
   end
@@ -7550,11 +7871,13 @@ class Interpreter
   end
 
 end
-"©#==============================================================================
+"+#==============================================================================
 # ** Game_Map
 #==============================================================================
 
 class Game_Map
+
+  # Keep the zone? 
   
   #--------------------------------------------------------------------------
   # * Public Instance Variables
@@ -7616,14 +7939,39 @@ class Game_Map
       @events[i] = Game_Event.new(@map.events[i])
     }
 
-    # Zones!
-    if @map.autoplay_bgm
-      $game_system.bgm_play(@map.bgm)
-    end
-    if @map.autoplay_bgs
-      $game_system.bgs_play(@map.bgs)
-    end
+    # Disregard if battle map? or use battle zone?
+    # Or various battle zones?
 
+    # What is the zone
+    autoplay = false
+    newzone = get_zone(@id)
+    if newzone != @zone.id
+
+      @zone = $data.zones[newzone]
+      log_info "Changing Zone: #{newzone}"
+
+      if @zone.id == "@clear"
+        $audio.bgm_stop
+        $audio.bgs_stop
+        autoplay = true
+      elsif @zone.id == "@nil"
+        # Play nothing do nothing
+        autoplay = true
+      else
+        # Play music from the zone
+        $audio.play(@zone.bgm)
+        $audio.play(@zone.bgs)
+        # Init tints and that
+      end
+
+    end
+    
+    # If a null or clear zone
+    if autoplay
+      $audio.bgm_play(@map.bgm) if @map.autoplay_bgm
+      $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
+    end
+    
   end
 
   #--------------------------------------------------------------------------
@@ -7696,6 +8044,13 @@ class Game_Map
     # Change direction (0,2,4,6,8,10) to obstacle bit (0,1,2,4,8,0)
     bit = (1 << (d / 2 - 1)) & 0x0f
 
+    # Loop in all events
+    events.values.each{ |e| 
+      if e != self_event and e.at?(x,y)
+         return false if !(e.through || e.above || e.below)
+      end
+    }
+
     # Loop searches in order from top of layer
     [2, 1, 0].each{ |i|
 
@@ -7736,8 +8091,22 @@ class Game_Map
   def lowest_event_at(x, y) events_at(x,y).min_by{ |e| e.y } end
   def starting_events() @events.values.select{ |e| e.starting } end
 
-end
-"Û$#==============================================================================
+
+  #--------------------------------------------------------------------------
+  # Find the zone name for this map
+  #--------------------------------------------------------------------------
+  def get_zone(id)
+    return $data.mapinfos[id].name if $data.mapinfos[id].name.include?('@')
+    return map_zone_or_nil(id)
+  end
+
+  def map_zone_or_nil(id)
+    return $data.mapinfos[id].name if $data.mapinfos[id].name.include?('@')
+    return '@nil' if $data.mapinfos[id].parent_id == 0
+    return map_zone_or_nil($data.mapinfos[id].parent_id)
+  end
+
+end"f##==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -7747,22 +8116,19 @@ end
 
 class Game_Player < Game_Character
 
-  attr_accessor :player_transferring      # player place movement flag
-  attr_accessor :player_new_map_id        # player destination: map ID
-  attr_accessor :player_new_x             # player destination: x-coordinate
-  attr_accessor :player_new_y             # player destination: y-coordinate
-  attr_accessor :player_new_direction     # player destination: direction
-  
+  attr_accessor :transferring      # player place movement flag
 
   def initialize
     super
     @character_name = "boyle"
 
-    @player_transferring = false
-    @player_new_map_id = 0
-    @player_new_x = 0
-    @player_new_y = 0
-    @player_new_direction = 0
+    @transferring = false
+    @xfer_data = nil
+  end
+
+  def queue_xfer(map,x,y,dir)
+    @transferring = true
+    @xfer_data = [map,x,y,dir]
   end
 
   #--------------------------------------------------------------------------
@@ -7885,7 +8251,9 @@ class Game_Player < Game_Character
   def update
 
     return if ($scene.busy?) || $debug.busy?
-    return if $map.interpreter.running? or @move_route_forcing 
+    return if $map.interpreter.running? or @move_route_forcing
+
+    transfer_player if @transferring 
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 
@@ -8004,22 +8372,18 @@ class Game_Player < Game_Character
   #--------------------------------------------------------------------------
   def transfer_player
    
-    $temp.player_transferring = false
+    @transferring = false
     $player.clear_path
 
     # Map to teleport to 
-    if $map.map_id != $temp.player_new_map_id
-      $map.setup($game_temp.player_new_map_id)      
+    if $map.id != @xfer_data[0]
+      $map.setup(@xfer_data[0])      
     end
 
     # Location on the map to teleport to
-    $player.moveto($temp.player_new_x, $temp.player_new_y)
-    $player.direction = $temp.player_new_direction
-
-    $player.straighten
-    $map.update
-
-    $map.autoplay    
+    $player.moveto(@xfer_data[1],@xfer_data[2])
+    $player.direction = @xfer_data[3]
+    $player.straighten  
 
     # AUTO SAVING
 
@@ -8032,17 +8396,21 @@ class Game_Player < Game_Character
   end
 
 end
-"O
+"h
 
 
 # Menu state
-# Hold cursor positions, current character etc etc etc"‹#==============================================================================
+# Hold cursor positions, current character etc etc etc
+
+class MenuData
+
+end"#==============================================================================
 # ** Game_Party
 #==============================================================================
 
 class Game_Party
 
-  attr_accessor :actors                   # actors
+  attr_accessor :active                  # actors
   attr_accessor :reserve                  # reserve party
 
   attr_reader   :gold                     # amount of gold
@@ -8071,7 +8439,10 @@ class Game_Party
     @armors = {}
     
     # TEMP DISABLE
-    set_active("boyle")
+    set_active("boy")
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
 
   end
 
@@ -8082,20 +8453,24 @@ class Game_Party
     return @actors.max_by(&:level).level
   end
 
+  def get(actor)
+    return @actors[actor]
+  end
+
   #--------------------------------------------------------------------------
   # * Add an Actor
   #     actor_id : actor ID
   #--------------------------------------------------------------------------
   def set_active(actor)
 
-    if @active.size < 4 and not @actors.include?(actor)
+    # if @active.size < 4 and not @actors.include?(actor)
       
       @active.push(actor)
 
-    end
-   if !@active.include?(actor)
-      @reserve.push(actor)
-    end
+    # end
+   # if !@active.include?(actor)
+   #    @reserve.push(actor)
+   #  end
 
   end
 
@@ -8256,7 +8631,7 @@ class Game_Party
     end
   end
         
-end"íclass Progress
+end"ìclass Progress
 
 	attr_accessor :quests, :complete
 	attr_accessor :progress
@@ -8265,7 +8640,7 @@ end"íclass Progress
 	def initialize
 		@quests = []
 		@complete = []
-		@progress = []
+		@progress = 0
 	end
 
 	def add_quest(q)
@@ -8393,7 +8768,7 @@ end
 	end
 
 end
-"¼#==============================================================================
+""#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -8407,51 +8782,122 @@ class Scene_Battle
     Graphics.freeze
 
     @vp = Viewport.new(0, 0, $game.width, $game.height)
+    @vp_hud = Viewport.new(0, 0, $game.width, $game.height)
 
     @vp.z = 6000  
-    @bg = Sprite.new(@vp)
+    @vp_hud.z = 75000
+
+        @bg = Sprite.new(@vp)
     @bg.z = -100
     @bg.bitmap = Cache.menu("tempback")
 
     @map = Game_Map.new()
-    @map.setup(25)
+    @map.setup(26)
 
-    @tilemap = Tilemap2.new(@vp,@map.map) 
+
+    @player = Game_Player.new
+    $player = @player
+    @player.moveto(5,5)
+
+        @map.update
+        @player.update
+        @map.update
+
+        #@map.target = @player
+
+    @tilemap = Tilemap.new(@vp) 
     #@tilemap.z = 500
 
-    @tilemap.refresh_tileset(@map)
+    
     @tilemap.update
 
-    @character_sprites = []
+    refresh_tileset
 
-    # for i in @map.events.keys.sort
-    #   sprite = Sprite_Character.new(@vp_main, @map.events[i])
-    #   @character_sprites.push(sprite)
-    # end
+    @hud = BattleHud.new(@vp_hud)
 
     # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
+
+    # Prepare characters
+    (1..4).each{ |c|
+      @map.events[c].direction = 4
+    }
+
 
     Graphics.transition(50,'Graphics/System/trans')  
             
   end
   
   def terminate
+    @character_sprites.each{ |s| s.dispose }
+    
+  end
 
-    @world.dispose
-    @hud.dispose
-
+  def busy?
+    return false
   end
 
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+
+
+    @player.update
+
+    $battle.update
+        @tilemap.ox = @map.display_x / 4
+    @tilemap.oy = @map.display_y / 4
     @tilemap.update
-     
-    
+
+    @map.display_x = 0
+    @map.display_y = 0
+
+    # Update character sprites
+    @character_sprites.each{ |s|
+      #log_info s.character.character_name
+      s.update
+      #s.x = 50
+      #s.y = 50
+    }
+
   end
 
-end"y#==============================================================================
+
+
+  #--------------------------------------------------------------------------
+  # * Refresh Tileset
+  #--------------------------------------------------------------------------
+  def refresh_tileset
+    @tileset_id = $map.tileset_id
+    
+          @tileset_id = $map.tileset_id
+          @tilemap.tileset = Cache.tileset(@map.tileset.tileset_name)#+'-big')
+      i = 0 
+      @map.tileset.autotile_names.each{ |a|
+        next if a == ''
+        @tilemap.autotiles[i] = Cache.autotile(a)#+'-big')
+        i+=1
+      }
+      @tilemap.map_data = @map.data
+      @tilemap.priorities = @map.tileset.priorities
+
+    #@character_sprites.each{ |s| s.dispose }
+     @character_sprites = []
+
+    for i in @map.events.keys.sort
+      sprite = Sprite_Character.new(@vp_hud, @map.events[i])
+      @character_sprites.push(sprite)
+      sprite.x = 50
+      sprite.y = 50
+    end
+
+    @character_sprites.push(Sprite_Character.new(@vp_hud, @player))
+
+    # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
+
+  end
+
+end"ó#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -8476,11 +8922,14 @@ class Scene_Map
     $player = @player
     @player.moveto($data.system.start_x, $data.system.start_y)
 
+    @map.target = @player
+
     # Make viewports - Also in the scene
     @vp_main = Viewport.new(0, 0, $game.width, $game.height)   
 
     # Make tilemap
-    @tilemap = Tilemap2.new(@vp_main)    
+    @tilemap = Tilemap.new(@vp_main)    
+
     #@panorama = Plane.new(@vp_main,-1000)
     #@fog = Plane.new(@vp_main,3000)
 
@@ -8614,7 +9063,17 @@ class Scene_Map
   #--------------------------------------------------------------------------
   def refresh_tileset
     @tileset_id = $map.tileset_id
-    @tilemap.refresh_tileset(@map)
+    
+          @tileset_id = $map.tileset_id
+          @tilemap.tileset = Cache.tileset(@map.tileset.tileset_name)#+'-big')
+      i = 0 
+      @map.tileset.autotile_names.each{ |a|
+        next if a == ''
+        @tilemap.autotiles[i] = Cache.autotile(a)#+'-big')
+        i+=1
+      }
+      @tilemap.map_data = @map.data
+      @tilemap.priorities = @map.tileset.priorities
 
     @character_sprites.each{ |s| s.dispose }
     @character_sprites = []
@@ -8977,7 +9436,7 @@ module RPG
       GC.start
     end
   end
-end" #==============================================================================
+end"F#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -9013,7 +9472,7 @@ class DataManager
 
     # Load up json data
     
-    @items = load_json("items",ItemData)
+    @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
     @weapons = load_json("weapons",WeaponData)
     @armors = load_json("armors",ArmorData)
 
@@ -9372,7 +9831,7 @@ class FileManager
   end
   
 end
-")#==============================================================================
+"?#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -9394,7 +9853,8 @@ class GameManager
     end
 
     Graphics.frame_rate = 60
-    resize(853,480)
+    #resize(853,480)
+    resize(640,480)
 
     @scenes = []
 
@@ -9826,7 +10286,7 @@ class TweenManager
 		return @tweens.select{ |n| n.parent == object }.empty?
 	end
 
-end"è
+end"%
 class ItemData
 	attr_reader :id
 	attr_reader :name
@@ -9881,8 +10341,11 @@ class EnemyData
 end
 
 class ZoneData
+	attr_reader :id
 	attr_reader :bgm
 	attr_reader :bgs
+	attr_reader :tint
+	attr_reader :weather
 end
 
 class ProgressData
@@ -10396,7 +10859,7 @@ end"ƒmodule Graphics
     end
     
   end
-end"	#==============================================================================
+end"Y	#==============================================================================
 # ** Actions
 #==============================================================================
 
@@ -10431,10 +10894,12 @@ class DebugMenu
 			when :main
 				add("General Settings",Proc.new{ page(:settings) })
 				add("Debug Settings",Proc.new{ page(:debug) })
+				add("Progress: #{$progress.progress}",nil) if !$progress.nil?
 				@esc = Proc.new{ hide }
 			when :settings
 				add("Toggle Fullscreen",Proc.new{ $game.toggle })
 				@esc = Proc.new{ page(:main) }
+
 		end
 		refresh
 	end
@@ -10510,6 +10975,7 @@ class DebugMenu
 
 
 	def show
+		page(:main)
 		@mnu_sprite.show
 		@idx_sprite.show
 		@text_sprite.show
@@ -10666,179 +11132,7 @@ def execute_spellcheck
     end  
 
     
-  end"gï»¿# # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
-# # Free for commercial use
-# # Licence : http://creativecommons.org/licenses/by/4.0/
-# # Contact : zeusex81@gmail.com
-# # How to Use :
-# #   - exporting bitmap :
-# #       bitmap.export(filename)
-# #    or bitmap.save(filename)
-# #
-# #   - serialize bitmap :
-# #       open(filename, 'wb') {|file| Marshal.dump(bitmap, file)}
-# #       bitmap = open(filename, 'rb') {|file| Marshal.load(file)}
-# #   or
-# #       save_data(bitmap, filename)
-# #       bitmap = load_data(filename)
-# #
-# #  - snapshot :
-# #      Graphics.export(filename)
-# #   or Graphics.save(filename)
-# #   or Graphics.snapshot(filename)
-# #   Here filename is optional, and will be replaced by datetime if omitted. 
- 
-# $imported ||= {}
-# $imported[:Zeus_Bitmap_Export] = __FILE__
- 
-# def xp?() false end; alias vx? xp?; alias vxace? xp?
-# RUBY_VERSION == '1.8.1' ? defined?(Hangup) ?
-# def xp?() true  end : def vx?() true  end : def vxace?() true  end
- 
-# class String
-#   alias getbyte  []
-#   alias setbyte  []=
-#   alias bytesize size
-# end unless vxace?
- 
-# class Font
-#   def marshal_dump()     end
-#   def marshal_load(dump) end
-# end
- 
-# class Bitmap
-#   RtlMoveMemory = Win32API.new('kernel32', 'RtlMoveMemory', 'ppi', 'i')
-#   def last_row_address
-#     return 0 if disposed?
-#     RtlMoveMemory.call(buf=[0].pack('L'), __id__*2+16, 4)
-#     RtlMoveMemory.call(buf, buf.unpack('L')[0]+8 , 4)
-#     RtlMoveMemory.call(buf, buf.unpack('L')[0]+16, 4)
-#     buf.unpack('L')[0]
-#   end
-#   def bytesize
-#     width * height * 4
-#   end
-#   def get_data
-#     data = [].pack('x') * bytesize
-#     RtlMoveMemory.call(data, last_row_address, data.bytesize)
-#     data
-#   end
-#   def set_data(data)
-#     RtlMoveMemory.call(last_row_address, data, data.bytesize)
-#   end
-#   def get_data_ptr
-#     data = String.new
-#     RtlMoveMemory.call(data.__id__*2, [vxace? ? 0x6005 : 0x2007].pack('L'), 4)
-#     RtlMoveMemory.call(data.__id__*2+8, [bytesize,last_row_address].pack('L2'), 8)
-#     def data.free() RtlMoveMemory.call(__id__*2, String.new, 16) end
-#     return data unless block_given?
-#     yield data ensure data.free
-#   end
-#   def _dump(level)
-#     get_data_ptr do |data|
-#       dump = Marshal.dump([width, height, Zlib::Deflate.deflate(data, 9)])
-#       dump.force_encoding('UTF-8') if vxace?
-#       dump
-#     end
-#   end
-#   def self._load(dump)
-#     width, height, data = *Marshal.load(dump)
-#     data.replace(Zlib::Inflate.inflate(data))
-#     bitmap = new(width, height)
-#     bitmap.set_data(data)
-#     bitmap
-#   end
-#   def export(filename)
-#     case format=File.extname(filename)
-#     when '.bmp'; export_bmp(filename)
-#     when '.png'; export_png(filename)
-#     when ''    ; export_png("#{filename}.png")
-#     else         print("Export format '#{format}' not supported.")
-#     end
-#   end
-#   alias save export
-#   def export_bmp(filename)
-#     get_data_ptr do |data|
-#       File.open(filename, 'wb') do |file|
-#         file.write(['BM',data.bytesize+54,0,54,40,width,height,
-#                     1,32,0,data.bytesize,0,0,0,0].pack('a2L6S2L6'))
-#         file.write(data)
-#       end
-#     end
-#   end
-#   def export_png(filename)
-#     data, i = get_data, 0
-#     if vxace?
-#       (0).step(data.bytesize-4, 4) do |i|
-#         byte2 = data.getbyte(i)
-#         data.setbyte(i, data.getbyte(i+2))
-#         data.setbyte(i+2, byte2)
-#       end
-#     else
-#       (0).step(data.bytesize-4, 4) do |i|
-#         data[i,3] = data[i,3].reverse!
-#       end
-#     end
-#     deflate = Zlib::Deflate.new(9)
-#       null_char, w4 = [].pack('x'), width*4
-#       (data.bytesize-w4).step(0, -w4) {|i| deflate << null_char << data[i,w4]}
-#       data.replace(deflate.finish)
-#     deflate.close
-#     File.open(filename, 'wb') do |file|
-#       def file.write_chunk(chunk)
-#         write([chunk.bytesize-4].pack('N'))
-#         write(chunk)
-#         write([Zlib.crc32(chunk)].pack('N'))
-#       end
-#       file.write("\211PNG\r\n\32\n")
-#       file.write_chunk(['IHDR',width,height,8,6,0,0,0].pack('a4N2C5'))
-#       file.write_chunk(data.insert(0, 'IDAT'))
-#       file.write_chunk('IEND')
-#     end
-#   end
-# end
- 
-# module Graphics
-#   if xp?
-#     FindWindow             = Win32API.new('user32', 'FindWindow'            , 'pp'       , 'i')
-#     GetDC                  = Win32API.new('user32', 'GetDC'                 , 'i'        , 'i')
-#     ReleaseDC              = Win32API.new('user32', 'ReleaseDC'             , 'ii'       , 'i')
-#     BitBlt                 = Win32API.new('gdi32' , 'BitBlt'                , 'iiiiiiiii', 'i')
-#     CreateCompatibleBitmap = Win32API.new('gdi32' , 'CreateCompatibleBitmap', 'iii'      , 'i')
-#     CreateCompatibleDC     = Win32API.new('gdi32' , 'CreateCompatibleDC'    , 'i'        , 'i')
-#     DeleteDC               = Win32API.new('gdi32' , 'DeleteDC'              , 'i'        , 'i')
-#     DeleteObject           = Win32API.new('gdi32' , 'DeleteObject'          , 'i'        , 'i')
-#     GetDIBits              = Win32API.new('gdi32' , 'GetDIBits'             , 'iiiiipi'  , 'i')
-#     SelectObject           = Win32API.new('gdi32' , 'SelectObject'          , 'ii'       , 'i')
-#     def self.snap_to_bitmap
-#       bitmap  = Bitmap.new(width, height)
-#       info    = [40,width,height,1,32,0,0,0,0,0,0].pack('LllSSLLllLL')
-#       hDC     = GetDC.call(hwnd)
-#       bmp_hDC = CreateCompatibleDC.call(hDC)
-#       bmp_hBM = CreateCompatibleBitmap.call(hDC, width, height)
-#       bmp_obj = SelectObject.call(bmp_hDC, bmp_hBM)
-#       BitBlt.call(bmp_hDC, 0, 0, width, height, hDC, 0, 0, 0xCC0020)
-#       GetDIBits.call(bmp_hDC, bmp_hBM, 0, height, bitmap.last_row_address, info, 0)
-#       SelectObject.call(bmp_hDC, bmp_obj)
-#       DeleteObject.call(bmp_hBM)
-#       DeleteDC.call(bmp_hDC)
-#       ReleaseDC.call(hwnd, hDC)
-#       bitmap
-#     end
-#   end
-#   class << self
-#     def hwnd() @hwnd ||= FindWindow.call('RGSS Player', nil) end
-#     def width()  640 end unless method_defined?(:width)
-#     def height() 480 end unless method_defined?(:height)
-#     def export(filename=Time.now.strftime("snapshot %Y-%m-%d %Hh%Mm%Ss #{frame_count}"))
-#       bitmap = snap_to_bitmap
-#       bitmap.export(filename)
-#       bitmap.dispose
-#     end
-#     alias save     export
-#     alias snapshot export
-#   end
-# end"O# Fullscreen++ v2.2 for VX and VXace by Zeus81
+  end"O# Fullscreen++ v2.2 for VX and VXace by Zeus81
 # Free for non commercial and commercial use
 # Licence : http://creativecommons.org/licenses/by-sa/3.0/
 # Contact : zeusex81@gmail.com
@@ -11090,7 +11384,29 @@ end"ê# if ACE_MODE
 #     log_err "Can't resize in XP mode"
 #   end
 
-# end"T/# Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
+# end"^#=============================================================================
+# * Snapshot script from screenshot.dll, Modified from GAMEGUY's SCRIPT
+#=============================================================================
+module Snapshot
+  def self.snap
+    snp = Win32API.new('screenshot.dll', 'Screenshot', %w(l l l l p l l), '')
+    window = Win32API.new('user32', 'FindWindowA', %w(p p), 'l')
+    ini = (Win32API.new 'kernel32', 'GetPrivateProfileStringA', %w(p p p p l p), 
+      'l')
+    game_name = '\0' * 256
+    ini.call('Game', 'Title', '', game_name, 255, '.\Game.ini')
+    game_name.delete!('\0')
+    win = window.call('RGSS Player', game_name)
+    count = 0
+    
+    file_name = "Graphics/Pictures/temp_screenshot#{rand(30)}.png"
+
+
+    log_info 'works to here'
+
+    snp.call(0, 0, 640, 480, file_name, win, 2)
+  end
+end"T/# Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
 # Free for commercial use
 # Licence : http://creativecommons.org/licenses/by/4.0/
 # Contact : zeusex81@gmail.com
