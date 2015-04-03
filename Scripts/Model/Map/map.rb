@@ -218,6 +218,9 @@ class Game_Map
   def lowest_event_at(x, y) events_at(x,y).min_by{ |e| e.y } end
   def starting_events() @events.values.select{ |e| e.starting } end
 
+  def event_by_name(name)
+    @events.values.find{ |e| e.event.name == name }
+  end
 
   #--------------------------------------------------------------------------
   # Find the zone name for this map

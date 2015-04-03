@@ -18,6 +18,8 @@ class Game_Actor < Game_Battler
   
   attr_reader   :skills                   # skills
 
+  attr_reader :actions
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     actor_id : actor ID
@@ -25,20 +27,21 @@ class Game_Actor < Game_Battler
   def initialize(id)
     super()
 
-    actor_data = $data.actors[id]
+    data = $data.actors[id]
     @id = id
 
-    @name = actor_data.name
+    @name = data.name
 
-    @equips = [] # extrapolate from data, combine weapon and armors!
-    actor_data.slots.split(" | ").each{ |s|
-      #@equips.
+    @equips = {}
+    data.slots.split(" | ").each{ |s|
+      @equips[s] = nil
     }
-    
+
     @skills = []
-    actor_data.slots.split(" | ").each{ |s|
+    
+    @actions = data.actions.split(" | ")
 
-    }
+    @resource = data.resource
 
     @level = 1
     @exp_list = Array.new(101)
@@ -46,6 +49,22 @@ class Game_Actor < Game_Battler
     @exp = @exp_list[@level]
 
   end
+
+
+
+  def skills_for(action)
+    return @skills.select{ |s| $data.skills[s].action == action }
+  end
+
+
+
+
+
+
+
+
+
+
 
   #--------------------------------------------------------------------------
   # * Calculate EXP
@@ -65,30 +84,6 @@ class Game_Actor < Game_Battler
     end
   end
 
-  #--------------------------------------------------------------------------
-  # * Get Element Revision Value
-  #     element_id : element ID
-  #--------------------------------------------------------------------------
-  def element_rate(element_id)
-    # Get values corresponding to element effectiveness
-    table = [0,200,150,100,50,0,-100]
-    result = table[$data_classes[@class_id].element_ranks[element_id]]
-    # If this element is protected by armor, then it's reduced by half
-    for i in [@armor1_id, @armor2_id, @armor3_id, @armor4_id]
-      armor = $data_armors[i]
-      if armor != nil and armor.guard_element_set.include?(element_id)
-        result /= 2
-      end
-    end
-    # If this element is protected by states, then it's reduced by half
-    for i in @states
-      if $data_states[i].guard_element_set.include?(element_id)
-        result /= 2
-      end
-    end
-    # End Method
-    return result
-  end
   
 
   #--------------------------------------------------------------------------
@@ -315,29 +310,15 @@ class Game_Actor < Game_Battler
 
   #--------------------------------------------------------------------------
   # * Learn Skill
-  #     skill_id : skill ID
   #--------------------------------------------------------------------------
-  def learn_skill(skill_id)
-    if skill_id > 0 and not skill_learn?(skill_id)
-      @skills.push(skill_id)
-      @skills.sort!
+  def learn(id)
+    if !skill?(id)
+      @skills.push(id)
     end
   end
 
-  #--------------------------------------------------------------------------
-  # * Forget Skill
-  #     skill_id : skill ID
-  #--------------------------------------------------------------------------
-  def forget_skill(skill_id)
-    @skills.delete(skill_id)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Determine if Finished Learning Skill
-  #     skill_id : skill ID
-  #--------------------------------------------------------------------------
-  def skill_learn?(skill_id)
-    return @skills.include?(skill_id)
+  def skill?(id)
+    return @skills.include?(id)
   end
 
 end

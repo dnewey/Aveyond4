@@ -25,6 +25,22 @@ class InputManager
 		return $keyboard.press?(VK_ESC)
 	end
 
+	def left?
+		return $keyboard.press?(VK_LEFT)
+	end
+
+	def right?
+		return $keyboard.press?(VK_RIGHT)
+	end
+
+	def up?
+		return $keyboard.press?(VK_UP)
+	end
+
+	def down?
+		return $keyboard.press?(VK_DOWN)
+	end
+
 	def shortcut?(s)
 
 	end

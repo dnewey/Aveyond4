@@ -21,7 +21,7 @@ class Game_Battle
   end
 
   def start
-$game.push_scene(Scene_Battle.new)
+    $game.push_scene(Scene_Battle.new)
   end
 
   def win?

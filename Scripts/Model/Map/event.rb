@@ -15,6 +15,7 @@ class Game_Event < Game_Character
   attr_reader   :starting                 # starting flag
   
   attr_reader   :name
+  attr_reader   :event
 
   attr_reader :above
   attr_reader :below

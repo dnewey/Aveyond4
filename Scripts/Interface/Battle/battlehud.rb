@@ -12,29 +12,18 @@ class BattleHud
 		@chars = []
 		idx = 0
 		$party.active.each{ |char|
-			@chars.push(CharView.new(vp,$party.get(char),idx))
+			@chars.push(CharView.new(vp,$party.actor_by_id(char),idx))
 			idx += 1
 		}
 
-		# Skill selector
-		# Or put this in scene
-		@actor_cmd = ActorCmd.new
 
-		# Pointer
-
-		# Message
 
 	end
 
-	def open_actor_cmd(actor)
-		@actor_cmd.open(actor)
-	end
-
-	def 
-
+	
 	def update
 
-		@actor_cmd.update
+		
 
 	end
 

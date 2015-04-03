@@ -13,14 +13,8 @@ class Game_Battler
 
   attr_reader   :states                   # states
 
-  attr_accessor :immortal                 # immortal flag
-
-
-  attr_accessor :critical                 # critical flag
-  
-  attr_accessor :collapsing               # collapsing
-
-
+  attr_accessor :action_id, :skill_id, :item_id
+  attr_accessor :target_type, :target_idx
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -39,16 +33,12 @@ class Game_Battler
     @def_plus = 0
 
 
-    @damage = nil
-    @critical = false
-
-    # Current action, remembers for next time also
+    @action_id = 0
     @skill_id = 0
     @item_id = 0
-    @target_index = -1
-    @action_selected = false
 
-    @linked_char = 0 # will be set during battle
+    @target_type = nil
+    @target_index = -1
 
   end
 
@@ -602,24 +592,6 @@ class Game_Battler
     # End Method
     return true
   end
-  #--------------------------------------------------------------------------
-  # * Calculating Element Correction
-  #     element_set : element
-  #--------------------------------------------------------------------------
-  def elements_correct(element_set)
-    # If not an element
-    if element_set == []
-      # Return 100
-      return 100
-    end
-    # Return the weakest object among the elements given
-    # * "element_rate" method is defined by Game_Actor and Game_Enemy classes,
-    #    which inherit from this class.
-    weakest = -100
-    for i in element_set
-      weakest = [weakest, self.element_rate(i)].max
-    end
-    return weakest
-  end
+
 
 end

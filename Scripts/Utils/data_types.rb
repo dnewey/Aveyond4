@@ -30,7 +30,14 @@ class ArmorData
 end
 
 class SkillData
-
+	attr_reader :id
+	attr_reader :name
+	attr_reader :action
+	attr_reader :description
+	attr_reader :scope
+	attr_reader :animation
+	attr_reader :stats
+	attr_reader :effect
 end
 
 class StateData
@@ -41,7 +48,6 @@ class ActorData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :profile
-	attr_reader :armor
 	attr_reader :actions
 	attr_reader :resource
 	attr_reader :slots

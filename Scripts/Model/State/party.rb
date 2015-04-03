@@ -38,6 +38,10 @@ class Game_Party
     set_active("mys")
     set_active("rob")
 
+    @actors["boy"].learn('darkness')
+    @actors["boy"].learn('fireburn')
+    @actors["boy"].learn('flames')
+
   end
 
   #--------------------------------------------------------------------------
@@ -47,8 +51,12 @@ class Game_Party
     return @actors.max_by(&:level).level
   end
 
-  def get(actor)
+  def actor_by_id(actor)
     return @actors[actor]
+  end
+
+  def actor_by_index(idx)
+    return @actors[@active[idx]]
   end
 
   #--------------------------------------------------------------------------

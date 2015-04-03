@@ -18,7 +18,6 @@
 # :defeat - enemy wins
 
 class Scene_Battle
-
   
   #--------------------------------------------------------------------------
   # * Set up the scene
@@ -41,40 +40,47 @@ class Scene_Battle
     @map.setup($battle.map)
 
     @player = Game_Player.new
-    $player = @player
+    $player = @player # Get rid of this
     @player.moveto(5,5)
 
-        @map.update
-        @player.update
-        @map.update
-
-        #@map.target = @player
+    #@map.target = @player
 
     @tilemap = MapWrap.new(@vp) 
-    #@tilemap.z = 500
+    @tilemap.refresh(@map)
 
-    
-    @tilemap.update
-
-    refresh_tileset
+    @character_sprites = []
+    @map.events.keys.sort.each{ |i|
+      sprite = Sprite_Character.new(@vp, @map.events[i])
+      @character_sprites.push(sprite)
+    }
 
     @hud = BattleHud.new(@vp_hud)
-
-    # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
+    @actor_cmd = ActorCmd.new(@vp_hud)
+    #@skill_cmd = SkillCmd.new()
+    #@target_cmd = TargetCmd.new()
 
     # Prepare characters
     (1..4).each{ |c|
       @map.events[c].direction = 4
     }
 
+    @map.update
+    @character_sprites.each{ |s| s.update }
+
+    @actor_chars = [1,2,3,4].map{ |i| @map.event_by_name("A.#{i}") }
+    @enemy_chars = [1,2,3,4,5].map{ |i| @map.event_by_name("E.#{i}") }
+
+    @props = []
 
     Graphics.transition(50,'Graphics/System/trans')  
+
+    @phase = :introduction
             
   end
   
   def terminate
-    @character_sprites.each{ |s| s.dispose }
-    
+    @map.dispose
+    @character_sprites.each{ |s| s.dispose }    
   end
 
   def busy?
@@ -86,28 +92,14 @@ class Scene_Battle
   #--------------------------------------------------------------------------
   def update
 
+    @map.update
+    @character_sprites.each{ |s| s.update }
 
-    @player.update
-
-    $battle.update
-        @tilemap.ox = @map.display_x / 4
-    @tilemap.oy = @map.display_y / 4
-    @tilemap.update
-
-    @map.display_x = 0
-    @map.display_y = 0
-
-    # Update character sprites
-    @character_sprites.each{ |s|
-      #log_info s.character.character_name
-      s.update
-      #s.x = 50
-      #s.y = 50
-    }
+    update_phase
 
   end
 
-def update
+  def update_phase
     case @phase
       when :introduction
         update_phase_introduction
@@ -116,6 +108,8 @@ def update
       when :party_cmd
         update_phase_party_cmd
       when :actor_cmd
+        update_phase_actor_cmd
+      when :target
         update_phase_actor_cmd
       when :map
         update_phase_main
@@ -126,115 +120,118 @@ def update
     end
   end
 
-  def change_phase(ph)
-    @phase = ph
-    case @phase
-      when :introduction
-        start_phase_introduction
-      when :enemy_cmd
-        start_phase_enemy_cmd
-      when :party_cmd
-        start_phase_party_cmd
-      when :actor_cmd
-        start_phase_actor_cmd
-      when :map
-        start_phase_main
-      when :victory
-        start_phase_victory
-      when :defeat
-        start_phase_defeat
-    end
-  end
-
-
-
-
-
-  def start_phase_introduction
-
-    # Prepare something
-
-  end
-
   def update_phase_introduction
-
-    # After some time, move on to enemy_cmd
-
-    change_phase(:enemy_cmd)
-
-  end
-
-  def start_phase_enemy_cmd
-
-    # Select skills for each enemy
-
-
-    change_phase(:party_cmd)
-
+    @phase = :enemy_cmd
   end
 
   def update_phase_enemy_cmd
-    # Not used
-  end
-
-  def start_phase_party_cmd
-    
-    # Show the visuals!
-
-    change_phase(:actor_cmd)
-
+    @phase = :party_cmd
   end
 
   def update_phase_party_cmd
-    # Not used
+    @actor_idx = -1    
+    next_actor
   end
 
-  def start_phase_actor_cmd
-    # What is this even for?    
-    @actor_idx = 0
-
-    # Open the ui
-    $scene.hud.open_actor_cmd($party.actor(@actor_idx))
-
+  def next_actor
+    @actor_idx += 1
+    @actor = $party.actor_by_index(@actor_idx)
+    @actor_cmd.setup(@actor,@actor_chars[@actor_idx])
+    @phase = :actor_cmd
   end
 
-  def actor_skill_select(cmd)
-
-  end
-
-  def actor_skill_cancel
-
+  def prev_actor
+    @actor_idx -= 1
+    @actor = $party.actor_by_index(@actor_idx)
+    @actor_cmd.setup(@actor,@actor_chars[@actor_idx])
+    @phase = :actor_cmd
   end
 
   def update_phase_actor_cmd
 
+    @actor_cmd.update
+
+    if $input.cancel?
+      return prev_actor
+    end
+
     # Player command inputs section
-    
-    
+    if $input.action?
 
-    # that's about it?
-    # show the ui? how?
+      action = @actor_cmd.get_action
+      @actor_cmd.close
 
-    $party.clear_actions
+      if action == "items"
+
+      else
+        skills = @actor.skills_for(action)
+      end
+
+      # If a multi-skill open the menu
+      if skills.count > 1
+
+        # Open skill_cmd
+
+      else
+
+        start_skill(skills[0])        
+
+      end
+
+    end    
 
   end
 
-  
-
-  def start_phase_main
-
-    # Prep list of actions
+  def start_action(id)
 
   end
+
+  def start_skill(id)
+
+    @actor.skill_id = id
+
+    # If single, targetable?
+    if ["one"].include?(skill.scope)
+      #targets = [[battler,char],...]
+      @target_cmd.setup(targets)
+      @phase = :target      
+    else
+      next_actor
+    end
+
+  end
+
+  def update_phase_skill_cmd
+    @skill_cmd.update
+
+    if $input.cancel?
+      @actor_idx -= 1
+      next_actor
+    end
+
+    if $input.action?
+
+    end
+
+  end
+
+  def update_phase_target
+
+    @target_cmd.update
+
+    if $input.cancel?
+      start_action(@battler.action)
+    end
+
+    if $input.action?
+      @battler.target = @target_cmd.target
+    end
+
+  end  
 
   def update_phase_main
 
-  end
-
-
-
-
-  def start_phase_victory
+    # Act out the skills
 
   end
 
@@ -242,37 +239,7 @@ def update
 
   end
 
-  def start_phase_defeat
-
-  end
-
   def update_phase_defeat
-
-  end
-
-
-
-
-  #--------------------------------------------------------------------------
-  # * Refresh Tileset
-  #--------------------------------------------------------------------------
-  def refresh_tileset
-    @tileset_id = @map.tileset_id
-    @tilemap.refresh(@map)
-
-    #@character_sprites.each{ |s| s.dispose }
-     @character_sprites = []
-
-    for i in @map.events.keys.sort
-      sprite = Sprite_Character.new(@vp_hud, @map.events[i])
-      @character_sprites.push(sprite)
-      sprite.x = 50
-      sprite.y = 50
-    end
-
-    @character_sprites.push(Sprite_Character.new(@vp_hud, @player))
-
-    # @character_sprites.push(Sprite_Character.new(@vp_main, @player))
 
   end
 

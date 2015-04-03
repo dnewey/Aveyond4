@@ -27,7 +27,6 @@ class Progress
 		return @complete.include?(q)
 	end
 
-
 	def progress!(progress)
 		@progress= $data.progress[progress]
 	end

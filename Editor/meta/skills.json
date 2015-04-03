@@ -7,6 +7,9 @@
     "default": "New Skill"
   },
   {
+    "field": "action"
+  },
+  {
     "field": "description",
     "edit": "area"
   },
@@ -22,11 +25,7 @@
     "edit": "area"
   },
   {
-    "field": "action",
+    "field": "effects",
     "edit": "area"
-  },
-  {
-    "field": "icon",
-    "edit": "icon"
   }
 ]
