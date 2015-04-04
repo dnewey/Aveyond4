@@ -13,8 +13,10 @@ class Game_Battler
 
   attr_reader   :states                   # states
 
-  attr_accessor :action_id, :skill_id, :item_id
+  attr_accessor :action, :skill_id, :item_id
+  attr_accessor :target
   attr_accessor :target_type, :target_idx
+  attr_accessor :ev
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -33,12 +35,16 @@ class Game_Battler
     @def_plus = 0
 
 
-    @action_id = 0
+    @action = 0
     @skill_id = 0
     @item_id = 0
 
+    @target = nil
+
     @target_type = nil
     @target_index = -1
+
+    @ev = nil
 
   end
 

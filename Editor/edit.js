@@ -208,6 +208,20 @@ refresh_table = function()
                 a.attr("data-type","select");
             }
 
+            if (meta_data[idx].edit == "scope")
+            {
+                options = '[{value: "one", text: "one"},' 
+                            + '{value: "two", text: "two"},'
+                            + '{value: "three", text: "three"},'
+                            + '{value: "all", text: "all"},'
+                            + '{value: "ally", text: "ally"},'
+                            + '{value: "party", text: "party"},'
+                            + '{value: "down", text: "down"},'
+                            + ']'
+                a.attr("data-source",options)
+                a.attr("data-type","select");
+            }
+
             //console.log(icon_data);
 
             // Create as editable

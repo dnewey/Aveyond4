@@ -3667,7 +3667,7 @@ class Widget_Bar < Widget
     
   end
   
-end"T
+end"z
 class ActorCmd
 
 	def initialize(vp)
@@ -3681,7 +3681,7 @@ class ActorCmd
 
 	end
 
-	def setup(battler,sprite)
+	def setup(battler)
 
 		@battler = battler
 
@@ -3700,15 +3700,15 @@ class ActorCmd
 		angle = -135 * 0.0174532925
 		dist = 50
 		@icons.each{ |i|
-			x = sprite.screen_x + Math.cos(angle) * dist
-			y = (sprite.screen_y-15) + Math.sin(angle) * dist
+			x = battler.ev.screen_x + Math.cos(angle) * dist
+			y = (battler.ev.screen_y-15) + Math.sin(angle) * dist
 			i.center(x,y)
 			angle += 40 * 0.0174532925
 		}
 
 		# Prep the text
 		@text.bitmap = Cache.menu("Battle/text")
-		@text.center(sprite.screen_x,sprite.screen_y + 24)
+		@text.center(battler.ev.screen_x,battler.ev.screen_y + 24)
 
 	end
 
@@ -3724,6 +3724,8 @@ class ActorCmd
 	end
 
 	def update
+
+		return if @battler.nil?
 
 		# Left and right to change
 		if $input.right?
@@ -3790,28 +3792,35 @@ class CharView
 
 	end
 
-end"“
+end"‘
 class SkillCmd
 
 	def initialize(vp)
 
 		@icons = []
-
 		
 		@text = Sprite.new
 		@text.bitmap = Cache.menu("battle/text.png")
 
 	end
 
-end"ä
+end"6
 class TargetCmd
+
+	attr_reader :active
 
 	def initialize(vp)
 
 		@vp = vp
 
 		@arrow = Sprite.new(@vp)
-		@arrow.bitmap = Cache.menu("Battle/arrow")
+		@arrow.bitmap = Cache.menu("Battle/target")
+
+		@targets_sy = nil
+		@targets_sx = nil
+		@targets = nil
+
+		@active = nil
 
 		@idx = 0
 
@@ -3819,13 +3828,21 @@ class TargetCmd
 
 	def setup(targets)
 
+		@targets = targets
+
+		# Sort targets by y pos
+		# Maybe x sort for left and right?
+		@targets_sy = targets.sort_by{ |t| t.ev.screen_y }
+		@targets_sx = targets.sort_by{ |t| t.ev.screen_x }
+
 		# Arrow pos
-		point_at(targets[0][1])
+		@active = targets[0]
+		point_at(targets[0])
 
 	end
 
 	def point_at(char)
-		@arrow.center(char.screen_x,char.screen_y)
+		@arrow.center(char.ev.screen_x,char.ev.screen_y)
 	end
 
 	def close
@@ -3836,26 +3853,79 @@ class TargetCmd
 
 		# Left and right to change
 		if $input.right?
-			@idx += 1 if @idx < @icons.count-1
-			log_info(@battler.actions[@idx])
+
+
+			# Get idx of sortings
+			idx = @targets_sx.index(@active)
+
+			idx += 1
+			if idx >= @targets_sx.count
+			  idx -=1
+			end
+			@active = @targets_sx[idx]
+
+			point_at(@active)
+			
 		end
 
 		if $input.left?
-			@idx -= 1 if @idx > 0
-			log_info(@battler.actions[@idx])
+			# Get idx of sortings
+			idx = @targets_sx.index(@active)
+
+			idx -= 1
+			if idx < 0
+			  idx +=1
+			end
+			@active = @targets_sx[idx]
+
+			point_at(@active)
+		end
+
+
+
+		# Left and right to change
+		if $input.down?	
+			
+			# Get idx of sortings
+			idx = @targets_sy.index(@active)
+
+			idx += 1
+			if idx >= @targets_sy.count
+			  idx -=1
+			end
+			@active = @targets_sy[idx]
+
+			point_at(@active)
+			
+		end
+
+		if $input.up?
+			# Get idx of sortings
+			idx = @targets_sy.index(@active)
+
+			idx -= 1
+			if idx < 0
+			  idx +=1
+			end
+			@active = @targets_sy[idx]
+
+			point_at(@active)
 		end
 
 		pos = $mouse.position
-		@icons.each{ |i|
-			if i.within?(pos[0],pos[1])
-				@idx = @icons.index(i)
-				log_info(@battler.actions[@idx])
-			end
+		@targets.each{ |i|
+			next if pos[0] < i.ev.screen_x - 20
+			next if pos[0] > i.ev.screen_x + 20
+			next if pos[1] < i.ev.screen_y - 64
+			next if pos[1] > i.ev.screen_y
+			@active = i
+			point_at(@active)
 		}
 
 	end
 
-end"*,#==============================================================================
+end
+"*,#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -4735,7 +4805,7 @@ class Game_Actor < Game_Battler
   end
 
 end
-"Õ#==============================================================================
+"í#==============================================================================
 # ** Game_Battle
 #==============================================================================
 
@@ -4744,6 +4814,8 @@ end
 class Game_Battle
 
   attr_accessor :map, :weather
+
+  attr_reader :enemies
 
 	def initialize
 		@enemies = []
@@ -4766,9 +4838,7 @@ class Game_Battle
   end
 
   
-
-
-
+  
   # CHOOSING TARGETS
 
 	  #--------------------------------------------------------------------------
@@ -4876,7 +4946,7 @@ class Game_Battle
   end
 
 end
-  "¯M#==============================================================================
+  "ýM#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -4891,8 +4961,10 @@ class Game_Battler
 
   attr_reader   :states                   # states
 
-  attr_accessor :action_id, :skill_id, :item_id
+  attr_accessor :action, :skill_id, :item_id
+  attr_accessor :target
   attr_accessor :target_type, :target_idx
+  attr_accessor :ev
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -4911,12 +4983,16 @@ class Game_Battler
     @def_plus = 0
 
 
-    @action_id = 0
+    @action = 0
     @skill_id = 0
     @item_id = 0
 
+    @target = nil
+
     @target_type = nil
     @target_index = -1
+
+    @ev = nil
 
   end
 
@@ -8712,7 +8788,7 @@ end"class State
 	end
 
 end
-"#==============================================================================
+"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -8730,6 +8806,10 @@ end
 
 # :victory - player wins
 # :defeat - enemy wins
+
+
+
+# Rename actor to active_battler
 
 class Scene_Battle
   
@@ -8770,8 +8850,8 @@ class Scene_Battle
 
     @hud = BattleHud.new(@vp_hud)
     @actor_cmd = ActorCmd.new(@vp_hud)
-    #@skill_cmd = SkillCmd.new()
-    #@target_cmd = TargetCmd.new()
+    @skill_cmd = SkillCmd.new(@vp_hud)
+    @target_cmd = TargetCmd.new(@vp_hud)
 
     # Prepare characters
     (1..4).each{ |c|
@@ -8781,8 +8861,20 @@ class Scene_Battle
     @map.update
     @character_sprites.each{ |s| s.update }
 
-    @actor_chars = [1,2,3,4].map{ |i| @map.event_by_name("A.#{i}") }
-    @enemy_chars = [1,2,3,4,5].map{ |i| @map.event_by_name("E.#{i}") }
+    [0,1,2,3].each{ |i| 
+      ev = @map.event_by_name("A.#{i}") 
+      if $party.active.count > i
+        $party.actor_by_index(i).ev = ev
+      end
+    }
+    [0,1,2,3,4].each{ |i| 
+      ev = @map.event_by_name("E.#{i}") 
+      if $battle.enemies.count > i
+        $battle.enemies[i].ev = ev
+      end
+    }
+
+    # Save char to battler for easy access
 
     @props = []
 
@@ -8824,7 +8916,7 @@ class Scene_Battle
       when :actor_cmd
         update_phase_actor_cmd
       when :target
-        update_phase_actor_cmd
+        update_phase_target
       when :map
         update_phase_main
       when :victory
@@ -8850,14 +8942,14 @@ class Scene_Battle
   def next_actor
     @actor_idx += 1
     @actor = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@actor,@actor_chars[@actor_idx])
+    @actor_cmd.setup(@actor)
     @phase = :actor_cmd
   end
 
   def prev_actor
     @actor_idx -= 1
     @actor = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@actor,@actor_chars[@actor_idx])
+    @actor_cmd.setup(@actor)
     @phase = :actor_cmd
   end
 
@@ -8875,10 +8967,19 @@ class Scene_Battle
       action = @actor_cmd.get_action
       @actor_cmd.close
 
-      if action == "items"
+      start_action(action)
+
+       end 
+
+  end
+
+  def start_action(id)
+
+    # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+      if id == "items"
 
       else
-        skills = @actor.skills_for(action)
+        skills = @actor.skills_for(id)
       end
 
       # If a multi-skill open the menu
@@ -8892,11 +8993,7 @@ class Scene_Battle
 
       end
 
-    end    
 
-  end
-
-  def start_action(id)
 
   end
 
@@ -8905,8 +9002,8 @@ class Scene_Battle
     @actor.skill_id = id
 
     # If single, targetable?
-    if ["one"].include?(skill.scope)
-      #targets = [[battler,char],...]
+    if ["one","ally"].include?($data.skills[id].scope)
+      targets = $battle.enemies
       @target_cmd.setup(targets)
       @phase = :target      
     else
@@ -8934,11 +9031,15 @@ class Scene_Battle
     @target_cmd.update
 
     if $input.cancel?
-      start_action(@battler.action)
+      @target_cmd.close
+      @actor_idx -= 1
+      next_actor
     end
 
     if $input.action?
-      @battler.target = @target_cmd.target
+      @actor.target = @target_cmd.active
+      @target_cmd.close
+      next_actor
     end
 
   end  

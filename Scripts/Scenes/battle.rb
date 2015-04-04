@@ -17,6 +17,10 @@
 # :victory - player wins
 # :defeat - enemy wins
 
+
+
+# Rename actor to active_battler
+
 class Scene_Battle
   
   #--------------------------------------------------------------------------
@@ -56,8 +60,8 @@ class Scene_Battle
 
     @hud = BattleHud.new(@vp_hud)
     @actor_cmd = ActorCmd.new(@vp_hud)
-    #@skill_cmd = SkillCmd.new()
-    #@target_cmd = TargetCmd.new()
+    @skill_cmd = SkillCmd.new(@vp_hud)
+    @target_cmd = TargetCmd.new(@vp_hud)
 
     # Prepare characters
     (1..4).each{ |c|
@@ -67,8 +71,20 @@ class Scene_Battle
     @map.update
     @character_sprites.each{ |s| s.update }
 
-    @actor_chars = [1,2,3,4].map{ |i| @map.event_by_name("A.#{i}") }
-    @enemy_chars = [1,2,3,4,5].map{ |i| @map.event_by_name("E.#{i}") }
+    [0,1,2,3].each{ |i| 
+      ev = @map.event_by_name("A.#{i}") 
+      if $party.active.count > i
+        $party.actor_by_index(i).ev = ev
+      end
+    }
+    [0,1,2,3,4].each{ |i| 
+      ev = @map.event_by_name("E.#{i}") 
+      if $battle.enemies.count > i
+        $battle.enemies[i].ev = ev
+      end
+    }
+
+    # Save char to battler for easy access
 
     @props = []
 
@@ -110,7 +126,7 @@ class Scene_Battle
       when :actor_cmd
         update_phase_actor_cmd
       when :target
-        update_phase_actor_cmd
+        update_phase_target
       when :map
         update_phase_main
       when :victory
@@ -136,14 +152,14 @@ class Scene_Battle
   def next_actor
     @actor_idx += 1
     @actor = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@actor,@actor_chars[@actor_idx])
+    @actor_cmd.setup(@actor)
     @phase = :actor_cmd
   end
 
   def prev_actor
     @actor_idx -= 1
     @actor = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@actor,@actor_chars[@actor_idx])
+    @actor_cmd.setup(@actor)
     @phase = :actor_cmd
   end
 
@@ -161,10 +177,19 @@ class Scene_Battle
       action = @actor_cmd.get_action
       @actor_cmd.close
 
-      if action == "items"
+      start_action(action)
+
+       end 
+
+  end
+
+  def start_action(id)
+
+    # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+      if id == "items"
 
       else
-        skills = @actor.skills_for(action)
+        skills = @actor.skills_for(id)
       end
 
       # If a multi-skill open the menu
@@ -178,11 +203,7 @@ class Scene_Battle
 
       end
 
-    end    
 
-  end
-
-  def start_action(id)
 
   end
 
@@ -191,8 +212,8 @@ class Scene_Battle
     @actor.skill_id = id
 
     # If single, targetable?
-    if ["one"].include?(skill.scope)
-      #targets = [[battler,char],...]
+    if ["one","ally"].include?($data.skills[id].scope)
+      targets = $battle.enemies
       @target_cmd.setup(targets)
       @phase = :target      
     else
@@ -220,11 +241,15 @@ class Scene_Battle
     @target_cmd.update
 
     if $input.cancel?
-      start_action(@battler.action)
+      @target_cmd.close
+      @actor_idx -= 1
+      next_actor
     end
 
     if $input.action?
-      @battler.target = @target_cmd.target
+      @actor.target = @target_cmd.active
+      @target_cmd.close
+      next_actor
     end
 
   end  

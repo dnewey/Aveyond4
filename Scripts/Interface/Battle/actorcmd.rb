@@ -12,7 +12,7 @@ class ActorCmd
 
 	end
 
-	def setup(battler,sprite)
+	def setup(battler)
 
 		@battler = battler
 
@@ -31,15 +31,15 @@ class ActorCmd
 		angle = -135 * 0.0174532925
 		dist = 50
 		@icons.each{ |i|
-			x = sprite.screen_x + Math.cos(angle) * dist
-			y = (sprite.screen_y-15) + Math.sin(angle) * dist
+			x = battler.ev.screen_x + Math.cos(angle) * dist
+			y = (battler.ev.screen_y-15) + Math.sin(angle) * dist
 			i.center(x,y)
 			angle += 40 * 0.0174532925
 		}
 
 		# Prep the text
 		@text.bitmap = Cache.menu("Battle/text")
-		@text.center(sprite.screen_x,sprite.screen_y + 24)
+		@text.center(battler.ev.screen_x,battler.ev.screen_y + 24)
 
 	end
 
@@ -55,6 +55,8 @@ class ActorCmd
 	end
 
 	def update
+
+		return if @battler.nil?
 
 		# Left and right to change
 		if $input.right?

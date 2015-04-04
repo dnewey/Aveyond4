@@ -8,6 +8,8 @@ class Game_Battle
 
   attr_accessor :map, :weather
 
+  attr_reader :enemies
+
 	def initialize
 		@enemies = []
     @props = []
@@ -29,9 +31,7 @@ class Game_Battle
   end
 
   
-
-
-
+  
   # CHOOSING TARGETS
 
 	  #--------------------------------------------------------------------------
