@@ -38,6 +38,10 @@ class Game_Actor < Game_Battler
     }
 
     @skills = []
+    # Get all skills that are not sub-skills
+    # But what of rowen?
+    # Don't even need to have the skills
+    # They are just from data hmmmmm
     
     @actions = data.actions.split(" | ")
 
@@ -47,6 +51,7 @@ class Game_Actor < Game_Battler
     @exp_list = Array.new(101)
     make_exp_list
     @exp = @exp_list[@level]
+
 
   end
 

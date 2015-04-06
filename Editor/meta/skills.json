@@ -7,7 +7,7 @@
     "default": "New Skill"
   },
   {
-    "field": "action"
+    "field": "book"
   },
   {
     "field": "description",
@@ -27,5 +27,8 @@
   {
     "field": "effects",
     "edit": "area"
+  },
+  {
+    "field": "user"
   }
 ]

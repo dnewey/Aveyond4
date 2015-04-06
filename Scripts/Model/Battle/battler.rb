@@ -46,6 +46,9 @@ class Game_Battler
 
     @ev = nil
 
+    @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting
+
+
   end
 
   #--------------------------------------------------------------------------
