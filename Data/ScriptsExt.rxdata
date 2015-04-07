@@ -4481,7 +4481,7 @@ class Part_Char
 
 	end
 
-end" " "œ(#==============================================================================
+end" " "6)#==============================================================================
 # ** Game_Actor
 #------------------------------------------------------------------------------
 #  This class handles the actor. It's used within the Game_Actors class
@@ -4521,6 +4521,10 @@ class Game_Actor < Game_Battler
     }
 
     @skills = []
+    # Get all skills that are not sub-skills
+    # But what of rowen?
+    # Don't even need to have the skills
+    # They are just from data hmmmmm
     
     @actions = data.actions.split(" | ")
 
@@ -4530,6 +4534,7 @@ class Game_Actor < Game_Battler
     @exp_list = Array.new(101)
     make_exp_list
     @exp = @exp_list[@level]
+
 
   end
 
@@ -4946,7 +4951,7 @@ class Game_Battle
   end
 
 end
-  "ýM#==============================================================================
+  "tN#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -4993,6 +4998,9 @@ class Game_Battler
     @target_index = -1
 
     @ev = nil
+
+    @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting
+
 
   end
 
