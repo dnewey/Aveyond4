@@ -19,6 +19,9 @@
     "field": "slots"
   },
   {
-    "field": "statratings"
+    "field": "stat"
+  },
+  {
+    "field": "modified"
   }
 ]

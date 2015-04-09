@@ -8,5 +8,8 @@
   },
   {
     "field": "value"
+  },
+  {
+    "field": "modified"
   }
 ]

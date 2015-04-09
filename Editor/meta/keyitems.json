@@ -17,5 +17,8 @@
   {
     "field": "chapter",
     "edit": "chapter"
+  },
+  {
+    "field": "modified"
   }
 ]

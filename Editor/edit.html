@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="assets/ico/favicon.png">
 
     <!-- Bootstrap x jquery -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap/bootstrap.css">
     <link rel="stylesheet" href="assets/css/custom-theme/jquery-ui-1.10.3.custom.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/docs.css">
@@ -69,9 +69,9 @@
                     </li>
 
                     <li>
-                                <a href="?type=zones">Zones</a>
-                            </li>
-                            <li>
+                        <a href="?type=zones">Zones</a>
+                    </li>
+                    <li>
                         <a href="?type=gear">Gear</a>
                     </li>
                     <li>
@@ -127,8 +127,13 @@
         <select id="dan-filter-by" style="font-size: 16px; padding: 6px; margin-top: 1px;" type="select" class="">
 
         </select>
-        <input id="dan-filter" style="font-size: 16px; padding: 6px; margin-top: 1px;" type="text" class="" value="Create New"/>
+        <input id="dan-filter" style="font-size: 16px; padding: 6px; margin-top: 1px;" type="text" class="" value=""/>
+        
         <input id="dan-create" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Create New"/>
+        <input id="dan-rev" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Reverse"/>
+        <input id="dan-mod" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Recent"/>
+        <input id="dan-allpp" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Show All"/>
+        
     </div>
 
     <table id="dantable" class="table table-striped">
@@ -150,8 +155,10 @@
 
 
     <div class="ui-state-highlight ui-corner-all">
-            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-                <strong>Hey!</strong> Everything is going swimmingly.</p>
+            <p>
+                <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                <strong>Info:</strong> <span id="dan-info"></span>
+            </p>
         </div>
 
         </div> <!-- End Col -->

@@ -91,7 +91,10 @@ class Ui_Message
     @sparks = []
 
     # Draw to textbox
-    @text_bmp = nil # maybe don't need to hold   
+    @text_bmp = nil
+
+    # merge text_bmp into textbox, use a sprite for the final char
+    # could do better effects maybe and use tweens
     
   end
   
@@ -261,8 +264,7 @@ class Ui_Message
 
   def redraw
 
-    @textbox.bitmap.clear
-    
+    @textbox.bitmap.clear    
     @textbox.bitmap.blt(0,0,@text_bmp,@text_bmp.rect)
 
     return if @word == nil

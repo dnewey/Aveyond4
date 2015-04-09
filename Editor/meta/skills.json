@@ -30,5 +30,8 @@
   },
   {
     "field": "user"
+  },
+  {
+    "field": "modified"
   }
 ]

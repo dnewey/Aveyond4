@@ -39,6 +39,8 @@ $(function()
     {
         //console.log("gotit");
         meta_data = data
+
+        meta_data.push({"field": "tools"});
     });
 
     request.fail(function(jqXHR, textStatus)
@@ -89,8 +91,22 @@ $(function()
 
     $('#dan-create').click(function ()
     {
-        console.log("CR");
         json_create();
+    });
+
+    $('#dan-rev').click(function ()
+    {
+        json_rev();
+    });
+
+    $('#dan-mod').click(function ()
+    {
+        json_sortmodified();
+    });
+
+    $('#dan-allpp').click(function ()
+    {
+        json_allpp();
     });
 
     refresh_header();
@@ -107,7 +123,7 @@ $(function()
 
     localStorage.clear();
 
-    $('.tip').tipr();
+   // $('.tip').tipr();
 
 });
 
@@ -125,17 +141,78 @@ refresh_table = function()
     for (var row = tbl_offset; row < tbl_offset + tbl_per_page; row++)
     {
         if (row >= json_data.length)
-            break;
+        {
+            // Blank table
+            var tr = document.createElement('tr');
+            
+            for (var idx in meta_data) {
+                var td = document.createElement('td');
+                var a = $('<a href="#">'
+                        + '-'
+                        +'</a>');
+
+                td.appendChild(a[0]);
+                tr.appendChild(td);
+            }
+
+            fragment.appendChild(tr);
+            continue;
+        }
 
         var tr = document.createElement('tr');
+        
 
         // Add function column, copy and delete
 
         for (var idx in meta_data) {
 
-            var td = document.createElement('td');
+            if (meta_data[idx].field == "modified")
+                continue;
 
+            var td = document.createElement('td');
             var fld = meta_data[idx].field;
+
+            if (fld == "user")
+            {
+
+                var att = document.createAttribute("style");
+                if (json_data[row][fld] == "rob")
+                    att.value = "background-color:pink";                           
+                else
+                    att.value = "background-color:lightblue";                           
+                td.setAttributeNode(att);
+            }
+
+
+            if (meta_data[idx].field == "tools")
+            {
+                var a = $('<a href="#" dan-row="' + row
+                    +'" dan-fld="'+fld+'">'
+                    + '<img title="Delete" src="assets/img/del.png" />'
+                    +'</a>');
+                a.click(function()
+                {
+                    json_delete($(this).attr('dan-row'));
+                });
+
+                // Add to row
+                td.appendChild(a[0]);
+
+                var b = $('<a href="#" dan-row="' + row +'"">'
+                    + '<img title="Duplicate" src="assets/img/dup.png" />'
+                    +'</a>');
+                b.click(function()
+                {
+                    json_dup($(this).attr('dan-row'));
+                });
+
+                // Add to row
+                td.appendChild(b[0]);
+
+                tr.appendChild(td);
+
+                continue;
+            }                        
 
             if (!json_data[row][fld])
                 if (meta_data[idx].default)
@@ -157,8 +234,7 @@ refresh_table = function()
             }
 
             if (meta_data[idx].edit == "area")
-            {
-                
+            {                
                 a.attr("data-type","textarea");
             }
 
@@ -232,8 +308,9 @@ refresh_table = function()
                         name: 'test',
                         prefetch: 'icons.json'
                     },
+                    emptytext: 'nil',
                     success: function (r, v) {
-                        return json_edit($(this).attr('dan-row'),$(this).attr('dan-fld'), v);
+                        json_edit($(this).attr('dan-row'),$(this).attr('dan-fld'), v);
                     }
                 });
             }
@@ -249,6 +326,8 @@ refresh_table = function()
     // Add to table body
     $('#dantable tbody').append(fragment);
 
+    $('.tip').tipr();
+
 };
 
 // --------------------------------------------------------------------------------
@@ -262,13 +341,19 @@ refresh_header = function()
     // Add th for each col
     for (var idx in meta_data)
     {
+        if (meta_data[idx].field == "modified")
+                continue;
+
         var th = document.createElement('th');
+        var att = document.createAttribute("style");
+            att.value = "padding-left: 2px; padding-right: 2px";                           
+            th.setAttributeNode(att);
 
         var fld = meta_data[idx].field;
 
         // Create the header button
-        var btn = $('<input style="width:100%;" type="button" dan-fld="' +
-                    fld + '" class="ui-button-primary button" value="' +
+        var btn = $('<input style="padding: 2px 5px 2px 5px; width:100%; font-weight: bold; font-size: 15px" type="button" dan-fld="' +
+                    fld + '" class="btn btn-primary" value="' +
                     fld + '"/>');
 
         // Define the sort function
@@ -288,8 +373,10 @@ refresh_header = function()
 // --------------------------------------------------------------------------------
 refresh_pages = function()
 {
+
+
     $('#dan-pages').html('');
-    var pages = json_data.length / tbl_per_page;
+    var pages = (json_data.length-1) / tbl_per_page;
     //pages -= 1;
     for (var idx = 0; idx <= pages; idx++)
     {
@@ -309,7 +396,10 @@ refresh_pages = function()
         // Add to page
         $('#dan-pages').append(btn);
     }
-    return $("#dan-pages").buttonset();
+    $("#dan-pages").buttonset();
+
+    $('#dan-info').html('Total records: '+json_data.length);
+
 };
 
 // --------------------------------------------------------------------------------
@@ -347,6 +437,8 @@ refresh_filterby = function()
 json_edit = function(row,fld, val)
 {
     json_data[row][fld] = val;
+    date = new Date();
+    json_data[row]['modified'] = date.getTime().toString();
     refresh_json();
 };
 
@@ -374,8 +466,11 @@ json_create = function()
         var val = meta_data[idx].default;
 
         obj[fld] = val;
-        console.log(obj);
+        //console.log(obj);
     }
+
+    date = new Date();
+    obj['modified'] = date.getTime().toString();
 
 
     json_data.push(obj);
@@ -391,10 +486,60 @@ json_create = function()
 // --------------------------------------------------------------------------------
 // Initialize
 // --------------------------------------------------------------------------------
-json_dup = function(id)
+json_rev = function()
 {
-    json_data[row][fld] = val;
+    json_data.reverse();
+    refresh_table();
+}
+
+// --------------------------------------------------------------------------------
+// Initialize
+// --------------------------------------------------------------------------------
+json_sortmodified = function()
+{
+    console.log("asdfasdf");
+    sort_table("modified");
+    refresh_table();
+}
+
+// --------------------------------------------------------------------------------
+// Initialize
+// --------------------------------------------------------------------------------
+json_allpp = function()
+{
+    tbl_offset = 0;
+
+    if (tbl_per_page == json_data.length)
+        tbl_per_page = 11;
+    else
+        tbl_per_page = json_data.length;
+
+    refresh_table();
+    refresh_pages();
+}
+
+// --------------------------------------------------------------------------------
+// Initialize
+// --------------------------------------------------------------------------------
+json_dup = function(row)
+{
+
+    json_data.push(JSON.parse(JSON.stringify(json_data[row])));
+
     refresh_json();
+    refresh_table();
+    refresh_pages();
+};
+
+// --------------------------------------------------------------------------------
+// Initialize
+// --------------------------------------------------------------------------------
+json_delete = function(row)
+{
+    json_data.splice(row,1)
+    refresh_json();
+    refresh_table();
+    refresh_pages();
 };
 
 // --------------------------------------------------------------------------------
