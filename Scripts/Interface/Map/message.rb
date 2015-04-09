@@ -6,13 +6,13 @@ class Ui_Message
 
   # Consts
   MIN_WIDTH = 200
-  MAX_WIDTH = 500
+  MAX_WIDTH = 350
   TAB_WIDTH = 35
 
   SPACING = 7
   LINE_HEIGHT = 29#6
-  PADDING_X = 16
-  PADDING_Y = 12
+  PADDING_X = 24
+  PADDING_Y = 16
 
   SPEED_1 = 0
   SPEED_2 = 1
@@ -23,7 +23,9 @@ class Ui_Message
   #--------------------------------------------------------------------------
   # Prepare
   #--------------------------------------------------------------------------
-  def initialize
+  def initialize(vp)
+
+    @vp = vp
 
     # Create the pieces but do nothing besides
     @state = :idle
@@ -34,13 +36,18 @@ class Ui_Message
     # This line data
     @name = ''
 
+    @font = Font.new
+    @font.name = "Georgia"
+    @font.size = 26
+    #@font.color = Color.new(245,223,200)
+
+    #@font.gradient = true
+    @font.gradient_color1 = Color.new(255,0,0)
+    @font.gradient_color2 = Color.new(245,223,200)
+
     @scratch = Bitmap.new(400,50)
 
-    # Hold the textbox, 
-    #@text_viewport
-
     @lines = []
-
 
     # Settings
     @color = nil
@@ -60,21 +67,31 @@ class Ui_Message
     @width = 0
     @height = 0
 
+    @wallpaper = Wallpaper.new(200,200,Cache.menu("Common/back"),vp)
+    @wallpaper.opacity = 230
+
     # Setup sprites
-    @textbox = Sprite.new($vp_ui)
-    @textbox.x = 50
-    @textbox.y = 150
-    #@namebox = add(Sprite.new)
+    @window = Sprite.new(vp)
+    @textbox = Sprite.new(vp)
+    @textbox.z += 50
 
-    #@next = add(Sprite.new)
-    @face = Sprite.new($vp_ui)
-    @face.z += 10
-    #@tail = add(Sprite.new)
+    @namebox = Sprite.new(vp)
+    @namebox.bitmap = Bitmap.new(220,40)
+    @namebox.bitmap.hskin(Cache.menu("Common/namebox"))
 
-    @window_bmp = nil
-    @text_bmp = nil
-
+    @next = Sprite.new(vp)
+    @next.bitmap = Cache.menu("Common/next")
     
+    @face = Sprite.new(vp)
+    @face.z += 10
+    
+    @tail = Sprite.new(vp)
+    @tail.bitmap = Cache.menu("Common/tail")
+
+    @sparks = []
+
+    # Draw to textbox
+    @text_bmp = nil # maybe don't need to hold   
     
   end
   
@@ -82,6 +99,9 @@ class Ui_Message
   # Frame Update
   #--------------------------------------------------------------------------
   def update
+
+    @wallpaper.update
+    @sparks.each{ |s| s.update }
     
 #~     if Input.press?(:SHIFT)
 #~       @state = :closing
@@ -136,8 +156,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
-    @scratch.font.size =28
-    @scratch.font.name = "Calibri"
+    @scratch.font = @font
 
     # Clear out the previous word
     @word = nil
@@ -166,29 +185,40 @@ class Ui_Message
 
     @width += @face.width
 
-    @face.x = max_width + @textbox.x + PADDING_X + PADDING_X
-    @face.y = @textbox.y + @height - @face.height - PADDING_Y
+    @window.x = 50
+    @window.y = 150
+
+    @face.x = -10 + max_width + @window.x + PADDING_X + PADDING_X
+    @face.y = 7 + @window.y + @height - @face.height - PADDING_Y
 
     # Position the textbox wherever it best fits
 
-    # Prepare the sprites
-    @textbox.bitmap = Bitmap.new(@width,@height)
+    # Prepare the sprites  
+    @window.bitmap = Bitmap.new(@width,@height)
+    @window.bitmap.borderskin
 
+    @textbox.move(@window.x,@window.y)
+    @textbox.bitmap = Bitmap.new(@width,@height)
     @text_bmp = Bitmap.new(@width,@height)
 
-    @window_bmp = Bitmap.new(@width,@height)
+    @wallpaper.resize(@width,@height)
+    @wallpaper.move(@window.x,@window.y) # mirror sprite?
+
+    @scratch.font = @font
+    @text_bmp.font = @font
+    @textbox.bitmap.font = @font
 
 
+    # COMBINE FONT AND SIZE
 
-    @window_bmp.windowskin("windowskin1")
+    @tail.x = @window.x + @width /2
+    @tail.y = @window.y + @height
 
+    @next.x = @window.x + @width /2
+    @next.y = @window.y + @height - 20
 
-    @scratch.font.size =28
-    @text_bmp.font.size = 28
-    @textbox.bitmap.font.size = 28
-
-    @text_bmp.font.name = "Calibri"
-    @textbox.bitmap.font.name = "Calibri"
+    @namebox.x = @window.x + 20
+    @namebox.y = @window.y - @namebox.height
 
 
     @line_idx = 0
@@ -232,8 +262,7 @@ class Ui_Message
   def redraw
 
     @textbox.bitmap.clear
-    @textbox.bitmap.blt(0,0,@window_bmp,@window_bmp.rect)
-
+    
     @textbox.bitmap.blt(0,0,@text_bmp,@text_bmp.rect)
 
     return if @word == nil
@@ -247,12 +276,26 @@ class Ui_Message
     #txt = @word[0..@char_idx-1]
     txt = @word.delete('*^')[0..@char_idx-1]
     size = @scratch.text_size(txt)
-    @textbox.bitmap.font.color = Color.new(255,255,255,255)
+
     @textbox.bitmap.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
     # Half draw the final
     return if @char_idx >= @word.length
-    @textbox.bitmap.font.color = Color.new(255,255,255,100)
-    @textbox.bitmap.draw_text(@cx+size.width,@cy-4,100,LINE_HEIGHT,@word.delete('*^').split('')[@char_idx])
+
+    # Offset the y here to animate
+    #r = rand(4)
+    r = 0
+    @textbox.bitmap.draw_text(@cx+size.width,@cy+r,100,LINE_HEIGHT,@word.delete('*^').split('')[@char_idx])
+
+
+    # Spawn spark
+    sprk = Spark.new("magic",@vp)
+    
+    x = @window.x + @cx+size.width
+    y = @window.y + @cy
+    sprk.center(x+6,y+16)
+    sprk.blend_type = 1
+    @sparks.push(sprk)
+
 
   end
 

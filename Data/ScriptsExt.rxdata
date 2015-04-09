@@ -1,4 +1,4 @@
-[U"å#==============================================================================
+[Y"å#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1390,7 +1390,57 @@ class List
 
   end
 
- end"„#==============================================================================
+ end"A
+class Spark < Sprite
+
+	def initialize(fx,vp)
+		super(vp)
+
+		self.bitmap = Cache.menu("Sparks/#{fx}")
+
+		@frame = -1
+
+		# No frame per row
+
+		@delay = 1
+		@next = 0
+
+		update
+
+
+
+	end
+
+	def width
+		return self.bitmap.width / 5
+	end
+
+	def height
+		return self.bitmap.width / 5
+	end
+
+	def update
+
+		# Step counters
+		@next -= 1
+		if @next < 1
+			@next = @delay
+
+			@frame += 1
+
+			fx = @frame % 5 # frames_per_row
+			fy = @frame / 5
+
+			# Refresh
+			
+			self.src_rect = Rect.new(fx*width,fy*height,width,height)
+
+
+		end
+
+	end
+
+end"„#==============================================================================
 # Tabs
 #==============================================================================
 
@@ -1467,7 +1517,95 @@ class Tabs < Sprite
 
   end
 
- end"#==============================================================================
+ end"³
+
+class Wallpaper < Sprite
+
+	# Doesn't have to be viewport tbh
+
+	def initialize(w,h,src,vp)
+
+		super(vp)
+
+		@src = src
+
+		@width = w
+		@height = h
+
+		self.bitmap = Bitmap.new(w,h)
+
+		@px = 0.0
+		@py = 0.0
+
+		@dx = 0  # Diplay x, integer
+		@dy = 0
+
+		@sx = 0.2
+		@sy = 0.2
+
+		redraw
+
+	end
+
+	def width() return @width end
+	def height() return @height end
+
+	def resize(w,h)
+		@width = w
+		@height = h
+		self.bitmap = Bitmap.new(w,h)
+		redraw
+	end
+
+	def update
+
+		# Redraw the bmp if needed
+		@px += @sx
+		@py += @sy
+
+		# Mod to width of bmp
+		@px -= @src.width if @px > @src.width
+		@px += @src.width if @px < -@src.width
+		@py -= @src.height if @py > @src.height
+		@py += @src.height if @py < @src.height
+		
+
+		if @px.to_i != @dx || @py.to_i != @dy
+			@dx = @px.to_i
+			@dy = @py.to_i
+			redraw
+		end
+
+	end
+
+	def redraw
+
+		cx = -@dx
+		cy = -@dy
+
+		while cx < @width
+
+			while cy < @height
+
+				rct = @src.rect
+				# If draw's over, cancel
+				# Also for offset for first
+
+				self.bitmap.blt(cx,cy,@src,rct)
+
+				cy += @src.height
+
+			end
+
+			cy = -@dy
+			cx += @src.width
+			#log_info("DRAW #{cx}")
+
+		end
+
+	end
+
+end"#==============================================================================
 # Widget_Bugbox
 #==============================================================================
 
@@ -3925,7 +4063,7 @@ class TargetCmd
 	end
 
 end
-"*,#==============================================================================
+"00#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -3933,13 +4071,13 @@ class Ui_Message
 
   # Consts
   MIN_WIDTH = 200
-  MAX_WIDTH = 500
+  MAX_WIDTH = 350
   TAB_WIDTH = 35
 
   SPACING = 7
   LINE_HEIGHT = 29#6
-  PADDING_X = 16
-  PADDING_Y = 12
+  PADDING_X = 24
+  PADDING_Y = 16
 
   SPEED_1 = 0
   SPEED_2 = 1
@@ -3950,7 +4088,9 @@ class Ui_Message
   #--------------------------------------------------------------------------
   # Prepare
   #--------------------------------------------------------------------------
-  def initialize
+  def initialize(vp)
+
+    @vp = vp
 
     # Create the pieces but do nothing besides
     @state = :idle
@@ -3961,13 +4101,18 @@ class Ui_Message
     # This line data
     @name = ''
 
+    @font = Font.new
+    @font.name = "Georgia"
+    @font.size = 26
+    #@font.color = Color.new(245,223,200)
+
+    #@font.gradient = true
+    @font.gradient_color1 = Color.new(255,0,0)
+    @font.gradient_color2 = Color.new(245,223,200)
+
     @scratch = Bitmap.new(400,50)
 
-    # Hold the textbox, 
-    #@text_viewport
-
     @lines = []
-
 
     # Settings
     @color = nil
@@ -3987,21 +4132,31 @@ class Ui_Message
     @width = 0
     @height = 0
 
+    @wallpaper = Wallpaper.new(200,200,Cache.menu("Common/back"),vp)
+    @wallpaper.opacity = 230
+
     # Setup sprites
-    @textbox = Sprite.new($vp_ui)
-    @textbox.x = 50
-    @textbox.y = 150
-    #@namebox = add(Sprite.new)
+    @window = Sprite.new(vp)
+    @textbox = Sprite.new(vp)
+    @textbox.z += 50
 
-    #@next = add(Sprite.new)
-    @face = Sprite.new($vp_ui)
-    @face.z += 10
-    #@tail = add(Sprite.new)
+    @namebox = Sprite.new(vp)
+    @namebox.bitmap = Bitmap.new(220,40)
+    @namebox.bitmap.hskin(Cache.menu("Common/namebox"))
 
-    @window_bmp = nil
-    @text_bmp = nil
-
+    @next = Sprite.new(vp)
+    @next.bitmap = Cache.menu("Common/next")
     
+    @face = Sprite.new(vp)
+    @face.z += 10
+    
+    @tail = Sprite.new(vp)
+    @tail.bitmap = Cache.menu("Common/tail")
+
+    @sparks = []
+
+    # Draw to textbox
+    @text_bmp = nil # maybe don't need to hold   
     
   end
   
@@ -4009,6 +4164,9 @@ class Ui_Message
   # Frame Update
   #--------------------------------------------------------------------------
   def update
+
+    @wallpaper.update
+    @sparks.each{ |s| s.update }
     
 #~     if Input.press?(:SHIFT)
 #~       @state = :closing
@@ -4063,8 +4221,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
-    @scratch.font.size =28
-    @scratch.font.name = "Calibri"
+    @scratch.font = @font
 
     # Clear out the previous word
     @word = nil
@@ -4093,29 +4250,40 @@ class Ui_Message
 
     @width += @face.width
 
-    @face.x = max_width + @textbox.x + PADDING_X + PADDING_X
-    @face.y = @textbox.y + @height - @face.height - PADDING_Y
+    @window.x = 50
+    @window.y = 150
+
+    @face.x = -10 + max_width + @window.x + PADDING_X + PADDING_X
+    @face.y = 7 + @window.y + @height - @face.height - PADDING_Y
 
     # Position the textbox wherever it best fits
 
-    # Prepare the sprites
-    @textbox.bitmap = Bitmap.new(@width,@height)
+    # Prepare the sprites  
+    @window.bitmap = Bitmap.new(@width,@height)
+    @window.bitmap.borderskin
 
+    @textbox.move(@window.x,@window.y)
+    @textbox.bitmap = Bitmap.new(@width,@height)
     @text_bmp = Bitmap.new(@width,@height)
 
-    @window_bmp = Bitmap.new(@width,@height)
+    @wallpaper.resize(@width,@height)
+    @wallpaper.move(@window.x,@window.y) # mirror sprite?
+
+    @scratch.font = @font
+    @text_bmp.font = @font
+    @textbox.bitmap.font = @font
 
 
+    # COMBINE FONT AND SIZE
 
-    @window_bmp.windowskin("windowskin1")
+    @tail.x = @window.x + @width /2
+    @tail.y = @window.y + @height
 
+    @next.x = @window.x + @width /2
+    @next.y = @window.y + @height - 20
 
-    @scratch.font.size =28
-    @text_bmp.font.size = 28
-    @textbox.bitmap.font.size = 28
-
-    @text_bmp.font.name = "Calibri"
-    @textbox.bitmap.font.name = "Calibri"
+    @namebox.x = @window.x + 20
+    @namebox.y = @window.y - @namebox.height
 
 
     @line_idx = 0
@@ -4159,8 +4327,7 @@ class Ui_Message
   def redraw
 
     @textbox.bitmap.clear
-    @textbox.bitmap.blt(0,0,@window_bmp,@window_bmp.rect)
-
+    
     @textbox.bitmap.blt(0,0,@text_bmp,@text_bmp.rect)
 
     return if @word == nil
@@ -4174,12 +4341,26 @@ class Ui_Message
     #txt = @word[0..@char_idx-1]
     txt = @word.delete('*^')[0..@char_idx-1]
     size = @scratch.text_size(txt)
-    @textbox.bitmap.font.color = Color.new(255,255,255,255)
+
     @textbox.bitmap.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
     # Half draw the final
     return if @char_idx >= @word.length
-    @textbox.bitmap.font.color = Color.new(255,255,255,100)
-    @textbox.bitmap.draw_text(@cx+size.width,@cy-4,100,LINE_HEIGHT,@word.delete('*^').split('')[@char_idx])
+
+    # Offset the y here to animate
+    #r = rand(4)
+    r = 0
+    @textbox.bitmap.draw_text(@cx+size.width,@cy+r,100,LINE_HEIGHT,@word.delete('*^').split('')[@char_idx])
+
+
+    # Spawn spark
+    sprk = Spark.new("magic",@vp)
+    
+    x = @window.x + @cx+size.width
+    y = @window.y + @cy
+    sprk.center(x+6,y+16)
+    sprk.blend_type = 1
+    @sparks.push(sprk)
+
 
   end
 
@@ -9066,7 +9247,7 @@ class Scene_Battle
 
   end
 
-end"—#==============================================================================
+end"Ñ#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -9094,10 +9275,11 @@ class Scene_Map
     @map.target = @player
 
     # Make viewports - Also in the scene
-    @vp_main = Viewport.new(0, 0, $game.width, $game.height)   
+    @vp_main = Viewport.new(0,0,$game.width,$game.height)   
+    @vp_ui = Viewport.new(0,0,$game.width,$game.height)
 
     # Make tilemap
-    @tilemap = MapWrap.new(@vp_main)    
+    @tilemap = MapWrap.new(@vp_main)
 
     #@panorama = Plane.new(@vp_main,-1000)
     #@fog = Plane.new(@vp_main,3000)
@@ -9108,7 +9290,7 @@ class Scene_Map
 
     @hud = Ui_Screen.new
 
-    @message = Ui_Message.new
+    @message = Ui_Message.new(@vp_ui)
 
 
     @tone = Tone.new(0, 0, 0, 0)
@@ -10462,7 +10644,102 @@ class TweenManager
 		return @tweens.select{ |n| n.parent == object }.empty?
 	end
 
-end"¾
+end"–	class Bitmap
+
+	def fill(color)
+		self.fill_rect(0,0,self.width,self.height,color)
+	end
+
+	def windowskin(skin)
+		src = Cache.windowskin(skin)
+		dest = rect.dup
+		dest.x += 3
+		dest.y += 3
+		dest.width -= 6
+		dest.height -= 6
+		stretch_blt(dest,src,Rect.new(0,0,128,128),210)
+
+		w = 16
+		h = 16
+		sx = 128
+		sy = 0
+
+		o = 255
+
+		# CORNERS
+	    blt(0,0,src,Rect.new(sx,sy,w,h),o) # top left
+	    blt(width-w,0,src,Rect.new(sx+48,sy,w,h),o) # top right
+	    blt(0,height-h,src,Rect.new(sx,sy+48,w,h),o) # bottom left
+	    blt(width-w,height-h,src,Rect.new(sx+48,sy+48,w,h),o) # bottom right
+	    
+	    #dest_rect, bmp, src_rect
+
+	   #  # Middle
+	   #stretch_blt(Rect.new(w,h,width-16,height-16),src,Rect.new(sx+16,0,w,h),o)
+
+	   #  # left side
+	   stretch_blt(Rect.new(0,h,w,height-32),src,Rect.new(sx,h+16,w,h),o)
+
+	   #  # Right
+	     stretch_blt(Rect.new(width-w,h,w,height-32),src,Rect.new(sx+48,h,w,h),o)
+
+	   #  #top
+	   stretch_blt(Rect.new(w,0,width-32,h),src,Rect.new(sx+16,0,w,h),o)
+
+	   # #bottom
+	   stretch_blt(Rect.new(w,height-h,width-32,h),src,Rect.new(sx+16,h+32,w,h),o)
+
+
+	end
+
+	def borderskin
+
+		src = Cache.menu("Common/skin")
+
+		# 32px corners, 64px edges
+
+		w = 32
+		h = 32
+
+		o = 255
+
+		# CORNERS
+	    blt(0,0,src,Rect.new(0,0,w,h),o) # top left
+	    blt(width-w,0,src,Rect.new(96,0,w,h),o) # top right
+
+	    blt(0,height-h,src,Rect.new(0,96,w,h),o) # bottom left
+	    blt(width-w,height-h,src,Rect.new(96,96,w,h),o) # bottom right
+	    
+	   # left side
+	   stretch_blt(Rect.new(0,h,w,height-64),src,Rect.new(0,h+16,w,h),o)
+
+	   # Right
+	   stretch_blt(Rect.new(width-w,h,w,height-64),src,Rect.new(96,h,w,h),o)
+
+	   # top
+	   stretch_blt(Rect.new(w,0,width-64,32),src,Rect.new(32,0,64,32),o)
+
+	   # bottom
+	   stretch_blt(Rect.new(w,height-h,width-64,32),src,Rect.new(32,96,64,32),o)
+
+	end
+
+	def vskin(src)
+		size = src.height/3
+    	blt(0,0,src,Rect.new(0,0,src.width,size)) # top left
+    	blt(0,height-size,src,Rect.new(0,size*2,src.width,size)) # bottom right    
+    	stretch_blt(Rect.new(0,size,size,height-size),src,Rect.new(0,size,src.width,size))
+	end
+
+	def hskin(src)
+		size = src.width/3
+    	blt(0,0,src,Rect.new(0,0,size,src.height)) #left
+    	blt(width-size,0,src,Rect.new(size*2,0,size,src.height)) # bottom right    
+    	stretch_blt(Rect.new(size,0,width-size*2,src.height),src,Rect.new(size,0,size,src.height))
+	end
+
+end
+"¾
 class ItemData
 	attr_reader :id
 	attr_reader :name
@@ -10539,7 +10816,152 @@ end
 class QuestData
 	attr_reader :id
 end
-"­module RPG
+"#==============================================================================
+# ** Gradient Font Color
+#------------------------------------------------------------------------------
+#   Original code by poccil
+#   Rewritten by Dargor, 2008
+#   05/07/08
+#   Version 1.0
+#------------------------------------------------------------------------------
+#   VERSION HISTORY:
+#    - 1.0 (05/07/08), Initial release
+#------------------------------------------------------------------------------
+#   INSTRUCTIONS:
+#    - Paste this above main
+#    - Edit the font's gradient parameters in a window like that:
+#            self.contents.font.gradient = true/false
+#            self.contents.font.gradient_color1 = color
+#            self.contents.font.gradient_color2 = color
+#            self.contents.font.gradient_mode = mode
+#                  Modes: (0 : Vertical, 1: Horizontal, 2: Diagonal)
+#    - By default, the gradient effect is on. You can turn it off by
+#       setting the @gradient flag in the Font class to false. (*line 47)
+#------------------------------------------------------------------------------
+#   NOTES:
+#       This script is compatible with both XP and VX
+#==============================================================================
+ 
+#==============================================================================
+# ** Font
+#==============================================================================
+ 
+class Font
+  #--------------------------------------------------------------------------
+  # * Public Instance Variables
+  #--------------------------------------------------------------------------
+  attr_accessor :gradient
+  attr_accessor :gradient_color1
+  attr_accessor :gradient_color2
+  #--------------------------------------------------------------------------
+  # * Alias Listing
+  #--------------------------------------------------------------------------
+  alias dargor_vx_font_gradient_initialize initialize
+  #--------------------------------------------------------------------------
+  # * Object Initialization
+  #--------------------------------------------------------------------------
+  def initialize(*args)
+     dargor_vx_font_gradient_initialize(*args)
+     @gradient = true
+     @gradient_color1 = Color.new(255,255,255)
+     @gradient_color2 = Color.new(255,255,255)
+  end
+end
+ 
+#==============================================================================
+# ** Bitmap
+#==============================================================================
+ 
+class Bitmap
+  #--------------------------------------------------------------------------
+  # * Alias Listing
+  #--------------------------------------------------------------------------
+  alias dargor_vx_bitmap_gradient_draw_text draw_text
+  #--------------------------------------------------------------------------
+  # * Draw Text
+  #--------------------------------------------------------------------------
+  def draw_text(*args)
+
+     # Original font color
+     if self.font.gradient
+        
+        # Get text variables
+        if args[0].is_a?(Rect)
+           x = args[0].x
+           y = args[0].y
+           width = args[0].width
+           height = args[0].height
+           text = args[1]
+           align = args[2].nil? ? 0 : args[2]
+        else
+           x = args[0]
+           y = args[1]
+           width = args[2]
+           height = args[3]
+           text = args[4]
+           align = args[5].nil? ? 0 : args[5]
+        end
+
+        original_color = self.font.color
+        alpha = original_color.alpha.to_f if alpha.nil?
+        # Create temporary text bitmap
+        text1=Bitmap.new(width, height)
+        text2=Bitmap.new(width, height)
+        text1.font.size = self.font.size
+        text1.font.name = self.font.name
+        text1.font.color = self.font.gradient_color2
+        text_height = text1.text_size(text).height
+        text_width = text1.text_size(text).width
+        return if text_width < 1 or text_height < 1
+
+        # Temporary remove the gradient effect
+        self.font.gradient = false
+        text1.dargor_vx_bitmap_gradient_draw_text(0, 0, width, height, text, align)
+        self.font.gradient = true
+
+        # What in the world .....
+           text_position = (height / 2) - (text_height / 2)
+           for i in 0...height
+              if i < text_position
+                 opacity = 0
+              elsif i > text_position + text_height
+                 opacity = 255
+              else
+                 ratio = ((i - text_position) * 1.0 / text_height)
+                 ratio -=(0.5 - ratio) * 0.5
+                 opacity = ratio * 255.0
+                 opacity = 255.0 if opacity > 255.0
+                 opacity = 0.0 if opacity < 0.0
+              end
+              text2.blt(0, i, text1, Rect.new(0,i,width,1), opacity)
+           end
+
+
+        # Draw gradient text
+        self.font.color = Color.new(255,0,0)#self.font.gradient_color1
+        self.font.color.alpha = alpha
+        # Temporary remove the gradient effect
+        self.font.gradient = false
+        dargor_vx_bitmap_gradient_draw_text(*args)
+        # Temporary remove the gradient effect
+        self.font.gradient = true
+        self.font.color = original_color
+        self.font.color.alpha = 255#alpha
+        self.blt(x, y, text2, text2.rect, alpha)
+        # Dispose gradient text bitmap
+        text1.dispose
+        text2.dispose
+     else
+        # The usual
+        dargor_vx_bitmap_gradient_draw_text(*args)
+     end
+
+    def draw_special
+
+    end
+
+  end
+end"­module RPG
   class Tileset
     def initialize
       @id = 0
@@ -10731,7 +11153,7 @@ module RPG
 end
 
 
-"§ class Array
+"> class Array
  	def count
  		return length
  	end
@@ -10750,62 +11172,6 @@ end
 class FalseClass; def to_i; 0 end end
 class TrueClass; def to_i; 1 end end
 
-class Bitmap
-
-	def fill(color)
-		self.fill_rect(0,0,self.width,self.height,color)
-	end
-
-	def windowskin(skin)
-		src = Cache.windowskin(skin)
-		dest = rect.dup
-		dest.x += 3
-		dest.y += 3
-		dest.width -= 6
-		dest.height -= 6
-		stretch_blt(dest,src,Rect.new(0,0,128,128),210)
-
-		w = 16
-		h = 16
-		sx = 128
-		sy = 0
-
-		o = 255
-
-		# CORNERS
-	    blt(0,0,src,Rect.new(sx,sy,w,h),o) # top left
-	    blt(width-w,0,src,Rect.new(sx+48,sy,w,h),o) # top right
-	    blt(0,height-h,src,Rect.new(sx,sy+48,w,h),o) # bottom left
-	    blt(width-w,height-h,src,Rect.new(sx+48,sy+48,w,h),o) # bottom right
-	    
-	    #dest_rect, bmp, src_rect
-
-	   #  # Middle
-	   #stretch_blt(Rect.new(w,h,width-16,height-16),src,Rect.new(sx+16,0,w,h),o)
-
-	   #  # left side
-	   stretch_blt(Rect.new(0,h,w,height-32),src,Rect.new(sx,h+16,w,h),o)
-
-	   #  # Right
-	     stretch_blt(Rect.new(width-w,h,w,height-32),src,Rect.new(sx+48,h,w,h),o)
-
-	   #  #top
-	   stretch_blt(Rect.new(w,0,width-32,h),src,Rect.new(sx+16,0,w,h),o)
-
-	   # #bottom
-	   stretch_blt(Rect.new(w,height-h,width-32,h),src,Rect.new(sx+16,h+32,w,h),o)
-
-
-	end
-
-	def vert(src)
-    	blt(0,0,src,Rect.new(0,0,src.width,10)) # top left
-    	blt(0,height-10,src,Rect.new(0,src.height-10,src.width,10)) # bottom right
-    
-    	stretch_blt(Rect.new(0,10,10,height-20),src,Rect.new(0,10,10,10))
-	end
-
-end
 
 class Fixnum
 	def odd?
