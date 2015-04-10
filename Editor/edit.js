@@ -210,20 +210,36 @@ refresh_table = function()
 
             // Create as editable
             if ($meta_data[idx].edit != "none") {
-                a.editable
-                ({
-                    typeahead: {
-                        name: 'test',
-                        prefetch: 'icons.json'
-                    },
-                    emptytext: 'nil',
-                    display: function(value, response) {
-                        return false;   //disable this method
-                    },
-                    success: function (r, v) {
-                        json_edit($(this),$(this).attr('dan-row'),$(this).attr('dan-fld'), v);
-                    }
-                });
+                
+                if ($meta_data[idx].edit != "select")
+                {
+                    a.editable
+                    ({
+                        typeahead: {
+                            name: 'test',
+                            prefetch: 'icons.json'
+                        },
+                        emptytext: 'nil',
+                        display: function(value, response) {
+                            return false;   //disable this method
+                        },
+                        success: function (r, v) {
+                            json_edit($(this),$(this).attr('dan-row'),$(this).attr('dan-fld'), v);
+                        }
+                    });
+                }
+                else // Editables don't overwrite truncated value
+                {
+                    a.editable
+                    ({
+                        emptytext: 'nil',
+                        success: function (r, v) {
+                            json_edit($(this),$(this).attr('dan-row'),$(this).attr('dan-fld'), v);
+                        }
+                    });
+                }
+
+
                 if ($json_data[row][fld] == "")
                     a.html("nil");
                 else
