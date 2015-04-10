@@ -1,31 +1,27 @@
+<!DOCTYPE html>
 <html>
 <head>
 
     <title>Aveyond 4 Database</title>
 
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="assets/ico/favicon.png">
+    <link href="assets/ico/favicon.png" rel="shortcut icon">
 
     <!-- Bootstrap x jquery -->
-    <link rel="stylesheet" href="assets/css/bootstrap/bootstrap.css">
-    <link rel="stylesheet" href="assets/css/custom-theme/jquery-ui-1.10.3.custom.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/docs.css">
-    <link rel="stylesheet" href="assets/tipr/tipr.css">
+    <link href="assets/css/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/custom-theme/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+    <link href="assets/css/docs.css" rel="stylesheet">
 
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery-1.9.1.min.js" type="text/javascript"></script>
     <script src="assets/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
     <script src="assets/js/bootstrap.js" type="text/javascript"></script>
     <script src="assets/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
     <script src="assets/js/docs.js" type="text/javascript"></script>
     <script src="assets/js/demo.js" type="text/javascript"></script>
-    <script src="assets/tipr/tipr.js" type="text/javascript"></script>
     <script src="assets/js/fuzzyset.js" type="text/javascript"></script>
 
     <!-- X-Edit -->
-    <link rel="stylesheet" href="assets/x/assets/css/bootstrap-editable.css">
-    <link rel="stylesheet" href="assets/x/ext/typeaheadjs/lib/typeahead.js-bootstrap.css">
+    <link href="assets/x/assets/css/bootstrap-editable.css" rel="stylesheet">
+    <link href="assets/x/ext/typeaheadjs/lib/typeahead.js-bootstrap.css" rel="stylesheet">
     <script src="assets/x/assets/js/bootstrap-editable.js" type="text/javascript"></script>
     <script src="assets/x/ext/typeaheadjs/typeaheadjs.js" type="text/javascript"></script>
     <script src="assets/x/ext/typeaheadjs/lib/typeahead.js" type="text/javascript"></script>
@@ -37,149 +33,88 @@
 
 <body>
 
-<!-- Navbar
-    ================================================== -->
+    <!-- Navbar ================================================== -->
+
     <header class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <!-- <div class="navbar-header">
-              <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">Av4</a>
-            </div> -->
-            <nav class="">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="?type=progress">Progress</a>
-                    </li>
-                    <li>
-                        <a href="?type=quests">Quests</a>
-                    </li>
-                    <li>
-                        <a href="?type=keyitems">Key Items</a>
-                    </li>
-                    <li>
-                        <a href="?type=items">Items</a>
-                    </li>
-                    
-                    <li>
-                        <a href="?type=enemies">Enemies</a>
-                    </li>
+        <div class="container" style="width: 100%">
 
-                    <li>
-                        <a href="?type=zones">Zones</a>
-                    </li>
-                    <li>
-                        <a href="?type=gear">Gear</a>
-                    </li>
-                    <li>
-                        <a href="?type=skills">Skills</a>
-                    </li>
-                    <li>
-                        <a href="?type=states">States</a>
-                    </li>
-                    <li>
-                        <a href="?type=actors">Actors</a>
-                    </li>
-                    
-                </ul>
-            </nav>
+            <ul class="nav navbar-nav">                
+                <li><a href="?type=progress">Progress</a></li>
+                <li><a href="?type=quests">Quests</a></li>
+                <li><a href="?type=keyitems">Key Items</a></li>
+                <li><a href="?type=items">Items</a></li>
+                <li><a href="?type=enemies">Enemies</a></li>
+                <li><a href="?type=zones">Zones</a></li>
+                <li><a href="?type=gear">Gear</a></li>
+                <li><a href="?type=skills">Skills</a></li>
+                <li><a href="?type=states">States</a></li>
+                <li><a href="?type=actors">Actors</a></li>
+            </ul>
+
         </div>
     </header>
 
+    <!-- Header ================================================== -->
 
-    <!-- Subhead
-    ================================================== -->
-    <header style="padding:0px; background-position: center; background-image: url('assets/img/header.jpg') !important;" class="bs-header" id="overview">
+    <header class="bs-header" id="overview" style="padding:0px; background-position: center; background-image: url('assets/img/header.jpg') !important;">
         <div class="container">
-            <h1 id="DanTitle" style="text-shadow: 3px 3px 3px rgba(0,0,0,0.75);">Items Data</h1>
-            <p id="DanSub" style="color: white;" class="lead">Editing items</p>
-            <a style="float: right; margin-top: -120px;" id="THEBTN" href="" download="items.json">
-            <button style="font-size:46px; padding: 20px 44px;" class="ui-button-danger ui-btn-lg ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Save</span></button>
-        </a>
+
+            <h1 id="dan-head-title" style="text-shadow: 3px 3px 3px rgba(0,0,0,0.75);">Items Data</h1>
+
+            <p class="lead" id="dan-head-sub" style="color: white;">Editing items</p>
+
+            <a href="" id="dan-head-btn" style="float: right; margin-top: -120px;">
+                <button class="ui-button-danger ui-btn-lg ui-button ui-corner-all" style="font-size:46px; padding: 20px 44px;">
+                    <span class="ui-button-text">Save</span>
+                </button>
+            </a>
+
         </div>
     </header>
 
+    <!-- Content ================================================== -->
 
-<div class="container" id="layout">
-    <!-- Docs nav ================================================== -->
-    <div class="row">
+    <div class="container" style="margin-top: 10px;">        
+        <div class="row"><div class="col-lg-16">
 
+            <!-- Top Toolbar -->
+            <div class="ui-toolbar ui-widget-header ui-corner-all" id="toolbar">
 
-<div class="col-lg-16" id="article">
+                <!-- Filter Box -->
+                <select class="" id="dan-filter-by" style="font-size: 16px; padding: 6px; margin-top: 1px;"></select> 
+                <input class="" id="dan-filter-txt" style="font-size: 16px; padding: 6px; margin-top: 1px;" type="text" value=""> 
 
+                <!-- Buttons -->
+                <input class="ui-button-primary button" id="dan-btn-create" style="width:100px; float: right; margin-right: 8px;" title="Create New Record" type="button" value="Create New"> 
+                <input class="ui-button-primary button" id="dan-btn-rev" style="width:100px; float: right; margin-right: 8px;" type="Reverse Data" value="Reverse"> 
+                <input class="ui-button-primary button" id="dan-btn-mod" style="width:100px; float: right; margin-right: 8px;" type="Show Recently Modified" value="Recent"> 
+                <input class="ui-button-primary button" id="dan-btn-allpp" style="width:100px; float: right; margin-right: 8px;" type="Toggle Full Data View" value="Show All">
 
-
-<!-- Button -->
-<section id="button">
-<!--     <div class="page-header">
-        <h1>Items Data</h1>
-        
-    </div> -->
-    </section>
-
-    <br/>
-
-
-    <div id="toolbar" class="ui-toolbar ui-widget-header ui-corner-all">
-        <select id="dan-filter-by" style="font-size: 16px; padding: 6px; margin-top: 1px;" type="select" class="">
-
-        </select>
-        <input id="dan-filter" style="font-size: 16px; padding: 6px; margin-top: 1px;" type="text" class="" value=""/>
-        
-        <input id="dan-create" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Create New"/>
-        <input id="dan-rev" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Reverse"/>
-        <input id="dan-mod" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Recent"/>
-        <input id="dan-allpp" style="float: right; margin-right: 8px;" type="button" class="ui-button-primary button" value="Show All"/>
-        
-    </div>
-
-    <table id="dantable" class="table table-striped">
-        <thead>
-            <tr>
-                
-            </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-
-    <div id="toolbar2" class="ui-toolbar ui-widget-header ui-corner-all">    
-        <div id="dan-pages">
-                
-        </div>
-    </div>
-
-
-    <div class="ui-state-highlight ui-corner-all">
-            <p>
-                <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-                <strong>Info:</strong> <span id="dan-info"></span>
-            </p>
-        </div>
-
-        </div> <!-- End Col -->
-    </div> <!-- End Row -->
-</div> <!-- Container -->
-
-<!-- Footer
-================================================== -->
-<!-- <footer class="bs-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 col-sm-5">
-                <h3><span class="icon-truck"></span> Credits</h3>
-                <ul class="list-unstyled">
-                    <li>jQuery UI Bootstrap &copy; <strong class="text-info">Addy Osmani</strong> 2012 - 2013.</li>
-                    <li>Bootstrap &copy; <strong class="text-info">Twitter, Inc.</strong> 2012 - 2013</li>
-                </ul>
             </div>
-        </div>
-    </div>
-</footer> -->
+
+            <!-- Data Table -->
+            <table class="table table-striped" id="dan-table">
+                <thead><tr></tr></thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Bottom Toolbar -->
+            <div class="ui-toolbar ui-widget-header ui-corner-all" id="toolbar2">
+                <div id="dan-pages"></div>
+            </div>
+
+            <!-- Info box -->
+            <div class="ui-state-highlight ui-corner-all">
+                <p>
+                    <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span> 
+                    <strong>Info:</strong> 
+                    <span id="dan-info"></span>
+                </p>
+            </div>
+
+        </div></div>
+
+    </div><!-- Container -->
 
 </body>
 </html>
