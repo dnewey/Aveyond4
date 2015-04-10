@@ -1,51 +1,47 @@
 
-var data_type = 'items';
+// --------------------------------------------------------------------------------
+// Variables
+// --------------------------------------------------------------------------------
 
-var icon_data = []
+var $data_type = 'items'; 
 
-var meta_data = 0;
-var json_data = [];
+var $meta_data = 0;
+var $json_data = [];
 
-var filter_by = "id"
-var filter_data = 0;
-
-var tbl_offset = 0;
-var tbl_sorting = "";
-var tbl_per_page = 11;
-var tbl_filter = "";
+var $tbl_offset = 0;
+var $tbl_per_page = 11;
+var $tbl_sorting = "";
 
 // --------------------------------------------------------------------------------
 // Initialize
 // --------------------------------------------------------------------------------
+
 $(function()
 {
     // Get the datatype from the url, default to something
-    var type = location.search.replace('?', '').split('=')[1];
-    if (!type)
-        type = "items";
-    data_type = type
+    $data_type = location.search.replace('?', '').split('=')[1];
+    if (!$data_type)
+        $data_type = 'items';
 
     // Load up the meta data
     var request = $.ajax(
-        {
-            url: 'meta/'+type+'.json',
-            type: "GET",
-            data: {},
-            async: false,
-            dataType: "json"
-        });
+    {
+        url: 'meta/'+$data_type+'.json',
+        type: "GET",
+        data: {},
+        async: false,
+        dataType: "json"
+    });
 
     request.done(function(data)
     {
-        //console.log("gotit");
-        meta_data = data
-
-        meta_data.push({"field": "tools"});
+        $meta_data = data
+        $meta_data.push({"field": "tools"});
     });
 
     request.fail(function(jqXHR, textStatus)
     {
-        console.log('meta/'+type+'.json');
+        console.log('meta/'+$data_type+'.json');
         console.log(textStatus);
         console.log(jqXHR);
     });
@@ -55,75 +51,55 @@ $(function()
     var idx = 50;
     while (idx >= 0)
     {
-        file = 'json/'+type+'('+idx+').json';
+        file = 'json/'+$data_type+'('+idx+').json';
         if (idx == 0)
-        {
-            file = 'json/'+type+'.json';
-        }
+            file = 'json/'+$data_type+'.json';
+
         //console.log(file);
         var request = $.ajax(
-            {
-                url: file,
-                type: "GET",
-                data: {},
-                async: false,
-                dataType: "json"
-            });
+        {
+            url: file,
+            type: "GET",
+            data: {},
+            async: false,
+            dataType: "json"
+        });
 
         request.done(function(data)
         {
-            //console.log("gotit");
-            json_data = data;
+            $json_data = data;
             idx = -1;
         });
 
         request.fail(function(jqXHR, textStatus)
         {
-            //console.log(textStatus);
             idx -= 1;
         });
     }
 
-    $('#dan-filter').keyup(function ()
+    // Set up filter box
+    for (var idx in $meta_data)
     {
-        filterby($('#dan-filter').val());
-    });
+        var fld = $meta_data[idx].field;
+        var op = $('<option value="' + fld + '">' + fld + '</option>');
+        $('#dan-filter-by').append(op);
+    }
+    $('#dan-filter-txt').keyup(function () { filterby($('#dan-filter-txt').val()); });
+    
+    // Buttons
+    $('#dan-btn-create').click(function () { json_create(); });
+    $('#dan-btn-rev').click(function () { json_rev(); });
+    $('#dan-btn-mod').click(function () { json_sortmodified(); });
+    $('#dan-btn-allpp').click(function () { json_allpp(); });
 
-    $('#dan-create').click(function ()
-    {
-        json_create();
-    });
-
-    $('#dan-rev').click(function ()
-    {
-        json_rev();
-    });
-
-    $('#dan-mod').click(function ()
-    {
-        json_sortmodified();
-    });
-
-    $('#dan-allpp').click(function ()
-    {
-        json_allpp();
-    });
-
+    // Set up that table
     refresh_header();
     refresh_table();
-    refresh_pages();
-
-    refresh_filterby();
+    refresh_pages();    
 
     // Top of page display
-    $('#DanTitle').html(data_type.titleize()+" Data")
-    $('#DanSub').html("Don't forget to save!")
-
-    $("#THEBTN").attr("download", data_type + ".json");
-
-    localStorage.clear();
-
-   // $('.tip').tipr();
+    $('#dan-head-title').html($data_type.titleize()+" Data")
+    $('#dan-head-sub').html("Don't forget to save!")
 
 });
 
@@ -133,186 +109,141 @@ $(function()
 refresh_table = function()
 {
     // Clear Html
-    $('#dantable tbody').html('');
+    $('#dan-table tbody').html('');
 
     var fragment = document.createDocumentFragment();
 
-
-    for (var row = tbl_offset; row < tbl_offset + tbl_per_page; row++)
+    for (var row = $tbl_offset; row < $tbl_offset + $tbl_per_page; row++)
     {
-        if (row >= json_data.length)
-        {
-            // Blank table
-            var tr = document.createElement('tr');
-            
-            for (var idx in meta_data) {
-                var td = document.createElement('td');
-                var a = $('<a href="#">'
-                        + '-'
-                        +'</a>');
+        var tr = document.createElement('tr');
 
-                td.appendChild(a[0]);
+        // Fill in blank frows to stop pages display jumping up and down
+        if (row >= $json_data.length)
+        {            
+            for (var idx in $meta_data) 
+            {
+                if ($meta_data[idx].field == "modified")
+                    continue;
+
+                var td = document.createElement('td');
+                td.appendChild($('<a href="#">-</a>')[0]);
                 tr.appendChild(td);
             }
 
             fragment.appendChild(tr);
             continue;
-        }
-
-        var tr = document.createElement('tr');
+        }        
         
 
-        // Add function column, copy and delete
+        // Fill in each column of the meta data
 
-        for (var idx in meta_data) {
-
-            if (meta_data[idx].field == "modified")
+        for (var idx in $meta_data) 
+        {
+            // Don't draw the modified time field
+            if ($meta_data[idx].field == "modified")
                 continue;
 
             var td = document.createElement('td');
-            var fld = meta_data[idx].field;
+            var fld = $meta_data[idx].field;
 
-            if (fld == "user")
+            // Custom coloring by value, use first letter?
+            if ($meta_data[idx].color == "true")
             {
+                if ($json_data[row][fld])
+                {
+                    color = stringToColour($json_data[row][fld]);
 
-                var att = document.createAttribute("style");
-                if (json_data[row][fld] == "rob")
-                    att.value = "background-color:pink";                           
-                else
-                    att.value = "background-color:lightblue";                           
-                td.setAttributeNode(att);
+                    var att = document.createAttribute("style");
+                    att.value = "background:rgba("+color.r+","+color.g+","+color.b+","+0.3+")";                           
+                    td.setAttributeNode(att);
+                }
             }
 
-
-            if (meta_data[idx].field == "tools")
+            // Tools column
+            if ($meta_data[idx].field == "tools")
             {
-                var a = $('<a href="#" dan-row="' + row
-                    +'" dan-fld="'+fld+'">'
-                    + '<img title="Delete" src="assets/img/del.png" />'
-                    +'</a>');
-                a.click(function()
-                {
-                    json_delete($(this).attr('dan-row'));
-                });
-
-                // Add to row
+                var a = $('<a href="#" dan-row="' + row +'" dan-fld="'+fld+'">' + '<img title="Delete" src="assets/img/del.png" />' + '</a>');
+                a.click(function(){json_delete($(this).attr('dan-row'));});
                 td.appendChild(a[0]);
-
-                var b = $('<a href="#" dan-row="' + row +'"">'
-                    + '<img title="Duplicate" src="assets/img/dup.png" />'
-                    +'</a>');
-                b.click(function()
-                {
-                    json_dup($(this).attr('dan-row'));
-                });
-
-                // Add to row
+                
+                var b = $('<a href="#" dan-row="' + row +'"">' + '<img title="Duplicate" src="assets/img/dup.png" />' +'</a>');
+                b.click(function(){json_dup($(this).attr('dan-row'));});
                 td.appendChild(b[0]);
 
+                // Next column
                 tr.appendChild(td);
-
                 continue;
             }                        
 
-            if (!json_data[row][fld])
-                if (meta_data[idx].default)
-                    json_data[row][fld] = meta_data[idx].default;
+            // If missing data, fill in with default value
+            // This is to support changing meta data with existing data files
+            if (!$json_data[row][fld])
+                if ($meta_data[idx].default)
+                    $json_data[row][fld] = $meta_data[idx].default;
                 else
-                    json_data[row][fld] = "";
+                    $json_data[row][fld] = "";
 
-            var a = $('<a href="#" dan-row="' + row
-                    +'" dan-fld="'+fld+'">'
-                    + json_data[row][fld]
-                    +'</a>');
+            // Create the content of the field, the clickable link
+            var a = $('<a href="#">' + $json_data[row][fld] +'</a>');
+            a.attr('dan-row',row);
+            a.attr('dan-fld',fld)
+            a.attr("data-title",$meta_data[idx].name);
+            a.attr("title",$json_data[row][fld]) // Replace this after edit also
 
-            // Define editable
-            a.attr("data-title",meta_data[idx].name);
-            if (meta_data[idx].edit == "list")
-            {
-                a.attr("data-value",0);
-                a.attr("data-type","select");
-            }
+            // **********************************************************
+            // Special Edit fields
 
-            if (meta_data[idx].edit == "area")
-            {                
+            // Text area
+            if ($meta_data[idx].edit == "area")
                 a.attr("data-type","textarea");
-            }
 
-            if (meta_data[idx].edit == "icon")
-            {
+            // Autocomplete icon names
+            if ($meta_data[idx].edit == "icon")
                 a.attr("data-type","typeaheadjs");
-                //a.attr("data-strings",icon_data);
-            }                
 
-            if (meta_data[idx].edit == "chapter")
-            {
-                options = '[{value: "chapter 1", text: "chapter 1"},' 
-                            + '{value: "chapter 2", text: "chapter 2"},'
-                            + '{value: "chapter 3", text: "chapter 3"},'
-                            + '{value: "chapter 4", text: "chapter 4"},'
-                            + '{value: "chapter 5", text: "chapter 5"},'
-                            + '{value: "chapter 6", text: "chapter 6"},'
-                            + '{value: "chapter 7", text: "chapter 7"},'
-                            + '{value: "chapter 8", text: "chapter 8"},'
-                            + '{value: "other", text: "other"}'
-                            + ']'
-                a.attr("data-source",options)
+            // Select boxes
+            if ($meta_data[idx].edit == "select")
+            {           
+                a.attr("data-source",build_select(fld));
                 a.attr("data-type","select");
             }
-
-            if (meta_data[idx].edit == "select")
-            {
-                options = '[{value: "items", text: "items"},' 
-                            + '{value: "cures", text: "cures"},'
-                            + '{value: "battle", text: "battle"},'
-                            + '{value: "keys", text: "keys"},'
-                            + '{value: "other", text: "other"}'
-                            + ']'
-                a.attr("data-source",options)
-                a.attr("data-type","select");
-            }
-
-            if (meta_data[idx].edit == "geartype")
-            {
-                options = '[{value: "weapon", text: "weapon"},' 
-                            + '{value: "misc", text: "misc"},'
-                            + '{value: "armor", text: "armor"},'
-                            + '{value: "helm", text: "helm"},'
-                            + '{value: "acc", text: "acc"},'
-                            + ']'
-                a.attr("data-source",options)
-                a.attr("data-type","select");
-            }
-
-            if (meta_data[idx].edit == "scope")
-            {
-                options = '[{value: "one", text: "one"},' 
-                            + '{value: "two", text: "two"},'
-                            + '{value: "three", text: "three"},'
-                            + '{value: "all", text: "all"},'
-                            + '{value: "ally", text: "ally"},'
-                            + '{value: "party", text: "party"},'
-                            + '{value: "down", text: "down"},'
-                            + ']'
-                a.attr("data-source",options)
-                a.attr("data-type","select");
-            }
-
-            //console.log(icon_data);
 
             // Create as editable
-            if (meta_data[idx].edit != "none") {
-                a.editable
-                ({
-                    typeahead: {
-                        name: 'test',
-                        prefetch: 'icons.json'
-                    },
-                    emptytext: 'nil',
-                    success: function (r, v) {
-                        json_edit($(this).attr('dan-row'),$(this).attr('dan-fld'), v);
-                    }
-                });
+            if ($meta_data[idx].edit != "none") {
+                
+                if ($meta_data[idx].edit != "select")
+                {
+                    a.editable
+                    ({
+                        typeahead: {
+                            name: 'test',
+                            prefetch: 'icons.json'
+                        },
+                        emptytext: 'nil',
+                        display: function(value, response) {
+                            return false;   //disable this method
+                        },
+                        success: function (r, v) {
+                            json_edit($(this),$(this).attr('dan-row'),$(this).attr('dan-fld'), v);
+                        }
+                    });
+                }
+                else // Editables don't overwrite truncated value
+                {
+                    a.editable
+                    ({
+                        emptytext: 'nil',
+                        success: function (r, v) {
+                            json_edit($(this),$(this).attr('dan-row'),$(this).attr('dan-fld'), v);
+                        }
+                    });
+                }
+
+
+                if ($json_data[row][fld] == "")
+                    a.html("nil");
+                else
+                    a.html($json_data[row][fld].truncate());
             }
 
             // Add to row
@@ -324,60 +255,110 @@ refresh_table = function()
     }
 
     // Add to table body
-    $('#dantable tbody').append(fragment);
-
-    $('.tip').tipr();
+    $('#dan-table tbody').append(fragment);
 
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Build select box
 // --------------------------------------------------------------------------------
+
+build_select = function(type)
+{
+    if (type == "chapter")
+    {
+        return '[{value: "chapter 1", text: "chapter 1"},' 
+            + '{value: "chapter 2", text: "chapter 2"},'
+            + '{value: "chapter 3", text: "chapter 3"},'
+            + '{value: "chapter 4", text: "chapter 4"},'
+            + '{value: "chapter 5", text: "chapter 5"},'
+            + '{value: "chapter 6", text: "chapter 6"},'
+            + '{value: "chapter 7", text: "chapter 7"},'
+            + '{value: "chapter 8", text: "chapter 8"},'
+            + '{value: "other", text: "other"}'
+            + ']';
+    }
+
+    if (type == "category")
+    {
+        return '[{value: "items", text: "items"},' 
+            + '{value: "cures", text: "cures"},'
+            + '{value: "battle", text: "battle"},'
+            + '{value: "keys", text: "keys"},'
+            + '{value: "other", text: "other"}'
+            + ']'
+    }
+
+    if (type == "geartype")
+    {
+        return '[{value: "weapon", text: "weapon"},' 
+            + '{value: "misc", text: "misc"},'
+            + '{value: "armor", text: "armor"},'
+            + '{value: "helm", text: "helm"},'
+            + '{value: "acc", text: "acc"},'
+            + ']'
+    }
+
+    if (type == "scope")
+    {
+        return '[{value: "one", text: "one"},' 
+            + '{value: "two", text: "two"},'
+            + '{value: "three", text: "three"},'
+            + '{value: "all", text: "all"},'
+            + '{value: "ally", text: "ally"},'
+            + '{value: "party", text: "party"},'
+            + '{value: "down", text: "down"},'
+            + ']'
+    }
+
+}
+
+// --------------------------------------------------------------------------------
+// Rebuild the table header
+// --------------------------------------------------------------------------------
+
 refresh_header = function()
 {
     // Clear the head
-    $('#dantable thead tr').html('');
+    $('#dan-table thead tr').html('');
 
     // Add th for each col
-    for (var idx in meta_data)
+    for (var idx in $meta_data)
     {
-        if (meta_data[idx].field == "modified")
-                continue;
+        if ($meta_data[idx].field == "modified")
+            continue;
 
         var th = document.createElement('th');
         var att = document.createAttribute("style");
-            att.value = "padding-left: 2px; padding-right: 2px";                           
-            th.setAttributeNode(att);
+        att.value = "padding-left: 2px; padding-right: 2px";                           
+        th.setAttributeNode(att);
 
-        var fld = meta_data[idx].field;
+        var fld = $meta_data[idx].field;
 
         // Create the header button
         var btn = $('<input style="padding: 2px 5px 2px 5px; width:100%; font-weight: bold; font-size: 15px" type="button" dan-fld="' +
                     fld + '" class="btn btn-primary" value="' +
                     fld + '"/>');
 
-        // Define the sort function
-        btn.click(function()
-        {
-            return sort_table($(this).attr('dan-fld'));
-        });
+        // Sort on click
+        btn.click(function() { return sort_table($(this).attr('dan-fld')); });
 
         // Add the button to the html
         th.appendChild(btn[0]);
-        $('#dantable thead tr').append(th);
+        $('#dan-table thead tr').append(th);
     }
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Refresh page display below table
 // --------------------------------------------------------------------------------
+
 refresh_pages = function()
 {
 
-
     $('#dan-pages').html('');
-    var pages = (json_data.length-1) / tbl_per_page;
-    //pages -= 1;
+    var pages = ($json_data.length-1) / $tbl_per_page;
+
     for (var idx = 0; idx <= pages; idx++)
     {
         // Create button
@@ -388,66 +369,47 @@ refresh_pages = function()
         // Clickable
         btn.click(function()
         {
-            tbl_offset = $(this).attr('dan-idx') *
-            tbl_per_page;
+            $tbl_offset = $(this).attr('dan-idx') * $tbl_per_page;
             refresh_table();
         });
 
         // Add to page
         $('#dan-pages').append(btn);
     }
+
     $("#dan-pages").buttonset();
-
-    $('#dan-info').html('Total records: '+json_data.length);
+    $('#dan-info').html('Total records: '+$json_data.length);
 
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Modify json data
 // --------------------------------------------------------------------------------
-refresh_filterby = function()
+
+json_edit = function(element,row,fld, val)
 {
-    // Clear the head
-    $('#dan-filter-by').html('');
-
-    // Add th for each col
-    for (var idx in meta_data)
-    {
-        var fld = meta_data[idx].field;
-
-        // Create the header button
-        var op = $('<option value="' +
-                    fld + '">' +
-                    fld + '</option>');
-
-        // Define the sort function
-        $('#dan-filter-by').on("change",function()
-        {
-            filter_by =  $('#dan-filter-by').val();
-        });
-
-        // Add the button to the html
-        $('#dan-filter-by').append(op);
-    }
-};
-
-// --------------------------------------------------------------------------------
-// Initialize
-// --------------------------------------------------------------------------------
-json_edit = function(row,fld, val)
-{
-    json_data[row][fld] = val;
+    $json_data[row][fld] = val;
     date = new Date();
-    json_data[row]['modified'] = date.getTime().toString();
+    $json_data[row]['modified'] = date.getTime().toString();
+
+    element.attr("title",val)
+
+    if (val == "")
+        element.html("nil");
+    else
+        element.html(val.truncate());
+
     refresh_json();
 };
 
 // --------------------------------------------------------------------------------
 // Build filter data
 // --------------------------------------------------------------------------------
+
 filterby = function(flt)
 {
-    json_data.sort(function(a,b)
+    filter_by = $('#dan-filter-by').val();
+    $json_data.sort(function(a,b)
     {
         return string_similarity(a[filter_by],flt) < string_similarity(b[filter_by],flt);
     });    
@@ -455,28 +417,23 @@ filterby = function(flt)
 }
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Create a new record
 // --------------------------------------------------------------------------------
+
 json_create = function()
 {
     var obj = new Object();
-    for (var idx in meta_data)
+    for (var idx in $meta_data)
     {
-        var fld = meta_data[idx].field;
-        var val = meta_data[idx].default;
-
+        var fld = $meta_data[idx].field;
+        var val = $meta_data[idx].default;
         obj[fld] = val;
-        //console.log(obj);
     }
 
     date = new Date();
     obj['modified'] = date.getTime().toString();
 
-
-    json_data.push(obj);
-
-    // Sort by reverse id to show latest added, and go page 1
-
+    $json_data.push(obj);
 
     refresh_json();
     refresh_pages();
@@ -484,17 +441,19 @@ json_create = function()
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Reverse the table
 // --------------------------------------------------------------------------------
+
 json_rev = function()
 {
-    json_data.reverse();
+    $json_data.reverse();
     refresh_table();
 }
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Sort by last modified 2015-04-10
 // --------------------------------------------------------------------------------
+
 json_sortmodified = function()
 {
     console.log("asdfasdf");
@@ -503,28 +462,29 @@ json_sortmodified = function()
 }
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Toggle showing all records vs pages
 // --------------------------------------------------------------------------------
+
 json_allpp = function()
 {
-    tbl_offset = 0;
+    $tbl_offset = 0;
 
-    if (tbl_per_page == json_data.length)
-        tbl_per_page = 11;
+    if ($tbl_per_page == $json_data.length)
+        $tbl_per_page = 11;
     else
-        tbl_per_page = json_data.length;
+        $tbl_per_page = $json_data.length;
 
     refresh_table();
     refresh_pages();
 }
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Duplicate chosen record
 // --------------------------------------------------------------------------------
+
 json_dup = function(row)
 {
-
-    json_data.push(JSON.parse(JSON.stringify(json_data[row])));
+    $json_data.push(JSON.parse(JSON.stringify($json_data[row])));
 
     refresh_json();
     refresh_table();
@@ -532,36 +492,54 @@ json_dup = function(row)
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Delete chosen record
 // --------------------------------------------------------------------------------
+
 json_delete = function(row)
 {
-    json_data.splice(row,1)
+    $json_data.splice(row,1)
+
     refresh_json();
     refresh_table();
     refresh_pages();
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Refresh json data for the save button
 // --------------------------------------------------------------------------------
+
 refresh_json = function()
 {
-    var blob, json, url;
-    json = JSON.stringify(json_data);
-    blob = new Blob([json],
-        {
-            type: 'application/json'
-        });
-    url = URL.createObjectURL(blob);
-    $("#THEBTN").attr("download", data_type + ".json");
-    $("#THEBTN").attr("href", url);
+    var json = JSON.stringify($json_data);
+    var blob = new Blob([json],{type: 'application/json'});
+    var url = URL.createObjectURL(blob);
+    $("#dan-head-btn").attr("download", $data_type + ".json");
+    $("#dan-head-btn").attr("href", url);
 };
 
+// --------------------------------------------------------------------------------
+// Sort the table
+// --------------------------------------------------------------------------------
+
+sort_table = function(col)
+{
+    if (col === $tbl_sorting)
+    {
+        $json_data.sort(sort_by(col, false));
+        $tbl_sorting = "";
+    }
+    else
+    {
+        $json_data.sort(sort_by(col, true));
+        $tbl_sorting = col;
+    }
+    refresh_table();
+};
 
 // --------------------------------------------------------------------------------
-// Initialize
+// Sort by function for sorting the table
 // --------------------------------------------------------------------------------
+
 sort_by = function(field, reverse, primer)
 {
     var key;
@@ -580,25 +558,7 @@ sort_by = function(field, reverse, primer)
 };
 
 // --------------------------------------------------------------------------------
-// Initialize
-// --------------------------------------------------------------------------------
-sort_table = function(col)
-{
-    if (col === tbl_sorting)
-    {
-        json_data.sort(sort_by(col, false));
-        tbl_sorting = "";
-    }
-    else
-    {
-        json_data.sort(sort_by(col, true));
-        tbl_sorting = col;
-    }
-    refresh_table();
-};
-
-// --------------------------------------------------------------------------------
-// Initialize
+// String sorting function
 // --------------------------------------------------------------------------------
 
 var get_bigrams, string_similarity;
@@ -636,7 +596,9 @@ string_similarity = function(str1, str2) {
   return 0.0;
 };
 
-
+// --------------------------------------------------------------------------------
+// String funcs
+// --------------------------------------------------------------------------------
 
 String.prototype.titleize = function() {
   var words = this.split(' ')
@@ -645,4 +607,30 @@ String.prototype.titleize = function() {
     array.push(words[i].charAt(0).toUpperCase() + words[i].toLowerCase().slice(1))
   }
   return array.join(' ')
+}
+
+String.prototype.truncate = function(){
+    if(this.length > 25) {
+        return this.substring(0,24)+"...";
+    }
+}
+
+var stringToColour = function(str) {
+
+    // str to hash
+    for (var i = 0, hash = 0; i < str.length; hash = str.charCodeAt(i++) + ((hash << 5) - hash));
+
+    // int/hash to hex
+    for (var i = 0, colour = "#"; i < 3; colour += ("00" + ((hash >> i++ * 8) & 0xFF).toString(16)).slice(-2));
+
+    return hexToRgb(colour);
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }

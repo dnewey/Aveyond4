@@ -13,7 +13,8 @@
     "field": "actions"
   },
   {
-    "field": "resource"
+    "field": "resource",
+    "color": "true"
   },
   {
     "field": "slots"
