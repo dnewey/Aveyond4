@@ -13,12 +13,16 @@
     "field": "actions"
   },
   {
-    "field": "resource"
+    "field": "resource",
+    "color": "true"
   },
   {
     "field": "slots"
   },
   {
-    "field": "statratings"
+    "field": "stat"
+  },
+  {
+    "field": "modified"
   }
 ]

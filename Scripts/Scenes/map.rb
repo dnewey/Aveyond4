@@ -26,10 +26,11 @@ class Scene_Map
     @map.target = @player
 
     # Make viewports - Also in the scene
-    @vp_main = Viewport.new(0, 0, $game.width, $game.height)   
+    @vp_main = Viewport.new(0,0,$game.width,$game.height)   
+    @vp_ui = Viewport.new(0,0,$game.width,$game.height)
 
     # Make tilemap
-    @tilemap = MapWrap.new(@vp_main)    
+    @tilemap = MapWrap.new(@vp_main)
 
     #@panorama = Plane.new(@vp_main,-1000)
     #@fog = Plane.new(@vp_main,3000)
@@ -40,7 +41,7 @@ class Scene_Map
 
     @hud = Ui_Screen.new
 
-    @message = Ui_Message.new
+    @message = Ui_Message.new(@vp_ui)
 
 
     @tone = Tone.new(0, 0, 0, 0)

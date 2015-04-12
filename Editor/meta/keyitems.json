@@ -16,6 +16,9 @@
   },
   {
     "field": "chapter",
-    "edit": "chapter"
+    "edit": "select"
+  },
+  {
+    "field": "modified"
   }
 ]

@@ -15,7 +15,8 @@
   },
   {
     "field": "scope",
-    "edit": "scope"
+    "edit": "select",
+    "color": "true"
   },
   {
     "field": "animation"
@@ -29,6 +30,10 @@
     "edit": "area"
   },
   {
-    "field": "user"
+    "field": "user",
+    "color": "true"
+  },
+  {
+    "field": "modified"
   }
 ]

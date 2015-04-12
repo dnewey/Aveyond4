@@ -5,8 +5,11 @@
   {
     "field": "name",
     "default": "New State"
-  }
+  },
   {
     "field": "stats"
+  },
+  {
+    "field": "modified"
   }
 ]

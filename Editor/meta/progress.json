@@ -1,12 +1,15 @@
 [
   {
     "field": "chapter",
-    "edit": "chapter"
+    "edit": "select"
   },
   {
     "field": "id"
   },
   {
     "field": "value"
+  },
+  {
+    "field": "modified"
   }
 ]

@@ -10,7 +10,7 @@
   },
   {
     "field": "type",
-    "edit": "geartype"
+    "edit": "select"
   },
   {
     "field": "description",
@@ -29,5 +29,8 @@
   },
   {
     "field": "source"
+  },
+  {
+    "field": "modified"
   }
 ]
