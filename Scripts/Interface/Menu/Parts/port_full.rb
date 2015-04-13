@@ -2,7 +2,7 @@
 # ** Part_Char
 #==============================================================================
 
-class Part_Char
+class Port_Full
 
 	def initialize(vp)
 

@@ -39,11 +39,11 @@ class Ui_Message
     @font = Font.new
     @font.name = "Georgia"
     @font.size = 26
-    #@font.color = Color.new(245,223,200)
+    @font.color = Color.new(245,223,200)
 
-    #@font.gradient = true
-    @font.gradient_color1 = Color.new(255,0,0)
-    @font.gradient_color2 = Color.new(245,223,200)
+    # @font.gradient = true
+    # @font.gradient_color1 = Color.new(255,0,0)
+    # @font.gradient_color2 = Color.new(245,223,200)
 
     @scratch = Bitmap.new(400,50)
 
@@ -204,8 +204,8 @@ class Ui_Message
     @textbox.bitmap = Bitmap.new(@width,@height)
     @text_bmp = Bitmap.new(@width,@height)
 
-    @wallpaper.resize(@width,@height)
-    @wallpaper.move(@window.x,@window.y) # mirror sprite?
+    @wallpaper.resize(@width-6,@height-6)
+    @wallpaper.move(@window.x+3,@window.y+3) # mirror sprite?
 
     @scratch.font = @font
     @text_bmp.font = @font

@@ -2,27 +2,30 @@
 # The magical list
 #==============================================================================
 
-# Draw item depends on type, ItemData, WeaponData etc
-# All action external to the list
-
-# Scrollbar is part of list?
-# Made up of multiple sprites
-
-# All items are predrawn to sprites, for scrollings?
-# But what of a really big list?
-
-# Ok hmmmm, draw the sprites when wanted
-
 class List
       
   attr_accessor :x, :y
+  attr_accessor :item_width, :item_height
+  attr_accessor :item_ox, :item_space
 
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
   def initialize(vp)
 
-  	@parent = nil
+        @font = Font.new
+    @font.name = "Georgia"
+    @font.size = 26
+    @font.color = Color.new(245,223,200)
+
+
+    @item_width = 0
+    @item_height = 0
+
+    @item_ox = 0
+    @item_space = 0
+
+
 
   	@x = 0
   	@y = 0
@@ -32,7 +35,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@per_page = 7
+  	@per_page = 10
 
   	# Sprites
   	@sprites = []
@@ -41,20 +44,13 @@ class List
   	}
   	@dynamo = Sprite.new(vp)
 
-  	@scroll_base = Sprite.new(vp)
-  	@scroll_up = Button.new(vp)
-  	@scroll_down = Button.new(vp)
-  	@scroll_btn = Sprite.new(vp)
+    # Scrollbar position calcerlater
 
   end
 
   def dispose
   	@sprites.each{ |s| s.dispose }
   	@dynamo.dispose
-  	@scroll_base.dispose
-  	@scroll_up.dispose
-  	@scroll_down.dispose
-  	@scroll_btn.dispose
   end
 
   def setup(data)
@@ -72,28 +68,15 @@ class List
   		@sprites[i].y = cy
   		@sprites[i].x = @x
       @sprites[i].opacity = 255
-  		cy += @sprites[i].bitmap.height
+  		cy += @item_space
+      #@sprites[i].bitmap.height
   	}
 
   	@cybt = cy
 
-  	# The scrollbar
-  	@scroll_base.bitmap = Bitmap.new(14,300)
-  	@scroll_base.bitmap.vert(Cache.menu("scrollbar"))
+  end
 
-  	@scroll_up.bitmap = Cache.menu("scrollup")
-  	@scroll_down.bitmap = Cache.menu("scrolldown")
-
-    @scroll_up.press = Proc.new{ 
-
-    if !@dynamo.done?
-        refresh
-        @page_idx += @pagemod
-        @dynamo.opacity = 0
-        $tweens.clear_all
-      end
-      @page_idx -= 1; self.refresh; self.scroll_down }
-    @scroll_down.press = Proc.new{ 
+  def scrollbar_down
       if !@dynamo.done?
         refresh
         @page_idx += @pagemod
@@ -101,38 +84,37 @@ class List
         $tweens.clear_all
       end
       @page_idx += 1;self.refresh; self.scroll_up 
-    }
+  end
 
-  	@scroll_btn.bitmap = Cache.menu("scrollbtn")
-
-  	# POSITION THOSE ^^^^^^^^^
-
-        @scroll_base.x = @x - 20
-    @scroll_base.y = @y + 10
-
-        @scroll_up.x = @x-30
-    @scroll_up.y = @y - 15
-
-        @scroll_down.x = @x-30
-    @scroll_down.y = @y +300
-
-  	# Show selected, a sprite behind hmmmm, 
-
+  def scrollbar_up
+      if !@dynamo.done?
+        refresh
+        @page_idx += @pagemod
+        @dynamo.opacity = 0
+        $tweens.clear_all
+      end
+      @page_idx -= 1; self.refresh; self.scroll_down
   end
 
   def draw_item(data,sprite,on)
 
+    # HMMMMMMMMMMMMMMMMMM
+
   	# DataBox atm
-  	sprite.bitmap = Bitmap.new(300,30)
-  	sprite.bitmap.fill(Color.new(123,123,219)) if on
-  	sprite.bitmap.draw_text(0,0,300,30,data.name)
+    src = Cache.menu("Common/bartest")
+    src = Cache.menu("Common/bartest2") if on
+  	sprite.bitmap = Bitmap.new(src.width,src.height)
+    sprite.bitmap.blt(0,0,src,src.rect)
+    #Bitmap.new(item_width,item_height)
+    #sprite.bitmap.skin(Cache.menu("Common/list_inner"))
+  	#sprite.bitmap.fill(Color.new(123,123,219)) if on
+
+    sprite.bitmap.font = @font
+  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.name,1)
 
   end
 
   def update
-
-    @scroll_up.update
-    @scroll_down.update
 
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN) #&& @dynamo.done?
