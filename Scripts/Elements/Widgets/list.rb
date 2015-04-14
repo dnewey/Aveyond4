@@ -8,6 +8,8 @@ class List
   attr_accessor :item_width, :item_height
   attr_accessor :item_ox, :item_space
 
+  attr_accessor :select, :change
+
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
@@ -25,6 +27,9 @@ class List
     @item_ox = 0
     @item_space = 0
 
+    # Procs
+    @select = nil
+    @change = nil
 
 
   	@x = 0
@@ -35,7 +40,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@per_page = 10
+  	@per_page = 11
 
   	# Sprites
   	@sprites = []
@@ -55,6 +60,7 @@ class List
 
   def setup(data)
   	@data = data
+    @per_page = @data.count
   	refresh
   end
 
@@ -65,6 +71,7 @@ class List
 
   	(0..@per_page-1).each{ |i|
   		draw_item(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
+      @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
   		@sprites[i].x = @x
       @sprites[i].opacity = 255
@@ -110,7 +117,7 @@ class List
   	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
     sprite.bitmap.font = @font
-  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.name,1)
+  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.text,1)
 
   end
 
@@ -161,6 +168,12 @@ class List
       refresh
       break
     }
+
+
+    # Selection
+    if $input.action?
+      @select.call(@current.text) if !@select.nil?
+    end
 
   end
 

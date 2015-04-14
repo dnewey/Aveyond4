@@ -1,7 +1,5 @@
 
-class List_Main
-
-	attr_accessor :list
+class List_Common
 
 	def initialize(vp)
 
@@ -30,17 +28,10 @@ class List_Main
 
 
 		data = []
-		data.push(_db('menu','Items'))
-		data.push(_db('menu','Journal'))
-		data.push(_db('menu','Party'))
-		data.push(_db('menu','Equip'))
-		data.push(_db('menu','Skills'))
-		data.push(_db('menu','Profiles'))
-		data.push(_db('menu','Options'))
-		data.push(_db('menu','Help'))
-		data.push(_db('menu','Quit'))
-		data.push(_db('menu','Load'))
-		data.push(_db('menu','Save'))
+		(0..100).to_a.each{ |i|
+			dta = DataBox.new(i)
+			data.push(dta)
+		}
 
 		@list.setup(data)
 
@@ -54,8 +45,4 @@ class List_Main
 		@list.update
 	end
 
-end
-
-def _db(*args)
-	DataBox.new(args[0],args[1],args[2],args[3])
 end

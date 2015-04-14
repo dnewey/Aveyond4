@@ -7,7 +7,7 @@ class Mnu_Main
 	def initialize(vp)
 
 		@menu = List_Main.new(vp)
-		#@menu.list.select = Proc.new{}
+		@menu.list.select = Proc.new{ |option| self.select(option) }
 
 		# Character Boxes
 		# @char_boxes = []
@@ -18,7 +18,6 @@ class Mnu_Main
 
 		@charbox2 = Char_Box_Large.new(vp)
 		@charbox2.move(416,25)
-
 
 		@charbox3 = Char_Box_Large.new(vp)
 		@charbox3.move(196,202)
@@ -34,6 +33,12 @@ class Mnu_Main
 
 	def update
 		@menu.update
+	end
+
+	def select(option)
+		if option == "Items"
+			$scene.push_menu(Mnu_Items.new)
+		end
 	end
 
 end

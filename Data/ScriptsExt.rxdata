@@ -1,4 +1,4 @@
-[\"å#==============================================================================
+[]"å#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1138,7 +1138,7 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end"`#==============================================================================
+end"v#==============================================================================
 # The magical list
 #==============================================================================
 
@@ -1147,6 +1147,8 @@ class List
   attr_accessor :x, :y
   attr_accessor :item_width, :item_height
   attr_accessor :item_ox, :item_space
+
+  attr_accessor :select, :change
 
   #--------------------------------------------------------------------------
   # * Init
@@ -1165,6 +1167,9 @@ class List
     @item_ox = 0
     @item_space = 0
 
+    # Procs
+    @select = nil
+    @change = nil
 
 
   	@x = 0
@@ -1175,7 +1180,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@per_page = 10
+  	@per_page = 11
 
   	# Sprites
   	@sprites = []
@@ -1195,6 +1200,7 @@ class List
 
   def setup(data)
   	@data = data
+    @per_page = @data.count
   	refresh
   end
 
@@ -1205,6 +1211,7 @@ class List
 
   	(0..@per_page-1).each{ |i|
   		draw_item(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
+      @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
   		@sprites[i].x = @x
       @sprites[i].opacity = 255
@@ -1250,7 +1257,7 @@ class List
   	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
     sprite.bitmap.font = @font
-  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.name,1)
+  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.text,1)
 
   end
 
@@ -1301,6 +1308,12 @@ class List
       refresh
       break
     }
+
+
+    # Selection
+    if $input.action?
+      @select.call(@current.text) if !@select.nil?
+    end
 
   end
 
@@ -4622,7 +4635,36 @@ class Mnu_File
 		@tabs.update
 	end
 
-end" "Î#==============================================================================
+end"å#==============================================================================
+# ** Mnu_Items
+#==============================================================================
+
+class Mnu_Items
+
+	def initialize(vp)
+
+		@title = Page_Title.new()
+
+		@tabs = nil
+
+		@menu = List_Common.new(vp)
+		#@menu.list.select = Proc.new{}
+
+		#@info = Info_Box.new()
+
+		@port = Port_Full.new(vp)
+
+	end
+
+	def dispose
+		@menu.dispose
+	end
+
+	def update
+		@menu.update
+	end
+
+end"#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -4631,7 +4673,7 @@ class Mnu_Main
 	def initialize(vp)
 
 		@menu = List_Main.new(vp)
-		#@menu.list.select = Proc.new{}
+		@menu.list.select = Proc.new{ |option| self.select(option) }
 
 		# Character Boxes
 		# @char_boxes = []
@@ -4642,7 +4684,6 @@ class Mnu_Main
 
 		@charbox2 = Char_Box_Large.new(vp)
 		@charbox2.move(416,25)
-
 
 		@charbox3 = Char_Box_Large.new(vp)
 		@charbox3.move(196,202)
@@ -4658,6 +4699,10 @@ class Mnu_Main
 
 	def update
 		@menu.update
+	end
+
+	def select(option)
+		log_info(option)
 	end
 
 end" "`
@@ -4693,8 +4738,8 @@ class Char_Box_Large
 		@port.move(x+17,y-27)
 	end
 
-end"º
-class List_Main
+end"¼
+class List_Common
 
 	def initialize(vp)
 
@@ -4740,6 +4785,66 @@ class List_Main
 		@list.update
 	end
 
+end"F
+class List_Main
+
+	attr_accessor :list
+
+	def initialize(vp)
+
+		# Left side window
+		@back = Sprite.new(vp)
+		@back.bitmap = Bitmap.new(164,444)
+		@back.bitmap.fill(Color.new(47,45,41))
+
+		@window = Sprite.new(vp)
+		@window.bitmap = Bitmap.new(170,450)
+    	@window.bitmap.borderskin("Common/skin-plain")
+
+    	@back.move(13,13)
+    	@window.move(10,10)
+
+		# Left side list
+		@list = List.new(vp)
+
+		@list.item_width = 156
+		@list.item_height = 42
+
+		@list.item_space = 43
+
+		@list.x = 16
+		@list.y = 16
+
+
+		data = []
+		data.push(_db('menu','Items'))
+		data.push(_db('menu','Journal'))
+		data.push(_db('menu','Party'))
+		data.push(_db('menu','Equip'))
+		data.push(_db('menu','Skills'))
+		data.push(_db('menu','Profiles'))
+		data.push(_db('menu','Options'))
+		data.push(_db('menu','Help'))
+		data.push(_db('menu','Quit'))
+		data.push(_db('menu','Load'))
+		data.push(_db('menu','Save'))
+
+		@list.setup(data)
+
+	end
+
+	def dispose
+
+	end
+
+	def update
+		@list.update
+	end
+
+end
+
+def _db(*args)
+	DataBox.new(args[0],args[1],args[2],args[3])
 end"†#==============================================================================
 # ** Part_Char
 #==============================================================================
@@ -8703,9 +8808,24 @@ class Game_Player < Game_Character
   end
 
 end
-"d
+"C
 # Menu state
 # Hold cursor positions, current character etc etc etc
+
+class DataBox
+	attr_accessor :type
+	attr_accessor :text
+	attr_accessor :icon
+	attr_accessor :misc
+
+	def initialize(type,text,icon="",misc="")
+		@type = type
+		@text = text
+		@icon = icon
+		@misc = misc
+	end
+
+end
 
 class MenuData
 
