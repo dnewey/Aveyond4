@@ -1,4 +1,4 @@
-[]"å#==============================================================================
+[^"å#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1138,7 +1138,7 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end"v#==============================================================================
+end"A#==============================================================================
 # The magical list
 #==============================================================================
 
@@ -1153,9 +1153,13 @@ class List
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
-  def initialize(vp)
+  def initialize()
 
-        @font = Font.new
+    # Make own viewport
+    @vp = Viewport.new(0,0,1000,1000)
+    @vp.z = 9999
+
+    @font = Font.new
     @font.name = "Georgia"
     @font.size = 26
     @font.color = Color.new(245,223,200)
@@ -1185,11 +1189,9 @@ class List
   	# Sprites
   	@sprites = []
   	@per_page.times{ |i|
-  		@sprites.push(Sprite.new(vp))
+  		@sprites.push(Sprite.new(@vp))
   	}
-  	@dynamo = Sprite.new(vp)
-
-    # Scrollbar position calcerlater
+  	@dynamo = Sprite.new(@vp)
 
   end
 
@@ -1206,14 +1208,16 @@ class List
 
   def refresh
 
+    @vp.rect = Rect.new(@x,@y,@item_width,@item_space*@per_page)
+
   	# Rebuild the items from data
-  	cy = @y
+  	cy = 0#@y
 
   	(0..@per_page-1).each{ |i|
   		draw_item(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
       @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
-  		@sprites[i].x = @x
+  		@sprites[i].x = 0#@x
       @sprites[i].opacity = 255
   		cy += @item_space
       #@sprites[i].bitmap.height
@@ -1248,8 +1252,8 @@ class List
     # HMMMMMMMMMMMMMMMMMM
 
   	# DataBox atm
-    src = Cache.menu("Common/bartest")
-    src = Cache.menu("Common/bartest2") if on
+    src = Cache.menu("Common/bartest3")
+    src = Cache.menu("Common/bartest4") if on
   	sprite.bitmap = Bitmap.new(src.width,src.height)
     sprite.bitmap.blt(0,0,src,src.rect)
     #Bitmap.new(item_width,item_height)
@@ -1257,6 +1261,7 @@ class List
   	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
     sprite.bitmap.font = @font
+    return if data.nil?
   	sprite.bitmap.draw_text(0,0,src.width,src.height,data.text,1)
 
   end
@@ -1300,6 +1305,7 @@ class List
 
     # Check mouseover
     @sprites.each_index{ |i|
+      break
       next if pos[0] < @sprites[i].x
       next if pos[1] < @sprites[i].y
       next if pos[0] > @sprites[i].x + @sprites[i].width
@@ -1323,30 +1329,30 @@ class List
           @pagemod = 1
 
     # Create the dynamo
-    @dynamo.y = @y - 30
-    @dynamo.x = @x
-    @dynamo.opacity = 0
+    @dynamo.y = 0 - @item_space
+    @dynamo.x = 0#@x
+    @dynamo.opacity = 205
 
     dur = 200
     ease = :quad_in_out
 
     draw_item(@data[@scroll_idx],@dynamo,@page_idx == -1)
 
-    @dynamo.do(go("y",30,dur,ease))
-    @dynamo.do(go("opacity",255,dur,ease))
+    @dynamo.do(go("y",@item_space,dur,ease))
+    @dynamo.do(go("opacity",50,dur,ease))
 
     @dynamo.do(proc(Proc.new{
       @page_idx += 1
 
       self.refresh
-      @dynamo.opacity = 0
+      @dynamo.opacity = 205
     },dur+30))
 
     @sprites.each{ |s|
-      s.do(go("y",30,dur,ease))
+      s.do(go("y",@item_space,dur,ease))
     }
 
-    @sprites[-1].do(go("opacity",-255,dur,ease))
+    @sprites[-1].do(go("opacity",-50,dur,ease))
 
   end
 
@@ -1357,16 +1363,16 @@ class List
 
   	# Create the dynamo
   	@dynamo.y = @cybt
-  	@dynamo.x = @x
-  	@dynamo.opacity = 0
+  	@dynamo.x = 0#@x
+  	@dynamo.opacity = 205
 
     dur = 200
     ease = :quad_in_out
 
   	draw_item(@data[@scroll_idx + @per_page - 1],@dynamo,@page_idx == @per_page)
 
-  	@dynamo.do(go("y",-30,dur,ease))
-  	@dynamo.do(go("opacity",255,dur,ease))
+  	@dynamo.do(go("y",-@item_space,dur,ease))
+  	@dynamo.do(go("opacity",50,dur,ease))
 
 
 
@@ -1374,14 +1380,14 @@ class List
 
       @page_idx -= 1
       self.refresh
-      @dynamo.opacity = 0
+      @dynamo.opacity = 205
     },dur+30))
 
   	@sprites.each{ |s|
-  		s.do(go("y",-30,dur,ease))
+  		s.do(go("y",-@item_space,dur,ease))
   	}
 
-  	@sprites[0].do(go("opacity",-255,dur,ease))
+  	@sprites[0].do(go("opacity",-50,dur,ease))
 
   end
 
@@ -4635,7 +4641,7 @@ class Mnu_File
 		@tabs.update
 	end
 
-end"å#==============================================================================
+end"ø#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -4643,14 +4649,14 @@ class Mnu_Items
 
 	def initialize(vp)
 
-		@title = Page_Title.new()
+		@title = Page_Title.new(vp)
 
 		@tabs = nil
 
 		@menu = List_Common.new(vp)
 		#@menu.list.select = Proc.new{}
 
-		#@info = Info_Box.new()
+		@info = Info_Box.new(vp)
 
 		@port = Port_Full.new(vp)
 
@@ -4662,15 +4668,18 @@ class Mnu_Items
 
 	def update
 		@menu.update
+		@info.update
 	end
 
-end"#==============================================================================
+end"\#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
 class Mnu_Main
 
 	def initialize(vp)
+
+		@vp = vp
 
 		@menu = List_Main.new(vp)
 		@menu.list.select = Proc.new{ |option| self.select(option) }
@@ -4702,7 +4711,9 @@ class Mnu_Main
 	end
 
 	def select(option)
-		log_info(option)
+		if option == "Items"
+			$scene.push_menu(Mnu_Items.new(@vp))
+		end
 	end
 
 end" "`
@@ -4738,40 +4749,63 @@ class Char_Box_Large
 		@port.move(x+17,y-27)
 	end
 
-end"¼
+end"z
+class Info_Box
+
+	def initialize(vp)
+
+		@wallpaper = Wallpaper.new(294,90,Cache.menu("Common/back"),vp)
+    	#@wallpaper.opacity = 230
+
+		@window = Sprite.new(vp)
+		@window.bitmap = Bitmap.new(300,96)
+    	@window.bitmap.borderskin("Common/skin-plain")
+
+    	@wallpaper.move(13,378)
+    	@window.move(10,375)
+
+	end
+
+	def update
+		@wallpaper.update
+	end
+
+end"f
 class List_Common
 
 	def initialize(vp)
 
 		# Left side window
 		@back = Sprite.new(vp)
-		@back.bitmap = Bitmap.new(164,444)
+		@back.bitmap = Bitmap.new(290,246)
 		@back.bitmap.fill(Color.new(47,45,41))
 
 		@window = Sprite.new(vp)
-		@window.bitmap = Bitmap.new(170,450)
+		@window.bitmap = Bitmap.new(300,256)
     	@window.bitmap.borderskin("Common/skin-plain")
 
-    	@back.move(13,13)
-    	@window.move(10,10)
+    	@back.move(13,113)
+    	@window.move(10,110)
 
 		# Left side list
-		@list = List.new(vp)
+		@list = List.new()
 
-		@list.item_width = 156
-		@list.item_height = 42
+		@list.item_width = 288
+		@list.item_height = 34
 
-		@list.item_space = 43
+		@list.item_space = 35
 
 		@list.x = 16
-		@list.y = 16
-
+		@list.y = 116
 
 		data = []
-		(0..100).to_a.each{ |i|
-			dta = DataBox.new(i)
-			data.push(dta)
-		}
+		data.push(_db('menu','Potion'))
+		data.push(_db('menu','Journal'))
+		data.push(_db('menu','Party'))
+		data.push(_db('menu','Equip'))
+		data.push(_db('menu','Skills'))
+		data.push(_db('menu','Profiles'))
+		data.push(_db('menu','Options'))
 
 		@list.setup(data)
 
@@ -4845,6 +4879,20 @@ end
 
 def _db(*args)
 	DataBox.new(args[0],args[1],args[2],args[3])
+end"¬
+
+
+class Page_Title
+
+	def initialize(vp)
+
+		@logo = Sprite.new(vp)
+		@logo.bitmap = Cache.menu("Common/title-circle")
+		@logo.x = 25
+		@logo.y = 15
+
+	end
+
 end"†#==============================================================================
 # ** Part_Char
 #==============================================================================
@@ -4855,7 +4903,7 @@ class Port_Full
 
 		@boyle = Sprite.new(vp)
 		@boyle.bitmap = Cache.menu("tempboyle")
-		@boyle.x = 500
+		@boyle.x = 350
 
 	end
 
@@ -4869,7 +4917,7 @@ class Port_Full
 
 	end
 
-end" "6)#==============================================================================
+end"6)#==============================================================================
 # ** Game_Actor
 #------------------------------------------------------------------------------
 #  This class handles the actor. It's used within the Game_Actors class
@@ -9710,7 +9758,7 @@ class Scene_Map
     end
   end
 
-end"O#==============================================================================
+end"´#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -9733,7 +9781,8 @@ class Scene_Menu
     @bg.bitmap = Cache.menu("Backs/sample")
 
     # The current menu
-    @menu = Mnu_Main.new(@vp)
+    #@menus = Mnu_Main.new(@vp)
+    @menu = Mnu_Items.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
   end
@@ -9754,6 +9803,14 @@ class Scene_Menu
 
     @menu.update     
     
+  end
+
+  def push_menu(menu)
+
+  end
+
+  def pop_menu(menu)
+
   end
 
 end" " "ê#==============================================================================

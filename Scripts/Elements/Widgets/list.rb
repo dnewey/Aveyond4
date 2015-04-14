@@ -13,9 +13,13 @@ class List
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
-  def initialize(vp)
+  def initialize()
 
-        @font = Font.new
+    # Make own viewport
+    @vp = Viewport.new(0,0,1000,1000)
+    @vp.z = 9999
+
+    @font = Font.new
     @font.name = "Georgia"
     @font.size = 26
     @font.color = Color.new(245,223,200)
@@ -45,11 +49,9 @@ class List
   	# Sprites
   	@sprites = []
   	@per_page.times{ |i|
-  		@sprites.push(Sprite.new(vp))
+  		@sprites.push(Sprite.new(@vp))
   	}
-  	@dynamo = Sprite.new(vp)
-
-    # Scrollbar position calcerlater
+  	@dynamo = Sprite.new(@vp)
 
   end
 
@@ -66,14 +68,16 @@ class List
 
   def refresh
 
+    @vp.rect = Rect.new(@x,@y,@item_width,@item_space*@per_page)
+
   	# Rebuild the items from data
-  	cy = @y
+  	cy = 0#@y
 
   	(0..@per_page-1).each{ |i|
   		draw_item(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
       @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
-  		@sprites[i].x = @x
+  		@sprites[i].x = 0#@x
       @sprites[i].opacity = 255
   		cy += @item_space
       #@sprites[i].bitmap.height
@@ -108,8 +112,8 @@ class List
     # HMMMMMMMMMMMMMMMMMM
 
   	# DataBox atm
-    src = Cache.menu("Common/bartest")
-    src = Cache.menu("Common/bartest2") if on
+    src = Cache.menu("Common/bartest3")
+    src = Cache.menu("Common/bartest4") if on
   	sprite.bitmap = Bitmap.new(src.width,src.height)
     sprite.bitmap.blt(0,0,src,src.rect)
     #Bitmap.new(item_width,item_height)
@@ -117,6 +121,7 @@ class List
   	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
     sprite.bitmap.font = @font
+    return if data.nil?
   	sprite.bitmap.draw_text(0,0,src.width,src.height,data.text,1)
 
   end
@@ -160,6 +165,7 @@ class List
 
     # Check mouseover
     @sprites.each_index{ |i|
+      break
       next if pos[0] < @sprites[i].x
       next if pos[1] < @sprites[i].y
       next if pos[0] > @sprites[i].x + @sprites[i].width
@@ -183,30 +189,30 @@ class List
           @pagemod = 1
 
     # Create the dynamo
-    @dynamo.y = @y - 30
-    @dynamo.x = @x
-    @dynamo.opacity = 0
+    @dynamo.y = 0 - @item_space
+    @dynamo.x = 0#@x
+    @dynamo.opacity = 205
 
     dur = 200
     ease = :quad_in_out
 
     draw_item(@data[@scroll_idx],@dynamo,@page_idx == -1)
 
-    @dynamo.do(go("y",30,dur,ease))
-    @dynamo.do(go("opacity",255,dur,ease))
+    @dynamo.do(go("y",@item_space,dur,ease))
+    @dynamo.do(go("opacity",50,dur,ease))
 
     @dynamo.do(proc(Proc.new{
       @page_idx += 1
 
       self.refresh
-      @dynamo.opacity = 0
+      @dynamo.opacity = 205
     },dur+30))
 
     @sprites.each{ |s|
-      s.do(go("y",30,dur,ease))
+      s.do(go("y",@item_space,dur,ease))
     }
 
-    @sprites[-1].do(go("opacity",-255,dur,ease))
+    @sprites[-1].do(go("opacity",-50,dur,ease))
 
   end
 
@@ -217,16 +223,16 @@ class List
 
   	# Create the dynamo
   	@dynamo.y = @cybt
-  	@dynamo.x = @x
-  	@dynamo.opacity = 0
+  	@dynamo.x = 0#@x
+  	@dynamo.opacity = 205
 
     dur = 200
     ease = :quad_in_out
 
   	draw_item(@data[@scroll_idx + @per_page - 1],@dynamo,@page_idx == @per_page)
 
-  	@dynamo.do(go("y",-30,dur,ease))
-  	@dynamo.do(go("opacity",255,dur,ease))
+  	@dynamo.do(go("y",-@item_space,dur,ease))
+  	@dynamo.do(go("opacity",50,dur,ease))
 
 
 
@@ -234,14 +240,14 @@ class List
 
       @page_idx -= 1
       self.refresh
-      @dynamo.opacity = 0
+      @dynamo.opacity = 205
     },dur+30))
 
   	@sprites.each{ |s|
-  		s.do(go("y",-30,dur,ease))
+  		s.do(go("y",-@item_space,dur,ease))
   	}
 
-  	@sprites[0].do(go("opacity",-255,dur,ease))
+  	@sprites[0].do(go("opacity",-50,dur,ease))
 
   end
 

@@ -21,7 +21,8 @@ class Scene_Menu
     @bg.bitmap = Cache.menu("Backs/sample")
 
     # The current menu
-    @menu = Mnu_Main.new(@vp)
+    #@menus = Mnu_Main.new(@vp)
+    @menu = Mnu_Items.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
   end
@@ -42,6 +43,14 @@ class Scene_Menu
 
     @menu.update     
     
+  end
+
+  def push_menu(menu)
+
+  end
+
+  def pop_menu(menu)
+
   end
 
 end

@@ -6,6 +6,8 @@ class Mnu_Main
 
 	def initialize(vp)
 
+		@vp = vp
+
 		@menu = List_Main.new(vp)
 		@menu.list.select = Proc.new{ |option| self.select(option) }
 
@@ -37,7 +39,7 @@ class Mnu_Main
 
 	def select(option)
 		if option == "Items"
-			$scene.push_menu(Mnu_Items.new)
+			$scene.push_menu(Mnu_Items.new(@vp))
 		end
 	end
 

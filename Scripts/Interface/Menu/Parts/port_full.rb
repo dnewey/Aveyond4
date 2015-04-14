@@ -8,7 +8,7 @@ class Port_Full
 
 		@boyle = Sprite.new(vp)
 		@boyle.bitmap = Cache.menu("tempboyle")
-		@boyle.x = 500
+		@boyle.x = 350
 
 	end
 
