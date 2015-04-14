@@ -1,4 +1,4 @@
-[Y"å#==============================================================================
+[\"å#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1138,31 +1138,34 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end"A#==============================================================================
+end"`#==============================================================================
 # The magical list
 #==============================================================================
-
-# Draw item depends on type, ItemData, WeaponData etc
-# All action external to the list
-
-# Scrollbar is part of list?
-# Made up of multiple sprites
-
-# All items are predrawn to sprites, for scrollings?
-# But what of a really big list?
-
-# Ok hmmmm, draw the sprites when wanted
 
 class List
       
   attr_accessor :x, :y
+  attr_accessor :item_width, :item_height
+  attr_accessor :item_ox, :item_space
 
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
   def initialize(vp)
 
-  	@parent = nil
+        @font = Font.new
+    @font.name = "Georgia"
+    @font.size = 26
+    @font.color = Color.new(245,223,200)
+
+
+    @item_width = 0
+    @item_height = 0
+
+    @item_ox = 0
+    @item_space = 0
+
+
 
   	@x = 0
   	@y = 0
@@ -1172,7 +1175,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@per_page = 7
+  	@per_page = 10
 
   	# Sprites
   	@sprites = []
@@ -1181,20 +1184,13 @@ class List
   	}
   	@dynamo = Sprite.new(vp)
 
-  	@scroll_base = Sprite.new(vp)
-  	@scroll_up = Button.new(vp)
-  	@scroll_down = Button.new(vp)
-  	@scroll_btn = Sprite.new(vp)
+    # Scrollbar position calcerlater
 
   end
 
   def dispose
   	@sprites.each{ |s| s.dispose }
   	@dynamo.dispose
-  	@scroll_base.dispose
-  	@scroll_up.dispose
-  	@scroll_down.dispose
-  	@scroll_btn.dispose
   end
 
   def setup(data)
@@ -1212,28 +1208,15 @@ class List
   		@sprites[i].y = cy
   		@sprites[i].x = @x
       @sprites[i].opacity = 255
-  		cy += @sprites[i].bitmap.height
+  		cy += @item_space
+      #@sprites[i].bitmap.height
   	}
 
   	@cybt = cy
 
-  	# The scrollbar
-  	@scroll_base.bitmap = Bitmap.new(14,300)
-  	@scroll_base.bitmap.vert(Cache.menu("scrollbar"))
+  end
 
-  	@scroll_up.bitmap = Cache.menu("scrollup")
-  	@scroll_down.bitmap = Cache.menu("scrolldown")
-
-    @scroll_up.press = Proc.new{ 
-
-    if !@dynamo.done?
-        refresh
-        @page_idx += @pagemod
-        @dynamo.opacity = 0
-        $tweens.clear_all
-      end
-      @page_idx -= 1; self.refresh; self.scroll_down }
-    @scroll_down.press = Proc.new{ 
+  def scrollbar_down
       if !@dynamo.done?
         refresh
         @page_idx += @pagemod
@@ -1241,38 +1224,37 @@ class List
         $tweens.clear_all
       end
       @page_idx += 1;self.refresh; self.scroll_up 
-    }
+  end
 
-  	@scroll_btn.bitmap = Cache.menu("scrollbtn")
-
-  	# POSITION THOSE ^^^^^^^^^
-
-        @scroll_base.x = @x - 20
-    @scroll_base.y = @y + 10
-
-        @scroll_up.x = @x-30
-    @scroll_up.y = @y - 15
-
-        @scroll_down.x = @x-30
-    @scroll_down.y = @y +300
-
-  	# Show selected, a sprite behind hmmmm, 
-
+  def scrollbar_up
+      if !@dynamo.done?
+        refresh
+        @page_idx += @pagemod
+        @dynamo.opacity = 0
+        $tweens.clear_all
+      end
+      @page_idx -= 1; self.refresh; self.scroll_down
   end
 
   def draw_item(data,sprite,on)
 
+    # HMMMMMMMMMMMMMMMMMM
+
   	# DataBox atm
-  	sprite.bitmap = Bitmap.new(300,30)
-  	sprite.bitmap.fill(Color.new(123,123,219)) if on
-  	sprite.bitmap.draw_text(0,0,300,30,data.name)
+    src = Cache.menu("Common/bartest")
+    src = Cache.menu("Common/bartest2") if on
+  	sprite.bitmap = Bitmap.new(src.width,src.height)
+    sprite.bitmap.blt(0,0,src,src.rect)
+    #Bitmap.new(item_width,item_height)
+    #sprite.bitmap.skin(Cache.menu("Common/list_inner"))
+  	#sprite.bitmap.fill(Color.new(123,123,219)) if on
+
+    sprite.bitmap.font = @font
+  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.name,1)
 
   end
 
   def update
-
-    @scroll_up.update
-    @scroll_down.update
 
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN) #&& @dynamo.done?
@@ -4063,7 +4045,7 @@ class TargetCmd
 	end
 
 end
-"Š0#==============================================================================
+"–0#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -4104,11 +4086,11 @@ class Ui_Message
     @font = Font.new
     @font.name = "Georgia"
     @font.size = 26
-    #@font.color = Color.new(245,223,200)
+    @font.color = Color.new(245,223,200)
 
-    #@font.gradient = true
-    @font.gradient_color1 = Color.new(255,0,0)
-    @font.gradient_color2 = Color.new(245,223,200)
+    # @font.gradient = true
+    # @font.gradient_color1 = Color.new(255,0,0)
+    # @font.gradient_color2 = Color.new(245,223,200)
 
     @scratch = Bitmap.new(400,50)
 
@@ -4269,8 +4251,8 @@ class Ui_Message
     @textbox.bitmap = Bitmap.new(@width,@height)
     @text_bmp = Bitmap.new(@width,@height)
 
-    @wallpaper.resize(@width,@height)
-    @wallpaper.move(@window.x,@window.y) # mirror sprite?
+    @wallpaper.resize(@width-6,@height-6)
+    @wallpaper.move(@window.x+3,@window.y+3) # mirror sprite?
 
     @scratch.font = @font
     @text_bmp.font = @font
@@ -4640,11 +4622,129 @@ class Mnu_File
 		@tabs.update
 	end
 
-end" " "†#==============================================================================
+end" "Î#==============================================================================
+# ** Mnu_Main
+#==============================================================================
+
+class Mnu_Main
+
+	def initialize(vp)
+
+		@menu = List_Main.new(vp)
+		#@menu.list.select = Proc.new{}
+
+		# Character Boxes
+		# @char_boxes = []
+		#@char_boxes.push(CHARBOX.new)
+
+		@charbox = Char_Box_Large.new(vp)
+		@charbox.move(196,25)
+
+		@charbox2 = Char_Box_Large.new(vp)
+		@charbox2.move(416,25)
+
+
+		@charbox3 = Char_Box_Large.new(vp)
+		@charbox3.move(196,202)
+
+		@charbox4 = Char_Box_Large.new(vp)
+		@charbox4.move(416,202)
+
+	end
+
+	def dispose
+		@menu.dispose
+	end
+
+	def update
+		@menu.update
+	end
+
+end" "`
+
+class Char_Box_Large
+
+	def initialize(vp)
+
+	    @wallpaper = Wallpaper.new(201,156,Cache.menu("Common/portback"),vp)
+	    #@wallpaper.opacity = 230
+
+		@gradient = Sprite.new(vp)
+		@gradient.bitmap = Cache.menu("Common/charbox-gradient")
+		@gradient.opacity = 90
+
+		@window = Sprite.new(vp)
+		@window.bitmap = Bitmap.new(205,160)
+		@window.bitmap.borderskin
+
+		@port = Sprite.new(vp)
+		@port.bitmap = Cache.face("boy")
+
+	end
+
+	def setup(char)
+
+	end
+
+	def move(x,y)
+		@window.move(x,y)
+		@gradient.move(x+2,y+50)
+		@wallpaper.move(x+2,y+2)		
+		@port.move(x+17,y-27)
+	end
+
+end"º
+class List_Main
+
+	def initialize(vp)
+
+		# Left side window
+		@back = Sprite.new(vp)
+		@back.bitmap = Bitmap.new(164,444)
+		@back.bitmap.fill(Color.new(47,45,41))
+
+		@window = Sprite.new(vp)
+		@window.bitmap = Bitmap.new(170,450)
+    	@window.bitmap.borderskin("Common/skin-plain")
+
+    	@back.move(13,13)
+    	@window.move(10,10)
+
+		# Left side list
+		@list = List.new(vp)
+
+		@list.item_width = 156
+		@list.item_height = 42
+
+		@list.item_space = 43
+
+		@list.x = 16
+		@list.y = 16
+
+
+		data = []
+		(0..100).to_a.each{ |i|
+			dta = DataBox.new(i)
+			data.push(dta)
+		}
+
+		@list.setup(data)
+
+	end
+
+	def dispose
+
+	end
+
+	def update
+		@list.update
+	end
+
+end"†#==============================================================================
 # ** Part_Char
 #==============================================================================
 
-class Part_Char
+class Port_Full
 
 	def initialize(vp)
 
@@ -4664,7 +4764,7 @@ class Part_Char
 
 	end
 
-end" " "6)#==============================================================================
+end" "6)#==============================================================================
 # ** Game_Actor
 #------------------------------------------------------------------------------
 #  This class handles the actor. It's used within the Game_Actors class
@@ -9490,7 +9590,7 @@ class Scene_Map
     end
   end
 
-end"K#==============================================================================
+end"O#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -9510,10 +9610,10 @@ class Scene_Menu
     # Background
     @bg = Sprite.new(@vp)
     @bg.z = -100
-    @bg.bitmap = Cache.menu("tempback")
+    @bg.bitmap = Cache.menu("Backs/sample")
 
     # The current menu
-    @menu = Mnu_File.new(@vp)
+    @menu = Mnu_Main.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
   end
@@ -10646,12 +10746,13 @@ class TweenManager
 		return @tweens.select{ |n| n.parent == object }.empty?
 	end
 
-end"–	class Bitmap
+end"³class Bitmap
 
 	def fill(color)
 		self.fill_rect(0,0,self.width,self.height,color)
 	end
 
+	# xp windowskin style
 	def windowskin(skin)
 		src = Cache.windowskin(skin)
 		dest = rect.dup
@@ -10694,35 +10795,68 @@ end"–	class Bitmap
 
 	end
 
-	def borderskin
+	def borderskin(gfx = "Common/skin")
 
-		src = Cache.menu("Common/skin")
+		src = Cache.menu(gfx)
 
 		# 32px corners, 64px edges
 
 		w = 32
 		h = 32
 
-		o = 255
-
 		# CORNERS
-	    blt(0,0,src,Rect.new(0,0,w,h),o) # top left
-	    blt(width-w,0,src,Rect.new(96,0,w,h),o) # top right
+	    blt(0,0,src,Rect.new(0,0,w,h)) # top left
+	    blt(width-w,0,src,Rect.new(96,0,w,h)) # top right
 
-	    blt(0,height-h,src,Rect.new(0,96,w,h),o) # bottom left
-	    blt(width-w,height-h,src,Rect.new(96,96,w,h),o) # bottom right
+	    blt(0,height-h,src,Rect.new(0,96,w,h)) # bottom left
+	    blt(width-w,height-h,src,Rect.new(96,96,w,h)) # bottom right
 	    
 	   # left side
-	   stretch_blt(Rect.new(0,h,w,height-64),src,Rect.new(0,h+16,w,h),o)
+	   stretch_blt(Rect.new(0,h,w,height-64),src,Rect.new(0,h+16,w,h))
 
 	   # Right
-	   stretch_blt(Rect.new(width-w,h,w,height-64),src,Rect.new(96,h,w,h),o)
+	   stretch_blt(Rect.new(width-w,h,w,height-64),src,Rect.new(96,h,w,h))
 
 	   # top
-	   stretch_blt(Rect.new(w,0,width-64,32),src,Rect.new(32,0,64,32),o)
+	   stretch_blt(Rect.new(w,0,width-64,32),src,Rect.new(32,0,64,32))
 
 	   # bottom
-	   stretch_blt(Rect.new(w,height-h,width-64,32),src,Rect.new(32,96,64,32),o)
+	   stretch_blt(Rect.new(w,height-h,width-64,32),src,Rect.new(32,96,64,32))
+
+	end
+
+	def skin(src)
+		
+		w = src.width/3
+		h = src.height/3
+
+
+		# Inside
+		dest = Rect.new(w,h,width-w,height-h)
+		srect = Rect.new(w,h,w,h)
+		stretch_blt(dest,src,srect)
+    	
+		# CORNERS
+	    blt(0,0,src,Rect.new(0,0,w,h)) # top left
+	    blt(width-w,0,src,Rect.new(w*2,0,w,h)) # top right
+
+	    blt(0,height-h,src,Rect.new(0,h*2,w,h)) # bottom left
+	    blt(width-w,height-h,src,Rect.new(w*2,h*2,w,h)) # bottom right
+	    
+	   # left side
+	   stretch_blt(Rect.new(0,h,w,height-h),src,Rect.new(0,w,w,h))
+
+	   # Right
+	   stretch_blt(Rect.new(width-w,h,w,height-h),src,Rect.new(w*2,h,w,h))
+
+	   # top
+	   stretch_blt(Rect.new(w,0,width-w,h),src,Rect.new(w,0,w,h))
+
+	   # bottom
+	   stretch_blt(Rect.new(w,height-h,width-w,h),src,Rect.new(w,h*2,w,h))
+
+
+
 
 	end
 
@@ -10818,7 +10952,7 @@ end
 class QuestData
 	attr_reader :id
 end
-"#==============================================================================
+"#==============================================================================
 # ** Gradient Font Color
 #------------------------------------------------------------------------------
 #   Original code by poccil
@@ -10864,7 +10998,7 @@ class Font
   #--------------------------------------------------------------------------
   def initialize(*args)
      dargor_vx_font_gradient_initialize(*args)
-     @gradient = true
+     @gradient = false
      @gradient_color1 = Color.new(255,255,255)
      @gradient_color2 = Color.new(255,255,255)
   end
@@ -11155,7 +11289,7 @@ module RPG
 end
 
 
-"> class Array
+"I class Array
  	def count
  		return length
  	end
@@ -11181,13 +11315,18 @@ class Fixnum
 	end
 end
 
+"# Extensions to sprite class
+
 class Sprite
+
 	def hide
 		self.visible = false
 	end
+
 	def show
 		self.visible = true
 	end
+
 	def move(x,y)
 		self.x = x
 		self.y = y
@@ -11213,6 +11352,7 @@ class Sprite
 		return false if y > self.y + height
 		return true
 	end
+
 end"Lif !ACE_MODE
 	class Font
 		attr_accessor :outline, :shadow

@@ -18,10 +18,10 @@ class Scene_Menu
     # Background
     @bg = Sprite.new(@vp)
     @bg.z = -100
-    @bg.bitmap = Cache.menu("tempback")
+    @bg.bitmap = Cache.menu("Backs/sample")
 
     # The current menu
-    @menu = Mnu_File.new(@vp)
+    @menu = Mnu_Main.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
   end

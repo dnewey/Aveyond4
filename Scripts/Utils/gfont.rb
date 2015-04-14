@@ -44,7 +44,7 @@ class Font
   #--------------------------------------------------------------------------
   def initialize(*args)
      dargor_vx_font_gradient_initialize(*args)
-     @gradient = true
+     @gradient = false
      @gradient_color1 = Color.new(255,255,255)
      @gradient_color2 = Color.new(255,255,255)
   end
