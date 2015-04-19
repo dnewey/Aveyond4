@@ -64,15 +64,18 @@ class Scene_Battle
     @target_cmd = TargetCmd.new(@vp_hud)
 
     # Prepare characters
-    (1..4).each{ |c|
-      @map.events[c].direction = 4
-    }
+    # (1..4).each{ |c|
+    #   @map.events[c].direction = 4
+    # }
 
     @map.update
     @character_sprites.each{ |s| s.update }
 
     [0,1,2,3].each{ |i| 
       ev = @map.event_by_name("A.#{i}") 
+      act = $party.actor_by_index(i).id
+      ev.character_name = "Player/#{act}-idle"
+      ev.pattern = rand(4)
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
       end
@@ -107,6 +110,8 @@ class Scene_Battle
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+
+    @hud.update
 
     @map.update
     @character_sprites.each{ |s| s.update }

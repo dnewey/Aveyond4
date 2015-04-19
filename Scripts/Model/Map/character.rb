@@ -20,13 +20,13 @@ class Game_Character
   
   # Graphics
 
-  attr_reader   :character_name           # character file name
+  attr_accessor   :character_name           # character file name
 
   attr_accessor   :opacity                  # opacity level
   
   
   attr_accessor :direction                # direction
-  attr_reader   :pattern                  # pattern
+  attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
   attr_accessor :animation_id             # animation ID

@@ -27,6 +27,7 @@ def aveyond4
     $settings = SettingsManager.new
     $files = FileManager.new
     $battle = Game_Battle.new
+    $fonts = FontManager.new
     $game = GameManager.new  
 
     # Call main method as long as $scene is effective      

@@ -6,7 +6,7 @@ class ActorCmd
 		@vp = vp
 
 		@icons = []
-		@text = Sprite.new(@vp)
+		#@text = Sprite.new(@vp)
 
 		@idx = 0
 
@@ -38,14 +38,14 @@ class ActorCmd
 		}
 
 		# Prep the text
-		@text.bitmap = Cache.menu("Battle/text")
-		@text.center(battler.ev.screen_x,battler.ev.screen_y + 24)
+		#@text.bitmap = Cache.menu("Battle/text")
+		#@text.center(battler.ev.screen_x,battler.ev.screen_y + 24)
 
 	end
 
 	def close
 		@icons.each{ |i| i.dispose }
-		@text.bitmap = nil
+		#@text.bitmap = nil
 		@icons = []
 		@battler = nil
 	end

@@ -47,9 +47,7 @@ class Bitmap
 
 	end
 
-	def borderskin(gfx = "Common/skin")
-
-		src = Cache.menu(gfx)
+	def borderskin(src)
 
 		# 32px corners, 64px edges
 
