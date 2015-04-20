@@ -19,10 +19,11 @@ class Scene_Menu
     @bg = Sprite.new(@vp)
     @bg.z = -100
     @bg.bitmap = Cache.menu("Backs/sample")
+    #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
 
     # The current menu
-    #@menus = Mnu_Main.new(@vp)
-    @menu = Mnu_Items.new(@vp)
+    @menu = Mnu_Main.new(@vp)
+    #@menu = Mnu_Items.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
   end
@@ -41,7 +42,7 @@ class Scene_Menu
 
     $game.pop_scene if Input.trigger?(Input::F7)
 
-    @menu.update     
+    @menu.update
     
   end
 

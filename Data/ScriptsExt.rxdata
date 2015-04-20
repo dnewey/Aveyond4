@@ -1,4 +1,4 @@
-[^"å#==============================================================================
+[a"#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -27,6 +27,7 @@ def aveyond4
     $settings = SettingsManager.new
     $files = FileManager.new
     $battle = Game_Battle.new
+    $fonts = FontManager.new
     $game = GameManager.new  
 
     # Call main method as long as $scene is effective      
@@ -129,504 +130,34 @@ class Sprite_Character < Sprite
 
   end
 end
-"x
+"·
 
 
 class MapWrap < Tilemap
 
+  attr_accessor :tileset_id
+
 	def refresh(map)
-      self.tileset = Cache.tileset(map.tileset.tileset_name)#+'-big')
+
+      @tileset_id = map.tileset_id
+
+      self.tileset = Cache.tileset(map.tileset.tileset_name)
       i = 0 
       map.tileset.autotile_names.each{ |a|
         next if a == ''
-        self.autotiles[i] = Cache.autotile(a)#+'-big')
+        self.autotiles[i] = Cache.autotile(a)
         i+=1
       }
+      
       self.map_data = map.data
       self.priorities = map.tileset.priorities
+
 	end
 
 end"A
 
 
-# Other things of this nature will reside within thine"!*# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # RGSS3 Plane v1.3.5
-# # FenixFyreX
-# # Thanks to boldpaste2 for debugging help!
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # This is a rewrite of RGSS3's Plane class, mainly for use with custom resolution
-# # alterations of RPG Maker VXAce. This allows Plane to function properly on
-# # larger resolutions than the hard-coded 640px x 480px in the dll.
-# #
-# # It also correctly displays ox and oy offset and such, just like the original.
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # CHANGELOG
-# # v1.3.5
-# #   - Fixed cache not updating disposed plane bitmaps.
-# # v1.3.4
-# #   - Fixed memory leak.
-# # v1.3.3
-# #   - Added in check for disposed or nil bitmap, fixing compatibility with fogs.
-# # v1.3.2
-# #   - Added in checks for already disposed planes, raising an RGSSError like the
-# #     original.
-# # v1.3.1
-# #   - Fixed potential game crash due to undisposed sprites.
-# # v1.2.x
-# #   - Added in caching of plane bitmaps, to stop the lag from persisting.
-# #   - Fixed potential bug where when the viewport was set, the bitmap would
-# #     retile incorrectly.
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # To remove any artifacts / conflicts with the original, we alias it then remove
-# # the original tie.
-# # RGSS3Plane = Plane
-# # Object.send(:remove_const, :Plane)
-
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # Rect#to_a
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# class Rect
-#   def to_a
-#     [self.x, self.y, self.width, self.height]
-#   end
-# end
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # Bitmap
-# #   Saves a bitmap's name, for future reference.
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# class Bitmap
-#   alias fyx_initialize_save_name initialize
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # initialize
-#   #   Instantiate a bitmap's name, if given one.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def initialize(*argv, &argb)
-#     @name = ''
-#     if name = argv.find {|arg| arg.is_a?(String) }
-#       @name = name
-#     end
-#     fyx_initialize_save_name(*argv, &argb)
-#   end
-#   attr_reader :name
-# end
- 
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # Cache
-# #   Add in Plane caching, to speed up processing at the slight cost of memory.
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# module Cache
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # Cache::plane_cache
-#   #   Convenience method, to not have to type it out in the below methods.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def self.plane_cache
-#     @plane_cache ||= {}
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # Cache::plane
-#   #   Get a cached plane bitmap.
-#   #   key : Object  ( most likely an Array e.g. [Rect, String] )
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def self.plane(key)
-#     return plane_cache[key]
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # Cache::add_plane
-#   #   Add a tiled plane bitmap to the cache.
-#   #   key : Object ( see above )
-#   #   bmp : Bitmap
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def self.add_plane(key, bmp)
-#     plane_cache[key] = bmp
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # Cache::has_plane?
-#   #   Check for a cached plane bitmap.
-#   #   key : Object ( see above )
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def self.has_plane?(key)
-#     plane_cache[key].is_a?(Bitmap) && !plane_cache[key].disposed?
-#   end
- 
-#   class << self; alias clear_b4_fyx_plane_cache clear; end
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # Cache::clear
-#   #   See original documentation.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def self.clear
-#     plane_cache.each_value {|v| v.dispose unless v.nil? || v.disposed? }
-#     plane_cache.clear
-#     clear_b4_fyx_plane_cache
-#   end
-# end
- 
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # Plane
-# #   Tiles a bitmap across either the window rect, or a given viewport's rect.
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# class Plane2
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # initialize
-#   #   Setup an allocated instance of Plane.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def initialize(v = nil, z = nil)
-#     @sprite = Sprite.new(v)
-#     @sprite.z = z
-#     @bitmap = nil
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # dispose
-#   #   Free an instance of Plane.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def dispose
-#     @sprite.bitmap.dispose unless bitmap_disposed?
-#     @sprite.dispose unless disposed?
-#     return nil
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # bitmap_disposed?
-#   #   Check whether this instance of Plane's bitmap has been freed.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def bitmap_disposed?
-#     disposed? || @sprite.bitmap.nil? || @sprite.bitmap.disposed?
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # disposed?
-#   #   Check whether this instance of Plane has been freed.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def disposed?
-#     @sprite.nil? || @sprite.disposed?
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # ox=
-#   #   Set the offset x of this instance of Plane.
-#   #   val : Integer
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def ox=(val)
-#     error_disposed if disposed?
-#     return if bitmap_disposed?
-   
-#     @sprite.ox = (val % (@bitmap.nil? ? 1 : @bitmap.width))
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # oy=
-#   #   Set the offset y of this instance of Plane.
-#   #   val : Integer
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def oy=(val)
-#     error_disposed if disposed?
-#     return if bitmap_disposed?
-   
-#     @sprite.oy = (val % (@bitmap.nil? ? 1 : @bitmap.height))
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # bitmap
-#   #   Get the tile bitmap of this instance of Plane.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def bitmap
-#     @bitmap
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # viewport=
-#   #   Set the viewport, and refresh if the vrect has changed.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def viewport=(v)
-#     error_disposed if disposed?
-#     r = v.nil? ? Rect.new(0, 0, Graphics.width, Graphics.height) : v.rect
-#     b = r != vrect
-#     ret = @sprite.viewport = v
-#     self.bitmap = @bitmap if b
-#     return ret
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # bitmap=
-#   #   Set the tile bitmap of this instance of Plane.
-#   #   bmp : Bitmap
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def bitmap=(bmp)
-#     error_disposed if disposed?
-#     if bmp.nil?
-#       @sprite.bitmap = nil
-#       return @bitmap = nil
-#     end
-   
-#     w, h = vrect.width, vrect.height
-   
-#     nw = bmp.width <= 100 ? 2 : 3
-#     nh = bmp.height <= 100 ? 2 : 3
-   
-#     dx = [(w / bmp.width).ceil, 1].max * nw
-#     dy = [(h / bmp.height).ceil, 1].max * nh
- 
-#     bw = dx * bmp.width
-#     bh = dy * bmp.height
- 
-#     @bitmap = bmp
-#     key = [vrect.to_a, bmp.name]
-#     if Cache.has_plane?(key)
-#       @sprite.bitmap = Cache.plane(key)
-#     else
-#       @sprite.bitmap = Bitmap.new(bw, bh)
-     
-#       dx.times do |x|
-#         dy.times do |y|
-#           @sprite.bitmap.blt(x * bmp.width, y * bmp.height, @bitmap, @bitmap.rect)
-#         end
-#       end
-#       Cache.add_plane(key, @sprite.bitmap)
-#     end
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # method_missing
-#   #   Here we let any methods not found in this class be redirected to our
-#   #   underlying sprite.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def method_missing(sym, *argv, &argb)
-#     if @sprite.respond_to?(sym)
-#       error_disposed if disposed?
-#       return @sprite.send(sym, *argv, &argb)
-#     end
-#     super(sym, *argv, &argb)
-#   end
- 
-#   # private methods from here down
-#   private
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # error_disposed
-#   #   If this plane (and it's underlying sprite) has been freed, then throw an
-#         #   RGSSError describing a disposed Plane.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def error_disposed
-#     raise RGSSError, 'disposed Plane', caller
-#   end
- 
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   # vrect
-#   #   Get the view rect of this instance of Plane, which depends on if the
-#   #   viewport has been set or not.
-#   #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-#   def vrect
-#     @sprite.viewport.nil? ? Rect.new(0, 0, Graphics.width, Graphics.height) :
-#     @sprite.viewport.rect
-#   end
-# end
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# # SCRIPT END
-# #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"­#==============================================================================
-# Tilemap Class
-#------------------------------------------------------------------------------
-# Script by SephirothSpawn
-#==============================================================================
-
-class Tilemap2
-  #--------------------------------------------------------------------------
-  Animated_Autotiles_Frames = 60
-  #--------------------------------------------------------------------------
-  Autotiles = [
-    [ [27, 28, 33, 34], [ 5, 28, 33, 34], [27,  6, 33, 34], [ 5,  6, 33, 34],
-      [27, 28, 33, 12], [ 5, 28, 33, 12], [27,  6, 33, 12], [ 5,  6, 33, 12] ],
-    [ [27, 28, 11, 34], [ 5, 28, 11, 34], [27,  6, 11, 34], [ 5,  6, 11, 34],
-      [27, 28, 11, 12], [ 5, 28, 11, 12], [27,  6, 11, 12], [ 5,  6, 11, 12] ],
-    [ [25, 26, 31, 32], [25,  6, 31, 32], [25, 26, 31, 12], [25,  6, 31, 12],
-      [15, 16, 21, 22], [15, 16, 21, 12], [15, 16, 11, 22], [15, 16, 11, 12] ],
-    [ [29, 30, 35, 36], [29, 30, 11, 36], [ 5, 30, 35, 36], [ 5, 30, 11, 36],
-      [39, 40, 45, 46], [ 5, 40, 45, 46], [39,  6, 45, 46], [ 5,  6, 45, 46] ],
-    [ [25, 30, 31, 36], [15, 16, 45, 46], [13, 14, 19, 20], [13, 14, 19, 12],
-      [17, 18, 23, 24], [17, 18, 11, 24], [41, 42, 47, 48], [ 5, 42, 47, 48] ],
-    [ [37, 38, 43, 44], [37,  6, 43, 44], [13, 18, 19, 24], [13, 14, 43, 44],
-      [37, 42, 43, 48], [17, 18, 47, 48], [13, 18, 43, 48], [ 1,  2,  7,  8] ]
-  ]
-  #--------------------------------------------------------------------------
-  attr_reader   :layers
-  attr_accessor :tileset
-  attr_accessor :autotiles
-  attr_accessor :map_data
-  attr_accessor :priorities
-  attr_accessor :visible
-  attr_accessor :ox
-  attr_accessor :oy
-  #--------------------------------------------------------------------------
-  def initialize(viewport, map = $map.map)
-
-    @tile_width  = 32
-    @tile_height = 32
-
-    @nxu = 30
-    @animo = 0
-
-
-    @layers = []
-    for l in 0...3
-      layer = Sprite.new(viewport)
-      layer.bitmap = Bitmap.new($map.width * @tile_width, $map.height * @tile_height)
-      layer.z = l * 150
-      @layers.push(layer)
-    end
-    @tileset    = nil  # Refers to Map Tileset PNG
-    @autotiles  = []   # Refers to Tileset Auto-Tiles (Actual Auto-Tiles)
-
-    @map_data   = nil  # Refers to 3D Array Of Tile Settings
-
-    @priorities = nil  # Refers to Tileset Priorities
-    @visible    = true # Refers to Tilest Visibleness
-    
-    @ox         = 0    # Bitmap Offsets
-    @oy         = 0    # bitmap Offsets
-    @data       = nil  # Acts As Refresh Flag
-    @map         = map
-
-  end
-  
-  #--------------------------------------------------------------------------
-  def dispose
-    @tileset.dispose
-    @autotiles.each{ |a| a.dispose }    
-    @layers.each{ |l| l.dispose }
-  end
-
-  def refresh_tileset(map)
-      @tileset = Cache.tileset(map.tileset.tileset_name)#+'-big')
-      i = 0 
-      map.tileset.autotile_names.each{ |a|
-        next if a == ''
-        @autotiles[i] = Cache.autotile(a)#+'-big')
-        i+=1
-      }
-      @map_data = map.data
-      @priorities = map.tileset.priorities
-  end
-
-  #--------------------------------------------------------------------------
-  def update
-    #unless @data == @map_data #&& @tile_width == $map.tilemap_tile_width &&
-           #@tile_height == $map.tilemap_tile_height
-           refresh
-    #end
-    for layer in @layers
-      layer.ox = @ox
-      layer.oy = @oy
-    end
-    @nxu -= 1
-    if @nxu ==0
-      @animo+=1
-      @anmio = 0 if @animo > 2
-    @nxu = 10
-    #  refresh
-      #refresh_autotiles # Cache the frames or something
-    end
-  end
-  
-  def refresh
-    @data = @map_data
-    for p in 0..5
-    p = 0
-      for z in 0...@map_data.zsize
-        for x in $player.x-5...$player.x+5
-          for y in $player.y-5...$player.y+5
-            id = @map_data[x, y, z]
-            next if id == 0
-            next unless p == @priorities[id]
-            p = 2 if p > 2
-            id < 384 ? draw_autotile(x, y, p, id) : draw_tile(x, y, p, id)
-          end
-        end
-      end
-    end
-  end
-
-
-
-
-
-  #--------------------------------------------------------------------------
-  def refreshXXX
-    @data = @map_data
-    for p in 0..5
-      for z in 0...@map_data.zsize
-        for x in 0...@map_data.xsize
-          for y in 0...@map_data.ysize
-            id = @map_data[x, y, z]
-            next if id == 0
-            next unless p == @priorities[id]
-            p = 2 if p > 2
-            id < 384 ? draw_autotile(x, y, p, id) : draw_tile(x, y, p, id)
-          end
-        end
-      end
-    end
-  end
-  #--------------------------------------------------------------------------
-  def refresh_autotiles
-
-    autotile_locations = Table.new(@map_data.xsize, @map_data.ysize,
-      @map_data.zsize)
-    for p in 0..5
-      for z in 0...@map_data.zsize
-        for x in 0...@map_data.xsize
-          for y in 0...@map_data.ysize
-            id = @map_data[x, y, z]
-            next if id == 0
-            next unless p == @priorities[id]
-            p = 2 if p > 2
-            if id < 384
-              #next if @autotiles[id / 48 - 1] == nil
-              next unless @autotiles[id / 48 - 1].width / 96 > 1
-              draw_autotile(x, y, p, id)
-              autotile_locations[x, y, z] = 1
-            else
-              if autotile_locations[x, y, z] == 1
-                draw_tile(x, y, p, id)
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-  #--------------------------------------------------------------------------
-  def draw_tile(x, y, z, id)
-    rect = Rect.new((id - 384) % 8 * @tile_width, (id - 384) / 8 * @tile_height, @tile_width, @tile_height)
-    x *= @tile_width
-    y *= @tile_height
-    @layers[z].bitmap.blt(x, y, @tileset, rect)
-  end
-  #--------------------------------------------------------------------------
-  def draw_autotile(x, y, z, tile_id)
-    autotile = @autotiles[tile_id / 48 - 1]
-    return if autotile == nil
-    tile_id %= 48
-    bitmap = Bitmap.new(@tile_width, @tile_height)
-    tiles = Autotiles[tile_id / 8][tile_id % 8]
-    frames = autotile.width / @tile_width*3
-    anim = @animo*96#(Graphics.frame_count / Animated_Autotiles_Frames) % frames * (@tile_width*3)
-
-    hw = @tile_width/2
-    hh = @tile_height/2
-
-    for i in 0...4
-      tile_position = tiles[i] - 1
-      src_rect = Rect.new(tile_position % 6 * hw + anim,
-        tile_position / 6 * hh, hw, hh)
-      bitmap.blt(i % 2 * hw, i / 2 * hh, autotile, src_rect)
-    end
-    x *= @tile_width
-    y *= @tile_height
-    @layers[z].bitmap.blt(x, y, bitmap, Rect.new(0, 0, @tile_width, @tile_height))
-  end
-end"½'#==============================================================================
+# Other things of this nature will reside within thine"½'#==============================================================================
 # Extended Sprite Class
 #==============================================================================
 
@@ -1052,7 +583,132 @@ class Widget < Sprite
   
   
 end
-"d	#==============================================================================
+"#
+
+class Box 
+
+	def initialize(vp,w=100,h=100)
+
+		@wallpaper = Sprite.new(vp)
+		@window = Sprite.new(vp)		
+
+		@skin = nil
+		@src = nil
+
+		@width = w
+		@height = h
+
+		@alpha = 230		
+
+		# Position
+		@px = 0.0 
+		@py = 0.0
+
+		# Display position, integer
+		@dx = 0 
+		@dy = 0
+
+		# Anim speed
+		@sx = 0.2
+		@sy = 0.2
+
+	end
+
+	def skin=(bmp)
+		@skin = bmp
+		@window.bitmap = Bitmap.new(@width,@height)
+		@window.bitmap.borderskin(@skin)
+	end
+
+	def wallpaper=(w)
+		@src = w
+		@wallpaper.bitmap = Bitmap.new(@width,@height)
+		redraw
+	end
+
+
+	def opacity=(o)
+		@wallpaper.opacity = o
+		@window.opacity = o
+	end
+
+	def x=(v)
+		@wallpaper.x = v+4
+		@window.x = v
+	end
+
+	def y=(v)
+		@wallpaper.y = v+4
+		@window.y = v
+	end
+
+	def move(x,y)
+		self.x = x
+		self.y = y
+	end
+
+	def width() return @width end
+	def height() return @height end
+
+	def resize(w,h)
+		@width = w
+		@height = h
+		@window.bitmap = Bitmap.new(w,h)
+		@window.bitmap.borderskin(@skin)
+		@wallpaper.bitmap = Bitmap.new(w-8,h-8)		
+		redraw
+	end
+
+	def update
+
+		# Redraw the bmp if needed
+		@px += @sx
+		@py += @sy
+
+		# Mod to width of bmp
+		@px -= @src.width if @px > @src.width
+		@px += @src.width if @px < -@src.width
+		@py -= @src.height if @py > @src.height
+		@py += @src.height if @py < @src.height		
+
+		if @px.to_i != @dx || @py.to_i != @dy
+			@dx = @px.to_i
+			@dy = @py.to_i
+			redraw
+		end
+
+	end
+
+	def redraw
+
+		@wallpaper.bitmap.clear
+
+		cx = -@dx
+		cy = -@dy
+
+		while cx < @width
+
+			while cy < @height
+
+				rct = @src.rect
+				# If draw's over, cancel
+				# Also for offset for first
+
+				@wallpaper.bitmap.blt(cx,cy,@src,rct,@alpha)
+
+				cy += @src.height
+
+			end
+
+			cy = -@dy
+			cx += @src.width
+			#log_info("DRAW #{cx}")
+
+		end
+
+	end
+
+end"d	#==============================================================================
 # Button
 #==============================================================================
 
@@ -1441,6 +1097,59 @@ class Spark < Sprite
 
 	end
 
+end"p
+class SpriteGroup
+
+	def initialize
+		@sprites = []
+		@opacity = 255
+		@x = 0
+		@y = 0
+	end
+
+	def add(spr,ox=0,oy=0)
+		@sprites.push([spr,ox,oy])
+	end
+
+	def move(spr,ox,oy)
+		@sprites.each{ |s|
+			if s[0] == spr
+				s[1] = ox
+				s[2] = oy
+			end
+		}
+	end
+
+	def x=(v)
+		@x = v
+		@sprites.each{ |s|
+			s[0].x = v + s[1]
+		}
+	end
+	def x
+		return @x
+	end
+
+	def y=(v)
+		@y = v
+		@sprites.each{ |s|
+			s[0].y = v + s[2]
+		}
+	end
+	def y
+		return @y
+	end
+
+	def opacity=(v)
+		@opacity = v
+		@sprites.each{ |s|
+			s[0].opacity = v
+		}
+	end
+	def opacity
+		return @opacity
+	end
+
 end"„#==============================================================================
 # Tabs
 #==============================================================================
@@ -1518,95 +1227,7 @@ class Tabs < Sprite
 
   end
 
- end"³
-
-class Wallpaper < Sprite
-
-	# Doesn't have to be viewport tbh
-
-	def initialize(w,h,src,vp)
-
-		super(vp)
-
-		@src = src
-
-		@width = w
-		@height = h
-
-		self.bitmap = Bitmap.new(w,h)
-
-		@px = 0.0
-		@py = 0.0
-
-		@dx = 0  # Diplay x, integer
-		@dy = 0
-
-		@sx = 0.2
-		@sy = 0.2
-
-		redraw
-
-	end
-
-	def width() return @width end
-	def height() return @height end
-
-	def resize(w,h)
-		@width = w
-		@height = h
-		self.bitmap = Bitmap.new(w,h)
-		redraw
-	end
-
-	def update
-
-		# Redraw the bmp if needed
-		@px += @sx
-		@py += @sy
-
-		# Mod to width of bmp
-		@px -= @src.width if @px > @src.width
-		@px += @src.width if @px < -@src.width
-		@py -= @src.height if @py > @src.height
-		@py += @src.height if @py < @src.height
-		
-
-		if @px.to_i != @dx || @py.to_i != @dy
-			@dx = @px.to_i
-			@dy = @py.to_i
-			redraw
-		end
-
-	end
-
-	def redraw
-
-		cx = -@dx
-		cy = -@dy
-
-		while cx < @width
-
-			while cy < @height
-
-				rct = @src.rect
-				# If draw's over, cancel
-				# Also for offset for first
-
-				self.bitmap.blt(cx,cy,@src,rct)
-
-				cy += @src.height
-
-			end
-
-			cy = -@dy
-			cx += @src.width
-			#log_info("DRAW #{cx}")
-
-		end
-
-	end
-
-end"#==============================================================================
+ end"#==============================================================================
 # Widget_Bugbox
 #==============================================================================
 
@@ -3806,7 +3427,55 @@ class Widget_Bar < Widget
     
   end
   
-end"z
+end"v
+# Update self perhamps? Disregard else
+# Uses $battle and that's it
+
+# Handle all inputs?
+
+class BattleHud
+
+	def initialize(vp)
+
+		# Bottom bar
+		@chars = []
+		idx = 0
+		$party.active.each{ |char|
+			char = CharView.new(vp,$party.actor_by_id(char),idx)
+			char.x = 5 + (idx * 158)
+			char.y = 340
+			@chars.push(char)
+			idx += 1
+		}
+
+
+		# Help box
+		@help_box = Box.new(vp)
+		@help_box.skin = Cache.menu("Common/skin-plain")
+    	@help_box.wallpaper = Cache.menu("Common/back")
+		@help_box.resize(300,50)
+		@help_box.move(166,8)
+
+	    @help_text = Sprite.new(vp)
+	    @help_text.bitmap = Bitmap.new(300,50)
+	    @help_text.bitmap.font = $fonts.message
+	    @help_text.bitmap.draw_text(0,0,300,50,"Shadow - Gain Darkness",1)
+		@help_text.move(166,9)
+
+	end
+
+	
+	def update
+
+		@chars.each{ |c|
+			c.update
+		}
+
+		@help_box.update
+
+	end
+
+end"~
 class ActorCmd
 
 	def initialize(vp)
@@ -3814,7 +3483,7 @@ class ActorCmd
 		@vp = vp
 
 		@icons = []
-		@text = Sprite.new(@vp)
+		#@text = Sprite.new(@vp)
 
 		@idx = 0
 
@@ -3846,14 +3515,14 @@ class ActorCmd
 		}
 
 		# Prep the text
-		@text.bitmap = Cache.menu("Battle/text")
-		@text.center(battler.ev.screen_x,battler.ev.screen_y + 24)
+		#@text.bitmap = Cache.menu("Battle/text")
+		#@text.center(battler.ev.screen_x,battler.ev.screen_y + 24)
 
 	end
 
 	def close
 		@icons.each{ |i| i.dispose }
-		@text.bitmap = nil
+		#@text.bitmap = nil
 		@icons = []
 		@battler = nil
 	end
@@ -3887,47 +3556,53 @@ class ActorCmd
 
 	end
 
-end"V
-# Update self perhamps? Disregard else
-# Uses $battle and that's it
-
-# Handle all inputs?
-
-class BattleHud
-
-	def initialize(vp)
-
-		# Bottom bar
-		@chars = []
-		idx = 0
-		$party.active.each{ |char|
-			@chars.push(CharView.new(vp,$party.actor_by_id(char),idx))
-			idx += 1
-		}
-
-
-
-	end
-
-	
-	def update
-
-		
-
-	end
-
-end"Ð
+end"a
 # Actor view, show portrait, hp etc
 
-class CharView
+class CharView < SpriteGroup
 
 	def initialize(vp,char,id)
 
-		@port = Sprite.new(vp)
-		@port.bitmap = Cache.face(char.id)
+		super()
 
-		@port.x = id * 150
-		@port.y = 380
+		@box = Box.new(vp)
+		@box.skin = Cache.menu("Common/skin-plain")
+    	@box.wallpaper = Cache.menu("Common/back2")
+		@box.resize(153,135)
+		add(@box)   
+
+		@port = Sprite.new(vp)
+		@port.bitmap = Cache.menu("Char/boy")
+		add(@port,34,-20)
+
+		@shadow = Sprite.new(vp)
+		@shadow.bitmap = Cache.menu("charview-shadow")
+		add(@shadow,6,74)
+
+		@xform = Sprite.new(vp)
+		@xform.bitmap = Cache.menu("charview-frog") if rand(10) > 3
+		add(@xform,15,65)
+
+
+
+		# Health
+		#bars
+
+		@hp_label = Sprite.new(vp)
+		@hp_label.bitmap = Cache.menu("label-hp")
+		add(@hp_label,8,112)
+
+
+
+		@mp_label = Sprite.new(vp)
+		@mp_label.bitmap = Cache.menu("label-mp")
+		add(@mp_label,8,92)
+
+	end
+
+	def update
+
+		@box.update
 
 	end
 
@@ -4064,7 +3739,52 @@ class TargetCmd
 	end
 
 end
-"–0#==============================================================================
+"½#==============================================================================
+# Ui_Screen
+#==============================================================================
+
+class Ui_Screen
+
+	attr_reader :message
+  
+	def initialize(vp)
+		
+		@message = Ui_Message.new(vp)
+
+		@bar = Ui_Bar.new(vp)
+		@info = Ui_Info.new(vp)
+
+	end
+
+	def update
+		@message.update
+	end
+
+    def busy?() 
+    	return @message.busy?
+    end
+
+end"à#==============================================================================
+# Ui_Bar
+#==============================================================================
+
+class Ui_Bar
+
+	def initialize(vp)
+
+	end
+
+end"â#==============================================================================
+# Ui_Info
+#==============================================================================
+
+class Ui_Info
+
+	def initialize(vp)
+
+	end
+
+end"X1#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -4076,8 +3796,8 @@ class Ui_Message
   TAB_WIDTH = 35
 
   SPACING = 7
-  LINE_HEIGHT = 29#6
-  PADDING_X = 24
+  LINE_HEIGHT = 27
+  PADDING_X = 22
   PADDING_Y = 16
 
   SPEED_1 = 0
@@ -4102,14 +3822,7 @@ class Ui_Message
     # This line data
     @name = ''
 
-    @font = Font.new
-    @font.name = "Georgia"
-    @font.size = 26
-    @font.color = Color.new(245,223,200)
 
-    # @font.gradient = true
-    # @font.gradient_color1 = Color.new(255,0,0)
-    # @font.gradient_color2 = Color.new(245,223,200)
 
     @scratch = Bitmap.new(400,50)
 
@@ -4133,17 +3846,24 @@ class Ui_Message
     @width = 0
     @height = 0
 
-    @wallpaper = Wallpaper.new(200,200,Cache.menu("Common/back"),vp)
-    @wallpaper.opacity = 230
+    @sprites = SpriteGroup.new
 
-    # Setup sprites
-    @window = Sprite.new(vp)
+    @box = Box.new(vp)
+    @box.skin = Cache.menu("Common/skin")
+    @box.wallpaper = Cache.menu("Common/back")
+
+    # Setup sprites    
     @textbox = Sprite.new(vp)
     @textbox.z += 50
 
     @namebox = Sprite.new(vp)
     @namebox.bitmap = Bitmap.new(220,40)
     @namebox.bitmap.hskin(Cache.menu("Common/namebox"))
+
+    @nametext = Sprite.new(vp)
+    @nametext.bitmap = Bitmap.new(220,40)
+    @nametext.bitmap.font = $fonts.namebox
+    @nametext.bitmap.draw_text(0,0,220,40,"texter")
 
     @next = Sprite.new(vp)
     @next.bitmap = Cache.menu("Common/next")
@@ -4153,6 +3873,19 @@ class Ui_Message
     
     @tail = Sprite.new(vp)
     @tail.bitmap = Cache.menu("Common/tail")
+
+
+    # Group system
+    @sprites.add(@box)
+    @sprites.add(@textbox)
+    @sprites.add(@namebox)
+    @sprites.add(@nametext)
+    @sprites.add(@next)
+    @sprites.add(@face)
+    @sprites.add(@tail)
+
+    @sprites.opacity = 0
+
 
     @sparks = []
 
@@ -4169,7 +3902,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def update
 
-    @wallpaper.update
+    @box.update
     @sparks.each{ |s| s.update }
     
 #~     if Input.press?(:SHIFT)
@@ -4178,9 +3911,9 @@ class Ui_Message
 #~     end      
     
     # Skip to end of this text
-    if Input.trigger?(Input::C) && @state == :texting
-      @skip_all = true
-    end
+    # if $input.action?
+    #   @skip_all = true
+    # end
 
     case @state
 
@@ -4225,7 +3958,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
-    @scratch.font = @font
+    @scratch.font = $fonts.message
 
     # Clear out the previous word
     @word = nil
@@ -4239,6 +3972,8 @@ class Ui_Message
     # Get face if exists
     if $data.actors.keys.include?(speaker[0..2])
       @face.bitmap = Cache.face(speaker)
+    else
+      @face.bitmap = nil
     end
 
     # Prepare the words to be written
@@ -4252,43 +3987,39 @@ class Ui_Message
     @width += PADDING_X * 2
     @height += PADDING_Y * 2
 
-    @width += @face.width
-
-    @window.x = 50
-    @window.y = 150
-
-    @face.x = -10 + max_width + @window.x + PADDING_X + PADDING_X
-    @face.y = 7 + @window.y + @height - @face.height - PADDING_Y
-
-    # Position the textbox wherever it best fits
+    if @face.bitmap
+      @width += @face.width 
+      fx = -10 + max_width + PADDING_X + PADDING_X
+      fy = 7 + @height - @face.height - PADDING_Y
+      @sprites.move(@face,fx,fy)
+    end
 
     # Prepare the sprites  
-    @window.bitmap = Bitmap.new(@width,@height)
-    @window.bitmap.borderskin
+    @box.resize(@width,@height)
 
-    @textbox.move(@window.x,@window.y)
+    #@textbox.move(@box.x,@box.y)
     @textbox.bitmap = Bitmap.new(@width,@height)
+
+    # Can this be cut?
     @text_bmp = Bitmap.new(@width,@height)
 
-    @wallpaper.resize(@width-6,@height-6)
-    @wallpaper.move(@window.x+3,@window.y+3) # mirror sprite?
-
-    @scratch.font = @font
-    @text_bmp.font = @font
-    @textbox.bitmap.font = @font
-
+    @scratch.font = $fonts.message
+    @text_bmp.font = $fonts.message
+    @textbox.bitmap.font = $fonts.message
 
     # COMBINE FONT AND SIZE
+    @sprites.move(@tail,@width/2,@height)
+    @sprites.move(@next,@width/2,@height-20)
 
-    @tail.x = @window.x + @width /2
-    @tail.y = @window.y + @height
+    @sprites.move(@namebox,20,-@namebox.height)
+    @sprites.move(@nametext,40,-@namebox.height+5)
 
-    @next.x = @window.x + @width /2
-    @next.y = @window.y + @height - 20
+    @sprites.x = 40
+    @sprites.y = 100
 
-    @namebox.x = @window.x + 20
-    @namebox.y = @window.y - @namebox.height
 
+    @sprites.do(go("opacity",255,500,:quad_in_out))
+    @sprites.do(go("y",-25,500,:quad_in_out))
 
     @line_idx = 0
     @word_idx = -1
@@ -4358,8 +4089,8 @@ class Ui_Message
     # Spawn spark
     sprk = Spark.new("magic",@vp)
     
-    x = @window.x + @cx+size.width
-    y = @window.y + @cy
+    x = @sprites.x + @cx+size.width
+    y = @sprites.y + @cy
     sprk.center(x+6,y+16)
     sprk.blend_type = 1
     @sparks.push(sprk)
@@ -4488,6 +4219,7 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
+      @sprites.do(go("opacity",-255,300,:quad_in_out))
     end
   end
 
@@ -4568,25 +4300,14 @@ class Ui_Message
   def clear() end
   def busy?() return @state != :idle end
 
-end"Š#==============================================================================
-# Ui_Screen
-#==============================================================================
+end"@
 
-class Ui_Screen
 
-	#attr_reader :message
-  
-	def initialize
-		#@message = Ui_Message.new        
+class Ui_Popper
+
+	def initialize(vp)
+
 	end
-
-	def update
-		#@message.update
-	end
-
-    def busy?() 
-    	return false#@message.busy?
-    end
 
 end"#==============================================================================
 # ** Mnu_File
@@ -4819,7 +4540,7 @@ class List_Common
 		@list.update
 	end
 
-end"F
+end"D
 class List_Main
 
 	attr_accessor :list
@@ -4839,7 +4560,7 @@ class List_Main
     	@window.move(10,10)
 
 		# Left side list
-		@list = List.new(vp)
+		@list = List.new()
 
 		@list.item_width = 156
 		@list.item_height = 42
@@ -6002,7 +5723,7 @@ class Game_Enemy < Game_Battler
 
 	end
 
-end"S•#==============================================================================
+end"W•#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -6024,13 +5745,13 @@ class Game_Character
   
   # Graphics
 
-  attr_reader   :character_name           # character file name
+  attr_accessor   :character_name           # character file name
 
   attr_accessor   :opacity                  # opacity level
   
   
   attr_accessor :direction                # direction
-  attr_reader   :pattern                  # pattern
+  attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
   attr_accessor :animation_id             # animation ID
@@ -7574,7 +7295,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"™U#==============================================================================
+end"U#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -7925,7 +7646,7 @@ class Interpreter
       end
     end
 
-    $scene.message.start(message)
+    $scene.hud.message.start(message)
     
     # Return mouse to default cursor
     #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
@@ -8914,7 +8635,7 @@ class Game_Party
     # TEMP DISABLE
     set_active("boy")
     set_active("ing")
-    set_active("mys")
+    set_active("phy")
     set_active("rob")
 
     @actors["boy"].learn('darkness')
@@ -9247,7 +8968,7 @@ end"class State
 	end
 
 end
-"#==============================================================================
+"¡#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -9313,15 +9034,18 @@ class Scene_Battle
     @target_cmd = TargetCmd.new(@vp_hud)
 
     # Prepare characters
-    (1..4).each{ |c|
-      @map.events[c].direction = 4
-    }
+    # (1..4).each{ |c|
+    #   @map.events[c].direction = 4
+    # }
 
     @map.update
     @character_sprites.each{ |s| s.update }
 
     [0,1,2,3].each{ |i| 
       ev = @map.event_by_name("A.#{i}") 
+      act = $party.actor_by_index(i).id
+      ev.character_name = "Player/#{act}-idle"
+      ev.pattern = rand(4)
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
       end
@@ -9356,6 +9080,8 @@ class Scene_Battle
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+
+    @hud.update
 
     @map.update
     @character_sprites.each{ |s| s.update }
@@ -9517,23 +9243,20 @@ class Scene_Battle
 
   end
 
-end"Ñ#==============================================================================
+end"Ç#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
 class Scene_Map
 
-  attr_reader   :tone                     # color tone
-  attr_reader   :weather_type             # weather type
-  attr_reader   :weather_max              # max number of weather sprites
-  
-  attr_reader :message
+  attr_reader :hud
 
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
   def initialize
 
+    # Prep model
     @map = Game_Map.new
     $map = @map
     @map.setup($data.system.start_map_id)
@@ -9549,30 +9272,15 @@ class Scene_Map
     @vp_ui = Viewport.new(0,0,$game.width,$game.height)
 
     # Make tilemap
-    @tilemap = MapWrap.new(@vp_main)
-
     #@panorama = Plane.new(@vp_main,-1000)
-    #@fog = Plane.new(@vp_main,3000)
-
-    @character_sprites = []
-
-    @tileset_id = 0 # move to tilemap? or cut stupid system
-
-    @hud = Ui_Screen.new
-
-    @message = Ui_Message.new(@vp_ui)
-
-
-    @tone = Tone.new(0, 0, 0, 0)
-    @tone_target = Tone.new(0, 0, 0, 0)
-    @tone_duration = 0
+    @tilemap = MapWrap.new(@vp_main)
+    @character_sprites = []  
 
     # weather in map data
-    @weather_type = 0
-    @weather_max = 0.0
-    @weather_type_target = 0
-    @weather_max_target = 0.0
-    @weather_duration = 0    
+    @weather = nil
+    
+    # UI
+    @hud = Ui_Screen.new(@vp_ui)
 
     Graphics.transition
             
@@ -9580,22 +9288,21 @@ class Scene_Map
   
   def terminate    
 
-    # Dispose of tilemap    
+    # Dispose of tilemap  
+    @panorama.dispose  
     @tilemap.dispose
-    @panorama.dispose
-    @fog.dispose
-    @hud.dispose
-
     @character_sprites.each{ |s| s.dispose }
-    @weather.dispose
-
+    @weather.dispose  
+    @hud.dispose
+    
     # Dispose of viewports
     @vp_main.dispose
+    @vp_ui.dispose
 
   end
 
   def busy?
-    return @hud.busy? || @message.busy?
+    return @hud.busy?
   end
 
   #--------------------------------------------------------------------------
@@ -9607,12 +9314,11 @@ class Scene_Map
     @player.update
 
     @hud.update
-    @message.update
 
     # check for changes
-    refresh_tileset if $map.tileset_id != @tileset_id
+    refresh_tileset if $map.tileset_id != @tilemap.tileset_id
+
     #refresh_panorama if @panorama_name != @map.tileset.panorama_name
-    #refresh_fog if @fog_name != @map.tileset.fog_name
 
     # Update tilemap
     @tilemap.ox = @map.display_x / 4
@@ -9623,45 +9329,14 @@ class Scene_Map
     #@panorama.ox = 0 # $map.display_x / 8
     #@panorama.oy = 0 # $map.display_y / 8
 
-    # Update fog plane
-    # @fog.zoom_x = @map.tileset.fog_zoom / 100.0
-    # @fog.zoom_y = @map.tileset.fog_zoom / 100.0
-    # @fog.opacity = @map.tileset.fog_opacity
-    # @fog.ox = @map.display_x / 4
-    # @fog.oy = @map.display_y / 4    
-
     # # Update character sprites
     @character_sprites.each{ |s|
       s.update
     }
 
-    if @tone_duration >= 1
-      d = @tone_duration
-      @tone.red = (@tone.red * (d - 1) + @tone_target.red) / d
-      @tone.green = (@tone.green * (d - 1) + @tone_target.green) / d
-      @tone.blue = (@tone.blue * (d - 1) + @tone_target.blue) / d
-      @tone.gray = (@tone.gray * (d - 1) + @tone_target.gray) / d
-      @tone_duration -= 1
-    end
-
-    if @weather_duration >= 1
-      d = @weather_duration
-      @weather_max = (@weather_max * (d - 1) + @weather_max_target) / d
-      @weather_duration -= 1
-      if @weather_duration == 0
-        @weather_type = @weather_type_target
-      end
-    end
-
-    # Update weather graphic
-    # @weather.type = $game_screen.weather_type
-    # @weather.max = $game_screen.weather_max
-    # @weather.ox = $map.display_x / 4
-    # @weather.oy = $map.display_y / 4
-    # @weather.update
-
+  
     # Set screen color tone and shake position
-    @vp_main.tone = @tone
+    #@vp_main.tone = @tone
 
     # Open Menu at player's request
     unless @map.interpreter.running? or @hud.busy?
@@ -9684,16 +9359,15 @@ class Scene_Map
   #--------------------------------------------------------------------------
   def refresh_tileset
     
-     @tileset_id = $map.tileset_id
-     @tilemap.refresh(@map)
+    @tilemap.refresh(@map)
 
     @character_sprites.each{ |s| s.dispose }
     @character_sprites = []
 
-    for i in @map.events.keys.sort
+    @map.events.keys.sort.each{ |i|
       sprite = Sprite_Character.new(@vp_main, @map.events[i])
       @character_sprites.push(sprite)
-    end
+    }
 
     @character_sprites.push(Sprite_Character.new(@vp_main, @player))
 
@@ -9711,54 +9385,7 @@ class Scene_Map
       Graphics.frame_reset
   end
 
-
-  def refresh_fog
-      @fog_name = $map.tileset.fog_name
-      if @fog.bitmap != nil
-        @fog.bitmap.dispose
-        @fog.bitmap = nil
-      end
-      if @fog_name != ""
-        @fog.bitmap = Cache.fog(@fog_name)
-      end
-      Graphics.frame_reset
-  end
-
-
-  #--------------------------------------------------------------------------
-  # * Start Changing Color Tone
-  #     tone : color tone
-  #     duration : time
-  #--------------------------------------------------------------------------
-  def start_tone_change(tone, duration)
-    @tone_target = tone.clone
-    @tone_duration = duration
-    if @tone_duration == 0
-      @tone = @tone_target.clone
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * Set Weather
-  #--------------------------------------------------------------------------
-  def weather(type, power, duration)
-    @weather_type_target = type
-    if @weather_type_target != 0
-      @weather_type = @weather_type_target
-    end
-    if @weather_type_target == 0
-      @weather_max_target = 0.0
-    else
-      @weather_max_target = (power + 1) * 4.0
-    end
-    @weather_duration = duration
-    if @weather_duration == 0
-      @weather_type = @weather_type_target
-      @weather_max = @weather_max_target
-    end
-  end
-
-end"´#==============================================================================
+end"ï#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -9779,10 +9406,11 @@ class Scene_Menu
     @bg = Sprite.new(@vp)
     @bg.z = -100
     @bg.bitmap = Cache.menu("Backs/sample")
+    #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
 
     # The current menu
-    #@menus = Mnu_Main.new(@vp)
-    @menu = Mnu_Items.new(@vp)
+    @menu = Mnu_Main.new(@vp)
+    #@menu = Mnu_Items.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
   end
@@ -9801,7 +9429,7 @@ class Scene_Menu
 
     $game.pop_scene if Input.trigger?(Input::F7)
 
-    @menu.update     
+    @menu.update
     
   end
 
@@ -10452,7 +10080,29 @@ class FileManager
   end
   
 end
-"?#==============================================================================
+"Ó
+class FontManager
+
+	attr_reader :message, :namebox
+
+	def initialize
+
+		@message = Font.new
+	    @message.name = "Georgia"
+	    @message.size = 26
+	    @message.color = Color.new(245,223,200)
+
+	    @namebox = Font.new
+	    @namebox.name = "Georgia"
+	    @namebox.size = 28
+	    @namebox.bold = true
+	    @namebox.gradient = true
+	    @namebox.gradient_color1 = Color.new(255,0,0)
+	    @namebox.gradient_color2 = Color.new(245,223,200)
+
+	end
+
+end"?#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -10923,7 +10573,7 @@ class TweenManager
 		return @tweens.select{ |n| n.parent == object }.empty?
 	end
 
-end"³class Bitmap
+end"ˆclass Bitmap
 
 	def fill(color)
 		self.fill_rect(0,0,self.width,self.height,color)
@@ -10972,9 +10622,7 @@ end"³class Bitmap
 
 	end
 
-	def borderskin(gfx = "Common/skin")
-
-		src = Cache.menu(gfx)
+	def borderskin(src)
 
 		# 32px corners, 64px edges
 
@@ -11129,7 +10777,7 @@ end
 class QuestData
 	attr_reader :id
 end
-"#==============================================================================
+"+#==============================================================================
 # ** Gradient Font Color
 #------------------------------------------------------------------------------
 #   Original code by poccil
@@ -11160,25 +10808,29 @@ end
 #==============================================================================
  
 class Font
+  
   #--------------------------------------------------------------------------
   # * Public Instance Variables
   #--------------------------------------------------------------------------
   attr_accessor :gradient
   attr_accessor :gradient_color1
   attr_accessor :gradient_color2
+  
   #--------------------------------------------------------------------------
   # * Alias Listing
   #--------------------------------------------------------------------------
   alias dargor_vx_font_gradient_initialize initialize
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize(*args)
      dargor_vx_font_gradient_initialize(*args)
-     @gradient = false
+     #@gradient = true
      @gradient_color1 = Color.new(255,255,255)
      @gradient_color2 = Color.new(255,255,255)
   end
+  
 end
  
 #==============================================================================

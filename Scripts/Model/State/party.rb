@@ -35,7 +35,7 @@ class Game_Party
     # TEMP DISABLE
     set_active("boy")
     set_active("ing")
-    set_active("mys")
+    set_active("phy")
     set_active("rob")
 
     @actors["boy"].learn('darkness')

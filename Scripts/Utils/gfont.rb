@@ -29,25 +29,29 @@
 #==============================================================================
  
 class Font
+  
   #--------------------------------------------------------------------------
   # * Public Instance Variables
   #--------------------------------------------------------------------------
   attr_accessor :gradient
   attr_accessor :gradient_color1
   attr_accessor :gradient_color2
+  
   #--------------------------------------------------------------------------
   # * Alias Listing
   #--------------------------------------------------------------------------
   alias dargor_vx_font_gradient_initialize initialize
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize(*args)
      dargor_vx_font_gradient_initialize(*args)
-     @gradient = false
+     #@gradient = true
      @gradient_color1 = Color.new(255,255,255)
      @gradient_color2 = Color.new(255,255,255)
   end
+  
 end
  
 #==============================================================================

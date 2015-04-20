@@ -10,8 +10,8 @@ class Ui_Message
   TAB_WIDTH = 35
 
   SPACING = 7
-  LINE_HEIGHT = 29#6
-  PADDING_X = 24
+  LINE_HEIGHT = 27
+  PADDING_X = 22
   PADDING_Y = 16
 
   SPEED_1 = 0
@@ -36,14 +36,7 @@ class Ui_Message
     # This line data
     @name = ''
 
-    @font = Font.new
-    @font.name = "Georgia"
-    @font.size = 26
-    @font.color = Color.new(245,223,200)
 
-    # @font.gradient = true
-    # @font.gradient_color1 = Color.new(255,0,0)
-    # @font.gradient_color2 = Color.new(245,223,200)
 
     @scratch = Bitmap.new(400,50)
 
@@ -67,17 +60,24 @@ class Ui_Message
     @width = 0
     @height = 0
 
-    @wallpaper = Wallpaper.new(200,200,Cache.menu("Common/back"),vp)
-    @wallpaper.opacity = 230
+    @sprites = SpriteGroup.new
 
-    # Setup sprites
-    @window = Sprite.new(vp)
+    @box = Box.new(vp)
+    @box.skin = Cache.menu("Common/skin")
+    @box.wallpaper = Cache.menu("Common/back")
+
+    # Setup sprites    
     @textbox = Sprite.new(vp)
     @textbox.z += 50
 
     @namebox = Sprite.new(vp)
     @namebox.bitmap = Bitmap.new(220,40)
     @namebox.bitmap.hskin(Cache.menu("Common/namebox"))
+
+    @nametext = Sprite.new(vp)
+    @nametext.bitmap = Bitmap.new(220,40)
+    @nametext.bitmap.font = $fonts.namebox
+    @nametext.bitmap.draw_text(0,0,220,40,"texter")
 
     @next = Sprite.new(vp)
     @next.bitmap = Cache.menu("Common/next")
@@ -87,6 +87,19 @@ class Ui_Message
     
     @tail = Sprite.new(vp)
     @tail.bitmap = Cache.menu("Common/tail")
+
+
+    # Group system
+    @sprites.add(@box)
+    @sprites.add(@textbox)
+    @sprites.add(@namebox)
+    @sprites.add(@nametext)
+    @sprites.add(@next)
+    @sprites.add(@face)
+    @sprites.add(@tail)
+
+    @sprites.opacity = 0
+
 
     @sparks = []
 
@@ -103,7 +116,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def update
 
-    @wallpaper.update
+    @box.update
     @sparks.each{ |s| s.update }
     
 #~     if Input.press?(:SHIFT)
@@ -112,9 +125,9 @@ class Ui_Message
 #~     end      
     
     # Skip to end of this text
-    if Input.trigger?(Input::C) && @state == :texting
-      @skip_all = true
-    end
+    # if $input.action?
+    #   @skip_all = true
+    # end
 
     case @state
 
@@ -159,7 +172,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
-    @scratch.font = @font
+    @scratch.font = $fonts.message
 
     # Clear out the previous word
     @word = nil
@@ -173,6 +186,8 @@ class Ui_Message
     # Get face if exists
     if $data.actors.keys.include?(speaker[0..2])
       @face.bitmap = Cache.face(speaker)
+    else
+      @face.bitmap = nil
     end
 
     # Prepare the words to be written
@@ -186,43 +201,39 @@ class Ui_Message
     @width += PADDING_X * 2
     @height += PADDING_Y * 2
 
-    @width += @face.width
-
-    @window.x = 50
-    @window.y = 150
-
-    @face.x = -10 + max_width + @window.x + PADDING_X + PADDING_X
-    @face.y = 7 + @window.y + @height - @face.height - PADDING_Y
-
-    # Position the textbox wherever it best fits
+    if @face.bitmap
+      @width += @face.width 
+      fx = -10 + max_width + PADDING_X + PADDING_X
+      fy = 7 + @height - @face.height - PADDING_Y
+      @sprites.move(@face,fx,fy)
+    end
 
     # Prepare the sprites  
-    @window.bitmap = Bitmap.new(@width,@height)
-    @window.bitmap.borderskin
+    @box.resize(@width,@height)
 
-    @textbox.move(@window.x,@window.y)
+    #@textbox.move(@box.x,@box.y)
     @textbox.bitmap = Bitmap.new(@width,@height)
+
+    # Can this be cut?
     @text_bmp = Bitmap.new(@width,@height)
 
-    @wallpaper.resize(@width-6,@height-6)
-    @wallpaper.move(@window.x+3,@window.y+3) # mirror sprite?
-
-    @scratch.font = @font
-    @text_bmp.font = @font
-    @textbox.bitmap.font = @font
-
+    @scratch.font = $fonts.message
+    @text_bmp.font = $fonts.message
+    @textbox.bitmap.font = $fonts.message
 
     # COMBINE FONT AND SIZE
+    @sprites.move(@tail,@width/2,@height)
+    @sprites.move(@next,@width/2,@height-20)
 
-    @tail.x = @window.x + @width /2
-    @tail.y = @window.y + @height
+    @sprites.move(@namebox,20,-@namebox.height)
+    @sprites.move(@nametext,40,-@namebox.height+5)
 
-    @next.x = @window.x + @width /2
-    @next.y = @window.y + @height - 20
+    @sprites.x = 40
+    @sprites.y = 100
 
-    @namebox.x = @window.x + 20
-    @namebox.y = @window.y - @namebox.height
 
+    @sprites.do(go("opacity",255,500,:quad_in_out))
+    @sprites.do(go("y",-25,500,:quad_in_out))
 
     @line_idx = 0
     @word_idx = -1
@@ -292,8 +303,8 @@ class Ui_Message
     # Spawn spark
     sprk = Spark.new("magic",@vp)
     
-    x = @window.x + @cx+size.width
-    y = @window.y + @cy
+    x = @sprites.x + @cx+size.width
+    y = @sprites.y + @cy
     sprk.center(x+6,y+16)
     sprk.blend_type = 1
     @sparks.push(sprk)
@@ -422,6 +433,7 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
+      @sprites.do(go("opacity",-255,300,:quad_in_out))
     end
   end
 

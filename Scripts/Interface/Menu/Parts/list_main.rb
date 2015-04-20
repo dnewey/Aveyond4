@@ -18,7 +18,7 @@ class List_Main
     	@window.move(10,10)
 
 		# Left side list
-		@list = List.new(vp)
+		@list = List.new()
 
 		@list.item_width = 156
 		@list.item_height = 42
