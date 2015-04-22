@@ -250,6 +250,7 @@ class Interpreter
     
     # Branch by command code
     return true if @list[@index].code == 108
+    return true if @list[@index].code == 509
     send("command_"+@list[@index].code.to_s)
     
   end
@@ -572,6 +573,7 @@ class Interpreter
     character.force_move_route(@parameters[1])
     return true
   end
+  
   #--------------------------------------------------------------------------
   # * Wait for Move's Completion
   #--------------------------------------------------------------------------
@@ -735,7 +737,8 @@ class Interpreter
   rescue Exception => e
 
     line = e.message.split(":")[1].to_i      
-    log_scr e.inspect
+    log_scr e.inspect.split(":in `")[0]
+    log_scr e.inspect.split(":in `")[1]
 
     lc = 0
       script.split("\n").each{ |s|

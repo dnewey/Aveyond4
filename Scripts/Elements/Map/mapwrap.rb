@@ -9,11 +9,11 @@ class MapWrap < Tilemap
 
       @tileset_id = map.tileset_id
 
-      self.tileset = Cache.tileset(map.tileset.tileset_name)
+      self.tileset = $cache.tileset(map.tileset.tileset_name)
       i = 0 
       map.tileset.autotile_names.each{ |a|
         next if a == ''
-        self.autotiles[i] = Cache.autotile(a)
+        self.autotiles[i] = $cache.autotile(a)
         i+=1
       }
       

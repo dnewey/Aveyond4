@@ -6,7 +6,7 @@ class Bitmap
 
 	# xp windowskin style
 	def windowskin(skin)
-		src = Cache.windowskin(skin)
+		src = $cache.windowskin(skin)
 		dest = rect.dup
 		dest.x += 3
 		dest.y += 3

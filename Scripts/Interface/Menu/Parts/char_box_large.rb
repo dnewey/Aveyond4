@@ -4,11 +4,11 @@ class Char_Box_Large
 
 	def initialize(vp)
 
-	    @wallpaper = Wallpaper.new(201,156,Cache.menu("Common/portback"),vp)
+	    @wallpaper = Wallpaper.new(201,156,$cache.menu("Common/portback"),vp)
 	    #@wallpaper.opacity = 230
 
 		@gradient = Sprite.new(vp)
-		@gradient.bitmap = Cache.menu("Common/charbox-gradient")
+		@gradient.bitmap = $cache.menu("Common/charbox-gradient")
 		@gradient.opacity = 90
 
 		@window = Sprite.new(vp)
@@ -16,7 +16,7 @@ class Char_Box_Large
 		@window.bitmap.borderskin
 
 		@port = Sprite.new(vp)
-		@port.bitmap = Cache.face("boy")
+		@port.bitmap = $cache.face("boy")
 
 	end
 

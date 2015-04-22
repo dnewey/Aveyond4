@@ -6,7 +6,7 @@ class SkillCmd
 		@icons = []
 		
 		@text = Sprite.new
-		@text.bitmap = Cache.menu("battle/text.png")
+		#@text.bitmap = $cache.menu("battle/text.png")
 
 	end
 

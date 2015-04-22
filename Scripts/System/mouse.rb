@@ -49,7 +49,7 @@ class MouseManager
   end
 
   def change_cursor(c)
-    @sprite.bitmap = Cache.cursor(c)
+    @sprite.bitmap = $cache.cursor(c)
   end
 
 end

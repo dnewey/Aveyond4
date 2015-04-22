@@ -138,6 +138,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def passable?(x, y, d) #d0 = jump
 
+    return true
+
     # Get new coordinates
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
@@ -1142,24 +1144,28 @@ class Game_Character
 #   # * Frame Update (run_path)
 #   #--------------------------------------------------------------------------
   def run_path
+
     return if moving?
+
     step = @map[@x,@y]
-    if step == 1
+    if step == 1 # AT TARGET POS
       @map = nil
       @runpath = false
       return
     end
       
+    # maybe cut the step != 0, would be broken if there
+
     dir = rand(2)
     case dir
     when 0
       move_right if @map[@x+1,@y] == step - 1 and step != 0
       move_down if @map[@x,@y+1] == step - 1 and step != 0
-      move_left if @map[@x-1,@y] == step -1 and step != 0
+      move_left if @map[@x-1,@y] == step - 1 and step != 0
       move_up if @map[@x,@y-1] == step - 1 and step != 0
     when 1
       move_up if @map[@x,@y-1] == step - 1 and step != 0
-      move_left if @map[@x-1,@y] == step -1 and step != 0
+      move_left if @map[@x-1,@y] == step - 1 and step != 0
       move_down if @map[@x,@y+1] == step - 1 and step != 0
       move_right if @map[@x+1,@y] == step - 1 and step != 0
     end
@@ -1171,7 +1177,8 @@ class Game_Character
   def find_path(x,y)
     sx, sy = @x, @y
     @tx, @ty = x, y
-    result = setup_map(sx,sy)
+    tx, ty = x,y
+    result = setup_map(sx,sy,tx,ty)
     @runpath = result[0]
     @map = result[1]
     @map[sx,sy] = result[2] if result[2] != nil
@@ -1186,12 +1193,13 @@ class Game_Character
   #--------------------------------------------------------------------------
   # * Setup Map
   #--------------------------------------------------------------------------
-  def setup_map(sx,sy)
+  def setup_map(sx,sy,tx,ty) #tx and ty in params for external call
+
     map = Table.new($map.width, $map.height)
 
     update_counter = 0
-    map[@tx,@ty] = 1
-    old_positions = [[@tx, @ty]]
+    map[tx,ty] = 1
+    old_positions = [[tx, ty]]
     new_positions = []
 
     depth = 2

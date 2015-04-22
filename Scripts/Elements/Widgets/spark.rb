@@ -4,7 +4,7 @@ class Spark < Sprite
 	def initialize(fx,vp)
 		super(vp)
 
-		self.bitmap = Cache.menu("Sparks/#{fx}")
+		self.bitmap = $cache.menu("Sparks/#{fx}")
 
 		@frame = -1
 

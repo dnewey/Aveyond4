@@ -15,11 +15,11 @@ class State
 
 	end
 
-	def flag!(f)
+	def flag(f)
 		@flags.push(f) if !@flags.include?(f)
 	end
 
-	def unflag!(f)
+	def nflag(f)
 		@flags.delete(f)
 	end
 
@@ -27,7 +27,7 @@ class State
 		return @flags.include?(f)
 	end
 
-	def var!(v,a)
+	def var(v,a)
 		if @vars.has_key?(v)
 			@vars[v] += a
 		else
@@ -35,7 +35,7 @@ class State
 		end
 	end
 
-	def unvar!(v,a)
+	def nvar(v,a)
 		if @vars.has_key?(v)
 			@vars[v] -= a
 		else
@@ -48,11 +48,11 @@ class State
 		return @vars[v] >= t
 	end
 
-	def state!(e,s)
+	def state(e,s)
 		@states[[$map.id,e,s]] = true
 	end
 
-	def unstate!(e,s)
+	def nstate(e,s)
 		@states[[$map.id,e,s]] = false
 	end
 
@@ -61,8 +61,11 @@ class State
 		return @states[[$map.id,e,s]]
 	end
 
-	def loc!(e)
+	def loc(e)
 		@locs[[$map.id,e]] = [e.x,e.y]
+	end
+	def nloc(e)
+
 	end
 
 	def loc?(e)
@@ -73,7 +76,9 @@ class State
 		return @locs[[$map.id,e]]
 	end
 
-	def delete!(e)
+
+
+	def delete(e)
 		@deleted.push([$map.id,e])
 	end
 
@@ -81,7 +86,7 @@ class State
 		return @deleted.include?([$map.id,e])
 	end
 
-	def disable!(e)
+	def disable(e)
 		@disabled.push([$map.id,e])
 	end
 

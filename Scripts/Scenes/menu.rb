@@ -18,7 +18,7 @@ class Scene_Menu
     # Background
     @bg = Sprite.new(@vp)
     @bg.z = -100
-    @bg.bitmap = Cache.menu("Backs/sample")
+    @bg.bitmap = $cache.menu_background("sample")
     #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
 
     # The current menu

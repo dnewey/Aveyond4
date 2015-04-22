@@ -23,7 +23,7 @@ class ActorCmd
 		battler.actions.each{ |action|
 			# Add an icon?
 			spr = Sprite.new(@vp)
-			spr.bitmap = Cache.menu("Battle/icon")
+			spr.bitmap = $cache.menu("Battlehud/Commands/icon")
 			@icons.push(spr)
 		}
 
@@ -61,19 +61,19 @@ class ActorCmd
 		# Left and right to change
 		if $input.right?
 			@idx += 1 if @idx < @icons.count-1
-			log_info(@battler.actions[@idx])
+			$scene.hud.set_help(@battler.actions[@idx])
 		end
 
 		if $input.left?
 			@idx -= 1 if @idx > 0
-			log_info(@battler.actions[@idx])
+			$scene.hud.set_help(@battler.actions[@idx])
 		end
 
 		pos = $mouse.position
 		@icons.each{ |i|
 			if i.within?(pos[0],pos[1])
 				@idx = @icons.index(i)
-				log_info(@battler.actions[@idx])
+				$scene.hud.set_help(@battler.actions[@idx])
 			end
 		}
 

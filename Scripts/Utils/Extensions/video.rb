@@ -60,7 +60,7 @@ def vxace?() false end
 RUBY_VERSION == '1.8.1' ? defined?(Hangup) ?
 def xp?() true  end : def vx?() true  end : def vxace?() true  end
  
-Cache = RPG::Cache if xp?
+#Cache = RPG::Cache if xp?
  
 class String
   alias getbyte  []
@@ -142,7 +142,7 @@ module Graphics
       back_sprite.z = 0x7FFF_FFFF
       begin
         cached = true
-        back_sprite.bitmap = Cache.picture('ZeusVideoPlayer')
+        back_sprite.bitmap = $cache.picture('ZeusVideoPlayer')
         back_sprite.zoom_x = width  / back_sprite.bitmap.width.to_f
         back_sprite.zoom_y = height / back_sprite.bitmap.height.to_f
       rescue

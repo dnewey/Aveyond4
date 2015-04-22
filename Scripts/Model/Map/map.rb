@@ -215,7 +215,7 @@ class Game_Map
   def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
   def event_at(x, y) @events.values.find{ |e| e.at?(x,y) } end
   def events_at(x, y) @events.values.select{ |e| e.at?(x,y) } end
-  def lowest_event_at(x, y) events_at(x,y).min_by{ |e| e.y } end
+  def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
   def starting_events() @events.values.select{ |e| e.starting } end
 
   def event_by_name(name)

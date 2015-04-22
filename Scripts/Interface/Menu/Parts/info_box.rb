@@ -3,7 +3,7 @@ class Info_Box
 
 	def initialize(vp)
 
-		@wallpaper = Wallpaper.new(294,90,Cache.menu("Common/back"),vp)
+		@wallpaper = Wallpaper.new(294,90,$cache.menu_common("back"),vp)
     	#@wallpaper.opacity = 230
 
 		@window = Sprite.new(vp)

@@ -63,8 +63,8 @@ class Ui_Message
     @sprites = SpriteGroup.new
 
     @box = Box.new(vp)
-    @box.skin = Cache.menu("Common/skin")
-    @box.wallpaper = Cache.menu("Common/back")
+    @box.skin = $cache.menu_common("skin")
+    @box.wallpaper = $cache.menu_wallpaper("diamonds")
 
     # Setup sprites    
     @textbox = Sprite.new(vp)
@@ -72,7 +72,7 @@ class Ui_Message
 
     @namebox = Sprite.new(vp)
     @namebox.bitmap = Bitmap.new(220,40)
-    @namebox.bitmap.hskin(Cache.menu("Common/namebox"))
+    @namebox.bitmap.hskin($cache.menu("Common/namebox"))
 
     @nametext = Sprite.new(vp)
     @nametext.bitmap = Bitmap.new(220,40)
@@ -80,13 +80,13 @@ class Ui_Message
     @nametext.bitmap.draw_text(0,0,220,40,"texter")
 
     @next = Sprite.new(vp)
-    @next.bitmap = Cache.menu("Common/next")
+    @next.bitmap = $cache.menu("Common/next")
     
     @face = Sprite.new(vp)
     @face.z += 10
     
     @tail = Sprite.new(vp)
-    @tail.bitmap = Cache.menu("Common/tail")
+    @tail.bitmap = $cache.menu("Common/tail")
 
 
     # Group system
@@ -185,7 +185,7 @@ class Ui_Message
     # TODO - add actor name to this check
     # Get face if exists
     if $data.actors.keys.include?(speaker[0..2])
-      @face.bitmap = Cache.face(speaker)
+      @face.bitmap = $cache.face(speaker)
     else
       @face.bitmap = nil
     end

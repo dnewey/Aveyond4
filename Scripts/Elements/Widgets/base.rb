@@ -93,16 +93,16 @@ class Widget < Sprite
     #--------------------------------------------------------------------------
   # * Manage
   #--------------------------------------------------------------------------
-  def from_menu(src) self.bitmap = Cache.menu(src) end
-  def from_menu_frame(src,frame) self.bitmap = Cache.menu_frame(src,frame) end
+  def from_menu(src) self.bitmap = $cache.menu(src) end
+  def from_menu_frame(src,frame) self.bitmap = $cache.menu_frame(src,frame) end
   def from_bitmap(bmp) self.bitmap = bmp end  
-  def from_icon(idx,double=false) self.bitmap = Cache.icon(idx,double) end  
-  def from_stroke_icon(idx,double=false) self.bitmap = Cache.stroke_icon(idx,double) end
+  def from_icon(idx,double=false) self.bitmap = $cache.icon(idx,double) end  
+  def from_stroke_icon(idx,double=false) self.bitmap = $cache.stroke_icon(idx,double) end
     
   # Stretch out
   def from_menu_stretch(src,width,height)
     self.bitmap = Bitmap.new(width,height)
-    img = Cache.menu(src)
+    img = $cache.menu(src)
     self.bitmap.stretch_blt(Rect.new(0,0,width,height),img,img.rect)
   end
   
@@ -119,9 +119,9 @@ class Widget < Sprite
     height = @height
 
     self.bitmap = Bitmap.new(width+shadow,height+shadow)
-    src = Cache.menu(src)
+    src = $cache.menu(src)
 
-    ssrc = Cache.menu('skin-shadow')
+    ssrc = $cache.menu('skin-shadow')
 
     w = src.width/3
     h = src.height/3
@@ -175,7 +175,7 @@ class Widget < Sprite
     #p img,idx
     zoom = 2.0 if zoom == true
     zoom = 1.0 if zoom == false
-    self.bitmap = Cache.char_frame(img,idx,dir,zoom,p)
+    self.bitmap = $cache.char_frame(img,idx,dir,zoom,p)
   end
   
   def from_spr(src)
@@ -230,7 +230,7 @@ class Widget < Sprite
     anums.each{ |n| nums.push(n.to_i) }
 
     # build the gfx of this number
-    src = Cache.menu('Bar/numbers.12.7')
+    src = $cache.menu('Bar/numbers.12.7')
     cw = src.width/12
     ch = src.height/7
 
@@ -284,7 +284,7 @@ class Widget < Sprite
     anums.each{ |n| nums.push(n.to_i) }
 
     # build the gfx of this number
-    src = Cache.menu('Bar/numbers.12.7')
+    src = $cache.menu('Bar/numbers.12.7')
     cw = src.width/12
     ch = src.height/7
 
@@ -325,7 +325,7 @@ class Widget < Sprite
     anums.each{ |n| nums.push(n.to_i) }
 
     # build the gfx of this number
-    src = Cache.menu('level_nums.10.1')
+    src = $cache.menu('level_nums.10.1')
     cw = src.width/10
     ch = src.height
     
@@ -370,7 +370,7 @@ class Widget < Sprite
 
     nums.each{ |n|
 
-      src = Cache.menu('Lvls/'+n.to_s)
+      src = $cache.menu('Lvls/'+n.to_s)
       bmp.blt(c,0,src,src.rect)
       c += src.width
 
@@ -391,7 +391,7 @@ class Widget < Sprite
     color = :white
 
     # build the gfx of this number
-    src = Cache.system('pop_'+size.to_s)
+    src = $cache.system('pop_'+size.to_s)
     cw = src.width/10
     ch = src.height/7
 

@@ -22,8 +22,8 @@ class BattleHud
 
 		# Help box
 		@help_box = Box.new(vp)
-		@help_box.skin = Cache.menu("Common/skin-plain")
-    	@help_box.wallpaper = Cache.menu("Common/back")
+		@help_box.skin = $cache.menu_common("skin-plain")
+    	@help_box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@help_box.resize(300,50)
 		@help_box.move(166,8)
 
@@ -35,6 +35,12 @@ class BattleHud
 
 	end
 
+	def set_help(text)
+
+		@help_text.bitmap.clear
+		@help_text.bitmap.draw_text(0,0,300,50,text,1)
+
+	end
 	
 	def update
 

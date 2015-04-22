@@ -28,7 +28,7 @@ class Tabs < Sprite
 
   def push(name,gfx)
     @names.push(name)
-    @gfx.push(Cache.menu(gfx))
+    @gfx.push($cache.menu(gfx))
     refresh
   end
 

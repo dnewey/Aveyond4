@@ -18,6 +18,7 @@ def aveyond4
       p e.inspect
     end
 
+    $cache = CacheManager.new
     $audio = AudioManager.new
     $keyboard = KeyboardManager.new
     $mouse = MouseManager.new

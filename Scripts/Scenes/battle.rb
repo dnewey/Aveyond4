@@ -22,6 +22,8 @@
 # Rename actor to active_battler
 
 class Scene_Battle
+
+  attr_accessor :hud
   
   #--------------------------------------------------------------------------
   # * Set up the scene
@@ -38,7 +40,7 @@ class Scene_Battle
 
     @bg = Sprite.new(@vp)
     @bg.z = -100
-    @bg.bitmap = Cache.menu("tempback")
+    #@bg.bitmap = $cache.menu("tempback")
 
     @map = Game_Map.new()
     @map.setup($battle.map)

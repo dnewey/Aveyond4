@@ -112,12 +112,12 @@ class List
     # HMMMMMMMMMMMMMMMMMM
 
   	# DataBox atm
-    src = Cache.menu("Common/bartest3")
-    src = Cache.menu("Common/bartest4") if on
+    src = $cache.menu("Common/bartest3")
+    src = $cache.menu("Common/bartest4") if on
   	sprite.bitmap = Bitmap.new(src.width,src.height)
     sprite.bitmap.blt(0,0,src,src.rect)
     #Bitmap.new(item_width,item_height)
-    #sprite.bitmap.skin(Cache.menu("Common/list_inner"))
+    #sprite.bitmap.skin($cache.menu("Common/list_inner"))
   	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
     sprite.bitmap.font = @font

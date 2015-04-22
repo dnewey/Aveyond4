@@ -31,9 +31,9 @@ class Sprite_Character < Sprite
      
       @character_name = @character.character_name
 
-        self.bitmap = Cache.character(@character.character_name,0)
+        self.bitmap = $cache.character(@character.character_name)
         if @character == $player
-          self.bitmap = Cache.character("Player/boy",0)
+          self.bitmap = $cache.character("Player/boy")
         end
         @cw = bitmap.width / 4
         @ch = bitmap.height / 4

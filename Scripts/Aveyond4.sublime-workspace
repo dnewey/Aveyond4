@@ -380,34 +380,37 @@
 	"buffers":
 	[
 		{
-			"file": "Interface/Battle/battlehud.rb",
+			"file": "Model/Map/event.rb",
 			"settings":
 			{
-				"buffer_size": 838,
+				"buffer_size": 8956,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Interface/Battle/Parts/charview.rb",
+			"contents": "#==============================================================================\n# ** Item Functions\n#==============================================================================\n\ndef add_item(id,number=1)\n\nend\n\ndef add_item_s(id,number=1)\n\nend\n\ndef remove_item(id,number=1)\n\nend\n\n",
+			"file": "Utils/Funcs/items.rb",
+			"file_size": 0,
+			"file_write_time": 130740957562337113,
 			"settings":
 			{
-				"buffer_size": 815,
+				"buffer_size": 282,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Elements/Widgets/bar.rb",
+			"file": "Utils/Funcs/events.rb",
 			"settings":
 			{
-				"buffer_size": 255,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Elements/Widgets/box.rb",
+			"file": "Utils/Funcs/state.rb",
 			"settings":
 			{
-				"buffer_size": 1702,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		}
@@ -505,7 +508,6 @@
 	[
 		"/C/Aveyond4/Scripts",
 		"/C/Aveyond4/Scripts/Elements",
-		"/C/Aveyond4/Scripts/Elements/Map",
 		"/C/Aveyond4/Scripts/Elements/Widgets",
 		"/C/Aveyond4/Scripts/Interface",
 		"/C/Aveyond4/Scripts/Interface/Battle",
@@ -516,47 +518,65 @@
 		"/C/Aveyond4/Scripts/Model",
 		"/C/Aveyond4/Scripts/Model/Battle",
 		"/C/Aveyond4/Scripts/Model/Map",
+		"/C/Aveyond4/Scripts/Model/State",
 		"/C/Aveyond4/Scripts/Scenes",
-		"/C/Aveyond4/Scripts/Utils"
+		"/C/Aveyond4/Scripts/System",
+		"/C/Aveyond4/Scripts/Utils",
+		"/C/Aveyond4/Scripts/Utils/Funcs"
 	],
 	"file_history":
 	[
-		"/C/Aveyond4/Scripts/Interface/Battle/Parts/help.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/box.rb",
-		"/C/Aveyond4/Scripts/Model/Map/character.rb",
-		"/C/Aveyond4/Scripts/Elements/Map/character.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/spritegroup.rb",
-		"/C/Aveyond4/Scripts/Interface/Battle/Parts/charview.rb",
-		"/C/Aveyond4/Scripts/Model/State/party.rb",
+		"/C/Aveyond4/Scripts/Utils/Funcs/docs.md",
+		"/C/Aveyond4/README.md",
+		"/C/Aveyond4/Scripts/Utils/Funcs/conditions.rb",
+		"/C/Aveyond4/Scripts/Interface/Battle/Parts/skillcmd.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/actorcmd.rb",
-		"/C/Aveyond4/Scripts/Scenes/battle.rb",
+		"/C/Aveyond4/Scripts/System/mouse.rb",
+		"/C/Aveyond4/Scripts/main.rb",
+		"/C/Aveyond4/Scripts/Utils/Funcs/moveroute.rb",
+		"/C/Aveyond4/Scripts/System/cache.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/battlehud.rb",
+		"/C/Aveyond4/Scripts/Scenes/battle.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
+		"/C/Aveyond4/Scripts/Model/Map/character.rb",
 		"/C/Aveyond4/Scripts/Utils/bitmap.rb",
+		"/C/Aveyond4/Scripts/Utils/Extensions/video.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/port_full.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/info_box.rb",
+		"/C/Aveyond4/Scripts/Interface/Battle/Parts/charview.rb",
+		"/C/Aveyond4/Scripts/Interface/Battle/Parts/targetcmd.rb",
+		"/C/Aveyond4/Scripts/Scenes/menu.rb",
+		"/C/Aveyond4/Scripts/Elements/Map/character.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/tabs.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/spark.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/base.rb",
+		"/C/Aveyond4/Scripts/Elements/Map/mapwrap.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
+		"/C/Aveyond4/Scripts/System/data.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/box.rb",
+		"/C/Aveyond4/Scripts/Model/Map/map.rb",
 		"/C/Aveyond4/Scripts/Model/Map/interpreter.rb",
+		"/C/Aveyond4/Scripts/Interface/Battle/Parts/help.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/spritegroup.rb",
+		"/C/Aveyond4/Scripts/Model/State/party.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/popper.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/info.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/bar.rb",
 		"/C/Aveyond4/Scripts/Scenes/map.rb",
-		"/C/Aveyond4/Scripts/Elements/Map/mapwrap.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/items.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_main.rb",
-		"/C/Aveyond4/Scripts/main.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/wallpaper.rb",
 		"/C/Aveyond4/Scripts/Utils/gfont.rb",
 		"/C/Aveyond4/Scripts/System/fonts.rb",
 		"/C/Aveyond4/Scripts/Utils/sprite.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
-		"/C/Aveyond4/Scripts/Scenes/menu.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/info_box.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/message.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/port_full.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_common.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/main.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/page_title.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
 		"/C/Aveyond4/Scripts/Utils/ruby.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/shop.rb",
 		"/C/Aveyond4/Scripts/Model/State/menu.rb",
@@ -574,11 +594,8 @@
 		"/C/Aveyond4/Editor/meta/zones.json",
 		"/C/Aveyond4/Editor/meta/states.json",
 		"/C/Aveyond4/Editor/meta/enemies.json",
-		"/C/Aveyond4/Scripts/Elements/Widgets/spark.rb",
-		"/C/Aveyond4/Scripts/Model/Map/map.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/actor.rb",
 		"/C/Aveyond4/Scripts/Model/Map/event.rb",
-		"/C/Aveyond4/Scripts/System/mouse.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/actorcmd.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battle.rb",
 		"/C/Aveyond4/Scripts/Model/State/progress.rb",
@@ -588,14 +605,12 @@
 		"/C/Aveyond4/Scripts/System/input.rb",
 		"/C/Aveyond4/Scripts/Utils/data_types.rb",
 		"/C/Users/Dan/AppData/Roaming/Sublime Text 3/Packages/Wizardry.sublime-build",
-		"/C/Aveyond4/Scripts/System/data.rb",
 		"/C/Aveyond4/Editor/json/keyitems.json",
 		"/C/Aveyond4/Scripts/Utils/Extensions/screenshot.rb",
 		"/C/FairyTale/Scripts/Engine/ABC/bitmapex.rb",
 		"/C/Stargazer/Data/Scripts/Data/zones.rb",
 		"/C/Aveyond4/Scripts/Utils/Debug/menu.rb",
 		"/C/Aveyond4/Scripts/Model/Map/player.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/tabs.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/file.rb",
 		"/C/Aveyond4/Scripts/Utils/Funcs/zones.rb",
 		"/C/Aveyond4/Scripts/Utils/Funcs/progress.rb",
@@ -638,17 +653,7 @@
 		"/C/Aveyond4/Scripts/Managers/mouse.rb",
 		"/C/Aveyond4/Scripts/View/Map/tilemap.rb",
 		"/C/Aveyond4/Scripts/Utils/exportbitmap.rb",
-		"/C/Aveyond4/Scripts/Utils/rpgmodule.rb",
-		"/C/Aveyond4/Scripts/Model/State/temp.rb",
-		"/C/Aveyond4/Editor/json/actors(1).json",
-		"/C/Aveyond4/Scripts/Utils/xpfixes.rb",
-		"/C/Aveyond4/Scripts/View/Map/character.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/action.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_3.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_2.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/troop.rb",
-		"/C/Aveyond4/Scripts/Utils/res.rb",
-		"/C/Aveyond4/Scripts/Utils/movetomouse.rb"
+		"/C/Aveyond4/Scripts/Utils/rpgmodule.rb"
 	],
 	"find":
 	{
@@ -659,6 +664,7 @@
 		"height": 93.0,
 		"where_history":
 		[
+			"C:\\Aveyond4\\Scripts",
 			"C:\\Aveyond4\\\\",
 			"C:\\Aveyond4\\Editor\\",
 			"C:\\Aveyond4\\Scripts\\",
@@ -672,6 +678,14 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"condition_applies",
+			"battle/text",
+			"Cache",
+			"commonskin",
+			"passable",
+			"@runpath",
+			"jump",
+			"move_route",
 			"pattern",
 			"draw_text",
 			"Data_Box",
@@ -791,15 +805,7 @@
 			"$game_map",
 			"@wordle",
 			".running?",
-			"message",
-			"redraw",
-			"TRYINGHERE",
-			"next_line",
-			"next_word",
-			"$hud.update",
-			"end",
-			"over_trigger",
-			"trying"
+			"message"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -807,6 +813,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"$cache",
 			"$tbl_sorting",
 			"$tbl_per_page",
 			"$tbl_offset",
@@ -841,24 +848,24 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Interface/Battle/battlehud.rb",
+					"file": "Model/Map/event.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 838,
+						"buffer_size": 8956,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								749,
-								749
+								450,
+								0
 							]
 						],
 						"settings":
@@ -867,176 +874,88 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 146.0,
-						"translation.y": 132.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Interface/Battle/Parts/charview.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 815,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								768,
-								768
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
-						"translation.x": -0.0,
-						"translation.y": 198.0,
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "Elements/Widgets/bar.rb",
+					"buffer": 1,
+					"file": "Utils/Funcs/items.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 255,
+						"buffer_size": 282,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								220,
-								220
+								282,
+								282
 							]
 						],
 						"settings":
@@ -1045,61 +964,61 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage"
 						},
@@ -1111,86 +1030,171 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "Elements/Widgets/box.rb",
+					"buffer": 2,
+					"file": "Utils/Funcs/events.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1702,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								631,
-								631
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"BracketHighlighterBusy": false,
-							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Utils/Funcs/state.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
-								"bh_square_content"
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content"
 							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1255,8 +1259,44 @@
 		"selected_items":
 		[
 			[
-				"charac",
+				"cache",
+				"Scripts\\System\\cache.rb"
+			],
+			[
+				"menu",
+				"Scripts\\Scenes\\menu.rb"
+			],
+			[
+				"chara",
 				"Scripts\\Elements\\Map\\character.rb"
+			],
+			[
+				"ouse",
+				"Scripts\\System\\mouse.rb"
+			],
+			[
+				"inter",
+				"Scripts\\Model\\Map\\interpreter.rb"
+			],
+			[
+				"cha",
+				"Scripts\\Model\\Map\\character.rb"
+			],
+			[
+				"mover",
+				"Scripts\\Utils\\Funcs\\moveroute.rb"
+			],
+			[
+				"charac",
+				"Scripts\\Model\\Map\\character.rb"
+			],
+			[
+				"inte",
+				"Scripts\\Model\\Map\\interpreter.rb"
+			],
+			[
+				"interp",
+				"Scripts\\Model\\Map\\interpreter.rb"
 			],
 			[
 				"party",
@@ -1265,10 +1305,6 @@
 			[
 				"group",
 				"Scripts\\Elements\\Widgets\\spritegroup.rb"
-			],
-			[
-				"interp",
-				"Scripts\\Model\\Map\\interpreter.rb"
 			],
 			[
 				"fonts",

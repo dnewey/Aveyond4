@@ -3,27 +3,56 @@
 
 class Bar < Sprite
 
-	def initialize(vp)
+	attr_accessor :value
+
+	def initialize(vp,w,h)
 
 		super(vp)
 
-		@value = 0
-		@target = 0
+		@value = 12
+		self.do(go("value",75,3000,:quad_in_out))
+		@target = 75
 
-		@max = 0
+		@drawn = @value
 
-		@width = 0
-		@height = 0
+		@max = 120
 
-		@base_color = Color.new(255,0,0,255)
+		@width = w
+		@height = h
+
+		@base_color = Color.new(46,46,46,200)
+		@ghost_color = Color.new(0,255,0,50)
 		@bar_color = Color.new(0,255,0,255)
 
+		self.bitmap = Bitmap.new(w,h)
+
+		redraw
+
+	end
+
+	def update
+		#if @drawn != @value.to_i
+			redraw
+		#end
 	end
 
 	def redraw
 
-		# Draw the 3 layers
+		@drawn = @value.to_i
 
+		# Draw the 3 layers
+		self.bitmap.clear
+		self.bitmap.fill(@base_color)
+
+		# Draw ghost
+		if @target > @value
+			gw = ((@target.to_f/@max) * @width).to_i
+			self.bitmap.fill_rect(0,0,gw,@height,@ghost_color)
+		end
+
+		# Draw next
+		vw = ((@value.to_f/@max) * @width).to_i
+		self.bitmap.fill_rect(0,0,vw,@height,@bar_color)
 
 	end
 

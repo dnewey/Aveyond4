@@ -47,10 +47,11 @@ class DataManager
     @quests = load_json("quests",QuestData)
     @zones = load_json("zones",ZoneData)
 
-    @clones = load_clones
-    @funcs = load_funcs
+    #@clones = load_clones
+    #@funcs = load_funcs
 
 		# Convert to json
+    # Currently doesn't work in ace
     @commons = load_data("Data/CommonEvents.rxdata")
     @tilesets = load_data("Data/Tilesets.rxdata")
     @system = load_data("Data/System.rxdata")
