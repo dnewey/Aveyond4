@@ -94,4 +94,8 @@ class State
 		return @disabled.include?([$map.id,e])
 	end
 
+	def enable(e)
+		@disabled.delete([$map.id,e])
+	end
+
 end

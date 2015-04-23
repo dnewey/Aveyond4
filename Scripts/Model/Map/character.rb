@@ -138,6 +138,7 @@ class Game_Character
       @original_move_route = @move_route
       @original_move_route_index = @move_route_index
     end
+
     # Change move route
     @move_route = move_route
     @move_route_index = 0
@@ -149,6 +150,7 @@ class Game_Character
     @wait_count = 0
     # Move cutsom
     move_type_custom
+    
   end
 
   #--------------------------------------------------------------------------
@@ -156,7 +158,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def passable?(x, y, d) #d0 = jump
 
-    #return true
+    return true
 
     # Get new coordinates
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
@@ -240,7 +242,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_x
     # Get screen coordinates from real coordinates and map display position
-    return (@real_x - $map.display_x + 3) / 4 + 16
+    return  @off_x + (@real_x - $map.display_x + 3) / 4 + 16
   end
 
   #--------------------------------------------------------------------------
@@ -437,6 +439,23 @@ class Game_Character
       end
 
       Audio.se_play("Audio/SE/step.ogg") if @move_angle == 2.4 && @prev_terrain != 3
+
+
+    elsif terrain_tag == 2 # Stairs
+
+      #@showdir = 8
+      #@direction = 8
+
+      @move_angle += 0.15
+
+      #if @move_angle < 3.14
+        #@showdir = 8
+      # Convert map coordinates from map move speed into move distance
+        distance = 2.0 ** @move_speed * (Math.sin(@move_angle)).abs
+      #end
+
+      Audio.se_play("Audio/SE/step.ogg") if @move_angle == 2.4 && @prev_terrain != 3
+
 
     else
       @move_angle = 0

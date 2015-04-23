@@ -2,28 +2,26 @@
 # ** Event Functions
 #==============================================================================
 
-# Event lookups
-
-def gid(str)
-
-	# empty means eid
-
+# Jumpings
+def jump(e,x,y)
+	gev(e).jump(x,y)
 end
 
-def gev(str)
+def jump_xy(e,x,y)
+	ev = gev(e)
+	ev.jump(x-ev.x,y-ev.y)
+end
 
-	return str if str == this
+def jump_to(e,t)
+	ev = gev(e)
+	target = gev(t)
+	ev.jump(target.x-ev.x,target.y-ev.y)
+end
 
-	# Empty means this
-	return this if str.nil?
-
-	# If a number, use as id
-	if str.kind_of?(Integer)
-		return $map.events[str.to_i]
-	end
-
-	# Check if name of event
-
-	# Event position
-
+# Opacity
+def hide(e)
+	gev(e).opacity = 0
+end
+def unhide(e)
+	gev(e).opacity = 255
 end

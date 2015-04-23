@@ -143,12 +143,12 @@ class Game_Player < Game_Character
   def update
 
     return if ($scene.busy?) || $debug.busy?
-    return if $map.interpreter.running? or @move_route_forcing
+    return if $map.interpreter.running?
+    return super if @move_route_forcing
 
     transfer_player if @transferring 
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
-
 
     if $input.click?
 

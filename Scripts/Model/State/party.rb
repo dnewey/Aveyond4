@@ -38,7 +38,6 @@ class Game_Party
     set_active("phy")
     set_active("rob")
 
-    @actors["boy"].learn('darkness')
     @actors["boy"].learn('fireburn')
     @actors["boy"].learn('flames')
 

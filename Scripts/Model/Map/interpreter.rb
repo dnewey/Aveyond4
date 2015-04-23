@@ -8,6 +8,10 @@
 class Interpreter
 
   attr_accessor :common_event_id
+
+  attr_accessor :wait_count
+
+  attr_accessor :event_id
   
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -52,10 +56,6 @@ class Interpreter
     @branch = {}                      # branch data
   end
 
-  def this
-    return $map.events[@event_id]
-  end
-  
   #--------------------------------------------------------------------------
   # * Event Setup
   #     list     : list of event commands

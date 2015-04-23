@@ -58,7 +58,14 @@ class Game_Actor < Game_Battler
 
 
   def skills_for(action)
-    return @skills.select{ |s| $data.skills[s].action == action }
+    log_info("SKILLS")
+    log_info(@skills)
+    log_info(action)
+    return @skills.select{ |s| 
+      log_info s
+      $data.skills[s].id == action || 
+      $data.skills[s].book == action
+    }
   end
 
 

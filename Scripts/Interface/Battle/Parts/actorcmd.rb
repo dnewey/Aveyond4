@@ -27,15 +27,12 @@ class ActorCmd
 			@icons.push(spr)
 		}
 
+
+
 		# Position the things
-		angle = -135 * 0.0174532925
-		dist = 50
-		@icons.each{ |i|
-			x = battler.ev.screen_x + Math.cos(angle) * dist
-			y = (battler.ev.screen_y-15) + Math.sin(angle) * dist
-			i.center(x,y)
-			angle += 40 * 0.0174532925
-		}
+		reposition
+
+		select
 
 		# Prep the text
 		#@text.bitmap = Cache.menu("Battle/text")
@@ -54,6 +51,26 @@ class ActorCmd
 		return @battler.actions[@idx]
 	end
 
+	def reposition
+		sx = @battler.ev.screen_x
+		sy = @battler.ev.screen_y-50
+
+		if @icons.count == 3
+			@icons[0].center(sx-36,sy-16)
+			@icons[1].center(sx,sy-25)
+			@icons[2].center(sx+36,sy-16)
+		end
+	end
+
+	def select
+		@icons.each{ |i|
+			$tweens.clear(i)
+		}
+		reposition
+		seq = sequence(go("y",-8,250,:quad_in_out),go("y",8,250,:cubic_in_out))
+		@icons[@idx].do(repeat(seq))
+	end
+
 	def update
 
 		return if @battler.nil?
@@ -62,11 +79,13 @@ class ActorCmd
 		if $input.right?
 			@idx += 1 if @idx < @icons.count-1
 			$scene.hud.set_help(@battler.actions[@idx])
+			select
 		end
 
 		if $input.left?
 			@idx -= 1 if @idx > 0
 			$scene.hud.set_help(@battler.actions[@idx])
+			select
 		end
 
 		pos = $mouse.position

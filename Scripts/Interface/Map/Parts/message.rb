@@ -161,7 +161,7 @@ class Ui_Message
     end
 
     # skipping
-    # while @state == :texting && @skip_all
+    # while @state == :texting && $input.action?
     #   @next_char > 0 ? @next_char -= 1 : update_message
     # end
 
@@ -180,18 +180,32 @@ class Ui_Message
     text_data = text.split(":")
 
     # Find speaker name, use to get face / event
-    speaker = text_data[0]
+    if text_data.count > 1
+      speaker = text_data[0]
+      content = text_data[1]
+    else
+      speaker = ""
+      content = text_data[0]
+    end
 
     # TODO - add actor name to this check
     # Get face if exists
     if $data.actors.keys.include?(speaker[0..2])
-      @face.bitmap = $cache.face(speaker)
+      @face.bitmap = $cache.menu_face(speaker)
     else
       @face.bitmap = nil
     end
 
+    @nametext.bitmap.clear
+    @namebox.bitmap.clear
+
+    if speaker != ""
+      @namebox.bitmap.hskin($cache.menu("Common/namebox"))
+      @nametext.bitmap.draw_text(0,0,220,40,speaker)
+    end
+
     # Prepare the words to be written
-    @lines = split_text(text_data[1])    
+    @lines = split_text(content)    
 
     # Now of the height? How many lines are there?
     @width = max_width
@@ -230,7 +244,6 @@ class Ui_Message
 
     @sprites.x = 40
     @sprites.y = 100
-
 
     @sprites.do(go("opacity",255,500,:quad_in_out))
     @sprites.do(go("y",-25,500,:quad_in_out))

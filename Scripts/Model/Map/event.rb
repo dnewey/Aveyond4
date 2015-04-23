@@ -279,14 +279,29 @@ class Game_Event < Game_Character
           @above = true
         when '#below'
           @below = true
+
         when '#opacity'
           self.opacity = data[1].to_i
+        when '#hide'
+          self.opacity = 0
+
         when '#width'
           @width = data[1].to_i
         when '#height'
           @height = data[1].to_i
         when '#gfx'
-          @character_name += "X/" + data[1]
+
+          if @character_name == "!!Prop"
+            @character_name = "Props/"+data[1]
+          end
+
+        when '#ox'
+          @off_x = data[1].to_i
+        when '#oy'
+          @off_y = data[1].to_i
+
+        when '#disable'
+          disable
 
       end
     }
@@ -338,18 +353,26 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def erase
     @erased = true
+    @self.opacity = 0
     refresh
   end
 
   def disable
     @disabled = true
-    $state.disable!(@id)
+    $state.disable(@id)
+    refresh
+  end
+
+  def enable
+    @disabled = false
+    $state.enable(@id)
     refresh
   end
 
   def delete
     @deleted = true
-    $state.delete!(@id)
+    $state.delete(@id)
+    @self.opacity = 0
     refresh
   end
 

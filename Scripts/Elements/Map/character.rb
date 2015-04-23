@@ -41,12 +41,19 @@ class Sprite_Character < Sprite
       self.ox = @cw / 2
       self.oy = @ch
 
+      if @character_name.include?("Prop")
+        @cw = bitmap.width
+        @ch = bitmap.height
+        self.ox = 0
+        self.oy = 0
+      end
+
     end
 
-    if @character == $player
-      self.bitmap = $cache.character("Player/boy")
-      self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
-    end
+    # if @character == $player
+    #   self.bitmap = $cache.character("Player/boy")
+    #   self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
+    # end
 
     # Set visible situation
     self.visible = !@character.transparent

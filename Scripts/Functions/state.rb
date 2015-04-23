@@ -24,11 +24,10 @@ def state?(e,s)
 end
 
 # Misc shorthands
-def loc(e) $state.loc(gid(e)) end
-def delete(e) $state.delete(gid(e)) end
-def disable(e) $state.delete(gid(e)) end
+def loc(e) gev(e).saveloc end
 
-# Fits here
-def erase(e)
+def erase(e) gev(e).erase end
+def delete(e) gev(e).delete end
+def disable(e) gev(e).disable end
 
-end
+def enable(e) gev(e).enable end

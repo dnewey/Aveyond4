@@ -32,12 +32,12 @@ end
 class SkillData
 	attr_reader :id
 	attr_reader :name
-	attr_reader :action
+	attr_reader :book
 	attr_reader :description
 	attr_reader :scope
 	attr_reader :animation
 	attr_reader :stats
-	attr_reader :effect
+	attr_reader :effects
 end
 
 class StateData

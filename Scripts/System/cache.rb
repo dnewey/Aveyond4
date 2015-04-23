@@ -43,6 +43,10 @@ class CacheManager
       load_bitmap("Graphics/Menus/Char/", filename)
     end
 
+    def menu_face(filename)
+      load_bitmap("Graphics/Menus/Ports/Message/", filename)
+    end
+
     def panorama(filename, hue)
       load_bitmap("Graphics/Panoramas/", filename, hue)
     end

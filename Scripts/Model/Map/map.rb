@@ -126,7 +126,7 @@ class Game_Map
     end
 
     # Camera update
-    
+    @target = $player
 
     # Camera update, maybe split to camera class
     if @target != nil

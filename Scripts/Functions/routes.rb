@@ -26,7 +26,10 @@ def path(ev,tx,ty)
 
 	result = char.setup_map(sx,sy,tx,ty)
 
-	next if !result[0]
+	if !result[0]
+		log_err("CANNOT FIND PATH")
+		return
+	end
 	map = result[1]
 	map[sx,sy] = result[2] if result[2] != nil
 
@@ -105,10 +108,27 @@ def route(ev,move)
 			when 'tu'
 				route.list.push(RPG::MoveCommand.new(19))
 
+
+			when 'walk'
+				route.list.push(RPG::MoveCommand.new(31))
+			when 'unwalk'
+				route.list.push(RPG::MoveCommand.new(32))
+
+			when 'step'
+				route.list.push(RPG::MoveCommand.new(33))
+			when 'unstep'
+				route.list.push(RPG::MoveCommand.new(34))
+
 			when 'fix'
 				route.list.push(RPG::MoveCommand.new(35))
-			when '!fix'
+			when 'unfix'
 				route.list.push(RPG::MoveCommand.new(36))
+
+			when 'thr', 'through'
+				route.list.push(RPG::MoveCommand.new(37))
+			when 'unthr', 'unthrough'
+				route.list.push(RPG::MoveCommand.new(38))	
+
 
 			when 'w'
 				route.list.push(RPG::MoveCommand.new(15,[params[0]]))
@@ -129,5 +149,6 @@ def route(ev,move)
 	route.list.push(RPG::MoveCommand.new())
 
 	char.force_move_route(route)
+	#$map.interpreter.command_210
 
 end

@@ -93,6 +93,8 @@ class Scene_Battle
 
     @props = []
 
+    #@map.target = $player
+
     Graphics.transition(50,'Graphics/System/trans')  
 
     @phase = :introduction
@@ -116,6 +118,7 @@ class Scene_Battle
     @hud.update
 
     @map.update
+    
     @character_sprites.each{ |s| s.update }
 
     update_phase
