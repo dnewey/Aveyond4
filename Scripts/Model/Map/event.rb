@@ -353,7 +353,7 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def erase
     @erased = true
-    @self.opacity = 0
+    self.opacity = 0
     refresh
   end
 
@@ -372,7 +372,7 @@ class Game_Event < Game_Character
   def delete
     @deleted = true
     $state.delete(@id)
-    @self.opacity = 0
+    self.opacity = 0
     refresh
   end
 

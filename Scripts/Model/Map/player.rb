@@ -142,9 +142,10 @@ class Game_Player < Game_Character
   #--------------------------------------------------------------------------
   def update
 
+    return super if @move_route_forcing
     return if ($scene.busy?) || $debug.busy?
     return if $map.interpreter.running?
-    return super if @move_route_forcing
+    
 
     transfer_player if @transferring 
 
