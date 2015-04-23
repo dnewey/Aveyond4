@@ -10,12 +10,10 @@ class Spark < Sprite
 
 		# No frame per row
 
-		@delay = 1
+		@delay = 3
 		@next = 0
 
 		update
-
-
 
 	end
 

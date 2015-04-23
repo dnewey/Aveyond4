@@ -1,10 +1,71 @@
+#==============================================================================
+# ** Route Functions
+#==============================================================================
 
+def wfc
+	$map.interpreter.command_210
+end
 
-def mr(ev,path,wfc=true) #waitforcompletion
+def path(ev,tx,ty)
 
-	char = $map.events[ev]
+	char = gev(ev)
 
-	data = path.split(',')
+	route = RPG::MoveRoute.new()
+	route.list.clear
+	route.repeat = false
+	route.skippable = false
+
+	x = 0
+	y = 0
+	sx = sy = 0
+
+	sx = char.x
+	sy = char.y
+	x = char.x
+	y = char.y
+
+	result = char.setup_map(sx,sy,tx,ty)
+
+	next if !result[0]
+	map = result[1]
+	map[sx,sy] = result[2] if result[2] != nil
+
+	# Now step through the path building cmds
+	step = map[x,y] 
+	while step != 1
+
+	     if map[x+1,y] == step - 1 and step != 0
+	     	route.list.push(RPG::MoveCommand.new(3))
+	     	x+=1
+	     end
+	     if map[x,y+1] == step - 1 and step != 0
+	     	route.list.push(RPG::MoveCommand.new(1))
+	     	y+=1
+	     end
+	     if map[x-1,y] == step - 1 and step != 0
+	     	route.list.push(RPG::MoveCommand.new(2))
+	     	x-=1
+	     end
+	     if map[x,y-1] == step - 1 and step != 0
+			route.list.push(RPG::MoveCommand.new(4))
+			y -= 1
+	     end
+
+	     step = map[x,y] 
+
+	end		
+
+	route.list.push(RPG::MoveCommand.new())
+
+	char.force_move_route(route)
+
+end
+
+def route(ev,move)
+
+	char = gev(ev)
+
+	data = move.split(',')
 
 	route = RPG::MoveRoute.new()
 	route.list.clear
@@ -60,76 +121,13 @@ def mr(ev,path,wfc=true) #waitforcompletion
 			when 'j'
 				route.list.push(RPG::MoveCommand.new(14,[0,0]))
 
-			when 'pf' # srs
-
-				# Only keeps pos for pathfinds, would need to keep x and y in move route or something
-				# Or just don't allow path find then move then path find
-
-				x = 0
-				y = 0
-				sx = sy = 0
-
-				if $mx == nil
-					sx = char.x
-					sy = char.y
-					x = char.x
-					y = char.y
-				else
-					sx = $mx
-					sy = $my
-					x = $mx
-					y = $my
-				end
-
-
-				log_info ['start',sx,sy]
-
-				tx = params[0]
-				ty = params[1]
-
-				result = char.setup_map(sx,sy,tx,ty)
-
-				next if !result[0]
-				map = result[1]
-				map[sx,sy] = result[2] if result[2] != nil
-
-				# Now step through the path building cmds
-				step = map[x,y] 
-				while step != 1
-
-				     if map[x+1,y] == step - 1 and step != 0
-				     	route.list.push(RPG::MoveCommand.new(3))
-				     	x+=1
-				     end
-				     if map[x,y+1] == step - 1 and step != 0
-				     	route.list.push(RPG::MoveCommand.new(1))
-				     	y+=1
-				     end
-				     if map[x-1,y] == step - 1 and step != 0
-				     	route.list.push(RPG::MoveCommand.new(2))
-				     	x-=1
-				     end
-				     if map[x,y-1] == step - 1 and step != 0
-						route.list.push(RPG::MoveCommand.new(4))
-						y -= 1
-				     end
-
-				     step = map[x,y] 
-
-				end		
-
-				$mx = x
-				$my = y		
 
 		end
 
 	}
 
-	$mx = $my = nil
-
 	route.list.push(RPG::MoveCommand.new())
 
 	char.force_move_route(route)
-	$map.interpreter.command_210 if wfc
 
 end

@@ -47,8 +47,7 @@ class DataManager
     @quests = load_json("quests",QuestData)
     @zones = load_json("zones",ZoneData)
 
-    #@clones = load_clones
-    #@funcs = load_funcs
+    @clones = load_clones
 
 		# Convert to json
     # Currently doesn't work in ace
@@ -86,30 +85,6 @@ class DataManager
     }
 
     return clones
-
-  end
-
-  def load_funcs
-
-    funcs = {}
-    map = load_data("Data/Map002.rxdata")
-
-    map.events.each{ |k,ev|
-      
-      ev.pages.each{ |p|
-        name = ''
-        p.list.each{ |cmd|
-          if cmd.code == 108 && cmd.parameters[0].include?("%")
-            name = cmd.parameters[0]
-          end
-        }
-        next if !name
-        funcs[name] = p.list
-      }
-      
-    }
-
-    return funcs
 
   end
 

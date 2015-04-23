@@ -20,11 +20,14 @@ class MouseManager
     @sprite.ox = 4
     change_cursor("Default")
   end
+
+  def x() @pos[0] end
+  def y() @pos[1] end
   
   def position() @pos; end
   def grid() 
-    x = (@pos[0] + $map.display_x / 128) / 32
-    y = (@pos[1] + $map.display_y / 128) / 32
+    x = (@pos[0] + $map.display_x / 4) / 32
+    y = (@pos[1] + $map.display_y / 4) / 32
     return [x.to_i,y.to_i]
   end
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end

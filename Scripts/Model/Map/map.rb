@@ -56,7 +56,7 @@ class Game_Map
     # Initialize displayed coordinates
     @display_x = 0
     @display_y = 0
-    @target = nil
+    @target = $player
     
     @need_refresh = false
     
@@ -86,8 +86,8 @@ class Game_Map
         autoplay = true
       else
         # Play music from the zone
-        $audio.play(@zone.bgm)
-        $audio.play(@zone.bgs)
+        #$audio.play(@zone.bgm)
+        #$audio.play(@zone.bgs)
         # Init tints and that
       end
 
@@ -126,7 +126,7 @@ class Game_Map
     end
 
     # Camera update
-    @target = $player
+    
 
     # Camera update, maybe split to camera class
     if @target != nil
@@ -135,11 +135,11 @@ class Game_Map
       @target_y = @target.real_y- (128 * 7)
 
       if @target_x != @display_x
-        @display_x += (@target_x-@display_x) * 0.5
+        @display_x += (@target_x-@display_x) * 0.1
       end
 
       if @target_y != @display_y
-        @display_y += (@target_y-@display_y) * 0.5
+        @display_y += (@target_y-@display_y) * 0.1
       end
 
       @display_x = @target_x
@@ -205,8 +205,19 @@ class Game_Map
   def bush?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x40 == 0x40 }.empty? end
   def counter?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x80 == 0x80 }.empty? end
   def terrain_tag(x, y)
-    [2,1,0].each{ |i| return @tileset.terrain_tags[data[x, y, i]] if data[x, y, i] != nil }
+
+    if @map_id != 0
+      for i in [2, 1, 0]
+        tile_id = data[x, y, i]
+        if tile_id == nil
+          return 0
+        elsif tile_id > 0   # @terrain_tags[tile_id] > 0
+          return @tileset.terrain_tags[tile_id]
+        end
+      end
+    end
     return 0
+  
   end
 
   #--------------------------------------------------------------------------

@@ -155,10 +155,12 @@ class Game_Player < Game_Character
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        log_info($map.display_x)
+        $scene.add_spark($mouse.x,$mouse.y)
+
+        log_info([mx,my])
         
         # Turn Character in direction
-        turn_toward_pos(mx,my)
+        #turn_toward_pos(mx,my)
         
         # Run Pathfinding
         evt = $map.lowest_event_at(mx, my)

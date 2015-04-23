@@ -6,6 +6,8 @@ class Scene_Map
 
   attr_reader :hud
 
+  attr_reader :overlay
+
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
@@ -24,7 +26,10 @@ class Scene_Map
 
     # Make viewports - Also in the scene
     @vp_main = Viewport.new(0,0,$game.width,$game.height)   
+    @vp_overlay = Viewport.new(0,0,$game.width,$game.height)
+
     @vp_ui = Viewport.new(0,0,$game.width,$game.height)
+
 
     # Make tilemap
     #@panorama = Plane.new(@vp_main,-1000)
@@ -33,15 +38,24 @@ class Scene_Map
 
     # weather in map data
     @weather = nil
+
+    @overlay = Sprite.new(@vp_overlay)
+    @overlay.bitmap = Bitmap.new($game.width,$game.height)
+    @overlay.bitmap.fill(Color.new(0,0,0))
+    @overlay.opacity = 0
+    @overlay.z = 999
     
     # UI
     @hud = Ui_Screen.new(@vp_ui)
+
+    # TESTING THE SPARKS
+    @sparks = []
 
     Graphics.transition
             
   end
   
-  def terminate    
+  def terminate
 
     # Dispose of tilemap  
     @panorama.dispose  
@@ -64,6 +78,14 @@ class Scene_Map
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+
+    # Update the sparks
+    @sparks.each{ |s| 
+      s.ox = @map.display_x/4
+      s.oy = @map.display_y/4
+      s.update 
+    }
+
 
     @map.update      
     @player.update
@@ -107,6 +129,22 @@ class Scene_Map
         
     end
     
+  end
+
+  def add_spark(x,y)
+
+    # Spawn spark
+    sprk = Spark.new("magic",@vp_main)
+    
+    #x = @sprites.x + @cx+size.width
+    #y = @sprites.y + @cy
+
+    dx = -@map.display_x/4
+    dy = -@map.display_y/4
+    sprk.center(x+3-dx,y+3-dy)
+    sprk.blend_type = 1
+    @sparks.push(sprk)
+
   end
 
   #--------------------------------------------------------------------------

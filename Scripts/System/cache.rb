@@ -80,7 +80,12 @@ class CacheManager
       path = folder_name + filename
       if not @cache.include?(path) or @cache[path].disposed?
         if filename != ""
-          @cache[path] = Bitmap.new(path)
+          begin
+            @cache[path] = Bitmap.new(path)
+          rescue
+            log_err("MISSING GRAPHICS: #{path}")
+            @cache[path] = Bitmap.new(32, 32)
+          end  
         else
           @cache[path] = Bitmap.new(32, 32)
         end

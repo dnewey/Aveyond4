@@ -187,7 +187,7 @@ class TargetTween < Tween
 	def initialize(var,target,speed=nil) # speed default to 10% distance
 		@target = target
 		@var = var
-		@speed = @speed
+		@speed = speed
 	end
 
 	def done?

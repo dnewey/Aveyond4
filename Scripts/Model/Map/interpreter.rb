@@ -238,7 +238,7 @@ class Interpreter
   # * Event Command Execution
   #--------------------------------------------------------------------------
   def execute_command
-    
+   
     # If last to arrive for list of event commands
     if @index >= @list.size - 1
       command_end
@@ -247,7 +247,7 @@ class Interpreter
 
     # Make event command parameters available for reference via @parameters
     @parameters = @list[@index].parameters
-    
+
     # Branch by command code
     return true if @list[@index].code == 108
     return true if @list[@index].code == 509

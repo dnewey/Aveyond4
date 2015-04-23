@@ -26,6 +26,10 @@ class Game_Character
   
   
   attr_accessor :direction                # direction
+
+  attr_accessor :showdir
+
+
   attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
@@ -50,7 +54,21 @@ class Game_Character
     @real_x = 0
     @real_y = 0
     @character_name = ""
+    
+
     @direction = 2
+    @showdir = 4
+    @lockdir = 0
+
+    @move_angle = 0
+
+    @prev_terrain = 0
+
+
+    @off_x = 0
+    @off_y = 0
+
+
     @pattern = 0
 
     @move_route_forcing = false
@@ -138,7 +156,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def passable?(x, y, d) #d0 = jump
 
-    return true
+    #return true
 
     # Get new coordinates
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
@@ -237,7 +255,7 @@ class Game_Character
     else
       n = @jump_peak - @jump_count
     end
-    return y - (@jump_peak * @jump_peak - n * n) / 2
+    return @off_y + y - (@jump_peak * @jump_peak - n * n) / 2
   end
   #--------------------------------------------------------------------------
   # * Get Screen Z-Coordinates
@@ -265,7 +283,9 @@ class Game_Character
   def bush_depth
     return 0 if @always_on_top
     return 0 if jumping?
-    return 12 if $map.bush?(@x, @y)
+    dx = ((@x * 128) - @real_x).abs
+    #log_info(dx) if dx > 0
+    return 12 if $map.bush?(@x, @y) && dx < 24
     return 0
   end
 
@@ -281,12 +301,21 @@ class Game_Character
 
     # Mouse pathfinding
     run_path if @runpath == true
+
+    # Update facing dir
+        @lockdir -= 1
+    if @lockdir <= 0
+      @showdir = @direction
+    end
     
     # Branch with jumping, moving, and stopping
     if jumping?
       update_jump
     elsif moving?
       update_move
+      if !moving?
+        @move_angle = 0
+      end
     else
       update_stop
     end
@@ -358,26 +387,75 @@ class Game_Character
   # * Update frame (move)
   #--------------------------------------------------------------------------
   def update_move
+
+    #if moving?
+
+    #end
+
+    
+    
+
     # Convert map coordinates from map move speed into move distance
-    distance = 2 ** @move_speed
+    distance = 2 ** @move_speed 
+
+    #LADDER
+    if terrain_tag == 3
+
+      # turn to get on ladder
+      if @direction == 2 #&& @prev_terrain != 3
+        @showdir = 4
+        @direction = 8
+        @lockdir = 4
+     else
+        @direction = 8
+        #@showdir = 8
+      end
+      @move_angle += 0.2
+      # Convert map coordinates from map move speed into move distance
+      distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
+
+      Audio.se_play("Audio/SE/step3.ogg") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
+      #Audio.se_play("Audio/SE/step.ogg") if (4.8 - @move_angle).abs < 0.21
+
+    elsif terrain_tag == 5 && @prev_terrain == 3
+      #@showdir = 8
+      #@direction = 8
+
+      @move_angle += 0.2
+
+      if @move_angle < 3.14
+        @showdir = 8
+      # Convert map coordinates from map move speed into move distance
+        distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
+      else
+        #if @lockdir > 0
+          @direction = 2
+          @showdir = 4
+          @lockdir = 2
+       # end
+        distance = 2 ** @move_speed 
+      end
+
+      Audio.se_play("Audio/SE/step.ogg") if @move_angle == 2.4 && @prev_terrain != 3
+
+    else
+      @move_angle = 0
+    end
+
     # If logical coordinates are further down than real coordinates
     if @y * 128 > @real_y
-      # Move down
       @real_y = [@real_y + distance, @y * 128].min
     end
     # If logical coordinates are more to the left than real coordinates
     if @x * 128 < @real_x
-      # Move left
       @real_x = [@real_x - distance, @x * 128].max
     end
     # If logical coordinates are more to the right than real coordinates
     if @x * 128 > @real_x
-      # Move right
       @real_x = [@real_x + distance, @x * 128].min
     end
     # If logical coordinates are further up than real coordinates
     if @y * 128 < @real_y
-      # Move up
       @real_y = [@real_y - distance, @y * 128].max
     end
 
@@ -397,6 +475,9 @@ class Game_Character
   # * Frame Update (stop)
   #--------------------------------------------------------------------------
   def update_stop
+
+    @prev_terrain = terrain_tag if @prev_terrain != terrain_tag
+
     # If stop animation is ON
     if @step_anime
       # Increase animation count by 1
@@ -653,6 +734,9 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_down(turn_enabled = true)
 
+
+@move_angle = 0
+
     # Turn down
     if turn_enabled
       turn_down
@@ -677,8 +761,12 @@ class Game_Character
   #     turn_enabled : a flag permits direction change on that spot
   #--------------------------------------------------------------------------
   def move_left(turn_enabled = true)
+
+@move_angle = 0
+
     # Turn left
     if turn_enabled
+      # If facing right, turn down for just second
       turn_left
     end
     # If passable
@@ -700,6 +788,9 @@ class Game_Character
   #     turn_enabled : a flag permits direction change on that spot
   #--------------------------------------------------------------------------
   def move_right(turn_enabled = true)
+
+    @move_angle = 0
+
     # Turn right
     if turn_enabled
       turn_right
@@ -723,6 +814,9 @@ class Game_Character
   #     turn_enabled : a flag permits direction change on that spot
   #--------------------------------------------------------------------------
   def move_up(turn_enabled = true)
+
+    @move_angle = 0
+
     # Turn up
     if turn_enabled
       turn_up
@@ -980,10 +1074,56 @@ class Game_Character
   #--------------------------------------------------------------------------
   # * Turns
   #--------------------------------------------------------------------------
-  def turn_down() @direction = 2 unless @direction_fix end
-  def turn_left() @direction = 4 unless @direction_fix end
-  def turn_right() @direction = 6unless @direction_fix end
-  def turn_up() @direction = 8 unless @direction_fix end
+  def turn_down() 
+    return if terrain_tag == 3 #on ladder
+    return if terrain_tag == 4 #&& @previous_terrain == 3
+    if @direction == 8
+        @showdir=4
+        @direction = 2
+        @lockdir = 6
+      else
+        @direction = 2 unless @direction_fix 
+      end  
+
+
+  end
+
+
+  def turn_left() 
+
+      if @direction == 6
+        @showdir=2
+        @direction =4
+        @lockdir = 7
+      else
+        @direction = 4 unless @direction_fix 
+      end
+    
+  end
+
+  def turn_right() 
+    if @direction == 4
+        @showdir=2
+        @direction = 6
+        @lockdir = 7
+    else
+      @direction = 6 unless @direction_fix 
+    end
+  end
+
+
+
+  def turn_up() 
+
+    if @direction == 2
+        @showdir=6
+        @direction = 8
+        @lockdir = 6
+      else
+        @direction = 8 unless @direction_fix 
+      end  
+
+  end
   
   #--------------------------------------------------------------------------
   # * Turn 90° Right

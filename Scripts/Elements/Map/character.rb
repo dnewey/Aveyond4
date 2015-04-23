@@ -31,34 +31,48 @@ class Sprite_Character < Sprite
      
       @character_name = @character.character_name
 
-        self.bitmap = $cache.character(@character.character_name)
-        if @character == $player
-          self.bitmap = $cache.character("Player/boy")
-        end
-        @cw = bitmap.width / 4
-        @ch = bitmap.height / 4
-        self.ox = @cw / 2
-        self.oy = @ch
-
+      self.bitmap = $cache.character(@character.character_name)
+      if @character == $player
+        self.bitmap = $cache.character("Player/boy")
+        
       end
+      @cw = bitmap.width / 4
+      @ch = bitmap.height / 4
+      self.ox = @cw / 2
+      self.oy = @ch
 
+    end
+
+    if @character == $player
+      self.bitmap = $cache.character("Player/boy")
+      self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
+    end
 
     # Set visible situation
     self.visible = !@character.transparent
     
     sx = @character.pattern * @cw
-    sy = (@character.direction - 2) / 2 * @ch
+    sy = (@character.showdir - 2) / 2 * @ch
     self.src_rect.set(sx, sy, @cw, @ch)
-
 
     # Set sprite coordinates
     self.x = @character.screen_x
-    self.y = @character.screen_y
+    self.y = @character.screen_y - 8
     self.z = @character.screen_z(@ch)
     
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity
-    self.bush_depth = @character.bush_depth
+    #log_info(@character.opacity) if @character.opacity < 255
+
+    #if @character.bush_depth > 0
+      #self.bush_depth = 1.2 * @character.bush_depth 
+
+      #bmp = self.bitmap
+      # self.bitmap = Bitmap.new(bmp.width,bmp.height)
+
+      # self.bitmap.blt(0,0,bmp,Rect.new(0,0,bmp.width,16))
+
+    #end
     
     # Animation
     # if @character.animation_id != 0
