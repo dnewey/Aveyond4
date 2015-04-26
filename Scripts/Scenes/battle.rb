@@ -4,21 +4,6 @@
 
 # Phases
 
-# :none
-
-# :introduction - introduction seq
-
-# :enemy_cmd
-# :party_cmd
-# :actor_cmd - choose actions
-
-# :main - perform actions
-
-# :victory - player wins
-# :defeat - enemy wins
-
-
-
 # Rename actor to active_battler
 
 class Scene_Battle
@@ -32,24 +17,33 @@ class Scene_Battle
 
     Graphics.freeze
 
+    @phase = :intro_init
+    @wait_frames = 0
+    @active_battler = nil
+
+    # Auto viewports to fullscreen and set z in init
     @vp = Viewport.new(0, 0, $game.width, $game.height)
     @vp_hud = Viewport.new(0, 0, $game.width, $game.height)
-
     @vp.z = 6000  
     @vp_hud.z = 75000
 
-    @bg = Sprite.new(@vp)
-    @bg.z = -100
-    #@bg.bitmap = $cache.menu("tempback")
+    @dbg_phase = Sprite.new(@vp_hud)
+    @dbg_phase.bitmap = Bitmap.new(150,30)
 
-    @map = Game_Map.new()
+    #@panorama = Sprite.new(@vp)
+    #@panorama.z = -100
+
+    @map = Game_Map.new
     @map.setup($battle.map)
 
     @player = Game_Player.new
-    $player = @player # Get rid of this
+    
+    # Get rid of this after figuring out camera pos as pos instead of event
+    $player = @player 
     @player.moveto(5,5)
+    @map.target = @player
 
-    #@map.target = @player
+    #@map.point_camera_at()
 
     @tilemap = MapWrap.new(@vp) 
     @tilemap.refresh(@map)
@@ -60,24 +54,19 @@ class Scene_Battle
       @character_sprites.push(sprite)
     }
 
+    # Create Hud Elements
     @hud = BattleHud.new(@vp_hud)
     @actor_cmd = ActorCmd.new(@vp_hud)
     @skill_cmd = SkillCmd.new(@vp_hud)
     @target_cmd = TargetCmd.new(@vp_hud)
 
-    # Prepare characters
-    # (1..4).each{ |c|
-    #   @map.events[c].direction = 4
-    # }
-
-    @map.update
-    @character_sprites.each{ |s| s.update }
-
+    # Prepare battler events
     [0,1,2,3].each{ |i| 
-      ev = @map.event_by_name("A.#{i}") 
+      ev = @map.event_by_name("A.#{i}")
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
+      ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
       end
@@ -89,15 +78,7 @@ class Scene_Battle
       end
     }
 
-    # Save char to battler for easy access
-
-    @props = []
-
-    #@map.target = $player
-
     Graphics.transition(50,'Graphics/System/trans')  
-
-    @phase = :introduction
             
   end
   
@@ -110,171 +91,79 @@ class Scene_Battle
     return false
   end
 
+  def wait(w)
+    @wait_frames = w
+  end
+
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
+
   def update
 
     @hud.update
-
-    @map.update
-    
+    @map.update    
     @character_sprites.each{ |s| s.update }
+
+    # Draw phase
+    @dbg_phase.bitmap.fill(Color.new(0,0,0))
+    @dbg_phase.bitmap.draw_text(10,0,150,30,@phase.to_s,0)
 
     update_phase
 
   end
 
   def update_phase
+
+    # Wait count here
+    if @wait_frames > 0
+      @wait_frames -= 1
+      return
+    end
+
     case @phase
-      when :introduction
-        update_phase_introduction
-      when :enemy_cmd
-        update_phase_enemy_cmd
-      when :party_cmd
-        update_phase_party_cmd
-      when :actor_cmd
-        update_phase_actor_cmd
-      when :target
-        update_phase_target
-      when :map
-        update_phase_main
-      when :victory
-        update_phase_victory
-      when :defeat
-        update_phase_defeat
-    end
-  end
 
-  def update_phase_introduction
-    @phase = :enemy_cmd
-  end
+      # Introduction Phase
+      when :intro_init
+        phase_intro_init
 
-  def update_phase_enemy_cmd
-    @phase = :party_cmd
-  end
+      # Actor Phase
+      when :actor_init
+        phase_actor_init
+      when :actor_action
+        phase_actor_action
+      when :actor_skill
+        phase_actor_skill
+      when :actor_item
+        phase_actor_item
+      when :actor_target
+        phase_actor_target
+      when :actor_next
+        phase_actor_next
 
-  def update_phase_party_cmd
-    @actor_idx = -1    
-    next_actor
-  end
+      # Battle phase
+      when :main_init
+        phase_main_init
+      when :main_prep
+        phase_main_prep
+      when :main_attack
+        phase_main_attack
+      when :main_defend
+        phase_main_defend
+      when :main_hit
+        phase_main_hit
+      when :main_crit
+        phase_main_crit
+      when :main_state
+        phase_main_state
+      when :main_next
+        phase_main_next
 
-  def next_actor
-    @actor_idx += 1
-    @actor = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@actor)
-    @phase = :actor_cmd
-  end
-
-  def prev_actor
-    @actor_idx -= 1
-    @actor = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@actor)
-    @phase = :actor_cmd
-  end
-
-  def update_phase_actor_cmd
-
-    @actor_cmd.update
-
-    if $input.cancel?
-      return prev_actor
-    end
-
-    # Player command inputs section
-    if $input.action?
-
-      action = @actor_cmd.get_action
-      @actor_cmd.close
-
-      start_action(action)
-
-       end 
-
-  end
-
-  def start_action(id)
-
-    # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-      if id == "items"
-
-      else
-        skills = @actor.skills_for(id)
-      end
-
-      # If a multi-skill open the menu
-      if skills.count > 1
-
-        # Open skill_cmd
-
-      else
-
-        start_skill(skills[0])        
-
-      end
-
-
-
-  end
-
-  def start_skill(id)
-
-    @actor.skill_id = id
-
-    # If single, targetable?
-    if ["one","ally"].include?($data.skills[id].scope)
-      targets = $battle.enemies
-      @target_cmd.setup(targets)
-      @phase = :target      
-    else
-      next_actor
-    end
-
-  end
-
-  def update_phase_skill_cmd
-    @skill_cmd.update
-
-    if $input.cancel?
-      @actor_idx -= 1
-      next_actor
-    end
-
-    if $input.action?
+      # Victory Phase
+      when :victory_init
+        phase_victory_init
 
     end
-
-  end
-
-  def update_phase_target
-
-    @target_cmd.update
-
-    if $input.cancel?
-      @target_cmd.close
-      @actor_idx -= 1
-      next_actor
-    end
-
-    if $input.action?
-      @actor.target = @target_cmd.active
-      @target_cmd.close
-      next_actor
-    end
-
-  end  
-
-  def update_phase_main
-
-    # Act out the skills
-
-  end
-
-  def update_phase_victory
-
-  end
-
-  def update_phase_defeat
 
   end
 

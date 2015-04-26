@@ -7,4 +7,11 @@ class Game_Enemy < Game_Battler
 
 	end
 
+	def choose_action
+
+		# Select from possible actions
+		# Select target with scope
+
+	end
+
 end

@@ -130,7 +130,7 @@ class Game_Map
     end
 
     # Camera update
-    #@target = $player
+    @target = $player
 
     # Camera update, maybe split to camera class
     if @target != nil
@@ -146,8 +146,8 @@ class Game_Map
         @display_y += (@target_y-@display_y) * 0.1
       end
 
-      #@display_x = @target_x
-      #@display_y = @target_y
+      @display_x = @target_x
+      @display_y = @target_y
 
     end
 

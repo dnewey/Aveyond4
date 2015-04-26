@@ -30,6 +30,7 @@ def aveyond4
     $battle = Game_Battle.new
     $fonts = FontManager.new
     $game = GameManager.new  
+   # $steam = SteamManager.new
 
     # Call main method as long as $scene is effective      
     $game.update until $game.quit?

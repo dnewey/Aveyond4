@@ -56,6 +56,11 @@ class Tween
 		@parent = parent
 	end
 
+	def disposed?
+		return @parent.disposed? if !@parent.nil?
+		return false
+	end
+
 	def start
 	end
 

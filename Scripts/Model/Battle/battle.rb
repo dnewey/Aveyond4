@@ -30,6 +30,22 @@ class Game_Battle
     return false
   end
 
+
+
+  def build_action_result(attacker)
+
+    # Attack already has skill selected, and targets if scope requires
+
+    # Get the defender, calc damage done, hmmmmm
+    # Multi stage damage supported here
+
+
+  end
+
+  def build_target_list(attacker)
+
+
+  end
   
   
   # CHOOSING TARGETS

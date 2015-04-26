@@ -38,12 +38,17 @@ class Game_Actor < Game_Battler
     }
 
     @skills = []
+
+
     # Get all skills that are not sub-skills
     # But what of rowen?
     # Don't even need to have the skills
     # They are just from data hmmmmm
     
     @actions = data.actions.split(" | ")
+
+    # Add actions as skills
+    @actions.each{ |a| @skills.push(a) }
 
     @resource = data.resource
 
@@ -56,26 +61,17 @@ class Game_Actor < Game_Battler
   end
 
 
-
   def skills_for(action)
     log_info("SKILLS")
     log_info(@skills)
     log_info(action)
+
     return @skills.select{ |s| 
       log_info s
       $data.skills[s].id == action || 
       $data.skills[s].book == action
     }
   end
-
-
-
-
-
-
-
-
-
 
 
   #--------------------------------------------------------------------------
