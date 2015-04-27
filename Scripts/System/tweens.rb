@@ -15,7 +15,7 @@ class TweenManager
 		delta = ((Time.now - @last) * 1000).to_i
 		@last = Time.now
 
-		@tweens.delete_if{ |n| n == nil || n.done? }
+		@tweens.delete_if{ |n| n.disposed? || n == nil || n.done? }
 	    @tweens.each{ |n| n.update(delta) }
 
 	end

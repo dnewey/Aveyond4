@@ -23,7 +23,7 @@ class KeyboardManager
 	KeyState = Win32API.new("user32","GetKeyState",['i'],'i')
 	
 	def initialize
-		@keys = {}
+		@keys_held = {}
 	end
 
 	def state?(key)
@@ -32,8 +32,8 @@ class KeyboardManager
 	end
 
 	def press?(key)
-	  if !@keys.has_key?(key) && state?(key)
-	  	@keys[key] = Graphics.frame_count
+	  if !@keys_held.has_key?(key) && state?(key)
+	  	@keys_held[key] = Graphics.frame_count
 	  	return true
 	  else
 	  	return false
@@ -42,8 +42,8 @@ class KeyboardManager
 
   def hold?(key)
     return true if press?(key)
-    if @keys.has_key?(key)
-      if (Graphics.frame_count - @keys[key]) % 8 == 7
+    if @keys_held.has_key?(key)
+      if (Graphics.frame_count - @keys_held[key]) % 8 == 7
         return true
       end
     end
@@ -59,7 +59,7 @@ class KeyboardManager
   end
 
 	def update
-		@keys.delete_if { |k,v| !state?(k)}
+		@keys_held.delete_if { |k,v| !state?(k)}
 	end
 
 	  # http://www.mods.com.au/budapi_docs/Virtual%20Key%20Codes.htm

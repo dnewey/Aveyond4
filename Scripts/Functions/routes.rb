@@ -6,6 +6,11 @@ def wfc
 	$map.interpreter.command_210
 end
 
+def td(e) gev(e).turn_down end
+def tl(e) gev(e).turn_left end
+def tr(e) gev(e).turn_right end
+def tu(e) gev(e).turn_up end
+
 def path(ev,tx,ty)
 
 	char = gev(ev)

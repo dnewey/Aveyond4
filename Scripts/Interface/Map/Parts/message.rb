@@ -9,6 +9,8 @@ class Ui_Message
   MAX_WIDTH = 350
   TAB_WIDTH = 35
 
+  MIN_HEIGHT_FACE = 90
+
   SPACING = 7
   LINE_HEIGHT = 27
   PADDING_X = 22
@@ -59,6 +61,8 @@ class Ui_Message
 
     @width = 0
     @height = 0
+
+    @speakr = nil
 
     @sprites = SpriteGroup.new
 
@@ -116,6 +120,12 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def update
 
+    @speaker = plr
+
+    # Put over speaker
+    @sprites.x = @speaker.screen_x - @width/2 - 10
+    @sprites.y = @speaker.screen_y - @height - 70
+
     @box.update
     @sparks.each{ |s| s.update }
     
@@ -142,9 +152,17 @@ class Ui_Message
 
       when :texting
         @next_char -= 1
-        if @next_char <= 0
+        if @next_char <= 0 || $keyboard.state?(VK_ENTER)
           #log_err "DOING"
           update_message
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
+          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
         end
         redraw
         
@@ -211,6 +229,8 @@ class Ui_Message
     @width = max_width
     @height = @lines.count * (LINE_HEIGHT)
 
+    @height = MIN_HEIGHT_FACE if @face.bitmap
+
     # Add padding
     @width += PADDING_X * 2
     @height += PADDING_Y * 2
@@ -242,11 +262,10 @@ class Ui_Message
     @sprites.move(@namebox,20,-@namebox.height)
     @sprites.move(@nametext,40,-@namebox.height+5)
 
-    @sprites.x = 40
-    @sprites.y = 100
+
 
     @sprites.do(go("opacity",255,500,:quad_in_out))
-    @sprites.do(go("y",-25,500,:quad_in_out))
+    #@sprites.do(go("y",-25,500,:quad_in_out))
 
     @line_idx = 0
     @word_idx = -1
@@ -446,7 +465,8 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
-      @sprites.do(go("opacity",-255,300,:quad_in_out))
+      @sprites.opacity = 0
+      #@sprites.do(go("opacity",-255,300,:quad_in_out))
     end
   end
 

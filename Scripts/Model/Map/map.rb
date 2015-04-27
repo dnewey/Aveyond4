@@ -34,6 +34,9 @@ class Game_Map
   #--------------------------------------------------------------------------
   def initialize
     @interpreter = Interpreter.new(0,true)
+
+    @target = $player
+    @namecache = {}
   end
   
   #--------------------------------------------------------------------------
@@ -44,6 +47,7 @@ class Game_Map
     
     # Put map ID in @map_id memory
     @id = id
+    @namecache = {} # reset each map
     
     # Load map from file and set @map
     @map = load_data(sprintf("Data/Map%03d.rxdata", @id))
@@ -230,7 +234,10 @@ class Game_Map
   def starting_events() @events.values.select{ |e| e.starting } end
 
   def event_by_name(name)
-    @events.values.find{ |e| e.event.name == name }
+    return @namecache[name] if @namecache.has_key?(name)
+    ev = @events.values.find{ |e| e.event.name == name }
+    @namecache[name] = ev
+    return ev
   end
 
   #--------------------------------------------------------------------------

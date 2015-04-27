@@ -11,7 +11,7 @@ def me
 end
 
 def this
-	return gev(me)
+	return $map.events[me]
 end
 
 def gid(str)
@@ -28,7 +28,6 @@ end
 def gev(str)
 
 	if str == $player
-		log_info("PLAYER")
 		return $player 
 	end
 
@@ -43,7 +42,10 @@ def gev(str)
 	end
 
 	# Check if name of event
+	ev = $map.event_by_name(str)
+	return ev if !ev.nil?
 
 	# Event position
+	log_err("BIGPROBLEMS")
 
 end

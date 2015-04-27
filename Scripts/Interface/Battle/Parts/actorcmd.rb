@@ -14,13 +14,15 @@ class ActorCmd
 
 	def setup(battler)
 
+		close
+
 		@battler = battler
 
 		@icons.each{ |i| i.dispose }
 		@icons = []
 
 		# Read the categories for this guy
-		battler.actions.each{ |action|
+		@battler.actions.each{ |action|
 			# Add an icon?
 			spr = Sprite.new(@vp)
 			spr.bitmap = $cache.menu("Battlehud/Commands/icon")
@@ -41,6 +43,9 @@ class ActorCmd
 	end
 
 	def close
+		@icons.each{ |i|
+			$tweens.clear(i)
+		}
 		@icons.each{ |i| i.dispose }
 		#@text.bitmap = nil
 		@icons = []
@@ -60,6 +65,15 @@ class ActorCmd
 			@icons[1].center(sx,sy-25)
 			@icons[2].center(sx+36,sy-16)
 		end
+
+		if @icons.count == 4
+			@icons[0].center(sx-48,sy-16)
+			@icons[1].center(sx-18,sy-25)
+			@icons[2].center(sx+18,sy-25)
+			@icons[3].center(sx+48,sy-16)
+		end
+
+
 	end
 
 	def select

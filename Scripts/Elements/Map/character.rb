@@ -50,6 +50,11 @@ class Sprite_Character < Sprite
 
     end
 
+    # Clear the helper graphics
+    if @character_name == "!!!"
+      self.bitmap.clear
+    end
+
     # if @character == $player
     #   self.bitmap = $cache.character("Player/boy")
     #   self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0

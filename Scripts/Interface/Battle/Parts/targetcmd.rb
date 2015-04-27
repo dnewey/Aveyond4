@@ -9,6 +9,7 @@ class TargetCmd
 
 		@arrow = Sprite.new(@vp)
 		@arrow.bitmap = $cache.menu("BattleHud/target")
+		@arrow.hide
 
 		@targets_sy = nil
 		@targets_sx = nil
@@ -21,6 +22,8 @@ class TargetCmd
 	end
 
 	def setup(targets)
+
+		@arrow.show
 
 		@targets = targets
 
@@ -40,7 +43,7 @@ class TargetCmd
 	end
 
 	def close
-		
+		@arrow.hide
 	end
 
 	def update

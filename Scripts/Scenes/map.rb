@@ -13,6 +13,11 @@ class Scene_Map
   #--------------------------------------------------------------------------
   def initialize
 
+    # Make viewports - Also in the scene
+    @vp_main = Viewport.new(0,0,$game.width,$game.height)   
+    @vp_overlay = Viewport.new(0,0,$game.width,$game.height)
+    @vp_ui = Viewport.new(0,0,$game.width,$game.height)
+
     # Prep model
     @map = Game_Map.new
     $map = @map
@@ -24,11 +29,7 @@ class Scene_Map
 
     @map.target = @player
 
-    # Make viewports - Also in the scene
-    @vp_main = Viewport.new(0,0,$game.width,$game.height)   
-    @vp_overlay = Viewport.new(0,0,$game.width,$game.height)
 
-    @vp_ui = Viewport.new(0,0,$game.width,$game.height)
 
 
     # Make tilemap
