@@ -19,6 +19,7 @@ class Scene_Battle
 
     # Determine order of attacks
     @battle_order = []
+    
     # certain attacks always go first, robin's team move with phye for example
 
 	@active_battler = @battle_order.shift
@@ -30,7 +31,7 @@ class Scene_Battle
   def phase_main_prep
 
   	# Calculate results now, then play out the anims
-  	@action_result = $battle.build_action_result
+  	@action_result = $battle.build_action_result(@active_battler)
 
   	# targets: evs
   	# damage

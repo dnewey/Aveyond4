@@ -14,12 +14,19 @@
     "edit": "area"
   },
   {
+    "field": "hits",
+    "default": "1"
+  },
+  {
     "field": "scope",
     "edit": "select",
     "color": "true"
   },
   {
-    "field": "animation"
+    "field": "anim_a"
+  },
+  {
+    "field": "anim_b"
   },
   {
     "field": "stats",

@@ -7,6 +7,10 @@
     "default": "New Enemy"
   },
   {
+    "field": "actions",
+    "default": "attack"
+  },
+  {
     "field": "stats",
     "edit": "area"
   },

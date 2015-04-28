@@ -1094,6 +1094,7 @@ class Game_Character
   # * Turns
   #--------------------------------------------------------------------------
   def turn_down() 
+    return if @direction_fix 
     return if terrain_tag == 3 #on ladder
     return if terrain_tag == 4 #&& @previous_terrain == 3
     if @direction == 8
@@ -1101,7 +1102,7 @@ class Game_Character
         @direction = 2
         @lockdir = 6
       else
-        @direction = 2 unless @direction_fix 
+        @direction = 2 
       end  
 
 
@@ -1109,7 +1110,7 @@ class Game_Character
 
 
   def turn_left() 
-
+    return if @direction_fix 
       if @direction == 6
         @showdir=2
         @direction =4
@@ -1121,6 +1122,7 @@ class Game_Character
   end
 
   def turn_right() 
+    return if @direction_fix 
     if @direction == 4
         @showdir=2
         @direction = 6
@@ -1133,7 +1135,7 @@ class Game_Character
 
 
   def turn_up() 
-
+    return if @direction_fix 
     if @direction == 2
         @showdir=6
         @direction = 8

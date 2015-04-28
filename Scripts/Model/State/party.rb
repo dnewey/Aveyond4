@@ -18,7 +18,11 @@ class Game_Party
 
     # Create all actors    
     @actors = {}
-    $data.actors.each{ |k,v| @actors[k] = Game_Actor.new(k) }    
+    $data.actors.each{ |k,v| 
+      battler = Game_Battler.new
+      battler.init_actor(k)
+      @actors[k] = battler 
+    }    
 
     # Create actor array
     @active = []
@@ -124,68 +128,12 @@ class Game_Party
       end
     end
   end
-
-  #--------------------------------------------------------------------------
-  # * Random Selection of Target Actor
-  #     hp0 : limited to actors with 0 HP
-  #--------------------------------------------------------------------------
-  def random_target_actor(hp0 = false)
-    # Initialize roulette
-    roulette = []
-    # Loop
-    for actor in @actors
-      # If it fits the conditions
-      if (not hp0 and actor.exist?) or (hp0 and actor.hp0?)
-        # Get actor class [position]
-        position = $data_classes[actor.class_id].position
-        # Front guard: n = 4; Mid guard: n = 3; Rear guard: n = 2
-        n = 4 - position
-        # Add actor to roulette n times
-        n.times do
-          roulette.push(actor)
-        end
-      end
-    end
-    # If roulette size is 0
-    if roulette.size == 0
-      return nil
-    end
-    # Spin the roulette, choose an actor
-    return roulette[rand(roulette.size)]
-  end
-
-  #--------------------------------------------------------------------------
-  # * Random Selection of Target Actor (HP 0)
-  #--------------------------------------------------------------------------
-  def random_target_actor_hp0
-    return random_target_actor(true)
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Smooth Selection of Target Actor
-  #     actor_index : actor index
-  #--------------------------------------------------------------------------
-  def smooth_target_actor(actor_index)
-    # Get an actor
-    actor = @actors[actor_index]
-    # If an actor exists
-    if actor != nil and actor.exist?
-      return actor
-    end
-    # Loop
-    for actor in @actors
-      # If an actor exists
-      if actor.exist?
-        return actor
-      end
-    end
-  end
   
   #--------------------------------------------------------------------------
   # ● check if actor is in party
   #--------------------------------------------------------------------------  
-  def has_actor?(actor)
-    return @active.include?(actor)
+  def has_member?(guy)
+    return (@active + @reserve).include?(guy)
   end
 
   #--------------------------------------------------------------------------

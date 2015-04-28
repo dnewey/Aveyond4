@@ -1,18 +1,12 @@
 #==============================================================================
 # ** Game_Event
-#------------------------------------------------------------------------------
-#  This class deals with events. It handles functions including event page 
-#  switching via condition determinants, and running parallel process events.
-#  It's used within the Game_Map class.
 #==============================================================================
 
 class Game_Event < Game_Character
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-  attr_reader   :trigger                  # trigger
-  attr_reader   :list                     # list of event commands
-  attr_reader   :starting                 # starting flag
+
+  attr_reader   :trigger   
+  attr_reader   :list          
+  attr_reader   :starting  
   
   attr_reader   :name
   attr_reader   :event
@@ -22,8 +16,8 @@ class Game_Event < Game_Character
       
   #--------------------------------------------------------------------------
   # * Object Initialization
-  #     event  : event (RPG::Event)
   #--------------------------------------------------------------------------
+
   def initialize(event)
     super()
 
@@ -44,10 +38,20 @@ class Game_Event < Game_Character
 
     # Name breakdown
     name = @event.name
+
+    clone_ev = nil
+    
+    # Clone map clone
     if name.include?('::')
-      name = name.delete('::')
-      clone = name
+      clone = name.delete('::')
+      name = $data.clones[clone].name
+      clone_ev = $data.clones[clone]
+    elsif name.include?(':')
+      clone = name.delete(':')
+      clone_ev = $map.event_by_name(clone).event
+      name = clone_ev.name
     end
+
     if name == '' || name == '#'
       @icon = nil
       @name = 'nil'
@@ -62,8 +66,8 @@ class Game_Event < Game_Character
     end   
     
     # Set pages from clone or event
-    if clone
-      @pages = $data.clones[clone]
+    if clone_ev
+      @pages = clone_ev.pages
     else
       @pages = @event.pages 
     end
@@ -157,6 +161,7 @@ class Game_Event < Game_Character
         return true
   end
 
+  # Can also be called by script
   def condition_applies?(cond)
       # cond is [code,data1.....]
 
@@ -166,19 +171,52 @@ class Game_Event < Game_Character
       when '?flag'
           return false if !flag?(cond[1])
               
-        # Progress
+      # Progress
+      when '?before'
+        return false if !$state.before?(cond[1])
       when '?progress'
-        return false if !progress?(cond[1])
+        return false if !$state.progress?(cond[1])
+      when '?after'
+        return false if !$state.beyond?(cond[1])
+
+      # States
+      when '?state'
+
 
       # Active Quest
       when '?active'
-        return false if !on_quest?(cond[1])
-         when '?quest'
-        return false if !on_quest?(cond[1])  
-              
-        # Item Check
+        return false if !$progress.quest?(cond[1])
+      when '?inactive'
+        return false if $progress.quest?(cond[1])
+      when '?complete'
+        return false if !$progress.complete?(cond[1])
+      when '?incomplete'
+        return false if $progress.complete?(cond[1])
+
+      # Party member check
+      when '?boyle', '?boy'
+        return false if !$party.has_member?('boy')
+      when '?ingrid', '?ing'
+        return false if !$party.has_member?('ing')
+      when '?myst', '?mys'
+        return false if !$party.has_member?('mys')
+      when '?robin', '?rob'
+        return false if !$party.has_member?('rob')
+      when '?hiberu', '?hib'
+        return false if !$party.has_member?('hib')
+      when '?rowen', '?row'
+        return false if !$party.has_member?('row')
+      when '?phye', '?phy'
+        return false if !$party.has_member?('phy')
+
+      # Inventory
+      when '?gold'
+        return false if !$party.has_gold?(cond[1].to_i)
+
       when '?item'
-        return false if !$game_party.has_item?(cond[1].to_i)
+        return false if !$game_party.has_item?(cond[1])
+
+
 
     end
 
@@ -232,6 +270,7 @@ class Game_Event < Game_Character
   end
 
   def setup_page_settings
+    
     # Set each instance variable
     @character_name = @page.graphic.character_name
     if @original_direction != @page.graphic.direction
@@ -255,10 +294,15 @@ class Game_Event < Game_Character
     @step_anime = @page.step_anime
     @direction_fix = @page.direction_fix
     @through = @page.through
-    #XP - VX @always_on_top = @page.always_on_top
     @trigger = @page.trigger
     @list = @page.list
     @interpreter = nil
+
+    # Do things based on the name
+    if @character_name == "!!!"
+      @through = true
+      @trigger = 1 if @trigger == 0
+    end
 
   end
   
@@ -293,6 +337,10 @@ class Game_Event < Game_Character
 
           if @character_name == "!!Prop"
             @character_name = "Props/"+data[1]
+          end
+
+          if @character_name.include?("NPC")
+            @character_name = "NPCs/"+@character_name.delete("NPC-")+"/"+data[1]
           end
 
         when '#ox'

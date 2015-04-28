@@ -2,7 +2,7 @@
 # ** Mnu_Main
 #==============================================================================
 
-class Mnu_Main
+class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def initialize(vp)
 
@@ -35,6 +35,17 @@ class Mnu_Main
 
 	def update
 		@menu.update
+	end
+
+	def close
+		@charbox.hide
+		@charbox2.hide
+		@charbox3.hide
+		@charbox4.hide
+	end
+
+	def open
+
 	end
 
 	def select(option)

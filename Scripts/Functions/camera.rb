@@ -3,13 +3,14 @@
 #==============================================================================
 
 def camera(e)
+	$map.camera_to(gev(e))
+end
 
-	# Empty means player
-	if e.nil?
-		$map.target = $player
-	else
-		$map.target = gev(e)
-	end
+def camera_xy(x,y)
+	$map.camera_xy(x,y)
+end
+
+def scenecam()
 
 end
 

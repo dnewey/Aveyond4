@@ -17,10 +17,12 @@ class State
 
 	def flag(f)
 		@flags.push(f) if !@flags.include?(f)
+		$map.need_refresh = true
 	end
 
-	def nflag(f)
+	def unflag(f)
 		@flags.delete(f)
+		$map.need_refresh = true
 	end
 
 	def flag?(f)
@@ -33,14 +35,16 @@ class State
 		else
 			@vars[v] = a
 		end
+		$map.need_refresh = true
 	end
 
-	def nvar(v,a)
+	def unvar(v,a)
 		if @vars.has_key?(v)
 			@vars[v] -= a
 		else
 			@vars[v] = -a
 		end
+		$map.need_refresh = true
 	end
 
 	def var?(v,t)
@@ -50,10 +54,12 @@ class State
 
 	def state(e,s)
 		@states[[$map.id,e,s]] = true
+		$map.need_refresh = true
 	end
 
-	def nstate(e,s)
+	def unstate(e,s)
 		@states[[$map.id,e,s]] = false
+		$map.need_refresh = true
 	end
 
 	def state?(e,s)

@@ -22,7 +22,7 @@ class Scene_Menu
     #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
 
     # The current menu
-    @menu = Mnu_Main.new(@vp)
+    @menus = [Mnu_Main.new(@vp)]
     #@menu = Mnu_Items.new(@vp)
 
     Graphics.transition(50,'Graphics/System/trans')            
@@ -42,16 +42,17 @@ class Scene_Menu
 
     $game.pop_scene if Input.trigger?(Input::F7)
 
-    @menu.update
+    @menus[-1].update
     
   end
 
   def push_menu(menu)
-
+    @menus[-1].close
+    @menus.push(menu)
   end
 
-  def pop_menu(menu)
-
+  def pop_menu
+    @menus.shift.dispose
   end
 
 end

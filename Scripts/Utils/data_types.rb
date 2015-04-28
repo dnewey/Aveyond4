@@ -34,8 +34,10 @@ class SkillData
 	attr_reader :name
 	attr_reader :book
 	attr_reader :description
+	attr_reader :hits
 	attr_reader :scope
-	attr_reader :animation
+	attr_reader :anim_a
+	attr_reader :anim_b
 	attr_reader :stats
 	attr_reader :effects
 end
