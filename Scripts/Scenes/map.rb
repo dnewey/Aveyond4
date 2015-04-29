@@ -27,7 +27,7 @@ class Scene_Map
     $player = @player
     @player.moveto($data.system.start_x, $data.system.start_y)
 
-    @map.target = @player
+   # @map.camera_to(@player)
 
 
 

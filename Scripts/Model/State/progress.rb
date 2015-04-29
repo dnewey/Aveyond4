@@ -12,11 +12,13 @@ class Progress
 
 	def add_quest(q)
 		@quests.push(q)
+		$map.need_refresh = true
 	end
 
 	def end_quest(q)
 		@quests.delete(q)
 		@complete.push(q)
+		$map.need_refresh = true
 	end
 
 	def quest_active?(q)
@@ -27,8 +29,9 @@ class Progress
 		return @complete.include?(q)
 	end
 
-	def progress!(progress)
+	def progress(progress)
 		@progress= $data.progress[progress]
+		$map.need_refresh = true
 	end
 
 	def progress?(progress)
@@ -39,6 +42,11 @@ class Progress
 	def beyond?(progress)
 		return false if !$data.progress.include?(progress)
 		return @progress > $data.progress[progress]
+	end
+
+	def before?(progress)
+		return false if !$data.progress.include?(progress)
+		return @progress < $data.progress[progress]
 	end
 
 end

@@ -29,4 +29,6 @@ end
 # Progress
 def progress(id) $progress.progress(id) end
 def progress?(id) return $progress.progress?(id) end
+
+def before?(id) return $progress.before?(id) end
 def beyond?(id) return $progress.beyond?(id) end

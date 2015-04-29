@@ -44,8 +44,8 @@ class Sprite_Character < Sprite
       if @character_name.include?("Prop")
         @cw = bitmap.width
         @ch = bitmap.height
-        self.ox = 0
-        self.oy = 0
+        self.ox = @cw / 2
+        self.oy = @ch
       end
 
     end

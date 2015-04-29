@@ -81,7 +81,8 @@ class DataManager
     map = load_data("Data/Map001.rxdata")
 
     map.events.each{ |k,ev|
-      clones[ev.name.split("#")[0].rstrip!] = ev.pages
+      name = ev.name.split('#').first.split('.')[1].rstrip
+      clones[name] = ev
     }
 
     return clones

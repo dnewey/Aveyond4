@@ -6,15 +6,10 @@ class List_Main
 	def initialize(vp)
 
 		# Left side window
-		@back = Sprite.new(vp)
-		@back.bitmap = Bitmap.new(164,444)
-		@back.bitmap.fill(Color.new(47,45,41))
+		@window = Box.new(vp)
+    	@window.skin = $cache.menu_common("skin-plain")
+    	@window.color = Color.new(47,45,41)
 
-		@window = Sprite.new(vp)
-		@window.bitmap = Bitmap.new(170,450)
-    	@window.bitmap.borderskin("Common/skin-plain")
-
-    	@back.move(13,13)
     	@window.move(10,10)
 
 		# Left side list

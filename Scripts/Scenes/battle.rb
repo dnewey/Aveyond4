@@ -40,10 +40,10 @@ class Scene_Battle
     
     # Get rid of this after figuring out camera pos as pos instead of event
     $player = @player 
-    @player.moveto(5,5)
-    @map.target = @player
-
-    #@map.point_camera_at()
+    #@player.moveto(5,5)
+    #@map.camera_to(@player)
+    @map.camera_xy(5,15)
+    
 
     @tilemap = MapWrap.new(@vp) 
     @tilemap.refresh(@map)
@@ -62,7 +62,7 @@ class Scene_Battle
 
     # Prepare battler events
     [0,1,2,3].each{ |i| 
-      ev = @map.event_by_name("A.#{i}")
+      ev = @map.event_by_evname("A.#{i}")
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
@@ -72,7 +72,7 @@ class Scene_Battle
       end
     }
     [0,1,2,3,4].each{ |i| 
-      ev = @map.event_by_name("E.#{i}") 
+      ev = @map.event_by_evname("E.#{i}") 
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
       end

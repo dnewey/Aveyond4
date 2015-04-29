@@ -14,7 +14,6 @@ class Game_Map
   # Drawing
   attr_accessor :display_x                # display x-coordinate * 128 # camera pos
   attr_accessor :display_y                # display y-coordinate * 128
-  attr_accessor :target
 
   attr_accessor :need_refresh             # refresh request flag
 
@@ -35,7 +34,10 @@ class Game_Map
   def initialize
     @interpreter = Interpreter.new(0,true)
 
-    @target = $player
+    @cam_target = $player
+    @cam_xy = [0,0]
+    @cam_snap = false
+
     @namecache = {}
   end
   
@@ -114,6 +116,26 @@ class Game_Map
   def data() return @map.data end
 
   #--------------------------------------------------------------------------
+  # * Camera
+  #--------------------------------------------------------------------------
+  def camera_to(ev)
+    @cam_target = ev
+    @cam_snap = false
+  end
+
+  def camera_xy(x,y)
+    @cam_xy = [x,y]
+    @cam_target = nil
+    @cam_snap = false
+  end
+
+  def camera_snap
+    @cam_snap = true
+  end
+
+  # SOME SORT OF CAMERA OFFSET TO ANIMATE FOR SHAKES
+
+  #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
@@ -130,24 +152,35 @@ class Game_Map
     end
 
     # Camera update
-    @target = $player
+    @cam_target = $player
 
     # Camera update, maybe split to camera class
-    if @target != nil
+    if @cam_target != nil
 
-      @target_x = @target.real_x- (128 * 9.5)
-      @target_y = @target.real_y- (128 * 7)
+      if @cam_target != nil
+        @target_x = @cam_target.real_x- (128 * 9.5)
+        @target_y = @cam_target.real_y- (128 * 7)
+      else
+        @target_x = @cam_xy[0] * 128
+        @target_y = @cam_xy[1] * 128
+      end
 
       if @target_x != @display_x
-        @display_x += (@target_x-@display_x) * 0.1
+        @display_x += (@target_x-@display_x) * 0.15
       end
 
       if @target_y != @display_y
-        @display_y += (@target_y-@display_y) * 0.1
+        @display_y += (@target_y-@display_y) * 0.15
       end
 
-      @display_x = @target_x
-      @display_y = @target_y
+      if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
+        @cam_snap = true
+      end
+
+      if @cam_snap
+        @display_x = @target_x
+        @display_y = @target_y
+      end
 
     end
 
@@ -234,6 +267,13 @@ class Game_Map
   def starting_events() @events.values.select{ |e| e.starting } end
 
   def event_by_name(name)
+    return @namecache[name] if @namecache.has_key?(name)
+    ev = @events.values.find{ |e| e.name == name }
+    @namecache[name] = ev
+    return ev
+  end
+
+  def event_by_evname(name)
     return @namecache[name] if @namecache.has_key?(name)
     ev = @events.values.find{ |e| e.event.name == name }
     @namecache[name] = ev

@@ -380,7 +380,7 @@ class ParallelTween < Tween
 
 	def set_parent(parent)
 		super(parent)
-		@sequence.each{ |n| n.set_parent(parent)}
+		@nanos.each{ |n| n.set_parent(parent)}
 	end
 
 	def done?

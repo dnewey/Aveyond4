@@ -1,4 +1,10 @@
 
+# Wallpaper or color overlay
+# FINALIZE THIS BOX CLASS NOW
+
+# THEN DO SOME MENUS
+# DRAW THE ICONS BETTER
+# GIVE 99 ALL ITEMS TEMP
 
 class Box 
 
@@ -16,12 +22,10 @@ class Box
 		@alpha = 230		
 
 		# Position
-		@px = 0.0 
-		@py = 0.0
+		@px, @py = 0.0, 0.0
 
 		# Display position, integer
-		@dx = 0 
-		@dy = 0
+		@dx, @dy = 0, 0
 
 		# Anim speed
 		@sx = 0.2
@@ -37,10 +41,14 @@ class Box
 
 	def wallpaper=(w)
 		@src = w
-		@wallpaper.bitmap = Bitmap.new(@width,@height)
+		@wallpaper.bitmap = Bitmap.new(@width-8,@height-8)
 		redraw
 	end
 
+	def color=(c)
+		@wallpaper.bitmap = Bitmap.new(@width-8,@height-8)
+		@wallpaper.bitmap.fill(c)
+	end
 
 	def opacity=(o)
 		@wallpaper.opacity = o
