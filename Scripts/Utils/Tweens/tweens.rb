@@ -1,6 +1,6 @@
 
-def sequence(a,b)
-	return SequenceTween.new(a,b)
+def sequence(*args)
+	return SequenceTween.new(*args)
 end
 
 def repeat(a,times=-1)

@@ -23,8 +23,8 @@ class Scene_Battle
       action = @actor_cmd.get_action
       @actor_cmd.close
 
-      log_info "ACTIOn"
-      log_info action
+      #log_info "ACTIOn"
+      #log_info action
 
       # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
       if action == "items"
@@ -33,7 +33,7 @@ class Scene_Battle
         skills = @active_battler.skills_for(action)
       end
 
-      log_info(skills)
+      #log_info(skills)
 
       # If a multi-skill open the menu
       if skills.count > 1

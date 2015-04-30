@@ -4,7 +4,7 @@
 
 class DebugConsole
 
-	INPUT_COLOR = Color.new(0,0,0,160)
+	INPUT_COLOR = Color.new(30,30,30,210)
 
 	MAX_LOGS = 11
 
@@ -30,11 +30,11 @@ class DebugConsole
 
 		# If console not showing
 		if !active?
-			show if $keyboard.press?(VK_TILDE) 
+			show if $keyboard.press?(VK_TAB) 
 		end
 
 		# Hide console if press TILDE
-		hide if active? && $keyboard.press?(VK_TILDE)
+		hide if active? && $keyboard.press?(VK_TAB)
 		hide if active? && $keyboard.press?(VK_ESC)
 
 		if !active?
@@ -48,7 +48,7 @@ class DebugConsole
 		return if !active?
 
 		# Show last
-		if $keyboard.press?(VK_TAB)
+		if $keyboard.press?(VK_DOWN)
 			@console_text = @history.empty? ? "" : @history.pop
 			refresh_console
 		end
@@ -101,7 +101,7 @@ class DebugConsole
 		@console_sprite.bitmap.draw_text(8,0,640,30,"-> "+@console_text) # Make gfx.width
 
 		if !@history.empty?
-			@console_sprite.bitmap.fill_rect(0,30,640,30,Color.new(0,0,0,60))
+			@console_sprite.bitmap.fill_rect(0,30,640,30,Color.new(0,0,0,120))
 			@console_sprite.bitmap.draw_text(8,30,640,30,"   "+@history[-1]) # Make gfx.width
 		end	
 
@@ -114,10 +114,13 @@ class DebugConsole
 		cx = 0
 		cy = 6
 
-		@osd_sprite.bitmap.fill_rect(cx,cy,640,30,Color.new(0,0,0,160))
-		@osd_sprite.bitmap.draw_text(cx+8,cy,640,30,"LOG HISTORY")
+		@osd_sprite.bitmap.fill_rect(cx,cy,640,50,Color.new(30,30,30,235))
+		@osd_sprite.bitmap.font.size = 28
+		@osd_sprite.bitmap.draw_text(cx+8,cy,640,50,"::LOG HISTORY::")
 
-		cy += 40
+		cy += 60
+
+		@osd_sprite.bitmap.font.size = 22
 
 		@logs.each{ |log|
 

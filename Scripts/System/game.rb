@@ -44,7 +44,7 @@ class GameManager
     @width = w
     @height = h
     if ACE_MODE
-    Graphics.resize_screen(w,h)
+      Graphics.resize_screen(w,h)
     end
     #set_rez(w,h)
   end

@@ -11,7 +11,8 @@ class SettingsManager
   attr_accessor :mouse
 
   attr_accessor :debug_skip_title
-  attr_accessor :debug_fps
+  attr_accessor :debug_draw_fps
+  attr_accessor :debug_draw_names
   
 
   # In settings
@@ -31,7 +32,8 @@ class SettingsManager
 
     # Debug options - keys 1-9
     @debug_skip_title = true
-    @debug_show_fps = 40
+    @debug_draw_fps = true
+    @debug_draw_names = true
         
     # Load from settings file real quick   
     File.open($appdata+'\settings.txt', "r").each do |line|

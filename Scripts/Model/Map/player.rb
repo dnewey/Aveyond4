@@ -18,9 +18,14 @@ class Game_Player < Game_Character
     @xfer_data = nil
   end
 
-  def queue_xfer(map,x,y,dir)
+  def transfer(map,x,y,dir)
     @transferring = true
     @xfer_data = [map,x,y,dir]
+  end
+
+  def transfer_to(map,target)
+    @transferring = true
+    @xfer_data = [map,target]
   end
 
   #--------------------------------------------------------------------------
@@ -272,13 +277,21 @@ class Game_Player < Game_Character
 
     # Map to teleport to 
     if $map.id != @xfer_data[0]
+      log_info @xfer_data
       $map.setup(@xfer_data[0])      
     end
 
     # Location on the map to teleport to
-    $player.moveto(@xfer_data[1],@xfer_data[2])
-    $player.direction = @xfer_data[3]
-    $player.straighten  
+    if @xfer_data.count > 2
+      $player.moveto(@xfer_data[1],@xfer_data[2])
+      $player.direction = @xfer_data[3]
+      $player.straighten  
+    else
+      ev = gev(@xfer_data[1])
+      $player.moveto(ev.x,ev.y)
+      #$player.direction = @xfer_data[3]
+      $player.straighten  
+    end
 
     # AUTO SAVING
 

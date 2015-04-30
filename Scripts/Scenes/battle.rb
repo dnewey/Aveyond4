@@ -23,9 +23,11 @@ class Scene_Battle
 
     # Auto viewports to fullscreen and set z in init
     @vp = Viewport.new(0, 0, $game.width, $game.height)
+    @vp_pops = Viewport.new(0,0,$game.width,$game.height)
     @vp_hud = Viewport.new(0, 0, $game.width, $game.height)
     @vp.z = 6000  
-    @vp_hud.z = 75000
+    @vp_pops.z = 6500
+    @vp_hud.z = 7500
 
     @dbg_phase = Sprite.new(@vp_hud)
     @dbg_phase.bitmap = Bitmap.new(150,30)
@@ -43,7 +45,8 @@ class Scene_Battle
     #@player.moveto(5,5)
     #@map.camera_to(@player)
     @map.camera_xy(5,15)
-    
+    @map.cam_oy = 150
+    @map.do(go("cam_oy",-150,3500,:quad_in_out))    
 
     @tilemap = MapWrap.new(@vp) 
     @tilemap.refresh(@map)
@@ -78,6 +81,12 @@ class Scene_Battle
       end
     }
 
+
+
+    # Poppers
+    @poppers = []
+
+
     Graphics.transition(50,'Graphics/System/trans')  
             
   end
@@ -104,6 +113,12 @@ class Scene_Battle
     @hud.update
     @map.update    
     @character_sprites.each{ |s| s.update }
+
+    # Remove pops that are invisible
+    @poppers.each{ |p| p.dispose if p.done? }
+    @poppers.delete_if{ |p| p.disposed? }
+
+    @poppers.each{ |p| p.update }
 
     # Draw phase
     @dbg_phase.bitmap.fill(Color.new(0,0,0))
@@ -146,6 +161,8 @@ class Scene_Battle
         phase_main_init
       when :main_prep
         phase_main_prep
+      when :main_start
+        phase_main_start
       when :main_attack
         phase_main_attack
       when :main_defend
@@ -166,5 +183,28 @@ class Scene_Battle
     end
 
   end
+
+
+  def pop_dmg(target,amount)
+    #ev = gev(target)
+    pop = Popper.new(@vp_pops)
+    pop.value = 0#amount #- amount/10
+    pop.x = target.screen_x-200-20
+    pop.y = target.screen_y-40-12+45
+    @poppers.push(pop)
+
+    pop.opacity = 1
+    pop.do(go("value",amount,700,:quad_in_out))
+    pop.do(sequence(go("opacity",254,500),go("opacity",0,1500),go("opacity",-255,500)))
+    pop.do(sequence(go("y",-30,500,:quad_in_out),go("y",-20,1500),go("y",-30,500,:quad_in_out)))
+
+
+  end
+
+  def pop_crit(target)
+
+  end
+
+
 
 end

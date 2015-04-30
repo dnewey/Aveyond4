@@ -38,6 +38,7 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	end
 
 	def close
+		@menu.hide
 		@charbox.hide
 		@charbox2.hide
 		@charbox3.hide

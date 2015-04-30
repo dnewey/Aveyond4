@@ -1,7 +1,7 @@
 class Progress
 
-	attr_accessor :quests, :complete
-	attr_accessor :progress
+	#attr_accessor :quests, :complete
+	#attr_accessor :progress
 
 
 	def initialize
@@ -13,12 +13,14 @@ class Progress
 	def add_quest(q)
 		@quests.push(q)
 		$map.need_refresh = true
+		log_info("Quest Added: #{q}")
 	end
 
 	def end_quest(q)
 		@quests.delete(q)
 		@complete.push(q)
 		$map.need_refresh = true
+		log_info("Quest Ended: #{q}")
 	end
 
 	def quest_active?(q)
@@ -29,9 +31,14 @@ class Progress
 		return @complete.include?(q)
 	end
 
-	def progress(progress)
-		@progress= $data.progress[progress]
+	def progress(pro)
+		@progress= $data.progress[pro]
 		$map.need_refresh = true
+		log_info("Progress Set: #{pro}")
+	end
+
+	def get_progress
+		return @progress
 	end
 
 	def progress?(progress)

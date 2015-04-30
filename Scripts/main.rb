@@ -30,7 +30,9 @@ def aveyond4
     $battle = Game_Battle.new
     $fonts = FontManager.new
     $game = GameManager.new  
-   # $steam = SteamManager.new
+    # $steam = SteamManager.new
+
+    $scratch = Bitmap.new(400,50)
 
     # Call main method as long as $scene is effective      
     $game.update until $game.quit?
@@ -46,7 +48,10 @@ rescue StandardError => e
   
   e.backtrace.each{ |location|
     line_num = location.split(":")[1]
-    script_name = location.split(":")[0].split("/").last
+    script_name = location.split(":")[0]
+    if script_name.include?("Scripts/")
+      script_name['Scripts/'] = ''
+    end
 
     if location.include?("Section")
       section = location[/(?#Section)(\d)*(:)/]
@@ -56,7 +61,7 @@ rescue StandardError => e
 
     method = location.split(":")[2]
     next if method == nil
-    loc_err = "Line " + line_num + ", in "+script_name+ ", "+method.to_s
+    loc_err = "Line " + line_num + ", "+method.to_s+" in "+script_name    
     loc_err = "Game Start" if script_name.include?("{0128")
     log_err("#{loc_err}")
   } 

@@ -1,16 +1,17 @@
 
-class List_Main
+class List_Main < SpriteGroup
 
 	attr_accessor :list
 
 	def initialize(vp)
+		super()
 
 		# Left side window
 		@window = Box.new(vp)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
-
-    	@window.move(10,10)
+    	@window.resize(168,480)
+    	add(@window)
 
 		# Left side list
 		@list = List.new()
@@ -20,9 +21,7 @@ class List_Main
 
 		@list.item_space = 43
 
-		@list.x = 16
-		@list.y = 16
-
+		add(@list,6,6)
 
 		data = []
 		data.push(_db('menu','Items'))
@@ -38,6 +37,8 @@ class List_Main
 		data.push(_db('menu','Save'))
 
 		@list.setup(data)
+
+		move(10,10)
 
 	end
 

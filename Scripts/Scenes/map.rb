@@ -6,7 +6,9 @@ class Scene_Map
 
   attr_reader :hud
 
+
   attr_reader :overlay
+  attr_reader :debug
 
   #--------------------------------------------------------------------------
   # * Set up the scene
@@ -49,6 +51,10 @@ class Scene_Map
     # UI
     @hud = Ui_Screen.new(@vp_ui)
 
+    @debug = Sprite.new(@vp_overlay)
+    @debug.bitmap = Bitmap.new($game.width,$game.height)
+    @debug.bitmap.font = $fonts.debug_min
+
     # TESTING THE SPARKS
     @sparks = []
 
@@ -79,6 +85,8 @@ class Scene_Map
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+
+    @debug.bitmap.clear
 
     # Update the sparks
     @sparks.each{ |s| 
@@ -120,14 +128,10 @@ class Scene_Map
     unless @map.interpreter.running? or @hud.busy?
 
       # Check inputs
-      if Input.trigger?(Input::F7)
+      if Input.trigger?(Input::B)
         $game.push_scene(Scene_Menu.new)
       end
 
-      if Input.trigger?(Input::F8)
-        $game.push_scene(Scene_Battle.new)
-      end
-        
     end
     
   end

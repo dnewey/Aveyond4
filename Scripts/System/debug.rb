@@ -10,7 +10,7 @@ def log_ev(msg) $debug.log(msg,'EVENT') end
 
 class DebugManager
 
-	OSD_OPACITY = 240
+	OSD_OPACITY = 230
 
 	INFO_COLOR = Color.new(220,171,1,OSD_OPACITY)
 	SCRIPT_COLOR = Color.new(128,0,64,OSD_OPACITY)

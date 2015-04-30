@@ -6,12 +6,12 @@ class Game_Battler
 
 
   def skills_for(action)
-    log_info("SKILLS")
-    log_info(@skills)
-    log_info(action)
+    # log_info("SKILLS")
+    # log_info(@skills)
+    # log_info(action)
 
     return @skills.select{ |s| 
-      log_info s
+      #log_info s
       $data.skills[s].id == action || 
       $data.skills[s].book == action
     }

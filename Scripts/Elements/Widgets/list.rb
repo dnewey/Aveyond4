@@ -13,15 +13,15 @@ class List
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
-  def initialize()
+  def initialize() 
 
     # Make own viewport
     @vp = Viewport.new(0,0,1000,1000)
     @vp.z = 9999
 
     @font = Font.new
-    @font.name = "Georgia"
-    @font.size = 26
+    @font.name = "Verdana"
+    @font.size = 20 #was 26
     @font.color = Color.new(245,223,200)
 
 
@@ -51,8 +51,16 @@ class List
   	@per_page.times{ |i|
   		@sprites.push(Sprite.new(@vp))
   	}
+
   	@dynamo = Sprite.new(@vp)
 
+  end
+
+  def opacity=(o)
+    @sprites.each{ |s|
+      s.opacity = 0
+    }
+    @dynamo.opacity = 0
   end
 
   def dispose
@@ -120,9 +128,13 @@ class List
     #sprite.bitmap.skin($cache.menu("Common/list_inner"))
   	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
+    ico = $cache.icon("items/map")
+    ico = $cache.icon("misc/unknown") if rand > 0.5
+    sprite.bitmap.blt(8,5,ico,ico.rect)
+
     sprite.bitmap.font = @font
     return if data.nil?
-  	sprite.bitmap.draw_text(0,0,src.width,src.height,data.text,1)
+  	sprite.bitmap.draw_text(18+21,0,src.width,src.height,data.text,0)
 
   end
 

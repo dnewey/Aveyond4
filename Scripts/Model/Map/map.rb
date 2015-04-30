@@ -11,9 +11,9 @@ class Game_Map
   #--------------------------------------------------------------------------
   attr_reader   :tileset  
   
-  # Drawing
-  attr_accessor :display_x                # display x-coordinate * 128 # camera pos
-  attr_accessor :display_y                # display y-coordinate * 128
+  # Camera offsets
+  attr_accessor :cam_ox, :cam_oy
+
 
   attr_accessor :need_refresh             # refresh request flag
 
@@ -37,6 +37,11 @@ class Game_Map
     @cam_target = $player
     @cam_xy = [0,0]
     @cam_snap = false
+    @cam_ox = 0
+    @cam_oy = 0
+
+    #self.do(pingpong("cam_ox",50,70,:quad_in_out))
+    #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
 
     @namecache = {}
   end
@@ -107,6 +112,14 @@ class Game_Map
     
   end
 
+  def display_x
+    return @display_x + (@cam_ox*4)
+  end
+
+  def display_y
+    return @display_y + (@cam_oy*4)
+  end
+
   #--------------------------------------------------------------------------
   # * Get Tileset ID
   #--------------------------------------------------------------------------
@@ -132,8 +145,6 @@ class Game_Map
   def camera_snap
     @cam_snap = true
   end
-
-  # SOME SORT OF CAMERA OFFSET TO ANIMATE FOR SHAKES
 
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -264,6 +275,8 @@ class Game_Map
   def event_at(x, y) @events.values.find{ |e| e.at?(x,y) } end
   def events_at(x, y) @events.values.select{ |e| e.at?(x,y) } end
   def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
+  
+
   def starting_events() @events.values.select{ |e| e.starting } end
 
   def event_by_name(name)
@@ -288,6 +301,7 @@ class Game_Map
     return map_zone_or_nil(id)
   end
 
+  # Return zone name, parent map or @nil if top map
   def map_zone_or_nil(id)
     return $data.mapinfos[id].name if $data.mapinfos[id].name.include?('@')
     return '@nil' if $data.mapinfos[id].parent_id == 0

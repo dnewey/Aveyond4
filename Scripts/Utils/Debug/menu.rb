@@ -20,6 +20,8 @@ class DebugMenu
 
 		@esc = Proc.new{ hide }
 
+		@cursor_pos = {}
+
 		page(:main)
 
 		hide
@@ -27,16 +29,39 @@ class DebugMenu
 	end
 
 	def page(newpage)
+
+		@cursor_pos[@page] = @idx
+
 		clear
+
+		@page = newpage
 
 		case newpage
 			when :main
-				add("General Settings",Proc.new{ page(:settings) })
-				add("Debug Settings",Proc.new{ page(:debug) })
-				add("Progress: #{$progress.progress}",nil) if !$progress.nil?
+
+				add(">> General Settings",Proc.new{ page(:settings) })
+				add(">> Debug Settings",Proc.new{ page(:debug) })
+				
+				add("-- Progress: #{$progress.get_progress}",nil) if !$progress.nil?
+
 				@esc = Proc.new{ hide }
+
 			when :settings
-				add("Toggle Fullscreen",Proc.new{ $game.toggle })
+
+				@menu_title = "GENERAL SETTINGS"
+
+				add(":: Toggle Fullscreen",Proc.new{ $game.flip_window })
+
+				@esc = Proc.new{ page(:main) }
+
+			when :debug
+
+				@menu_title = "DEBUG SETTINGS"
+
+				add(":: Toggle skip title - "+$settings.debug_skip_title.to_s.upcase,Proc.new{ $settings.debug_skip_title ^= true })
+				add(":: Toggle draw fps - "+$settings.debug_draw_fps.to_s.upcase,Proc.new{ $settings.debug_draw_fps ^= true })
+				add(":: Toggle draw names - "+$settings.debug_draw_names.to_s.upcase,Proc.new{ $settings.debug_draw_names ^= true })
+
 				@esc = Proc.new{ page(:main) }
 
 		end
@@ -45,7 +70,7 @@ class DebugMenu
 
 
 	def clear
-		@idx = 0
+		#@idx = 0
 		@actions.clear
 		refresh
 	end
@@ -56,25 +81,32 @@ class DebugMenu
 
 	def update
 
-		if $keyboard.press?(VK_ESC)
+		if $keyboard.press?(VK_TILDE)
 			active? ? @esc.call : show
+		end
+
+		if $keyboard.press?(VK_ESC)
+			@esc.call if active?
 		end
 
 		return if !active?
 
 		if $keyboard.press?(VK_ENTER)
 			@actions[@idx][1].call if @actions[@idx][1] != nil
+			page(@page)
 		end
 		
 		if $keyboard.press?(VK_DOWN)
 			@idx += 1 if @idx != @actions.count - 1
+			#@idx_sprite.bitmap.fill(Color.new(rand(255),rand(255),rand(255)))
 		end
 
 		if $keyboard.press?(VK_UP)
 			@idx -= 1 if @idx != 0
+			#@idx_sprite.bitmap.fill(Color.new(rand(255),rand(255),rand(255)))
 		end
 
-		@idx_sprite.y = 46 + (@idx * 34)
+		@idx_sprite.y = 66 + (@idx * 34)
 		
 
 		#refresh
@@ -83,24 +115,30 @@ class DebugMenu
 
 	def refresh
 
+
+		@idx = @cursor_pos.has_key?(@page) ? @cursor_pos[@page] : 0
+
 		@mnu_sprite.bitmap = Bitmap.new(640,480)#$game.width,$game.height)
 		@text_sprite.bitmap = Bitmap.new(640,480)#$game.width,$game.height)
 
 		@idx_sprite.bitmap = Bitmap.new(400,30)
-		@idx_sprite.bitmap.fill(Color.new(50,120,180,240))
+		@idx_sprite.bitmap.fill(Color.new(40,110,170,240))
 
 		cx = 0
 		cy = 6
 
-		@mnu_sprite.bitmap.fill_rect(cx,cy,640,30,Color.new(0,0,0,160))
-		@text_sprite.bitmap.draw_text(cx+8,cy,640,30,@menu_title)
+		@mnu_sprite.bitmap.fill_rect(cx,cy,640,50,Color.new(30,30,30,235))
+		@text_sprite.bitmap.font.size = 28
+		@text_sprite.bitmap.draw_text(cx+8,cy,640,50,"::"+@menu_title+"::")
 
-		cy += 40
+		cy += 60
+
+		@text_sprite.bitmap.font.size = 22
 
 		@actions.each_index{ |i|
 
-			out = "-> "+@actions[i][0]
-			color = Color.new(0,0,0,120)
+			out = @actions[i][0]
+			color = Color.new(30,30,30,210)
 
 			size = @mnu_sprite.bitmap.text_size(out)
 			@mnu_sprite.bitmap.fill_rect(cx,cy,400,30,color)

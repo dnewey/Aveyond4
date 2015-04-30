@@ -8,6 +8,17 @@ module Graphics
     
     alias fps_update update unless method_defined?(:fps_update)
     def update
+
+      if !$settings.debug_draw_fps
+      	fps_sprite.hide
+      	back_sprite.hide
+      	fps_update
+      	return
+      else
+		fps_sprite.show
+      	back_sprite.show
+      end
+
 	  t = Time.now
 	  fps_update
 	  @fps_tmp[frame_count % frame_rate] = Time.now != t
@@ -26,8 +37,8 @@ module Graphics
 	  if !@fps_sprite or @fps_sprite.disposed?
 	    @fps_sprite = Sprite.new
 	    @fps_sprite.z = 9999
-	    @fps_sprite.x = $game.width-50
-	    @fps_sprite.y = 6
+	    @fps_sprite.x = $game.width-45
+	    @fps_sprite.y = 16
 	    @fps_sprite.bitmap = Bitmap.new(30, 30*62)
 	    @fps_sprite.bitmap.font.size = 28
 	    @fps_sprite.bitmap.font.name = "Consolas"
@@ -43,8 +54,8 @@ module Graphics
 	  if !@back_sprite or @back_sprite.disposed?
 	    @back_sprite = Sprite.new
 	    @back_sprite.z = 9997
-	    @back_sprite.x = $game.width-50
-	    @back_sprite.y = 6
+	    @back_sprite.x = $game.width-40
+	    @back_sprite.y = 16
 	    @back_sprite.bitmap = Bitmap.new(30, 30)
 	  end
 	  return @back_sprite

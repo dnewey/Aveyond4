@@ -239,7 +239,7 @@ class Ui_Message
       @width += @face.width 
       fx = -10 + max_width + PADDING_X + PADDING_X
       fy = 7 + @height - @face.height - PADDING_Y
-      @sprites.move(@face,fx,fy)
+      @sprites.change(@face,fx,fy)
     end
 
     # Prepare the sprites  
@@ -256,11 +256,11 @@ class Ui_Message
     @textbox.bitmap.font = $fonts.message
 
     # COMBINE FONT AND SIZE
-    @sprites.move(@tail,@width/2,@height)
-    @sprites.move(@next,@width/2,@height-20)
+    @sprites.change(@tail,@width/2,@height)
+    @sprites.change(@next,@width/2,@height-20)
 
-    @sprites.move(@namebox,20,-@namebox.height)
-    @sprites.move(@nametext,40,-@namebox.height+5)
+    @sprites.change(@namebox,20,-@namebox.height)
+    @sprites.change(@nametext,40,-@namebox.height+5)
 
 
 

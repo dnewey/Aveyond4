@@ -46,6 +46,7 @@ class Box
 	end
 
 	def color=(c)
+		@color = c
 		@wallpaper.bitmap = Bitmap.new(@width-8,@height-8)
 		@wallpaper.bitmap.fill(c)
 	end
@@ -78,8 +79,12 @@ class Box
 		@height = h
 		@window.bitmap = Bitmap.new(w,h)
 		@window.bitmap.borderskin(@skin)
-		@wallpaper.bitmap = Bitmap.new(w-8,h-8)		
-		redraw
+		@wallpaper.bitmap = Bitmap.new(w-8,h-8)	
+		if @src != nil	
+			redraw
+		else
+			@wallpaper.bitmap.fill(@color)
+		end
 	end
 
 	def update

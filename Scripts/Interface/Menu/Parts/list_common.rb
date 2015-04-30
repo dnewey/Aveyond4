@@ -1,14 +1,15 @@
 
-class List_Common
+class List_Common < SpriteGroup
 
 	def initialize(vp)
+		super()
 
 		# Left side window
-		@window = Box.new(vp,290,246)
+		@window = Box.new(vp,300,258)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
-    	@window.move(10,110)
-
+    	add(@window)
+    	
 		# Left side list
 		@list = List.new()
 
@@ -16,20 +17,20 @@ class List_Common
 		@list.item_height = 34
 
 		@list.item_space = 35
-
-		@list.x = 16
-		@list.y = 116
+		add(@list,6,6)
 
 		data = []
-		data.push(_db('menu','Potion'))
-		data.push(_db('menu','Journal'))
-		data.push(_db('menu','Party'))
-		data.push(_db('menu','Equip'))
-		data.push(_db('menu','Skills'))
-		data.push(_db('menu','Profiles'))
-		data.push(_db('menu','Options'))
+		data.push(_db('menu','Necromancer Staff'))
+		data.push(_db('menu','Boyle goes to college'))
+		data.push(_db('menu','Bottle of Glowmoths'))
+		data.push(_db('menu','Transformation Potion'))
+		data.push(_db('menu','Chicken Curse Scroll'))
+		data.push(_db('menu','Tick tock clock'))
+		data.push(_db('menu','Tinctura Hypercurium'))
 
 		@list.setup(data)
+
+		move(10,110)
 
 	end
 

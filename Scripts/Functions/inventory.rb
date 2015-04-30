@@ -37,3 +37,9 @@ def item?(id,number=1)
 	$party.has_item?(id,number)
 end
 
+def all_items
+	$data.items.each{ |i|
+		item(i.id,99)
+	}
+end
+

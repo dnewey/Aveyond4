@@ -71,6 +71,14 @@ class Sprite_Character < Sprite
     self.x = @character.screen_x
     self.y = @character.screen_y - 8
     self.z = @character.screen_z(@ch)
+
+    # TODO auto name the helper icons
+
+    if $scene.is_a?(Scene_Map) && $settings.debug_draw_names
+      w = $scene.debug.bitmap.text_size(@character.name).width + 6 if @character != $player
+      $scene.debug.bitmap.fill_rect(self.x-w/2,self.y,w,20,Color.new(23,111,22,200)) if @character != $player
+      $scene.debug.bitmap.draw_text(self.x-w/2,self.y,w,20,@character.name,1) if @character != $player
+    end
     
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity

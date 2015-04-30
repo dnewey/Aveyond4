@@ -81,7 +81,12 @@ class DataManager
     map = load_data("Data/Map001.rxdata")
 
     map.events.each{ |k,ev|
-      name = ev.name.split('#').first.split('.')[1].rstrip
+      dta = ev.name.split('#').first.split('.')
+      if dta.count > 1
+        name = dta[1].rstrip
+      else
+        name = dta[0].rstrip
+      end
       clones[name] = ev
     }
 
@@ -125,7 +130,8 @@ class DataManager
     }
 
     # Export to rxdata for later
-    save_data(data,"Data/Json/#{file}.rxdata")
+    # Disabled for now to not crowd up github commits
+    #save_data(data,"Data/Json/#{file}.rxdata")
 
     return data
 

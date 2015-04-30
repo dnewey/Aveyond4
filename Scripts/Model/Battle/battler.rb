@@ -19,6 +19,8 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def initialize
 
+    @is_actor = true
+
     # Current values
     @hp = 0
     @mp = 0
@@ -57,6 +59,8 @@ class Game_Battler
 
   def init_actor(id)
 
+    @is_actor = true
+
     data = $data.actors[id]
     @id = id
 
@@ -77,10 +81,13 @@ class Game_Battler
 
   def init_enemy(id)
 
+    @is_actor = false
+
   end
-
   
-
+  def is_actor?
+    return @is_actor
+  end
 
   #--------------------------------------------------------------------------
   # * Recover All
@@ -93,16 +100,16 @@ class Game_Battler
     end
   end
 
-
   # perhamps cut these things
-  def dead?() (@hp == 0 and not @immortal) end
-  def exist?() (@hp > 0 or @immortal) end
-  def hp0?() @hp == 0 end
+  def down?
+    @hp == 0 
+  end
+  def attackable?
+    return !down?
+  end
+
   def inputable?() restriction <= 1 end
-  def movable?() restriction < 4 end
-
-
-  
+  def movable?() restriction < 4 end  
 
 
   # PROBABLY DON'T HAVE THIS HERE
