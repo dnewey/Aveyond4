@@ -22,6 +22,12 @@ class Char_Box_Large < SpriteGroup
 
 	end
 
+	def dispose
+		@window.dispose
+		@gradient.dispose
+		@port.dispose
+	end
+
 	def setup(char)
 
 	end

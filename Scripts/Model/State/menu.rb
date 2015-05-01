@@ -19,4 +19,8 @@ end
 
 class MenuData
 
+	attr_accessor :actor
+	attr_accessor :category
+	attr_accessor :tab
+
 end

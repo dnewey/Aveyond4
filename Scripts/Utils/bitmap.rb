@@ -4,6 +4,10 @@ class Bitmap
 		self.fill_rect(0,0,self.width,self.height,color)
 	end
 
+	def fill_rand
+		self.fill_rect(0,0,self.width,self.height,Color.new(rand(255),rand(255),rand(255)))
+	end
+
 	# xp windowskin style
 	def windowskin(skin)
 		src = $cache.windowskin(skin)

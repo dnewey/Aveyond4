@@ -1,11 +1,4 @@
 
-# Wallpaper or color overlay
-# FINALIZE THIS BOX CLASS NOW
-
-# THEN DO SOME MENUS
-# DRAW THE ICONS BETTER
-# GIVE 99 ALL ITEMS TEMP
-
 class Box 
 
 	def initialize(vp,w=100,h=100)
@@ -31,6 +24,11 @@ class Box
 		@sx = 0.2
 		@sy = 0.2
 
+	end
+
+	def dispose
+		@wallpaper.dispose
+		@window.dispose
 	end
 
 	def skin=(bmp)

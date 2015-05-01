@@ -1,6 +1,8 @@
 
 class List_Common < SpriteGroup
 
+	attr_reader :list
+
 	def initialize(vp)
 		super()
 
@@ -31,6 +33,7 @@ class List_Common < SpriteGroup
 		@list.setup(data)
 
 		move(10,110)
+		@list.refresh
 
 	end
 
@@ -41,5 +44,15 @@ class List_Common < SpriteGroup
 	def update
 		@list.update
 	end
+
+
+
+
+	# All the various data that can be shown
+	def items(category)
+
+	end
+
+	
 
 end

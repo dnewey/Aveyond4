@@ -17,6 +17,7 @@ class Ui_Screen
 
 	def update
 		@message.update
+		@bar.update
 	end
 
     def busy?() 

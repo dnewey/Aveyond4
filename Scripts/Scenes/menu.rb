@@ -21,17 +21,23 @@ class Scene_Menu
     @bg.bitmap = $cache.menu_background("sample")
     #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
 
-    # The current menu
-    @menus = [Mnu_Main.new(@vp)]
-    #@menu = Mnu_Items.new(@vp)
+    # Choose background by location
 
-    Graphics.transition(50,'Graphics/System/trans')            
+    # The current menu
+    @menu = Mnu_Main.new(@vp)
+    @sub = nil
+
+    Graphics.transition(20,'Graphics/System/trans')     
+
   end
   
   def terminate
 
-    @menu.dispose
+    @menu.dispose if @menu != nil
+    @sub.dispose if @sub != nil
     @bg.dispose
+
+    @vp.dispose
 
   end
 
@@ -40,19 +46,28 @@ class Scene_Menu
   #--------------------------------------------------------------------------
   def update
 
-    $game.pop_scene if Input.trigger?(Input::F7)
-
-    @menus[-1].update
+    if @sub == nil || @sub.closed
+      @menu.update
+    else
+      @sub.update
+    end
     
   end
 
-  def push_menu(menu)
-    @menus[-1].close
-    @menus.push(menu)
+  def open_sub(menu)
+    @menu.close
+    @sub = menu
+    @sub.open
   end
 
-  def pop_menu
-    @menus.shift.dispose
+  def close_sub
+    @sub.close
+    @sub.dispose
+    @menu.open
+  end
+
+  def close_all
+
   end
 
 end

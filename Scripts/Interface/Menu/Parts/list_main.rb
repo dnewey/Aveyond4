@@ -10,16 +10,20 @@ class List_Main < SpriteGroup
 		@window = Box.new(vp)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
-    	@window.resize(168,480)
+    	@window.resize(178,362)
     	add(@window)
 
 		# Left side list
 		@list = List.new()
 
-		@list.item_width = 156
-		@list.item_height = 42
+		# @list.item_width = 156
+		# @list.item_height = 42
+		#@list.item_space = 43
 
-		@list.item_space = 43
+		@list.item_width = 166
+		@list.item_height = 34
+		@list.item_space = 35
+		
 
 		add(@list,6,6)
 
@@ -31,7 +35,7 @@ class List_Main < SpriteGroup
 		data.push(_db('menu','Skills'))
 		data.push(_db('menu','Profiles'))
 		data.push(_db('menu','Options'))
-		data.push(_db('menu','Help'))
+		#data.push(_db('menu','Help'))
 		data.push(_db('menu','Quit'))
 		data.push(_db('menu','Load'))
 		data.push(_db('menu','Save'))
@@ -39,11 +43,13 @@ class List_Main < SpriteGroup
 		@list.setup(data)
 
 		move(10,10)
+		@list.refresh
 
 	end
 
 	def dispose
-
+		@window.dispose
+		@list.dispose
 	end
 
 	def update

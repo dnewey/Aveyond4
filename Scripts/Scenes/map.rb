@@ -15,6 +15,7 @@ class Scene_Map
   #--------------------------------------------------------------------------
   def initialize
 
+
     # Make viewports - Also in the scene
     @vp_main = Viewport.new(0,0,$game.width,$game.height)   
     @vp_overlay = Viewport.new(0,0,$game.width,$game.height)
@@ -30,9 +31,6 @@ class Scene_Map
     @player.moveto($data.system.start_x, $data.system.start_y)
 
    # @map.camera_to(@player)
-
-
-
 
     # Make tilemap
     #@panorama = Plane.new(@vp_main,-1000)
@@ -58,7 +56,8 @@ class Scene_Map
     # TESTING THE SPARKS
     @sparks = []
 
-    Graphics.transition
+    #Graphics.transition
+    Graphics.transition(20,'Graphics/System/trans') 
             
   end
   
@@ -128,7 +127,7 @@ class Scene_Map
     unless @map.interpreter.running? or @hud.busy?
 
       # Check inputs
-      if Input.trigger?(Input::B)
+      if $input.cancel?
         $game.push_scene(Scene_Menu.new)
       end
 

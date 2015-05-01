@@ -1,5 +1,13 @@
 [
 "items/map",
+"misc/char",
+"misc/coins",
+"misc/gamepad",
+"misc/journal",
+"misc/keys",
+"misc/mouse",
+"misc/quit",
+"misc/settings",
 "misc/unknown",
 ""
 ]

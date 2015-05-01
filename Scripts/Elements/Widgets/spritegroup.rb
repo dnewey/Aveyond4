@@ -8,6 +8,10 @@ class SpriteGroup
 		@y = 0
 	end
 
+	def update
+		@sprites.each{ |s| s[0].update }
+	end
+
 	def add(spr,ox=0,oy=0)
 		@sprites.push([spr,ox,oy])
 	end

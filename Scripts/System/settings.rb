@@ -13,6 +13,7 @@ class SettingsManager
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
   attr_accessor :debug_draw_names
+  attr_accessor :debug_draw_sprites # Draw rect under sprites
   
 
   # In settings
@@ -34,6 +35,7 @@ class SettingsManager
     @debug_skip_title = true
     @debug_draw_fps = true
     @debug_draw_names = true
+    @debug_draw_sprites = false
         
     # Load from settings file real quick   
     File.open($appdata+'\settings.txt', "r").each do |line|

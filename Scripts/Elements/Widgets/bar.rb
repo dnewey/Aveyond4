@@ -1,6 +1,5 @@
 
 
-
 class Bar < Sprite
 
 	attr_accessor :value

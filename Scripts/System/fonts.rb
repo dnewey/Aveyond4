@@ -7,6 +7,8 @@ class FontManager
 
 	def initialize
 
+		@scratch = Bitmap.new(600,50)
+
 		# Debug Fonts
 
 		@debug = Font.new
@@ -36,6 +38,11 @@ class FontManager
 	    @namebox.gradient_color1 = Color.new(255,0,0)
 	    @namebox.gradient_color2 = Color.new(245,223,200)
 
+	end
+
+	def size(text,font)
+		@scratch.font = font
+		return @scratch.text_size(text)
 	end
 
 end

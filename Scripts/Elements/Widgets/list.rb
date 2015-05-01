@@ -8,7 +8,9 @@ class List
   attr_accessor :item_width, :item_height
   attr_accessor :item_ox, :item_space
 
-  attr_accessor :select, :change
+  attr_accessor :select, :cancel, :change
+
+  attr_accessor :active
 
   #--------------------------------------------------------------------------
   # * Init
@@ -33,8 +35,8 @@ class List
 
     # Procs
     @select = nil
+    @cancel = nil
     @change = nil
-
 
   	@x = 0
   	@y = 0
@@ -53,6 +55,8 @@ class List
   	}
 
   	@dynamo = Sprite.new(@vp)
+
+    @active = true
 
   end
 
@@ -140,8 +144,11 @@ class List
 
   def update
 
+    return if !@active
+
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN) #&& @dynamo.done?
+
       if !@dynamo.done?
         refresh
         @page_idx += @pagemod
@@ -155,9 +162,11 @@ class List
   		else
   		  refresh
       end
+      @change.call(@current.text) if !@change.nil?
   	end
 
   	if $keyboard.press?(VK_UP) #&& @dynamo.done?
+      
       if !@dynamo.done?
         refresh
         @page_idx += @pagemod
@@ -171,6 +180,7 @@ class List
   		else
   		  refresh
       end
+      @change.call(@current.text) if !@change.nil?
   	end
 
     pos = $mouse.position
@@ -191,6 +201,12 @@ class List
     # Selection
     if $input.action?
       @select.call(@current.text) if !@select.nil?
+    end
+
+    # Cancel
+    if $input.cancel?
+      log_info("TRYIT")
+      @cancel.call(@current.text) if !@cancel.nil?
     end
 
   end

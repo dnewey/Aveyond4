@@ -2,6 +2,7 @@
 # ** Part_Char
 #==============================================================================
 
+# Could auto choose the right char, but maybe just put as sprite
 class Port_Full
 
 	def initialize(vp)
@@ -10,6 +11,14 @@ class Port_Full
 		@boyle.bitmap = $cache.menu("tempboyle")
 		@boyle.x = 350
 
+	end
+
+	def hide
+		@boyle.hide
+	end
+
+	def show
+		@boyle.show
 	end
 
 	def dispose
