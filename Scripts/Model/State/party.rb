@@ -11,6 +11,8 @@ class Game_Party
 
   attr_accessor :all_actors
 
+  attr_reader :leader
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -41,6 +43,8 @@ class Game_Party
     set_active("ing")
     set_active("phy")
     set_active("rob")
+
+    @leader = 'ing'
 
     @actors["boy"].learn('fireburn')
     @actors["boy"].learn('flames')

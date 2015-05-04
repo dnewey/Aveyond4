@@ -127,7 +127,7 @@ class Scene_Map
     unless @map.interpreter.running? or @hud.busy?
 
       # Check inputs
-      if $input.cancel?
+      if $input.cancel? || Input.trigger?(Input::F7)
         $game.push_scene(Scene_Menu.new)
       end
 

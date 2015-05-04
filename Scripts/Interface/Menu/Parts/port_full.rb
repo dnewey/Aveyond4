@@ -9,7 +9,7 @@ class Port_Full
 
 		@boyle = Sprite.new(vp)
 		@boyle.bitmap = $cache.menu("tempboyle")
-		@boyle.x = 350
+		@boyle.x = 330
 
 	end
 

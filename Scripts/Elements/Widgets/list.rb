@@ -12,6 +12,10 @@ class List
 
   attr_accessor :active
 
+  attr_reader :page_idx
+
+  attr_accessor :type
+
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
@@ -41,6 +45,7 @@ class List
   	@x = 0
   	@y = 0
 
+    @type = :item
   	@data = []
 
   	@scroll_idx = 0
@@ -78,6 +83,10 @@ class List
   	refresh
   end
 
+  def idx
+    return @scroll_idx + @page_idx
+  end
+
   def refresh
 
     @vp.rect = Rect.new(@x,@y,@item_width,@item_space*@per_page)
@@ -86,7 +95,7 @@ class List
   	cy = 0#@y
 
   	(0..@per_page-1).each{ |i|
-  		draw_item(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
+  		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
       @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
   		@sprites[i].x = 0#@x
@@ -119,26 +128,72 @@ class List
       @page_idx -= 1; self.refresh; self.scroll_down
   end
 
-  def draw_item(data,sprite,on)
+  def current
+    return @current[0] if @type == :misc
+    return @current
+  end
 
-    # HMMMMMMMMMMMMMMMMMM
+  def draw(data,sprite,on)
 
-  	# DataBox atm
+  	# Draw the base
     src = $cache.menu("Common/bartest3")
     src = $cache.menu("Common/bartest4") if on
   	sprite.bitmap = Bitmap.new(src.width,src.height)
     sprite.bitmap.blt(0,0,src,src.rect)
-    #Bitmap.new(item_width,item_height)
-    #sprite.bitmap.skin($cache.menu("Common/list_inner"))
-  	#sprite.bitmap.fill(Color.new(123,123,219)) if on
 
-    ico = $cache.icon("items/map")
-    ico = $cache.icon("misc/unknown") if rand > 0.5
+    return if data == nil
+
+    # Drw the contents
+    case @type
+      when :item
+        draw_item(data,sprite,on)
+      when :skill
+        draw_skill(data,sprite,on)
+      when :quest
+        draw_quest(data,sprite,on)
+      when :misc
+        draw_misc(data,sprite,on)
+    end
+
+  end
+
+  def draw_item(data,sprite,on)
+
+    #return if $data.items.has_key?(data)
+
+    item = $data.items[data]
+
+    ico = $cache.icon(item.icon)
+    
     sprite.bitmap.blt(8,5,ico,ico.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
 
-    sprite.bitmap.font = @font
-    return if data.nil?
-  	sprite.bitmap.draw_text(18+21,0,src.width,src.height,data.text,0)
+  end
+
+  def draw_skill(data,sprite,on)
+
+  end
+
+  def draw_quest(data,sprite,on)
+
+    item = $data.quests[data]
+
+    ico = $cache.icon('items/map')
+    
+    sprite.bitmap.blt(8,5,ico,ico.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
+
+  end
+
+  def draw_misc(data,sprite,on)
+
+    ico = $cache.icon(data[1])
+    
+    sprite.bitmap.blt(8,5,ico,ico.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,data[0],0)
 
   end
 
@@ -162,7 +217,7 @@ class List
   		else
   		  refresh
       end
-      @change.call(@current.text) if !@change.nil?
+      @change.call(current) if !@change.nil?
   	end
 
   	if $keyboard.press?(VK_UP) #&& @dynamo.done?
@@ -180,7 +235,7 @@ class List
   		else
   		  refresh
       end
-      @change.call(@current.text) if !@change.nil?
+      @change.call(current) if !@change.nil?
   	end
 
     pos = $mouse.position
@@ -200,13 +255,13 @@ class List
 
     # Selection
     if $input.action?
-      @select.call(@current.text) if !@select.nil?
+      @select.call(current) if !@select.nil?
     end
 
     # Cancel
     if $input.cancel?
       log_info("TRYIT")
-      @cancel.call(@current.text) if !@cancel.nil?
+      @cancel.call(current) if !@cancel.nil?
     end
 
   end

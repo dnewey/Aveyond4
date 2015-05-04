@@ -13,6 +13,8 @@ class Game_Event < Game_Character
 
   attr_reader :above
   attr_reader :below
+
+  attr_reader :page_idx
       
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -35,6 +37,9 @@ class Game_Event < Game_Character
 
     @width = 1
     @height = 1
+
+    @page = nil
+    @page_idx = -1
 
     # Name breakdown
     name = @event.name
@@ -132,17 +137,33 @@ class Game_Event < Game_Character
   def start  
     return if @erased || @deleted || @disabled
     return if !@list || @list.size < 1
+    refresh
     @starting = true    
+
+  end
+
+  def stop
+
+    log_sys("STATEENABLEING")
+
+    # Enable the second state if there is one
+    state(@id,"second_#{@page_idx}") if !is_second?(@page)
+
   end
 
   def find_page
     return nil if @erased || @deleted
-    @pages.reverse.find { |page| 
-      conditions_met?(page) 
-    } 
+    page = @pages.count-1
+    while page >= 0
+      return page if conditions_met?(page)
+      page -= 1
+    end
   end
 
-  def conditions_met?(page)
+  def conditions_met?(idx)
+        #return false if page == 0
+
+        page = @pages[idx]
       
         # DANHAX - check super conditions
         page.list.each{ |line|
@@ -151,7 +172,7 @@ class Game_Event < Game_Character
             comment = line.parameters[0]
             if comment[0] == '?'[0]
               data = comment.split(' ')
-              if !condition_applies?(data)
+              if !condition_applies?(data,idx)
                 return false
               end
             end
@@ -162,10 +183,16 @@ class Game_Event < Game_Character
   end
 
   # Can also be called by script
-  def condition_applies?(cond)
+  def condition_applies?(cond,idx)
       # cond is [code,data1.....]
 
     case cond[0]
+
+      # Second
+      when '?second'
+        return false if !conditions_met?(idx-1)
+        return false if !state?(@id,"second_#{idx-1}")
+       
 
       # Flag
       when '?flag'
@@ -185,13 +212,15 @@ class Game_Event < Game_Character
 
       # Active Quest
       when '?active'
-        return false if !$progress.quest?(cond[1])
+        return false if !$progress.active?(cond[1])
       when '?inactive'
-        return false if $progress.quest?(cond[1])
+        return false if $progress.active?(cond[1])
       when '?complete'
         return false if !$progress.complete?(cond[1])
       when '?incomplete'
         return false if $progress.complete?(cond[1])
+      when '?quest'
+        return false if !$progress.quest?(cond[1])
 
       # Party member check
       when '?boyle', '?boy'
@@ -224,15 +253,62 @@ class Game_Event < Game_Character
 
   end
 
+  def label_applies?(label)
+
+    case label
+      
+      when '@first'
+        return false if state?(me,"second_#{this.page_idx}")
+      when '@second'
+        return false if !state?(me,"second_#{this.page_idx}")
+
+      when '@boy'
+        return false if $party.leader != 'boy'      
+      when '@ing'
+        return false if $party.leader != 'ing'
+      when '@mys'
+        return false if $party.leader != 'mys'
+      when '@rob'
+        return false if $party.leader != 'rob'
+      when '@hib'
+        return false if $party.leader != 'hib'
+      when '@row'
+        return false if $party.leader != 'row'
+      when '@phy'
+        return false if $party.leader != 'phy'
+
+    end
+
+    return true
+
+  end
+
   #--------------------------------------------------------------------------
   # * Refresh
   #--------------------------------------------------------------------------
   def refresh
-    new_page = find_page
+    @page_idx = find_page
+    new_page = @pages[@page_idx]
     setup_page(new_page) if new_page != @page
   end
 
+  def is_second?(page)
+
+    # DANHAX - check super conditions
+    page.list.each{ |line|
   
+      if line.code == 108
+        comment = line.parameters[0]
+        if comment[0] == '?'[0]
+          data = comment.split(' ')
+          return true if data[0] == '?second'
+        end
+      end        
+    }  
+
+    return false
+
+  end  
   
   def setup_page(new_page)
 

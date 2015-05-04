@@ -1,6 +1,8 @@
 
 class SpriteGroup
 
+	attr_reader :sprites
+
 	def initialize
 		@sprites = [] # [spr,ox,oy] -- maybe add opacity offset
 		@opacity = 255

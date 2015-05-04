@@ -9,7 +9,6 @@ class Label < Sprite
   attr_accessor :font 
   attr_accessor :fixed_width
   attr_accessor :padding
-  attr_accessor :indent
     
   #--------------------------------------------------------------------------
   # * Init
@@ -23,14 +22,13 @@ class Label < Sprite
 
     @align = 0
 
+    @icon = nil
+
     @padding = 5
-    @indent = 0
 
     # If there is a width, don't auto size width
     @fixed_width = 0
 
-    @height = 0
-    
   end
 
   def update
@@ -64,13 +62,15 @@ class Label < Sprite
       end
     else
       size = $fonts.size(@text,@font)
-      size.width += @padding*2+@indent
+      size.width += @padding*2
       size.height += @padding*2
       self.bitmap = Bitmap.new(size.width,size.height)
     end
 
+    self.bitmap.font = @font
+
     # Draw the text
-    x = @padding+@indent
+    x = @padding
     y = @padding
     w = self.bitmap.width-@padding*2
     h = self.bitmap.height-@padding*2

@@ -146,6 +146,11 @@ class Game_Map
     @cam_snap = true
   end
 
+  def refresh
+    @events.values.each{ |e| e.refresh }
+      @need_refresh = false
+    end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
