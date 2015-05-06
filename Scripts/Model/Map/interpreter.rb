@@ -125,6 +125,7 @@ class Interpreter
 
         # If not auto run
         if e.trigger < 3
+          
           e.clear_starting
           e.lock          
         end
@@ -248,6 +249,30 @@ class Interpreter
     # Make event command parameters available for reference via @parameters
     @parameters = @list[@index].parameters
 
+    # Check if this is a label marker
+    # If it is check if applies, if so keep going,
+    # Otherwise skip to next label
+    if @list[@index].code == 108 && @parameters[0].include?('@')
+
+      # Keep going until a label passes or end of events
+      while true
+
+        # No more commands, end it
+        if @index >= @list.size - 1
+          command_end
+          return true
+        end
+
+        if @list[@index].code == 108
+          break if this.label_applies?(@list[@index].parameters[0])
+        end
+
+        @index += 1
+
+      end
+
+    end
+
     # Branch by command code
     return true if @list[@index].code == 108
     return true if @list[@index].code == 509
@@ -265,6 +290,9 @@ class Interpreter
       # Unlock event
       $map.events[@event_id].unlock
     end
+
+    # Tell the even that it is stopping so it can mark second
+    this.stop 
   end
 
   #--------------------------------------------------------------------------
@@ -733,6 +761,8 @@ class Interpreter
     
     # Evaluation
     result = eval(script)
+
+    return true
 
   rescue Exception => e
 

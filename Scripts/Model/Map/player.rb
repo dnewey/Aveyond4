@@ -28,6 +28,10 @@ class Game_Player < Game_Character
     @xfer_data = [map,target]
   end
 
+  def name
+    return "Player"
+  end
+
   #--------------------------------------------------------------------------
   # * Passable Determinants
   #--------------------------------------------------------------------------

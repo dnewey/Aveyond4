@@ -11,6 +11,7 @@ class Mnu_Items
 		@closed = false
 
 		@title = Page_Title.new(vp)
+		@title.change('inventory')
 
 		@tabs = nil
 
@@ -19,11 +20,20 @@ class Mnu_Items
 		@menu.list.cancel = Proc.new{ |option| self.cancel(option) }
 		@menu.list.change = Proc.new{ |option| self.change(option) }
 
-		#@menu.list.select = Proc.new{}
+		data = []
+		data.push('covey')
+		data.push('covey')
+		data.push('covey')
+
+		@menu.list.setup(data)
+
 
 		@info = Info_Box.new(vp)
 
 		@port = Port_Full.new(vp)
+
+		@item_box = Item_Box.new(vp)
+		@item_box.center(462,130)
 
 	end
 
@@ -54,6 +64,8 @@ class Mnu_Items
 
 	def change(option)
 		@info.title.text = option
+		@item_box.item(option)
+		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 	end
 
 	def select(option)	

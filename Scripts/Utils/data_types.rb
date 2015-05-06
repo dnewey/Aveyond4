@@ -76,4 +76,10 @@ end
 
 class QuestData
 	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	#attr_reader :category
+	#attr_reader :icon
+	#attr_reader :price
+	#attr_reader :action
 end

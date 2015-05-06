@@ -6,17 +6,17 @@ class Info_Box < SpriteGroup
 	def initialize(vp)
 		super()		
 
-		@window = Box.new(vp,300,96)
+		@window = Box.new(vp,300,60)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.wallpaper = $cache.menu_wallpaper("diamonds")
     	add(@window)
 
     	@title = Label.new(vp)
     	@title.fixed_width = 250
-    	@title.text = "Tester Name"
-    	add(@title,10,10)
+    	@title.text = "Active Quests:"
+    	add(@title,10,13)
     	
-    	move(10,375)
+    	move(10,410)
 
 	end
 

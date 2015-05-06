@@ -27,7 +27,7 @@ class Progress
 		return @quests.include?(q)
 	end
 
-	def quest_done?(q)
+	def quest_complete?(q)
 		return @complete.include?(q)
 	end
 

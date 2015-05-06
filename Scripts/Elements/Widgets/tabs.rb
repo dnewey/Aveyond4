@@ -19,16 +19,18 @@ class Tabs < Sprite
   	#@parent = nil
     @names = []
   	@gfx = []
+    @gfx_on = []
 
     @ranges = []
 
-  	@tab_idx = 0
+  	@idx = 0
 
   end
 
-  def push(name,gfx)
+  def push(name)
     @names.push(name)
-    @gfx.push($cache.menu(gfx))
+    @gfx.push($cache.menu_tab(name))
+    @gfx_on.push($cache.menu_tab(name+"-on"))
     refresh
   end
 
@@ -46,9 +48,13 @@ class Tabs < Sprite
 
     # Draw the tabs
     cx = 0
+    idx = 0
     @gfx.each{ |b|
-      self.bitmap.blt(cx,0,b,b.rect)
+      src = b
+      src = @gfx_on[idx] if idx == @idx
+      self.bitmap.blt(cx,0,src,src.rect)
       cx += b.width + SPACING
+      idx += 1
     }
 
   end
@@ -56,12 +62,12 @@ class Tabs < Sprite
   def update
 
   	# Check inputs and that
-  	if $keyboard.press?(VK_RIGHT)
+  	if $input.right?
       @idx += 1
       refresh      
   	end
 
-  	if $keyboard.press?(VK_LEFT) #&& @dynamo.done?
+  	if $input.left? #&& @dynamo.done?
       @idx -= 1
       refresh  
   	end
