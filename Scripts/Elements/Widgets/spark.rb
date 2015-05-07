@@ -4,7 +4,7 @@ class Spark < Sprite
 	def initialize(fx,vp)
 		super(vp)
 
-		self.bitmap = $cache.menu("Sparks/#{fx}")
+		self.bitmap = $cache.animation(fx)
 
 		@total_frames = fx.split(".")[1].to_i
 		@total_frames -= 1

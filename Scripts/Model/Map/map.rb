@@ -38,7 +38,7 @@ class Game_Map
     @cam_xy = [0,0]
     @cam_snap = false
     @cam_ox = 0
-    @cam_oy = 0
+    @cam_oy = 0#-16
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))

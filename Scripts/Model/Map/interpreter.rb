@@ -378,7 +378,11 @@ class Interpreter
       end
     end
 
-    $scene.hud.message.start_vn(message)
+    $scene.hud.message.start(message)
+
+    # If vn mode
+    
+    #$scene.hud.message.start_vn(message)
     
     # Return mouse to default cursor
     #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)

@@ -1,6 +1,9 @@
 
 class Box 
 
+	attr_accessor :name
+	attr_accessor :window
+
 	def initialize(vp,w=100,h=100)
 
 		@wallpaper = Sprite.new(vp)
@@ -12,9 +15,13 @@ class Box
 		@width = w
 		@height = h
 
-		@alpha = 230		
+		@alpha = 210#230		
 
-		# Position
+		# Keep a hold of it
+		@x = 0
+		@y = 0
+
+		# Wallapper Position
 		@px, @py = 0.0, 0.0
 
 		# Display position, integer
@@ -63,13 +70,23 @@ class Box
 	end
 
 	def x=(v)
+		@x = v
 		@wallpaper.x = v+4
 		@window.x = v
 	end
 
+	def x
+		return @x
+	end
+
 	def y=(v)
+		@y = v
 		@wallpaper.y = v+4
 		@window.y = v
+	end
+
+	def y
+		return @y
 	end
 
 	def move(x,y)

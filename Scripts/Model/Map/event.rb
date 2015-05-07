@@ -143,6 +143,8 @@ class Game_Event < Game_Character
   end
 
   def stop
+
+    $player.looklike($party.leader)
     
     # Enable the second state if there is one
     state(@id,"second_#{@page_idx}") if !is_second?(@page)

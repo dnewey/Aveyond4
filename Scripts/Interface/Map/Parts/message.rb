@@ -9,6 +9,8 @@ class Ui_Message
   MAX_WIDTH = 350
   TAB_WIDTH = 35
 
+  VN_WIDTH = 520
+
   MIN_HEIGHT_FACE = 80
 
   SPACING = 7
@@ -36,6 +38,7 @@ class Ui_Message
     @text = ""
 
     @scratch = Bitmap.new(400,50)
+    @scratch.font = $fonts.message
 
     @lines = []
 
@@ -59,6 +62,8 @@ class Ui_Message
 
     @mode = :speaker # speaker, system or vn
     @speaker = nil
+
+    @vn_port = Sprite.new(vp)
 
     @sprites = SpriteGroup.new
 
@@ -97,8 +102,8 @@ class Ui_Message
     @sprites.add(@textbox)
     @sprites.add(@lastchar)
 
-    @sprites.add(@namebox)
-    @sprites.add(@nametext)
+    @sprites.add(@namebox,20,-@namebox.height)
+    @sprites.add(@nametext,40,-@namebox.height+5)
 
     #@sprites.add(@next)
     @sprites.add(@face)
@@ -118,7 +123,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def update
 
-    if @mode == :speaker
+    if @mode == :message
 
       @speaker = plr if !@speaker
 
@@ -138,15 +143,10 @@ class Ui_Message
         y = 46
         h = true
       end
-      @tail.hide if h == true
-      @tail.show if h == false
+      #@tail.hide if h == true
+      @tail.show #if h == false
 
       @sprites.move(x,y)
-
-    elsif @mode == :vn
-
-      # put at bottom
-      @sprites.move(40,320)
 
     end
 
@@ -200,204 +200,139 @@ class Ui_Message
     # end
 
   end
-  
+
   #--------------------------------------------------------------------------
   # Show Convo
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
-    @mode = :speaker
+    @mode = :message
 
-    @scratch.font = $fonts.message
+    # Reset
+    @face.bitmap = nil
+    #@vn_port.bitmap = nil
+    @vn_port.do(to("opacity",0,-11))
+    @speaker = nil
+    @line_idx = 0
+    @word_idx = -1
+    @cx = PADDING_X
+    @cy = PADDING_Y
 
-    # Clear out the previous word
-    @word = nil
-
+    return log_error "Must specify speaker" if !text.include?(':')
     text_data = text.split(":")
 
-    # Find speaker name, use to get face / event
-    if text_data.count > 1
-      speaker = text_data[0]
-      content = text_data[1]
-    else
-      speaker = ""
-      content = text_data[0]
+    # Read data to get name and text
+    speaker = text_data[0]
+    @lines = split_text(text_data[1]) 
+
+    # Figure things out from speaker
+    speaker = this.name if speaker == 'this'
+    name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
+
+
+    # Check the mode
+    if speaker.include?("vn-")
+      speaker = speaker.sub("vn-",'')
+      name = name.sub("vn-",'')
+      @mode = :vn
+
+      # Set vn face
+      @vn_port.bitmap = $cache.face_vn(speaker)
+      @vn_port.x = ($game.width - @vn_port.width)/2
+      @vn_port.y = $game.height - @vn_port.height
+      @vn_port.opacity = 0
+      @vn_port.do(go("opacity",255,400,:quad_in_out))
+      speaker = nil
+
     end
 
-    # Find the speaker event
-    @speaker = plr if speaker == 'boy'
-    @speaker = gev(7) if speaker == 'hib'
-
-    # TODO - add actor name to this check
-    # Get face if exists
-    if $data.actors.keys.include?(speaker[0..2])
-      @face.bitmap = $cache.menu_face(speaker)
-    else
-      @face.bitmap = nil
+    # System message
+    if speaker == 'sys'
+      speaker = nil
+      name = ''
+      @mode = :sys
+      @tail.hide
     end
 
-    @nametext.bitmap.clear
-    @namebox.bitmap.clear
-
-    if speaker != ""
-      speaker2 = "Boyle" if speaker == 'boy'
-      speaker2 = "Hi'beru" if speaker == 'hib'
-      size = $fonts.size(speaker2,@nametext.bitmap.font)
-      @namebox.bitmap = Bitmap.new(size.width+40,40)
-      @namebox.bitmap.hskin($cache.menu("Common/namebox"))
-      @nametext.bitmap.draw_gtext(0,0,220,35,speaker2,1)
+    
+    # If in party, show as player and change player graphic
+    if $data.actors.has_key?(speaker) && @mode == :message
+      @speaker = $player
+      $player.looklike(speaker)
+    elsif speaker != nil
+      @speaker = gev(speaker)
     end
 
-    # Prepare the words to be written
-    @lines = split_text(content)    
+    # Get face and name of player characters
+    if $data.actors.has_key?(name)
+      @face.bitmap = $cache.face(name) if @mode == :message
+      name = $data.actors[name].name
+    end
 
-    # Now of the height? How many lines are there?
-    @width = max_width
-    @height = @lines.count * (LINE_HEIGHT)
+    build_namebox(name)
 
-    @height = MIN_HEIGHT_FACE if @face.bitmap
+       
 
-    # Add padding
-    @width += PADDING_X * 2
-    @height += PADDING_Y * 2
+    # Textbox size
+    @width = max_width + PADDING_X * 2
+    @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
 
+    # Position the face
     if @face.bitmap
       @width += @face.width 
+      @height = MIN_HEIGHT_FACE  + PADDING_Y * 2
       fx = -10 + max_width + PADDING_X + PADDING_X
       fy = 7 + @height - @face.height - PADDING_Y
       @sprites.change(@face,fx,fy)
     end
 
+    if @mode == :vn
+      @width = VN_WIDTH
+      @height = (3 * LINE_HEIGHT) + PADDING_Y * 2
+    end
+
     # Prepare the sprites  
     @box.resize(@width,@height)
-
-    #@textbox.move(@box.x,@box.y)
     @textbox.bitmap = Bitmap.new(@width,@height)
-
-    # Can this be cut?
     @text_bmp = Bitmap.new(@width,@height)
-
-    @scratch.font = $fonts.message
+    
     @text_bmp.font = $fonts.message
     @textbox.bitmap.font = $fonts.message
 
-    # COMBINE FONT AND SIZE
+    # Point tale x at speaker and y under box
+    # Would need to be put in update
     @sprites.change(@tail,@width/2-2,@height)
     #@sprites.change(@next,@width/2,@height-20)
-
-    @sprites.change(@namebox,20,-@namebox.height)
-    @sprites.change(@nametext,40,-@namebox.height+5)
-
-
 
     @sprites.do(go("opacity",255,500,:quad_in_out))
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
-    @line_idx = 0
-    @word_idx = -1
-
-    @cx = PADDING_X
-    @cy = PADDING_Y
-
-    # Start text
+    # Start writing    
     @state = :texting
 
+    # Position for system messages
+    if @mode == :vn
+      @sprites.move(($game.width-@width)/2,320)
+    end
+
+    if @mode == :sys
+      @sprites.move(($game.width-@width)/2,220)
+    end
         
   end
 
-  # **************************************************
+  def build_namebox(name)
 
-  # VN MODE
+      # Create the namebox
+      @nametext.bitmap.clear
+      @namebox.bitmap.clear
 
-  # **************************************************
+      return if name == ''
 
-
-  def start_vn(text)
-
-    # VN MODE!
-    @mode = :vn
-    @tail.hide
-
-    @scratch.font = $fonts.message
-
-    # Clear out the previous word
-    @word = nil
-
-    text_data = text.split(":")
-
-    # Find speaker name, use to get face / event
-    if text_data.count > 1
-      speaker = text_data[0]
-      content = text_data[1]
-    else
-      speaker = ""
-      content = text_data[0]
-    end
-
-    # TODO - add actor name to this check
-    # Get face if exists
-    @face.bitmap = nil
-
-
-    @nametext.bitmap.clear
-    @namebox.bitmap.clear
-
-    if speaker != ""
-      speaker2 = "Boyle" if speaker == 'boy'
-      speaker2 = "Hi'beru" if speaker == 'hib'
-      size = $fonts.size(speaker2,@nametext.bitmap.font)
+      size = $fonts.size(name,@nametext.bitmap.font)
       @namebox.bitmap = Bitmap.new(size.width+40,40)
       @namebox.bitmap.hskin($cache.menu("Common/namebox"))
-      @nametext.bitmap.draw_gtext(0,0,220,35,speaker2,1)
-    end
-
-    # Prepare the words to be written
-    @lines = split_text(content)    
-
-    # Now of the height? How many lines are there?
-    @width = 520#MAX_WIDTH
-    @height = 3 * LINE_HEIGHT
-
-    #@height = MIN_HEIGHT_FACE if @face.bitmap
-
-    # Add padding
-    @width += PADDING_X * 2
-    @height += PADDING_Y * 2
-
-    # Prepare the sprites  
-    @box.resize(@width,@height)
-
-    #@textbox.move(@box.x,@box.y)
-    @textbox.bitmap = Bitmap.new(@width,@height)
-
-    # Can this be cut?
-    @text_bmp = Bitmap.new(@width,@height)
-
-    @scratch.font = $fonts.message
-    @text_bmp.font = $fonts.message
-    @textbox.bitmap.font = $fonts.message
-
-    # COMBINE FONT AND SIZE
-    @sprites.change(@tail,@width/2-2,@height)
-    #@sprites.change(@next,@width/2,@height-20)
-
-    @sprites.change(@namebox,20,-@namebox.height)
-    @sprites.change(@nametext,40,-@namebox.height+5)
-
-
-
-    @sprites.do(go("opacity",255,500,:quad_in_out))
-    #@sprites.do(go("y",-25,500,:quad_in_out))
-
-    @line_idx = 0
-    @word_idx = -1
-
-    @cx = PADDING_X
-    @cy = PADDING_Y
-
-    # Start text
-    @state = :texting
-
+      @nametext.bitmap.draw_gtext(0,0,220,35,name,1)
   end
 
   #--------------------------------------------------------------------------

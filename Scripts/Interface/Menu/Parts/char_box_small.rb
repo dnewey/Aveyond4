@@ -2,25 +2,26 @@
 
 class Char_Box_Small < SpriteGroup
 
+	attr_accessor :box
+
 	def initialize(vp)
 
 		super()
 
-		@window = Box.new(vp,130,84)
-		@window.skin = $cache.menu_common("skin")
-		@window.wallpaper = $cache.menu_wallpaper("portback")
-		add(@window)
+		@box = Box.new(vp,132,87)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("portback")
+		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.menu_face_small("boy")
-		add(@port,31,-15)
+		@port.bitmap = $cache.face_small(["boy",'hib','row'].sample)
+		add(@port,31,-10)
+		@port.z += 50
 
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient-small")
 		@gradient.opacity = 160
 		add(@gradient,5,30)
-
-
 
 		@xp_bar = Bar.new(vp,106,8)
 		add(@xp_bar,11,64)
@@ -33,9 +34,13 @@ class Char_Box_Small < SpriteGroup
 	end
 
 	def dispose
-		@window.dispose
+		@box.dispose
 		#@gradient.dispose
 		#@port.dispose
+	end
+
+	def update
+		@box.update
 	end
 
 	def setup(char)

@@ -57,6 +57,7 @@ class Ui_Bar < SpriteGroup
 		add(@help,cx,4)
 
 		move(0,480-32)
+
 	end
 
 	def update

@@ -7,6 +7,7 @@ class Label < Sprite
   # accessors
   attr_accessor :align 
   attr_accessor :font 
+  attr_accessor :shadow
   attr_accessor :fixed_width
   attr_accessor :padding
   attr_accessor :icon
@@ -18,6 +19,7 @@ class Label < Sprite
     super(vp)
 
     @font = $fonts.debug
+    @shadow = nil
 
     @text = "Label"
 
@@ -84,8 +86,15 @@ class Label < Sprite
     y = @padding
     w = self.bitmap.width-@padding*2
     h = self.bitmap.height-@padding*2
-    self.bitmap.draw_text(x,y,w,h,@text,@align)
     
+    if @shadow
+      self.bitmap.font = @shadow
+      self.bitmap.draw_text(x+1,y+1,w,h,@text,@align)
+    end
+
+    self.bitmap.font = @font
+    self.bitmap.draw_gtext(x,y,w,h,@text,@align)
+        
   end
   
 end

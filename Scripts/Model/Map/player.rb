@@ -12,8 +12,7 @@ class Game_Player < Game_Character
 
   def initialize
     super
-    @character_name = "boyle"
-
+    looklike("boy")
     @transferring = false
     @xfer_data = nil
   end
@@ -30,6 +29,11 @@ class Game_Player < Game_Character
 
   def name
     return "Player"
+  end
+
+  def looklike(char)
+    log_scr("CHANGEIT")
+    self.character_name = "Player/#{char}"
   end
 
   #--------------------------------------------------------------------------

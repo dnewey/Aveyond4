@@ -4,7 +4,7 @@ class FontManager
 	attr_reader :debug, :debug_min, :debug_ttl
 	attr_reader :message, :message_shadow, :namebox
 
-	attr_reader :list
+	attr_reader :list, :list_shadow
 
 	attr_reader :pop_ttl, :pop_text, :pop_type
 
@@ -37,6 +37,11 @@ class FontManager
     	@list.name = "Verdana"
     	@list.size = 20 #was 26
     	@list.color = Color.new(245,223,200)
+
+    	@list_shadow = Font.new
+    	@list_shadow.name = "Verdana"
+    	@list_shadow.size = 20 #was 26
+    	@list_shadow.color = Color.new(0,0,0,90)
 
 
 		# Message box

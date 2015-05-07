@@ -27,7 +27,7 @@ class Scene_Menu
     @menu = Mnu_Main.new(@vp)
     @sub = nil
 
-    Graphics.transition(20,'Graphics/System/trans')     
+    Graphics.transition(20,'Graphics/Transitions/trans')     
 
   end
   
