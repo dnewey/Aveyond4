@@ -32,6 +32,10 @@ class SpriteGroup
 		self.y = ny
 	end
 
+	def remove
+		move(@x,@y)
+	end
+
 	def x=(v)
 		@x = v
 		@sprites.each{ |s| s[0].x = v + s[1] }

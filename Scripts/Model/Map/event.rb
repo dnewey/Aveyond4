@@ -143,9 +143,7 @@ class Game_Event < Game_Character
   end
 
   def stop
-
-    log_sys("STATEENABLEING")
-
+    
     # Enable the second state if there is one
     state(@id,"second_#{@page_idx}") if !is_second?(@page)
 
@@ -200,15 +198,15 @@ class Game_Event < Game_Character
               
       # Progress
       when '?before'
-        return false if !$state.before?(cond[1])
+        return false if !$progress.before?(cond[1])
       when '?progress'
-        return false if !$state.progress?(cond[1])
+        return false if !$progress.progress?(cond[1])
       when '?after'
-        return false if !$state.beyond?(cond[1])
+        return false if !$progress.beyond?(cond[1])
 
       # States
       when '?state'
-
+        return false if !$state.state?(me,cond[1])
 
       # Active Quest
       when '?active'

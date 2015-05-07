@@ -37,6 +37,10 @@ class Scene_Battle
 
     @map = Game_Map.new
     @map.setup($battle.map)
+    #$map = @map 
+    # Could put the scrolling into battle in with this
+    # Char screenx comes from this, perhaps $scene.map
+
 
     @player = Game_Player.new
     
@@ -81,7 +85,8 @@ class Scene_Battle
       end
     }
 
-
+    # TESTING THE SPARKS
+    @sparks = []
 
     # Poppers
     @poppers = []
@@ -104,11 +109,39 @@ class Scene_Battle
     @wait_frames = w
   end
 
+
+  def add_spark(x,y)
+
+    # Spawn spark
+    #sprk = Spark.new("click.20",@vp_main)
+    sprk = Spark.new("redstar.24",@vp_pops)
+
+    #x = @sprites.x + @cx+size.width
+    #y = @sprites.y + @cy
+
+    dx = -@map.display_x/4
+    dy = -@map.display_y/4
+    sprk.center(x+3-dx,y+5-dy-32)
+    #sprk.blend_type = 1
+    @sparks.push(sprk)
+
+
+  end
+
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
 
   def update
+
+        @sparks.delete_if{ |s| s.done? }
+
+    # Update the sparks
+    @sparks.each{ |s| 
+      s.ox = @map.display_x/4
+      s.oy = @map.display_y/4
+      s.update 
+    }
 
     @hud.update
     @map.update    

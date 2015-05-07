@@ -2,7 +2,7 @@
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
-	attr_reader :message, :namebox
+	attr_reader :message, :message_shadow, :namebox
 
 	attr_reader :list
 
@@ -43,16 +43,20 @@ class FontManager
 
 		@message = Font.new
 	    @message.name = "Georgia"
-	    @message.size = 24
+	    @message.size = 24 #30 good for big text
+	    #@message.gradient = true
 	    @message.color = Color.new(245,223,200)
+
+	    @message_shadow = Font.new
+	    @message_shadow.name = "Georgia"
+	    @message_shadow.size = 24
+	    @message_shadow.color = Color.new(0,0,0,90)
 
 	    @namebox = Font.new
 	    @namebox.name = "Bitter"
-	    @namebox.size = 28
-	    @namebox.bold = true
+	    @namebox.size = 30
+	    @namebox.italic = true
 	    @namebox.gradient = true
-	    @namebox.gradient_color1 = Color.new(255,0,0)
-	    @namebox.gradient_color2 = Color.new(245,223,200)
 
 
 	    # Menus
@@ -64,7 +68,8 @@ class FontManager
 
 	    @pop_text = Font.new
 	    @pop_text.name = "Verdana"
-	    @pop_text.size = 19
+	    @pop_text.size = 18
+	    #@pop_text.italic = true
 	    @pop_text.color = Color.new(245,223,200)
 
 	   	@pop_type = Font.new

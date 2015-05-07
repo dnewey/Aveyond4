@@ -45,6 +45,10 @@ class Scene_Battle
   # Show anim on attacker
   def phase_main_attack
 
+    # x = @active_battler.ev.screen_x
+    # y = @active_battler.ev.screen_y
+    # add_spark(x,y)
+
     # Hit anim if there is one
     if @attack_round.anim_a == nil
       @phase = :main_defend # RENAME TO MAIN_ANIM_HIT
@@ -59,6 +63,12 @@ class Scene_Battle
   # Show anim on defender
   def phase_main_defend
 
+    @attack_results.each{ |result|
+      x = result.target.ev.screen_x
+      y = result.target.ev.screen_y
+      add_spark(x,y)
+    }
+
     # Hit anim if there is one
     if @attack_round.anim_b == nil
       @phase = :main_hit # RENAME TO MAIN_ANIM_HIT
@@ -67,7 +77,7 @@ class Scene_Battle
 
   	# Onto the next
   	@phase = :main_hit
-    wait(20)
+    #wait(20)
 
   end
 

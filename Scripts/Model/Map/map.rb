@@ -140,6 +140,8 @@ class Game_Map
     @cam_xy = [x,y]
     @cam_target = nil
     @cam_snap = false
+
+    log_info("CAMXY: #{x}#{y}")
   end
 
   def camera_snap
@@ -168,37 +170,35 @@ class Game_Map
     end
 
     # Camera update
-    @cam_target = $player
+    #@cam_target = $player
 
     # Camera update, maybe split to camera class
+
     if @cam_target != nil
-
-      if @cam_target != nil
-        @target_x = @cam_target.real_x- (128 * 9.5)
-        @target_y = @cam_target.real_y- (128 * 7)
-      else
-        @target_x = @cam_xy[0] * 128
-        @target_y = @cam_xy[1] * 128
-      end
-
-      if @target_x != @display_x
-        @display_x += (@target_x-@display_x) * 0.15
-      end
-
-      if @target_y != @display_y
-        @display_y += (@target_y-@display_y) * 0.15
-      end
-
-      if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
-        @cam_snap = true
-      end
-
-      if @cam_snap
-        @display_x = @target_x
-        @display_y = @target_y
-      end
-
+      @target_x = @cam_target.real_x- (128 * 9.5)
+      @target_y = @cam_target.real_y- (128 * 7)
+    else
+      @target_x = @cam_xy[0] * 128
+      @target_y = @cam_xy[1] * 128
     end
+
+    if @target_x != @display_x
+      @display_x += (@target_x-@display_x) * 0.15
+    end
+
+    if @target_y != @display_y
+      @display_y += (@target_y-@display_y) * 0.15
+    end
+
+    if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
+      @cam_snap = true
+    end
+
+    if @cam_snap
+      @display_x = @target_x
+      @display_y = @target_y
+    end
+
 
     # Limit cam to screen
     @display_x = 0 if @display_x < 0

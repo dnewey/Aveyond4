@@ -9,5 +9,7 @@
 "misc/quit",
 "misc/settings",
 "misc/unknown",
+"stats/attack",
+"stats/restore",
 ""
 ]

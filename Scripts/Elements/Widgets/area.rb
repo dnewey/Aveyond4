@@ -55,7 +55,7 @@ class Area < Sprite
   		cx += w.width
   		if cx < @fixed_width
   			lines[-1] += word + ' '
-  			cx += w.width + @spacing
+  			cx += @spacing
   		else
   			lines.push(word + ' ')
   			cx = 0

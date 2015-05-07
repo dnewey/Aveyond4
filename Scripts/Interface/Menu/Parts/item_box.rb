@@ -14,6 +14,7 @@ class Item_Box < SpriteGroup
 
     	@title = Label.new(vp)
     	@title.fixed_width = 250
+    	@title.icon = $cache.icon("items/map")
     	@title.font = $fonts.pop_ttl
     	@title.text = "Active Quests:"
     	add(@title,16,10)
@@ -28,9 +29,17 @@ class Item_Box < SpriteGroup
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
     	@desc.text = "Missing Descriptor"
-    	add(@desc,16,40)
+    	add(@desc,16,42)
 
     	@stat_a = Label.new(vp)
+		@stat_a.fixed_width = 250
+    	@stat_a.icon = $cache.icon("stats/restore")
+    	@stat_a.font = $fonts.pop_text
+    	@stat_a.text = "Restores 10HP"
+    	add(@stat_a,36,70)
+
+
+
     	@stat_b = Label.new(vp)
     	@stat_c = Label.new(vp)
     	

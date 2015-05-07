@@ -27,6 +27,10 @@ class CacheManager
       load_bitmap("Graphics/Icons/", filename)
     end
 
+    def particle(filename)
+      load_bitmap("Graphics/Particles/", filename)
+    end
+
     def menu(filename)
       load_bitmap("Graphics/Menus/", filename)
     end

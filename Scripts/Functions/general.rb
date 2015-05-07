@@ -15,7 +15,7 @@ def fadeout
 end
 
 def fadein
-	$scene.overlay.do(to("opacity",0,7))
+	$scene.overlay.do(to("opacity",0,-7))
 end
 
 def fade(ev)

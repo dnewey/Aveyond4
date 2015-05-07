@@ -1,0 +1,24 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "frames"
+  },
+  {
+    "field": "delay"
+  },
+  {
+    "field": "fadeout"
+  },
+  {
+    "field": "behind"
+  },
+  {
+    // Avove below same
+    "field": "blend"
+  },
+  {
+    "field": "sound"
+  }
+]

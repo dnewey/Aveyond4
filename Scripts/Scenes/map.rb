@@ -30,7 +30,7 @@ class Scene_Map
     $player = @player
     @player.moveto($data.system.start_x, $data.system.start_y)
 
-   # @map.camera_to(@player)
+    @map.camera_to(@player)
 
     # Make tilemap
     #@panorama = Plane.new(@vp_main,-1000)
@@ -38,7 +38,7 @@ class Scene_Map
     @character_sprites = []  
 
     # weather in map data
-    @weather = nil
+    @weather = Weather.new(@vp_overlay)
 
     @overlay = Sprite.new(@vp_overlay)
     @overlay.bitmap = Bitmap.new($game.width,$game.height)
@@ -87,6 +87,8 @@ class Scene_Map
 
     @debug.bitmap.clear
 
+    @sparks.delete_if{ |s| s.done? }
+
     # Update the sparks
     @sparks.each{ |s| 
       s.ox = @map.display_x/4
@@ -132,21 +134,24 @@ class Scene_Map
       end
 
     end
+
+    @weather.update
     
   end
 
   def add_spark(x,y)
 
     # Spawn spark
-    sprk = Spark.new("magic",@vp_main)
-    
+    sprk = Spark.new("firework.30",@vp_main)
+    #sprk = Spark.new("pink.40",@vp_main)
+
     #x = @sprites.x + @cx+size.width
     #y = @sprites.y + @cy
 
     dx = -@map.display_x/4
     dy = -@map.display_y/4
-    sprk.center(x+3-dx,y+3-dy)
-    sprk.blend_type = 1
+    sprk.center(x+3-dx,y+5-dy)
+    #sprk.blend_type = 1
     @sparks.push(sprk)
 
   end

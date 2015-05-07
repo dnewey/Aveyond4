@@ -13,8 +13,9 @@ class Info_Box < SpriteGroup
 
     	@title = Label.new(vp)
     	@title.fixed_width = 250
+    	@title.icon = $cache.icon("items/map")
     	@title.text = "Active Quests:"
-    	add(@title,10,13)
+    	add(@title,12,13)
     	
     	move(10,410)
 

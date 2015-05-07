@@ -378,7 +378,7 @@ class Interpreter
       end
     end
 
-    $scene.hud.message.start(message)
+    $scene.hud.message.start_vn(message)
     
     # Return mouse to default cursor
     #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)

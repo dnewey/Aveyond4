@@ -9,6 +9,7 @@ class Label < Sprite
   attr_accessor :font 
   attr_accessor :fixed_width
   attr_accessor :padding
+  attr_accessor :icon
     
   #--------------------------------------------------------------------------
   # * Init
@@ -63,14 +64,23 @@ class Label < Sprite
     else
       size = $fonts.size(@text,@font)
       size.width += @padding*2
+      size.width += 32 if @icon
       size.height += @padding*2
       self.bitmap = Bitmap.new(size.width,size.height)
     end
 
     self.bitmap.font = @font
 
+    # Draw the icon
+    if @icon
+
+      self.bitmap.blt(@padding,(size.height-28)/2+2,@icon,@icon.rect)
+
+    end
+
     # Draw the text
     x = @padding
+    x += 32 if @icon
     y = @padding
     w = self.bitmap.width-@padding*2
     h = self.bitmap.height-@padding*2

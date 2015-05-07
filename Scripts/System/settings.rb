@@ -34,7 +34,7 @@ class SettingsManager
     # Debug options - keys 1-9
     @debug_skip_title = true
     @debug_draw_fps = true
-    @debug_draw_names = true
+    @debug_draw_names = false
     @debug_draw_sprites = false
         
     # Load from settings file real quick   
