@@ -1,4 +1,4 @@
-[k"°#==============================================================================
+[m"°#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -66,7 +66,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end":#==============================================================================
+end"Õ#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -100,10 +100,9 @@ class Sprite_Character < Sprite
       @character_name = @character.character_name
 
       self.bitmap = $cache.character(@character.character_name)
-      if @character == $player
-        self.bitmap = $cache.character("Player/boy")
-        
-      end
+
+
+
       @cw = bitmap.width / 4
       @ch = bitmap.height / 4
       self.ox = @cw / 2
@@ -198,7 +197,60 @@ class MapWrap < Tilemap
 end"A
 
 
-# Other things of this nature will reside within thine"T#==============================================================================
+# Other things of this nature will reside within thine"Í
+# Spawn and manage weather particles
+
+class Particle < Sprite
+
+  attr_accessor :mx, :my, :sx, :sy
+  
+end
+
+class Weather
+
+	def initialize(vp)
+
+		@stars = []
+	    (1..15).each{ |s|
+	      s = Particle.new(vp)
+	      s.bitmap = $cache.particle(['yellow','blue'].sample)
+	      @stars.push(s)
+	      s.sx = rand(640)
+	      s.sy = rand(480)
+	      s.mx = rand
+	      s.my = rand
+	      s.x = s.sx
+	      s.y = s.sy
+	      s.opacity = 70 + rand(100)
+	    }
+
+	end
+
+	def update
+
+		@stars.each{ |s|
+	      s.sx += s.mx * (0.5+rand)
+	      s.sy += s.my * (0.5+rand)
+	      s.x = s.sx
+	      s.y = s.sy
+	      
+	      if s.x > 660 || s.y > 500
+	        s.mx = rand
+	        s.my = rand
+	        if rand > 0.5
+	          s.sx = rand(480)
+	          s.sy = -100 + rand(50)
+	        else
+	          s.sx = -100 + rand(50)
+	          s.sy = rand(320)
+	        end
+	        s.opacity = 70 + rand(100)
+	      end		      
+		}
+
+	end
+
+end"J#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -255,7 +307,7 @@ class Area < Sprite
   		cx += w.width
   		if cx < @fixed_width
   			lines[-1] += word + ' '
-  			cx += w.width + @spacing
+  			cx += @spacing
   		else
   			lines.push(word + ' ')
   			cx = 0
@@ -339,8 +391,11 @@ class Bar < Sprite
 
 	end
 
-end"i
+end""	
 class Box 
+
+	attr_accessor :name
+	attr_accessor :window
 
 	def initialize(vp,w=100,h=100)
 
@@ -353,9 +408,13 @@ class Box
 		@width = w
 		@height = h
 
-		@alpha = 230		
+		@alpha = 210#230		
 
-		# Position
+		# Keep a hold of it
+		@x = 0
+		@y = 0
+
+		# Wallapper Position
 		@px, @py = 0.0, 0.0
 
 		# Display position, integer
@@ -404,13 +463,23 @@ class Box
 	end
 
 	def x=(v)
+		@x = v
 		@wallpaper.x = v+4
 		@window.x = v
 	end
 
+	def x
+		return @x
+	end
+
 	def y=(v)
+		@y = v
 		@wallpaper.y = v+4
 		@window.y = v
+	end
+
+	def y
+		return @y
 	end
 
 	def move(x,y)
@@ -569,7 +638,7 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end"«#==============================================================================
+end";	#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -578,8 +647,10 @@ class Label < Sprite
   # accessors
   attr_accessor :align 
   attr_accessor :font 
+  attr_accessor :shadow
   attr_accessor :fixed_width
   attr_accessor :padding
+  attr_accessor :icon
     
   #--------------------------------------------------------------------------
   # * Init
@@ -588,6 +659,7 @@ class Label < Sprite
     super(vp)
 
     @font = $fonts.debug
+    @shadow = nil
 
     @text = "Label"
 
@@ -634,19 +706,35 @@ class Label < Sprite
     else
       size = $fonts.size(@text,@font)
       size.width += @padding*2
+      size.width += 32 if @icon
       size.height += @padding*2
       self.bitmap = Bitmap.new(size.width,size.height)
     end
 
     self.bitmap.font = @font
 
+    # Draw the icon
+    if @icon
+
+      self.bitmap.blt(@padding,(size.height-28)/2+2,@icon,@icon.rect)
+
+    end
+
     # Draw the text
     x = @padding
+    x += 32 if @icon
     y = @padding
     w = self.bitmap.width-@padding*2
     h = self.bitmap.height-@padding*2
-    self.bitmap.draw_text(x,y,w,h,@text,@align)
     
+    if @shadow
+      self.bitmap.font = @shadow
+      self.bitmap.draw_text(x+1,y+1,w,h,@text,@align)
+    end
+
+    self.bitmap.font = @font
+    self.bitmap.draw_gtext(x,y,w,h,@text,@align)
+        
   end
   
 end"#==============================================================================
@@ -985,20 +1073,29 @@ class List
 
   end
 
- end">
+ end"˜
 class Spark < Sprite
 
 	def initialize(fx,vp)
 		super(vp)
 
-		self.bitmap = $cache.menu("Sparks/#{fx}")
+		self.bitmap = $cache.animation(fx)
 
-		@frame = -1
+		@total_frames = fx.split(".")[1].to_i
+		@total_frames -= 1
+
+		@frame = 1
 
 		# No frame per row
 
-		@delay = 3
+		self.opacity = 25
+
+		@delay = 2
+
 		@next = 0
+
+		# Can fade out when done
+		@fade_out = true
 
 		update
 
@@ -1012,6 +1109,11 @@ class Spark < Sprite
 		return self.bitmap.width / 5
 	end
 
+	def done?
+		return false if @fade_out && self.opacity > 0
+		return @frame == @total_frames
+	end
+
 	def update
 
 		# Step counters
@@ -1021,8 +1123,14 @@ class Spark < Sprite
 
 			@frame += 1
 
+			@frame = @total_frames if @frame > @total_frames
+
+			self.opacity -= 15 if @total_frames == @frame
+
 			fx = @frame % 5 # frames_per_row
 			fy = @frame / 5
+
+
 
 			# Refresh
 			
@@ -1033,7 +1141,7 @@ class Spark < Sprite
 
 	end
 
-end"a
+end"…
 class SpriteGroup
 
 	attr_reader :sprites
@@ -1065,6 +1173,10 @@ class SpriteGroup
 	def move(nx,ny)
 		self.x = nx
 		self.y = ny
+	end
+
+	def remove
+		move(@x,@y)
 	end
 
 	def x=(v)
@@ -1312,7 +1424,7 @@ def hide(e)
 end
 def unhide(e)
 	gev(e).opacity = 255
-end"½#==============================================================================
+end"¾#==============================================================================
 # ** General Functions
 #==============================================================================
 
@@ -1329,7 +1441,7 @@ def fadeout
 end
 
 def fadein
-	$scene.overlay.do(to("opacity",0,7))
+	$scene.overlay.do(to("opacity",0,-7))
 end
 
 def fade(ev)
@@ -1401,7 +1513,14 @@ def item?(id,number=1)
 
 end
 
-"ÿ#==============================================================================
+"-
+def vnmode
+
+end
+
+def vnexit
+
+end"ÿ#==============================================================================
 # ** Progress Functions
 #==============================================================================
 
@@ -2129,7 +2248,7 @@ class Ui_Screen
     	return @message.busy? || @item
     end
 
-end"ç#==============================================================================
+end"é#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -2188,6 +2307,7 @@ class Ui_Bar < SpriteGroup
 		add(@help,cx,4)
 
 		move(0,480-32)
+
 	end
 
 	def update
@@ -2204,7 +2324,7 @@ class Ui_Info
 
 	end
 
-end"96#==============================================================================
+end"Ù>#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -2215,11 +2335,13 @@ class Ui_Message
   MAX_WIDTH = 350
   TAB_WIDTH = 35
 
-  MIN_HEIGHT_FACE = 90
+  VN_WIDTH = 520
+
+  MIN_HEIGHT_FACE = 80
 
   SPACING = 7
   LINE_HEIGHT = 27
-  PADDING_X = 22
+  PADDING_X = 21
   PADDING_Y = 16
 
   SPEED_1 = 0
@@ -2241,12 +2363,8 @@ class Ui_Message
     # Hold on to the convo
     @text = ""
 
-    # This line data
-    @name = ''
-
-
-
     @scratch = Bitmap.new(400,50)
+    @scratch.font = $fonts.message
 
     @lines = []
 
@@ -2254,7 +2372,7 @@ class Ui_Message
     @color = nil
 
     # Text display
-    @text_delay = SPEED_3
+    @text_delay = SPEED_4
     @wait_frames = 0
     @next_char = 0
 
@@ -2268,7 +2386,10 @@ class Ui_Message
     @width = 0
     @height = 0
 
-    @speakr = nil
+    @mode = :speaker # speaker, system or vn
+    @speaker = nil
+
+    @vn_port = Sprite.new(vp)
 
     @sprites = SpriteGroup.new
 
@@ -2280,6 +2401,9 @@ class Ui_Message
     @textbox = Sprite.new(vp)
     @textbox.z += 50
 
+    @lastchar = Sprite.new(vp)
+    @lastchar.z += 50
+
     @namebox = Sprite.new(vp)
     @namebox.bitmap = Bitmap.new(220,40)
     @namebox.bitmap.hskin($cache.menu("Common/namebox"))
@@ -2289,8 +2413,8 @@ class Ui_Message
     @nametext.bitmap.font = $fonts.namebox
     @nametext.bitmap.draw_text(0,0,220,40,"texter")
 
-    @next = Sprite.new(vp)
-    @next.bitmap = $cache.menu("Common/next")
+    #@next = Sprite.new(vp)
+    #@next.bitmap = $cache.menu("Common/next")
     
     @face = Sprite.new(vp)
     @face.z += 10
@@ -2302,23 +2426,22 @@ class Ui_Message
     # Group system
     @sprites.add(@box)
     @sprites.add(@textbox)
-    @sprites.add(@namebox)
-    @sprites.add(@nametext)
-    @sprites.add(@next)
+    @sprites.add(@lastchar)
+
+    @sprites.add(@namebox,20,-@namebox.height)
+    @sprites.add(@nametext,40,-@namebox.height+5)
+
+    #@sprites.add(@next)
     @sprites.add(@face)
     @sprites.add(@tail)
 
     @sprites.opacity = 0
-
 
     @sparks = []
 
     # Draw to textbox
     @text_bmp = nil
 
-    # merge text_bmp into textbox, use a sprite for the final char
-    # could do better effects maybe and use tweens
-    
   end
   
   #--------------------------------------------------------------------------
@@ -2326,11 +2449,32 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def update
 
-    @speaker = plr
+    if @mode == :message
 
-    # Put over speaker
-    @sprites.x = @speaker.screen_x - @width/2 - 10
-    @sprites.y = @speaker.screen_y - @height - 70
+      @speaker = plr if !@speaker
+
+      # Put over speaker
+      x = @speaker.screen_x - @width/2 - 10
+      y = @speaker.screen_y - @height - 70
+
+      # Hiding the tail?
+      h = false
+
+      # LIMIT TO BE ON SCREEN
+      if x < 7
+        x = 7 
+        h = true
+      end
+      if y < 46
+        y = 46
+        h = true
+      end
+      #@tail.hide if h == true
+      @tail.show #if h == false
+
+      @sprites.move(x,y)
+
+    end
 
     @box.update
     @sparks.each{ |s| s.update }
@@ -2361,14 +2505,6 @@ class Ui_Message
         if @next_char <= 0 || $keyboard.state?(VK_ENTER)
           #log_err "DOING"
           update_message
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
-          update_message if $keyboard.state?(VK_ENTER) && @state == :texting
         end
         redraw
         
@@ -2390,99 +2526,139 @@ class Ui_Message
     # end
 
   end
-  
+
   #--------------------------------------------------------------------------
   # Show Convo
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
 
-    @scratch.font = $fonts.message
+    @mode = :message
 
-    # Clear out the previous word
-    @word = nil
+    # Reset
+    @face.bitmap = nil
+    #@vn_port.bitmap = nil
+    @vn_port.do(to("opacity",0,-11))
+    @speaker = nil
+    @line_idx = 0
+    @word_idx = -1
+    @cx = PADDING_X
+    @cy = PADDING_Y
 
+    return log_error "Must specify speaker" if !text.include?(':')
     text_data = text.split(":")
 
-    # Find speaker name, use to get face / event
-    if text_data.count > 1
-      speaker = text_data[0]
-      content = text_data[1]
-    else
-      speaker = ""
-      content = text_data[0]
+    # Read data to get name and text
+    speaker = text_data[0]
+    @lines = split_text(text_data[1]) 
+
+    # Figure things out from speaker
+    speaker = this.name if speaker == 'this'
+    name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
+
+
+    # Check the mode
+    if speaker.include?("vn-")
+      speaker = speaker.sub("vn-",'')
+      name = name.sub("vn-",'')
+      @mode = :vn
+
+      # Set vn face
+      @vn_port.bitmap = $cache.face_vn(speaker)
+      @vn_port.x = ($game.width - @vn_port.width)/2
+      @vn_port.y = $game.height - @vn_port.height
+      @vn_port.opacity = 0
+      @vn_port.do(go("opacity",255,400,:quad_in_out))
+      speaker = nil
+
     end
 
-    # TODO - add actor name to this check
-    # Get face if exists
-    if $data.actors.keys.include?(speaker[0..2])
-      @face.bitmap = $cache.menu_face(speaker)
-    else
-      @face.bitmap = nil
+    # System message
+    if speaker == 'sys'
+      speaker = nil
+      name = ''
+      @mode = :sys
+      @tail.hide
     end
 
-    @nametext.bitmap.clear
-    @namebox.bitmap.clear
-
-    if speaker != ""
-      @namebox.bitmap.hskin($cache.menu("Common/namebox"))
-      @nametext.bitmap.draw_text(0,0,220,40,speaker)
+    
+    # If in party, show as player and change player graphic
+    if $data.actors.has_key?(speaker) && @mode == :message
+      @speaker = $player
+      $player.looklike(speaker)
+    elsif speaker != nil
+      @speaker = gev(speaker)
     end
 
-    # Prepare the words to be written
-    @lines = split_text(content)    
+    # Get face and name of player characters
+    if $data.actors.has_key?(name)
+      @face.bitmap = $cache.face(name) if @mode == :message
+      name = $data.actors[name].name
+    end
 
-    # Now of the height? How many lines are there?
-    @width = max_width
-    @height = @lines.count * (LINE_HEIGHT)
+    build_namebox(name)
 
-    @height = MIN_HEIGHT_FACE if @face.bitmap
+       
 
-    # Add padding
-    @width += PADDING_X * 2
-    @height += PADDING_Y * 2
+    # Textbox size
+    @width = max_width + PADDING_X * 2
+    @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
 
+    # Position the face
     if @face.bitmap
       @width += @face.width 
+      @height = MIN_HEIGHT_FACE  + PADDING_Y * 2
       fx = -10 + max_width + PADDING_X + PADDING_X
       fy = 7 + @height - @face.height - PADDING_Y
       @sprites.change(@face,fx,fy)
     end
 
+    if @mode == :vn
+      @width = VN_WIDTH
+      @height = (3 * LINE_HEIGHT) + PADDING_Y * 2
+    end
+
     # Prepare the sprites  
     @box.resize(@width,@height)
-
-    #@textbox.move(@box.x,@box.y)
     @textbox.bitmap = Bitmap.new(@width,@height)
-
-    # Can this be cut?
     @text_bmp = Bitmap.new(@width,@height)
-
-    @scratch.font = $fonts.message
+    
     @text_bmp.font = $fonts.message
     @textbox.bitmap.font = $fonts.message
 
-    # COMBINE FONT AND SIZE
-    @sprites.change(@tail,@width/2,@height)
-    @sprites.change(@next,@width/2,@height-20)
-
-    @sprites.change(@namebox,20,-@namebox.height)
-    @sprites.change(@nametext,40,-@namebox.height+5)
-
-
+    # Point tale x at speaker and y under box
+    # Would need to be put in update
+    @sprites.change(@tail,@width/2-2,@height)
+    #@sprites.change(@next,@width/2,@height-20)
 
     @sprites.do(go("opacity",255,500,:quad_in_out))
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
-    @line_idx = 0
-    @word_idx = -1
-
-    @cx = PADDING_X
-    @cy = PADDING_Y
-
-    # Start text
+    # Start writing    
     @state = :texting
 
+    # Position for system messages
+    if @mode == :vn
+      @sprites.move(($game.width-@width)/2,320)
+    end
+
+    if @mode == :sys
+      @sprites.move(($game.width-@width)/2,220)
+    end
         
+  end
+
+  def build_namebox(name)
+
+      # Create the namebox
+      @nametext.bitmap.clear
+      @namebox.bitmap.clear
+
+      return if name == ''
+
+      size = $fonts.size(name,@nametext.bitmap.font)
+      @namebox.bitmap = Bitmap.new(size.width+40,40)
+      @namebox.bitmap.hskin($cache.menu("Common/namebox"))
+      @nametext.bitmap.draw_gtext(0,0,220,35,name,1)
   end
 
   #--------------------------------------------------------------------------
@@ -2504,6 +2680,21 @@ class Ui_Message
     
     # Wait before drawing another character
     @next_char = @text_delay
+
+    # Show the behind char anim
+        # Spawn spark
+    sprk = Spark.new("message.28",@vp)
+
+    txt = @word.delete('*^')[0..@char_idx-1]
+    size = @scratch.text_size(txt)
+
+    #return if size.width < 10
+    
+    x = @sprites.x + @cx+size.width
+    y = @sprites.y + @cy
+    sprk.center(x+4,y+16)
+    #sprk.blend_type = 1
+    @sparks.push(sprk)
     
     # AUTO PAUSE AFTER SENTENCE HERE
     #(@wait_frames = @text_delay * 5; @state = :waiting) if @word.empty? && @dodotpause && @wordlength > 1
@@ -2526,26 +2717,42 @@ class Ui_Message
 
     #txt = @word[0..@char_idx-1]
     txt = @word.delete('*^')[0..@char_idx-1]
+    txt2 = @word.delete('*^')[@char_idx..@char_idx]
+
     size = @scratch.text_size(txt)
 
-    @textbox.bitmap.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
+    # SHADOW HERE FOR THE WORD IN PROGRESS
+
+    @textbox.bitmap.draw_gtext(@cx,@cy,300,LINE_HEIGHT,txt)
+
     # Half draw the final
     return if @char_idx >= @word.length
 
     # Offset the y here to animate
     #r = rand(4)
     r = 0
-    @textbox.bitmap.draw_text(@cx+size.width,@cy+r,100,LINE_HEIGHT,@word.delete('*^').split('')[@char_idx])
+    op = 220 - @next_char * 50
+
+    @textbox.bitmap.font = $fonts.message_shadow
+    @textbox.bitmap.font.color.alpha = op
+    @textbox.bitmap.draw_text(@cx+r+size.width+2,@cy+r+2,100,LINE_HEIGHT,txt2)
+
+    @textbox.bitmap.font.color.alpha = 255
 
 
-    # Spawn spark
-    sprk = Spark.new("magic",@vp)
-    
-    x = @sprites.x + @cx+size.width
-    y = @sprites.y + @cy
-    sprk.center(x+6,y+16)
-    sprk.blend_type = 1
-    @sparks.push(sprk)
+    @textbox.bitmap.font = $fonts.message
+    @textbox.bitmap.font.color.alpha = op
+    @textbox.bitmap.draw_gtext(@cx+r+size.width,@cy+r,100,LINE_HEIGHT,txt2)
+
+    @textbox.bitmap.font.color.alpha = 255
+
+
+    # Maybe last char so this can redraw fast, maybe don't even need
+
+
+  end
+
+  def redraw_last
 
 
   end
@@ -2558,6 +2765,7 @@ class Ui_Message
     @word = nil
     if @line_idx >= @lines.count
       @state = :done
+      @box.skin = $cache.menu_common("skin-gold")
     else
       @word_idx = 0
       @cy += LINE_HEIGHT
@@ -2578,8 +2786,15 @@ class Ui_Message
 
       txt = @word.delete('*^')[0..@char_idx]
 
+      @text_bmp.font = $fonts.message_shadow
+      @text_bmp.font.bold = @word.include?('*')
+      @text_bmp.font.italic = @word.include?('^')
+      @text_bmp.draw_text(@cx+2,@cy+2,300,LINE_HEIGHT,txt)
 
-      @text_bmp.draw_text(@cx,@cy,300,LINE_HEIGHT,txt)
+      @text_bmp.font = $fonts.message
+      @text_bmp.font.bold = @word.include?('*')
+      @text_bmp.font.italic = @word.include?('^')
+      @text_bmp.draw_gtext(@cx,@cy,300,LINE_HEIGHT,txt)
 
       # Step cursor
       @cx += word_width(@word)
@@ -2672,6 +2887,7 @@ class Ui_Message
       @state = :closing
       @textbox.bitmap.clear
       @sprites.opacity = 0
+      @box.skin = $cache.menu_common("skin")
       #@sprites.do(go("opacity",-255,300,:quad_in_out))
     end
   end
@@ -2753,7 +2969,8 @@ class Ui_Message
   def clear() end
   def busy?() return @state != :idle end
 
-end"@
+end
+"@
 
 
 class Ui_Popper
@@ -2945,7 +3162,7 @@ class Mnu_Journal
 		$scene.close_sub
 	end
 
-end"Æ#==============================================================================
+end"˜#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -2955,87 +3172,94 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 		@vp = vp
 
-		# Character Boxes
-		# @char_boxes = []
-		#@char_boxes.push(CHARBOX.new)
+		@chars = []
 
-		@charbox = Char_Box_Large.new(vp)
-		@charbox.move(196,25)
+		# Active Characters
+		charbox = Char_Box_Large.new(vp)
+		charbox.box.name = "C.1"
+		charbox.move(200,15)
+		@chars.push(charbox)
 
-		@charbox2 = Char_Box_Large.new(vp)
-		@charbox2.move(416,25)
+		charbox = Char_Box_Large.new(vp)
+		charbox.box.name = "C.2"
+		charbox.move(420,15)
+		@chars.push(charbox)
 
-		@charbox3 = Char_Box_Large.new(vp)
-		@charbox3.move(196,201)
+		charbox = Char_Box_Large.new(vp)
+		charbox.box.name = "C.3"
+		charbox.move(200,198)
+		@chars.push(charbox)
 
-		@charbox4 = Char_Box_Large.new(vp)
-		@charbox4.move(416,201)
+		charbox = Char_Box_Large.new(vp)
+		charbox.box.name = "C.4"
+		charbox.move(420,198)
+		@chars.push(charbox)
 
-		@charbox5 = Char_Box_Small.new(vp)
-		@charbox5.move(196,376)
+		# Reserve Characters
+		charbox = Char_Box_Small.new(vp)
+		charbox.box.name = "C.5"
+		charbox.move(200,381)
+		@chars.push(charbox)
 
-		@charbox6 = Char_Box_Small.new(vp)
-		@charbox6.move(343,376)
+		charbox = Char_Box_Small.new(vp)
+		charbox.box.name = "C.6"
+		charbox.move(347,381)
+		@chars.push(charbox)
 
-		@charbox7 = Char_Box_Small.new(vp)
-		@charbox7.move(490,376)
+		charbox = Char_Box_Small.new(vp)
+		charbox.box.name = "C.7"
+		charbox.move(492,381)
+		@chars.push(charbox)
 
 
-		data = []
-		data.push('Items')
-		data.push('Journal')
-		data.push('Party')
-		data.push('Equip')
-		data.push('Skills')
-		data.push('Profiles')
-		data.push('Options')
-		data.push('Quit')
-		#data.push(['Load','items/map'])
-		#data.push(['Save','items/map'])
+		@data = ['Journal','Items','Equip','Skills',
+  	 		     'Party','Options','Quit','Load','Save']
 
-		@data = data
-
-		cy = 25
+		cy = 15
 
 		@buttons = []
 		@texts = []
 		@icons = []
 
-		data.each{ |item|
+		@data.each{ |item|
 
-			btn = Box.new(vp,168,50)
+			btn = Box.new(vp,170,45)
 	     	btn.skin = $cache.menu_common("skin-plain")
 	     	btn.wallpaper = $cache.menu_wallpaper("diamonds")
-	     	btn.move(10,cy)
+	     	btn.move(15,cy)
+	     	btn.name = item
 	     	@buttons.push(btn)
 
 	     	text = Label.new(vp)
 	     	text.font = $fonts.list
+	     	text.shadow = $fonts.list_shadow
 	     	text.text = item
-	     	text.move(90,cy+10)
+	     	text.move(94,cy+7)
 	     	@texts.push(text)
 
 	     	icon = Sprite.new(vp)
-	     	icon.bitmap = $cache.menu("Icons/#{['journal','inventory'].sample}")
-	     	icon.move(-10+28,cy-8)
-	     	icon.src_rect = Rect.new(32,0,120,50)
+	     	icon.bitmap = $cache.menu("Icons/"+item)
+	     	icon.move(-4+28,cy-12)
+	     	#icon.src_rect = Rect.new(68,0,120,50)
 	     	icon.z += 50
 	     	@icons.push(icon)
 
-	     	cy += 55
+	     	cy += 51
 
      	}
 
      	@glow = Sprite.new(vp)
-     	@glow.bitmap = $cache.menu_common("box-glow")
+     	@glow.bitmap = Bitmap.new(@buttons[0].width-12,@buttons[0].height-12)
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
      	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
 
      	@idx = 0
      	@sr = 0
 
-     	setidx(0)
-
+     	@boxes = @buttons + @chars.map{ |c| c.box }
      	
+     	@selected = "Journal"
+     	choose(@selected)
 
 	end
 
@@ -3045,6 +3269,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		@charbox2.dispose
 		@charbox3.dispose
 		@charbox4.dispose
+		@charbox5.disposed
+		@charbox6.disposed
+		@charbox7.dispose
 
 		@glow.dispose
 		@icons.each{ |i| i.dispose }
@@ -3054,28 +3281,113 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def update
 		#@menu.update
+		#@chars.each{ |c| c.update }
 
 		if $input.action?
-			select(@data[@idx])
+			select(@selected)
+		end
+
+		if $input.right?
+
+			box = nil
+			@boxes.each{ |b| 
+			
+				if b.name == @selected 
+					box = b 
+					break
+				end
+			}
+
+			sx = box.x + box.width
+			sy = box.y + box.height/2
+			search(sx,sy,3,1)
+
+		end
+
+		if $input.left?
+
+			box = nil
+			@boxes.each{ |b| 
+			
+				if b.name == @selected 
+					box = b 
+					break
+				end
+			}
+
+			sx = box.x
+			sy = box.y + box.height/2
+			search(sx,sy,-3,1)
+
 		end
 
 		if $input.down?
-			@idx += 1
-			setidx(@idx)
+
+			box = nil
+			@boxes.each{ |b| 
+			
+				if b.name == @selected 
+					box = b 
+					break
+				end
+			}
+
+			sx = box.x + box.width/2		
+			sy = box.y + box.height
+			search(sx,sy,1,3)
+
 		end
+
 		if $input.up?
-			@idx -= 1
-			setidx(@idx)
+
+			box = nil
+			@boxes.each{ |b| 
+			
+				if b.name == @selected 
+					box = b 
+					break
+				end
+			}
+
+			sx = box.x + box.width/2		
+			sy = box.y
+			search(sx,sy,1,-3)
+
 		end
+
+	end
+
+	def search(sx,sy,x,y)
+
+		before = @selected
+
+		cx = sx
+		cy = sy
+
+		# Start moving until find something
+		while true
+
+			cx += x
+			cy += y
+
+			@boxes.each{ |box|
+				if box.window.within?(cx,cy)
+					return choose(box.name)
+				end
+			}
+
+			cy = 0 if cy > 480
+			cx = 0 if cx > 640
+			cy = 480 if cy < 0
+			cx = 640 if cx < 0
+
+		end
+
 	end
 
 	def open
 
-		@charbox.show
-		@charbox2.show
-		@charbox3.show
-		@charbox4.show
-
+		@chars.each{ |c| c.show } 
 
 		@glow.show
 		@icons.each{ |i| i.show }
@@ -3085,10 +3397,7 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def close
 
-		@charbox.hide
-		@charbox2.hide
-		@charbox3.hide
-		@charbox4.hide
+		@chars.each{ |c| c.hide } 
 
 		@glow.hide
 		@icons.each{ |i| i.hide }
@@ -3096,19 +3405,44 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		@buttons.each{ |i| i.hide }
 	end
 
-	def setidx(idx)
+	def choose(target)
+
+		@selected = target
+
 		@sr = 0
+
+
 		idx2 = 0
 		@icons.each{ |i|
-			i.src_rect = Rect.new(32,0,120,50)
-			i.y = 25+(idx2*55)-8
+			i.src_rect = Rect.new(36,0,120,50)
+			i.y = 25+(idx2*51)-23
 			$tweens.clear(i)
 			idx2 += 1
 		}
-		@icons[idx].do(go("y",-12,250,:quad_in_out))
-		self.do(go("srcrecter",12,250,:quad_in_out))
 
-		@glow.move(16,25+(idx*55)+6)
+
+		# Find the icon if this is journal
+		@idx = nil
+		if !@buttons.select{ |b| b.name == target }.empty?
+
+			idx = 0
+			@buttons.each{ |b|
+				break if b.name == target
+				idx += 1
+			}
+
+			@idx = idx
+
+			@icons[idx].do(go("y",-12,250,:quad_in_out))
+			self.do(go("srcrecter",12,250,:quad_in_out))
+
+		end
+
+		glowon = @boxes.find{ |b| b.name == target }
+
+		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+		@glow.move(glowon.x+6,glowon.y+6)
 
 	end
 
@@ -3117,8 +3451,12 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	end
 
 	def srcrecter=(y)
+		if @idx == nil
+			$tweens.clear(self)
+			return
+		end
 		@sr = y
-		@icons[@idx].src_rect = Rect.new(32,0,120,50+y)
+		@icons[@idx].src_rect = Rect.new(36,0,120,50+y)
 	end
 
 	def select(option)
@@ -3136,23 +3474,26 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		$game.pop_scene
 	end
 
-end"¯
+end"	
 
 class Char_Box_Large < SpriteGroup
+
+	attr_accessor :box
 
 	def initialize(vp)
 
 		super()
 
-		@window = Box.new(vp,205,160)
-		@window.skin = $cache.menu_common("skin")
-		@window.wallpaper = $cache.menu_wallpaper("portback")
-		add(@window)
+		@box = Box.new(vp,205,168)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("lightning")
+		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.menu_face("boy")
+		@port.bitmap = $cache.face(["boy",'hib','mys','rob','row'].sample)
 		@port.src_rect.width = 155
-		add(@port,42,-30)
+		add(@port,42,-20)
+		@port.z += 50
 
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient")
@@ -3193,38 +3534,43 @@ class Char_Box_Large < SpriteGroup
 	end
 
 	def dispose
-		@window.dispose
+		@box.dispose
 		@gradient.dispose
 		@port.dispose
+	end
+
+	def update
+		@box.update
 	end
 
 	def setup(char)
 
 	end
 
-end"
+end"^
 
 class Char_Box_Small < SpriteGroup
+
+	attr_accessor :box
 
 	def initialize(vp)
 
 		super()
 
-		@window = Box.new(vp,130,84)
-		@window.skin = $cache.menu_common("skin")
-		@window.wallpaper = $cache.menu_wallpaper("portback")
-		add(@window)
+		@box = Box.new(vp,132,87)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("portback")
+		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.menu_face_small("boy")
-		add(@port,31,-15)
+		@port.bitmap = $cache.face_small(["boy",'hib','row'].sample)
+		add(@port,31,-10)
+		@port.z += 50
 
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient-small")
 		@gradient.opacity = 160
 		add(@gradient,5,30)
-
-
 
 		@xp_bar = Bar.new(vp,106,8)
 		add(@xp_bar,11,64)
@@ -3237,16 +3583,20 @@ class Char_Box_Small < SpriteGroup
 	end
 
 	def dispose
-		@window.dispose
+		@box.dispose
 		#@gradient.dispose
 		#@port.dispose
+	end
+
+	def update
+		@box.update
 	end
 
 	def setup(char)
 
 	end
 
-end"æ
+end"
 class Info_Box < SpriteGroup
 
 	attr_accessor :title
@@ -3261,8 +3611,9 @@ class Info_Box < SpriteGroup
 
     	@title = Label.new(vp)
     	@title.fixed_width = 250
+    	@title.icon = $cache.icon("items/map")
     	@title.text = "Active Quests:"
-    	add(@title,10,13)
+    	add(@title,12,13)
     	
     	move(10,410)
 
@@ -3277,7 +3628,7 @@ class Info_Box < SpriteGroup
 
 	end
 
-end"î
+end"Ó
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -3293,6 +3644,7 @@ class Item_Box < SpriteGroup
 
     	@title = Label.new(vp)
     	@title.fixed_width = 250
+    	@title.icon = $cache.icon("items/map")
     	@title.font = $fonts.pop_ttl
     	@title.text = "Active Quests:"
     	add(@title,16,10)
@@ -3307,9 +3659,17 @@ class Item_Box < SpriteGroup
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
     	@desc.text = "Missing Descriptor"
-    	add(@desc,16,40)
+    	add(@desc,16,42)
 
     	@stat_a = Label.new(vp)
+		@stat_a.fixed_width = 250
+    	@stat_a.icon = $cache.icon("stats/restore")
+    	@stat_a.font = $fonts.pop_text
+    	@stat_a.text = "Restores 10HP"
+    	add(@stat_a,36,70)
+
+
+
     	@stat_b = Label.new(vp)
     	@stat_c = Label.new(vp)
     	
@@ -5343,7 +5703,7 @@ class Game_Character
 
 
 end
-"R0#==============================================================================
+"—0#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -5489,8 +5849,8 @@ class Game_Event < Game_Character
 
   def stop
 
-    log_sys("STATEENABLEING")
-
+    $player.looklike($party.leader)
+    
     # Enable the second state if there is one
     state(@id,"second_#{@page_idx}") if !is_second?(@page)
 
@@ -5545,15 +5905,15 @@ class Game_Event < Game_Character
               
       # Progress
       when '?before'
-        return false if !$state.before?(cond[1])
+        return false if !$progress.before?(cond[1])
       when '?progress'
-        return false if !$state.progress?(cond[1])
+        return false if !$progress.progress?(cond[1])
       when '?after'
-        return false if !$state.beyond?(cond[1])
+        return false if !$progress.beyond?(cond[1])
 
       # States
       when '?state'
-
+        return false if !$state.state?(me,cond[1])
 
       # Active Quest
       when '?active'
@@ -5845,7 +6205,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"·X#==============================================================================
+end"üX#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -6226,6 +6586,10 @@ class Interpreter
     end
 
     $scene.hud.message.start(message)
+
+    # If vn mode
+    
+    #$scene.hud.message.start_vn(message)
     
     # Return mouse to default cursor
     #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
@@ -6632,7 +6996,7 @@ class Interpreter
   end
 
 end
-"¿!#==============================================================================
+"›!#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -6672,7 +7036,7 @@ class Game_Map
     @cam_xy = [0,0]
     @cam_snap = false
     @cam_ox = 0
-    @cam_oy = 0
+    @cam_oy = 0#-16
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
@@ -6774,6 +7138,8 @@ class Game_Map
     @cam_xy = [x,y]
     @cam_target = nil
     @cam_snap = false
+
+    log_info("CAMXY: #{x}#{y}")
   end
 
   def camera_snap
@@ -6802,37 +7168,35 @@ class Game_Map
     end
 
     # Camera update
-    @cam_target = $player
+    #@cam_target = $player
 
     # Camera update, maybe split to camera class
+
     if @cam_target != nil
-
-      if @cam_target != nil
-        @target_x = @cam_target.real_x- (128 * 9.5)
-        @target_y = @cam_target.real_y- (128 * 7)
-      else
-        @target_x = @cam_xy[0] * 128
-        @target_y = @cam_xy[1] * 128
-      end
-
-      if @target_x != @display_x
-        @display_x += (@target_x-@display_x) * 0.15
-      end
-
-      if @target_y != @display_y
-        @display_y += (@target_y-@display_y) * 0.15
-      end
-
-      if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
-        @cam_snap = true
-      end
-
-      if @cam_snap
-        @display_x = @target_x
-        @display_y = @target_y
-      end
-
+      @target_x = @cam_target.real_x- (128 * 9.5)
+      @target_y = @cam_target.real_y- (128 * 7)
+    else
+      @target_x = @cam_xy[0] * 128
+      @target_y = @cam_xy[1] * 128
     end
+
+    if @target_x != @display_x
+      @display_x += (@target_x-@display_x) * 0.15
+    end
+
+    if @target_y != @display_y
+      @display_y += (@target_y-@display_y) * 0.15
+    end
+
+    if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
+      @cam_snap = true
+    end
+
+    if @cam_snap
+      @display_x = @target_x
+      @display_y = @target_y
+    end
+
 
     # Limit cam to screen
     @display_x = 0 if @display_x < 0
@@ -6947,7 +7311,7 @@ class Game_Map
     return map_zone_or_nil($data.mapinfos[id].parent_id)
   end
 
-end"%#==============================================================================
+end"]%#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -6961,8 +7325,7 @@ class Game_Player < Game_Character
 
   def initialize
     super
-    @character_name = "boyle"
-
+    looklike("boy")
     @transferring = false
     @xfer_data = nil
   end
@@ -6979,6 +7342,11 @@ class Game_Player < Game_Character
 
   def name
     return "Player"
+  end
+
+  def looklike(char)
+    log_scr("CHANGEIT")
+    self.character_name = "Player/#{char}"
   end
 
   #--------------------------------------------------------------------------
@@ -7518,7 +7886,7 @@ class Game_Party
     set_active("phy")
     set_active("rob")
 
-    @leader = 'ing'
+    @leader = 'boy'
 
     @actors["boy"].learn('fireburn')
     @actors["boy"].learn('flames')
@@ -7823,7 +8191,7 @@ end"class State
 	end
 
 end
-"+#==============================================================================
+"ô#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -7862,6 +8230,10 @@ class Scene_Battle
 
     @map = Game_Map.new
     @map.setup($battle.map)
+    #$map = @map 
+    # Could put the scrolling into battle in with this
+    # Char screenx comes from this, perhaps $scene.map
+
 
     @player = Game_Player.new
     
@@ -7906,7 +8278,8 @@ class Scene_Battle
       end
     }
 
-
+    # TESTING THE SPARKS
+    @sparks = []
 
     # Poppers
     @poppers = []
@@ -7929,11 +8302,39 @@ class Scene_Battle
     @wait_frames = w
   end
 
+
+  def add_spark(x,y)
+
+    # Spawn spark
+    #sprk = Spark.new("click.20",@vp_main)
+    sprk = Spark.new("redstar.24",@vp_pops)
+
+    #x = @sprites.x + @cx+size.width
+    #y = @sprites.y + @cy
+
+    dx = -@map.display_x/4
+    dy = -@map.display_y/4
+    sprk.center(x+3-dx,y+5-dy-32)
+    #sprk.blend_type = 1
+    @sparks.push(sprk)
+
+
+  end
+
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
 
   def update
+
+        @sparks.delete_if{ |s| s.done? }
+
+    # Update the sparks
+    @sparks.each{ |s| 
+      s.ox = @map.display_x/4
+      s.oy = @map.display_y/4
+      s.update 
+    }
 
     @hud.update
     @map.update    
@@ -8204,7 +8605,8 @@ class Scene_Battle
     @actor_cmd.setup(@active_battler)
   end
 
-end"	
+end"„
+
 class Scene_Battle
 
   def phase_main_init
@@ -8251,6 +8653,10 @@ class Scene_Battle
   # Show anim on attacker
   def phase_main_attack
 
+    # x = @active_battler.ev.screen_x
+    # y = @active_battler.ev.screen_y
+    # add_spark(x,y)
+
     # Hit anim if there is one
     if @attack_round.anim_a == nil
       @phase = :main_defend # RENAME TO MAIN_ANIM_HIT
@@ -8265,6 +8671,12 @@ class Scene_Battle
   # Show anim on defender
   def phase_main_defend
 
+    @attack_results.each{ |result|
+      x = result.target.ev.screen_x
+      y = result.target.ev.screen_y
+      add_spark(x,y)
+    }
+
     # Hit anim if there is one
     if @attack_round.anim_b == nil
       @phase = :main_hit # RENAME TO MAIN_ANIM_HIT
@@ -8273,7 +8685,7 @@ class Scene_Battle
 
   	# Onto the next
   	@phase = :main_hit
-    wait(20)
+    #wait(20)
 
   end
 
@@ -8343,7 +8755,7 @@ class Scene_Battle
 
   end
 
-end"q#==============================================================================
+end"ò#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -8375,7 +8787,7 @@ class Scene_Map
     $player = @player
     @player.moveto($data.system.start_x, $data.system.start_y)
 
-   # @map.camera_to(@player)
+    @map.camera_to(@player)
 
     # Make tilemap
     #@panorama = Plane.new(@vp_main,-1000)
@@ -8383,7 +8795,7 @@ class Scene_Map
     @character_sprites = []  
 
     # weather in map data
-    @weather = nil
+    @weather = Weather.new(@vp_overlay)
 
     @overlay = Sprite.new(@vp_overlay)
     @overlay.bitmap = Bitmap.new($game.width,$game.height)
@@ -8432,6 +8844,8 @@ class Scene_Map
 
     @debug.bitmap.clear
 
+    @sparks.delete_if{ |s| s.done? }
+
     # Update the sparks
     @sparks.each{ |s| 
       s.ox = @map.display_x/4
@@ -8477,21 +8891,24 @@ class Scene_Map
       end
 
     end
+
+    @weather.update
     
   end
 
   def add_spark(x,y)
 
     # Spawn spark
-    sprk = Spark.new("magic",@vp_main)
-    
+    sprk = Spark.new("firework.30",@vp_main)
+    #sprk = Spark.new("pink.40",@vp_main)
+
     #x = @sprites.x + @cx+size.width
     #y = @sprites.y + @cy
 
     dx = -@map.display_x/4
     dy = -@map.display_y/4
-    sprk.center(x+3-dx,y+3-dy)
-    sprk.blend_type = 1
+    sprk.center(x+3-dx,y+5-dy)
+    #sprk.blend_type = 1
     @sparks.push(sprk)
 
   end
@@ -8528,7 +8945,7 @@ class Scene_Map
   end
 
 end
-"Ö#==============================================================================
+"Û#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -8557,7 +8974,7 @@ class Scene_Menu
     @menu = Mnu_Main.new(@vp)
     @sub = nil
 
-    Graphics.transition(20,'Graphics/System/trans')     
+    Graphics.transition(20,'Graphics/Transitions/trans')     
 
   end
   
@@ -8677,79 +9094,41 @@ class AudioManager
       stop_bgs
   end     
 
-end"†
+end"µ	
 class CacheManager
 
     def initialize
         @cache = {}
     end
 
-    def animation(filename, hue)
-      load_bitmap("Graphics/Animations/", filename, hue)
-    end
-    def autotile(filename)
-      load_bitmap("Graphics/Autotiles/", filename)
-    end
-    def character(filename)
-      load_bitmap("Graphics/Characters/", filename)
-    end
-    def cursor(filename)
-      load_bitmap("Graphics/Cursors/", filename)
-    end
-    def face(filename)
-      load_bitmap("Graphics/Faces/", filename)
-    end
-    def fog(filename, hue)
-      load_bitmap("Graphics/Fogs/", filename, hue)
-    end
-    def icon(filename)
-      load_bitmap("Graphics/Icons/", filename)
-    end
+    def animation(filename) load("Animations/", filename) end
 
-    def menu(filename)
-      load_bitmap("Graphics/Menus/", filename)
-    end
-    def menu_common(filename)
-      load_bitmap("Graphics/Menus/Common/", filename)
-    end
-    def menu_wallpaper(filename)
-      load_bitmap("Graphics/Menus/Wallpapers/", filename)
-    end
-    def menu_background(filename)
-      load_bitmap("Graphics/Menus/Backgrounds/", filename)
-    end
+    def autotile(filename) load("Autotiles/", filename) end
+    def tileset(filename) load("Tilesets/", filename) end
+    def character(filename) load("Characters/", filename) end
 
-    def menu_face(filename)
-      load_bitmap("Graphics/Menus/Ports/Message/", filename)
-    end
-    def menu_face_small(filename)
-      load_bitmap("Graphics/Menus/Ports/Small/", filename)
-    end
-    def menu_tab(filename)
-      load_bitmap("Graphics/Menus/Tabs/", filename)
-    end
-
-    def menu_char(filename)
-      load_bitmap("Graphics/Menus/Char/", filename)
-    end
-
-    def panorama(filename, hue)
-      load_bitmap("Graphics/Panoramas/", filename, hue)
-    end
-    def picture(filename)
-      load_bitmap("Graphics/Pictures/", filename)
-    end
-    def tileset(filename)
-      load_bitmap("Graphics/Tilesets/", filename)
-    end
-    def title(filename)
-      load_bitmap("Graphics/Titles/", filename)
-    end
-    def windowskin(filename)
-      load_bitmap("Graphics/Windowskins/", filename)
-    end
+    
+    def panorama(filename) load("Panoramas/", filename) end
+    def fog(filename) load("Fogs/", filename, hue) end
+    def particle(filename) load("Particles/", filename) end
 
 
+    # Menu
+    def menu(filename) load("Menus/", filename) end
+    def menu_common(filename) load("Menus/Common/", filename) end
+    def menu_wallpaper(filename) load("Menus/Wallpapers/", filename) end
+    def menu_background(filename) load("Menus/Backgrounds/", filename) end
+    def menu_tab(filename) load("Menus/Tabs/", filename) end
+    def menu_char(filename) load("Menus/Char/", filename) end
+
+    def cursor(filename) load("Cursors/", filename) end
+    def icon(filename) load("Icons/", filename) end
+
+    # Faces
+    def face(filename) load("Faces/Message/", filename) end
+    def face_vn(filename) load("Faces/Vn/", filename) end
+    def face_small(filename) load("Faces/Small/", filename) end
+    
 
 
     def tile(filename, tile_id, hue)
@@ -8766,8 +9145,8 @@ class CacheManager
     end
 
 
-    def load_bitmap(folder_name, filename, hue = 0)
-      path = folder_name + filename
+    def load(folder_name, filename, hue = 0)
+      path = "Graphics/"+folder_name + filename
       if not @cache.include?(path) or @cache[path].disposed?
         if filename != ""
           begin
@@ -8797,93 +9176,7 @@ class CacheManager
       GC.start
     end
 
-  end
-
-
-
-# module RPG
-#   module Cache
-
-#     def self.animation(filename, hue)
-#       self.load_bitmap("Graphics/Animations/", filename, hue)
-#     end
-#     def self.autotile(filename)
-#       self.load_bitmap("Graphics/Autotiles/", filename)
-#     end
-#     def self.character(filename, hue)
-#       self.load_bitmap("Graphics/Characters/", filename, hue)
-#     end
-#     def self.cursor(filename)
-#       self.load_bitmap("Graphics/Cursors/", filename)
-#     end
-#     def self.face(filename)
-#       self.load_bitmap("Graphics/Faces/", filename)
-#     end
-#     def self.fog(filename, hue)
-#       self.load_bitmap("Graphics/Fogs/", filename, hue)
-#     end
-#     def self.icon(filename)
-#       self.load_bitmap("Graphics/Icons/", filename)
-#     end
-#     def self.menu(filename)
-#       self.load_bitmap("Graphics/Menus/", filename)
-#     end
-#     def self.panorama(filename, hue)
-#       self.load_bitmap("Graphics/Panoramas/", filename, hue)
-#     end
-#     def self.picture(filename)
-#       self.load_bitmap("Graphics/Pictures/", filename)
-#     end
-#     def self.tileset(filename)
-#       self.load_bitmap("Graphics/Tilesets/", filename)
-#     end
-#     def self.title(filename)
-#       self.load_bitmap("Graphics/Titles/", filename)
-#     end
-#     def self.windowskin(filename)
-#       self.load_bitmap("Graphics/Windowskins/", filename)
-#     end
-#     def self.tile(filename, tile_id, hue)
-#       key = [filename, tile_id, hue]
-#       if not @cache.include?(key) or @cache[key].disposed?
-#         @cache[key] = Bitmap.new(32, 32)
-#         x = (tile_id - 384) % 8 * 32
-#         y = (tile_id - 384) / 8 * 32
-#         rect = Rect.new(x, y, 32, 32)
-#         @cache[key].blt(0, 0, self.tileset(filename), rect)
-#         @cache[key].hue_change(hue)
-#       end
-#       @cache[key]
-#     end
-
-#     @cache = {}
-#     def self.load_bitmap(folder_name, filename, hue = 0)
-#       path = folder_name + filename
-#       if not @cache.include?(path) or @cache[path].disposed?
-#         if filename != ""
-#           @cache[path] = Bitmap.new(path)
-#         else
-#           @cache[path] = Bitmap.new(32, 32)
-#         end
-#       end
-#       if hue == 0
-#         @cache[path]
-#       else
-#         key = [path, hue]
-#         if not @cache.include?(key) or @cache[key].disposed?
-#           @cache[key] = @cache[path].clone
-#           @cache[key].hue_change(hue)
-#         end
-#         @cache[key]
-#       end
-#     end
-
-#     def self.clear
-#       @cache = {}
-#       GC.start
-#     end
-#   end
-# end"[#==============================================================================
+  end"[#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -9261,13 +9554,13 @@ class FileManager
   end
   
 end
-"„
+"Â
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
-	attr_reader :message, :namebox
+	attr_reader :message, :message_shadow, :namebox
 
-	attr_reader :list
+	attr_reader :list, :list_shadow
 
 	attr_reader :pop_ttl, :pop_text, :pop_type
 
@@ -9301,21 +9594,30 @@ class FontManager
     	@list.size = 20 #was 26
     	@list.color = Color.new(245,223,200)
 
+    	@list_shadow = Font.new
+    	@list_shadow.name = "Verdana"
+    	@list_shadow.size = 20 #was 26
+    	@list_shadow.color = Color.new(0,0,0,90)
+
 
 		# Message box
 
 		@message = Font.new
 	    @message.name = "Georgia"
-	    @message.size = 24
+	    @message.size = 24 #30 good for big text
+	    #@message.gradient = true
 	    @message.color = Color.new(245,223,200)
+
+	    @message_shadow = Font.new
+	    @message_shadow.name = "Georgia"
+	    @message_shadow.size = 24
+	    @message_shadow.color = Color.new(0,0,0,90)
 
 	    @namebox = Font.new
 	    @namebox.name = "Bitter"
-	    @namebox.size = 28
-	    @namebox.bold = true
+	    @namebox.size = 30
+	    @namebox.italic = true
 	    @namebox.gradient = true
-	    @namebox.gradient_color1 = Color.new(255,0,0)
-	    @namebox.gradient_color2 = Color.new(245,223,200)
 
 
 	    # Menus
@@ -9327,7 +9629,8 @@ class FontManager
 
 	    @pop_text = Font.new
 	    @pop_text.name = "Verdana"
-	    @pop_text.size = 19
+	    @pop_text.size = 18
+	    #@pop_text.italic = true
 	    @pop_text.color = Color.new(245,223,200)
 
 	   	@pop_type = Font.new
@@ -9723,7 +10026,7 @@ class Sprite_Mouse < Sprite
     
   end
 end
-"%#==============================================================================
+"&#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -9759,7 +10062,7 @@ class SettingsManager
     # Debug options - keys 1-9
     @debug_skip_title = true
     @debug_draw_fps = true
-    @debug_draw_names = true
+    @debug_draw_names = false
     @debug_draw_sprites = false
         
     # Load from settings file real quick   
@@ -10083,7 +10386,7 @@ class QuestData
 	#attr_reader :price
 	#attr_reader :action
 end
-"+#==============================================================================
+"r#==============================================================================
 # ** Gradient Font Color
 #------------------------------------------------------------------------------
 #   Original code by poccil
@@ -10115,27 +10418,9 @@ end
  
 class Font
   
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
   attr_accessor :gradient
   attr_accessor :gradient_color1
   attr_accessor :gradient_color2
-  
-  #--------------------------------------------------------------------------
-  # * Alias Listing
-  #--------------------------------------------------------------------------
-  alias dargor_vx_font_gradient_initialize initialize
-
-  #--------------------------------------------------------------------------
-  # * Object Initialization
-  #--------------------------------------------------------------------------
-  def initialize(*args)
-     dargor_vx_font_gradient_initialize(*args)
-     #@gradient = true
-     @gradient_color1 = Color.new(255,255,255)
-     @gradient_color2 = Color.new(255,255,255)
-  end
   
 end
  
@@ -10144,94 +10429,81 @@ end
 #==============================================================================
  
 class Bitmap
-  #--------------------------------------------------------------------------
-  # * Alias Listing
-  #--------------------------------------------------------------------------
-  alias dargor_vx_bitmap_gradient_draw_text draw_text
+
   #--------------------------------------------------------------------------
   # * Draw Text
   #--------------------------------------------------------------------------
-  def draw_text(*args)
+  def draw_gtext(x,y,width,height,text,type=0)
 
-     # Original font color
-     if self.font.gradient
+      #return draw_text(*args) if !self.font.gradient
+
+      # colors
+      case type
+        when 0
+          c1 = Color.new(215,193,170)
+        when 1
+          c1 = Color.new(189,186,105)
+      end      
+
+      c2 = Color.new(255,255,255)
         
-        # Get text variables
-        if args[0].is_a?(Rect)
-           x = args[0].x
-           y = args[0].y
-           width = args[0].width
-           height = args[0].height
-           text = args[1]
-           align = args[2].nil? ? 0 : args[2]
-        else
-           x = args[0]
-           y = args[1]
-           width = args[2]
-           height = args[3]
-           text = args[4]
-           align = args[5].nil? ? 0 : args[5]
-        end
-
-        original_color = self.font.color
-        alpha = original_color.alpha.to_f if alpha.nil?
-        # Create temporary text bitmap
-        text1=Bitmap.new(width, height)
-        text2=Bitmap.new(width, height)
-        text1.font.size = self.font.size
-        text1.font.name = self.font.name
-        text1.font.color = self.font.gradient_color2
-        text_height = text1.text_size(text).height
-        text_width = text1.text_size(text).width
-        return if text_width < 1 or text_height < 1
-
-        # Temporary remove the gradient effect
-        self.font.gradient = false
-        text1.dargor_vx_bitmap_gradient_draw_text(0, 0, width, height, text, align)
-        self.font.gradient = true
-
-        # What in the world .....
-           text_position = (height / 2) - (text_height / 2)
-           for i in 0...height
-              if i < text_position
-                 opacity = 0
-              elsif i > text_position + text_height
-                 opacity = 255
-              else
-                 ratio = ((i - text_position) * 1.0 / text_height)
-                 ratio -=(0.5 - ratio) * 0.5
-                 opacity = ratio * 255.0
-                 opacity = 255.0 if opacity > 255.0
-                 opacity = 0.0 if opacity < 0.0
-              end
-              text2.blt(0, i, text1, Rect.new(0,i,width,1), opacity)
-           end
+      # Align left only
+      align = 0
 
 
-        # Draw gradient text
-        self.font.color = Color.new(255,0,0)#self.font.gradient_color1
-        self.font.color.alpha = alpha
-        # Temporary remove the gradient effect
-        self.font.gradient = false
-        dargor_vx_bitmap_gradient_draw_text(*args)
-        # Temporary remove the gradient effect
-        self.font.gradient = true
-        self.font.color = original_color
-        self.font.color.alpha = 255#alpha
-        self.blt(x, y, text2, text2.rect, alpha)
-        # Dispose gradient text bitmap
-        text1.dispose
-        text2.dispose
-     else
-        # The usual
-        dargor_vx_bitmap_gradient_draw_text(*args)
-     end
+      original_color = self.font.color
+      alpha = original_color.alpha.to_f if alpha.nil?
+      # Create temporary text bitmap
+      text1=Bitmap.new(width, height)
+      text2=Bitmap.new(width, height)
+      text1.font.size = self.font.size
+      text1.font.name = self.font.name
+      text1.font.italic = self.font.italic
+      text1.font.bold = self.font.bold
+      text1.font.color = c1 #self.font.gradient_color2
+      text_height = text1.text_size(text).height
+      text_width = text1.text_size(text).width
+      return if text_width < 1 or text_height < 1
 
-    def draw_special
+      # Temporary remove the gradient effect
+      text1.draw_text(0, 0, width, height, text, align)
 
-    end
+      # What in the world .....
+         text_position = (height / 2) - (text_height / 2)
+         for i in 0...height
+            if i < text_position
+               opacity = 0
+            elsif i > text_position + text_height
+               opacity = 255
+            else
+               ratio = ((i - text_position) * 1.0 / text_height)
+               ratio -=(0.5 - ratio) * 0.5
+               #ratio += 0.2
+               opacity = ratio * 255.0
+               opacity = 255.0 if opacity > 255.0
+               opacity = 0.0 if opacity < 0.0
+            end
+            text2.blt(0, i, text1, Rect.new(0,i,width,1), opacity)
+         end
+
+
+      # Draw gradient text
+      self.font.color = c2 #self.font.gradient_color1
+      self.font.color.alpha = alpha
+      # Temporary remove the gradient effect
+      self.font.gradient = false
+      draw_text(x,y,width,height,text)
+      # Temporary remove the gradient effect
+      self.font.gradient = true
+      self.font.color = original_color
+      self.font.color.alpha = 255#alpha
+      self.blt(x, y, text2, text2.rect, alpha)
+      # Dispose gradient text bitmap
+      text1.dispose
+      text2.dispose
 
   end
+
 end"~# if !ACE_MODE
 #   class Font
 #     attr_accessor :outline, :shadow
