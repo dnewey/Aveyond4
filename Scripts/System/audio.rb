@@ -10,7 +10,7 @@ class AudioManager
   end
 
   # send_blank to force start music
-  def play_bgm(bgm)
+  def music(bgm)
     @bgm = bgm
     return if !$settings.music
     if !FileTest.exists?("Audio/BGM/" + se.name)

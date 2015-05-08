@@ -21,15 +21,15 @@ end
 def gid(str)
 
 	# empty means eid
-
-	# If already a number send it
-	if str.kind_of?(Integer)
-		return str
-	end
+	return gev(str).id
 
 end
 
 def gev(str)
+
+
+	#check for int that is in a string
+	#treat as an int
 
 	return $player if str == -1
 	return $player if str == 'plr'
@@ -82,8 +82,7 @@ def gev(str)
 
 		end
 
-	# Return some sort of dummy event
-	log_info(str)
-	log_err("BIGPROBLEMS")
+	log_err("Can't find event: #{str}")
+	return nil
 
 end

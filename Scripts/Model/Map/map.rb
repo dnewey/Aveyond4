@@ -39,6 +39,7 @@ class Game_Map
     @cam_snap = false
     @cam_ox = 0
     @cam_oy = 0#-16
+    @cam_speed = 0.15
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
@@ -131,17 +132,18 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Camera
   #--------------------------------------------------------------------------
-  def camera_to(ev)
+  def camera_to(ev,spd=0.15)
     @cam_target = ev
     @cam_snap = false
+    @cam_speed = spd
   end
 
-  def camera_xy(x,y)
+  def camera_xy(x,y,spd=0.15)
     @cam_xy = [x,y]
     @cam_target = nil
     @cam_snap = false
+    @cam_speed = spd
 
-    log_info("CAMXY: #{x}#{y}")
   end
 
   def camera_snap
@@ -183,11 +185,11 @@ class Game_Map
     end
 
     if @target_x != @display_x
-      @display_x += (@target_x-@display_x) * 0.15
+      @display_x += (@target_x-@display_x) * @cam_speed
     end
 
     if @target_y != @display_y
-      @display_y += (@target_y-@display_y) * 0.15
+      @display_y += (@target_y-@display_y) * @cam_speed
     end
 
     if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5

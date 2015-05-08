@@ -254,22 +254,25 @@ class Ui_Message
       @tail.hide
     end
 
+    # Have to split name by '-' to make expressions work
+    # GET RID OF IT
     
     # If in party, show as player and change player graphic
-    if $data.actors.has_key?(speaker) && @mode == :message
+    if $data.actors.has_key?(name.split('-')[0]) && @mode == :message
       @speaker = $player
-      $player.looklike(speaker)
+      $player.looklike(name.split('-')[0])
     elsif speaker != nil
       @speaker = gev(speaker)
+      @mode = :sys if @speaker == nil
     end
 
     # Get face and name of player characters
-    if $data.actors.has_key?(name)
+    if $data.actors.has_key?(name.split('-')[0])
       @face.bitmap = $cache.face(name) if @mode == :message
-      name = $data.actors[name].name
+      name = $data.actors[name.split('-')[0]].name
     end
 
-    build_namebox(name)
+    build_namebox(name.split("-")[0])
 
        
 

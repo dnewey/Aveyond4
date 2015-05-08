@@ -15,6 +15,8 @@ class Game_Event < Game_Character
   attr_reader :below
 
   attr_reader :page_idx
+
+  attr_reader :deleted, :disabled, :erased
       
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -208,7 +210,11 @@ class Game_Event < Game_Character
 
       # States
       when '?state'
-        return false if !$state.state?(me,cond[1])
+        if cond.count > 2
+          return false if !$state.state?(cond[1],cond[2])
+        else
+          return false if !$state.state?(@id,cond[1])
+        end
 
       # Active Quest
       when '?active'
@@ -243,7 +249,8 @@ class Game_Event < Game_Character
         return false if !$party.has_gold?(cond[1].to_i)
 
       when '?item'
-        return false if !$game_party.has_item?(cond[1])
+        cond[2] = 1 if cond.count < 3
+        return false if !($party.item_number(cond[1]) >= cond[2].to_i)
 
 
 
@@ -288,11 +295,13 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def refresh
     @page_idx = find_page
-    new_page = @pages[@page_idx]
+    new_page = @pages[@page_idx] if @page_idx != nil
     setup_page(new_page) if new_page != @page
   end
 
   def is_second?(page)
+
+    return if page == nil
 
     # DANHAX - check super conditions
     page.list.each{ |line|
@@ -324,12 +333,6 @@ class Game_Event < Game_Character
     # Clear starting flag
     clear_starting
     
-    # If trigger is [parallel process]
-    if @trigger == 4
-      @interpreter = Interpreter.new
-      @interpreter.setup(@list, @event.id)
-    end
-
     # Auto event start determinant
     check_event_trigger_auto
 
@@ -444,6 +447,14 @@ class Game_Event < Game_Character
     #     start
     #   end
     # end
+
+    # If trigger is [parallel process]
+    if @trigger == 4
+      @interpreter = Interpreter.new
+      @interpreter.setup(@list, @event.id)
+    end
+
+
     # If trigger is [auto run]
     if @trigger == 3 || @event.name == 'AUTORUN'
       start
@@ -455,8 +466,9 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def update
     super
+
     # Automatic event starting determinant
-    check_event_trigger_auto
+    check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
     if @interpreter != nil

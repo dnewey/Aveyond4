@@ -38,6 +38,7 @@ class Game_Character
   attr_accessor :ignore_movement          # ignore movement when finding path
   attr_accessor :step_anime               # stop animation
   
+  attr_accessor :cool_jumps, :spin_jumps, :flat_jumps
   
   # Custom
   attr_accessor :off_x, :off_y
@@ -68,6 +69,9 @@ class Game_Character
     @off_x = 0
     @off_y = 0
 
+    @cool_jumps = false
+    @spin_jumps = false
+    @flat_jumps = false
 
     @pattern = 0
 
@@ -112,6 +116,7 @@ class Game_Character
   # * Determine if Jumping
   #--------------------------------------------------------------------------
   def jumping?
+    @showdir = [2,4,6,8].sample if @jump_count > 0 && @spin_jumps
     return @jump_count > 0
   end
 
@@ -257,7 +262,11 @@ class Game_Character
     else
       n = @jump_peak - @jump_count
     end
-    return @off_y + y - (@jump_peak * @jump_peak - n * n) / 2
+    if @flat_jumps
+      return @off_y + y - (@jump_peak * @jump_peak - n * n) / 6
+    else
+      return @off_y + y - (@jump_peak * @jump_peak - n * n) / 2
+    end
   end
   #--------------------------------------------------------------------------
   # * Get Screen Z-Coordinates
@@ -380,9 +389,26 @@ class Game_Character
   def update_jump
     # Reduce jump count by 1
     @jump_count -= 1
+    @jump_count += 0.5 if @cool_jumps
     # Calculate new coordinates
     @real_x = (@real_x * @jump_count + @x * 128) / (@jump_count + 1)
     @real_y = (@real_y * @jump_count + @y * 128) / (@jump_count + 1)
+
+    # Run in air for cool jumps
+    if @cool_jumps && !@spin_jumps
+
+      # If move animation is ON
+      if @walk_anime
+        # Increase animation count by 1.5
+        @anime_count += 3
+      # If move animation is OFF, and stop animation is ON
+      elsif @step_anime
+        # Increase animation count by 1
+        @anime_count += 2
+      end
+
+    end
+
   end
 
   #--------------------------------------------------------------------------
@@ -1083,7 +1109,8 @@ class Game_Character
       # Calculate distance
       distance = Math.sqrt(x_plus * x_plus + y_plus * y_plus).round
       # Set jump count
-      @jump_peak = 10 + distance - @move_speed
+      @jump_peak = 10 + distance - @move_speed 
+      @jump_peak += distance if @cool_jumps
       @jump_count = @jump_peak * 2
       # Clear stop count
       @stop_count = 0

@@ -124,14 +124,18 @@ class Interpreter
     $map.starting_events.each{ |e| 
 
         # If not auto run
-        if e.trigger < 3
+        #if e.trigger < 3
           
           e.clear_starting
           e.lock          
-        end
+       # end
         
         # Set up event
-        setup(e.list, e.id)
+
+        # Make sure autoruns don't run a second time if disabled
+        return if e.disabled || e.deleted || e.erased
+
+        setup(e.list, e.id) 
         
         return      
     }
@@ -292,7 +296,7 @@ class Interpreter
     end
 
     # Tell the even that it is stopping so it can mark second
-    this.stop 
+    $map.events[@event_id].stop 
   end
 
   #--------------------------------------------------------------------------

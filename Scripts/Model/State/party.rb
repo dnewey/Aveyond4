@@ -95,15 +95,15 @@ class Game_Party
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
-  def add_item(id,n) add(@items,id,n) end
-  def lose_item(item,n) add(@items,id,n) end
+  def add_item(id,n) add(@items,id,n); $map.need_refresh = true end
+  def lose_item(id,n) add(@items,id,-n); $map.need_refresh = true end
   def item_number(id) count(@items,id) end
-  def has_item?(id) count(type,id) > 0 end
-
+  def has_item?(id) count(@items,id) > 0 end
 
 
   def add(type,id,number)
     type.has_key?(id) ? type[id] += number : type[id] = number
+    type[id] = 0 if type[id] < 0
   end
 
   def count(type,id)

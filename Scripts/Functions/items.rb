@@ -12,10 +12,10 @@ def item_s(id,number=1)
 end
 
 def unitem(id,number=1)
-
+	$party.lose_item(id,number)
 end
 
 def item?(id,number=1)
-
+	return $party.item_number(id) >= number
 end
 

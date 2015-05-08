@@ -66,7 +66,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"’#==============================================================================
+end"#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -115,6 +115,11 @@ class Sprite_Character < Sprite
         self.oy = @ch
       end
 
+    end
+
+  self.zoom_y = 1
+    if rand > 0.5
+      self.zoom_y = -1
     end
 
     # Clear the helper graphics
@@ -638,7 +643,7 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end";	#==============================================================================
+end"≤	#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -651,6 +656,8 @@ class Label < Sprite
   attr_accessor :fixed_width
   attr_accessor :padding
   attr_accessor :icon
+
+  attr_accessor :gradient
     
   #--------------------------------------------------------------------------
   # * Init
@@ -733,7 +740,11 @@ class Label < Sprite
     end
 
     self.bitmap.font = @font
-    self.bitmap.draw_gtext(x,y,w,h,@text,@align)
+    if @gradient
+      self.bitmap.draw_gtext(x,y,w,h,@text,@align)
+    else
+      self.bitmap.draw_text(x,y,w,h,@text,@align)
+    end
         
   end
   
@@ -1294,25 +1305,21 @@ class Tabs < Sprite
 
   end
 
- end"G#==============================================================================
+ end"J#==============================================================================
 # ** Camera Functions
 #==============================================================================
 
-def camera(e)
-	$map.camera_to(gev(e))
+def camera(e,spd=0.15)
+	$map.camera_to(gev(e),spd)
 end
 
-def camera_xy(x,y)
-	$map.camera_xy(x,y)
+def camera_xy(x,y,spd=0.15)
+	$map.camera_xy(x,y,spd)
 end
 
 def scenecam()
 
-end
-
-def camspeed
-
-end"X#==============================================================================
+end"#==============================================================================
 # ** Common Functions
 #==============================================================================
 
@@ -1335,15 +1342,18 @@ end
 def gid(str)
 
 	# empty means eid
-
-	# If already a number send it
-	if str.kind_of?(Integer)
-		return str
-	end
+	return gev(str).id
 
 end
 
 def gev(str)
+
+
+	#check for int that is in a string
+	#treat as an int
+
+	return $player if str == -1
+	return $player if str == 'plr'
 
 	if str.kind_of?(Integer)
 		return $map.events[str]
@@ -1393,9 +1403,8 @@ def gev(str)
 
 		end
 
-	# Return some sort of dummy event
-	log_info(str)
-	log_err("BIGPROBLEMS")
+	log_err("Can't find event: #{str}")
+	return nil
 
 end
 "Ó#==============================================================================
@@ -1447,6 +1456,40 @@ end
 def fade(ev)
 	log_info(ev)
 	gev(ev).do(to("opacity",0,2))
+end"»
+class Group
+
+	def initialize(args)
+
+		@events = args
+
+	end
+
+	def method_missing(m,*args)
+
+		@events.each{ |ev|
+			if ev.is_a?(String)
+				argstring = " '#{ev}',"
+			else
+				argstring = " #{ev},"
+			end
+
+			args.each{ |a|
+				if a.is_a?(String)
+					argstring+=(" '"+a+"',")
+				else
+					argstring+=(" "+a+",")
+				end
+			}
+			eval(m.to_s[1..-1]+argstring.chop)
+		}
+
+	end
+
+end
+
+def grp(*args)
+	return Group.new(args)
 end"Î#==============================================================================
 # ** Item Functions
 #==============================================================================
@@ -1492,7 +1535,7 @@ def all_items
 	}
 end
 
-"k#==============================================================================
+"Ø#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -1506,11 +1549,11 @@ def item_s(id,number=1)
 end
 
 def unitem(id,number=1)
-
+	$party.lose_item(id,number)
 end
 
 def item?(id,number=1)
-
+	return $party.item_number(id) >= number
 end
 
 "-
@@ -1557,7 +1600,7 @@ def progress(id) $progress.progress(id) end
 def progress?(id) return $progress.progress?(id) end
 
 def before?(id) return $progress.before?(id) end
-def beyond?(id) return $progress.beyond?(id) end"0#==============================================================================
+def beyond?(id) return $progress.beyond?(id) end"à#==============================================================================
 # ** Route Functions
 #==============================================================================
 
@@ -1639,6 +1682,8 @@ def route(ev,move)
 	route.repeat = false
 	route.skippable = false
 
+	live_dir = char.direction
+
 	data.each{ |step|
 
 		params = []
@@ -1655,21 +1700,29 @@ def route(ev,move)
 		case step
 
 			when 'd'
+				live_dir = 2
 				route.list.push(RPG::MoveCommand.new(1))
 			when 'l'
+				live_dir = 4
 				route.list.push(RPG::MoveCommand.new(2))
 			when 'r'
+				live_dir = 6
 				route.list.push(RPG::MoveCommand.new(3))
 			when 'u'
+				live_dir = 8
 				route.list.push(RPG::MoveCommand.new(4))
 
 			when 'td'
+				live_dir = 2
 				route.list.push(RPG::MoveCommand.new(16))
 			when 'tl'
+				live_dir = 4
 				route.list.push(RPG::MoveCommand.new(17))
 			when 'tr'
+				live_dir = 6
 				route.list.push(RPG::MoveCommand.new(18))
 			when 'tu'
+				live_dir = 8
 				route.list.push(RPG::MoveCommand.new(19))
 
 
@@ -1704,6 +1757,19 @@ def route(ev,move)
 
 			when 'j'
 				route.list.push(RPG::MoveCommand.new(14,[0,0]))
+			when 'jf'
+				jc = [0,1] if live_dir == 2
+				jc = [-1,0] if live_dir == 4
+				jc = [1,0] if live_dir == 6
+				jc = [0,-1] if live_dir == 8
+				route.list.push(RPG::MoveCommand.new(14,jc))
+			when 'jb'
+				jc = [0,1] if live_dir == 8
+				jc = [-1,0] if live_dir == 6
+				jc = [1,0] if live_dir == 4
+				jc = [0,-1] if live_dir == 2
+				live_dir = 10 - live_dir
+				route.list.push(RPG::MoveCommand.new(14,jc))
 
 
 		end
@@ -1716,7 +1782,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"8#==============================================================================
+"G#==============================================================================
 # ** State Functions
 #==============================================================================
 
@@ -1729,6 +1795,7 @@ def flag?(id) return $state.flag?(id) end
 def var(id,a=1) $state.var(id,a) end
 def unvar(id,a=1) $state.var(id,a) end
 def var?(id,a) return $state.var?(id,a) end
+#def gvar(id)
 
 # State shortands
 def state(e,s) 
@@ -2324,7 +2391,7 @@ class Ui_Info
 
 	end
 
-end"Ÿ>#==============================================================================
+end"è?#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -2580,22 +2647,25 @@ class Ui_Message
       @tail.hide
     end
 
+    # Have to split name by '-' to make expressions work
+    # GET RID OF IT
     
     # If in party, show as player and change player graphic
-    if $data.actors.has_key?(speaker) && @mode == :message
+    if $data.actors.has_key?(name.split('-')[0]) && @mode == :message
       @speaker = $player
-      $player.looklike(speaker)
+      $player.looklike(name.split('-')[0])
     elsif speaker != nil
       @speaker = gev(speaker)
+      @mode = :sys if @speaker == nil
     end
 
     # Get face and name of player characters
-    if $data.actors.has_key?(name)
+    if $data.actors.has_key?(name.split('-')[0])
       @face.bitmap = $cache.face(name) if @mode == :message
-      name = $data.actors[name].name
+      name = $data.actors[name.split('-')[0]].name
     end
 
-    build_namebox(name)
+    build_namebox(name.split("-")[0])
 
        
 
@@ -3057,7 +3127,7 @@ class Mnu_Items
 		$scene.close_sub
 	end
 
-end"#==============================================================================
+end"M#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -3134,6 +3204,7 @@ class Mnu_Journal
 		@tabs.update
 		@menu.update
 		@info.update
+		@title.update
 	end
 
 	def close
@@ -3141,6 +3212,10 @@ class Mnu_Journal
 		@menu.hide
 		@title.hide
 		@info.hide
+		@window.hide
+		@tabs.hide
+		@desc.hide
+		@zone.hide
 	end
 
 	def open
@@ -3162,7 +3237,7 @@ class Mnu_Journal
 		$scene.close_sub
 	end
 
-end"ò#==============================================================================
+end"D#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -3233,6 +3308,7 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	     	text = Label.new(vp)
 	     	text.font = $fonts.list
 	     	text.shadow = $fonts.list_shadow
+	     	text.gradient = true
 	     	text.text = item
 	     	text.move(94,cy+7)
 	     	@texts.push(text)
@@ -3265,18 +3341,13 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def dispose
 
-		@charbox.dispose
-		@charbox2.dispose
-		@charbox3.dispose
-		@charbox4.dispose
-		@charbox5.disposed
-		@charbox6.disposed
-		@charbox7.dispose
+		@chars.each{ |c| c.dispose } 
 
 		@glow.dispose
 		@icons.each{ |i| i.dispose }
 		@texts.each{ |i| i.dispose }
 		@buttons.each{ |i| i.dispose }
+
 	end
 
 	def update
@@ -3820,15 +3891,7 @@ end
 
 def _db(*args)
 	DataBox.new(args[0],args[1],args[2],args[3])
-end"#
-
-class Page_Tabs
-
-
-
-end"
-
-
+end"
 class Page_Title < SpriteGroup
 
 	def initialize(vp)
@@ -3836,7 +3899,6 @@ class Page_Title < SpriteGroup
 
 		@web = Sprite.new(vp)
 		@web.bitmap = $cache.menu_common("webber")
-		#@web.opacity = 20
 		add(@web,-40,-50)
 
 		@icon = Sprite.new(vp)
@@ -3854,6 +3916,10 @@ class Page_Title < SpriteGroup
 	def change(page)
 		@icon.bitmap = $cache.menu("Icons/"+page)
 		@title.bitmap = $cache.menu("Titles/"+page)
+	end
+
+	def update
+
 	end
 
 end"#==============================================================================
@@ -4288,7 +4354,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"…°#==============================================================================
+end"ƒ§#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -4328,6 +4394,7 @@ class Game_Character
   attr_accessor :ignore_movement          # ignore movement when finding path
   attr_accessor :step_anime               # stop animation
   
+  attr_accessor :cool_jumps, :spin_jumps, :flat_jumps
   
   # Custom
   attr_accessor :off_x, :off_y
@@ -4358,6 +4425,9 @@ class Game_Character
     @off_x = 0
     @off_y = 0
 
+    @cool_jumps = false
+    @spin_jumps = false
+    @flat_jumps = false
 
     @pattern = 0
 
@@ -4402,6 +4472,7 @@ class Game_Character
   # * Determine if Jumping
   #--------------------------------------------------------------------------
   def jumping?
+    @showdir = [2,4,6,8].sample if @jump_count > 0 && @spin_jumps
     return @jump_count > 0
   end
 
@@ -4547,7 +4618,11 @@ class Game_Character
     else
       n = @jump_peak - @jump_count
     end
-    return @off_y + y - (@jump_peak * @jump_peak - n * n) / 2
+    if @flat_jumps
+      return @off_y + y - (@jump_peak * @jump_peak - n * n) / 6
+    else
+      return @off_y + y - (@jump_peak * @jump_peak - n * n) / 2
+    end
   end
   #--------------------------------------------------------------------------
   # * Get Screen Z-Coordinates
@@ -4670,9 +4745,26 @@ class Game_Character
   def update_jump
     # Reduce jump count by 1
     @jump_count -= 1
+    @jump_count += 0.5 if @cool_jumps
     # Calculate new coordinates
     @real_x = (@real_x * @jump_count + @x * 128) / (@jump_count + 1)
     @real_y = (@real_y * @jump_count + @y * 128) / (@jump_count + 1)
+
+    # Run in air for cool jumps
+    if @cool_jumps && !@spin_jumps
+
+      # If move animation is ON
+      if @walk_anime
+        # Increase animation count by 1.5
+        @anime_count += 3
+      # If move animation is OFF, and stop animation is ON
+      elsif @step_anime
+        # Increase animation count by 1
+        @anime_count += 2
+      end
+
+    end
+
   end
 
   #--------------------------------------------------------------------------
@@ -5373,7 +5465,8 @@ class Game_Character
       # Calculate distance
       distance = Math.sqrt(x_plus * x_plus + y_plus * y_plus).round
       # Set jump count
-      @jump_peak = 10 + distance - @move_speed
+      @jump_peak = 10 + distance - @move_speed 
+      @jump_peak += distance if @cool_jumps
       @jump_count = @jump_peak * 2
       # Clear stop count
       @stop_count = 0
@@ -5703,7 +5796,7 @@ class Game_Character
 
 
 end
-"ó0#==============================================================================
+"º1#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -5720,6 +5813,8 @@ class Game_Event < Game_Character
   attr_reader :below
 
   attr_reader :page_idx
+
+  attr_reader :deleted, :disabled, :erased
       
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -5913,7 +6008,11 @@ class Game_Event < Game_Character
 
       # States
       when '?state'
-        return false if !$state.state?(me,cond[1])
+        if cond.count > 2
+          return false if !$state.state?(cond[1],cond[2])
+        else
+          return false if !$state.state?(@id,cond[1])
+        end
 
       # Active Quest
       when '?active'
@@ -5948,7 +6047,8 @@ class Game_Event < Game_Character
         return false if !$party.has_gold?(cond[1].to_i)
 
       when '?item'
-        return false if !$game_party.has_item?(cond[1])
+        cond[2] = 1 if cond.count < 3
+        return false if !($party.item_number(cond[1]) >= cond[2].to_i)
 
 
 
@@ -5993,11 +6093,13 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def refresh
     @page_idx = find_page
-    new_page = @pages[@page_idx]
+    new_page = @pages[@page_idx] if @page_idx != nil
     setup_page(new_page) if new_page != @page
   end
 
   def is_second?(page)
+
+    return if page == nil
 
     # DANHAX - check super conditions
     page.list.each{ |line|
@@ -6029,12 +6131,6 @@ class Game_Event < Game_Character
     # Clear starting flag
     clear_starting
     
-    # If trigger is [parallel process]
-    if @trigger == 4
-      @interpreter = Interpreter.new
-      @interpreter.setup(@list, @event.id)
-    end
-
     # Auto event start determinant
     check_event_trigger_auto
 
@@ -6149,6 +6245,14 @@ class Game_Event < Game_Character
     #     start
     #   end
     # end
+
+    # If trigger is [parallel process]
+    if @trigger == 4
+      @interpreter = Interpreter.new
+      @interpreter.setup(@list, @event.id)
+    end
+
+
     # If trigger is [auto run]
     if @trigger == 3 || @event.name == 'AUTORUN'
       start
@@ -6160,8 +6264,9 @@ class Game_Event < Game_Character
   #--------------------------------------------------------------------------
   def update
     super
+
     # Automatic event starting determinant
-    check_event_trigger_auto
+    check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
     if @interpreter != nil
@@ -6205,7 +6310,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"¸X#==============================================================================
+end"éY#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -6331,14 +6436,18 @@ class Interpreter
     $map.starting_events.each{ |e| 
 
         # If not auto run
-        if e.trigger < 3
+        #if e.trigger < 3
           
           e.clear_starting
           e.lock          
-        end
+       # end
         
         # Set up event
-        setup(e.list, e.id)
+
+        # Make sure autoruns don't run a second time if disabled
+        return if e.disabled || e.deleted || e.erased
+
+        setup(e.list, e.id) 
         
         return      
     }
@@ -6499,7 +6608,7 @@ class Interpreter
     end
 
     # Tell the even that it is stopping so it can mark second
-    this.stop 
+    $map.events[@event_id].stop 
   end
 
   #--------------------------------------------------------------------------
@@ -6996,7 +7105,7 @@ class Interpreter
   end
 
 end
-"õ!#==============================================================================
+"€!#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -7037,6 +7146,7 @@ class Game_Map
     @cam_snap = false
     @cam_ox = 0
     @cam_oy = 0#-16
+    @cam_speed = 0.15
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
@@ -7129,17 +7239,18 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Camera
   #--------------------------------------------------------------------------
-  def camera_to(ev)
+  def camera_to(ev,spd=0.15)
     @cam_target = ev
     @cam_snap = false
+    @cam_speed = spd
   end
 
-  def camera_xy(x,y)
+  def camera_xy(x,y,spd=0.15)
     @cam_xy = [x,y]
     @cam_target = nil
     @cam_snap = false
+    @cam_speed = spd
 
-    log_info("CAMXY: #{x}#{y}")
   end
 
   def camera_snap
@@ -7181,11 +7292,11 @@ class Game_Map
     end
 
     if @target_x != @display_x
-      @display_x += (@target_x-@display_x) * 0.15
+      @display_x += (@target_x-@display_x) * @cam_speed
     end
 
     if @target_y != @display_y
-      @display_y += (@target_y-@display_y) * 0.15
+      @display_y += (@target_y-@display_y) * @cam_speed
     end
 
     if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
@@ -7840,7 +7951,7 @@ class MenuData
 	attr_accessor :category
 	attr_accessor :tab
 
-end"#==============================================================================
+end"s#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -7937,15 +8048,15 @@ class Game_Party
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
-  def add_item(id,n) add(@items,id,n) end
-  def lose_item(item,n) add(@items,id,n) end
+  def add_item(id,n) add(@items,id,n); $map.need_refresh = true end
+  def lose_item(id,n) add(@items,id,-n); $map.need_refresh = true end
   def item_number(id) count(@items,id) end
-  def has_item?(id) count(type,id) > 0 end
-
+  def has_item?(id) count(@items,id) > 0 end
 
 
   def add(type,id,number)
     type.has_key?(id) ? type[id] += number : type[id] = number
+    type[id] = 0 if type[id] < 0
   end
 
   def count(type,id)
@@ -8084,7 +8195,7 @@ end"Qclass Progress
 		return @progress < $data.progress[progress]
 	end
 
-end"class State
+end"<class State
 
 	def initialize
 
@@ -8139,6 +8250,8 @@ end"class State
 	end
 
 	def state(e,s)
+		log_info(e)
+		log_info(s)
 		@states[[$map.id,e,s]] = true
 		$map.need_refresh = true
 	end
@@ -8149,6 +8262,8 @@ end"class State
 	end
 
 	def state?(e,s)
+		log_sys e
+		log_sys s
 		return false if !@states.has_key?([$map.id,e,s])
 		return @states[[$map.id,e,s]]
 	end

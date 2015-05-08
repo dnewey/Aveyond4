@@ -53,6 +53,8 @@ class State
 	end
 
 	def state(e,s)
+		log_info(e)
+		log_info(s)
 		@states[[$map.id,e,s]] = true
 		$map.need_refresh = true
 	end
@@ -63,6 +65,8 @@ class State
 	end
 
 	def state?(e,s)
+		log_sys e
+		log_sys s
 		return false if !@states.has_key?([$map.id,e,s])
 		return @states[[$map.id,e,s]]
 	end

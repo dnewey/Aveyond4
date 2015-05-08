@@ -80,6 +80,8 @@ def route(ev,move)
 	route.repeat = false
 	route.skippable = false
 
+	live_dir = char.direction
+
 	data.each{ |step|
 
 		params = []
@@ -96,21 +98,29 @@ def route(ev,move)
 		case step
 
 			when 'd'
+				live_dir = 2
 				route.list.push(RPG::MoveCommand.new(1))
 			when 'l'
+				live_dir = 4
 				route.list.push(RPG::MoveCommand.new(2))
 			when 'r'
+				live_dir = 6
 				route.list.push(RPG::MoveCommand.new(3))
 			when 'u'
+				live_dir = 8
 				route.list.push(RPG::MoveCommand.new(4))
 
 			when 'td'
+				live_dir = 2
 				route.list.push(RPG::MoveCommand.new(16))
 			when 'tl'
+				live_dir = 4
 				route.list.push(RPG::MoveCommand.new(17))
 			when 'tr'
+				live_dir = 6
 				route.list.push(RPG::MoveCommand.new(18))
 			when 'tu'
+				live_dir = 8
 				route.list.push(RPG::MoveCommand.new(19))
 
 
@@ -145,6 +155,19 @@ def route(ev,move)
 
 			when 'j'
 				route.list.push(RPG::MoveCommand.new(14,[0,0]))
+			when 'jf'
+				jc = [0,1] if live_dir == 2
+				jc = [-1,0] if live_dir == 4
+				jc = [1,0] if live_dir == 6
+				jc = [0,-1] if live_dir == 8
+				route.list.push(RPG::MoveCommand.new(14,jc))
+			when 'jb'
+				jc = [0,1] if live_dir == 8
+				jc = [-1,0] if live_dir == 6
+				jc = [1,0] if live_dir == 4
+				jc = [0,-1] if live_dir == 2
+				live_dir = 10 - live_dir
+				route.list.push(RPG::MoveCommand.new(14,jc))
 
 
 		end
