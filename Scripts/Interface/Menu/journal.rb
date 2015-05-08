@@ -75,6 +75,7 @@ class Mnu_Journal
 		@tabs.update
 		@menu.update
 		@info.update
+		@title.update
 	end
 
 	def close
@@ -82,6 +83,10 @@ class Mnu_Journal
 		@menu.hide
 		@title.hide
 		@info.hide
+		@window.hide
+		@tabs.hide
+		@desc.hide
+		@zone.hide
 	end
 
 	def open

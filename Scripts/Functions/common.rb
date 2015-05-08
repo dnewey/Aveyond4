@@ -31,6 +31,9 @@ end
 
 def gev(str)
 
+	return $player if str == -1
+	return $player if str == 'plr'
+
 	if str.kind_of?(Integer)
 		return $map.events[str]
 	end

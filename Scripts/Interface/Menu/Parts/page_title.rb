@@ -1,6 +1,4 @@
 
-
-
 class Page_Title < SpriteGroup
 
 	def initialize(vp)
@@ -8,7 +6,6 @@ class Page_Title < SpriteGroup
 
 		@web = Sprite.new(vp)
 		@web.bitmap = $cache.menu_common("webber")
-		#@web.opacity = 20
 		add(@web,-40,-50)
 
 		@icon = Sprite.new(vp)
@@ -26,6 +23,10 @@ class Page_Title < SpriteGroup
 	def change(page)
 		@icon.bitmap = $cache.menu("Icons/"+page)
 		@title.bitmap = $cache.menu("Titles/"+page)
+	end
+
+	def update
+
 	end
 
 end

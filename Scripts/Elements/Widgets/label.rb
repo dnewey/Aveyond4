@@ -11,6 +11,8 @@ class Label < Sprite
   attr_accessor :fixed_width
   attr_accessor :padding
   attr_accessor :icon
+
+  attr_accessor :gradient
     
   #--------------------------------------------------------------------------
   # * Init
@@ -93,7 +95,11 @@ class Label < Sprite
     end
 
     self.bitmap.font = @font
-    self.bitmap.draw_gtext(x,y,w,h,@text,@align)
+    if @gradient
+      self.bitmap.draw_gtext(x,y,w,h,@text,@align)
+    else
+      self.bitmap.draw_text(x,y,w,h,@text,@align)
+    end
         
   end
   

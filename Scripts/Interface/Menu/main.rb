@@ -69,6 +69,7 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	     	text = Label.new(vp)
 	     	text.font = $fonts.list
 	     	text.shadow = $fonts.list_shadow
+	     	text.gradient = true
 	     	text.text = item
 	     	text.move(94,cy+7)
 	     	@texts.push(text)
@@ -101,18 +102,13 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def dispose
 
-		@charbox.dispose
-		@charbox2.dispose
-		@charbox3.dispose
-		@charbox4.dispose
-		@charbox5.disposed
-		@charbox6.disposed
-		@charbox7.dispose
+		@chars.each{ |c| c.dispose } 
 
 		@glow.dispose
 		@icons.each{ |i| i.dispose }
 		@texts.each{ |i| i.dispose }
 		@buttons.each{ |i| i.dispose }
+
 	end
 
 	def update

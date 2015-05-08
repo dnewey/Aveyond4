@@ -11,6 +11,7 @@ def flag?(id) return $state.flag?(id) end
 def var(id,a=1) $state.var(id,a) end
 def unvar(id,a=1) $state.var(id,a) end
 def var?(id,a) return $state.var?(id,a) end
+#def gvar(id)
 
 # State shortands
 def state(e,s) 
