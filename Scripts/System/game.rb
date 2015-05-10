@@ -66,6 +66,7 @@ class GameManager
 
   def update
 
+    $audio.update
     $keyboard.update
     $mouse.update
     $debug.update

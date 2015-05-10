@@ -32,7 +32,6 @@ class Game_Player < Game_Character
   end
 
   def looklike(char)
-    log_scr("CHANGEIT")
     self.character_name = "Player/#{char}"
   end
 
