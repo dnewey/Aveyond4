@@ -32,37 +32,37 @@
   	case e
   		when :linear; linear_tween(t,b,c,d)
 
-  		when :quad_in; ease_in_quad(t,b,c,d)
-  		when :quad_out; ease_out_quad(t,b,c,d)
-  		when :quad_in_out; ease_in_out_quad(t,b,c,d)
+  		when :quad_in, :quad_i, :qi; ease_in_quad(t,b,c,d)
+  		when :quad_out, :quad_o, :qo; ease_out_quad(t,b,c,d)
+  		when :quad_in_out, :quad_io, :qio; ease_in_out_quad(t,b,c,d)
 
-  		when :cubic_in; ease_in_cubic(t,b,c,d)
-  		when :cubic_out; ease_out_cubic(t,b,c,d)
-  		when :cubic_in_out; ease_in_out_cubic(t,b,c,d)
+  		when :cubic_in, :cubic_i; ease_in_cubic(t,b,c,d)
+  		when :cubic_out, :cubic_o; ease_out_cubic(t,b,c,d)
+  		when :cubic_in_out, :cubic_io; ease_in_out_cubic(t,b,c,d)
 
-  		when :quart_in; ease_in_quart(t,b,c,d)
-  		when :quart_out; ease_out_quart(t,b,c,d)
-  		when :quart_in_out; ease_in_out_quart(t,b,c,d)
+  		when :quart_in, :quart_i; ease_in_quart(t,b,c,d)
+  		when :quart_out, :quart_o; ease_out_quart(t,b,c,d)
+  		when :quart_in_out, :quart_io; ease_in_out_quart(t,b,c,d)
 
-  		when :quint_in; ease_in_quint(t,b,c,d)
-  		when :quint_out; ease_out_quint(t,b,c,d)
-  		when :quint_in_out; ease_in_out_quint(t,b,c,d)
+  		when :quint_in, :quint_i; ease_in_quint(t,b,c,d)
+  		when :quint_out, :quint_i; ease_out_quint(t,b,c,d)
+  		when :quint_in_out, :quint_io; ease_in_out_quint(t,b,c,d)
 
-  		when :sine_in; ease_in_sine(t,b,c,d)
-  		when :sine_out; ease_out_sine(t,b,c,d)
-  		when :sine_in_out; ease_in_out_sine(t,b,c,d)
+  		when :sine_in, :sine_i; ease_in_sine(t,b,c,d)
+  		when :sine_out, :sine_o; ease_out_sine(t,b,c,d)
+  		when :sine_in_out, :sine_io; ease_in_out_sine(t,b,c,d)
 
-  		when :expo_in; ease_in_expo(t,b,c,d)
-  		when :expo_out; ease_out_expo(t,b,c,d)
-  		when :expo_in_out; ease_in_out_expo(t,b,c,d)
+  		when :expo_in, :expo_i; ease_in_expo(t,b,c,d)
+  		when :expo_out, :expo_o; ease_out_expo(t,b,c,d)
+  		when :expo_in_out, :expo_io; ease_in_out_expo(t,b,c,d)
 
-  		when :circ_in; ease_in_circ(t,b,c,d)
-  		when :circ_out; ease_out_circ(t,b,c,d)
-  		when :circ_in_out; ease_in_out_circ(t,b,c,d)
+  		when :circ_in, :circ_i; ease_in_circ(t,b,c,d)
+  		when :circ_out, :circ_o; ease_out_circ(t,b,c,d)
+  		when :circ_in_out, :circ_io; ease_in_out_circ(t,b,c,d)
 
-      when :bounce_in; ease_in_bounce(t,b,c,d)
-      when :bounce_out; ease_out_bounce(t,b,c,d)
-      when :bounce_in_out; ease_in_out_bounce(t,b,c,d)
+      when :bounce_in, :bounce_i; ease_in_bounce(t,b,c,d)
+      when :bounce_out, :bounce_o; ease_out_bounce(t,b,c,d)
+      when :bounce_in_out, :bounce_io; ease_in_out_bounce(t,b,c,d)
 
   	end
 

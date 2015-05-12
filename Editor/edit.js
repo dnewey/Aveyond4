@@ -101,6 +101,8 @@ $(function()
     $('#dan-head-title').html($data_type.titleize()+" Data")
     $('#dan-head-sub').html("Don't forget to save!")
 
+    $( document ).tooltip();
+
 });
 
 // --------------------------------------------------------------------------------
@@ -334,9 +336,15 @@ refresh_header = function()
         th.setAttributeNode(att);
 
         var fld = $meta_data[idx].field;
+    
+        var hlp = "";
+        if ($meta_data[idx].help)
+        {
+            hlp = $meta_data[idx].help;
+        }
 
         // Create the header button
-        var btn = $('<input style="padding: 2px 5px 2px 5px; width:100%; font-weight: bold; font-size: 15px" type="button" dan-fld="' +
+        var btn = $('<input title="'+hlp+'" style="padding: 2px 5px 2px 5px; width:100%; font-weight: bold; font-size: 15px" type="button" dan-fld="' +
                     fld + '" class="btn btn-primary" value="' +
                     fld + '"/>');
 
@@ -392,7 +400,7 @@ json_edit = function(element,row,fld, val)
     date = new Date();
     $json_data[row]['modified'] = date.getTime().toString();
 
-    element.attr("title",val)
+    element.attr("title",val) // Only if it will be cut off but
 
     if (val == "")
         element.html("nil");
@@ -451,7 +459,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-04-10
+// Sort by last modified 2015-05-11
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()

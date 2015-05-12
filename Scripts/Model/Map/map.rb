@@ -171,12 +171,14 @@ class Game_Map
       @need_refresh = false
     end
 
-    # Camera update
-    #@cam_target = $player
+    # Mouse update
+    # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
 
-    # Camera update, maybe split to camera class
+  end
 
-    if @cam_target != nil
+  def update_camera
+
+      if @cam_target != nil
       @target_x = @cam_target.real_x- (128 * 9.5)
       @target_y = @cam_target.real_y- (128 * 7)
     else
@@ -212,10 +214,7 @@ class Game_Map
     #@display_x = w if @display_x > w
     #@display_y = w if @display_y > h
 
-
-
   end
-
   #--------------------------------------------------------------------------
   # * Determine if Passable
   #--------------------------------------------------------------------------

@@ -576,6 +576,10 @@ module Seal
       end
     end
 
+    def playing?
+      return state == State::PLAYING
+    end
+
   private
     def operate(operation)
       check_error(operation[@source])

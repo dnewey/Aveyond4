@@ -16,7 +16,7 @@ class MouseManager
     @pos = [0,0]
     @hwnd = Findwindow.call(nil, "Aveyond")
     @sprite = Sprite.new()
-    @sprite.z = 10100
+    @sprite.z = 5000
     @sprite.ox = 4
     change_cursor("Default")
   end

@@ -39,8 +39,5 @@
   {
     "field": "user",
     "color": "true"
-  },
-  {
-    "field": "modified"
   }
 ]

@@ -27,6 +27,7 @@ class CacheManager
 
     def cursor(filename) load("Cursors/", filename) end
     def icon(filename) load("Icons/", filename) end
+    def numbers(filename) load("Numbers/", filename) end
 
     # Faces
     def face(filename) load("Faces/Message/", filename) end

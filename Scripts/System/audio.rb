@@ -2,8 +2,6 @@
 # ** Audio Manager
 #==============================================================================
 
-
-
 class EnviroSource < Seal::Source
 
   attr_reader :file
@@ -69,7 +67,6 @@ class EnviroSource < Seal::Source
     self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
 
 
-
   end
 
 end
@@ -82,48 +79,92 @@ class AudioManager
     Seal.startup
 
     @music = Seal::Source.new
-    @crossfade = Seal::Source.new # Swap with music after done
-
     @atmosphere = Seal::Source.new
 
-    @environmental = [] # Looping, fade by distance
-    # UNLIMITED
+    # Looping, fade by distance
+    @environmental = [] 
 
+    # System Effects
     @system = []
-    2.times{ @system.push(Seal::Source.new) }
 
+    # Sound effects with reverb
     @sfx = []
-    5.times{ @sfx.push(Seal::Source.new) }
-    # NEVER DESTROY
+
 
     @mode = :normal
+    @effect = nil
 
     @sfx_vol = 1.0 # Set by mode
+
+    #change_mode(:cave)
     
   end
 
-  def env(sound,pos)
-    @environmental.each{ |snd|
-      if snd.file == sound
+  def env(file,pos)
+    @environmental.each{ |file|
+      if snd.file == file
         snd.addpos(pos)
         return
       end
     }
-    @environmental.push(EnviroSource.new(sound,pos))
+    @environmental.push(EnviroSource.new(file,pos))
   end
 
-  def music
-    @source.stream = Seal::Stream.open("Audio/BGM/gunblade.ogg",Seal::Format::OV)
+  def music(file)
+    @music.stream = Seal::Stream.open(file)
+    @music.play
+  end
+
+  def sys(file,vol)
+
+    log_scr(@sys.count)
+
+    # Check through sources, if empty, use, if none, add
+    @sys.each{ |src|
+      if !src.playing?
+        src.buffer = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+        src.play
+        return
+      end
+    }
+
+    # Add new
+    src = Seal::Source.new
+    buf = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+    src.buffer = buf
+    src.play
+    @sys.push(src)
 
   end
 
-  def inside
+  def sfx(file,vol)
+
+    log_scr(@sfx.count)
+
+    # Check through sources, if empty, use, if none, add
+    @sfx.each{ |src|
+      if !src.playing?
+        src.buffer = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+        
+        src.play
+        return
+      end
+    }
+
+    # Add new
+    src = Seal::Source.new
+    buf = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+    src.buffer = buf
+    src.feed(@effect, 0) if @effect != nil
+    src.play
+    @sfx.push(src)
 
   end
 
-  def sfx
-    
-    @source.play
+  def dip(src)
+
+    # Dip the music while the src plays then fade up
+
   end
 
 
@@ -140,31 +181,32 @@ class AudioManager
 
 
   def pause
-    @source.pause
+    @music.pause
   end
-
 
   def unpause
-    @source.play
+    @music.play
   end
 
-
-
+  # Change mode between maps so clear sources also
   def change_mode(mode)
+
     @mode = mode
 
     # Create new effect and volume modifier
     case mode
       when :normal
-
+        @effect = nil
+        return
 
       when :cave
-        # pre =Seal::Reverb::Preset::CAVE
-          # r = Seal::Reverb.new(pre)
-          # @slot = Seal::EffectSlot.new(r)
-          # @source.feed(@slot, 0)
+        preset = Seal::Reverb::Preset::CAVE
+        
     end
 
+    # Prepare the effect to be added to each newly created source
+    @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+   
   end
 
   def update

@@ -3,11 +3,19 @@ def sequence(*args)
 	return SequenceTween.new(*args)
 end
 
+def seq(*args)
+	return SequenceTween.new(*args)
+end
+
 def repeat(a,times=-1)
 	return LoopTween.new(a,times)
 end
 
 def parallel(*args)
+	return ParallelTween.new(args)
+end
+
+def para(*args)
 	return ParallelTween.new(args)
 end
 
@@ -120,7 +128,7 @@ class ProcTween < Tween
 
 	def update(delta)
 		@delay -= delta
-		@proc.call()if done?
+		@proc.call() if done?
 	end
 
 end

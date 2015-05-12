@@ -6,19 +6,27 @@
     "field": "frames"
   },
   {
-    "field": "delay"
+    "field": "delay",
+    "default": 0
   },
   {
-    "field": "fadeout"
+    "field": "fadeout",
+    "default": "true"
   },
   {
-    "field": "behind"
+    "field": "order",
+    "help": "Same, Above or Below"
   },
   {
-    // Avove below same
-    "field": "blend"
+    "field": "blend",
+    "default": 0
   },
   {
-    "field": "sound"
+    "field": "opacity",
+    "default": "150"
+  },
+  {
+    "field": "sound",
+    "help": "Format - sound:delay"
   }
 ]

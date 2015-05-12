@@ -2,17 +2,8 @@
 # ** Scene_Map
 #==============================================================================
 
-# Phases
+class Scene_Battle < Scene_Base
 
-# Rename actor to active_battler
-
-class Scene_Battle
-
-  attr_accessor :hud
-  
-  #--------------------------------------------------------------------------
-  # * Set up the scene
-  #--------------------------------------------------------------------------
   def initialize
 
     Graphics.freeze
@@ -21,53 +12,25 @@ class Scene_Battle
     @wait_frames = 0
     @active_battler = nil
 
-    # Auto viewports to fullscreen and set z in init
-    @vp = Viewport.new(0, 0, $game.width, $game.height)
-    @vp_pops = Viewport.new(0,0,$game.width,$game.height)
-    @vp_hud = Viewport.new(0, 0, $game.width, $game.height)
-    @vp.z = 6000  
-    @vp_pops.z = 6500
-    @vp_hud.z = 7500
-
-    @dbg_phase = Sprite.new(@vp_hud)
-    @dbg_phase.bitmap = Bitmap.new(150,30)
-
-    #@panorama = Sprite.new(@vp)
-    #@panorama.z = -100
-
-    @map = Game_Map.new
     @map.setup($battle.map)
-    #$map = @map 
+    @tilemap.refresh(@map)
+
     # Could put the scrolling into battle in with this
     # Char screenx comes from this, perhaps $scene.map
-
-
-    @player = Game_Player.new
-    
-    # Get rid of this after figuring out camera pos as pos instead of event
-    $player = @player 
-    #@player.moveto(5,5)
-    #@map.camera_to(@player)
+   
     @map.camera_xy(5,15)
     @map.cam_oy = 150
     @map.do(go("cam_oy",-150,3500,:quad_in_out))    
 
-    @tilemap = MapWrap.new(@vp) 
-    @tilemap.refresh(@map)
-
-    @character_sprites = []
-    @map.events.keys.sort.each{ |i|
-      sprite = Sprite_Character.new(@vp, @map.events[i])
-      @character_sprites.push(sprite)
-    }
 
     # Create Hud Elements
-    @hud = BattleHud.new(@vp_hud)
-    @actor_cmd = ActorCmd.new(@vp_hud)
-    @skill_cmd = SkillCmd.new(@vp_hud)
-    @target_cmd = TargetCmd.new(@vp_hud)
+    @hud = BattleHud.new(@vp_ui)
+    @actor_cmd = ActorCmd.new(@vp_ui)
+    @skill_cmd = SkillCmd.new(@vp_ui)
+    @target_cmd = TargetCmd.new(@vp_ui)
 
-    # Prepare battler events
+
+    # Find battler events
     [0,1,2,3].each{ |i| 
       ev = @map.event_by_evname("A.#{i}")
       act = $party.actor_by_index(i).id
@@ -85,20 +48,13 @@ class Scene_Battle
       end
     }
 
-    # TESTING THE SPARKS
-    @sparks = []
-
-    # Poppers
-    @poppers = []
-
 
     Graphics.transition(50,'Graphics/System/trans')  
             
   end
   
   def terminate
-    @map.dispose
-    @character_sprites.each{ |s| s.dispose }    
+    super  
   end
 
   def busy?
@@ -109,49 +65,13 @@ class Scene_Battle
     @wait_frames = w
   end
 
-
-  def add_spark(x,y)
-
-    # Spawn spark
-    #sprk = Spark.new("click.20",@vp_main)
-    sprk = Spark.new("redstar.24",@vp_pops)
-
-    #x = @sprites.x + @cx+size.width
-    #y = @sprites.y + @cy
-
-    dx = -@map.display_x/4
-    dy = -@map.display_y/4
-    sprk.center(x+3-dx,y+5-dy-32)
-    #sprk.blend_type = 1
-    @sparks.push(sprk)
-
-
-  end
-
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
 
   def update
 
-        @sparks.delete_if{ |s| s.done? }
-
-    # Update the sparks
-    @sparks.each{ |s| 
-      s.ox = @map.display_x/4
-      s.oy = @map.display_y/4
-      s.update 
-    }
-
-    @hud.update
-    @map.update    
-    @character_sprites.each{ |s| s.update }
-
-    # Remove pops that are invisible
-    @poppers.each{ |p| p.dispose if p.done? }
-    @poppers.delete_if{ |p| p.disposed? }
-
-    @poppers.each{ |p| p.update }
+    super
 
     # Draw phase
     @dbg_phase.bitmap.fill(Color.new(0,0,0))
@@ -216,28 +136,5 @@ class Scene_Battle
     end
 
   end
-
-
-  def pop_dmg(target,amount)
-    #ev = gev(target)
-    pop = Popper.new(@vp_pops)
-    pop.value = 0#amount #- amount/10
-    pop.x = target.screen_x-200-20
-    pop.y = target.screen_y-40-12+45
-    @poppers.push(pop)
-
-    pop.opacity = 1
-    pop.do(go("value",amount,700,:quad_in_out))
-    pop.do(sequence(go("opacity",254,500),go("opacity",0,1500),go("opacity",-255,500)))
-    pop.do(sequence(go("y",-30,500,:quad_in_out),go("y",-20,1500),go("y",-30,500,:quad_in_out)))
-
-
-  end
-
-  def pop_crit(target)
-
-  end
-
-
 
 end

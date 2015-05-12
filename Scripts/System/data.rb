@@ -18,6 +18,8 @@ class DataManager
   attr_reader :quests
   attr_reader :zones
 
+  attr_reader :anims
+
   # Clone events
   attr_reader :clones
 
@@ -35,8 +37,7 @@ class DataManager
     # Load up json data
     
     @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
-    @weapons = load_json("weapons",WeaponData)
-    @armors = load_json("armors",ArmorData)
+    @gear = load_json("gear",GearData)
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
@@ -46,6 +47,8 @@ class DataManager
     @progress = load_json("progress",ProgressData)
     @quests = load_json("quests",QuestData)
     @zones = load_json("zones",ZoneData)
+
+    @anims = load_json("anims",AnimData)
 
     @clones = load_clones
 
@@ -121,7 +124,18 @@ class DataManager
     json_data.each{ |v|
       item = type.new
       v.each{ |var,val|
+        
+        # Ignore modified field
+        next if var == 'modified'
+
         # Attempt to convert val to int or float
+        if val.numeric?
+          if val.include?(".")
+            val = val.to_f
+          else
+            val = val.to_i
+          end
+        end
 
         item.instance_variable_set("@#{var}", val)
       }

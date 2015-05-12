@@ -3,10 +3,13 @@
     "field": "id"
   },
   {
-    "field": "bgm"
+    "field": "music"
   },
   {
-    "field": "bgs"
+    "field": "atmosphere"
+  },
+  {
+    "field": "reverb"
   },
   {
     "field": "tint"
@@ -15,6 +18,14 @@
     "field": "weather"
   },
   {
-    "field": "modified"
+    "field": "fog"
+  },
+  {
+    "field": "panoramas",
+    "edit": "area"
+  },
+  {
+    "field": "enemies",
+    "edit": "area"
   }
 ]

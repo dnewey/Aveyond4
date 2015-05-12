@@ -9,17 +9,7 @@ class ItemData
 	attr_reader :action
 end
 
-class WeaponData
-	attr_reader :id
-	attr_reader :name
-	attr_reader :description
-	attr_reader :category
-	attr_reader :icon
-	attr_reader :price
-	attr_reader :action
-end
-
-class ArmorData
+class GearData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
@@ -62,10 +52,14 @@ end
 
 class ZoneData
 	attr_reader :id
-	attr_reader :bgm
-	attr_reader :bgs
+	attr_reader :music
+	attr_reader :atmosphere
+	attr_reader :reverb
 	attr_reader :tint
 	attr_reader :weather
+	attr_reader :fog
+	attr_reader :panoramas
+	attr_reader :enemies
 end
 
 class ProgressData
@@ -82,4 +76,15 @@ class QuestData
 	#attr_reader :icon
 	#attr_reader :price
 	#attr_reader :action
+end
+
+class AnimData
+	attr_reader :id
+	attr_reader :frames
+	attr_reader :delay
+	attr_reader :fadeout
+	attr_reader :order
+	attr_reader :blend
+	attr_reader :opacity
+	attr_reader :sound
 end

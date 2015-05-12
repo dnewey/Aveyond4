@@ -31,6 +31,13 @@ class Ui_Screen
 				@item = nil
 			end
 		end
+
+	  # Check inputs
+	  return if busy? or $map.interpreter.running?
+      if $input.cancel? || Input.trigger?(Input::F7)
+        $game.push_scene(Scene_Menu.new)
+      end
+
 	end
 
 	def open_item(i)

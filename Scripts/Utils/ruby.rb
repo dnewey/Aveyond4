@@ -12,6 +12,10 @@
   def is_integer?
     self.to_i.to_s == self
   end
+  def numeric?
+    return true if self =~ /\A\d+\Z/
+    true if Float(self) rescue false
+  end
 end
 
 class FalseClass; def to_i; 0 end end
