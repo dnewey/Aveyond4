@@ -174,6 +174,8 @@ class Game_Map
     # Mouse update
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
 
+update_camera
+
   end
 
   def update_camera

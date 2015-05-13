@@ -360,16 +360,21 @@ class Ui_Message
 
     # Show the behind char anim
         # Spawn spark
-    sprk = Spark.new("message.28",@vp)
+
+
 
     txt = @word.delete('*^')[0..@char_idx-1]
     size = @scratch.text_size(txt)
 
     #return if size.width < 10
     
+    
+
     x = @sprites.x + @cx+size.width
     y = @sprites.y + @cy
-    sprk.center(x+4,y+16)
+
+sprk = Spark.new("message.28",x+4,y+16,@vp)
+
     #sprk.blend_type = 1
     @sparks.push(sprk)
     
