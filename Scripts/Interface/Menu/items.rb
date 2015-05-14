@@ -2,23 +2,16 @@
 # ** Mnu_Items
 #==============================================================================
 
-class Mnu_Items
-
-	attr_accessor :closed
+class Mnu_Items < Mnu_Base
 
 	def initialize(vp)
+		super(vp)
 
-		@closed = false
+		@title.change('items')
 
-		@title = Page_Title.new(vp)
-		@title.change('inventory')
-
-		@tabs = nil
-
-		@menu = List_Common.new(vp)
-		@menu.list.select = Proc.new{ |option| self.select(option) }
-		@menu.list.cancel = Proc.new{ |option| self.cancel(option) }
-		@menu.list.change = Proc.new{ |option| self.change(option) }
+		@tabs.push("all")
+		#@tabs.push("potions")
+		#@tabs.push("keys")
 
 		data = []
 		data.push('covey')
@@ -27,39 +20,18 @@ class Mnu_Items
 
 		@menu.list.setup(data)
 
-
-		@info = Info_Box.new(vp)
-
 		@port = Port_Full.new(vp)
+		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
 		@item_box.center(462,130)
+		self.right.push(@item_box)
 
-	end
-
-	def dispose
-		@menu.dispose
 	end
 
 	def update
-		@menu.update
-		@info.update
-	end
-
-	def close
-		@closed = true
-		@menu.hide
-		@title.hide
-		@info.hide
-		@port.hide
-	end
-
-	def open
-		@menu.show
-		@title.show
-		@info.show
-		@port.show
-		@menu.list.refresh
+		super
+		
 	end
 
 	def change(option)
@@ -70,10 +42,6 @@ class Mnu_Items
 
 	def select(option)	
 		
-	end
-
-	def cancel(option)
-		$scene.close_sub
 	end
 
 end

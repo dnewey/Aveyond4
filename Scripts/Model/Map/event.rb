@@ -10,6 +10,7 @@ class Game_Event < Game_Character
   
   attr_reader   :name
   attr_reader   :event
+  attr_reader   :icon
 
   attr_reader :above
   attr_reader :below
@@ -381,6 +382,9 @@ class Game_Event < Game_Character
     if @character_name == "!!!"
       @through = true
       @trigger = 1 if @trigger == 0
+      if @pattern == 0 && @direction == 2
+        @icon = 'T'
+      end
     end
 
   end
@@ -422,10 +426,20 @@ class Game_Event < Game_Character
             @character_name = "NPCs/"+@character_name.delete("NPC-")+"/"+data[1]
           end
 
+        when '#rand-pattern'
+          @force_pattern = rand(3)
+
+        when '#rand-dir'
+          @direction = [2,4,6].sample
+
         when '#ox'
           @off_x = data[1].to_i
         when '#oy'
           @off_y = data[1].to_i
+
+        when '#moblin'
+          #data.push(1) if data.count < 2
+          #$scene.add_moblin(@id,data[1].to_i)
 
         when '#disable'
           disable

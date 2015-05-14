@@ -14,6 +14,8 @@ class Ui_Screen
 
 		@bar = Ui_Bar.new(vp)
 		#@info = Ui_Info.new(vp)
+		@popper = nil
+		@grid = nil
 
 		@item = nil
 
@@ -23,6 +25,21 @@ class Ui_Screen
 		@message.update
 		@bar.update
 		#@info.update
+		if @popper
+			@popper.update 
+			if $input.action?
+				@popper.dispose
+				@popper = nil
+			end
+		end
+
+		if @grid
+			@grid.update 
+			if $input.action?
+				@grid.dispose
+				@grid = nil
+			end
+		end
 
 		if @item
 			@item.update 
@@ -46,8 +63,18 @@ class Ui_Screen
 		@item.move(40,40)
 	end
 
+	def open_popper()
+		@popper = Ui_Popper.new(@vp)
+		return @popper
+	end
+
+	def open_grid()
+		@grid = Grid_Base.new(@vp)
+		return @grid
+	end
+
     def busy?() 
-    	return @message.busy? || @item
+    	return @message.busy? || @item || @popper || @grid
     end
 
 end

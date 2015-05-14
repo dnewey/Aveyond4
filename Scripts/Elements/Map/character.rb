@@ -50,9 +50,9 @@ class Sprite_Character < Sprite
     end
 
     # Clear the helper graphics
-    if @character_name == "!!!"
-      self.bitmap.clear
-    end
+    # if @character_name == "!!!"
+    #   self.bitmap.clear
+    # end
 
     # if @character == $player
     #   self.bitmap = $cache.character("Player/boy")
@@ -62,7 +62,11 @@ class Sprite_Character < Sprite
     # Set visible situation
     self.visible = !@character.transparent
     
-    sx = @character.pattern * @cw
+    if @character.force_pattern
+      sx = @character.force_pattern * @cw
+    else
+      sx = @character.pattern * @cw
+    end
     sy = (@character.showdir - 2) / 2 * @ch
     self.src_rect.set(sx, sy, @cw, @ch)
 

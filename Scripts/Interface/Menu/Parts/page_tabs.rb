@@ -6,7 +6,7 @@
 # Image based only
 # Drawn to single sprite
 
-class Tabs < Sprite
+class Page_Tabs < Sprite
 
   SPACING = 5
 
@@ -25,6 +25,8 @@ class Tabs < Sprite
 
   	@idx = 0
 
+    move(120,78)
+
   end
 
   def push(name)
@@ -32,10 +34,6 @@ class Tabs < Sprite
     @gfx.push($cache.menu_tab(name))
     @gfx_on.push($cache.menu_tab(name+"-on"))
     refresh
-  end
-
-  def dispose
-  	
   end
 
   def refresh

@@ -1,14 +1,13 @@
 class Progress
 
-	#attr_accessor :quests, :complete
-	#attr_accessor :progress
-
+	attr_accessor :quests, :complete
 
 	def initialize
 		@quests = []
 		@complete = []
 		@progress = 0
 	end
+
 
 	def add_quest(q)
 		@quests.push(q)

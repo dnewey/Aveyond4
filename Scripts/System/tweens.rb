@@ -16,6 +16,7 @@ class TweenManager
 		@last = Time.now
 
 		@tweens.delete_if{ |n| (n.is_a?(Sprite) && n.disposed?) || n == nil || n.done? }
+		
 	    @tweens.each{ |n| n.update(delta) }
 
 	end

@@ -29,7 +29,7 @@ class Game_Character
 
   attr_accessor :showdir
 
-
+  attr_accessor :force_pattern
   attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
@@ -60,6 +60,8 @@ class Game_Character
     @direction = 2
     @showdir = 4
     @lockdir = 0
+
+    @force_pattern = nil
 
     @move_angle = 0
 
@@ -163,7 +165,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def passable?(x, y, d) #d0 = jump
 
-    return true
+    #return true
 
     # Get new coordinates
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
@@ -274,10 +276,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_z(height = 0)
 
-    # Some sort of below character here
-    # return 0 if @always on bottom
-
-    return 999 if @always_on_top
+    return 0 if @below
+    return 999 if @above
 
     # Get screen coordinates from real coordinates and map display position
     z = (@real_y - $map.display_y + 3) / 4 + 32
@@ -442,7 +442,7 @@ class Game_Character
       # Convert map coordinates from map move speed into move distance
       distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
 
-      Audio.se_play("Audio/SE/step3.ogg") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
+      sfx("step3") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
       #Audio.se_play("Audio/SE/step.ogg") if (4.8 - @move_angle).abs < 0.21
 
     elsif terrain_tag == 5 && @prev_terrain == 3
@@ -464,7 +464,7 @@ class Game_Character
         distance = 2 ** @move_speed 
       end
 
-      Audio.se_play("Audio/SE/step.ogg") if @move_angle == 2.4 && @prev_terrain != 3
+      sfx("step") if @move_angle == 2.4 && @prev_terrain != 3
 
 
     elsif terrain_tag == 2 # Stairs

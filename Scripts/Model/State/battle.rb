@@ -13,6 +13,11 @@ class Game_Battle
     @map = 26
 	end
 
+  # Enemies for this zone from zone data
+  def change_enemies(enemies)
+
+  end
+
   def add(enemy)
     battler = Game_Battler.new
     battler.init_enemy(enemy)

@@ -76,7 +76,11 @@ class AudioManager
 
   def initialize
 
+    begin
     Seal.startup
+  rescue
+    retry
+  end
 
     @music = Seal::Source.new
     @atmosphere = Seal::Source.new
@@ -101,7 +105,7 @@ class AudioManager
   end
 
   def env(file,pos)
-    @environmental.each{ |file|
+    @environmental.each{ |snd|
       if snd.file == file
         snd.addpos(pos)
         return
@@ -111,8 +115,21 @@ class AudioManager
   end
 
   def music(file)
-    @music.stream = Seal::Stream.open(file)
+    if file == nil || file == ''
+      @music.stop
+      return
+    end
+    @music.stream = Seal::Stream.open("Audio/BGM/#{file}.ogg")
     @music.play
+  end
+
+  def atmosphere(file)
+    if file == nil  || file == ''
+      @atmosphere.stop
+      return
+    end
+    @atmosphere.stream = Seal::Stream.open("Audio/BGM/#{file}.ogg")
+    @atmosphere.play
   end
 
   def sys(file,vol)
@@ -174,10 +191,6 @@ class AudioManager
     Audio.bgm_play("Audio/BGM/" + bgm)
   end
 
-  def music(m)
-    @music = Seal::Stream.new("Audio/BGM/gunblade.ogg")
-  end
-
 
 
   def pause
@@ -195,11 +208,11 @@ class AudioManager
 
     # Create new effect and volume modifier
     case mode
-      when :normal
+      when 'normal', ''
         @effect = nil
         return
 
-      when :cave
+      when 'cave'
         preset = Seal::Reverb::Preset::CAVE
         
     end

@@ -1,9 +1,9 @@
 
 class Moblin
 
-	def initialize(scr,delay)
+	def initialize(ev,delay)
 
-		@src = src
+		@ev = ev
 		@delay = delay
 		@next = 1
 
@@ -15,7 +15,7 @@ class Moblin
 		if @next <= 0
 
 			@next = @delay
-			eval(@src)
+			@ev.start
 
 		end
 

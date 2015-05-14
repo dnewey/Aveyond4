@@ -23,7 +23,7 @@ class List
 
     # Make own viewport
     @vp = Viewport.new(0,0,1000,1000)
-    @vp.z = 9999
+    @vp.z = 4500
 
     @font = Font.new
     @font.name = "Verdana"
@@ -54,12 +54,15 @@ class List
   	@per_page = 11
 
   	# Sprites
+
+    @dynamo = Sprite.new(@vp)
+    
   	@sprites = []
   	@per_page.times{ |i|
   		@sprites.push(Sprite.new(@vp))
   	}
 
-  	@dynamo = Sprite.new(@vp)
+  	
 
     @active = true
 
@@ -67,9 +70,9 @@ class List
 
   def opacity=(o)
     @sprites.each{ |s|
-      s.opacity = 0
+      s.opacity = o
     }
-    @dynamo.opacity = 0
+    @dynamo.opacity = o
   end
 
   def dispose
@@ -80,6 +83,7 @@ class List
   def setup(data)
   	@data = data
     @per_page = @data.count
+    @per_page = 1 if @per_page == 0
   	refresh
   end
 
@@ -88,12 +92,14 @@ class List
   end
 
   def refresh
+    return if @dynamo.disposed?
 
     @vp.rect = Rect.new(@x,@y,@item_width,@item_space*@per_page)
 
   	# Rebuild the items from data
   	cy = 0#@y
 
+    if !@data.empty?
   	(0..@per_page-1).each{ |i|
   		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
       @current = @data[i+@scroll_idx] if i == @page_idx
@@ -103,8 +109,21 @@ class List
   		cy += @item_space
       #@sprites[i].bitmap.height
   	}
+  end
 
   	@cybt = cy
+
+
+    # If empty, draw dynamo as "Nothing here"
+    if @data.empty?
+      @dynamo.bitmap = Bitmap.new(@item_width,@item_height)
+      @dynamo.bitmap.font = @font
+      @dynamo.bitmap.draw_text(0,0,@item_width,@item_height,"Sorry, no items",1)
+      #@dynamo.bitmap.draw_text(0,0,100,40,"Nothing",2)
+      @dynamo.x = 0
+      @dynamo.y = 0
+      @dynamo.opacity = 150
+    end
 
   end
 
@@ -199,10 +218,15 @@ class List
 
   def update
 
+    @vp.rect.x = @x
+    @vp.rect.y = @y
+
     return if !@active
 
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN) #&& @dynamo.done?
+
+      return if @page_idx + @scroll_idx >= @data.count - 1
 
       if !@dynamo.done?
         refresh

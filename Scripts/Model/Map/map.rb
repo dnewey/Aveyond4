@@ -94,13 +94,25 @@ class Game_Map
         $audio.bgs_stop
         autoplay = true
       elsif @zone.id == "@nil"
-        # Play nothing do nothing
+        # Don't change anything
+        # Load the map music if you like
         autoplay = true
       else
+
         # Play music from the zone
-        #$audio.play(@zone.bgm)
-        #$audio.play(@zone.bgs)
+        $audio.music(@zone.music)
+        $audio.atmosphere(@zone.atmosphere)
+        $audio.change_mode(@zone.reverb)
+
         # Init tints and that
+        $scene.change_weather(@zone.weather)
+        $scene.change_fog(@zone.fog)
+        $scene.change_tint(@zone.tint)
+        $scene.change_panoramas(@zone.panoramas)
+
+        # Prep enemies for this zone
+        $battle.change_enemies(@zone.enemies)
+
       end
 
     end
@@ -143,7 +155,6 @@ class Game_Map
     @cam_target = nil
     @cam_snap = false
     @cam_speed = spd
-
   end
 
   def camera_snap
@@ -173,17 +184,52 @@ class Game_Map
 
     # Mouse update
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
+    update_mouse
+
+    update_camera
+
+  end
+
+  def update_mouse
+
+    # Mouse position
+    mx, my = *$mouse.grid
+
+    # What event is there
+    if event_at(mx,my) != nil
+
+      ev = event_at(mx,my)
+      case ev.icon
+
+        when 'S'
+          $mouse.change_cursor('Speak')
+        when 'I'
+          $mouse.change_cursor('Inspect')
+        when 'T'
+          $mouse.change_cursor('Transfer')
+        else
+          $mouse.change_cursor('Default')
+
+      end
+
+    else
+      if $map.passable?(mx,my,$player.direction)
+        $mouse.change_cursor('Default')
+      else
+        $mouse.change_cursor('Battle')
+      end
+    end
 
   end
 
   def update_camera
 
-      if @cam_target != nil
+    if @cam_target != nil
       @target_x = @cam_target.real_x- (128 * 9.5)
       @target_y = @cam_target.real_y- (128 * 7)
     else
-      @target_x = @cam_xy[0] * 128
-      @target_y = @cam_xy[1] * 128
+      @target_x = @cam_xy[0] * 64
+      @target_y = @cam_xy[1] * 64
     end
 
     if @target_x != @display_x
@@ -198,10 +244,10 @@ class Game_Map
       @cam_snap = true
     end
 
-    if @cam_snap
-      @display_x = @target_x
-      @display_y = @target_y
-    end
+    # if @cam_snap
+    #   @display_x = @target_x
+    #   @display_y = @target_y
+    # end
 
 
     # Limit cam to screen

@@ -74,8 +74,8 @@ class Scene_Battle < Scene_Base
     super
 
     # Draw phase
-    @dbg_phase.bitmap.fill(Color.new(0,0,0))
-    @dbg_phase.bitmap.draw_text(10,0,150,30,@phase.to_s,0)
+    #@dbg_phase.bitmap.fill(Color.new(0,0,0))
+    #@dbg_phase.bitmap.draw_text(10,0,150,30,@phase.to_s,0)
 
     update_phase
 

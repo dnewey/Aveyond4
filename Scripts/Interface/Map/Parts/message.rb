@@ -116,6 +116,10 @@ class Ui_Message
     # Draw to textbox
     @text_bmp = nil
 
+
+
+    @choices = []
+
   end
   
   #--------------------------------------------------------------------------
@@ -360,7 +364,7 @@ class Ui_Message
 
     # Show the behind char anim
         # Spawn spark
-    sprk = Spark.new("message.28",@vp)
+    
 
     txt = @word.delete('*^')[0..@char_idx-1]
     size = @scratch.text_size(txt)
@@ -369,8 +373,10 @@ class Ui_Message
     
     x = @sprites.x + @cx+size.width
     y = @sprites.y + @cy
-    sprk.center(x+4,y+16)
+    sprk = Spark.new("message.28",x+4,y+16,@vp)
+    #sprk.center()
     #sprk.blend_type = 1
+    sprk.opacity = 20
     @sparks.push(sprk)
     
     # AUTO PAUSE AFTER SENTENCE HERE
@@ -609,7 +615,7 @@ class Ui_Message
     end
 
     # If width is less than max * 2, we are splitting at the first word after half point
-    if total_width < MAX_WIDTH * 2
+    if total_width < MAX_WIDTH * 2 && false
       limit = total_width / 2
       cursor = 0
       lines = [[]]

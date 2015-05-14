@@ -8,7 +8,7 @@ class FontManager
 
 	attr_reader :pop_ttl, :pop_text, :pop_type
 
-	attr_reader :page_ttl, :page_text
+	attr_reader :page_ttl, :page_sub, :page_text
 
 
 	def initialize
@@ -87,13 +87,19 @@ class FontManager
 
 	    @page_ttl = Font.new
 		@page_ttl.name = "Georgia"
-	    @page_ttl.size = 30
+	    @page_ttl.size = 28
 	    #@page_ttl.bold = true
 	    @page_ttl.color = Color.new(44,44,44)
 
+	   	@page_sub = Font.new
+		@page_sub.name = "Bitter"
+	    @page_sub.size = 20
+	    #@page_ttl.bold = true
+	    @page_sub.color = Color.new(99,99,99)
+
 	   	@page_text = Font.new
 		@page_text.name = "Georgia"
-	    @page_text.size = 24
+	    @page_text.size = 20
 	    @page_text.color = Color.new(44,44,44)
 
 	end

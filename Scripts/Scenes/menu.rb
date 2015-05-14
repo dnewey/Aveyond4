@@ -13,7 +13,7 @@ class Scene_Menu
 
     # Vp
     @vp = Viewport.new(0,0,$game.width,$game.height)
-    @vp.z = 5000
+    @vp.z = 3500
 
     # Background
     @bg = Sprite.new(@vp)
@@ -46,10 +46,21 @@ class Scene_Menu
   #--------------------------------------------------------------------------
   def update
 
-    if @sub == nil || @sub.closed
+    if @sub == nil || @sub.done?
       @menu.update
     else
       @sub.update
+    end
+
+    if @sub != nil && @sub.done? # CLOSE SELF
+      @sub.dispose
+      @sub = nil
+      @menu.open
+    end
+
+    if $input.cancel?
+      $tweens.clear_all
+      $game.pop_scene
     end
     
   end
@@ -60,11 +71,11 @@ class Scene_Menu
     @sub.open
   end
 
-  def close_sub
-    @sub.close
-    @sub.dispose
-    @menu.open
-  end
+  # def close_sub
+  #   @sub.close
+  #   @sub.dispose
+  #   @menu.open
+  # end
 
   def close_all
 

@@ -10,7 +10,6 @@ class Label < Sprite
   attr_accessor :shadow
   attr_accessor :fixed_width
   attr_accessor :padding
-  attr_accessor :icon
 
   attr_accessor :gradient
     
@@ -50,6 +49,11 @@ class Label < Sprite
       refresh
     end
   end
+
+  def icon=(icon)
+    @icon = icon
+    refresh
+  end
     
   #--------------------------------------------------------------------------
   # * Redraw
@@ -78,7 +82,7 @@ class Label < Sprite
     # Draw the icon
     if @icon
 
-      self.bitmap.blt(@padding,(size.height-28)/2+2,@icon,@icon.rect)
+      self.bitmap.blt(@padding,(size.height-28)/2,@icon,@icon.rect)
 
     end
 

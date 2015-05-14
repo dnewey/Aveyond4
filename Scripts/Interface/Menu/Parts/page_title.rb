@@ -20,6 +20,10 @@ class Page_Title < SpriteGroup
 
 	end
 
+	def dispose
+		@sprites.each{ |s| s[0].dispose }
+	end
+
 	def change(page)
 		@icon.bitmap = $cache.menu("Icons/"+page)
 		@title.bitmap = $cache.menu("Titles/"+page)

@@ -221,10 +221,10 @@ refresh_table = function()
                             name: 'test',
                             prefetch: 'icons.json'
                         },
-                        emptytext: 'nil',
-                        display: function(value, response) {
-                            return false;   //disable this method
-                        },
+                        // emptytext: 'nil',
+                        // display: function(value, response) {
+                        //     return false;   //disable this method
+                        // },
                         success: function (r, v) {
                             json_edit($(this),$(this).attr('dan-row'),$(this).attr('dan-fld'), v);
                         }
@@ -459,7 +459,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-05-11
+// Sort by last modified 2015-05-12
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()

@@ -28,7 +28,8 @@ class List_Common < SpriteGroup
 	end
 
 	def dispose
-
+		@window.dispose
+		@list.dispose
 	end
 
 	def update

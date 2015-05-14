@@ -293,17 +293,29 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def select(option)
 
-		if option == "Items"
-			$scene.open_sub(Mnu_Items.new(@vp))
+		case option
+			when "Journal"
+				$scene.open_sub(Mnu_Journal.new(@vp))
+			when "Items"
+				$scene.open_sub(Mnu_Items.new(@vp))
+			when "Equip"
+				$scene.open_sub(Mnu_Equip.new(@vp))
+			when "Skills"
+				$scene.open_sub(Mnu_Skills.new(@vp))
+			when "Party"
+				$scene.open_sub(Mnu_Party.new(@vp))
+			when "Options"
+				$scene.open_sub(Mnu_Options.new(@vp))
+			when "Quit"
+				$scene.open_sub(Mnu_Quit.new(@vp))
+			when "Load"
+				$scene.open_sub(Mnu_Load.new(@vp))
+			when "Save"
+				$scene.open_sub(Mnu_Save.new(@vp))
+			when "Char"
+				$scene.open_sub(Mnu_Char.new(@vp))
 		end
-		if option == "Journal"
-			$scene.open_sub(Mnu_Journal.new(@vp))
-		end
-	end
 
-	def cancel(option)
-		# save cursor pos for later
-		$game.pop_scene
 	end
 
 end

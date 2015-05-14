@@ -7,6 +7,8 @@ class Scene_Map < Scene_Base
    def initialize
     super
 
+    @moblins = []
+
     # Setup
     @map.setup($data.system.start_map_id)
     @player.moveto($data.system.start_x, $data.system.start_y)
@@ -18,7 +20,7 @@ class Scene_Map < Scene_Base
 
     @hud = Ui_Screen.new(@vp_ui)
 
-    @moblins = []
+    
             
   end
   
@@ -41,8 +43,8 @@ class Scene_Map < Scene_Base
     
   end
 
-  def moblin(src,delay)
-    @moblins.push(Moblin.new(src,delay))
+  def add_moblin(ev,delay)
+    @moblins.push(Moblin.new(gev(ev),delay))
   end
 
 end

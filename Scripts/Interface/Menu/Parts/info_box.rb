@@ -21,6 +21,11 @@ class Info_Box < SpriteGroup
 
 	end
 
+	def dispose
+		@window.dispose
+		@title.dispose
+	end
+
 	def update
 		@window.update
 	end

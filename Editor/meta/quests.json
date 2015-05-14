@@ -10,7 +10,15 @@
     "edit": "area"
   },
   {
-    "field": "req"
+    "field": "location"
+  },
+  {
+    "field": "req",
+    "help": "Format - type:id:count Item, Var or Flag"
+  },
+  {
+    "field": "reward",
+    "help": "Format - id:count or gold:count"
   },
   {
     "field": "chapter",

@@ -168,22 +168,22 @@ class Game_Player < Game_Character
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        $scene.add_spark($mouse.x,$mouse.y)
+        $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
 
-        log_info([mx,my])
+        
         
         # Turn Character in direction
         #turn_toward_pos(mx,my)
         
         # Run Pathfinding
-        evt = $map.lowest_event_at(mx, my)
-#        if evt == nil
+        evt = $map.event_at(mx, my)
+        if evt == nil
           find_path(mx, my)
           @eventarray = @runpath ? $map.events_at(mx, my) : nil
-        # else
-        #   find_path(evt.x, evt.y)
-        #   @eventarray = [evt]
-        # end
+        else
+           find_path(evt.x+1, evt.y+1)
+           @eventarray = [evt]
+        end
         
         # If Event At Grid Location
         unless @eventarray.nil?

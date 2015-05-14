@@ -27,10 +27,15 @@ class Box
 		# Display position, integer
 		@dx, @dy = 0, 0
 
-		# Anim speed
-		@sx = 0.2
-		@sy = 0.2
+		# Anim speed - default to still
+		@sx = 0.0#0.2
+		@sy = 0.0#0.2
 
+	end
+
+	def scroll(x,y)
+		@sx = x
+		@sy = y
 	end
 
 	def dispose

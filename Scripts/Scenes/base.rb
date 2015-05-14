@@ -43,7 +43,7 @@ class Scene_Base
     @pops = []
 
     # weather in map data
-    @weather = Weather.new(@vp_over)
+    @weather = nil#Weather.new(@vp_over)
     @fog = Plane.new(@vp_over)
 
     # Put this where?
@@ -55,13 +55,6 @@ class Scene_Base
     
     # UI
     @hud = nil # Define in sub
-
-    # Tracking value, NO, PUT IN DEBUG
-    # Char names are in this also
-    # Is this different
-    @debug = Sprite.new(@vp_overlay)
-    @debug.bitmap = Bitmap.new($game.width,$game.height)
-    @debug.bitmap.font = $fonts.debug_min
             
   end
   
@@ -73,7 +66,7 @@ class Scene_Base
     @characters.each{ |s| s.dispose }
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
-    @weather.dispose
+    @weather.dispose if @eather
     @fog.dispose
     @overlay.dispose
     @hud.dispose
@@ -94,8 +87,6 @@ class Scene_Base
   #--------------------------------------------------------------------------
   def update
 
-    @debug.bitmap.clear
-
     # Model update
     @map.update      
     @player.update
@@ -110,8 +101,8 @@ class Scene_Base
     @sparks.each{ |s| 
       # Mouse click needs to follow, others do not
       # Maybe just do all
-      #s.ox = @map.display_x/4
-      #s.oy = @map.display_y/4
+      s.ox = @map.display_x/4
+      s.oy = @map.display_y/4
       s.update 
     }
     @pops.each{ |s| 
@@ -119,7 +110,7 @@ class Scene_Base
       #s.oy = @map.display_y/4
       s.update 
     }
-    @weather.update
+    @weather.update if @weather
     #@fog.update
     #@overlay.update
     @hud.update
@@ -152,10 +143,32 @@ class Scene_Base
 
   end
 
-  def add_spark(fx,x,y)
+  def change_tint(tint)
 
-    sprk = Spark.new("redstar",x,y,@vp_main)
+  end
+
+  def change_weather(weather)
+    @weather.dispose if @weather
+    case weather
+      when 'dark-dots'
+        @weather = Weather_DarkDots.new(@vp_over)
+    end
+  end
+
+  def change_fog(fog)
+
+  end
+
+  def change_panoramas(panos)
+
+  end
+
+
+  def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
+
+    sprk = Spark.new(fx,x,y,vp)
     @sparks.push(sprk)
+    return sprk
 
   end
 

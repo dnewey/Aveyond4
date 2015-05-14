@@ -72,10 +72,10 @@ class QuestData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
-	#attr_reader :category
-	#attr_reader :icon
-	#attr_reader :price
-	#attr_reader :action
+	attr_reader :location
+	attr_reader :req
+	attr_reader :reward
+	attr_reader :chapter
 end
 
 class AnimData

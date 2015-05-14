@@ -32,11 +32,14 @@ class DebugManager
 		
 		# Prepare on screen log
 		@viewport = Viewport.new(0,0,640,480)
-		@viewport.z = 4000
+		@viewport.z = 5000
 		
 		@console = DebugConsole.new(@viewport)
 
 		@menu = DebugMenu.new(@viewport)
+
+		@track = Sprite.new(@viewport)
+	    @track.bitmap = Bitmap.new(150,30)
 
 		@last_color = INFO_COLOR
 
@@ -48,9 +51,21 @@ class DebugManager
 		@console.update if !@menu.active?
 		@menu.update if !@console.active?
 
+		# If tracking, do it
+		if @track_obj
+			@track.bitmap.fill(Color.new(0,0,0))
+			@track.bitmap.font = $fonts.debug_min
+   	 		@track.bitmap.draw_text(10,0,150,30,@track_obj.send(@track_val).to_s,0)
+   	    end
+
 	end
 
+	def track(obj,val)
 
+		@track_obj = obj
+		@track_val = val
+
+	end
 
 	def log(msg,type='LOG')
 	    return if !DEBUG

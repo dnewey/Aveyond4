@@ -86,3 +86,9 @@ def gev(str)
 	return nil
 
 end
+
+def moblin(ev,delay=1)
+
+	$scene.add_moblin(ev,delay)
+
+end
