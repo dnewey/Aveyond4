@@ -220,6 +220,8 @@ class Game_Map
       end
     end
 
+update_camera
+
   end
 
   def update_camera

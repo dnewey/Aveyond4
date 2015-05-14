@@ -1,4 +1,4 @@
-[m"∞#==============================================================================
+[v"∞#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -66,7 +66,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"#==============================================================================
+end"’#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -115,11 +115,6 @@ class Sprite_Character < Sprite
         self.oy = @ch
       end
 
-    end
-
-  self.zoom_y = 1
-    if rand > 0.5
-      self.zoom_y = -1
     end
 
     # Clear the helper graphics
@@ -202,7 +197,501 @@ class MapWrap < Tilemap
 end"A
 
 
-# Other things of this nature will reside within thine"Õ
+# Other things of this nature will reside within thine"O
+class Pop < Sprite
+
+	def initialize(ein,eout,vp)
+		super(vp)
+
+		anim_seq = seq()
+
+		case ein
+
+			when :fade
+				self.opacity = 0
+				#anim_seq.push(set("opacity",0))
+				anim_seq.push(go("opacity",255,500,:qio))
+
+			when :blast
+				self.zoom_x = 1
+				self.zoom_y = 0
+				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
+				anim_seq.push(go("zoom_y",1,700,:bounce_o))
+
+		end
+
+		anim_seq.push(delay(1000))
+
+		case eout
+
+			when :fade
+				anim_seq.push(go("opacity",-255,500,:qio))
+
+			when :blast
+				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
+				anim_seq.push(go("zoom_y",-1,700,:bounce_i))				
+
+		end
+
+		self.do(anim_seq)
+
+	end
+
+	def icon=(ico)
+
+		self.bitmap = $cache.icon(ico)
+
+		self.ox = width/2
+		self.oy = height/2
+
+	end
+
+	def number=(num)
+
+		# prepare number data
+	    data = num.to_i.to_s.split(//)
+	    nums = []
+	    data.each{ |n| nums.push(n.to_i) }
+
+	    size = 22
+
+	    # build the gfx of this number
+	    src = $cache.numbers('pop_'+size.to_s)
+	    cw = src.width/10
+	    ch = src.height/7
+
+	    # Colors
+	    colors = [:yellow,:orange,:purple,:green,:red,:gray,:white]
+	    ic = 0#colors.index(color)
+	    
+	    # prepare the final image
+	    width = 0
+	    nums.each{ |n| width+=cw*0.75 }
+	    bmp = Bitmap.new(width,ch)
+	    c = 0
+
+	    nums.each{ |n|
+
+	      s = n * cw
+
+	      bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
+	      c += cw*0.65
+
+	    }
+
+	    self.bitmap = bmp
+	    
+		self.ox = width/2
+		self.oy = height/2 
+
+	end
+
+
+end"# #==============================================================================
+# # Sprite_Pop
+# #==============================================================================
+
+# class Sprite_Pop < Sprite_Elebase
+  
+#   attr_accessor :life,:vx,:vy,:fx,:fy,:dx,:dy
+#   attr_accessor :base_type
+#   attr_accessor :type
+    
+#   #--------------------------------------------------------------------------
+#   # * Init
+#   #--------------------------------------------------------------------------
+#   def initialize(vp)
+#     super(vp)
+    
+#     @state = :in
+        
+#     # Defaults
+#     @life = 45
+#     @fx = 0.0
+#     @fy = 0.4
+#     @dx = 0.0
+#     @dy = 0.0
+#     @vx = rand*2.0-1.0
+#     @vy = rand*-5.0-10.0
+#     @base_type = :normal
+#     @type = :fall
+    
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare icon popper
+#   #--------------------------------------------------------------------------
+#   def pop_icon(ic,double=false)
+#     prep_sprite(Cache.icon(ic,true)) 
+#   end
+  
+#   def pop_gfx(gfx)
+#     prep_sprite(Cache.menu(gfx))
+#   end
+  
+#   def pop_hit(gfx)
+#     prep_sprite(Cache.menu(gfx))
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare damage popper
+#   #--------------------------------------------------------------------------
+#   def pop_dmg(dmg,size,color)
+
+#     
+    
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare damage popper
+#   #--------------------------------------------------------------------------
+#   def pop_xp(dmg,size,color)
+
+#     # prepare number data
+#     anums = dmg.to_i.to_s.split(//)
+#     nums = []
+#     anums.each{ |n| nums.push(n.to_i) }
+
+#     # build the gfx of this number
+#     src = Cache.system('pop_'+size.to_s)
+#     cw = src.width/10
+#     ch = src.height/7
+
+#     # Colors
+#     colors = [:yellow,:orange,:blue,:green,:red,:gray,:white]
+#     ic = colors.find_index(color)
+    
+#     # prepare the final image
+#     width = 0
+#     nums.each{ |n| width+=cw }
+#     bmp = Bitmap.new(width+20,ch)
+#     c = 0
+
+#     nums.each{ |n|
+
+#       s = n * cw
+
+#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
+#       c += cw*0.65
+
+#     }
+    
+#     src = Cache.menu('xp')
+#     bmp.blt(c+2,9,src,src.rect)
+    
+#     prep_sprite(bmp)    
+    
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare sharp popper
+#   #--------------------------------------------------------------------------
+#   def pop_sharp(dmg,size,color)
+
+#     # prepare number data
+#     anums = dmg.to_i.to_s.split(//)
+#     nums = []
+#     anums.each{ |n| nums.push(n.to_i) }
+
+#     # build the gfx of this number
+#     src = Cache.system('pop_'+size.to_s)
+#     cw = src.width/10
+#     ch = src.height/7
+
+#     # Colors
+#     colors = [:yellow,:orange,:blue,:green,:red,:gray,:white]
+#     ic = colors.find_index(color)
+
+#     # prepare the final image
+#     width = 0
+#     nums.each{ |n| width+=cw }
+#     bmp = Bitmap.new(width+38,ch+3)
+#     c = 0
+    
+    
+
+#     nums.each{ |n|
+
+#       s = n * cw
+
+#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
+#       c += cw*0.65
+
+#     }
+
+    
+#     src = Cache.menu('dmg')
+#     bmp.blt(c+1,4,src,src.rect)
+    
+#     prep_sprite(bmp)    
+
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare sharp popper
+#   #--------------------------------------------------------------------------
+#   def pop_block(dmg,size,color)
+
+#     # prepare number data
+#     anums = dmg.to_i.to_s.split(//)
+#     nums = []
+#     anums.each{ |n| nums.push(n.to_i) }
+
+#     # build the gfx of this number
+#     src = Cache.system('pop_'+size.to_s)
+#     cw = src.width/10
+#     ch = src.height/7
+
+#     # Colors
+#     colors = [:yellow,:orange,:blue,:green,:red,:gray,:white]
+#     ic = colors.find_index(color)
+    
+#     # prepare the final image
+#     width = 0
+#     nums.each{ |n| width+=cw }
+#     bmp = Bitmap.new(width+40,ch)
+#     c = 0
+
+#     nums.each{ |n|
+
+#       s = n * cw
+
+#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
+#       c += cw*0.65
+
+#     }
+    
+#     src = Cache.menu('block')
+#     bmp.blt(c+1,5,src,src.rect)
+    
+#     prep_sprite(bmp)    
+    
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare damage popper
+#   #--------------------------------------------------------------------------
+#   def pop_hp(dmg,size,color)
+
+#     # prepare number data
+#     anums = dmg.to_i.to_s.split(//)
+#     nums = []
+#     anums.each{ |n| nums.push(n.to_i) }
+
+#     # build the gfx of this number
+#     src = Cache.system('pop_'+size.to_s)
+#     cw = src.width/10
+#     ch = src.height/7
+
+#     # Colors
+#     colors = [:yellow,:orange,:purple,:green,:red,:gray,:white]
+#     ic = colors.find_index(color)
+    
+#     # prepare the final image
+#     width = 0
+#     nums.each{ |n| width+=cw }
+#     bmp = Bitmap.new(width+20,ch+15)
+#     c = 0
+
+#     nums.each{ |n|
+
+#       s = n * cw
+
+#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
+#       c += cw*0.65
+
+#     }
+    
+#     if color == :green
+#       src = Cache.menu('hp_heal')
+#     elsif color == :purple
+#       src = Cache.menu('hp_poison')
+#     else
+#       src = Cache.menu('hp')
+#     end
+#     bmp.blt(c+2,9,src,src.rect)
+    
+#     prep_sprite(bmp)    
+    
+#   end
+  
+#   #--------------------------------------------------------------------------
+#   # * Prepare sprite
+#   #--------------------------------------------------------------------------
+#   def prep_sprite(bmp)
+    
+#     # setup sprite
+#     self.opacity = 0
+#     self.bitmap = bmp
+#     self.auto_size
+#     @loc_y = y.to_f-bmp.height/2
+#     @loc_x = self.x
+#     @base_y = @base_type == :normal ? @loc_y - (bmp.height/2)+10 : 220
+    
+#   end  
+  
+#   #--------------------------------------------------------------------------
+#   # * Dispose
+#   #--------------------------------------------------------------------------
+#   def dispose
+
+#     self.bitmap.dispose if self.bitmap != nil
+#     super
+
+#   end
+
+#   #--------------------------------------------------------------------------
+#   # * Update
+#   #--------------------------------------------------------------------------
+#   def update
+#     super
+    
+#     @vy += @fy if @type == :fall
+#     @vx += @fx if @type == :fall
+    
+#     @vx *= (1-@dx)
+#     @vy *= (1-@dy)
+
+#     @loc_y += @vy
+#     @loc_x += @vx
+    
+#     if @type == :fall
+#       if @vy > 0 && @loc_y >= @base_y
+#         @vy > 2.0 ? @vy *= -0.5 : @vy = 0
+#         @loc_y = @base_y
+#       end
+#     elsif @type == :zoom
+      
+#     else
+#       @vy *= 0.9
+#       @vx *= 0.8
+#     end
+
+#     # Positioning
+#     self.y = @loc_y
+#     self.x = @loc_x
+
+#     if @state == :in
+#       self.opacity += 20
+#       @state = :up if self.opacity >= 255
+#     elsif @state == :up
+#       @life -= 1
+#       @state = :out if @life <= 0
+#     elsif @state == :out
+#       self.opacity -= 8
+#       @state = :done if self.opacity <= 0
+#     end
+    
+#     #p @state
+
+#   end
+
+#   #--------------------------------------------------------------------------
+#   # * Mischecks
+#   #--------------------------------------------------------------------------
+#   def dead?() return self.opacity <= 0 end
+
+# end"ø
+class Spark < Sprite
+
+	def initialize(fx,x,y,vp)
+		super(vp)
+
+
+		# fx is database id, also gfx name
+		# If not in database, use defaults
+
+		self.bitmap = $cache.animation(fx)
+
+		# Defaults
+		@frames = 25
+		@delay = 2
+
+		@fade_out = true
+
+		self.opacity = 122
+		self.blend_type = 0
+
+		@sound = nil
+		@sound_delay = 0
+
+		if $data.anims.has_key?(fx)
+
+			anim = $data.anims[fx]
+			@frames = anim.frames
+			@delay = anim.delay
+			@fadeout = anim.fadeout
+			case anim.order
+				when 'below'
+				when 'same'
+				when 'above'
+			end
+
+			#self.blend_type = anim.blend
+
+			# Split sound input
+			if anim.sound != ''
+				dta = anim.split(':')
+				if dta.count > 1
+					@sound_delay = dta[1].to_i
+				end
+				@sound = dta[0]
+			end
+
+		end
+
+		self.center(x,y)
+
+		@idx = -1
+		@next = 0
+		update
+
+	end
+
+	def width
+		return self.bitmap.width / 5
+	end
+
+	def height
+		return self.bitmap.width / 5
+	end
+
+	def done?
+		return false if @fade_out && self.opacity > 0
+		return @idx == @frames
+	end
+
+	def update
+
+		#self.ox = -$scene.map.display_x
+    	#self.oy = -$scene.map.display_y
+
+		# Step counters
+		@next -= 1
+		if @next < 1
+			@next = @delay
+
+			@idx += 1
+
+			@idx = @frames if @idx > @frames
+
+			self.opacity -= 15 if @frames == @idx
+
+			fx = @idx % 5 # frames_per_row
+			fy = @idx / 5
+
+
+
+			# Refresh
+			
+			self.src_rect = Rect.new(fx*width,fy*height,width,height)
+
+
+		end
+
+	end
+
+end"Õ
 # Spawn and manage weather particles
 
 class Particle < Sprite
@@ -1084,75 +1573,7 @@ class List
 
   end
 
- end"ò
-class Spark < Sprite
-
-	def initialize(fx,vp)
-		super(vp)
-
-		self.bitmap = $cache.animation(fx)
-
-		@total_frames = fx.split(".")[1].to_i
-		@total_frames -= 1
-
-		@frame = 1
-
-		# No frame per row
-
-		self.opacity = 25
-
-		@delay = 2
-
-		@next = 0
-
-		# Can fade out when done
-		@fade_out = true
-
-		update
-
-	end
-
-	def width
-		return self.bitmap.width / 5
-	end
-
-	def height
-		return self.bitmap.width / 5
-	end
-
-	def done?
-		return false if @fade_out && self.opacity > 0
-		return @frame == @total_frames
-	end
-
-	def update
-
-		# Step counters
-		@next -= 1
-		if @next < 1
-			@next = @delay
-
-			@frame += 1
-
-			@frame = @total_frames if @frame > @total_frames
-
-			self.opacity -= 15 if @total_frames == @frame
-
-			fx = @frame % 5 # frames_per_row
-			fy = @frame / 5
-
-
-
-			# Refresh
-			
-			self.src_rect = Rect.new(fx*width,fy*height,width,height)
-
-
-		end
-
-	end
-
-end"Ö
+ end" "Ö
 class SpriteGroup
 
 	attr_reader :sprites
@@ -1305,7 +1726,19 @@ class Tabs < Sprite
 
   end
 
- end"J#==============================================================================
+ end"õ
+
+def sfx(file,vol=1.0)
+	$audio.sfx(file,vol)
+end
+
+def sys(file,vol=1.0)
+	$audio.sys(file,vol)
+end
+
+def music(file,vol)
+	$audio.music(file)
+end"J#==============================================================================
 # ** Camera Functions
 #==============================================================================
 
@@ -1319,7 +1752,7 @@ end
 
 def scenecam()
 
-end"#==============================================================================
+end"Õ#==============================================================================
 # ** Common Functions
 #==============================================================================
 
@@ -1328,7 +1761,7 @@ def plr
 end
 
 def me
-	return $map.interpreter.event_id
+	return $scene.map.interpreter.event_id
 end
 
 def this
@@ -1356,14 +1789,14 @@ def gev(str)
 	return $player if str == 'plr'
 
 	if str.kind_of?(Integer)
-		return $map.events[str]
+		return $scene.map.events[str]
 	end
 
 	if str.include?(',')
 
 			coords = str.split(",")
 			# Get by coords
-			return $map.event_at(coords[0].to_i,coords[1].to_i)
+			return $scene.map.event_at(coords[0].to_i,coords[1].to_i)
 
 	end
 
@@ -1379,26 +1812,26 @@ def gev(str)
 			return this
 
 		when 'up'
-			return $map.event_at(this.x,this.y-1) # || dummy
+			return $scene.map.event_at(this.x,this.y-1) # || dummy
 		when 'down'
-			return $map.event_at(this.x,this.y+1)
+			return $scene.map.event_at(this.x,this.y+1)
 		when 'left'
-			return $map.event_at(this.x-1,this.y)
+			return $scene.map.event_at(this.x-1,this.y)
 		when 'right'
-			return $map.event_at(this.x+1,this.y)
+			return $scene.map.event_at(this.x+1,this.y)
 		when 'under'
-			return $map.lowest_event_at(this.x,this.y)
+			return $scene.map.lowest_event_at(this.x,this.y)
 		when 'facing'
-			return $map.event_at(this.x,this.y-1) if $player.direction == 8
-			return $map.event_at(this.x,this.y+1) if $player.direction == 2
-			return $map.event_at(this.x-1,this.y) if $player.direction == 4
-			return $map.event_at(this.x+1,this.y) if $player.direction == 6
+			return $scene.map.event_at(this.x,this.y-1) if $player.direction == 8
+			return $scene.map.event_at(this.x,this.y+1) if $player.direction == 2
+			return $scene.map.event_at(this.x-1,this.y) if $player.direction == 4
+			return $scene.map.event_at(this.x+1,this.y) if $player.direction == 6
 
 		
 		else
 
 			# Check if name of event
-			ev = $map.event_by_name(str)
+			ev = $scene.map.event_by_name(str)
 			return ev if !ev.nil?
 
 		end
@@ -1782,7 +2215,56 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"G#==============================================================================
+"a
+def spark(ev,fx)
+
+	$scene.add_spark(fx,gev(ev).screen_x,gev(ev).screen_y)
+
+end
+
+def pop_huh(ev)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 70
+	$scene.add_icon("misc/exclaim",x,y,:blast,:fade)
+
+	sfx('jump')
+
+end
+
+def pop_wha(ev)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 70
+	$scene.add_icon("misc/unknown",x,y,:blast,:fade)
+
+	sfx('jump')
+
+end
+
+def pop_num(ev,number)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 70
+	$scene.add_num(number,x,y,:blast,:fade)
+
+	sfx('jump')
+
+end
+
+def icon(ev,icon,ein=:blast,eout=:blast)
+
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 32
+	$scene.add_icon(icon,x,y,ein,eout)
+
+end"G#==============================================================================
 # ** State Functions
 #==============================================================================
 
@@ -2270,7 +2752,7 @@ class TargetCmd
 	end
 
 end
-"Õ#==============================================================================
+"Ä#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -2303,6 +2785,13 @@ class Ui_Screen
 				@item = nil
 			end
 		end
+
+	  # Check inputs
+	  return if busy? or $map.interpreter.running?
+      if $input.cancel? || Input.trigger?(Input::F7)
+        $game.push_scene(Scene_Menu.new)
+      end
+
 	end
 
 	def open_item(i)
@@ -2391,7 +2880,7 @@ class Ui_Info
 
 	end
 
-end"è?#==============================================================================
+end"â?#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -2753,16 +3242,21 @@ class Ui_Message
 
     # Show the behind char anim
         # Spawn spark
-    sprk = Spark.new("message.28",@vp)
+
+
 
     txt = @word.delete('*^')[0..@char_idx-1]
     size = @scratch.text_size(txt)
 
     #return if size.width < 10
     
+    
+
     x = @sprites.x + @cx+size.width
     y = @sprites.y + @cy
-    sprk.center(x+4,y+16)
+
+sprk = Spark.new("message.28",x+4,y+16,@vp)
+
     #sprk.blend_type = 1
     @sparks.push(sprk)
     
@@ -7105,7 +7599,7 @@ class Interpreter
   end
 
 end
-"€!#==============================================================================
+""#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -7278,12 +7772,16 @@ class Game_Map
       @need_refresh = false
     end
 
-    # Camera update
-    #@cam_target = $player
+    # Mouse update
+    # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
 
-    # Camera update, maybe split to camera class
+update_camera
 
-    if @cam_target != nil
+  end
+
+  def update_camera
+
+      if @cam_target != nil
       @target_x = @cam_target.real_x- (128 * 9.5)
       @target_y = @cam_target.real_y- (128 * 7)
     else
@@ -7319,10 +7817,7 @@ class Game_Map
     #@display_x = w if @display_x > w
     #@display_y = w if @display_y > h
 
-
-
   end
-
   #--------------------------------------------------------------------------
   # * Determine if Passable
   #--------------------------------------------------------------------------
@@ -7422,7 +7917,30 @@ class Game_Map
     return map_zone_or_nil($data.mapinfos[id].parent_id)
   end
 
-end"]%#==============================================================================
+end"œ
+class Moblin
+
+	def initialize(scr,delay)
+
+		@src = src
+		@delay = delay
+		@next = 1
+
+	end
+
+	def update
+
+		@next -= 1
+		if @next <= 0
+
+			@next = @delay
+			eval(@src)
+
+		end
+
+	end
+
+end"D%#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -7456,7 +7974,6 @@ class Game_Player < Game_Character
   end
 
   def looklike(char)
-    log_scr("CHANGEIT")
     self.character_name = "Player/#{char}"
   end
 
@@ -8195,7 +8712,7 @@ end"Qclass Progress
 		return @progress < $data.progress[progress]
 	end
 
-end"<class State
+end"class State
 
 	def initialize
 
@@ -8250,8 +8767,6 @@ end"<class State
 	end
 
 	def state(e,s)
-		log_info(e)
-		log_info(s)
 		@states[[$map.id,e,s]] = true
 		$map.need_refresh = true
 	end
@@ -8262,8 +8777,6 @@ end"<class State
 	end
 
 	def state?(e,s)
-		log_sys e
-		log_sys s
 		return false if !@states.has_key?([$map.id,e,s])
 		return @states[[$map.id,e,s]]
 	end
@@ -8306,21 +8819,208 @@ end"<class State
 	end
 
 end
-"Ù#==============================================================================
-# ** Scene_Map
+"Ä#==============================================================================
+# ** Scene_Base
 #==============================================================================
 
-# Phases
+class Scene_Base
 
-# Rename actor to active_battler
+  attr_reader :map, :player
 
-class Scene_Battle
+  attr_reader :panorama, :tilemap
+  attr_reader :weather, :fog, :overlay
 
-  attr_accessor :hud
-  
+  attr_reader :hud
+
+  attr_reader :debug
+
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
+  def initialize
+
+    $scene = self
+
+    # Prep model
+    @map = Game_Map.new
+    @player = Game_Player.new
+
+    # Make viewports - Also in the scene
+    @vp_under = Viewport.new(0,0,$game.width,$game.height)
+    @vp_under.z = 0
+    @vp_main = Viewport.new(0,0,$game.width,$game.height)   
+    @vp_main.z = 1000
+    @vp_over = Viewport.new(0,0,$game.width,$game.height)
+    @vp_over.z = 2000
+    @vp_ui = Viewport.new(0,0,$game.width,$game.height)
+    @vp_ui.z = 3000
+   
+    # Make tilemap
+    #@panorama = Plane.new(@vp_under,-1000)
+    @tilemap = MapWrap.new(@vp_main)
+    
+    @characters = []  
+    @sparks = []
+    @pops = []
+
+    # weather in map data
+    @weather = Weather.new(@vp_over)
+    @fog = Plane.new(@vp_over)
+
+    # Put this where?
+    @overlay = Sprite.new(@vp_over)
+    @overlay.bitmap = Bitmap.new($game.width,$game.height)
+    @overlay.bitmap.fill(Color.new(0,0,0))
+    @overlay.opacity = 0
+    @overlay.z = 999
+    
+    # UI
+    @hud = nil # Define in sub
+
+    # Tracking value, NO, PUT IN DEBUG
+    # Char names are in this also
+    # Is this different
+    @debug = Sprite.new(@vp_overlay)
+    @debug.bitmap = Bitmap.new($game.width,$game.height)
+    @debug.bitmap.font = $fonts.debug_min
+            
+  end
+  
+  def terminate
+
+    # Dispose of things
+    @panorama.dispose
+    @tilemap.dispose
+    @characters.each{ |s| s.dispose }
+    @sparks.each{ |s| s.dispose }
+    @pops.each{ |s| s.dispose }
+    @weather.dispose
+    @fog.dispose
+    @overlay.dispose
+    @hud.dispose
+    
+    # Dispose of viewports
+    @vp_under.dispose
+    @vp_main.dispose   
+    @vp_over.dispose
+    @vp_ui.dispose
+
+    @map.dispose
+    @player.dispose
+
+  end
+
+  #--------------------------------------------------------------------------
+  # * Update the map contents and processes input from the player
+  #--------------------------------------------------------------------------
+  def update
+
+    @debug.bitmap.clear
+
+    # Model update
+    @map.update      
+    @player.update
+
+
+    # Elements update
+    #@panorama.update # With animated position
+    @tilemap.ox = @map.display_x / 4
+    @tilemap.oy = @map.display_y / 4
+    @tilemap.update
+    @characters.each{ |s| s.update }
+    @sparks.each{ |s| 
+      # Mouse click needs to follow, others do not
+      # Maybe just do all
+      #s.ox = @map.display_x/4
+      #s.oy = @map.display_y/4
+      s.update 
+    }
+    @pops.each{ |s| 
+      #s.ox = @map.display_x/4
+      #s.oy = @map.display_y/4
+      s.update 
+    }
+    @weather.update
+    #@fog.update
+    #@overlay.update
+    @hud.update
+
+    # Try to delete anything
+    @sparks.delete_if{ |s| s.done? }
+    @pops.delete_if{ |s| s.done? }
+
+    # Could delete erased characters here
+
+
+    # Rebuild the map
+    reload_map if @map.tileset_id != @tilemap.tileset_id
+    
+  end
+
+  def reload_map
+    
+    @tilemap.refresh(@map)
+
+    @characters.each{ |s| s.dispose }
+    @characters = []
+
+    @map.events.keys.sort.each{ |i|
+      sprite = Sprite_Character.new(@vp_main, @map.events[i])
+      @characters.push(sprite)
+    }
+
+    @characters.push(Sprite_Character.new(@vp_main, @player))
+
+  end
+
+  def add_spark(fx,x,y)
+
+    sprk = Spark.new("redstar",x,y,@vp_main)
+    @sparks.push(sprk)
+
+  end
+
+  def add_icon(ic,x,y,ein,eout)
+
+    ico = Pop.new(ein,eout,@vp_over)
+    ico.icon = ic
+    ico.move(x,y)
+    @pops.push(ico) # Could combine these with spark
+
+  end
+
+  def add_num(nm,x,y,ein,eout)
+
+    ico = Pop.new(ein,eout,@vp_over)
+    ico.number = nm
+    ico.move(x,y)
+    @pops.push(ico) # Could combine these with spark
+
+  end
+
+  def pop_dmg(target,amount)
+    #ev = gev(target)
+    pop = Popper.new(@vp_pops)
+    pop.value = 0#amount #- amount/10
+    pop.x = target.screen_x-200-20
+    pop.y = target.screen_y-40-12+45
+    @poppers.push(pop)
+
+    pop.opacity = 1
+    pop.do(go("value",amount,700,:quad_in_out))
+    pop.do(sequence(go("opacity",254,500),go("opacity",0,1500),go("opacity",-255,500)))
+    pop.do(sequence(go("y",-30,500,:quad_in_out),go("y",-20,1500),go("y",-30,500,:quad_in_out)))
+
+
+  end
+
+end
+"ﬂ#==============================================================================
+# ** Scene_Map
+#==============================================================================
+
+class Scene_Battle < Scene_Base
+
   def initialize
 
     Graphics.freeze
@@ -8329,53 +9029,25 @@ class Scene_Battle
     @wait_frames = 0
     @active_battler = nil
 
-    # Auto viewports to fullscreen and set z in init
-    @vp = Viewport.new(0, 0, $game.width, $game.height)
-    @vp_pops = Viewport.new(0,0,$game.width,$game.height)
-    @vp_hud = Viewport.new(0, 0, $game.width, $game.height)
-    @vp.z = 6000  
-    @vp_pops.z = 6500
-    @vp_hud.z = 7500
-
-    @dbg_phase = Sprite.new(@vp_hud)
-    @dbg_phase.bitmap = Bitmap.new(150,30)
-
-    #@panorama = Sprite.new(@vp)
-    #@panorama.z = -100
-
-    @map = Game_Map.new
     @map.setup($battle.map)
-    #$map = @map 
+    @tilemap.refresh(@map)
+
     # Could put the scrolling into battle in with this
     # Char screenx comes from this, perhaps $scene.map
-
-
-    @player = Game_Player.new
-    
-    # Get rid of this after figuring out camera pos as pos instead of event
-    $player = @player 
-    #@player.moveto(5,5)
-    #@map.camera_to(@player)
+   
     @map.camera_xy(5,15)
     @map.cam_oy = 150
     @map.do(go("cam_oy",-150,3500,:quad_in_out))    
 
-    @tilemap = MapWrap.new(@vp) 
-    @tilemap.refresh(@map)
-
-    @character_sprites = []
-    @map.events.keys.sort.each{ |i|
-      sprite = Sprite_Character.new(@vp, @map.events[i])
-      @character_sprites.push(sprite)
-    }
 
     # Create Hud Elements
-    @hud = BattleHud.new(@vp_hud)
-    @actor_cmd = ActorCmd.new(@vp_hud)
-    @skill_cmd = SkillCmd.new(@vp_hud)
-    @target_cmd = TargetCmd.new(@vp_hud)
+    @hud = BattleHud.new(@vp_ui)
+    @actor_cmd = ActorCmd.new(@vp_ui)
+    @skill_cmd = SkillCmd.new(@vp_ui)
+    @target_cmd = TargetCmd.new(@vp_ui)
 
-    # Prepare battler events
+
+    # Find battler events
     [0,1,2,3].each{ |i| 
       ev = @map.event_by_evname("A.#{i}")
       act = $party.actor_by_index(i).id
@@ -8393,20 +9065,13 @@ class Scene_Battle
       end
     }
 
-    # TESTING THE SPARKS
-    @sparks = []
-
-    # Poppers
-    @poppers = []
-
 
     Graphics.transition(50,'Graphics/System/trans')  
             
   end
   
   def terminate
-    @map.dispose
-    @character_sprites.each{ |s| s.dispose }    
+    super  
   end
 
   def busy?
@@ -8417,49 +9082,13 @@ class Scene_Battle
     @wait_frames = w
   end
 
-
-  def add_spark(x,y)
-
-    # Spawn spark
-    #sprk = Spark.new("click.20",@vp_main)
-    sprk = Spark.new("redstar.24",@vp_pops)
-
-    #x = @sprites.x + @cx+size.width
-    #y = @sprites.y + @cy
-
-    dx = -@map.display_x/4
-    dy = -@map.display_y/4
-    sprk.center(x+3-dx,y+5-dy-32)
-    #sprk.blend_type = 1
-    @sparks.push(sprk)
-
-
-  end
-
   #--------------------------------------------------------------------------
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
 
   def update
 
-        @sparks.delete_if{ |s| s.done? }
-
-    # Update the sparks
-    @sparks.each{ |s| 
-      s.ox = @map.display_x/4
-      s.oy = @map.display_y/4
-      s.update 
-    }
-
-    @hud.update
-    @map.update    
-    @character_sprites.each{ |s| s.update }
-
-    # Remove pops that are invisible
-    @poppers.each{ |p| p.dispose if p.done? }
-    @poppers.delete_if{ |p| p.disposed? }
-
-    @poppers.each{ |p| p.update }
+    super
 
     # Draw phase
     @dbg_phase.bitmap.fill(Color.new(0,0,0))
@@ -8524,29 +9153,6 @@ class Scene_Battle
     end
 
   end
-
-
-  def pop_dmg(target,amount)
-    #ev = gev(target)
-    pop = Popper.new(@vp_pops)
-    pop.value = 0#amount #- amount/10
-    pop.x = target.screen_x-200-20
-    pop.y = target.screen_y-40-12+45
-    @poppers.push(pop)
-
-    pop.opacity = 1
-    pop.do(go("value",amount,700,:quad_in_out))
-    pop.do(sequence(go("opacity",254,500),go("opacity",0,1500),go("opacity",-255,500)))
-    pop.do(sequence(go("y",-30,500,:quad_in_out),go("y",-20,1500),go("y",-30,500,:quad_in_out)))
-
-
-  end
-
-  def pop_crit(target)
-
-  end
-
-
 
 end"[
 class Scene_Battle
@@ -8870,81 +9476,32 @@ class Scene_Battle
 
   end
 
-end"Ú#==============================================================================
+end"‰#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
-class Scene_Map
+class Scene_Map < Scene_Base
 
-  attr_reader :hud
+   def initialize
+    super
 
-
-  attr_reader :overlay
-  attr_reader :debug
-
-  #--------------------------------------------------------------------------
-  # * Set up the scene
-  #--------------------------------------------------------------------------
-  def initialize
-
-
-    # Make viewports - Also in the scene
-    @vp_main = Viewport.new(0,0,$game.width,$game.height)   
-    @vp_overlay = Viewport.new(0,0,$game.width,$game.height)
-    @vp_ui = Viewport.new(0,0,$game.width,$game.height)
-
-    # Prep model
-    @map = Game_Map.new
-    $map = @map
+    # Setup
     @map.setup($data.system.start_map_id)
-
-    @player = Game_Player.new
-    $player = @player
     @player.moveto($data.system.start_x, $data.system.start_y)
 
     @map.camera_to(@player)
 
-    # Make tilemap
-    #@panorama = Plane.new(@vp_main,-1000)
-    @tilemap = MapWrap.new(@vp_main)
-    @character_sprites = []  
+    $map = @map
+    $player = @player
 
-    # weather in map data
-    @weather = Weather.new(@vp_overlay)
-
-    @overlay = Sprite.new(@vp_overlay)
-    @overlay.bitmap = Bitmap.new($game.width,$game.height)
-    @overlay.bitmap.fill(Color.new(0,0,0))
-    @overlay.opacity = 0
-    @overlay.z = 999
-    
-    # UI
     @hud = Ui_Screen.new(@vp_ui)
 
-    @debug = Sprite.new(@vp_overlay)
-    @debug.bitmap = Bitmap.new($game.width,$game.height)
-    @debug.bitmap.font = $fonts.debug_min
-
-    # TESTING THE SPARKS
-    @sparks = []
-
-    #Graphics.transition
-    Graphics.transition(20,'Graphics/System/trans') 
+    @moblins = []
             
   end
   
   def terminate
-
-    # Dispose of tilemap  
-    @panorama.dispose  
-    @tilemap.dispose
-    @character_sprites.each{ |s| s.dispose }
-    @weather.dispose  
-    @hud.dispose
-    
-    # Dispose of viewports
-    @vp_main.dispose
-    @vp_ui.dispose
+    super
 
   end
 
@@ -8956,107 +9513,14 @@ class Scene_Map
   # * Update the map contents and processes input from the player
   #--------------------------------------------------------------------------
   def update
+    super
 
-    @debug.bitmap.clear
-
-    @sparks.delete_if{ |s| s.done? }
-
-    # Update the sparks
-    @sparks.each{ |s| 
-      s.ox = @map.display_x/4
-      s.oy = @map.display_y/4
-      s.update 
-    }
-
-
-    @map.update      
-    @player.update
-
-    @hud.update
-
-    # check for changes
-    refresh_tileset if $map.tileset_id != @tilemap.tileset_id
-
-    #refresh_panorama if @panorama_name != @map.tileset.panorama_name
-
-    # Update tilemap
-    @tilemap.ox = @map.display_x / 4
-    @tilemap.oy = @map.display_y / 4
-    @tilemap.update
-
-    # Update panorama plane
-    #@panorama.ox = 0 # $map.display_x / 8
-    #@panorama.oy = 0 # $map.display_y / 8
-
-    # # Update character sprites
-    @character_sprites.each{ |s|
-      s.update
-    }
-
-  
-    # Set screen color tone and shake position
-    #@vp_main.tone = @tone
-
-    # Open Menu at player's request
-    unless @map.interpreter.running? or @hud.busy?
-
-      # Check inputs
-      if $input.cancel? || Input.trigger?(Input::F7)
-        $game.push_scene(Scene_Menu.new)
-      end
-
-    end
-
-    @weather.update
+    @moblins.each{ |i| i.update } if !busy?
     
   end
 
-  def add_spark(x,y)
-
-    # Spawn spark
-    sprk = Spark.new("firework.30",@vp_main)
-    #sprk = Spark.new("pink.40",@vp_main)
-
-    #x = @sprites.x + @cx+size.width
-    #y = @sprites.y + @cy
-
-    dx = -@map.display_x/4
-    dy = -@map.display_y/4
-    sprk.center(x+3-dx,y+5-dy)
-    #sprk.blend_type = 1
-    @sparks.push(sprk)
-
-  end
-
-  #--------------------------------------------------------------------------
-  # * Refresh Tileset
-  #--------------------------------------------------------------------------
-  def refresh_tileset
-    
-    @tilemap.refresh(@map)
-
-    @character_sprites.each{ |s| s.dispose }
-    @character_sprites = []
-
-    @map.events.keys.sort.each{ |i|
-      sprite = Sprite_Character.new(@vp_main, @map.events[i])
-      @character_sprites.push(sprite)
-    }
-
-    @character_sprites.push(Sprite_Character.new(@vp_main, @player))
-
-  end
-
-  def refresh_panorama
-      @panorama_name = $map.tileset.panorama_name
-      if @panorama.bitmap != nil
-        @panorama.bitmap.dispose
-        @panorama.bitmap = nil
-      end
-      if @panorama_name != ""
-        @panorama.bitmap = Cache.panorama(@panorama_name)
-      end
-      Graphics.frame_reset
+  def moblin(src,delay)
+    @moblins.push(Moblin.new(src,delay))
   end
 
 end
@@ -9132,84 +9596,898 @@ class Scene_Menu
 
   end
 
-end" " "Í#==============================================================================
+end" " "¬Cmodule Seal
+
+  #LIB_DIR = "System/"
+  class SealAPI < Win32API
+    STRCPY_S = Win32API.new('msvcrt', 'strcpy_s', 'pll', 'i')
+
+    def initialize(func, arg_types, return_type = 'i', *args)
+      @return_string = return_type == 'p'
+      library = File.join(defined?(LIB_DIR) ? LIB_DIR : '.', 'seal')
+      super(library, "seal_#{func}", arg_types, return_type, *args)
+    end
+
+    def [](*args)
+      result = call(*args)
+      if @return_string and result.is_a? Integer
+        # String pointer is returned to Ruby as an integer even though we
+        # specified 'p' as the return value - possibly a bug in Ruby 1.9.3's
+        # Win32API implementation. Work around it.
+        message_buffer = ' ' * 128
+        STRCPY_S.call(message_buffer, message_buffer.size, result)
+        return message_buffer.strip
+      end
+      result
+    end unless method_defined? :[]
+  end
+
+  module Helper
+    GET_ERR_MSG = SealAPI.new('get_err_msg', 'i', 'p')
+
+    class << self
+      def define_enum(mod, constants, start_value = 0)
+        constants.each_with_index do |constant, index|
+          mod.const_set(constant, start_value + index)
+        end
+      end
+
+      # Returns a destructor for a native Seal object. This is most likely
+      # called in the initializer method, but we cannot define the proc handler
+      # there because that will capture the binding of the implicit `self` (due
+      # to the nature of closure), which makes the object that `self` refers to
+      # unrecyclable.
+      def free(obj, destroyer)
+        lambda { |object_id| destroyer[obj] }
+      end
+    end
+
+  private
+    def check_error(error_code)
+      raise SealError, GET_ERR_MSG[error_code], caller.shift if error_code != 0
+      nil
+    end
+
+    def input_audio(media, filename, format, inputter)
+      check_error(inputter[media, filename, format])
+    end
+
+    def set_obj_int(obj, int, setter)
+      check_error(setter[obj, int])
+      int
+    end
+
+    def get_obj_int(obj, getter)
+      buffer = '    '
+      check_error(getter[obj, buffer])
+      buffer.unpack('i')[0]
+    end
+
+    def set_obj_char(obj, bool, setter)
+      set_obj_int(obj, bool ? 1 : 0, setter)
+    end
+
+    def get_obj_char(obj, getter)
+      buffer = ' '
+      check_error(getter[obj, buffer])
+      buffer.unpack('c')[0] != 0
+    end
+
+    # Win32API does not support float argument type, need to pass as integer.
+    def set_obj_float(obj, float, setter)
+      check_error(setter[obj, [float].pack('f').unpack('i')[0]])
+      float
+    end
+
+    def get_obj_float(obj, getter)
+      float_buffer = '    '
+      check_error(getter[obj, float_buffer])
+      float_buffer.unpack('f')[0]
+    end
+  end
+
+  VERSION = SealAPI.new('get_version', 'v', 'p')[]
+
+  class << self
+    include Helper
+
+    STARTUP = SealAPI.new('startup', 'p')
+    CLEANUP = SealAPI.new('cleanup', 'v', 'v')
+    GET_PER_SRC_EFFECT_LIMIT = SealAPI.new('get_per_src_effect_limit', 'v')
+
+    def startup(device = nil)
+      check_error(STARTUP[device ? device : 0])
+    end
+
+    def cleanup
+      CLEANUP[]
+    end
+
+    def per_source_effect_limit
+      GET_PER_SRC_EFFECT_LIMIT[]
+    end
+  end
+
+  module Format
+    Helper.define_enum(self, [
+      :UNKNOWN,
+      :WAV,
+      :OV,
+      :MPG
+    ])
+  end
+
+  class SealError < Exception
+  end
+
+  class Buffer
+    include Helper
+
+    INIT = SealAPI.new('init_buf', 'p')
+    DESTROY = SealAPI.new('destroy_buf', 'p')
+    LOAD = SealAPI.new('load2buf', 'ppi')
+    GET_SIZE = SealAPI.new('get_buf_size', 'pp')
+    GET_FREQ = SealAPI.new('get_buf_freq', 'pp')
+    GET_BPS = SealAPI.new('get_buf_bps', 'pp')
+    GET_NCHANNELS = SealAPI.new('get_buf_nchannels', 'pp')
+
+    def initialize(filename, format = Format::UNKNOWN)
+      @buffer = '    '
+      check_error(INIT[@buffer])
+      input_audio(@buffer, filename, format, LOAD)
+      ObjectSpace.define_finalizer(self, Helper.free(@buffer, DESTROY))
+      self
+    end
+
+    def load(filename, format = Format::UNKNOWN)
+      input_audio(@buffer, filename, format, LOAD)
+      self
+    end
+
+    def size
+      get_obj_int(@buffer, GET_SIZE)
+    end
+
+    def frequency
+      get_obj_int(@buffer, GET_FREQ)
+    end
+
+    def bit_depth
+      get_obj_int(@buffer, GET_BPS)
+    end
+
+    def channel_count
+      get_obj_int(@buffer, GET_NCHANNELS)
+    end
+  end
+
+  class Stream
+    include Helper
+
+    OPEN = SealAPI.new('open_stream', 'ppi')
+    CLOSE = SealAPI.new('close_stream', 'p')
+    REWIND = SealAPI.new('rewind_stream', 'p')
+
+    class << self
+      alias open new
+    end
+
+    def initialize(filename, format = Format::UNKNOWN)
+      @stream = '    ' * 5
+      input_audio(@stream, filename, format, OPEN)
+      ObjectSpace.define_finalizer(self, Helper.free(@stream, CLOSE))
+      self
+    end
+
+    def frequency
+      field(4)
+    end
+
+    def bit_depth
+      field(2)
+    end
+
+    def channel_count
+      field(3)
+    end
+
+    def rewind
+      check_error(REWIND[@stream])
+    end
+
+    def close
+      check_error(CLOSE[@stream])
+    end
+
+  private
+    def field(index)
+      @stream[index * 4, 4].unpack('i')[0]
+    end
+  end
+
+  class Reverb
+    include Helper
+
+    INIT = SealAPI.new('init_rvb', 'p')
+    DESTROY = SealAPI.new('destroy_rvb', 'p')
+    LOAD = SealAPI.new('load_rvb', 'pi')
+    SET_DENSITY = SealAPI.new('set_rvb_density', 'pi')
+    SET_DIFFUSION = SealAPI.new('set_rvb_diffusion', 'pi')
+    SET_GAIN = SealAPI.new('set_rvb_gain', 'pi')
+    SET_HFGAIN = SealAPI.new('set_rvb_hfgain', 'pi')
+    SET_DECAY_TIME = SealAPI.new('set_rvb_decay_time', 'pi')
+    SET_HFDECAY_RATIO = SealAPI.new('set_rvb_hfdecay_ratio', 'pi')
+    SET_REFLECTIONS_GAIN = SealAPI.new('set_rvb_reflections_gain', 'pi')
+    SET_REFLECTIONS_DELAY = SealAPI.new('set_rvb_reflections_delay', 'pi')
+    SET_LATE_GAIN = SealAPI.new('set_rvb_late_gain', 'pi')
+    SET_LATE_DELAY = SealAPI.new('set_rvb_late_delay', 'pi')
+    SET_AIR_ABSORBTION_HFGAIN =
+      SealAPI.new('set_rvb_air_absorbtion_hfgain', 'pi')
+    SET_ROOM_ROLLOFF_FACTOR = SealAPI.new('set_rvb_room_rolloff_factor', 'pi')
+    SET_HFDECAY_LIMITED = SealAPI.new('set_rvb_hfdecay_limited', 'pi')
+    GET_DENSITY = SealAPI.new('get_rvb_density', 'pp')
+    GET_DIFFUSION = SealAPI.new('get_rvb_diffusion', 'pp')
+    GET_GAIN = SealAPI.new('get_rvb_gain', 'pp')
+    GET_HFGAIN = SealAPI.new('get_rvb_hfgain', 'pp')
+    GET_DECAY_TIME = SealAPI.new('get_rvb_decay_time', 'pp')
+    GET_HFDECAY_RATIO = SealAPI.new('get_rvb_hfdecay_ratio', 'pp')
+    GET_REFLECTIONS_GAIN = SealAPI.new('get_rvb_reflections_gain', 'pp')
+    GET_REFLECTIONS_DELAY = SealAPI.new('get_rvb_reflections_delay', 'pp')
+    GET_LATE_GAIN = SealAPI.new('get_rvb_late_gain', 'pp')
+    GET_LATE_DELAY = SealAPI.new('get_rvb_late_delay', 'pp')
+    GET_AIR_ABSORBTION_HFGAIN =
+      SealAPI.new('get_rvb_air_absorbtion_hfgain', 'pp')
+    GET_ROOM_ROLLOFF_FACTOR = SealAPI.new('get_rvb_room_rolloff_factor', 'pp')
+    IS_HFDECAY_LIMITED = SealAPI.new('is_rvb_hfdecay_limited', 'pp')
+
+    def initialize(preset = nil)
+      @effect = '    '
+      check_error(INIT[@effect])
+      load(preset) if preset
+      ObjectSpace.define_finalizer(self, Helper.free(@effect, DESTROY))
+      self
+    end
+
+    def load(preset)
+      check_error(LOAD[@effect, preset])
+    end
+
+    def density=(density)
+      set_obj_float(@effect, density, SET_DENSITY)
+    end
+
+    def diffusion=(diffusion)
+      set_obj_float(@effect, diffusion, SET_DIFFUSION)
+    end
+
+    def gain=(gain)
+      set_obj_float(@effect, gain, SET_GAIN)
+    end
+
+    def hfgain=(hfgain)
+      set_obj_float(@effect, hfgain, SET_HFGAIN)
+    end
+
+    def decay_time=(decay_time)
+      set_obj_float(@effect, decay_time, SET_DECAY_TIME)
+    end
+
+    def hfdecay_ratio=(hfdecay_ratio)
+      set_obj_float(@effect, hfdecay_ratio, SET_HFDECAY_RATIO)
+    end
+
+    def reflections_gain=(reflections_gain)
+      set_obj_float(@effect, reflections_gain, SET_REFLECTIONS_GAIN)
+    end
+
+    def reflections_delay=(reflections_delay)
+      set_obj_float(@effect, reflections_delay, SET_REFLECTIONS_DELAY)
+    end
+
+    def late_gain=(late_gain)
+      set_obj_float(@effect, late_gain, SET_LATE_GAIN)
+    end
+
+    def late_delay=(late_delay)
+      set_obj_float(@effect, late_delay, SET_LATE_DELAY)
+    end
+
+    def air_absorbtion_hfgain=(air_absorbtion_hfgain)
+      set_obj_float(@effect, air_absorbtion_hfgain, SET_AIR_ABSORBTION_HFGAIN)
+    end
+
+    def room_rolloff_factor=(room_rolloff_factor)
+      set_obj_float(@effect, room_rolloff_factor, SET_ROOM_ROLLOFF_FACTOR)
+    end
+
+    def hfdecay_limited=(hfdecay_limited)
+      set_obj_char(@effect, hfdecay_limited, SET_HFDECAY_LIMITED)
+    end
+
+    def density
+      get_obj_float(@effect, GET_DENSITY)
+    end
+
+    def diffusion
+      get_obj_float(@effect, GET_DIFFUSION)
+    end
+
+    def gain
+      get_obj_float(@effect, GET_GAIN)
+    end
+
+    def hfgain
+      get_obj_float(@effect, GET_HFGAIN)
+    end
+
+    def decay_time
+      get_obj_float(@effect, GET_DECAY_TIME)
+    end
+
+    def hfdecay_ratio
+      get_obj_float(@effect, GET_HFDECAY_RATIO)
+    end
+
+    def reflections_gain
+      get_obj_float(@effect, GET_REFLECTIONS_GAIN)
+    end
+
+    def reflections_delay
+      get_obj_float(@effect, GET_REFLECTIONS_DELAY)
+    end
+
+    def late_gain
+      get_obj_float(@effect, GET_LATE_GAIN)
+    end
+
+    def late_delay
+      get_obj_float(@effect, GET_LATE_DELAY)
+    end
+
+    def air_absorbtion_hfgain
+      get_obj_float(@effect, GET_AIR_ABSORBTION_HFGAIN)
+    end
+
+    def room_rolloff_factor
+      get_obj_float(@effect, GET_ROOM_ROLLOFF_FACTOR)
+    end
+
+    def hfdecay_limited
+      get_obj_char(@effect, IS_HFDECAY_LIMITED)
+    end
+
+    alias hfdecay_limited? hfdecay_limited
+
+    module Preset
+      Helper.define_enum(self, [
+        :GENERIC,
+        :PADDEDCELL,
+        :ROOM,
+        :BATHROOM,
+        :LIVINGROOM,
+        :STONEROOM,
+        :AUDITORIUM,
+        :CONCERTHALL,
+        :CAVE,
+        :ARENA,
+        :HANGAR,
+        :CARPETEDHALLWAY,
+        :HALLWAY,
+        :STONECORRIDOR,
+        :ALLEY,
+        :FOREST,
+        :CITY,
+        :MOUNTAINS,
+        :QUARRY,
+        :PLAIN,
+        :PARKINGLOT,
+        :SEWERPIPE,
+        :UNDERWATER,
+        :DRUGGED,
+        :DIZZY,
+        :PSYCHOTIC
+      ])
+    end
+  end
+
+  class Source
+    include Helper
+
+    INIT = SealAPI.new('init_src', 'p')
+    DESTROY = SealAPI.new('destroy_src', 'p')
+    PLAY = SealAPI.new('play_src', 'p')
+    STOP = SealAPI.new('stop_src', 'p')
+    REWIND = SealAPI.new('rewind_src', 'p')
+    PAUSE = SealAPI.new('pause_src', 'p')
+    DETACH = SealAPI.new('detach_src_audio', 'p')
+    MOVE = SealAPI.new('move_src', 'p')
+    SET_BUF = SealAPI.new('set_src_buf', 'pp')
+    SET_STREAM = SealAPI.new('set_src_stream', 'pp')
+    FEED_EFS = SealAPI.new('feed_efs', 'ppi')
+    UPDATE = SealAPI.new('update_src', 'p')
+    SET_POS = SealAPI.new('set_src_pos', 'piii')
+    SET_VEL = SealAPI.new('set_src_vel', 'piii')
+    SET_GAIN = SealAPI.new('set_src_gain', 'pi')
+    SET_PITCH = SealAPI.new('set_src_pitch', 'pi')
+    SET_AUTO = SealAPI.new('set_src_auto', 'pi')
+    SET_RELATIVE = SealAPI.new('set_src_relative', 'pi')
+    SET_LOOPING = SealAPI.new('set_src_looping', 'pi')
+    SET_QUEUE_SIZE = SealAPI.new('set_src_queue_size', 'pi')
+    SET_CHUNK_SIZE = SealAPI.new('set_src_chunk_size', 'pi')
+    GET_POS = SealAPI.new('get_src_pos', 'pppp')
+    GET_VEL = SealAPI.new('get_src_vel', 'pppp')
+    GET_GAIN = SealAPI.new('get_src_gain', 'pp')
+    GET_PITCH = SealAPI.new('get_src_pitch', 'pp')
+    GET_AUTO = SealAPI.new('is_src_auto', 'pp')
+    GET_RELATIVE = SealAPI.new('is_src_relative', 'pp')
+    GET_LOOPING = SealAPI.new('is_src_looping', 'pp')
+    GET_QUEUE_SIZE = SealAPI.new('get_src_queue_size', 'pp')
+    GET_CHUNK_SIZE = SealAPI.new('get_src_chunk_size', 'pp')
+    GET_TYPE = SealAPI.new('get_src_type', 'pp')
+    GET_STATE = SealAPI.new('get_src_state', 'pp')
+
+    def initialize
+      @source = '    ' * 5
+      check_error(INIT[@source])
+      ObjectSpace.define_finalizer(self, Helper.free(@source, DESTROY))
+      self
+    end
+
+    def play
+      operate(PLAY)
+    end
+
+    def stop
+      operate(STOP)
+    end
+
+    def rewind
+      operate(REWIND)
+    end
+
+    def pause
+      operate(PAUSE)
+    end
+
+    def move
+      operate(MOVE)
+    end
+
+    def buffer=(buffer)
+      set_audio(:@buffer, buffer, SET_BUF)
+    end
+
+    def stream=(stream)
+      set_audio(:@stream, stream, SET_STREAM)
+    end
+
+    attr_reader :buffer, :stream
+
+    def feed(effect_slot, index)
+      native_efs_obj = effect_slot.instance_variable_get(:@effect_slot)
+      check_error(FEED_EFS[@source, native_efs_obj, index])
+      self
+    end
+
+    def update
+      operate(UPDATE)
+    end
+
+    def position=(position)
+      set_3float(position, SET_POS)
+    end
+
+    def velocity=(velocity)
+      set_3float(velocity, SET_VEL)
+    end
+
+    def gain=(gain)
+      return if gain < 0
+      set_obj_float(@source, gain, SET_GAIN)
+    end
+
+    def pitch=(pitch)
+      set_obj_float(@source, pitch, SET_PITCH)
+    end
+
+    def auto=(auto)
+      set_obj_char(@source, auto, SET_AUTO)
+    end
+
+    def queue_size=(queue_size)
+      set_obj_int(@source, queue_size, SET_QUEUE_SIZE)
+    end
+
+    def chunk_size=(chunk_size)
+      set_obj_int(@source, chunk_size, SET_CHUNK_SIZE)
+    end
+
+    def relative=(relative)
+      set_obj_char(@source, relative, SET_RELATIVE)
+    end
+
+    def looping=(looping)
+      set_obj_char(@source, looping, SET_LOOPING)
+    end
+
+    def position
+      get_3float(GET_POS)
+    end
+
+    def velocity
+      get_3float(GET_VEL)
+    end
+
+    def gain
+      get_obj_float(@source, GET_GAIN)
+    end
+
+    def pitch
+      get_obj_float(@source, GET_PITCH)
+    end
+
+    def auto
+      get_obj_char(@source, GET_AUTO)
+    end
+
+    def relative
+      get_obj_char(@source, GET_RELATIVE)
+    end
+
+    def looping
+      get_obj_char(@source, GET_LOOPING)
+    end
+
+    alias auto? auto
+    alias relative? relative
+    alias looping? looping
+
+    def queue_size
+      get_obj_int(@source, GET_QUEUE_SIZE)
+    end
+
+    def chunk_size
+      get_obj_int(@source, GET_CHUNK_SIZE)
+    end
+
+    def type
+      case get_obj_int(@source, GET_TYPE)
+      when Type::STATIC
+        Type::STATIC
+      when Type::STREAMING
+        Type::STREAMING
+      else
+        Type::UNDETERMINED
+      end
+    end
+
+    def state
+      case get_obj_int(@source, GET_STATE)
+      when State::PLAYING
+        State::PLAYING
+      when State::PAUSED
+        State::PAUSED
+      when State::STOPPED
+        State::STOPPED
+      else
+        State::INITIAL
+      end
+    end
+
+    def playing?
+      return state == State::PLAYING
+    end
+
+  private
+    def operate(operation)
+      check_error(operation[@source])
+      self
+    end
+
+    def set_audio(var, audio, setter)
+      if audio.nil?
+        operate(DETACH)
+      else
+        check_error(setter[@source, audio.instance_variable_get(var)])
+      end
+      instance_variable_set(var, audio)
+      audio
+    end
+
+    def set_3float(float_tuple, setter)
+      integer_tuple = float_tuple.pack('f*').unpack('i*')
+      check_error(setter[@source, *integer_tuple])
+      float_tuple
+    end
+
+    def get_3float(getter)
+      float_tuple_buffers = Array.new(3) { '    ' }
+      check_error(getter[@source, *float_tuple_buffers])
+      float_tuple_buffers.join.unpack('f*')
+    end
+
+    module State
+      Helper.define_enum(self, [
+        :INITIAL,
+        :PLAYING,
+        :PAUSED,
+        :STOPPED
+      ])
+    end
+
+    module Type
+      Helper.define_enum(self, [
+        :UNDETERMINED,
+        :STATIC,
+        :STREAMING
+      ])
+    end
+  end
+
+  class EffectSlot
+    include Helper
+
+    INIT = SealAPI.new('init_efs', 'p')
+    DESTROY = SealAPI.new('destroy_efs', 'p')
+    SET_EFFECT = SealAPI.new('set_efs_effect', 'pp')
+    SET_GAIN = SealAPI.new('set_efs_gain', 'pi')
+    SET_AUTO = SealAPI.new('set_efs_auto', 'pi')
+    GET_GAIN = SealAPI.new('get_efs_gain', 'pp')
+    GET_AUTO = SealAPI.new('is_efs_auto', 'pp')
+
+    def initialize(effect = nil)
+      @effect_slot = '    '
+      check_error(INIT[@effect_slot])
+      self.effect = effect if effect
+      ObjectSpace.define_finalizer(self, Helper.free(@effect_slot, DESTROY))
+      self
+    end
+
+    def effect=(effect)
+      native_effect_obj = effect ? effect.instance_variable_get(:@effect) : 0
+      check_error(SET_EFFECT[@effect_slot, native_effect_obj])
+      @effect = effect
+      effect
+    end
+
+    attr_reader :effect
+
+    def gain=(gain)
+      set_obj_float(@effect_slot, gain, SET_GAIN)
+    end
+
+    def gain
+      get_obj_float(@effect_slot, GET_GAIN)
+    end
+
+    def auto=(auto)
+      set_obj_char(@effect_slot, auto, SET_AUTO)
+    end
+
+    def auto
+      get_obj_char(@effect_slot, GET_AUTO)
+    end
+
+    alias auto? auto
+  end
+end"##==============================================================================
 # ** Audio Manager
 #==============================================================================
 
+class EnviroSource < Seal::Source
+
+  attr_reader :file
+
+  def initialize(sound,pos)
+    super()
+
+    @file = sound
+
+    @positions = [pos]
+    self.buffer = Seal::Buffer.new("Audio/SE/#{sound}.ogg")
+    self.looping = true
+    self.play
+
+    @short = 96 * 4 # *4 to convert to REAL coords
+    @long = 320 * 4
+
+  end
+
+  def addpos(pos)
+
+    @positions.push(pos)
+
+  end
+
+  def update
+
+    # Use player pos for now
+    px = $player.real_x
+    py = $player.real_y
+
+    # Find closest point
+    src = nil
+    mn = 999999999
+    @positions.each{ |p| 
+      dist = ((px-p[0]) * (px-p[0])) +
+             ((py-p[1]) * (py-p[1]))
+      if dist < mn
+        mn = dist
+        src = p
+      end
+    }
+
+    # Use distance to figure volume
+    dist = ((px-src[0]) * (px-src[0])) +
+           ((py-src[1]) * (py-src[1]))
+
+    dist = Math.sqrt(dist)
+
+    # If under min, full volume
+    if dist < @short
+      self.gain = 1.0
+      return
+    end
+
+    # If over max, off
+    if dist > @long
+      self.gain = 0.0
+      return
+    end
+
+    # Scale
+    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
+
+
+  end
+
+end
+
 class AudioManager
 
+
   def initialize
-  	@bgm = nil
-  	@bgs = nil
+
+    Seal.startup
+
+    @music = Seal::Source.new
+    @atmosphere = Seal::Source.new
+
+    # Looping, fade by distance
+    @environmental = [] 
+
+    # System Effects
+    @system = []
+
+    # Sound effects with reverb
+    @sfx = []
+
+
+    @mode = :normal
+    @effect = nil
+
+    @sfx_vol = 1.0 # Set by mode
+
+    #change_mode(:cave)
+    
   end
+
+  def env(file,pos)
+    @environmental.each{ |file|
+      if snd.file == file
+        snd.addpos(pos)
+        return
+      end
+    }
+    @environmental.push(EnviroSource.new(file,pos))
+  end
+
+  def music(file)
+    @music.stream = Seal::Stream.open(file)
+    @music.play
+  end
+
+  def sys(file,vol)
+
+    log_scr(@sys.count)
+
+    # Check through sources, if empty, use, if none, add
+    @sys.each{ |src|
+      if !src.playing?
+        src.buffer = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+        src.play
+        return
+      end
+    }
+
+    # Add new
+    src = Seal::Source.new
+    buf = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+    src.buffer = buf
+    src.play
+    @sys.push(src)
+
+  end
+
+  def sfx(file,vol)
+
+    log_scr(@sfx.count)
+
+    # Check through sources, if empty, use, if none, add
+    @sfx.each{ |src|
+      if !src.playing?
+        src.buffer = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+        
+        src.play
+        return
+      end
+    }
+
+    # Add new
+    src = Seal::Source.new
+    buf = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+    src.buffer = buf
+    src.feed(@effect, 0) if @effect != nil
+    src.play
+    @sfx.push(src)
+
+  end
+
+  def dip(src)
+
+    # Dip the music while the src plays then fade up
+
+  end
+
 
   # send_blank to force start music
   def play_bgm(bgm)
     @bgm = bgm
-    return if !$settings.music
-    if !FileTest.exists?("Audio/BGM/" + se.name)
-      return log_err("Missing Music: #{bgm.name}")
+    Audio.bgm_play("Audio/BGM/" + bgm)
+  end
+
+  def music(m)
+    @music = Seal::Stream.new("Audio/BGM/gunblade.ogg")
+  end
+
+
+
+  def pause
+    @music.pause
+  end
+
+  def unpause
+    @music.play
+  end
+
+  # Change mode between maps so clear sources also
+  def change_mode(mode)
+
+    @mode = mode
+
+    # Create new effect and volume modifier
+    case mode
+      when :normal
+        @effect = nil
+        return
+
+      when :cave
+        preset = Seal::Reverb::Preset::CAVE
+        
     end
-    Audio.bgm_play("Audio/BGM/" + bgm.name, bgm.volume, bgm.pitch)
+
+    # Prepare the effect to be added to each newly created source
+    @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+   
   end
 
-  def play_bgs(bgs)
-	  @bgm = bgm
-	  return if !$settings.music
-    Audio.bgm_play("Audio/BGM/" + bgm.name, bgm.volume, bgm.pitch)
+  def update
+
+    @environmental.each{ |e| e.update }
+
   end
 
-  def stop_bgm
-    Audio.bgm_stop
-  end
-
-  def stop_bgs
-    Audio.bgs_stop
-  end
-
-  def fadeout_bgm(time)
-    @bgm = nil
-    Audio.bgm_fade(time * 1000)
-  end
-  
-  def fadeout_bgs(time)
-    @bgs = nil
-    Audio.bgs_fade(time * 1000)
-  end
-
-  def play_me(me)
-  	return if !$settings.music
-    if !FileTest.exists?("Audio/ME/" + me.name)
-      return log_err("Missing ME: #{me.name}")
-    end
-    Audio.me_play("Audio/ME/" + me.name, me.volume, me.pitch)
-  end
-
-  def play_se(se)
-    return if !$settings.sound
-    if !FileTest.exists?("Audio/SE/" + se.name)
-      return log_err("Missing Sound: #{se.name}")
-    end
-    Audio.se_play("Audio/SE/" + se.name, se.volume, se.pitch)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Turn on music
-  #--------------------------------------------------------------------------
-  def enable_music
-    Audio.bgm_play("Audio/BGM/" + @bgm.name, @bgm.volume, @bgm.pitch)
-    Audio.bgs_play("Audio/BGS/" + @bgs.name, @bgs.volume, @bgs.pitch)
-  end     
-  
-  #--------------------------------------------------------------------------
-  # * Turn off music
-  #--------------------------------------------------------------------------
-  def disable_music
-      stop_bgm
-      stop_bgs
-  end     
-
-end"µ	
+end"Ô	
 class CacheManager
 
     def initialize
@@ -9238,6 +10516,7 @@ class CacheManager
 
     def cursor(filename) load("Cursors/", filename) end
     def icon(filename) load("Icons/", filename) end
+    def numbers(filename) load("Numbers/", filename) end
 
     # Faces
     def face(filename) load("Faces/Message/", filename) end
@@ -9291,7 +10570,7 @@ class CacheManager
       GC.start
     end
 
-  end"[#==============================================================================
+  end"W#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -9311,6 +10590,8 @@ class DataManager
   attr_reader :quests
   attr_reader :zones
 
+  attr_reader :anims
+
   # Clone events
   attr_reader :clones
 
@@ -9328,8 +10609,7 @@ class DataManager
     # Load up json data
     
     @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
-    @weapons = load_json("weapons",WeaponData)
-    @armors = load_json("armors",ArmorData)
+    @gear = load_json("gear",GearData)
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
@@ -9339,6 +10619,8 @@ class DataManager
     @progress = load_json("progress",ProgressData)
     @quests = load_json("quests",QuestData)
     @zones = load_json("zones",ZoneData)
+
+    @anims = load_json("anims",AnimData)
 
     @clones = load_clones
 
@@ -9414,7 +10696,18 @@ class DataManager
     json_data.each{ |v|
       item = type.new
       v.each{ |var,val|
+        
+        # Ignore modified field
+        next if var == 'modified'
+
         # Attempt to convert val to int or float
+        if val.numeric?
+          if val.include?(".")
+            val = val.to_f
+          else
+            val = val.to_i
+          end
+        end
 
         item.instance_variable_set("@#{var}", val)
       }
@@ -9489,7 +10782,7 @@ class DebugManager
 		
 		# Prepare on screen log
 		@viewport = Viewport.new(0,0,640,480)
-		@viewport.z = 8888
+		@viewport.z = 4000
 		
 		@console = DebugConsole.new(@viewport)
 
@@ -9774,7 +11067,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"W#==============================================================================
+end"j#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -9842,6 +11135,7 @@ class GameManager
 
   def update
 
+    $audio.update
     $keyboard.update
     $mouse.update
     $debug.update
@@ -10015,7 +11309,7 @@ class KeyboardManager
 
   end
 
-end"(#============================================================================== 
+end"'#============================================================================== 
 # ** Modules.Mouse Input (7.0)              By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -10033,7 +11327,7 @@ class MouseManager
     @pos = [0,0]
     @hwnd = Findwindow.call(nil, "Aveyond")
     @sprite = Sprite.new()
-    @sprite.z = 10100
+    @sprite.z = 5000
     @sprite.ox = 4
     change_cursor("Default")
   end
@@ -10416,7 +11710,7 @@ end"¯class Bitmap
 	end
 
 end
-"n
+"ﬂ
 class ItemData
 	attr_reader :id
 	attr_reader :name
@@ -10427,17 +11721,7 @@ class ItemData
 	attr_reader :action
 end
 
-class WeaponData
-	attr_reader :id
-	attr_reader :name
-	attr_reader :description
-	attr_reader :category
-	attr_reader :icon
-	attr_reader :price
-	attr_reader :action
-end
-
-class ArmorData
+class GearData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
@@ -10480,10 +11764,14 @@ end
 
 class ZoneData
 	attr_reader :id
-	attr_reader :bgm
-	attr_reader :bgs
+	attr_reader :music
+	attr_reader :atmosphere
+	attr_reader :reverb
 	attr_reader :tint
 	attr_reader :weather
+	attr_reader :fog
+	attr_reader :panoramas
+	attr_reader :enemies
 end
 
 class ProgressData
@@ -10500,6 +11788,17 @@ class QuestData
 	#attr_reader :icon
 	#attr_reader :price
 	#attr_reader :action
+end
+
+class AnimData
+	attr_reader :id
+	attr_reader :frames
+	attr_reader :delay
+	attr_reader :fadeout
+	attr_reader :order
+	attr_reader :blend
+	attr_reader :opacity
+	attr_reader :sound
 end
 "r#==============================================================================
 # ** Gradient Font Color
@@ -10818,7 +12117,7 @@ end"~# if !ACE_MODE
 # end
 
 
-"I class Array
+"¨ class Array
  	def count
  		return length
  	end
@@ -10831,6 +12130,10 @@ end"~# if !ACE_MODE
  class String
   def is_integer?
     self.to_i.to_s == self
+  end
+  def numeric?
+    return true if self =~ /\A\d+\Z/
+    true if Float(self) rescue false
   end
 end
 
@@ -11686,7 +12989,8 @@ module Snapshot
 
     snp.call(0, 0, 640, 480, file_name, win, 2)
   end
-end"à1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
+end"A
+# Moved to System/_seal for now to run before AudioManager"à1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
 # # Free for commercial use
 # # Licence : http://creativecommons.org/licenses/by/4.0/
 # # Contact : zeusex81@gmail.com
@@ -11973,7 +13277,7 @@ end"à1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
 #       end
 #     end
 #   end
-# end"?
+# end">
 # Copyright (c) 2013 Dami√°n Silvani
 
 # MIT License
@@ -12007,37 +13311,37 @@ end"à1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
   	case e
   		when :linear; linear_tween(t,b,c,d)
 
-  		when :quad_in; ease_in_quad(t,b,c,d)
-  		when :quad_out; ease_out_quad(t,b,c,d)
-  		when :quad_in_out; ease_in_out_quad(t,b,c,d)
+  		when :quad_in, :quad_i, :qi; ease_in_quad(t,b,c,d)
+  		when :quad_out, :quad_o, :qo; ease_out_quad(t,b,c,d)
+  		when :quad_in_out, :quad_io, :qio; ease_in_out_quad(t,b,c,d)
 
-  		when :cubic_in; ease_in_cubic(t,b,c,d)
-  		when :cubic_out; ease_out_cubic(t,b,c,d)
-  		when :cubic_in_out; ease_in_out_cubic(t,b,c,d)
+  		when :cubic_in, :cubic_i; ease_in_cubic(t,b,c,d)
+  		when :cubic_out, :cubic_o; ease_out_cubic(t,b,c,d)
+  		when :cubic_in_out, :cubic_io; ease_in_out_cubic(t,b,c,d)
 
-  		when :quart_in; ease_in_quart(t,b,c,d)
-  		when :quart_out; ease_out_quart(t,b,c,d)
-  		when :quart_in_out; ease_in_out_quart(t,b,c,d)
+  		when :quart_in, :quart_i; ease_in_quart(t,b,c,d)
+  		when :quart_out, :quart_o; ease_out_quart(t,b,c,d)
+  		when :quart_in_out, :quart_io; ease_in_out_quart(t,b,c,d)
 
-  		when :quint_in; ease_in_quint(t,b,c,d)
-  		when :quint_out; ease_out_quint(t,b,c,d)
-  		when :quint_in_out; ease_in_out_quint(t,b,c,d)
+  		when :quint_in, :quint_i; ease_in_quint(t,b,c,d)
+  		when :quint_out, :quint_i; ease_out_quint(t,b,c,d)
+  		when :quint_in_out, :quint_io; ease_in_out_quint(t,b,c,d)
 
-  		when :sine_in; ease_in_sine(t,b,c,d)
-  		when :sine_out; ease_out_sine(t,b,c,d)
-  		when :sine_in_out; ease_in_out_sine(t,b,c,d)
+  		when :sine_in, :sine_i; ease_in_sine(t,b,c,d)
+  		when :sine_out, :sine_o; ease_out_sine(t,b,c,d)
+  		when :sine_in_out, :sine_io; ease_in_out_sine(t,b,c,d)
 
-  		when :expo_in; ease_in_expo(t,b,c,d)
-  		when :expo_out; ease_out_expo(t,b,c,d)
-  		when :expo_in_out; ease_in_out_expo(t,b,c,d)
+  		when :expo_in, :expo_i; ease_in_expo(t,b,c,d)
+  		when :expo_out, :expo_o; ease_out_expo(t,b,c,d)
+  		when :expo_in_out, :expo_io; ease_in_out_expo(t,b,c,d)
 
-  		when :circ_in; ease_in_circ(t,b,c,d)
-  		when :circ_out; ease_out_circ(t,b,c,d)
-  		when :circ_in_out; ease_in_out_circ(t,b,c,d)
+  		when :circ_in, :circ_i; ease_in_circ(t,b,c,d)
+  		when :circ_out, :circ_o; ease_out_circ(t,b,c,d)
+  		when :circ_in_out, :circ_io; ease_in_out_circ(t,b,c,d)
 
-      when :bounce_in; ease_in_bounce(t,b,c,d)
-      when :bounce_out; ease_out_bounce(t,b,c,d)
-      when :bounce_in_out; ease_in_out_bounce(t,b,c,d)
+      when :bounce_in, :bounce_i; ease_in_bounce(t,b,c,d)
+      when :bounce_out, :bounce_o; ease_out_bounce(t,b,c,d)
+      when :bounce_in_out, :bounce_io; ease_in_out_bounce(t,b,c,d)
 
   	end
 
@@ -12188,8 +13492,12 @@ end"à1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
 	def done?
 		return $tweens.done?(self)
 	end
-end"[
+end"Œ
 def sequence(*args)
+	return SequenceTween.new(*args)
+end
+
+def seq(*args)
 	return SequenceTween.new(*args)
 end
 
@@ -12198,6 +13506,10 @@ def repeat(a,times=-1)
 end
 
 def parallel(*args)
+	return ParallelTween.new(args)
+end
+
+def para(*args)
 	return ParallelTween.new(args)
 end
 
@@ -12310,7 +13622,7 @@ class ProcTween < Tween
 
 	def update(delta)
 		@delay -= delta
-		@proc.call()if done?
+		@proc.call() if done?
 	end
 
 end
