@@ -3,11 +3,11 @@
 
 class MapWrap < Tilemap
 
-  attr_accessor :tileset_id
+  attr_accessor :map_id
 
 	def refresh(map)
 
-      @tileset_id = map.tileset_id
+      @map_id = map.id
 
       self.tileset = $cache.tileset(map.tileset.tileset_name)
       i = 0 

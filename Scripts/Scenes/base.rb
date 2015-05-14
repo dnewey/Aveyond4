@@ -91,7 +91,6 @@ class Scene_Base
     @map.update      
     @player.update
 
-
     # Elements update
     #@panorama.update # With animated position
     @tilemap.ox = @map.display_x / 4
@@ -101,8 +100,8 @@ class Scene_Base
     @sparks.each{ |s| 
       # Mouse click needs to follow, others do not
       # Maybe just do all
-      s.ox = @map.display_x/4
-      s.oy = @map.display_y/4
+      #s.ox = @map.display_x/4
+      #s.oy = @map.display_y/4
       s.update 
     }
     @pops.each{ |s| 
@@ -123,7 +122,7 @@ class Scene_Base
 
 
     # Rebuild the map
-    reload_map if @map.tileset_id != @tilemap.tileset_id
+    reload_map if @map.id != @tilemap.map_id
     
   end
 
@@ -166,7 +165,7 @@ class Scene_Base
 
   def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
 
-    sprk = Spark.new(fx,x,y,vp)
+    sprk = Spark.new(fx,x,y,@vp_main)
     @sparks.push(sprk)
     return sprk
 

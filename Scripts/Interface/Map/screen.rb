@@ -69,7 +69,9 @@ class Ui_Screen
 	end
 
 	def open_grid()
-		@grid = Grid_Base.new(@vp)
+		@grid = Ui_Grid.new(@vp)
+		@grid.add_button('first','MEMO','faces/hib')
+		@grid.add_button('sfirst','MEMO','faces/hib')
 		return @grid
 	end
 

@@ -2,13 +2,9 @@
 # ** Item Functions
 #==============================================================================
 
-def gold(amount)
+def gold(amount,type='f')
 	$party.add_gold(amount)
-	# SHOW TEXT
-end
-
-def gold_s(amount)
-	$party.add_gold(amount)
+	pop_gold(amount,type)
 end
 
 def ungold(amount)
@@ -20,13 +16,13 @@ def gold?(amount)
 end
 
 
-def item(id,number=1)
+def item(id,number=1,type='f')
+	if !number.is_a?(Integer)
+		type = number
+		number = 1
+	end
 	$party.add_item(id,number)
-	# Show the text
-end
-
-def item_s(id,number=1)
-	$party.add_item(id,number)
+	pop_item(id,number,type)
 end
 
 def unitem(id,number=1)

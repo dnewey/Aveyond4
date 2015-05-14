@@ -18,11 +18,13 @@ class Ui_Message
   PADDING_X = 21
   PADDING_Y = 16
 
-  SPEED_1 = 0
-  SPEED_2 = 1
-  SPEED_3 = 2
+  SPEED_1 = 9
+  SPEED_2 = 7
+  SPEED_3 = 5
   SPEED_4 = 3
-  SPEED_5 = 4
+  SPEED_5 = 1
+
+  attr_reader :last_choice
   
   #--------------------------------------------------------------------------
   # Prepare
@@ -47,6 +49,7 @@ class Ui_Message
 
     # Text display
     @text_delay = SPEED_4
+    @normal_speed = SPEED_4
     @wait_frames = 0
     @next_char = 0
 
@@ -116,9 +119,9 @@ class Ui_Message
     # Draw to textbox
     @text_bmp = nil
 
-
-
+    @grid = nil
     @choices = []
+    @last_choice = ''
 
   end
   
@@ -126,6 +129,8 @@ class Ui_Message
   # Frame Update
   #--------------------------------------------------------------------------
   def update
+
+    @grid.update if @grid
 
     if @mode == :message
 
@@ -145,6 +150,14 @@ class Ui_Message
       end
       if y < 46
         y = 46
+        h = true
+      end
+      if x > 640-@width-10
+        x = 640-@width-10
+        h = true
+      end
+      if y > 480-@height-10
+        y = 480-@height-10
         h = true
       end
       #@tail.hide if h == true
@@ -191,8 +204,10 @@ class Ui_Message
 
         # Choices in here too
 
-      when :pausing
-        check_input_next
+      #when :pausing
+      #  check_input_next
+      when :choice
+        check_input_choice
       when :done
         check_input_done
         
@@ -203,6 +218,10 @@ class Ui_Message
     #   @next_char > 0 ? @next_char -= 1 : update_message
     # end
 
+  end
+
+  def add_choice(choice)
+    @choices.push(choice)
   end
 
   #--------------------------------------------------------------------------
@@ -335,6 +354,7 @@ class Ui_Message
       @namebox.bitmap.clear
 
       return if name == ''
+      return if name == nil
 
       size = $fonts.size(name,@nametext.bitmap.font)
       @namebox.bitmap = Bitmap.new(size.width+40,40)
@@ -447,8 +467,13 @@ class Ui_Message
     @line_idx += 1
     @word = nil
     if @line_idx >= @lines.count
-      @state = :done
-      @box.skin = $cache.menu_common("skin-gold")
+      # If choices, open them now
+      if !@choices.empty?
+        open_choices
+      else
+        @state = :done
+        @box.skin = $cache.menu_common("skin-gold")
+      end
     else
       @word_idx = 0
       @cy += LINE_HEIGHT
@@ -511,16 +536,19 @@ class Ui_Message
           @wait_frames = cmd.size > 1 ? cmd[1].to_i : 15
           @state = :waiting
                     
-        when "$sp"
+        when "$s"
           if cmd[1] == 'n' || cmd[1] == 'r'
             @text_delay = @normal_speed
           else
-            @text_delay = cmd[1].to_i
+            @text_delay = SPEED_1 if cmd[1] == '1'
+            @text_delay = SPEED_2 if cmd[1] == '2'
+            @text_delay = SPEED_3 if cmd[1] == '3'
+            @text_delay = SPEED_4 if cmd[1] == '4'
+            @text_delay = SPEED_5 if cmd[1] == '5'          
           end
                     
-        when "$s" # play sound
-          #log_err("TRYPLAYIT")
-          #Audio.se_play("Audio/SE/"+cmd[1]) 
+        when "$sfx" # play sound
+          sfx(cmd[1])
           
         when "$m"
           
@@ -543,20 +571,27 @@ class Ui_Message
           
       end
         
-      update_waiting while @state == :waiting
       @word = nil
-      next_word
+      next_word if @state != :waiting        
 
     end
 
   end  
+
+  def open_choices
+    @state = :choice
+    @grid = Ui_Grid.new(@vp)
+    @grid.move(@box.x,@box.y+@box.height)
+    @grid.add_button('a',@choices[0].split(": ")[1],'faces/rob')
+    @grid.add_button('b',@choices[1].split(": ")[1],'faces/rob')
+  end
 
   #--------------------------------------------------------------------------
   # * Update waiting
   #--------------------------------------------------------------------------
   def update_waiting
     @wait_frames -= 1
-    @wait_frames = 0 if @skip_all #|| Graphics.frame_rate == 120
+    # @wait_frames = 0 if @skip_all #|| Graphics.frame_rate == 120
     @state = :texting if (@wait_frames < 1)
   end
 
@@ -567,6 +602,27 @@ class Ui_Message
     if $input.action? || $input.click?
       #sound(:text_next)
       #self.slide_zy(0.0)
+      @state = :closing
+      @textbox.bitmap.clear
+      @sprites.opacity = 0
+      @box.skin = $cache.menu_common("skin")
+      #@sprites.do(go("opacity",-255,300,:quad_in_out))
+    end
+  end
+
+  #--------------------------------------------------------------------------
+  # * Wait for input or choice
+  #--------------------------------------------------------------------------
+  def check_input_choice
+    if $input.action?
+      #sound(:text_next)
+      #self.slide_zy(0.0)
+
+      @last_choice = @choices[@grid.idx].split(":")[0]
+      @choices = []
+
+      @grid.dispose
+      @grid = nil
       @state = :closing
       @textbox.bitmap.clear
       @sprites.opacity = 0
@@ -653,3 +709,4 @@ class Ui_Message
   def busy?() return @state != :idle end
 
 end
+

@@ -95,20 +95,24 @@ class Game_Party
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
-  def add_item(id,n) add(@items,id,n); $map.need_refresh = true end
-  def lose_item(id,n) add(@items,id,-n); $map.need_refresh = true end
-  def item_number(id) count(@items,id) end
-  def has_item?(id) count(@items,id) > 0 end
-
-
-  def add(type,id,number)
-    type.has_key?(id) ? type[id] += number : type[id] = number
-    type[id] = 0 if type[id] < 0
+  def add_item(id,n) 
+    @items.has_key?(id) ? @items[id] += n : @items[id] = n
+    @items[id] = 0 if @items[id] < 0 
+    $map.need_refresh = true
   end
 
-  def count(type,id)
-    return type.has_key?(id) ? type[id] : 0
+  def lose_item(id,n) add_item(id,-n) end
+  
+  def item_number(id) return @items.has_key?(id) ? @items[id] : 0 end
+  def has_item?(id) item_number(id) > 0 end
+
+
+  def add_gold(n)
+    @gold += n
+    @gold = 0 if @gold < 0
+    $map.need_refresh = true
   end
+
 
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead

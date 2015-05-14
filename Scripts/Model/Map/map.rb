@@ -39,12 +39,24 @@ class Game_Map
     @cam_snap = false
     @cam_ox = 0
     @cam_oy = 0#-16
-    @cam_speed = 0.15
+    @cam_speed = 'mid'
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
 
     @namecache = {}
+  end
+
+  def cam_speed
+    case @cam_speed
+      when 'slow'
+        return 10
+      when 'mid'
+        return 20
+      when 'fast'
+        return 30
+    end
+    return 20
   end
   
   #--------------------------------------------------------------------------
@@ -87,13 +99,15 @@ class Game_Map
     if newzone != @zone.id
 
       @zone = $data.zones[newzone]
+
       log_info "Changing Zone: #{newzone}"
+
 
       if @zone.id == "@clear"
         $audio.bgm_stop
         $audio.bgs_stop
         autoplay = true
-      elsif @zone.id == "@nil"
+      elsif @zone.id == "@nil" || @zone == nil
         # Don't change anything
         # Load the map music if you like
         autoplay = true
@@ -171,6 +185,8 @@ class Game_Map
   #--------------------------------------------------------------------------
   def update
 
+    update_camera
+
     @interpreter.update
 
     # Anti lag here
@@ -186,7 +202,7 @@ class Game_Map
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
     update_mouse
 
-    update_camera
+    
 
   end
 
@@ -235,11 +251,11 @@ update_camera
     end
 
     if @target_x != @display_x
-      @display_x += (@target_x-@display_x) * @cam_speed
+      @display_x += [(@target_x-@display_x) * 0.15,cam_speed].min
     end
 
     if @target_y != @display_y
-      @display_y += (@target_y-@display_y) * @cam_speed
+      @display_y += [(@target_y-@display_y) * 0.15,cam_speed].min
     end
 
     if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5

@@ -44,7 +44,8 @@ class Scene_Map < Scene_Base
   end
 
   def add_moblin(ev,delay)
-    @moblins.push(Moblin.new(gev(ev),delay))
+    ev = gev(ev) if !ev.is_a?(Game_Event)
+    @moblins.push(Moblin.new(ev,delay))
   end
 
 end

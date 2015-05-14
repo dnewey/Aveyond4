@@ -2,11 +2,11 @@
 # ** Camera Functions
 #==============================================================================
 
-def camera(e,spd=0.15)
+def camera(e,spd='mid')
 	$map.camera_to(gev(e),spd)
 end
 
-def camera_xy(x,y,spd=0.15)
+def camera_xy(x,y,spd='mid')
 	$map.camera_xy(x,y,spd)
 end
 

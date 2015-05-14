@@ -1,75 +1,90 @@
 #==============================================================================
-# ** Grid_Base
+# ** Ui_Grid
 #==============================================================================
 
-class Grid_Base
+class Ui_Grid
+
+	attr_reader :idx
 
 	def initialize(vp)
 
 		@vp = vp
 
-		@data = ['Journal','Items','Equip','Skills',
-  	 		     'Party','Options','Quit','Load','Save']
+		@layout = :vertical
 
-		cy = 15
+		@cx = 0
+		@cy = 0
 
-		@buttons = []
-		@texts = []
+		@fix_width = 0
 
-		@data.each{ |item|
-
-			btn = Box.new(vp,170,45)
-	     	btn.skin = $cache.menu_common("skin-plain")
-	     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
-	     	btn.move(15,cy)
-	     	btn.name = item
-	     	@buttons.push(btn)
-
-	     	text = Label.new(vp)
-	     	text.font = $fonts.list
-	     	text.shadow = $fonts.list_shadow
-	     	text.icon = $cache.icon("faces/hib")
-	     	text.gradient = true
-	     	text.text = item
-	     	text.move(25,cy+7)
-	     	@texts.push(text)
-
-	     	cy += 51
-
-     	}
+		@boxes = []
+		@contents = []
 
      	@glow = Sprite.new(vp)
-     	@glow.bitmap = Bitmap.new(@buttons[0].width-12,@buttons[0].height-12)
+     	@glow.bitmap = Bitmap.new(100,100)
      	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
      	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
+     	@glow.z += 50
 
      	@idx = 0
-
-     	@boxes = @buttons
      	
-     	@selected = "Journal"
-     	choose(@selected)
+     	#@selected = "Journal"
+     	#choose(@selected)
 
+	end
+
+	def move(x,y)
+		@cx = x
+		@cy = y
 	end
 
 	def dispose
 
-		@chars.each{ |c| c.dispose } 
-
+		$tweens.clear(@glow)
 		@glow.dispose
-		@icons.each{ |i| i.dispose }
-		@texts.each{ |i| i.dispose }
-		@buttons.each{ |i| i.dispose }
+		@contents.each{ |i| i.dispose }
+		@boxes.each{ |i| i.dispose }
+
+	end
+
+	def add_button(name,text,icon)
+
+		# Create new things
+		btn = Box.new(@vp,170,45)
+     	btn.skin = $cache.menu_common("skin-plain")
+     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
+     	btn.name = name
+     	@boxes.push(btn)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = text
+     	@contents.push(cont)
+
+     	# Position
+     	btn.move(@cx,@cy)
+     	cont.move(@cx+10,@cy+10)
+
+     	if @boxes.count == 1
+     		choose(@boxes[0].name)
+     	end
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += 50
+     	end
+
+	end
+
+	def add_image(image)
 
 	end
 
 	def update
-		#@menu.update
-		#@chars.each{ |c| c.update }
-
-		if $input.action?
-			select(@selected)
-		end
+		return if @boxes.empty?
 
 		if $input.right?
 
@@ -171,21 +186,17 @@ class Grid_Base
 
 	def open
 
-		@chars.each{ |c| c.show } 
-
 		@glow.show
-		@texts.each{ |i| i.show }
-		@buttons.each{ |i| i.show }
+		@contents.each{ |i| i.show }
+		@boxes.each{ |i| i.show }
 
 	end
 
 	def close
 
-		@chars.each{ |c| c.hide } 
-
 		@glow.hide
-		@texts.each{ |i| i.hide }
-		@buttons.each{ |i| i.hide }
+		@contents.each{ |i| i.hide }
+		@boxes.each{ |i| i.hide }
 
 	end
 
@@ -195,10 +206,10 @@ class Grid_Base
 
 		# Find the icon if this is journal
 		@idx = nil
-		if !@buttons.select{ |b| b.name == target }.empty?
+		if !@boxes.select{ |b| b.name == target }.empty?
 
 			idx = 0
-			@buttons.each{ |b|
+			@boxes.each{ |b|
 				break if b.name == target
 				idx += 1
 			}

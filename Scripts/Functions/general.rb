@@ -10,15 +10,28 @@ def w(f=5)
 	$map.interpreter.wait_count = f
 end
 
-def fadeout
-	$scene.overlay.do(to("opacity",255,7))
+def fadeout(f=30)
+	$scene.overlay.do(to("opacity",255,255/f))
+	w f
 end
 
-def fadein
-	$scene.overlay.do(to("opacity",0,-7))
+def fadein(f=30)
+	$scene.overlay.do(to("opacity",0,-255/30))
+	w f
 end
 
 def fade(ev)
-	log_info(ev)
 	gev(ev).do(to("opacity",0,2))
+end
+
+def gfx(ev,name)
+	gev(ev).character_name = name	
+end
+
+def cam_oy(amount)
+	$map.do(go("cam_oy",amount,amount*6,:qio))
+end
+
+def cam_ox(amount)
+	$map.do(go("cam_ox",amount,amount.abs*6,:qio))
 end

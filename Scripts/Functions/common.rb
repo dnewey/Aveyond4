@@ -11,7 +11,7 @@ def me
 end
 
 def this
-	return $map.events[me]
+	return $scene.map.events[me]
 end
 
 def dummy
@@ -19,6 +19,12 @@ def dummy
 end
 
 def gid(str)
+
+
+
+	if str == 'me'
+		return me
+	end
 
 	# empty means eid
 	return gev(str).id
@@ -46,6 +52,14 @@ def gev(str)
 
 	end
 
+	if str.numeric?
+		return $scene.map.events[str.to_i]
+	end
+
+	if str == 'me'
+		return $scene.map.events[me] 
+	end
+
 	case str
 
 		when $player
@@ -57,12 +71,13 @@ def gev(str)
 		when nil
 			return this
 
+			# Move all of this elsewhere
 		when 'up'
 			return $scene.map.event_at(this.x,this.y-1) # || dummy
 		when 'down'
 			return $scene.map.event_at(this.x,this.y+1)
-		when 'left'
-			return $scene.map.event_at(this.x-1,this.y)
+		# when 'left'
+		# 	return $scene.map.event_at(this.x-1,this.y)
 		when 'right'
 			return $scene.map.event_at(this.x+1,this.y)
 		when 'under'

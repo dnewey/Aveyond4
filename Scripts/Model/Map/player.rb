@@ -155,8 +155,8 @@ class Game_Player < Game_Character
   def update
 
     return super if @move_route_forcing
-    return if ($scene.busy?) || $debug.busy?
-    return if $map.interpreter.running?
+    return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
+    return super(true) if $map.interpreter.running? # Still finish turn anim
     
 
     transfer_player if @transferring 
@@ -284,7 +284,6 @@ class Game_Player < Game_Character
 
     # Map to teleport to 
     if $map.id != @xfer_data[0]
-      log_info @xfer_data
       $map.setup(@xfer_data[0])      
     end
 

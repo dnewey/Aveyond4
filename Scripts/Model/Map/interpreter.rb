@@ -375,11 +375,9 @@ class Interpreter
     message = message.join(' ')
 
     # If there is a choice next, add it
-    if next_event_code == 102
+    while next_event_code == 101 && @list[@index+1].parameters[0].include?("@")
       @index+=1
-      while next_event_code == 402
-
-      end
+      $scene.hud.message.add_choice(@list[@index].parameters[0])
     end
 
     $scene.hud.message.start(message)
@@ -389,7 +387,7 @@ class Interpreter
     #$scene.hud.message.start_vn(message)
     
     # Return mouse to default cursor
-    #$mouse_sprite.set_bitmap(MouseCursor::Default_Cursor)
+    #$mouse.set_cursor('Default')
     
     # Continue
     return true

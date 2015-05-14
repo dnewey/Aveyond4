@@ -3,11 +3,8 @@
 
 def transfer(map,room)
 
-	# Find the map
-
-	# Find the event of the room
-
-	# Do the transfer
+	id = find_map_id(map)
+	$player.transfer_to(id,room)
 
 end
 
@@ -47,6 +44,16 @@ def find_child_id(parent_id,name)
 		next if map.name != name
 		next if map.parent_id != parent_id
 		return k
+	}
+
+	return 0
+
+ end
+
+ def find_map_id(name)
+
+	$data.mapinfos.each{ |k,map|
+		return k if map.name == name
 	}
 
 	return 0

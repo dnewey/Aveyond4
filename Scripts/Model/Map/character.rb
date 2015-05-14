@@ -26,10 +26,10 @@ class Game_Character
   
   
   attr_accessor :direction                # direction
-
   attr_accessor :showdir
 
-  attr_accessor :force_pattern
+  attr_accessor :force_pattern # For random pattern feature
+
   attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
@@ -165,7 +165,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def passable?(x, y, d) #d0 = jump
 
-    #return true
+    #return true if self != $player
 
     # Get new coordinates
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
@@ -177,7 +177,7 @@ class Game_Character
     
     # To new tile and from new tile
     return false unless $map.passable?(x, y, d, self)
-    return false unless $map.passable?(new_x, new_y, 10 - d) 
+    return false  unless $map.passable?(new_x, new_y, 10 - d,self)
 
     # end
     return true
@@ -308,16 +308,21 @@ class Game_Character
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
-  def update
+  def update(mini=false)
 
-    # Mouse pathfinding
-    run_path if @runpath == true
+    # mini is just for player to make sure anim finishes
 
     # Update facing dir
-        @lockdir -= 1
+    @lockdir -= 1
     if @lockdir <= 0
       @showdir = @direction
     end
+
+    return if mini
+
+
+    # Mouse pathfinding
+    run_path if @runpath == true    
     
     # Branch with jumping, moving, and stopping
     if jumping?

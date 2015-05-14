@@ -5,16 +5,12 @@
 # Quests
 def quest(id) 
 	$progress.add_quest(id) 
-	# Pop up a text
-end
-
-def quest_s(id)
-
+	pop_quest(id)
 end
 
 def unquest(id)
 	$progress.end_quest(id)
-	# show quest complete
+	pop_unquest(id)
 end
 
 def quest?(id)

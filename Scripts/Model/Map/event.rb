@@ -56,7 +56,7 @@ class Game_Event < Game_Character
       clone_ev = $data.clones[clone]
     elsif name.include?(':')
       clone = name.delete(':')
-      clone_ev = $map.event_by_name(clone).event
+      clone_ev = $scene.map.event_by_name(clone).event
       name = clone_ev.name
     end
 
@@ -212,7 +212,7 @@ class Game_Event < Game_Character
       # States
       when '?state'
         if cond.count > 2
-          return false if !$state.state?(cond[1],cond[2])
+          return false if !$state.state?(gid(cond[1]),cond[2])
         else
           return false if !$state.state?(@id,cond[1])
         end
@@ -263,13 +263,14 @@ class Game_Event < Game_Character
 
   def label_applies?(label)
 
-    case label
+    case label.split(":")[0]
       
       when '@first'
         return false if state?(me,"second_#{this.page_idx}")
       when '@second'
         return false if !state?(me,"second_#{this.page_idx}")
 
+      # Char in party
       when '@boy'
         return false if $party.leader != 'boy'      
       when '@ing'
@@ -284,6 +285,10 @@ class Game_Event < Game_Character
         return false if $party.leader != 'row'
       when '@phy'
         return false if $party.leader != 'phy'
+
+      # Choices
+      when '@a', '@b', '@c', '@d'
+        return false if label.split(":")[0] != $scene.hud.message.last_choice
 
     end
 
@@ -438,8 +443,8 @@ class Game_Event < Game_Character
           @off_y = data[1].to_i
 
         when '#moblin'
-          #data.push(1) if data.count < 2
-          #$scene.add_moblin(@id,data[1].to_i)
+          data.push(1) if data.count < 2
+          $scene.add_moblin(self,data[1].to_i)
 
         when '#disable'
           disable
