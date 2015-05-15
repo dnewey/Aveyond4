@@ -56,7 +56,7 @@ class Game_Map
       when 'fast'
         return 30
     end
-    return 20
+    return 50
   end
   
   #--------------------------------------------------------------------------
@@ -236,8 +236,6 @@ class Game_Map
       end
     end
 
-update_camera
-
   end
 
   def update_camera
@@ -250,16 +248,47 @@ update_camera
       @target_y = @cam_xy[1] * 64
     end
 
-    if @target_x != @display_x
-      @display_x += [(@target_x-@display_x) * 0.15,cam_speed].min
+    # if @target_x != @display_x
+    #   @display_x += [(@target_x-@display_x) * 0.15,cam_speed].min
+    # end
+
+    # if @target_y != @display_y
+    #   @display_y += [(@target_y-@display_y) * 0.15,cam_speed].min
+    # end
+
+    # calc dx and dx
+    dx = @target_x - @display_x
+    dy = @target_y - @display_y
+
+    dist = dx+dy
+
+    # calc ratio
+    if (dx - dy).abs < 5
+      r = 0.5
+    else
+      if dy == 0
+        r = 1
+      else
+        r = dx/dy
+      end
     end
 
-    if @target_y != @display_y
-      @display_y += [(@target_y-@display_y) * 0.15,cam_speed].min
-    end
+    # Limit
+    dist *= 0.15
+    dist = 40 if dist > 40
 
-    if (@target_x-@display_x) < 5 && (@target_y-@display_y) < 5
-      @cam_snap = true
+    # move by speed
+    sx = dist * r 
+    sy = dist * (1-r)
+
+    @display_x += sx
+    @display_y += sy
+
+
+    if (dx) < 5 && (dx) < 5
+      #@cam_snap = true
+      @display_x = @target_x
+      @display_y = @target_y
     end
 
     # if @cam_snap

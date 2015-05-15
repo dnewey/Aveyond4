@@ -12,6 +12,8 @@ class Game_Event < Game_Character
   attr_reader   :event
   attr_reader   :icon
 
+  attr_accessor :random
+
   attr_reader :above
   attr_reader :below
 
@@ -28,6 +30,9 @@ class Game_Event < Game_Character
 
     @event = event
     @id = event.id
+
+    # Hold a random number to be used with @r1
+    @random = 0 
     
     @erased = false
     @disabled = $state.disable?(@id)
@@ -289,6 +294,23 @@ class Game_Event < Game_Character
       # Choices
       when '@a', '@b', '@c', '@d'
         return false if label.split(":")[0] != $scene.hud.message.last_choice
+
+      # Randoms
+      when '@r1'
+        return false if @random != 1
+      when '@r2'
+        return false if @random != 2
+      when '@r3'
+        return false if @random != 3
+      when '@r4'
+        return false if @random != 4
+      when '@r5'
+        return false if @random != 5
+      when '@r6'
+        return false if @random != 6
+      when '@r7'
+        return false if @random != 7
+
 
     end
 

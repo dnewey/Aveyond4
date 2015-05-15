@@ -123,6 +123,12 @@ def route(ev,move)
 				live_dir = 8
 				route.list.push(RPG::MoveCommand.new(19))
 
+			when 'f'
+				route.list.push(RPG::MoveCommand.new(12))
+
+			when 'b'
+				route.list.push(RPG::MoveCommand.new(13))
+
 
 			when 'walk'
 				route.list.push(RPG::MoveCommand.new(31))
@@ -144,14 +150,12 @@ def route(ev,move)
 			when 'unthr', 'unthrough'
 				route.list.push(RPG::MoveCommand.new(38))	
 
+			when 'sp'
+				route.list.push(RPG::MoveCommand.new(29,[params[0]]))
+
 
 			when 'w'
 				route.list.push(RPG::MoveCommand.new(15,[params[0]]))
-
-			when '180'
-				route.list.push(RPG::MoveCommand.new(21))
-				route.list.push(RPG::MoveCommand.new(15,[5]))
-				route.list.push(RPG::MoveCommand.new(21))
 
 			when 'j'
 				route.list.push(RPG::MoveCommand.new(14,[0,0]))

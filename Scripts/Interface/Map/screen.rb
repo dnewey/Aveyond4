@@ -13,6 +13,7 @@ class Ui_Screen
 		@message = Ui_Message.new(vp)
 
 		@bar = Ui_Bar.new(vp)
+		@bar.hide
 		#@info = Ui_Info.new(vp)
 		@popper = nil
 		@grid = nil

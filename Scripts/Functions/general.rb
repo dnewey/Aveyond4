@@ -29,7 +29,7 @@ def gfx(ev,name)
 end
 
 def cam_oy(amount)
-	$map.do(go("cam_oy",amount,amount*6,:qio))
+	$map.do(go("cam_oy",amount,amount.abs*6,:qio))
 end
 
 def cam_ox(amount)

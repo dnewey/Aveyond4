@@ -25,3 +25,7 @@ end
 def unhide(e)
 	gev(e).opacity = 255
 end
+
+def roll(range)
+	gev(me).random = rand(range) + 1
+end
