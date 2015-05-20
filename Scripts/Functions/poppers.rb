@@ -38,6 +38,10 @@ def pop_get(type,b,ib)
 			a = "Fang receives: "
 			ia = nil
 
+		when 'rat'
+			a = "Trevor found: "
+			ia = nil
+
 		when 'boy','ing','hib','mys','phy','rob','row'
 			a = $data.actors[type].name+" receives: "
 			ia = $cache.icon("faces/#{type}")

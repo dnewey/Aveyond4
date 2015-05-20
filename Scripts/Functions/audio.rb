@@ -8,6 +8,6 @@ def sys(file,vol=1.0)
 	$audio.sys(file,vol)
 end
 
-def music(file,vol)
-	$audio.music(file)
+def music(file,vol=1.0)
+	$audio.music(file,vol)
 end

@@ -74,6 +74,8 @@ def gev(str)
 			# Move all of this elsewhere
 		when 'up'
 			return $scene.map.event_at(this.x,this.y-1) # || dummy
+		when 'up2'
+			return $scene.map.event_at(this.x,this.y-2) # || dummy
 		when 'down'
 			return $scene.map.event_at(this.x,this.y+1)
 		# when 'left'

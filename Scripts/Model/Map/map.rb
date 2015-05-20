@@ -292,8 +292,8 @@ class Game_Map
     end
 
     # if @cam_snap
-    #   @display_x = @target_x
-    #   @display_y = @target_y
+       @display_x = @target_x
+       @display_y = @target_y
     # end
 
 
