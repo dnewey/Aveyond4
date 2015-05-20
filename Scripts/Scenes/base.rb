@@ -35,7 +35,7 @@ class Scene_Base
     @vp_ui.z = 3000
    
     # Make tilemap
-    #@panorama = Plane.new(@vp_under,-1000)
+    @panoramas = []
     @tilemap = MapWrap.new(@vp_main)
     
     @characters = []  
@@ -92,7 +92,7 @@ class Scene_Base
     @player.update
 
     # Elements update
-    #@panorama.update # With animated position
+    @panoramas.each{ |p| p.update } # With animated position
     @tilemap.ox = @map.display_x / 4
     @tilemap.oy = @map.display_y / 4
     @tilemap.update
@@ -159,6 +159,20 @@ class Scene_Base
   end
 
   def change_panoramas(panos)
+
+      @panoramas.each{ |p| p.dispose }
+    @panoramas.clear
+
+    data = panos.split("\n")
+
+    data.each{ |p|
+
+      pano = Panorama.new(@vp_under)
+      #pano.z = -1000
+      pano.bitmap = $cache.panorama(p)
+      @panoramas.push(pano)
+
+    }
 
   end
 
