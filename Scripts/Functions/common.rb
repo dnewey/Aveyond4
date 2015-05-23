@@ -72,19 +72,25 @@ def gev(str)
 			return this
 
 			# Move all of this elsewhere
-		when 'up'
+		when '@up'
 			return $scene.map.event_at(this.x,this.y-1) # || dummy
-		when 'up2'
+		when '@up2'
 			return $scene.map.event_at(this.x,this.y-2) # || dummy
-		when 'down'
+		when '@down'
 			return $scene.map.event_at(this.x,this.y+1)
-		# when 'left'
-		# 	return $scene.map.event_at(this.x-1,this.y)
-		when 'right'
+		when '@down2'
+			return $scene.map.event_at(this.x,this.y+2)
+		when '@left'
+		 	return $scene.map.event_at(this.x-1,this.y)
+		when '@left2'
+		 	return $scene.map.event_at(this.x-2,this.y)
+		when '@right'
 			return $scene.map.event_at(this.x+1,this.y)
-		when 'under'
+		when '@right2'
+			return $scene.map.event_at(this.x+2,this.y)
+		when '@under'
 			return $scene.map.lowest_event_at(this.x,this.y)
-		when 'facing'
+		when '@facing'
 			return $scene.map.event_at(this.x,this.y-1) if $player.direction == 8
 			return $scene.map.event_at(this.x,this.y+1) if $player.direction == 2
 			return $scene.map.event_at(this.x-1,this.y) if $player.direction == 4

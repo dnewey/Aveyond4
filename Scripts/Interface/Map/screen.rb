@@ -29,6 +29,7 @@ class Ui_Screen
 		if @popper
 			@popper.update 
 			if $input.action?
+				$tweens.clear(@popper)
 				@popper.dispose
 				@popper = nil
 			end
@@ -37,6 +38,7 @@ class Ui_Screen
 		if @grid
 			@grid.update 
 			if $input.action?
+				$tweens.clear(@grid)
 				@grid.dispose
 				@grid = nil
 			end
@@ -45,6 +47,7 @@ class Ui_Screen
 		if @item
 			@item.update 
 			if $input.action?
+				$tweens.clear(@item)
 				@item.dispose
 				@item = nil
 			end

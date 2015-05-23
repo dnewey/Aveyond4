@@ -176,7 +176,6 @@ class Scene_Base
 
   end
 
-
   def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
 
     sprk = Spark.new(fx,x,y,@vp_main)
