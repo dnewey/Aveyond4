@@ -2,6 +2,12 @@
 # ** Ui_Grid
 #==============================================================================
 
+# Cut the old layout system
+# Change to a dynamic style
+# add_vert and add_hor
+# Adds to the right or below, perhaps above even?
+# Above could be used for bottom bar?
+
 class Ui_Grid
 
 	attr_reader :idx

@@ -25,8 +25,6 @@ class CharView < SpriteGroup
 		@xform.bitmap = $cache.menu_char("Transforms/frog") if rand(10) > 3
 		add(@xform,15,65)
 
-
-
 		# Health
 		#bars
 

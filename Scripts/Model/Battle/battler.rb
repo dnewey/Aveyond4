@@ -76,7 +76,6 @@ class Game_Battler
     # Add actions as skills, maybe not now, only when checking
     @actions.each{ |a| @skills.push(a) }
 
-
   end
 
   def init_enemy(id)

@@ -1,4 +1,4 @@
-[|"°#==============================================================================
+[}"°#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1764,7 +1764,7 @@ end
 
 def scenecam()
 
-end"í#==============================================================================
+end"	#==============================================================================
 # ** Common Functions
 #==============================================================================
 
@@ -1799,6 +1799,10 @@ end
 
 def gev(str)
 
+	if str.is_a?(Game_Event)
+		return str
+	end
+
 
 	#check for int that is in a string
 	#treat as an int
@@ -1812,9 +1816,9 @@ def gev(str)
 
 	if str.include?(',')
 
-			coords = str.split(",")
-			# Get by coords
-			return $scene.map.event_at(coords[0].to_i,coords[1].to_i)
+		coords = str.split(",")
+		# Get by coords
+		return $scene.map.event_at(coords[0].to_i,coords[1].to_i)
 
 	end
 
@@ -2580,7 +2584,7 @@ class Popper < Sprite
 
 	end
 
-end"x
+end"j
 class ActorCmd
 
 	def initialize(vp)
@@ -2607,7 +2611,7 @@ class ActorCmd
 		@battler.actions.each{ |action|
 			# Add an icon?
 			spr = Sprite.new(@vp)
-			spr.bitmap = $cache.menu("Battlehud/Commands/icon")
+			spr.bitmap = $cache.icon("misc/bulb")
 			@icons.push(spr)
 		}
 
@@ -2694,7 +2698,7 @@ class ActorCmd
 
 	end
 
-end"J
+end"F
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -2720,8 +2724,6 @@ class CharView < SpriteGroup
 		@xform = Sprite.new(vp)
 		@xform.bitmap = $cache.menu_char("Transforms/frog") if rand(10) > 3
 		add(@xform,15,65)
-
-
 
 		# Health
 		#bars
@@ -2752,7 +2754,26 @@ class CharView < SpriteGroup
 
 	end
 
-end"“
+end"…
+class ItemCmd
+
+	def initialize(vp)
+
+		@menu = List_Common.new(vp)
+		@menu.list.select = Proc.new{ |option| self.select(option) }
+		@menu.list.cancel = Proc.new{ |option| self.cancel(option) }
+		@menu.list.change = Proc.new{ |option| self.change(option) }
+		
+		data = []
+		data.push('covey')
+		data.push('covey')
+		data.push('covey')
+
+		@menu.list.setup(data)
+
+	end
+
+end"4
 class SkillCmd
 
 	def initialize(vp)
@@ -2762,9 +2783,13 @@ class SkillCmd
 		@text = Sprite.new
 		#@text.bitmap = $cache.menu("battle/text.png")
 
+		# Customized per character, but always as a nice list of types?
+		# Skill would maybe be the only category for these?
+		# All could be disable if need be
+
 	end
 
-end"e
+end"b
 class TargetCmd
 
 	attr_reader :active
@@ -2774,7 +2799,7 @@ class TargetCmd
 		@vp = vp
 
 		@arrow = Sprite.new(@vp)
-		@arrow.bitmap = $cache.menu("BattleHud/target")
+		@arrow.bitmap = $cache.menu_common("target")
 		@arrow.hide
 
 		@targets_sy = nil
@@ -5492,7 +5517,7 @@ class Right_Page < SpriteGroup
 
     end
 
-end"ú
+end"ø
 #==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
@@ -5570,7 +5595,6 @@ class Game_Battler
 
     # Add actions as skills, maybe not now, only when checking
     @actions.each{ |a| @skills.push(a) }
-
 
   end
 
@@ -5891,7 +5915,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"&¥#==============================================================================
+end"t§#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -6001,6 +6025,17 @@ class Game_Character
 
     @opacity = 255
   end
+
+  # For offsets > 32, snap the position and remove offset
+  def snap_offset
+    @y += @off_y / 32
+    @x += @off_x / 32
+    @real_x = @x * 128
+    @real_y = @y * 128
+    @off_y = @off_y % 32
+    @off_x = @off_x % 32
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Moving
   #--------------------------------------------------------------------------
@@ -6142,7 +6177,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_x
     # Get screen coordinates from real coordinates and map display position
-    return  @off_x + (@real_x - $map.display_x + 3) / 4 + 16
+    return  @off_x + (@real_x - $scene.map.display_x + 3) / 4 + 16
   end
 
   #--------------------------------------------------------------------------
@@ -6150,7 +6185,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_y
     # Get screen coordinates from real coordinates and map display position
-    y = (@real_y - $map.display_y + 3) / 4 + 32
+    y = (@real_y - $scene.map.display_y + 3) / 4 + 32
     # Make y-coordinate smaller via jump count
     if @jump_count >= @jump_peak
       n = @jump_count - @jump_peak
@@ -6173,7 +6208,7 @@ class Game_Character
     return 999 if @above
 
     # Get screen coordinates from real coordinates and map display position
-    z = (@real_y - $map.display_y + 3) / 4 + 32
+    z = (@real_y - $scene.map.display_y + 3) / 4 + 32
 
     # If height exceeds 32, then add 31
     return z #+ ((height > 32) ? 31 : 0)
@@ -6189,14 +6224,14 @@ class Game_Character
     return 0 if jumping?
     dx = ((@x * 128) - @real_x).abs
     #log_info(dx) if dx > 0
-    return 12 if $map.bush?(@x, @y) && dx < 24
+    return 12 if $scene.map.bush?(@x, @y) && dx < 24
     return 0
   end
 
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #--------------------------------------------------------------------------
-  def terrain_tag() return $map.terrain_tag(@x, @y) end
+  def terrain_tag() return $scene.map.terrain_tag(@x, @y) end
 
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -6211,7 +6246,7 @@ class Game_Character
       @showdir = @direction
     end
 
-    return if mini
+    return if mini && !jumping? # Force jumps to finish
 
 
     # Mouse pathfinding
@@ -6340,8 +6375,8 @@ class Game_Character
       # Convert map coordinates from map move speed into move distance
       distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
 
-      sfx("step3") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
-      #Audio.se_play("Audio/SE/step.ogg") if (4.8 - @move_angle).abs < 0.21
+      #sfx("step") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
+      #sfx("step") if (4.8 - @move_angle).abs < 0.21
 
     elsif terrain_tag == 5 && @prev_terrain == 3
       #@showdir = 8
@@ -6693,7 +6728,9 @@ class Game_Character
       @y += 1
       # Increase steps
       increase_steps
-    # If impassable
+      # If impassable
+      $audio.queue('step',10) if terrain_tag == 3 || terrain_tag == 5
+      $audio.queue('step',24) if terrain_tag == 3
     else
       # Determine if touch event is triggered IF ENEMY ONLY
       #check_event_trigger_touch(@x, @y+1)
@@ -6769,10 +6806,14 @@ class Game_Character
       # Turn up
       turn_up
       # Update coordinates
+      pt = terrain_tag
       @y -= 1
       # Increase steps
       increase_steps
     # If impassable
+      $audio.queue('step',10) if terrain_tag == 3 && pt == 3
+      $audio.queue('step',6) if terrain_tag == 4
+      $audio.queue('step',24) if terrain_tag == 3
     else
       # Determine if touch event is triggered
      # check_event_trigger_touch(@x, @y-1)
@@ -7893,7 +7934,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"¸Y#==============================================================================
+end"{Z#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -8182,6 +8223,14 @@ class Interpreter
   # * End Event
   #--------------------------------------------------------------------------
   def command_end
+
+    # Fix for going into battle mid event
+    # Cut this or something, change all maps here to $scene.map?
+    if $map.events[@event_id] == nil
+      @list = nil
+      return
+    end
+
     # Clear list of event commands
     @list = nil
     # If main map event and event ID are valid
@@ -8192,6 +8241,7 @@ class Interpreter
 
     # Tell the even that it is stopping so it can mark second
     $map.events[@event_id].stop 
+
   end
 
   #--------------------------------------------------------------------------
@@ -9118,7 +9168,7 @@ class Moblin
 
 	end
 
-end"†%#==============================================================================
+end"ß%#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -9135,6 +9185,7 @@ class Game_Player < Game_Character
     looklike("boy")
     @transferring = false
     @xfer_data = nil
+    @static = false
   end
 
   def transfer(map,x,y,dir)
@@ -9153,6 +9204,10 @@ class Game_Player < Game_Character
 
   def looklike(char)
     self.character_name = "Player/#{char}"
+  end
+
+  def static
+    @static = true
   end
 
   #--------------------------------------------------------------------------
@@ -9273,6 +9328,8 @@ class Game_Player < Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
+
+    return if @static
 
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
@@ -9430,7 +9487,7 @@ class Game_Player < Game_Character
   end
 
 end
-"ã
+"1
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -9467,7 +9524,7 @@ class Game_Battle
 
   def build_attack_queue
 
-    return [$party.actor_by_id("boy")]
+    return [$party.actor_by_id("boy"),$party.actor_by_id("ing"),$party.actor_by_id("phy"),$party.actor_by_id("rob")]
 
   end
 
@@ -10004,7 +10061,7 @@ end"class State
 	end
 
 end
-"Ç#==============================================================================
+"Ä#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -10210,11 +10267,11 @@ class Scene_Base
 
   def pop_dmg(target,amount)
     #ev = gev(target)
-    pop = Popper.new(@vp_pops)
+    pop = Popper.new(@vp_over)
     pop.value = 0#amount #- amount/10
     pop.x = target.screen_x-200-20
     pop.y = target.screen_y-40-12+45
-    @poppers.push(pop)
+    @pops.push(pop)
 
     pop.opacity = 1
     pop.do(go("value",amount,700,:quad_in_out))
@@ -10225,13 +10282,14 @@ class Scene_Base
   end
 
 end
-"á#==============================================================================
+"—#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
 class Scene_Battle < Scene_Base
 
   def initialize
+    super
 
     Graphics.freeze
 
@@ -10245,9 +10303,12 @@ class Scene_Battle < Scene_Base
     # Could put the scrolling into battle in with this
     # Char screenx comes from this, perhaps $scene.map
    
-    @map.camera_xy(5,15)
-    @map.cam_oy = 150
-    @map.do(go("cam_oy",-150,3500,:quad_in_out))    
+    @player.moveto(0,0)
+    @player.static
+    @map.camera_to(@player)
+    #@map.camera_xy(5,15)
+    #@map.cam_oy = 150
+    #@map.do(go("cam_oy",-250,2500,:quad_in_out))    
 
 
     # Create Hud Elements
@@ -10256,6 +10317,8 @@ class Scene_Battle < Scene_Base
     @skill_cmd = SkillCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
 
+    #$map = @map
+    #$player = @player
 
     # Find battler events
     [0,1,2,3].each{ |i| 
@@ -10263,6 +10326,7 @@ class Scene_Battle < Scene_Base
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
+      ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
@@ -10275,8 +10339,9 @@ class Scene_Battle < Scene_Base
       end
     }
 
-
-    Graphics.transition(50,'Graphics/System/trans')  
+    reload_map
+        
+    Graphics.transition(20,'Graphics/Transitions/trans') 
             
   end
   
@@ -10536,7 +10601,7 @@ class Scene_Battle
     @actor_cmd.setup(@active_battler)
   end
 
-end"„
+end"Ž
 
 class Scene_Battle
 
@@ -10605,7 +10670,7 @@ class Scene_Battle
     @attack_results.each{ |result|
       x = result.target.ev.screen_x
       y = result.target.ev.screen_y
-      add_spark(x,y)
+      add_spark('redstar',x,y)
     }
 
     # Hit anim if there is one
@@ -10626,7 +10691,7 @@ class Scene_Battle
     # Better figure damage pops
     @attack_results.each{ |result|
 
-        pop_dmg(result.target.ev,result.damage)
+        pop_num(result.target.ev,result.damage)
 
     }
 
@@ -10666,7 +10731,7 @@ class Scene_Battle
 	  if !@battle_queue.empty?
 		
   		# Good place to check for end of battle also
-	 	  @active_battler = @battle_order.shift
+	 	  @active_battler = @battle_queue.shift
 	   	@phase = :main_prep
       return
 
@@ -10686,7 +10751,7 @@ class Scene_Battle
 
   end
 
-end"#==============================================================================
+end"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -10706,9 +10771,7 @@ class Scene_Map < Scene_Base
     $map = @map
     $player = @player
 
-    @hud = Ui_Screen.new(@vp_ui)
-
-    
+    @hud = Ui_Screen.new(@vp_ui)    
             
   end
   
@@ -11494,7 +11557,7 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"*#==============================================================================
+end"g#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -11590,6 +11653,9 @@ class AudioManager
     # Sound effects with reverb
     @sfx = []
 
+    # Queue of sfx to play [[file,delay,vol]]
+    @queue = [] 
+
 
     @mode = :normal
     @effect = nil
@@ -11674,6 +11740,10 @@ class AudioManager
 
   end
 
+  def queue(file,delay,vol=1.0)
+    @queue.push([file,delay,vol])
+  end
+
   def dip(src)
 
     # Dip the music while the src plays then fade up
@@ -11721,6 +11791,18 @@ class AudioManager
   def update
 
     @environmental.each{ |e| e.update }
+
+    # Play sfx on delay
+    @queue.each{ |i|
+
+      i[1] -= 1
+      if i[1] <= 0
+        sfx(i[0],i[2])
+      end
+
+    }
+
+    @queue.delete_if{ |i| i[1] <= 0 }
 
   end
 
@@ -13378,7 +13460,7 @@ end"~# if !ACE_MODE
 # end
 
 
-"¬ class Array
+"Ñ class Array
  	def count
  		return length
  	end
@@ -13406,6 +13488,9 @@ class Fixnum
 	def odd?
 		return self % 2 == 1
 	end
+  def include?(a)
+    false
+  end
 end
 
 "# Extensions to sprite class

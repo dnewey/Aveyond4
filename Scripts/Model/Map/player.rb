@@ -15,6 +15,7 @@ class Game_Player < Game_Character
     looklike("boy")
     @transferring = false
     @xfer_data = nil
+    @static = false
   end
 
   def transfer(map,x,y,dir)
@@ -33,6 +34,10 @@ class Game_Player < Game_Character
 
   def looklike(char)
     self.character_name = "Player/#{char}"
+  end
+
+  def static
+    @static = true
   end
 
   #--------------------------------------------------------------------------
@@ -153,6 +158,8 @@ class Game_Player < Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
+
+    return if @static
 
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim

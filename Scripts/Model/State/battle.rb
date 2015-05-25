@@ -35,7 +35,7 @@ class Game_Battle
 
   def build_attack_queue
 
-    return [$party.actor_by_id("boy")]
+    return [$party.actor_by_id("boy"),$party.actor_by_id("ing"),$party.actor_by_id("phy"),$party.actor_by_id("rob")]
 
   end
 

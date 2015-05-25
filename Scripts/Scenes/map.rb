@@ -18,9 +18,7 @@ class Scene_Map < Scene_Base
     $map = @map
     $player = @player
 
-    @hud = Ui_Screen.new(@vp_ui)
-
-    
+    @hud = Ui_Screen.new(@vp_ui)    
             
   end
   

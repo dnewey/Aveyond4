@@ -287,6 +287,14 @@ class Interpreter
   # * End Event
   #--------------------------------------------------------------------------
   def command_end
+
+    # Fix for going into battle mid event
+    # Cut this or something, change all maps here to $scene.map?
+    if $map.events[@event_id] == nil
+      @list = nil
+      return
+    end
+
     # Clear list of event commands
     @list = nil
     # If main map event and event ID are valid
@@ -297,6 +305,7 @@ class Interpreter
 
     # Tell the even that it is stopping so it can mark second
     $map.events[@event_id].stop 
+
   end
 
   #--------------------------------------------------------------------------

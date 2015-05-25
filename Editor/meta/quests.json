@@ -23,8 +23,5 @@
   {
     "field": "chapter",
     "edit": "select"
-  },
-  {
-    "field": "modified"
   }
 ]

@@ -108,6 +108,17 @@ class Game_Character
 
     @opacity = 255
   end
+
+  # For offsets > 32, snap the position and remove offset
+  def snap_offset
+    @y += @off_y / 32
+    @x += @off_x / 32
+    @real_x = @x * 128
+    @real_y = @y * 128
+    @off_y = @off_y % 32
+    @off_x = @off_x % 32
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Moving
   #--------------------------------------------------------------------------
@@ -249,7 +260,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_x
     # Get screen coordinates from real coordinates and map display position
-    return  @off_x + (@real_x - $map.display_x + 3) / 4 + 16
+    return  @off_x + (@real_x - $scene.map.display_x + 3) / 4 + 16
   end
 
   #--------------------------------------------------------------------------
@@ -257,7 +268,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_y
     # Get screen coordinates from real coordinates and map display position
-    y = (@real_y - $map.display_y + 3) / 4 + 32
+    y = (@real_y - $scene.map.display_y + 3) / 4 + 32
     # Make y-coordinate smaller via jump count
     if @jump_count >= @jump_peak
       n = @jump_count - @jump_peak
@@ -280,7 +291,7 @@ class Game_Character
     return 999 if @above
 
     # Get screen coordinates from real coordinates and map display position
-    z = (@real_y - $map.display_y + 3) / 4 + 32
+    z = (@real_y - $scene.map.display_y + 3) / 4 + 32
 
     # If height exceeds 32, then add 31
     return z #+ ((height > 32) ? 31 : 0)
@@ -296,14 +307,14 @@ class Game_Character
     return 0 if jumping?
     dx = ((@x * 128) - @real_x).abs
     #log_info(dx) if dx > 0
-    return 12 if $map.bush?(@x, @y) && dx < 24
+    return 12 if $scene.map.bush?(@x, @y) && dx < 24
     return 0
   end
 
   #--------------------------------------------------------------------------
   # * Get Terrain Tag
   #--------------------------------------------------------------------------
-  def terrain_tag() return $map.terrain_tag(@x, @y) end
+  def terrain_tag() return $scene.map.terrain_tag(@x, @y) end
 
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -318,7 +329,7 @@ class Game_Character
       @showdir = @direction
     end
 
-    return if mini
+    return if mini && !jumping? # Force jumps to finish
 
 
     # Mouse pathfinding
@@ -447,8 +458,8 @@ class Game_Character
       # Convert map coordinates from map move speed into move distance
       distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
 
-      sfx("step3") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
-      #Audio.se_play("Audio/SE/step.ogg") if (4.8 - @move_angle).abs < 0.21
+      #sfx("step") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
+      #sfx("step") if (4.8 - @move_angle).abs < 0.21
 
     elsif terrain_tag == 5 && @prev_terrain == 3
       #@showdir = 8
@@ -800,7 +811,9 @@ class Game_Character
       @y += 1
       # Increase steps
       increase_steps
-    # If impassable
+      # If impassable
+      $audio.queue('step',10) if terrain_tag == 3 || terrain_tag == 5
+      $audio.queue('step',24) if terrain_tag == 3
     else
       # Determine if touch event is triggered IF ENEMY ONLY
       #check_event_trigger_touch(@x, @y+1)
@@ -876,10 +889,14 @@ class Game_Character
       # Turn up
       turn_up
       # Update coordinates
+      pt = terrain_tag
       @y -= 1
       # Increase steps
       increase_steps
     # If impassable
+      $audio.queue('step',10) if terrain_tag == 3 && pt == 3
+      $audio.queue('step',6) if terrain_tag == 4
+      $audio.queue('step',24) if terrain_tag == 3
     else
       # Determine if touch event is triggered
      # check_event_trigger_touch(@x, @y-1)

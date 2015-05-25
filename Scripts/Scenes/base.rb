@@ -204,11 +204,11 @@ class Scene_Base
 
   def pop_dmg(target,amount)
     #ev = gev(target)
-    pop = Popper.new(@vp_pops)
+    pop = Popper.new(@vp_over)
     pop.value = 0#amount #- amount/10
     pop.x = target.screen_x-200-20
     pop.y = target.screen_y-40-12+45
-    @poppers.push(pop)
+    @pops.push(pop)
 
     pop.opacity = 1
     pop.do(go("value",amount,700,:quad_in_out))

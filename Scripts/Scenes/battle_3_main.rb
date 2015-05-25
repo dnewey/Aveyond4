@@ -66,7 +66,7 @@ class Scene_Battle
     @attack_results.each{ |result|
       x = result.target.ev.screen_x
       y = result.target.ev.screen_y
-      add_spark(x,y)
+      add_spark('redstar',x,y)
     }
 
     # Hit anim if there is one
@@ -87,7 +87,7 @@ class Scene_Battle
     # Better figure damage pops
     @attack_results.each{ |result|
 
-        pop_dmg(result.target.ev,result.damage)
+        pop_num(result.target.ev,result.damage)
 
     }
 
@@ -127,7 +127,7 @@ class Scene_Battle
 	  if !@battle_queue.empty?
 		
   		# Good place to check for end of battle also
-	 	  @active_battler = @battle_order.shift
+	 	  @active_battler = @battle_queue.shift
 	   	@phase = :main_prep
       return
 

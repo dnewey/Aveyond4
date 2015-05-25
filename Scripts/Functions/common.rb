@@ -33,6 +33,10 @@ end
 
 def gev(str)
 
+	if str.is_a?(Game_Event)
+		return str
+	end
+
 
 	#check for int that is in a string
 	#treat as an int
@@ -46,9 +50,9 @@ def gev(str)
 
 	if str.include?(',')
 
-			coords = str.split(",")
-			# Get by coords
-			return $scene.map.event_at(coords[0].to_i,coords[1].to_i)
+		coords = str.split(",")
+		# Get by coords
+		return $scene.map.event_at(coords[0].to_i,coords[1].to_i)
 
 	end
 

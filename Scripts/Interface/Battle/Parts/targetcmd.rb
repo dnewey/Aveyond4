@@ -8,7 +8,7 @@ class TargetCmd
 		@vp = vp
 
 		@arrow = Sprite.new(@vp)
-		@arrow.bitmap = $cache.menu("BattleHud/target")
+		@arrow.bitmap = $cache.menu_common("target")
 		@arrow.hide
 
 		@targets_sy = nil

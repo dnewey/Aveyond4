@@ -5,6 +5,7 @@
 class Scene_Battle < Scene_Base
 
   def initialize
+    super
 
     Graphics.freeze
 
@@ -18,9 +19,12 @@ class Scene_Battle < Scene_Base
     # Could put the scrolling into battle in with this
     # Char screenx comes from this, perhaps $scene.map
    
-    @map.camera_xy(5,15)
-    @map.cam_oy = 150
-    @map.do(go("cam_oy",-150,3500,:quad_in_out))    
+    @player.moveto(0,0)
+    @player.static
+    @map.camera_to(@player)
+    #@map.camera_xy(5,15)
+    #@map.cam_oy = 150
+    #@map.do(go("cam_oy",-250,2500,:quad_in_out))    
 
 
     # Create Hud Elements
@@ -29,6 +33,8 @@ class Scene_Battle < Scene_Base
     @skill_cmd = SkillCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
 
+    #$map = @map
+    #$player = @player
 
     # Find battler events
     [0,1,2,3].each{ |i| 
@@ -36,6 +42,7 @@ class Scene_Battle < Scene_Base
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
+      ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
@@ -48,8 +55,9 @@ class Scene_Battle < Scene_Base
       end
     }
 
-
-    Graphics.transition(50,'Graphics/System/trans')  
+    reload_map
+        
+    Graphics.transition(20,'Graphics/Transitions/trans') 
             
   end
   

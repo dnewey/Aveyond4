@@ -25,7 +25,7 @@ class ActorCmd
 		@battler.actions.each{ |action|
 			# Add an icon?
 			spr = Sprite.new(@vp)
-			spr.bitmap = $cache.menu("Battlehud/Commands/icon")
+			spr.bitmap = $cache.icon("misc/bulb")
 			@icons.push(spr)
 		}
 

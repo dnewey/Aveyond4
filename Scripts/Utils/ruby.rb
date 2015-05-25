@@ -26,5 +26,8 @@ class Fixnum
 	def odd?
 		return self % 2 == 1
 	end
+  def include?(a)
+    false
+  end
 end
 
