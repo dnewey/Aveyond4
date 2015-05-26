@@ -2773,14 +2773,11 @@ class ItemCmd
 
 	end
 
-end"4
+end"ª
 class SkillCmd
 
 	def initialize(vp)
 
-		@icons = []
-		
-		@text = Sprite.new
 		#@text.bitmap = $cache.menu("battle/text.png")
 
 		# Customized per character, but always as a nice list of types?
@@ -2788,6 +2785,25 @@ class SkillCmd
 		# All could be disable if need be
 
 	end
+
+	def setup(char)
+
+		case char
+			when 'boy'; setup_boy
+			when 'ing'; setup_ing
+		end
+	end
+
+	def setup_boy
+
+
+	end
+
+	def setup_ing
+
+	end
+
+	
 
 end"b
 class TargetCmd
@@ -3064,9 +3080,15 @@ class Ui_Bar < SpriteGroup
 		super()
 	end
 
-end"#==============================================================================
+end";#==============================================================================
 # ** Ui_Grid
 #==============================================================================
+
+# Cut the old layout system
+# Change to a dynamic style
+# add_vert and add_hor
+# Adds to the right or below, perhaps above even?
+# Above could be used for bottom bar?
 
 class Ui_Grid
 
