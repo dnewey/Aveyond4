@@ -13,7 +13,9 @@ class Game_Battler
   attr_accessor :target
   attr_accessor :target_type, :target_idx
   attr_accessor :ev
-  
+
+  attr_reader :hp, :mp
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -27,11 +29,10 @@ class Game_Battler
 
     @restype = nil#data.resource
 
-    # Stats - enemy base and player bonus    
-    @hp_init, @mp_init, @atk_init, @def_init = 0, 0, 0, 0
-    @hp_rate, @mp_rate, @atk_rate, @def_rate = 0, 0, 0, 0
-    @hp_plus,  @mp_plus, @atk_plus, @def_plus = 0, 0, 0, 0
-
+    # Enemy values and also bonus for player
+    @stat_plus = {}
+    @stat_mods = {}
+   
     @xp = 0
     @level = 1
 
@@ -44,8 +45,9 @@ class Game_Battler
     @skill_cooldown = {}
 
     # Skill selection
-    @action = 0
-    @skill_id = 0
+    @action = nil
+    @skill_id = nil
+    @item_id = nil
 
     @target = nil
     @target_type = nil # <-- Scope?
@@ -55,6 +57,12 @@ class Game_Battler
 
     @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting
 
+    recover_all
+
+  end
+
+  def is_actor?
+    return @is_actor
   end
 
   def init_actor(id)
@@ -74,13 +82,34 @@ class Game_Battler
     @actions = data.actions.split(" | ")
 
     # Add actions as skills, maybe not now, only when checking
-    @actions.each{ |a| @skills.push(a) }
+    #@actions.each{ |a| @skills.push(a) }
+
+    # Prepare stat mods per character
+    if data.mods != ""
+      data.mods.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_mods[md[0]] = md[1].to_i
+        log_info @stat_mods
+      }
+    end
+
 
   end
 
   def init_enemy(id)
 
     @is_actor = false
+
+    data = $data.enemies[id]
+    @id = id
+
+    # Get stat plus per enemy
+    if data.stats != ""
+      data.stats.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_plus[md[0]] = md[1].to_i
+      }
+    end
 
   end
   
@@ -93,11 +122,22 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def recover_all
     @hp = maxhp
-    @sp = maxsp
-    for i in @states.clone
-      remove_state(i)
-    end
+    @mp = maxmp
+   # for i in @states.clone
+   #   remove_state(i)
+   # end
   end
+
+  
+  def damage(amount)
+    @hp -= amount
+  end
+
+  def heal(amount)
+
+  end
+
+
 
   # perhamps cut these things
   def down?
@@ -105,27 +145,6 @@ class Game_Battler
   end
   def attackable?
     return !down?
-  end
-
-  def inputable?() restriction <= 1 end
-  def movable?() restriction < 4 end  
-
-
-  # PROBABLY DON'T HAVE THIS HERE
-  def slip_damage_effect
-
-    # Set damage
-    self.damage = self.maxhp / 20 # 10
-    # Dispersion
-    if self.damage.abs > 0
-      amp = [self.damage.abs * 15 / 100, 1].max
-      self.damage += rand(amp+1) + rand(amp+1) - amp
-    end
-    # Subtract damage from HP
-    self.hp -= self.damage
-    # End Method
-    return true
-
   end
 
 

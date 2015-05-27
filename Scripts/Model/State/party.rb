@@ -40,9 +40,9 @@ class Game_Party
     
     # TEMP DISABLE
     set_active("boy")
-    set_active("ing")
-    set_active("phy")
-    set_active("rob")
+    # set_active("ing")
+    # set_active("phy")
+    # set_active("rob")
 
     @leader = 'boy'
 
@@ -64,6 +64,10 @@ class Game_Party
 
   def actor_by_index(idx)
     return @actors[@active[idx]]
+  end
+
+  def active_battlers
+    return @active.map{ |a| @actors[a] }
   end
 
   #--------------------------------------------------------------------------

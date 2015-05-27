@@ -87,13 +87,14 @@ class Scene_Battle
     # Better figure damage pops
     @attack_results.each{ |result|
 
+        result.target.damage(result.damage)
         pop_num(result.target.ev,result.damage)
 
     }
 
     # Onto the next
     @phase = :main_crit
-    wait(20)
+    wait(1)
 
   end
 
@@ -102,7 +103,7 @@ class Scene_Battle
     # Onto the next
 
     @phase = :main_state
-    wait(20)
+    wait(1)
 
   end
 
@@ -110,7 +111,7 @@ class Scene_Battle
 
     # Onto the next
     @phase = :main_next
-    wait(20)
+    wait(1)
 
   end
 
@@ -136,7 +137,11 @@ class Scene_Battle
     # Go to next turn, actor select
     @phase = :actor_init
 
-
 	end
+
+  # NOT CURRENTLY ACTIVATED
+  def phase_main_end
+    # Remove stats and that before next turn starts
+  end
 
 end

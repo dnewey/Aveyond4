@@ -23,9 +23,9 @@ class Game_Player < Game_Character
     @xfer_data = [map,x,y,dir]
   end
 
-  def transfer_to(map,target)
+  def transfer_to(map,target,after=nil)
     @transferring = true
-    @xfer_data = [map,target]
+    @xfer_data = [map,target,after]
   end
 
   def name
@@ -146,8 +146,13 @@ class Game_Player < Game_Character
       if event.at?(x,y) and [1,2].include?(event.trigger)
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
-          event.start
-          result = true
+          if event.trigger == 2
+            start_battle
+            return true
+          else
+            event.start
+            result = true
+          end
         end
       end
     end
@@ -295,16 +300,25 @@ class Game_Player < Game_Character
     end
 
     # Location on the map to teleport to
-    if @xfer_data.count > 2
-      $player.moveto(@xfer_data[1],@xfer_data[2])
-      $player.direction = @xfer_data[3]
-      $player.straighten  
-    else
+    # if @xfer_data.count > 2
+    #   $player.moveto(@xfer_data[1],@xfer_data[2])
+    #   $player.direction = @xfer_data[3]
+    #   $player.straighten  
+    # else
       ev = gev(@xfer_data[1])
-      $player.moveto(ev.x,ev.y)
+      @direction = @xfer_data[2] if @xfer_data[2] != nil
+      dx = 0
+      dy = 0
+      dx = 1 if @direction == 6
+      dx = -1 if @direction == 4
+      dy = 1 if @direction == 2
+      dy = -1 if @direction == 8
+      $player.moveto(ev.x+dx,ev.y+dy)
       #$player.direction = @xfer_data[3]
+
       $player.straighten  
-    end
+
+    #end
 
     # AUTO SAVING
 

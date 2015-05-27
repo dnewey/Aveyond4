@@ -24,7 +24,10 @@ class Scene_Menu
     # Choose background by location
 
     # The current menu
-    @menu = Mnu_Main.new(@vp)
+    case $game.menu_page
+      when "Main"; @menu = Mnu_Main.new(@vp)
+      when "Shop"; @menu = Mnu_Shop.new(@vp)
+    end
     @sub = nil
 
     Graphics.transition(20,'Graphics/Transitions/trans')     
@@ -58,7 +61,7 @@ class Scene_Menu
       @menu.open
     end
 
-    if $input.cancel?
+    if $input.cancel? || (@sub == nil && @menu.done?)
       $tweens.clear_all
       $game.pop_scene
     end
@@ -80,5 +83,6 @@ class Scene_Menu
   def close_all
 
   end
+
 
 end

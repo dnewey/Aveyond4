@@ -84,11 +84,7 @@ class Game_Map
     
     @need_refresh = false
     
-    # Set map event data
-    @events = {}
-    @map.events.keys.each{ |i|
-      @events[i] = Game_Event.new(@map.events[i])
-    }
+
 
     # Disregard if battle map? or use battle zone?
     # Or various battle zones?
@@ -136,6 +132,15 @@ class Game_Map
       $audio.bgm_play(@map.bgm) if @map.autoplay_bgm
       $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
     end
+
+
+
+
+        # Set map event data
+    @events = {}
+    @map.events.keys.each{ |i|
+      @events[i] = Game_Event.new(@map.events[i])
+    }
     
   end
 
@@ -188,6 +193,7 @@ class Game_Map
     update_camera
 
     @interpreter.update
+    return if $scene.is_a?(Scene_Menu)
 
     # Anti lag here
     @events.values.each{ |e| e.update }

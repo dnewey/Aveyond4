@@ -20,6 +20,7 @@
     "field": "slots"
   },
   {
-    "field": "stat"
+    "field": "mods",
+    "edit": "area"
   }
 ]

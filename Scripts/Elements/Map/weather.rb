@@ -62,4 +62,8 @@ class Weather_DarkDots
 
 	end
 
+	def dispose
+
+	end
+
 end

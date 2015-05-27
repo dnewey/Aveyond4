@@ -5,6 +5,7 @@
 class List
       
   attr_accessor :x, :y
+  attr_accessor :per_page
   attr_accessor :item_width, :item_height
   attr_accessor :item_ox, :item_space
 
@@ -66,6 +67,11 @@ class List
 
     @active = true
 
+  end
+
+  def move(x,y)
+    @x = x
+    @y = y
   end
 
   def opacity=(o)
@@ -278,14 +284,13 @@ class List
 
 
     # Selection
-    if $input.action?
-      @select.call(current) if !@select.nil?
+    if !@select.nil? && $input.action?
+      @select.call(current)
     end
 
     # Cancel
-    if $input.cancel?
-      log_info("TRYIT")
-      @cancel.call(current) if !@cancel.nil?
+    if !@cancel.nil? && $input.cancel?
+      @cancel.call(current)
     end
 
   end

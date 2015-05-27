@@ -7,6 +7,11 @@
     "default": "New State"
   },
   {
-    "field": "stats"
+    "field": "stats",
+    "edit": "area"
+  },
+  {
+    "field": "mods",
+    "edit": "area"
   }
 ]

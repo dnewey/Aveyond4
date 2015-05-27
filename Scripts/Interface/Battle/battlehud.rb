@@ -19,7 +19,6 @@ class BattleHud
 			idx += 1
 		}
 
-
 		# Help box
 		@help_box = Box.new(vp)
 		@help_box.skin = $cache.menu_common("skin-plain")

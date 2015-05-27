@@ -4,6 +4,8 @@
 
 class Scene_Battle < Scene_Base
 
+  attr_accessor :phase
+
   def initialize
     super
 
@@ -31,6 +33,7 @@ class Scene_Battle < Scene_Base
     @hud = BattleHud.new(@vp_ui)
     @actor_cmd = ActorCmd.new(@vp_ui)
     @skill_cmd = SkillCmd.new(@vp_ui)
+    @item_cmd = ItemCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
 
     #$map = @map
@@ -91,6 +94,8 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
+    $debug.track(self,"phase")
+
     # Wait count here
     if @wait_frames > 0
       @wait_frames -= 1
@@ -112,6 +117,8 @@ class Scene_Battle < Scene_Base
         phase_actor_skill
       when :actor_item
         phase_actor_item
+      when :actor_strategize
+        phase_actor_strategize
       when :actor_target
         phase_actor_target
       when :actor_next

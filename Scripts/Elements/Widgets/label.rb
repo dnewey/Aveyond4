@@ -44,6 +44,7 @@ class Label < Sprite
   # * Manage
   #--------------------------------------------------------------------------
   def text=(text)
+    text = text.to_s
     if @text != text
       @text = text
       refresh

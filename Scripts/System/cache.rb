@@ -5,6 +5,8 @@ class CacheManager
         @cache = {}
     end
 
+    def get(filename) load("",filename) end
+
     def animation(filename) load("Animations/", filename) end
 
     def autotile(filename) load("Autotiles/", filename) end

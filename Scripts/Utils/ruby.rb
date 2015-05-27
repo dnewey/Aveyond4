@@ -4,8 +4,10 @@
  	end
  	def sample
       self[rand(length)]
-  	end
-
+  end
+  def shuffle
+    return self.sort_by { rand }
+  end
  end
 
  class String

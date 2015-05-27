@@ -5,6 +5,7 @@
 class GameManager
 
   attr_reader :width, :height
+  attr_accessor :menu_page
 
 	def initialize
 
@@ -24,6 +25,7 @@ class GameManager
     resize(640,480)
 
     @scenes = []
+    @queue = nil
 
     # Game State Objects
     $progress = Progress.new
@@ -74,6 +76,11 @@ class GameManager
     Graphics.update
     Input.update
     @scenes[0].update
+
+    if @queue
+      push_scene(@queue)
+      @queue = nil
+    end
 
   end
 

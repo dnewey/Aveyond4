@@ -11,7 +11,7 @@ def tl(e) gev(e).turn_left end
 def tr(e) gev(e).turn_right end
 def tu(e) gev(e).turn_up end
 
-def path(ev,tx,ty)
+def path(ev,tx,ty,after=nil)
 
 	char = gev(ev)
 
@@ -63,6 +63,19 @@ def path(ev,tx,ty)
 
 	end		
 
+	if after != nil
+		case after
+			when 2, 'd'
+				route.list.push(RPG::MoveCommand.new(16))
+			when 4, 'l'
+				route.list.push(RPG::MoveCommand.new(17))
+			when 6, 'r'
+				route.list.push(RPG::MoveCommand.new(18))
+			when 8, 'u'
+				route.list.push(RPG::MoveCommand.new(19))
+		end
+	end
+	
 	route.list.push(RPG::MoveCommand.new())
 
 	char.force_move_route(route)

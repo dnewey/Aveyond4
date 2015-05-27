@@ -89,7 +89,7 @@ $(function()
     // Buttons
     $('#dan-btn-create').click(function () { json_create(); });
     $('#dan-btn-rev').click(function () { json_rev(); });
-    $('#dan-btn-mod').click(function () { json_sortmodified(); });
+    //$('#dan-btn-mod').click(function () { json_sortmodified(); });
     $('#dan-btn-allpp').click(function () { json_allpp(); });
 
     // Set up that table
@@ -398,7 +398,7 @@ json_edit = function(element,row,fld, val)
 {
     $json_data[row][fld] = val;
     date = new Date();
-    $json_data[row]['modified'] = date.getTime().toString();
+    //$json_data[row]['modified'] = date.getTime().toString();
 
     element.attr("title",val) // Only if it will be cut off but
 
@@ -459,7 +459,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-05-12
+// Sort by last modified 2015-05-26
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()

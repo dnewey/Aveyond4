@@ -6,7 +6,7 @@ class Game_Battler
   # * States
   #--------------------------------------------------------------------------
 
-def state?(state_id)
+  def state?(state_id)
     return @states.include?(state_id)
   end
 

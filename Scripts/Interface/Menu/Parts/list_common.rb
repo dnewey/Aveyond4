@@ -36,14 +36,9 @@ class List_Common < SpriteGroup
 		@list.update
 	end
 
-
-
-
 	# All the various data that can be shown
 	def items(category)
 
-	end
-
-	
+	end	
 
 end

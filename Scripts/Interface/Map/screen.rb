@@ -13,11 +13,14 @@ class Ui_Screen
 		@message = Ui_Message.new(vp)
 
 		@bar = Ui_Bar.new(vp)
-		@bar.hide
-		#@info = Ui_Info.new(vp)
+		#@bar.hide
+		
+		@info = Ui_Info.new(vp)
+
+
+		@shop = nil
 		@popper = nil
 		@grid = nil
-
 		@item = nil
 
 	end
@@ -53,10 +56,19 @@ class Ui_Screen
 			end
 		end
 
+		if @shop
+			@shop.update 
+			if $input.action?
+				$tweens.clear(@shop)
+				@shop.dispose
+				@shop = nil
+			end
+		end
+
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || Input.trigger?(Input::F7)
-        $game.push_scene(Scene_Menu.new)
+      	open_main_menu
       end
 
 	end
@@ -79,8 +91,13 @@ class Ui_Screen
 		return @grid
 	end
 
+	def open_shop()
+		@shop = Ui_Shop.new(@vp)
+		return @shop
+	end
+
     def busy?() 
-    	return @message.busy? || @item || @popper || @grid
+    	return @message.busy? || @item || @popper || @grid || @shop
     end
 
 end

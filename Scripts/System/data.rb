@@ -6,8 +6,9 @@ class DataManager
 
   # JsonData
 	attr_reader :items
-  attr_reader :weapons
-  attr_reader :armors
+  attr_reader :items
+  attr_reader :shop
+  attr_reader :gear
 
   attr_reader :actors
   attr_reader :enemies
@@ -19,6 +20,8 @@ class DataManager
   attr_reader :zones
 
   attr_reader :anims
+
+  attr_reader :numbers
 
   # Clone events
   attr_reader :clones
@@ -37,10 +40,13 @@ class DataManager
     # Load up json data
     
     @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
+    # shop somehow
+
     @gear = load_json("gear",GearData)
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
+    
     @skills = load_json("skills",SkillData)
     @states = load_json("states",StateData)
     
@@ -49,6 +55,8 @@ class DataManager
     @zones = load_json("zones",ZoneData)
 
     @anims = load_json("anims",AnimData)
+
+    @numbers = load_json("numbers",NumberData)
 
     @clones = load_clones
 

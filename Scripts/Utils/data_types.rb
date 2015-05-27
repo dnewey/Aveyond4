@@ -43,11 +43,15 @@ class ActorData
 	attr_reader :actions
 	attr_reader :resource
 	attr_reader :slots
-	attr_reader :statratings
+	attr_reader :mods
 end
 
 class EnemyData
-
+	attr_reader :id
+	attr_reader :name
+	attr_reader :actions
+	attr_reader :stats
+	attr_reader :loot
 end
 
 class ZoneData
@@ -87,4 +91,10 @@ class AnimData
 	attr_reader :blend
 	attr_reader :opacity
 	attr_reader :sound
+end
+
+class NumberData
+	attr_reader :id
+	attr_reader :value
+	attr_reader :notes
 end

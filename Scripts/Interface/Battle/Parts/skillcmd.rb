@@ -13,7 +13,7 @@ class SkillCmd
 
 	def setup(char)
 
-		case char
+		case char.id
 			when 'boy'; setup_boy
 			when 'ing'; setup_ing
 		end
@@ -28,6 +28,18 @@ class SkillCmd
 
 	end
 
+	def close
+
+	end
+
+	def update
+
+	end
+
 	
+
+	def get_skill
+		return @skill
+	end
 
 end

@@ -38,6 +38,8 @@ class Game_Character
   attr_accessor :ignore_movement          # ignore movement when finding path
   attr_accessor :step_anime               # stop animation
   
+  attr_accessor :fxtrail
+
   attr_accessor :cool_jumps, :spin_jumps, :flat_jumps
   
   # Custom
@@ -74,6 +76,8 @@ class Game_Character
     @cool_jumps = false
     @spin_jumps = false
     @flat_jumps = false
+
+    @fxtrail = nil
 
     @pattern = 0
 
@@ -171,6 +175,10 @@ class Game_Character
     
   end
 
+    def at?(x,y)
+    return self.x == x && self.y == y
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Passable
   #--------------------------------------------------------------------------
@@ -181,6 +189,8 @@ class Game_Character
     # Get new coordinates
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
+
+    return false if $player.at?(new_x,new_y)
        
     # If coordinates are outside of map
     return false unless $map.valid?(new_x, new_y)
@@ -796,7 +806,7 @@ class Game_Character
   def move_down(turn_enabled = true)
 
 
-@move_angle = 0
+    @move_angle = 0
 
     # Turn down
     if turn_enabled
@@ -816,7 +826,7 @@ class Game_Character
       $audio.queue('step',24) if terrain_tag == 3
     else
       # Determine if touch event is triggered IF ENEMY ONLY
-      #check_event_trigger_touch(@x, @y+1)
+      check_event_trigger_touch(@x, @y+1)
     end
   end
   #--------------------------------------------------------------------------
@@ -843,7 +853,7 @@ class Game_Character
     # If impassable
     else
       # Determine if touch event is triggered
-      #check_event_trigger_touch(@x-1, @y)
+      check_event_trigger_touch(@x-1, @y)
     end
   end
   #--------------------------------------------------------------------------
@@ -869,7 +879,7 @@ class Game_Character
     # If impassable
     else
       # Determine if touch event is triggered
-     # check_event_trigger_touch(@x+1, @y)
+      check_event_trigger_touch(@x+1, @y)
     end
   end
   #--------------------------------------------------------------------------
@@ -899,7 +909,7 @@ class Game_Character
       $audio.queue('step',24) if terrain_tag == 3
     else
       # Determine if touch event is triggered
-     # check_event_trigger_touch(@x, @y-1)
+      check_event_trigger_touch(@x, @y-1)
     end
   end
   #--------------------------------------------------------------------------

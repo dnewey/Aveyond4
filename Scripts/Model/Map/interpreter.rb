@@ -180,6 +180,7 @@ class Interpreter
       return if @message_waiting
 
       # Misc hud busy
+      return if $scene.is_a?(Scene_Menu)
       return if $scene.busy?
 
       # If waiting for move to end

@@ -21,6 +21,7 @@ class Game_Event < Game_Character
 
   attr_reader :deleted, :disabled, :erased
       
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -94,10 +95,6 @@ class Game_Event < Game_Character
     end
     
     refresh
-  end
-
-  def at?(x,y)
-    return self.x == x && self.y == y
   end
 
   #--------------------------------------------------------------------------
@@ -414,6 +411,12 @@ class Game_Event < Game_Character
       end
     end
 
+    # Change enemy gfx
+    if @character_name == "!!!Monster"
+      @character_name = "Monsters/#{$battle.enemy_types[@pattern]}"
+      @trigger = 2
+    end
+
   end
   
   def read_comment_data
@@ -453,6 +456,9 @@ class Game_Event < Game_Character
             @character_name = "NPCs/"+@character_name.delete("NPC-")+"/"+data[1]
           end
 
+        when "#icon"
+          @character_name = "Icons/#{data[1]}"
+
         when '#rand-pattern'
           @force_pattern = rand(3)
 
@@ -470,6 +476,9 @@ class Game_Event < Game_Character
 
         when '#disable'
           disable
+
+        when '#fxtrail'
+          @fxtrail = data[1]
 
       end
     }
@@ -500,6 +509,17 @@ class Game_Event < Game_Character
     if @trigger == 3 || @event.name == 'AUTORUN'
       start
     end
+  end
+
+
+  def check_event_trigger_touch(x, y)
+        
+    return false if $map.interpreter.running?
+      
+    if $player.at?(x,y) and [1,2].include?(@trigger)
+      start_battle
+    end
+
   end
 
   #--------------------------------------------------------------------------

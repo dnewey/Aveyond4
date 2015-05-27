@@ -7,6 +7,8 @@ class CharView < SpriteGroup
 
 		super()
 
+		@battler = char
+
 		@box = Box.new(vp)
 		@box.skin = $cache.menu_common("skin-plain")
     	@box.wallpaper = $cache.menu_wallpaper("back2")
@@ -36,6 +38,11 @@ class CharView < SpriteGroup
 		@hp_label.opacity = 200
 		add(@hp_label,12,110)
 
+		@hp_text = Label.new(vp)
+		@hp_text.font = $fonts.hud_hp
+		@hp_text.text = 23
+		add(@hp_text,120,110)
+
 		@mp_bar = Bar.new(vp,110,8)
 		add(@mp_bar,11,100)
 
@@ -51,6 +58,10 @@ class CharView < SpriteGroup
 		@box.update
 		@hp_bar.update
 		@mp_bar.update
+
+		@hp_text.text = @battler.hp
+		@hp_bar.value = @battler.hp
+		@hp_bar.max = @battler.maxhp
 
 	end
 

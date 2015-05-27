@@ -4,8 +4,10 @@ class Game_Battle
   attr_accessor :map, :weather
 
   attr_reader :enemies
+  attr_reader :enemy_types
 
 	def initialize
+    @enemy_types = []
 		@enemies = []
     @props = []
     @actor_index = 0
@@ -15,7 +17,7 @@ class Game_Battle
 
   # Enemies for this zone from zone data
   def change_enemies(enemies)
-
+    @enemy_types = enemies.split("\n")
   end
 
   def add(enemy)
@@ -35,7 +37,7 @@ class Game_Battle
 
   def build_attack_queue
 
-    return [$party.actor_by_id("boy"),$party.actor_by_id("ing"),$party.actor_by_id("phy"),$party.actor_by_id("rob")]
+    return ($party.active_battlers + @enemies).shuffle
 
   end
 

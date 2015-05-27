@@ -2,19 +2,18 @@
 
 class Bar < Sprite
 
-	attr_accessor :value
+	attr_accessor :value, :max
 
 	def initialize(vp,w,h)
 
 		super(vp)
 
-		@value = 12
-		self.do(go("value",75,3000,:quad_in_out))
-		@target = 75
-
+		
+		@value = 100
 		@drawn = @value
 
-		@max = 120
+		@target = @value
+		@max = 100
 
 		@width = w
 		@height = h
@@ -30,9 +29,9 @@ class Bar < Sprite
 	end
 
 	def update
-		#if @drawn != @value.to_i
+		if @drawn != @value.to_i
 			redraw
-		#end
+		end
 	end
 
 	def redraw

@@ -17,6 +17,7 @@ class Sprite_Character < Sprite
   def initialize(viewport, character = nil)
     super(viewport)
     @character = character
+    @iconmode = false
     update
   end
 
@@ -31,9 +32,19 @@ class Sprite_Character < Sprite
      
       @character_name = @character.character_name
 
+      if @character_name.include?("Icons")
+        self.bitmap = $cache.get(@character.character_name)
+        @cw = bitmap.width
+        @ch = bitmap.height
+        self.ox = @cw/2
+        self.oy = @ch
+        @iconmode = true
+        return
+      end
+
+      @iconmode = false
+
       self.bitmap = $cache.character(@character.character_name)
-
-
 
       @cw = bitmap.width / 4
       @ch = bitmap.height / 4
@@ -47,6 +58,8 @@ class Sprite_Character < Sprite
         self.oy = @ch
       end
 
+
+
     end
 
     # Clear the helper graphics
@@ -59,16 +72,23 @@ class Sprite_Character < Sprite
     #   self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
     # end
 
+    if @character.fxtrail != nil && @character.moving?
+      spark(@character.id,'redstar') if rand > 0.80
+    end
+
     # Set visible situation
     self.visible = !@character.transparent
     
-    if @character.force_pattern
-      sx = @character.force_pattern * @cw
-    else
-      sx = @character.pattern * @cw
+
+    if !@iconmode
+      if @character.force_pattern
+        sx = @character.force_pattern * @cw
+      else
+        sx = @character.pattern * @cw
+      end
+      sy = (@character.showdir - 2) / 2 * @ch
+      self.src_rect.set(sx, sy, @cw, @ch)
     end
-    sy = (@character.showdir - 2) / 2 * @ch
-    self.src_rect.set(sx, sy, @cw, @ch)
 
     # Set sprite coordinates
     self.x = @character.screen_x

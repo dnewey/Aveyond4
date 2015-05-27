@@ -2,47 +2,54 @@
 
 class Scene_Battle
 
-  # Could auto do next actor
+  #==============================================================================
+  # ** actor_init
+  #==============================================================================
+
   def phase_actor_init
     @actor_idx = -1  
     @phase = :actor_next
-    return
   end
+
+  #==============================================================================
+  # ** actor_action
+  #==============================================================================
 
   def phase_actor_action
 
     @actor_cmd.update
 
     if $input.cancel?
-      return actor_prev
+      if @actor_idx != 0
+        @actor_idx -= 1
+        @active_battler = $party.actor_by_index(@actor_idx)
+        @actor_cmd.setup(@active_battler)
+      end
     end
 
     # Player command inputs section
     if $input.action?
 
       action = @actor_cmd.get_action
+      @active_battler.action = action
       @actor_cmd.close
 
-      #log_info "ACTIOn"
-      #log_info action
+      case action 
 
-      # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-      if action == "items"
+        when "items"
 
-      else
-        skills = @active_battler.skills_for(action)
-      end
+          @item_cmd.setup
+          @phase = :actor_item
 
-      #log_info(skills)
+        when "skills"
 
-      # If a multi-skill open the menu
-      if skills.count > 1
+          @skill_cmd.setup(@active_battler)
+          @phase = :actor_skill
 
-        # Open skill_cmd
+        else
 
-      else
-
-        select_skill(skills[0])        
+          @active_battler.skill_id = action
+          @phase = :actor_strategize
 
       end
 
@@ -61,11 +68,13 @@ class Scene_Battle
     if $input.cancel?
       @actor_idx -= 1
       @phase = :actor_next
-      return
+      @skill_cmd.close
     end
 
     if $input.action?
-
+      @skill_cmd.close
+      @active_battler.skill_id = @item_cmd.get_skill
+      @phase = :actor_strategize
     end
 
   end
@@ -76,17 +85,38 @@ class Scene_Battle
 
   def phase_actor_item
 
-    @skill_cmd.update
+    @item_cmd.update
 
     if $input.cancel?
       @actor_idx -= 1
       @phase = :actor_next
-      return
+      @item_cmd.close
     end
 
     if $input.action?
-
+      @item_cmd.close
+      @active_battler.item_id = @item_cmd.get_item
+      @phase = :actor_strategize
     end
+
+  end
+
+  #==============================================================================
+  # ** actor_strategize
+  #==============================================================================
+
+  def phase_actor_strategize
+
+    # Get the skill or item
+
+    # If single, targetable?
+    #if ["one","ally"].include?($data.skills[id].scope)
+      targets = $battle.enemies #$battle.build_target_list(@active_battler)
+      @target_cmd.setup(targets)
+      @phase = :actor_target      
+    #else
+    #  @phase = :actor_next
+    #end
 
   end
 
@@ -100,67 +130,33 @@ class Scene_Battle
 
     if $input.cancel?
       @target_cmd.close
-      # Switch to actor_action instead
-      # Then actor prev could combine into a actor_skill that could do items also
       @actor_idx -= 1
       @phase = :actor_next
-      return
     end
 
     if $input.action?
       @active_battler.target = @target_cmd.active
       @target_cmd.close
       @phase = :actor_next
-      return
     end
 
   end  
+
+  #==============================================================================
+  # ** actor_next
+  #==============================================================================
 
   def phase_actor_next
 
     @actor_idx += 1
     if @actor_idx >= $party.active.count
-      @actor_cmd.close
       @phase = :main_init
-      return
-    end
-
-    @phase = :actor_action 
-    @active_battler = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@active_battler)
-    
-  end
-
-  #==============================================================================
-  # ** select_skill
-  #==============================================================================
-  # Select a skill and decide whether targeting phase is needed
-
-  def select_skill(id)
-
-    @active_battler.skill_id = id
-
-    log_info(id)
-
-    # If single, targetable?
-    if ["one","ally"].include?($data.skills[id].scope)
-      targets = $battle.enemies #$battle.build_target_list(@active_battler)
-      @target_cmd.setup(targets)
-      @phase = :actor_target      
     else
-      @phase = :actor_next
-      return
+      @active_battler = $party.actor_by_index(@actor_idx)
+      @actor_cmd.setup(@active_battler)
+      @phase = :actor_action 
     end
-
-  end
-
-
-
-  def actor_prev
-    return if @actor_idx == 0
-    @actor_idx -= 1
-    @active_battler = $party.actor_by_index(@actor_idx)
-    @actor_cmd.setup(@active_battler)
+    
   end
 
 end

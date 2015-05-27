@@ -17,10 +17,11 @@
     "edit": "area"
   },
   {
-    "field": "stats"
+    "field": "stats",
+    "edit": "area"
   },
   {
-    "field": "effect",
+    "field": "mods",
     "edit": "area"
   },
   {

@@ -318,4 +318,8 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	end
 
+	def done?
+		return false
+	end
+
 end

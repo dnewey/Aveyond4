@@ -6,9 +6,6 @@ class Game_Battler
 
 
   def skills_for(action)
-    # log_info("SKILLS")
-    # log_info(@skills)
-    # log_info(action)
 
     return @skills.select{ |s| 
       #log_info s
@@ -18,9 +15,10 @@ class Game_Battler
   end
 
   def choose_action
-  	return 'attack'
-  end
-  
+  	@action = 'attack'
+    @skill_id = 'attack'
+    @target = $party.actor_by_id('boy')
+  end  
 
   #--------------------------------------------------------------------------
   # * Determine Usable Skills

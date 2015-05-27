@@ -10,6 +10,8 @@ class FontManager
 
 	attr_reader :page_ttl, :page_sub, :page_text
 
+	attr_reader :hud_hp
+
 
 	def initialize
 
@@ -101,6 +103,15 @@ class FontManager
 		@page_text.name = "Georgia"
 	    @page_text.size = 20
 	    @page_text.color = Color.new(44,44,44)
+
+
+		# Misc
+
+		@hud_hp = Font.new
+		@hud_hp.name = "Bitter"
+	    @hud_hp.size = 20
+	    @hud_hp.color = Color.new(99,99,99)
+
 
 	end
 

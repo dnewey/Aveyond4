@@ -16,9 +16,5 @@
   },
   {
     "field": "loot"
-  },
-  {
-    "field": "icon",
-    "edit": "icon"
   }
 ]
