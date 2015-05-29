@@ -103,8 +103,8 @@ class Scene_Base
     @sparks.each{ |s| 
       # Mouse click needs to follow, others do not
       # Maybe just do all
-      #s.ox = @map.display_x/4
-      #s.oy = @map.display_y/4
+      s.ox = @map.display_x/4
+      s.oy = @map.display_y/4
       s.update 
     }
     @pops.each{ |s| 
@@ -122,6 +122,9 @@ class Scene_Base
     @pops.delete_if{ |s| s.done? }
 
     # Could delete erased characters here
+
+    @vp_over.ox = $map.display_x / 4
+    @vp_over.oy = $map.display_y / 4
 
 
     # Rebuild the map

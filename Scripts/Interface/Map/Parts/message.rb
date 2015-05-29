@@ -22,7 +22,7 @@ class Ui_Message
   SPEED_2 = 7
   SPEED_3 = 5
   SPEED_4 = 3
-  SPEED_5 = 1
+  SPEED_5 = 2
 
   attr_reader :last_choice
   
@@ -110,7 +110,7 @@ class Ui_Message
 
     #@sprites.add(@next)
     @sprites.add(@face)
-    @sprites.add(@tail)
+   # @sprites.add(@tail)
 
     @sprites.opacity = 0
 
@@ -146,24 +146,31 @@ class Ui_Message
       # LIMIT TO BE ON SCREEN
       if x < 7
         x = 7 
-        h = true
+        #h = true
       end
       if y < 46
-        y = 46
+        y = 290
         h = true
       end
       if x > 640-@width-10
         x = 640-@width-10
-        h = true
+        #h = true
       end
       if y > 480-@height-10
         y = 480-@height-10
         h = true
       end
-      #@tail.hide if h == true
-      @tail.show #if h == false
+      # @tail.bitmap = $cache.menu("Common/tail2") if h == true
+      # @tail.bitmap = $cache.menu("Common/tail") if h == false
 
       @sprites.move(x,y)
+
+      x = @speaker.screen_x - 12# - @width/2
+      y = @speaker.screen_y - 70# - @height
+
+      @tail.move(x,y)
+
+      
 
     end
 
@@ -241,7 +248,7 @@ class Ui_Message
     @cx = PADDING_X
     @cy = PADDING_Y
 
-    return log_error "Must specify speaker" if !text.include?(':')
+    return log_err "Must specify speaker" if !text.include?(':')
     text_data = text.split(":")
 
     # Read data to get name and text
@@ -250,6 +257,7 @@ class Ui_Message
 
     # Figure things out from speaker
     speaker = this.name if speaker == 'this'
+    speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 
 
@@ -360,15 +368,21 @@ class Ui_Message
       @namebox.bitmap = Bitmap.new(size.width+40,40)
       @namebox.bitmap.hskin($cache.menu("Common/namebox"))
       @nametext.bitmap.draw_gtext(0,0,220,35,name,1)
+
   end
 
   #--------------------------------------------------------------------------
   # * Update Message
   #--------------------------------------------------------------------------
   def update_message
+
+    skip_wait_test = false
     
     # if the current word is empty, get the next one and see if it fits
-    next_word if @word == nil || @char_idx > @word.length
+    if @word == nil || @char_idx > @word.length
+      next_word
+      skip_wait_test = true
+    end
         
     # if not texting then don't go
     return unless @state == :texting
@@ -377,10 +391,10 @@ class Ui_Message
     @char_idx += 1
 
     # Play a lovely character sound
-    #sound(:text_char) if $settings.value('text_sound') 
+    sys('txt2',1.0) #if $settings.value('text_sound') 
     
     # Wait before drawing another character
-    @next_char = @text_delay
+    @next_char = @text_delay if !skip_wait_test
 
     # Show the behind char anim
         # Spawn spark
@@ -430,6 +444,7 @@ class Ui_Message
 
     # Half draw the final
     return if @char_idx >= @word.length
+    return
 
     # Offset the y here to animate
     #r = rand(4)

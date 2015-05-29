@@ -180,8 +180,8 @@ class Game_Player < Game_Character
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
-
+        $scene.add_spark('click',$mouse.x+($map.display_x/4)+3,$mouse.y+($map.display_y/4)+5)
+        $audio.sys('walkto',0.7)
         
         
         # Turn Character in direction

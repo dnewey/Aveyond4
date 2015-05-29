@@ -190,7 +190,7 @@ class Game_Character
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
 
-    return false if $player.at?(new_x,new_y)
+    return false if self != $player && $player.at?(new_x,new_y)
        
     # If coordinates are outside of map
     return false unless $map.valid?(new_x, new_y)
@@ -490,7 +490,7 @@ class Game_Character
         distance = 2 ** @move_speed 
       end
 
-      sfx("step") if @move_angle == 2.4 && @prev_terrain != 3
+      #sfx("step") if @move_angle == 2.4 && @prev_terrain != 3
 
 
     elsif terrain_tag == 2 # Stairs
@@ -506,7 +506,7 @@ class Game_Character
         distance = 2.0 ** @move_speed * (Math.sin(@move_angle)).abs
       #end
 
-      Audio.se_play("Audio/SE/step.ogg") if @move_angle == 2.4 && @prev_terrain != 3
+      #Audio.se_play("Audio/SE/step.ogg") if @move_angle == 2.4 && @prev_terrain != 3
 
 
     else
@@ -822,8 +822,12 @@ class Game_Character
       # Increase steps
       increase_steps
       # If impassable
-      $audio.queue('step',10) if terrain_tag == 3 || terrain_tag == 5
-      $audio.queue('step',24) if terrain_tag == 3
+      $audio.queue('step',10,0.15) if terrain_tag == 3 || terrain_tag == 5
+      $audio.queue('step',24,0.15) if terrain_tag == 3
+
+       #$audio.queue('walk',4,0.5) if self == $player
+       $audio.queue('walk',12,0.4) if self == $player && terrain_tag != 3
+       $audio.queue('walk',12,0.6) if self == $player && terrain_tag == 2
     else
       # Determine if touch event is triggered IF ENEMY ONLY
       check_event_trigger_touch(@x, @y+1)
@@ -851,6 +855,8 @@ class Game_Character
       # Increase steps
       increase_steps
     # If impassable
+    $audio.queue('walk',12,0.4) if self == $player && terrain_tag != 3
+    $audio.queue('walk',12,0.6) if self == $player && terrain_tag == 2
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x-1, @y)
@@ -877,6 +883,8 @@ class Game_Character
       # Increase steps
       increase_steps
     # If impassable
+    $audio.queue('walk',12,0.4) if self == $player && terrain_tag != 3
+    $audio.queue('walk',12,0.6) if self == $player && terrain_tag == 2
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x+1, @y)
@@ -904,9 +912,12 @@ class Game_Character
       # Increase steps
       increase_steps
     # If impassable
-      $audio.queue('step',10) if terrain_tag == 3 && pt == 3
-      $audio.queue('step',6) if terrain_tag == 4
-      $audio.queue('step',24) if terrain_tag == 3
+      $audio.queue('step',10,0.15) if terrain_tag == 3 && pt == 3
+      $audio.queue('step',24,0.15) if terrain_tag == 4
+      $audio.queue('step',24,0.15) if terrain_tag == 3
+
+      $audio.queue('walk',12,0.4) if self == $player && terrain_tag != 3
+      $audio.queue('walk',12,0.6) if self == $player && terrain_tag == 2
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x, @y-1)
@@ -1432,7 +1443,7 @@ class Game_Character
         #log_sys([x,y])
 
         if x == sx and y == sy
-          log_scr("WINWINWINW")
+          #log_scr("WINWINWINW")
           return [true, map, step-1] 
         end
 
@@ -1465,7 +1476,7 @@ class Game_Character
       #log_info (old_positions)
     }
       
-      log_err "FAILFAIL"
+    log_err "No Path Found"
     return [false, nil, nil]     
 
   end

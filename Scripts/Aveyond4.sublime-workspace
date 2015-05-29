@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"skip",
+				"skip_wait_test"
+			],
+			[
+				"enemy",
+				"enemy_types"
+			],
+			[
+				"att",
+				"attr_reader"
+			],
+			[
 				"attr",
 				"attr_reader"
 			],
@@ -54,10 +66,6 @@
 			[
 				"env",
 				"environmental"
-			],
-			[
-				"att",
-				"attr_accessor"
 			],
 			[
 				"need",
@@ -523,7 +531,15 @@
 			"file": "Model/Map/character.rb",
 			"settings":
 			{
-				"buffer_size": 41442,
+				"buffer_size": 42235,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "System/audio.rb",
+			"settings":
+			{
+				"buffer_size": 4301,
 				"line_ending": "Windows"
 			}
 		},
@@ -531,7 +547,47 @@
 			"file": "Model/Map/event.rb",
 			"settings":
 			{
-				"buffer_size": 13338,
+				"buffer_size": 13910,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Elements/Map/weather.rb",
+			"settings":
+			{
+				"buffer_size": 1555,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/Parts/message.rb",
+			"settings":
+			{
+				"buffer_size": 17536,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/battle.rb",
+			"settings":
+			{
+				"buffer_size": 52,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Scenes/base.rb",
+			"settings":
+			{
+				"buffer_size": 4991,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/sparks.rb",
+			"settings":
+			{
+				"buffer_size": 869,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +595,7 @@
 			"file": "Model/Map/player.rb",
 			"settings":
 			{
-				"buffer_size": 9624,
+				"buffer_size": 9774,
 				"line_ending": "Windows"
 			}
 		},
@@ -547,7 +603,7 @@
 			"file": "Model/State/battle.rb",
 			"settings":
 			{
-				"buffer_size": 3376,
+				"buffer_size": 3463,
 				"line_ending": "Windows"
 			}
 		},
@@ -616,14 +672,6 @@
 			}
 		},
 		{
-			"file": "Utils/ruby.rb",
-			"settings":
-			{
-				"buffer_size": 483,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "Model/Battle/battler_3_skills.rb",
 			"settings":
 			{
@@ -667,7 +715,7 @@
 			"file": "Interface/Battle/Parts/itemcmd.rb",
 			"settings":
 			{
-				"buffer_size": 828,
+				"buffer_size": 897,
 				"line_ending": "Windows"
 			}
 		},
@@ -675,15 +723,65 @@
 			"file": "Elements/Map/character.rb",
 			"settings":
 			{
-				"buffer_size": 3739,
+				"buffer_size": 3755,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Elements/Map/mapwrap.rb",
+			"file": "Functions/audio.rb",
 			"settings":
 			{
-				"buffer_size": 401,
+				"buffer_size": 151,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/Parts/shop.rb",
+			"settings":
+			{
+				"buffer_size": 867,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/menus.rb",
+			"settings":
+			{
+				"buffer_size": 251,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 128 files for \"Scene_Menu\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\menus.rb:\n    2  def open_main_menu\n    3  	$game.menu_page = \"Main\"\n    4: 	$game.push_scene(Scene_Menu.new)\n    5  end\n    6  \n    7  def open_shop_buy\n    8  	$game.menu_page = \"Shop\"\n    9: 	$game.push_scene(Scene_Menu.new)\n   10  end\n   11  \n   12  def open_shop_sell\n   13  	$game.menu_page = \"Shop\"\n   14: 	$game.push_scene(Scene_Menu.new)\n   15  end\n   16  \n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\screen.rb:\n   69  	  return if busy? or $map.interpreter.running?\n   70        if $input.cancel? || Input.trigger?(Input::F7)\n   71:         $game.push_scene(Scene_Menu.new)\n   72        end\n   73  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\interpreter.rb:\n  181  \n  182        # Misc hud busy\n  183:       return if $scene.is_a?(Scene_Menu)\n  184        return if $scene.busy?\n  185  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  189  \n  190      @interpreter.update\n  191:     return if $scene.is_a?(Scene_Menu)\n  192  \n  193      # Anti lag here\n\nC:\\Aveyond4\\Scripts\\Scenes\\base.rb:\n   88    def update\n   89  \n   90:     return if $scene.is_a?(Scene_Menu)\n   91  \n   92      # Model update\n   93      @map.update      \n   94:     return if $scene.is_a?(Scene_Menu)\n   95      @player.update\n   96  \n\nC:\\Aveyond4\\Scripts\\Scenes\\menu.rb:\n    1  #==============================================================================\n    2: # ** Scene_Menu\n    3  #==============================================================================\n    4  \n    5: class Scene_Menu\n    6    \n    7    #--------------------------------------------------------------------------\n\n10 matches across 6 files\n\n\nSearching 128 files for \"Scene_Menu\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\menus.rb:\n    2  def open_main_menu\n    3  	$game.menu_page = \"Main\"\n    4: 	$game.push_scene(Scene_Menu.new)\n    5  end\n    6  \n    7  def open_shop_buy\n    8  	$game.menu_page = \"Shop\"\n    9: 	$game.push_scene(Scene_Menu.new)\n   10  end\n   11  \n   12  def open_shop_sell\n   13  	$game.menu_page = \"Shop\"\n   14: 	$game.push_scene(Scene_Menu.new)\n   15  end\n   16  \n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\screen.rb:\n   70        if $input.cancel? || Input.trigger?(Input::F7)\n   71        	$game.menu_page = \"Main\"\n   72:         $game.push_scene(Scene_Menu.new)\n   73        end\n   74  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\interpreter.rb:\n  181  \n  182        # Misc hud busy\n  183:       return if $scene.is_a?(Scene_Menu)\n  184        return if $scene.busy?\n  185  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  189  \n  190      @interpreter.update\n  191:     return if $scene.is_a?(Scene_Menu)\n  192  \n  193      # Anti lag here\n\nC:\\Aveyond4\\Scripts\\Scenes\\base.rb:\n   88    def update\n   89  \n   90:     return if $scene.is_a?(Scene_Menu)\n   91  \n   92      # Model update\n   93      @map.update      \n   94:     return if $scene.is_a?(Scene_Menu)\n   95      @player.update\n   96  \n\nC:\\Aveyond4\\Scripts\\Scenes\\menu.rb:\n    1  #==============================================================================\n    2: # ** Scene_Menu\n    3  #==============================================================================\n    4  \n    5: class Scene_Menu\n    6    \n    7    #--------------------------------------------------------------------------\n\n10 matches across 6 files\n\n\nSearching 128 files for \"change_fogs\" (case sensitive)\n\n0 matches\n\nSearching 128 files for \"change_tint\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  122          $scene.change_weather(@zone.weather)\n  123          $scene.change_fog(@zone.fog)\n  124:         $scene.change_tint(@zone.tint)\n  125          $scene.change_panoramas(@zone.panoramas)\n  126  \n\nC:\\Aveyond4\\Scripts\\Scenes\\base.rb:\n  148    end\n  149  \n  150:   def change_tint(tint)\n  151  \n  152    end\n\n2 matches across 2 files\n\n\nSearching 128 files for \"enemy\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n   56      @ev = nil # Mid battle hold even number for easy access\n   57  \n   58:     @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting\n   59  \n   60      recover_all\n   ..\n   97    end\n   98  \n   99:   def init_enemy(id)\n  100  \n  101      @is_actor = false\n  ...\n  104      @id = id\n  105  \n  106:     # Get stat plus per enemy\n  107      if data.stats != \"\"\n  108        data.stats.split(\"\\n\").each{ |m|\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\event.rb:\n  415      end\n  416  \n  417:     # Change enemy gfx\n  418      if @character_name == \"!!!Monster\"\n  419:       @character_name = \"Monsters/#{$battle.enemy_types[@pattern]}\"\n  420      end\n  421  \n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n    5  \n    6    attr_reader :enemies\n    7:   attr_reader :enemy_types\n    8  \n    9  	def initialize\n   10:     @enemy_types = []\n   11  		@enemies = []\n   12      @props = []\n   ..\n   18    # Enemies for this zone from zone data\n   19    def change_enemies(enemies)\n   20:     @enemy_types = enemies.split(\"\\n\")\n   21    end\n   22  \n   23:   def add(enemy)\n   24      battler = Game_Battler.new\n   25:     battler.init_enemy(enemy)\n   26      @enemies.push(battler)\n   27    end\n   ..\n  131        when 'all'\n  132  \n  133:         # All enemy\n  134          if attacker.is_actor?\n  135            return @enemies.select{ |b| b.attackable? }\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n    4    def phase_main_init\n    5     	\n    6:     # Choose enemy actions\n    7      $battle.enemies.each{ |e|\n    8      	e.choose_action\n\nC:\\Aveyond4\\Scripts\\Utils\\rpgmodule.rb:\n   75  #       @escape_se = RPG::AudioFile.new(\"\", 80)\n   76  #       @actor_collapse_se = RPG::AudioFile.new(\"\", 80)\n   77: #       @enemy_collapse_se = RPG::AudioFile.new(\"\", 80)\n   78  #       @words = RPG::System::Words.new\n   79  #       @test_battlers = []\n   ..\n  111  #     attr_accessor :escape_se\n  112  #     attr_accessor :actor_collapse_se\n  113: #     attr_accessor :enemy_collapse_se\n  114  #     attr_accessor :words\n  115  #     attr_accessor :test_battlers\n\n15 matches across 5 files\n\n\nSearching 128 files for \"enemies\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  101      @is_actor = false\n  102  \n  103:     data = $data.enemies[id]\n  104      @id = id\n  105  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  121          $scene.change_panoramas(@zone.panoramas)\n  122  \n  123:         # Prep enemies for this zone\n  124:         $battle.change_enemies(@zone.enemies)\n  125  \n  126        end\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n    4    attr_accessor :map, :weather\n    5  \n    6:   attr_reader :enemies\n    7    attr_reader :enemy_types\n    8  \n    9  	def initialize\n   10      @enemy_types = []\n   11: 		@enemies = []\n   12      @props = []\n   13      @actor_index = 0\n   ..\n   17  \n   18    # Enemies for this zone from zone data\n   19:   def change_enemies(enemies)\n   20:     @enemy_types = enemies.split(\"\\n\")\n   21    end\n   22  \n   ..\n   24      battler = Game_Battler.new\n   25      battler.init_enemy(enemy)\n   26:     @enemies.push(battler)\n   27    end\n   28  \n   ..\n   38    def build_attack_queue\n   39  \n   40:     return ($party.active_battlers + @enemies).shuffle\n   41  \n   42    end\n   ..\n  106  \n  107          if attacker.is_actor?\n  108:           return @enemies.select{ |b| b.attackable? }.sample\n  109          else\n  110            return $party.active.select{ |b| b.attackable? }.sample\n  ...\n  115          # Random 2\n  116          if attacker.is_actor?\n  117:           return @enemies.select{ |b| b.attackable? }.sample(2)\n  118          else\n  119            return $party.active.select{ |b| b.attackable? }.sample(2)\n  ...\n  124          # Random 3\n  125          if attacker.is_actor?\n  126:           return @enemies.select{ |b| b.attackable? }.sample(3)\n  127          else\n  128            return $party.active.select{ |b| b.attackable? }.sample(3)\n  ...\n  133          # All enemy\n  134          if attacker.is_actor?\n  135:           return @enemies.select{ |b| b.attackable? }\n  136          else\n  137            return $party.active.select{ |b| b.attackable? }\n  ...\n  144            return $party.active.select{ |b| b.attackable? }\n  145          else          \n  146:           return @enemies.select{ |b| b.attackable? }\n  147          end\n  148  \n\nC:\\Aveyond4\\Scripts\\Scenes\\battle.rb:\n   54      [0,1,2,3,4].each{ |i| \n   55        ev = @map.event_by_evname(\"E.#{i}\") \n   56:       if $battle.enemies.count > i\n   57:         $battle.enemies[i].ev = ev\n   58        end\n   59      }\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n  112      # If single, targetable?\n  113      #if [\"one\",\"ally\"].include?($data.skills[id].scope)\n  114:       targets = $battle.enemies #$battle.build_target_list(@active_battler)\n  115        @target_cmd.setup(targets)\n  116        @phase = :actor_target      \n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n    5     	\n    6      # Choose enemy actions\n    7:     $battle.enemies.each{ |e|\n    8      	e.choose_action\n    9      }\n\nC:\\Aveyond4\\Scripts\\System\\data.rb:\n   12  \n   13    attr_reader :actors\n   14:   attr_reader :enemies\n   15    attr_reader :skills\n   16    attr_reader :states\n   ..\n   46  \n   47      @actors = load_json(\"actors\",ActorData)\n   48:     @enemies = load_json(\"enemies\",EnemyData)\n   49      \n   50      @skills = load_json(\"skills\",SkillData)\n\nC:\\Aveyond4\\Scripts\\Utils\\data_types.rb:\n   64  	attr_reader :fog\n   65  	attr_reader :panoramas\n   66: 	attr_reader :enemies\n   67  end\n   68  \n\n24 matches across 8 files\n\n\nSearching 128 files for \"event_touch\" (case sensitive)\ntouch enSearching 128 files for \"event_touch\" (case sensitive)\n\n0 matches\n\nSearching 128 files for \"touch_event\" (case sensitive)\n\n0 matches\n\nSearching 128 files for \"touch\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  820        $audio.queue('step',24) if terrain_tag == 3\n  821      else\n  822:       # Determine if touch event is triggered IF ENEMY ONLY\n  823:       #check_event_trigger_touch(@x, @y+1)\n  824      end\n  825    end\n  ...\n  847      # If impassable\n  848      else\n  849:       # Determine if touch event is triggered\n  850:       #check_event_trigger_touch(@x-1, @y)\n  851      end\n  852    end\n  ...\n  873      # If impassable\n  874      else\n  875:       # Determine if touch event is triggered\n  876:      # check_event_trigger_touch(@x+1, @y)\n  877      end\n  878    end\n  ...\n  903        $audio.queue('step',24) if terrain_tag == 3\n  904      else\n  905:       # Determine if touch event is triggered\n  906:      # check_event_trigger_touch(@x, @y-1)\n  907      end\n  908    end\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\event.rb:\n  493    #--------------------------------------------------------------------------\n  494    def check_event_trigger_auto\n  495:     # # If trigger is [touch from event] and consistent with player coordinates\n  496      # if @trigger == 2 and @x == $player.x and @y == $player.y\n  497      #   # If starting determinant other than jumping is same position event\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\player.rb:\n  135    # * Touch Event Starting Determinant\n  136    #--------------------------------------------------------------------------\n  137:   def check_event_trigger_touch(x, y)\n  138          \n  139      return false if $map.interpreter.running?\n  ...\n  231        # If player was moving last time\n  232        if last_moving\n  233:         # Event determinant is via touch of same position event\n  234          result = check_event_trigger_here([1,2])\n  235        end\n  ...\n  252            \n  253          #   # SHAZ - trigger event when:\n  254:         #   # - Autotouch and standing on or beside, or with a counter between\n  255:         #   # - player/event touch and standing as close as possible (on, if possible)\n  256          #   distance = Math.hypot(@x - event.x, @y - event.y)\n  257  \n\nC:\\Aveyond4\\Scripts\\System\\mouse.rb:\n   96          \n   97          if !((icon == \"talk\") || \n   98:            (icon == \"touch\") || \n   99             (icon == \"fight\") || \n  100             (icon == \"examine\") || \n\n14 matches across 4 files\n\n\nSearching 128 files for \"check_event_trigger_touch\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  821      else\n  822        # Determine if touch event is triggered IF ENEMY ONLY\n  823:       #check_event_trigger_touch(@x, @y+1)\n  824      end\n  825    end\n  ...\n  848      else\n  849        # Determine if touch event is triggered\n  850:       check_event_trigger_touch(@x-1, @y)\n  851      end\n  852    end\n  ...\n  874      else\n  875        # Determine if touch event is triggered\n  876:      # check_event_trigger_touch(@x+1, @y)\n  877      end\n  878    end\n  ...\n  904      else\n  905        # Determine if touch event is triggered\n  906:      # check_event_trigger_touch(@x, @y-1)\n  907      end\n  908    end\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\player.rb:\n  135    # * Touch Event Starting Determinant\n  136    #--------------------------------------------------------------------------\n  137:   def check_event_trigger_touch(x, y)\n  138          \n  139      return false if $map.interpreter.running?\n\n5 matches across 2 files\n\n\nSearching 129 files for \"check_event_trigger_touch\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  821      else\n  822        # Determine if touch event is triggered IF ENEMY ONLY\n  823:       check_event_trigger_touch(@x, @y+1)\n  824      end\n  825    end\n  ...\n  848      else\n  849        # Determine if touch event is triggered\n  850:       check_event_trigger_touch(@x-1, @y)\n  851      end\n  852    end\n  ...\n  874      else\n  875        # Determine if touch event is triggered\n  876:       check_event_trigger_touch(@x+1, @y)\n  877      end\n  878    end\n  ...\n  904      else\n  905        # Determine if touch event is triggered\n  906:       check_event_trigger_touch(@x, @y-1)\n  907      end\n  908    end\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\player.rb:\n  135    # * Touch Event Starting Determinant\n  136    #--------------------------------------------------------------------------\n  137:   def check_event_trigger_touch(x, y)\n  138          \n  139      return false if $map.interpreter.running?\n\n5 matches across 2 files\n\n\nSearching 129 files for \"add_moblin\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\common.rb:\n  117  def moblin(ev,delay=1)\n  118  \n  119: 	$scene.add_moblin(ev,delay)\n  120  \n  121  end\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\event.rb:\n  473          when '#moblin'\n  474            data.push(1) if data.count < 2\n  475:           $scene.add_moblin(self,data[1].to_i)\n  476  \n  477          when '#disable'\n\nC:\\Aveyond4\\Scripts\\Scenes\\map.rb:\n   42    end\n   43  \n   44:   def add_moblin(ev,delay)\n   45      ev = gev(ev) if !ev.is_a?(Game_Event)\n   46      @moblins.push(Moblin.new(ev,delay))\n\n3 matches across 3 files\n\n\nSearching 129 files for \"def passable\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  183    # * Determine if Passable\n  184    #--------------------------------------------------------------------------\n  185:   def passable?(x, y, d) #d0 = jump\n  186  \n  187      #return true if self != $player\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  318    # * Determine if Passable\n  319    #--------------------------------------------------------------------------\n  320:   def passable?(x, y, d, self_event = nil)\n  321  \n  322      return false unless valid?(x, y)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\player.rb:\n   44    # * Passable Determinants\n   45    #--------------------------------------------------------------------------\n   46:   def passable?(x, y, d)\n   47      if DEBUG and Input.press?(Input::CTRL)\n   48        return true\n\n3 matches across 3 files\n\n\nSearching 129 files for \"WINWIN\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n 1433  \n 1434          if x == sx and y == sy\n 1435:           log_scr(\"WINWINWINW\")\n 1436            return [true, map, step-1] \n 1437          end\n\n1 match in 1 file\n\n\nSearching 129 files for \"bush\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Elements\\Map\\character.rb:\n   70      # if @character == $player\n   71      #   self.bitmap = $cache.character(\"Player/boy\")\n   72:     #   self.bitmap = $cache.character(\"Player/boy_corn\") if @character.bush_depth > 0\n   73      # end\n   74  \n   ..\n  104      end\n  105      \n  106:     # Set opacity level, blend method, and bush depth\n  107      self.opacity = @character.opacity\n  108      #log_info(@character.opacity) if @character.opacity < 255\n  109  \n  110:     #if @character.bush_depth > 0\n  111:       #self.bush_depth = 1.2 * @character.bush_depth \n  112  \n  113        #bmp = self.bitmap\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  313    # * Get Thicket Depth\n  314    #--------------------------------------------------------------------------\n  315:   def bush_depth\n  316      return 0 if @always_on_top\n  317      return 0 if jumping?\n  318      dx = ((@x * 128) - @real_x).abs\n  319      #log_info(dx) if dx > 0\n  320:     return 12 if $scene.map.bush?(@x, @y) && dx < 24\n  321      return 0\n  322    end\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  356    # * Determine Thicket\n  357    #--------------------------------------------------------------------------\n  358:   def bush?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x40 == 0x40 }.empty? end\n  359    def counter?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x80 == 0x80 }.empty? end\n  360    def terrain_tag(x, y)\n\n8 matches across 3 files\n",
+			"settings":
+			{
+				"buffer_size": 17428,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "Scenes/map.rb",
+			"settings":
+			{
+				"buffer_size": 996,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "System/game.rb",
+			"settings":
+			{
+				"buffer_size": 1666,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/Parts/info.rb",
+			"settings":
+			{
+				"buffer_size": 534,
 				"line_ending": "Windows"
 			}
 		},
@@ -700,6 +798,46 @@
 			"settings":
 			{
 				"buffer_size": 1483,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Menu/shop.rb",
+			"settings":
+			{
+				"buffer_size": 795,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/routes.rb",
+			"settings":
+			{
+				"buffer_size": 4124,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Scenes/menu.rb",
+			"settings":
+			{
+				"buffer_size": 1747,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Menu/main.rb",
+			"settings":
+			{
+				"buffer_size": 5537,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Model/Map/interpreter.rb",
+			"settings":
+			{
+				"buffer_size": 22402,
 				"line_ending": "Windows"
 			}
 		},
@@ -819,8 +957,9 @@
 		"/C/Aveyond4/Scripts/Interface",
 		"/C/Aveyond4/Scripts/Interface/Battle",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts",
+		"/C/Aveyond4/Scripts/Interface/Map",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts",
 		"/C/Aveyond4/Scripts/Interface/Menu",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts",
 		"/C/Aveyond4/Scripts/Model",
 		"/C/Aveyond4/Scripts/Model/Battle",
 		"/C/Aveyond4/Scripts/Model/Map",
@@ -834,6 +973,11 @@
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/Scripts/System/audio.rb",
+		"/C/Aveyond4/Scripts/Utils/ruby.rb",
+		"/C/Aveyond4/Scripts/Model/Map/map.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
+		"/C/Aveyond4/Scripts/Scenes/base.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/weather.rb",
 		"/C/Aveyond4/Scripts/Model/Map/player.rb",
 		"/C/Aveyond4/Scripts/Functions/routes.rb",
@@ -863,26 +1007,21 @@
 		"/C/Aveyond4/Scripts/Functions/poppers.rb",
 		"/C/Aveyond4/Scripts/Functions/inventory.rb",
 		"/C/Aveyond4/Scripts/Scenes/map.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
 		"/C/Aveyond4/Scripts/Functions/sparks.rb",
 		"/C/Aveyond4/Scripts/Functions/progress.rb",
 		"/C/Aveyond4/Scripts/Functions/transfers.rb",
 		"/C/Aveyond4/Scripts/Model/Map/interpreter.rb",
 		"/C/Aveyond4/Scripts/Functions/general.rb",
-		"/C/Aveyond4/Scripts/Model/Map/map.rb",
-		"/C/Aveyond4/Scripts/Scenes/base.rb",
 		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_3_main.rb",
 		"/C/Aveyond4/Scripts/Functions/common.rb",
 		"/C/Aveyond4/Scripts/System/tweens.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
 		"/C/Aveyond4/Scripts/Model/Map/character.rb",
-		"/C/Aveyond4/Scripts/Utils/ruby.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/actorcmd.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/targetcmd.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/skillcmd.rb",
 		"/C/Aveyond4/Editor/meta/keyitems.json",
-		"/C/Aveyond4/Scripts/System/audio.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/panorama.rb",
 		"/C/Aveyond4/Scripts/Functions/events.rb",
 		"/C/Users/Dan/Desktop/test.bikini",
@@ -988,6 +1127,27 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"log",
+			"@tail",
+			"bush",
+			"WINWIN",
+			"def passable",
+			"add_moblin",
+			"check",
+			"check_event_trigger_touch",
+			"passable",
+			"check_event_trigger_touch",
+			"touch",
+			"touch_event",
+			"event_touch",
+			"enemies",
+			"enemy",
+			"change_tint",
+			"change_fogs",
+			"Scene_Menu",
+			"$map",
+			"$interp",
+			"Scene_Menu",
 			"transfer_to",
 			"modified",
 			"choose_action",
@@ -1094,28 +1254,7 @@
 			"stop",
 			"clear_starting",
 			"starting = false",
-			".starting",
-			"starting = false",
-			"find_page",
-			"start",
-			"condition_applies",
-			"refresh",
-			"$input.cancel?",
-			"Input::B",
-			"Text",
-			"end",
-			"def fill",
-			"seq",
-			"scratch",
-			"F7",
-			"transfer",
-			"zone",
-			"page",
-			"font.default",
-			".display_x",
-			"display_x",
-			"< SpriteGroup",
-			"event_by_name"
+			".starting"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1163,7 +1302,7 @@
 	"groups":
 	[
 		{
-			"selected": 23,
+			"selected": 8,
 			"sheets":
 			[
 				{
@@ -1253,7 +1392,7 @@
 						"translation.y": 1653.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 42,
 					"type": "text"
 				},
 				{
@@ -1279,56 +1418,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -1343,7 +1482,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -1369,56 +1508,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -1430,10 +1569,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2166.0,
+						"translation.y": 1888.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1522,7 +1661,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
@@ -1531,15 +1670,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 41442,
+						"buffer_size": 42235,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2353,
-								2353
+								27733,
+								27733
 							]
 						],
 						"settings":
@@ -1548,56 +1687,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -1609,27 +1748,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1197.0,
+						"translation.y": 17550.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "Model/Map/event.rb",
+					"file": "System/audio.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13338,
+						"buffer_size": 4301,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11389,
-								11389
+								2159,
+								2159
 							]
 						],
 						"settings":
@@ -1638,56 +1777,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -1698,8 +1837,8 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 8416.0,
+						"translation.x": -0.0,
+						"translation.y": 1824.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -1707,19 +1846,19 @@
 				},
 				{
 					"buffer": 6,
-					"file": "Model/Map/player.rb",
+					"file": "Model/Map/event.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9624,
+						"buffer_size": 13910,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9145,
-								9145
+								11108,
+								11108
 							]
 						],
 						"settings":
@@ -1728,56 +1867,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -1789,27 +1928,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5292.0,
+						"translation.y": 8183.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 7,
-					"file": "Model/State/battle.rb",
+					"file": "Elements/Map/weather.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3376,
+						"buffer_size": 1555,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								18,
-								18
+								687,
+								687
 							]
 						],
 						"settings":
@@ -1818,56 +1957,145 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 342.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Interface/Map/Parts/message.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17536,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8768,
+								8768
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -1877,6 +2105,273 @@
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7005.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Functions/battle.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 52,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								52,
+								52
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Scenes/base.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4991,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2901,
+								2901
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 203.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Functions/sparks.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 869,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								243,
+								243
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1886,7 +2381,187 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 12,
+					"file": "Model/Map/player.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9774,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2898,
+								2898
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1506.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "Model/State/battle.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3463,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								322,
+								322
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 21,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
 					"file": "/C/Aveyond4/Editor/meta/numbers.json",
 					"semi_transient": false,
 					"settings":
@@ -1971,11 +2646,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 15,
 					"file": "System/data.rb",
 					"semi_transient": false,
 					"settings":
@@ -2061,11 +2736,11 @@
 						"translation.y": 513.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 16,
 					"file": "/C/Aveyond4/Editor/edit.html",
 					"semi_transient": false,
 					"settings":
@@ -2151,11 +2826,11 @@
 						"translation.y": 456.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 17,
 					"file": "/C/Aveyond4/Editor/edit.js",
 					"semi_transient": false,
 					"settings":
@@ -2241,11 +2916,11 @@
 						"translation.y": 7157.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 18,
 					"file": "Model/Battle/battler_2_states.rb",
 					"semi_transient": false,
 					"settings":
@@ -2331,11 +3006,11 @@
 						"translation.y": 342.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 19,
 					"file": "Model/Battle/battler.rb",
 					"semi_transient": false,
 					"settings":
@@ -2357,75 +3032,75 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2052.0,
+						"translation.y": 2046.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 20,
 					"file": "Model/Battle/battler_1_stats.rb",
 					"semi_transient": false,
 					"settings":
@@ -2447,56 +3122,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -2511,11 +3186,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 21,
 					"file": "/C/Aveyond4/Editor/meta/actors.json",
 					"semi_transient": false,
 					"settings":
@@ -2601,101 +3276,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
-					"file": "Utils/ruby.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 483,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								122,
-								122
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 17,
+					"buffer": 22,
 					"file": "Model/Battle/battler_3_skills.rb",
 					"semi_transient": false,
 					"settings":
@@ -2781,11 +3366,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 23,
 					"file": "Interface/Battle/battlehud.rb",
 					"semi_transient": false,
 					"settings":
@@ -2870,11 +3455,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 40,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 24,
 					"file": "Elements/Widgets/label.rb",
 					"semi_transient": false,
 					"settings":
@@ -2960,11 +3545,11 @@
 						"translation.y": 342.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 41,
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 25,
 					"file": "Elements/Widgets/bar.rb",
 					"semi_transient": false,
 					"settings":
@@ -2986,56 +3571,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -3049,11 +3634,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 26,
 					"file": "Interface/Battle/Parts/skillcmd.rb",
 					"semi_transient": false,
 					"settings":
@@ -3075,56 +3660,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -3134,27 +3719,27 @@
 							"syntax": "Packages/Ruby/Ruby.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 228.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 27,
 					"file": "Interface/Battle/Parts/itemcmd.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 828,
+						"buffer_size": 897,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								228,
-								228
+								504,
+								504
 							]
 						],
 						"settings":
@@ -3163,61 +3748,61 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"translate_tabs_to_spaces": false
@@ -3226,24 +3811,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 28,
 					"file": "Elements/Map/character.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3739,
+						"buffer_size": 3755,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2235,
-								2235
+								1847,
+								1847
 							]
 						],
 						"settings":
@@ -3252,56 +3837,56 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -3313,49 +3898,163 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 969.0,
+						"translation.y": 583.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 24,
-					"file": "Elements/Map/mapwrap.rb",
-					"semi_transient": true,
+					"buffer": 29,
+					"file": "Functions/audio.rb",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 401,
+						"buffer_size": 151,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								151,
+								151
 							]
 						],
 						"settings":
 						{
 							"BracketHighlighterBusy": false,
+							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "Interface/Map/Parts/shop.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 867,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								585,
+								629
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
@@ -3370,27 +4069,680 @@
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 285.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 26,
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "Functions/menus.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 251,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								128,
+								128
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 27,
+					"type": "text"
+				},
+				{
+					"buffer": 32,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17428,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										179,
+										189
+									],
+									[
+										297,
+										307
+									],
+									[
+										416,
+										426
+									],
+									[
+										644,
+										654
+									],
+									[
+										805,
+										815
+									],
+									[
+										973,
+										983
+									],
+									[
+										1119,
+										1129
+									],
+									[
+										1228,
+										1238
+									],
+									[
+										1410,
+										1420
+									],
+									[
+										1529,
+										1539
+									],
+									[
+										1843,
+										1853
+									],
+									[
+										1961,
+										1971
+									],
+									[
+										2080,
+										2090
+									],
+									[
+										2292,
+										2302
+									],
+									[
+										2453,
+										2463
+									],
+									[
+										2621,
+										2631
+									],
+									[
+										2767,
+										2777
+									],
+									[
+										2876,
+										2886
+									],
+									[
+										3058,
+										3068
+									],
+									[
+										3177,
+										3187
+									],
+									[
+										3591,
+										3602
+									],
+									[
+										3750,
+										3761
+									],
+									[
+										4059,
+										4064
+									],
+									[
+										4184,
+										4189
+									],
+									[
+										4296,
+										4301
+									],
+									[
+										4463,
+										4468
+									],
+									[
+										4570,
+										4575
+									],
+									[
+										4721,
+										4726
+									],
+									[
+										4776,
+										4781
+									],
+									[
+										4942,
+										4947
+									],
+									[
+										5014,
+										5019
+									],
+									[
+										5083,
+										5088
+									],
+									[
+										5089,
+										5094
+									],
+									[
+										5202,
+										5207
+									],
+									[
+										5413,
+										5418
+									],
+									[
+										5667,
+										5672
+									],
+									[
+										5914,
+										5919
+									],
+									[
+										6195,
+										6202
+									],
+									[
+										6360,
+										6367
+									],
+									[
+										6412,
+										6419
+									],
+									[
+										6426,
+										6433
+									],
+									[
+										6572,
+										6579
+									],
+									[
+										6684,
+										6691
+									],
+									[
+										6830,
+										6837
+									],
+									[
+										6838,
+										6845
+									],
+									[
+										6873,
+										6880
+									],
+									[
+										7007,
+										7014
+									],
+									[
+										7141,
+										7148
+									],
+									[
+										7255,
+										7262
+									],
+									[
+										7485,
+										7492
+									],
+									[
+										7721,
+										7728
+									],
+									[
+										7958,
+										7965
+									],
+									[
+										8207,
+										8214
+									],
+									[
+										8417,
+										8424
+									],
+									[
+										8458,
+										8465
+									],
+									[
+										8684,
+										8691
+									],
+									[
+										8929,
+										8936
+									],
+									[
+										9084,
+										9091
+									],
+									[
+										9227,
+										9234
+									],
+									[
+										9248,
+										9255
+									],
+									[
+										9450,
+										9457
+									],
+									[
+										9898,
+										9903
+									],
+									[
+										9971,
+										9976
+									],
+									[
+										10092,
+										10097
+									],
+									[
+										10151,
+										10156
+									],
+									[
+										10272,
+										10277
+									],
+									[
+										10331,
+										10336
+									],
+									[
+										10482,
+										10487
+									],
+									[
+										10541,
+										10546
+									],
+									[
+										10779,
+										10784
+									],
+									[
+										11195,
+										11200
+									],
+									[
+										11398,
+										11403
+									],
+									[
+										11599,
+										11604
+									],
+									[
+										11694,
+										11699
+									],
+									[
+										11952,
+										11957
+									],
+									[
+										12286,
+										12311
+									],
+									[
+										12438,
+										12463
+									],
+									[
+										12591,
+										12616
+									],
+									[
+										12744,
+										12769
+									],
+									[
+										12994,
+										13019
+									],
+									[
+										13333,
+										13358
+									],
+									[
+										13485,
+										13510
+									],
+									[
+										13637,
+										13662
+									],
+									[
+										13789,
+										13814
+									],
+									[
+										14039,
+										14064
+									],
+									[
+										14317,
+										14327
+									],
+									[
+										14500,
+										14510
+									],
+									[
+										14639,
+										14649
+									],
+									[
+										15014,
+										15026
+									],
+									[
+										15267,
+										15279
+									],
+									[
+										15531,
+										15543
+									],
+									[
+										15824,
+										15830
+									],
+									[
+										16195,
+										16199
+									],
+									[
+										16318,
+										16322
+									],
+									[
+										16477,
+										16481
+									],
+									[
+										16511,
+										16515
+									],
+									[
+										16541,
+										16545
+									],
+									[
+										16767,
+										16771
+									],
+									[
+										16961,
+										16965
+									],
+									[
+										17187,
+										17191
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								16478,
+								16478
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 15,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 10754.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 33,
+					"file": "Scenes/map.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 996,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								996,
+								996
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -3405,11 +4757,189 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 34,
+					"file": "System/game.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1666,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1227,
+								1227
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 798.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 28,
+					"type": "text"
+				},
+				{
+					"buffer": 35,
+					"file": "Interface/Map/Parts/info.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 534,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								510,
+								510
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 30,
+					"type": "text"
+				},
+				{
+					"buffer": 36,
 					"file": "Elements/Widgets/list.rb",
 					"semi_transient": false,
 					"settings":
@@ -3495,16 +5025,193 @@
 						"translation.y": 855.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 43,
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 37,
 					"file": "Interface/Menu/base.rb",
 					"semi_transient": false,
 					"settings":
 					{
 						"buffer_size": 1483,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								280,
+								280
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 24,
+					"type": "text"
+				},
+				{
+					"buffer": 38,
+					"file": "Interface/Menu/shop.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 795,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								260,
+								260
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 39,
+					"file": "Functions/routes.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4124,
 						"regions":
 						{
 						},
@@ -3520,56 +5227,145 @@
 							"BracketHighlighterBusy": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 1254.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 40,
+					"file": "Scenes/menu.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1747,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1638,
+								1638
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
@@ -3577,17 +5373,197 @@
 								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 830.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 41,
+					"file": "Interface/Menu/main.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5537,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5532,
+								5532
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5472.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 25,
+					"type": "text"
+				},
+				{
+					"buffer": 42,
+					"file": "Model/Map/interpreter.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22402,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5004,
+								5004
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2793.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 23,
+					"type": "text"
+				},
+				{
+					"buffer": 43,
 					"file": "Interface/Map/Parts/grid.rb",
 					"semi_transient": false,
 					"settings":
@@ -3609,61 +5585,61 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"translate_tabs_to_spaces": false
@@ -3672,11 +5648,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 44,
 					"file": "Interface/Menu/Parts/list_common.rb",
 					"semi_transient": false,
 					"settings":
@@ -3761,7 +5737,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 44,
 					"type": "text"
 				}
 			]

@@ -56,6 +56,7 @@ class Sprite_Character < Sprite
         @ch = bitmap.height
         self.ox = @cw / 2
         self.oy = @ch
+        @iconmode = true
       end
 
 
@@ -108,12 +109,12 @@ class Sprite_Character < Sprite
     #log_info(@character.opacity) if @character.opacity < 255
 
     #if @character.bush_depth > 0
-      #self.bush_depth = 1.2 * @character.bush_depth 
+      self.bush_depth = @character.bush_depth 
 
-      #bmp = self.bitmap
-      # self.bitmap = Bitmap.new(bmp.width,bmp.height)
+     # bmp = self.bitmap
+      #self.bitmap = Bitmap.new(bmp.width,bmp.height)
 
-      # self.bitmap.blt(0,0,bmp,Rect.new(0,0,bmp.width,16))
+      #self.bitmap.blt(0,0,bmp,Rect.new(0,0,bmp.width,16))
 
     #end
     

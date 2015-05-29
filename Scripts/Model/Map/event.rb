@@ -456,6 +456,18 @@ class Game_Event < Game_Character
             @character_name = "NPCs/"+@character_name.delete("NPC-")+"/"+data[1]
           end
 
+        when "#prop"
+          @character_name = "Props/#{data[1]}"
+
+        when "#animal"
+          @character_name = "Animals/#{data[1]}"
+
+        when "#object"
+          @character_name = "Objects/#{data[1]}"
+
+        when "#door"
+          @character_name = "Doors/#{data[1]}"
+
         when "#icon"
           @character_name = "Icons/#{data[1]}"
 

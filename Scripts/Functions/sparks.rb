@@ -1,7 +1,7 @@
 
 def spark(ev,fx)
 
-	$scene.add_spark(fx,gev(ev).screen_x,gev(ev).screen_y-10)
+	$scene.add_spark(fx,gev(ev).real_x/4+16,gev(ev).real_y/4+16-10)
 
 end
 

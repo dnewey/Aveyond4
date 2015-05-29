@@ -3,7 +3,7 @@
 
 class Particle < Sprite
 
-  attr_accessor :mx, :my, :sx, :sy
+  attr_accessor :mx, :my, :sx, :sy, :opac
   
 end
 
@@ -16,17 +16,22 @@ class Weather_DarkDots
 	def initialize(vp)
 
 		@stars = []
-	    (1..100).each{ |s|
+	    (1..30).each{ |s|
 	      s = Particle.new(vp)
 	      s.bitmap = $cache.particle(['yellow','blue'].sample)
 	      @stars.push(s)
-	      s.sx = rand(-120+800)#rand(640)
-	      s.sy = rand(-140+700)#rand(480)
-	      s.mx = rand
-	      s.my = rand
+	      s.sx = $scene.map.display_x/4+ rand(640+220) - 320#-120+800)#rand(640)
+	      s.sy = $scene.map.display_y/4+ rand(480+240) - 240 #-140+700)#rand(480)
+	      s.mx = rand * 0.5
+	      s.my = rand * 0.5
 	      s.x = s.sx
 	      s.y = s.sy
-	      s.opacity = 70 + rand(100)
+	   	  s.opac = 70 + rand(100)
+	      s.opacity = 0
+	      # z = 1 + rand
+	      # s.zoom_x = z
+	      # s.zoom_y = z
+
 	    }
 
 	end
@@ -35,20 +40,18 @@ class Weather_DarkDots
 
 		@stars.each{ |s|
 
-		  s.ox = $map.display_x / 4
-		  s.oy = $map.display_y / 4
-
-	      s.sx += s.mx * (0.5+rand)
-	      s.sy += s.my * (0.5+rand)
+	      s.sx += s.mx * (0.3+rand)
+	      s.sy += s.my * (0.3+rand)
 	      s.x = s.sx
 	      s.y = s.sy
+
+	      s.opacity += 3 if s.opac > s.opacity
 	      
-	      if (s.x > 800 + ($map.display_x/4) || s.y > 720 + ($map.display_y/4)) ||
-	      	s.x < -100 + ($map.display_x/4) || s.y < -100  + ($map.display_y/4)
+	      if s.x > $scene.map.display_x/4 + 860 || s.y > $scene.map.display_y/4+720 || s.x < $scene.map.display_x/4 - 320 || s.y < $scene.map.display_y/4 - 240
 	        s.mx = rand
 	        s.my = rand
-	        s.sx = rand(-120+500)
-	        s.sy = rand(-140+350)
+	      	s.sx = $scene.map.display_x/4+ rand(640+320) - 320#-120+800)#rand(640)
+	      	s.sy = $scene.map.display_y/4+ rand(480+240) - 240 #-140+700)#rand(480)
 	        # if rand > 0.5
 	        #   s.sx = rand(-120+750)
 	        #   s.sy = -100 + rand(50)
@@ -56,7 +59,8 @@ class Weather_DarkDots
 	        #   s.sx = -100 + rand(50)
 	        #   s.sy = rand(-140+560)
 	        # end
-	        s.opacity = 70 + rand(100)
+	        s.opac = 70 + rand(100)
+	        s.opacity = 0
 	      end		      
 		}
 

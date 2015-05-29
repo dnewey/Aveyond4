@@ -12,7 +12,7 @@ class EnviroSource < Seal::Source
     @file = sound
 
     @positions = [pos]
-    self.buffer = Seal::Buffer.new("Audio/SE/#{sound}.ogg")
+    self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
     self.looping = true
     self.play
 
@@ -89,7 +89,7 @@ class AudioManager
     @environmental = [] 
 
     # System Effects
-    @system = []
+    @sys = []
 
     # Sound effects with reverb
     @sfx = []
@@ -122,7 +122,7 @@ class AudioManager
       @music.stop
       return
     end
-    @music.stream = Seal::Stream.open("Audio/BGM/#{file}.ogg")
+    @music.stream = Seal::Stream.open("Audio/Music/#{file}.ogg")
     @music.play
   end
 
@@ -131,18 +131,19 @@ class AudioManager
       @atmosphere.stop
       return
     end
-    @atmosphere.stream = Seal::Stream.open("Audio/BGM/#{file}.ogg")
+    @atmosphere.gain = 0.3
+    @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
   end
 
-  def sys(file,vol)
+  def sys(file,vol=1.0)
 
-    log_scr(@sys.count)
+    #log_scr(@sys.count)
 
     # Check through sources, if empty, use, if none, add
     @sys.each{ |src|
       if !src.playing?
-        src.buffer = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+        src.buffer = Seal::Buffer.new("Audio/Sys/#{file}.ogg")
         src.play
         return
       end
@@ -150,21 +151,22 @@ class AudioManager
 
     # Add new
     src = Seal::Source.new
-    buf = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+    buf = Seal::Buffer.new("Audio/Sys/#{file}.ogg")
+    src.gain = vol
     src.buffer = buf
     src.play
     @sys.push(src)
 
   end
 
-  def sfx(file,vol)
+  def sfx(file,vol=1.0)
 
-    log_scr(@sfx.count)
+    #log_scr(@sfx.count)
 
     # Check through sources, if empty, use, if none, add
     @sfx.each{ |src|
       if !src.playing?
-        src.buffer = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+        src.buffer = Seal::Buffer.new("Audio/Sounds/#{file}.ogg")
         
         src.play
         return
@@ -173,8 +175,9 @@ class AudioManager
 
     # Add new
     src = Seal::Source.new
-    buf = Seal::Buffer.new("Audio/SE/#{file}.ogg")
+    buf = Seal::Buffer.new("Audio/Sounds/#{file}.ogg")
     src.buffer = buf
+    src.gain = vol
     src.feed(@effect, 0) if @effect != nil
     src.play
     @sfx.push(src)
