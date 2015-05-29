@@ -290,6 +290,8 @@ class Game_Player < Game_Character
   # * Teleport the Player
   #--------------------------------------------------------------------------
   def transfer_player
+
+    Graphics.freeze
    
     @transferring = false
     $player.clear_path
@@ -299,14 +301,19 @@ class Game_Player < Game_Character
       $map.setup(@xfer_data[0])      
     end
 
-    # Location on the map to teleport to
-    # if @xfer_data.count > 2
-    #   $player.moveto(@xfer_data[1],@xfer_data[2])
-    #   $player.direction = @xfer_data[3]
-    #   $player.straighten  
-    # else
       ev = gev(@xfer_data[1])
-      @direction = @xfer_data[2] if @xfer_data[2] != nil
+      if @xfer_data[2] != nil
+        case @xfer_data[2]
+          when 'd'
+            @direction = 2
+          when 'l'
+            @direction = 4
+          when 'r'
+            @direction = 6
+          when 'u'
+            @direction = 8
+        end
+      end
       dx = 0
       dy = 0
       dx = 1 if @direction == 6
@@ -317,6 +324,19 @@ class Game_Player < Game_Character
       #$player.direction = @xfer_data[3]
 
       $player.straighten  
+
+      $game.update
+
+      $scene.overlay.opacity = 255
+
+
+      #Graphics.transition(16)
+       Graphics.transition(45,'Graphics/Transitions/cave') 
+
+       Graphics.freeze
+
+       $scene.overlay.opacity = 0
+       Graphics.transition(45,'Graphics/Transitions/cave_inv')      
 
     #end
 

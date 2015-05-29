@@ -355,7 +355,8 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Determine Thicket
   #--------------------------------------------------------------------------
-  def bush?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x40 == 0x40 }.empty? end
+  def bush?(x, y) return false
+   ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x40 == 0x40 }.empty? end
   def counter?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x80 == 0x80 }.empty? end
   def terrain_tag(x, y)
 

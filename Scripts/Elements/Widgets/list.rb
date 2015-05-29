@@ -234,6 +234,8 @@ class List
 
       return if @page_idx + @scroll_idx >= @data.count - 1
 
+      sys('select')
+
       if !@dynamo.done?
         refresh
         @page_idx += @pagemod
@@ -251,6 +253,8 @@ class List
   	end
 
   	if $keyboard.press?(VK_UP) #&& @dynamo.done?
+
+      sys('select')
       
       if !@dynamo.done?
         refresh
@@ -269,14 +273,19 @@ class List
   	end
 
     pos = $mouse.position
+    pos[0] -= @x
+    pos[1] -= @y
 
     # Check mouseover
     @sprites.each_index{ |i|
-      break
+      next if @page_idx == i
+      next if @sprites[i] == nil
+      next if @sprites[i].bitmap == nil
       next if pos[0] < @sprites[i].x
       next if pos[1] < @sprites[i].y
       next if pos[0] > @sprites[i].x + @sprites[i].width
       next if pos[1] > @sprites[i].y + @sprites[i].height
+      sys('select')
       @page_idx = i
       refresh
       break
@@ -284,12 +293,13 @@ class List
 
 
     # Selection
-    if !@select.nil? && $input.action?
+    if !@select.nil? && ($input.action? || $input.click?)
       @select.call(current)
     end
 
     # Cancel
-    if !@cancel.nil? && $input.cancel?
+    if !@cancel.nil? && ($input.cancel? || $input.rclick?)
+      sys('cancel')
       @cancel.call(current)
     end
 

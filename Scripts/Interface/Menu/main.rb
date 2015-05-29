@@ -96,7 +96,8 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
      	@boxes = @buttons + @chars.map{ |c| c.box }
      	
      	@selected = "Journal"
-     	choose(@selected)
+     	@selected_box = nil
+     	choose(@selected,false)
 
 	end
 
@@ -115,77 +116,52 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		#@menu.update
 		#@chars.each{ |c| c.update }
 
-		if $input.action?
+		if $input.action? || $input.click?
 			select(@selected)
 		end
 
-		if $input.right?
-
-			box = nil
-			@boxes.each{ |b| 
+		# Just remember selected I would suppose
+		box = @selected_box
 			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
+		if $input.right?		
 			sx = box.x + box.width
-			sy = box.y + box.height/2
+			sy = box.y + box.height/2	
 			search(sx,sy,3,1)
-
 		end
 
 		if $input.left?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
 			sx = box.x
 			sy = box.y + box.height/2
 			search(sx,sy,-3,1)
-
 		end
 
 		if $input.down?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
 			sx = box.x + box.width/2		
 			sy = box.y + box.height
 			search(sx,sy,1,3)
-
 		end
 
 		if $input.up?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
 			sx = box.x + box.width/2		
 			sy = box.y
 			search(sx,sy,1,-3)
-
 		end
+
+		pos = $mouse.position
+     
+
+		# Mousing
+		@boxes.each{ |b| 
+
+			next if b == @selected_box
+			next if pos[0] < b.x
+		    next if pos[1] < b.y
+		    next if pos[0] > b.x + b.width
+		    next if pos[1] > b.y + b.height
+			choose(b.name)
+			break
+
+		}
 
 	end
 
@@ -237,7 +213,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		@buttons.each{ |i| i.hide }
 	end
 
-	def choose(target)
+	def choose(target,dosound=true)
+
+		sys('select') if dosound
 
 		@selected = target
 
@@ -270,7 +248,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 		end
 
-		glowon = @boxes.find{ |b| b.name == target }
+		@selected_box = @boxes.find{ |b| b.name == target }
+
+		glowon = @selected_box
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
      	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
@@ -292,6 +272,8 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	end
 
 	def select(option)
+
+		sys('action')
 
 		case option
 			when "Journal"

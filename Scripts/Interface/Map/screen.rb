@@ -67,7 +67,7 @@ class Ui_Screen
 
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
-      if $input.cancel? || Input.trigger?(Input::F7)
+      if $input.cancel? || $input.rclick?
       	open_main_menu
       end
 

@@ -10,6 +10,10 @@ class SpriteGroup
 		@y = 0
 	end
 
+	def disposed?
+		return @sprites[0][0].disposed?
+	end
+
 	def update
 		@sprites.each{ |s| s[0].update }
 	end

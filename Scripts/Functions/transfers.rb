@@ -7,17 +7,17 @@ def transfer(map,room)
 
 end
 
-def transfer_world
+def transfer_world(dir=nil)
 
 	# Get name of transfer
 	room = $map.events[me].name
 
 	# Do the transfer
-	$player.transfer_to(25,room)
+	$player.transfer_to(WORLD_MAP_ID,room,dir)
 
 end
 
-def transfer_map
+def transfer_map(dir=nil)
 	
 	# Get name of transfer
 	room = $map.events[me].name
@@ -26,11 +26,11 @@ def transfer_map
 	map = find_map_id(room.split(" *")[0])
 
 	# Do the transfer
-	$player.transfer_to(map,room)
+	$player.transfer_to(map,room,dir)
 
 end
 
-def transfer_in
+def transfer_in(dir=nil)
 
 	# Get name of transfer
 	room = $map.events[me].name
@@ -44,11 +44,11 @@ def transfer_in
 	end
 
 	# Do the transfer
-	$player.transfer_to(map,room)
+	$player.transfer_to(map,room,dir)
 
 end
 
-def transfer_out
+def transfer_out(dir=nil)
 
 	# Get name of transfer
 	room = $map.events[me].name
@@ -57,7 +57,7 @@ def transfer_out
 	map = find_parent_id($map.id)
 
 	# Do the transfer
-	$player.transfer_to(map,room)
+	$player.transfer_to(map,room,dir)
 
 end
 

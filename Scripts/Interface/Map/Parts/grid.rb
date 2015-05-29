@@ -208,6 +208,8 @@ class Ui_Grid
 
 	def choose(target)
 
+		sys('select')
+
 		@selected = target
 
 		# Find the icon if this is journal

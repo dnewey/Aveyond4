@@ -29,6 +29,8 @@ class Scene_Base
     @vp_under.z = 0
     @vp_main = Viewport.new(0,0,$game.width,$game.height)   
     @vp_main.z = 1000
+    @vp_weather = Viewport.new(0,0,$game.width,$game.height)
+    @vp_weather.z = 1999
     @vp_over = Viewport.new(0,0,$game.width,$game.height)
     @vp_over.z = 2000
     @vp_ui = Viewport.new(0,0,$game.width,$game.height)
@@ -123,8 +125,8 @@ class Scene_Base
 
     # Could delete erased characters here
 
-    @vp_over.ox = $map.display_x / 4
-    @vp_over.oy = $map.display_y / 4
+    @vp_weather.ox = $map.display_x / 4
+    @vp_weather.oy = $map.display_y / 4
 
 
     # Rebuild the map
@@ -156,7 +158,7 @@ class Scene_Base
     @weather.dispose if @weather
     case weather
       when 'dark-dots'
-        @weather = Weather_DarkDots.new(@vp_over)
+        @weather = Weather_DarkDots.new(@vp_weather)
     end
   end
 

@@ -61,6 +61,9 @@ class Mnu_Base
 	end
 
 	def cancel(option)
+		@left.each{ |a| $tweens.clear(a) }
+		@right.each{ |a| $tweens.clear(a) }
+		@other.each{ |a| $tweens.clear(a) }
 		close
 	end
 

@@ -21,7 +21,7 @@ def fadein(f=30)
 end
 
 def fade(ev)
-	gev(ev).do(to("opacity",0,2))
+	gev(ev).do(go("opacity",-255,300))
 end
 
 def gfx(ev,name)

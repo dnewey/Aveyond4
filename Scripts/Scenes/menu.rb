@@ -61,7 +61,8 @@ class Scene_Menu
       @menu.open
     end
 
-    if $input.cancel? || (@sub == nil && @menu.done?)
+    if ($input.cancel? || $input.rclick?) || (@sub == nil && @menu.done?)
+      sys('cancel')
       $tweens.clear_all
       $game.pop_scene
     end

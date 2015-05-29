@@ -25,6 +25,10 @@ class InputManager
 		return $keyboard.press?(VK_ESC)
 	end
 
+	def rclick?
+		return $keyboard.press?(VK_RBUTTON)
+	end
+
 	def left?
 		return $keyboard.press?(VK_LEFT)
 	end

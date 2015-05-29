@@ -28,6 +28,7 @@ class Spark < Sprite
 			@frames = anim.frames
 			@delay = anim.delay
 			@fadeout = anim.fadeout
+			self.opacity = anim.opacity
 			case anim.order
 				when 'below'
 				when 'same'
@@ -82,7 +83,7 @@ class Spark < Sprite
 
 			@idx = @frames if @idx > @frames
 
-			self.opacity -= 15 if @frames == @idx
+			self.opacity -= 30 if @idx >= @frames - 2
 
 			fx = @idx % 5 # frames_per_row
 			fy = @idx / 5

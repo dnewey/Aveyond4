@@ -4,6 +4,7 @@
 
 
 VK_LBUTTON = 1
+VK_RBUTTON = 2
 
 VK_BS = 8
 VK_TAB = 9
