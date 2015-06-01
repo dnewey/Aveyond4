@@ -59,8 +59,6 @@ class Sprite_Character < Sprite
         @iconmode = true
       end
 
-
-
     end
 
     # Clear the helper graphics

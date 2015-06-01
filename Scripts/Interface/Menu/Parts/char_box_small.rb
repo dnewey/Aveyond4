@@ -4,7 +4,7 @@ class Char_Box_Small < SpriteGroup
 
 	attr_accessor :box
 
-	def initialize(vp)
+	def initialize(vp,char)
 
 		super()
 

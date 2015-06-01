@@ -52,7 +52,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@per_page = 11
+  	@per_page = 8
 
   	# Sprites
 
@@ -107,6 +107,7 @@ class List
 
     if !@data.empty?
   	(0..@per_page-1).each{ |i|
+      next if @sprites[i] == nil
   		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
       @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
@@ -160,6 +161,9 @@ class List
 
   def draw(data,sprite,on)
 
+    return if sprite == nil
+    sprite.bitmap.clear if sprite.bitmap != nil
+
   	# Draw the base
     src = $cache.menu("Common/bartest3")
     src = $cache.menu("Common/bartest4") if on
@@ -185,6 +189,9 @@ class List
   def draw_item(data,sprite,on)
 
     #return if $data.items.has_key?(data)
+
+
+    return if data == nil
 
     item = $data.items[data]
 
@@ -307,6 +314,8 @@ class List
 
   def scroll_down
 
+    @dynamo.bitmap.clear
+
     @scroll_idx -= 1    
           @pagemod = 1
 
@@ -340,6 +349,8 @@ class List
 
   def scroll_up
 
+    @dynamo.bitmap.clear
+
     @scroll_idx += 1    
           @pagemod = -1
 
@@ -351,7 +362,7 @@ class List
     dur = 200
     ease = :quad_in_out
 
-  	draw_item(@data[@scroll_idx + @per_page - 1],@dynamo,@page_idx == @per_page)
+  	draw_item(@data[@scroll_idx + @per_page],@dynamo,@page_idx == @per_page)
 
   	@dynamo.do(go("y",-@item_space,dur,ease))
   	@dynamo.do(go("opacity",50,dur,ease))

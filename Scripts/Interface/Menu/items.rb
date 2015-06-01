@@ -13,10 +13,7 @@ class Mnu_Items < Mnu_Base
 		#@tabs.push("potions")
 		#@tabs.push("keys")
 
-		data = []
-		data.push('covey')
-		data.push('covey')
-		data.push('covey')
+		data = $party.item_list
 
 		@menu.list.setup(data)
 
@@ -25,6 +22,7 @@ class Mnu_Items < Mnu_Base
 
 		@item_box = Item_Box.new(vp)
 		@item_box.center(462,130)
+		@item_box.hide
 		self.right.push(@item_box)
 
 	end
@@ -36,6 +34,7 @@ class Mnu_Items < Mnu_Base
 
 	def change(option)
 		@info.title.text = option
+		#@item_box.show
 		@item_box.item(option)
 		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 	end

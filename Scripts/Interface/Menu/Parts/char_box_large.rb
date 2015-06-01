@@ -4,7 +4,7 @@ class Char_Box_Large < SpriteGroup
 
 	attr_accessor :box
 
-	def initialize(vp)
+	def initialize(vp,char)
 
 		super()
 
@@ -14,7 +14,7 @@ class Char_Box_Large < SpriteGroup
 		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.face(["boy",'hib','mys','rob','row'].sample)
+		@port.bitmap = $cache.face(char)
 		@port.src_rect.width = 155
 		add(@port,42,-20)
 		@port.z += 50

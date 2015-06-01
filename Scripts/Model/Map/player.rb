@@ -9,12 +9,14 @@
 class Game_Player < Game_Character
 
   attr_accessor :transferring      # player place movement flag
+  attr_accessor :trans_type 
 
   def initialize
     super
     looklike("boy")
     @transferring = false
     @xfer_data = nil
+    @trans_type = :cross
     @static = false
   end
 
@@ -327,16 +329,36 @@ class Game_Player < Game_Character
 
       $game.update
 
-      $scene.overlay.opacity = 255
+      # If next zone is different, start fading?
+      $audio.fadeout
+
+      
+
+      case @trans_type
+
+        when :cross
+          Graphics.transition(16)
+
+        when :cave
+          $scene.overlay.opacity = 255
+          Graphics.transition(45,'Graphics/Transitions/cave') 
+          Graphics.freeze
+          $scene.overlay.opacity = 0
+          Graphics.transition(45,'Graphics/Transitions/cave_inv')   
+
+        when :fade
+          $scene.overlay.opacity = 255
+          Graphics.transition(45) 
+          Graphics.freeze
+          $scene.overlay.opacity = 0
+          Graphics.transition(45)    
+
+      end
 
 
-      #Graphics.transition(16)
-       Graphics.transition(45,'Graphics/Transitions/cave') 
 
-       Graphics.freeze
-
-       $scene.overlay.opacity = 0
-       Graphics.transition(45,'Graphics/Transitions/cave_inv')      
+      # Now do the zone etc
+      $map.setup_audio
 
     #end
 

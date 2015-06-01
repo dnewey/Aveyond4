@@ -417,6 +417,10 @@ class Game_Event < Game_Character
       @trigger = 2
     end
 
+    if @character_name == "Common"
+      @direction_fix = true
+    end
+
   end
   
   def read_comment_data

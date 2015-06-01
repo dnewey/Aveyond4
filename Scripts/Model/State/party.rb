@@ -117,6 +117,14 @@ class Game_Party
     $map.need_refresh = true
   end
 
+  def item_list
+    items = []
+    @items.each{ |k,v|
+      items.push(k) if v > 0
+    }
+    return items
+  end
+
 
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead

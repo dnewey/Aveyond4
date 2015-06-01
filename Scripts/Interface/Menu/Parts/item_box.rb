@@ -49,6 +49,7 @@ class Item_Box < SpriteGroup
 
 	end
 
+
 	def center(x,y)
 		move(x-150,y-60)
 	end

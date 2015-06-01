@@ -107,6 +107,11 @@ class AudioManager
     
   end
 
+  def fadeout
+    @music_target = 0.0
+    @atmosphere_target = 0.0
+  end
+
   def env(file,pos)
     @environmental.each{ |snd|
       if snd.file == file
@@ -117,21 +122,23 @@ class AudioManager
     @environmental.push(EnviroSource.new(file,pos))
   end
 
-  def music(file)
+  def music(file,vol=1.0)
     if file == nil || file == ''
       @music.stop
       return
     end
+    @music.gain = vol
     @music.stream = Seal::Stream.open("Audio/Music/#{file}.ogg")
     @music.play
   end
 
   def atmosphere(file)
+    @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
       return
     end
-    @atmosphere.gain = 0.3
+    #@atmosphere.gain = 0.3
     @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
   end
@@ -215,12 +222,14 @@ class AudioManager
   def change_mode(mode)
 
     @mode = mode
+    preset = nil
 
     # Create new effect and volume modifier
     case mode
       when 'normal', ''
+        preset = nil
         @effect = nil
-        return
+        
 
       when 'cave'
         preset = Seal::Reverb::Preset::CAVE
@@ -228,11 +237,25 @@ class AudioManager
     end
 
     # Prepare the effect to be added to each newly created source
-    @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+    if preset != nil
+      @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+    end
+
+    #@sfx.each{ |s| s.dispose }
+    @sfx = []
+
    
   end
 
   def update
+
+    if @atmosphere_target != @atmosphere.gain
+      if @atmosphere_target > @atmosphere.gain
+        @atmosphere.gain -= 0.05
+      else
+        @atmosphere.gain += 0.05
+      end
+    end
 
     @environmental.each{ |e| e.update }
 

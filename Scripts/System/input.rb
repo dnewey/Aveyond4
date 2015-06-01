@@ -22,7 +22,7 @@ class InputManager
 	end
 
 	def cancel?
-		return $keyboard.press?(VK_ESC)
+		return $keyboard.press?(VK_ESC) || $keyboard.press?(VK_NUM0)
 	end
 
 	def rclick?

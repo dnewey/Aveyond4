@@ -31,6 +31,7 @@ class GameManager
     $progress = Progress.new
     $state = State.new
     $party = Game_Party.new
+    $menu = MenuState.new
     $battle = Game_Battle.new    
 
     # Make scene object (title screen)

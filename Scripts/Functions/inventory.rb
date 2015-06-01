@@ -3,6 +3,7 @@
 #==============================================================================
 
 def gold(amount,type='f')
+	sys('coins')
 	$party.add_gold(amount)
 	pop_gold(amount,type)
 end
@@ -22,7 +23,7 @@ def item(id,number=1,type='f')
 		number = 1
 	end
 	$party.add_item(id,number)
-	pop_item(id,number,type)
+	pop_item(id,number,type) if type != 's'
 end
 
 def unitem(id,number=1)
@@ -33,9 +34,10 @@ def item?(id,number=1)
 	$party.has_item?(id,number)
 end
 
-def all_items
-	$data.items.each{ |i|
-		item(i.id,99)
+def grant_items
+	$data.items.each{ |k,v|
+		log_scr(v.id)
+		item(v.id,99,'s')
 	}
 end
 

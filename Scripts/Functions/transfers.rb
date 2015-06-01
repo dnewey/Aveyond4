@@ -30,7 +30,29 @@ def transfer_map(dir=nil)
 
 end
 
+def transfer_house_in(dir=nil)
+	transfer_in(dir)
+	$player.trans_type = :fade
+end
+
+def transfer_house_out(dir=nil)
+	transfer_out(dir)
+	$player.trans_type = :fade
+end
+
+def transfer_cave_in(dir=nil)
+	transfer_in(dir)
+	$player.trans_type = :cave
+end
+
+def transfer_cave_out(dir=nil)
+	transfer_out(dir)
+	$player.trans_type = :cave
+end
+
 def transfer_in(dir=nil)
+
+	$player.trans_type = :cross
 
 	# Get name of transfer
 	room = $map.events[me].name
@@ -49,6 +71,8 @@ def transfer_in(dir=nil)
 end
 
 def transfer_out(dir=nil)
+
+	$player.trans_type = :cross
 
 	# Get name of transfer
 	room = $map.events[me].name

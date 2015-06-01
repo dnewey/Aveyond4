@@ -18,6 +18,9 @@
     return true if self =~ /\A\d+\Z/
     true if Float(self) rescue false
   end
+  def to_b
+    return self == "true"
+  end
 end
 
 class FalseClass; def to_i; 0 end end

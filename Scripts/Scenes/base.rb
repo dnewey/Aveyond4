@@ -168,17 +168,45 @@ class Scene_Base
 
   def change_panoramas(panos)
 
-      @panoramas.each{ |p| p.dispose }
+    @panoramas.each{ |p| p.dispose }
     @panoramas.clear
+
+   
 
     data = panos.split("\n")
 
-    data.each{ |p|
+    data.each{ |pano|
 
-      pano = Panorama.new(@vp_under)
+       panorama = Panorama.new(@vp_under)
+
+      # Any extra data
+      dta = pano.split(" | ")
+
+      if dta.count > 1
+        dta.each_index{ |i|
+          next if i == 0
+          d = dta[i].split("=>")
+
+          case d[0]
+            when 'ax'; panorama.att_x = d[1].to_f
+            when 'ay'; panorama.att_y = d[1].to_f
+            when 'sx'; panorama.spd_x = d[1].to_f
+            when 'sy'; panorama.spd_y = d[1].to_f
+            when 'ox'; panorama.start_x = d[1].to_f
+            when 'oy'; panorama.start_y = d[1].to_f
+            when 'px'; panorama.pad_x = d[1].to_f
+            when 'py'; panorama.pad_y = d[1].to_f
+            when 'r'; panorama.repeat = d[1].to_b
+
+          end
+
+        }
+      end
+
+      
       #pano.z = -1000
-      pano.bitmap = $cache.panorama(p)
-      @panoramas.push(pano)
+      panorama.bitmap = $cache.panorama(dta[0])
+      @panoramas.push(panorama)
 
     }
 
@@ -213,7 +241,7 @@ class Scene_Base
   def pop_dmg(target,amount)
     #ev = gev(target)
     pop = Popper.new(@vp_over)
-    pop.value = 0#amount #- amount/10
+    pop.value = amount #- amount/10
     pop.x = target.screen_x-200-20
     pop.y = target.screen_y-40-12+45
     @pops.push(pop)

@@ -1,4 +1,4 @@
-["°#==============================================================================
+[€"°#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -66,7 +66,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end",#==============================================================================
+end"(#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -126,8 +126,6 @@ class Sprite_Character < Sprite
         self.oy = @ch
         @iconmode = true
       end
-
-
 
     end
 
@@ -219,12 +217,31 @@ class MapWrap < Tilemap
 
 	end
 
-end"\
+end"ã
 class Panorama
+
+  attr_accessor :spd_x, :spd_y # Speed
+  attr_accessor :pad_x, :pad_y # Padding
+  attr_accessor :off_x, :off_y 
+  attr_accessor :att_x, :att_y # Attach
+  attr_accessor :start_x, :start_y 
+  attr_accessor :repeat
  
   def initialize(v)
     @sprite = Sprite.new(v)
     @bitmap = nil
+
+    @spd_x = @spd_y = 0
+    @pad_x = @pad_y = 0
+    @off_x = @off_y = 0
+
+    @repeat = true
+    @att_x = 0.0
+    @att_y = 0.0
+
+    @start_x = 0
+    @start_y = 0
+
   end
  
  def dispose
@@ -233,15 +250,22 @@ class Panorama
     @bitmap.dispose
   end
  
-  def ox=(val) 
-    @sprite.ox = val % @bitmap.width
-  end
- 
-  def oy=(val)
-    @sprite.oy = val % @bitmap.height
-  end
-
   def update
+    
+    @off_x += @spd_x
+    @off_y += @spd_y
+
+    @sprite.ox = -@off_x
+    @sprite.oy = -@off_y
+
+    @sprite.ox += ($map.display_x / 4 * @att_x)
+    @sprite.oy += ($map.display_y / 4 * @att_y)
+
+    @sprite.ox = @sprite.ox % @bitmap.width
+    @sprite.oy = @sprite.oy % @bitmap.height
+
+    @sprite.x = @start_x
+    @sprite.y = @start_y
 
   end
 
@@ -254,6 +278,8 @@ class Panorama
    
     dx = [(w / bmp.width).ceil, 1].max * nw
     dy = [(h / bmp.height).ceil, 1].max * nh
+
+    dy = 1 if !@repeat
  
     bw = dx * bmp.width
     bh = dy * bmp.height
@@ -263,7 +289,7 @@ class Panorama
      
       dx.times do |x|
         dy.times do |y|
-          @sprite.bitmap.blt(x * bmp.width, y * bmp.height, @bitmap, @bitmap.rect)
+          @sprite.bitmap.blt((x * bmp.width), (y * bmp.height), @bitmap, @bitmap.rect)
         end
       end
 
@@ -1338,7 +1364,7 @@ class Label < Sprite
         
   end
   
-end"§#==============================================================================
+end"k#==============================================================================
 # The magical list
 #==============================================================================
 
@@ -1392,7 +1418,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@per_page = 11
+  	@per_page = 8
 
   	# Sprites
 
@@ -1447,6 +1473,7 @@ class List
 
     if !@data.empty?
   	(0..@per_page-1).each{ |i|
+      next if @sprites[i] == nil
   		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
       @current = @data[i+@scroll_idx] if i == @page_idx
   		@sprites[i].y = cy
@@ -1500,6 +1527,9 @@ class List
 
   def draw(data,sprite,on)
 
+    return if sprite == nil
+    sprite.bitmap.clear if sprite.bitmap != nil
+
   	# Draw the base
     src = $cache.menu("Common/bartest3")
     src = $cache.menu("Common/bartest4") if on
@@ -1525,6 +1555,9 @@ class List
   def draw_item(data,sprite,on)
 
     #return if $data.items.has_key?(data)
+
+
+    return if data == nil
 
     item = $data.items[data]
 
@@ -1647,6 +1680,8 @@ class List
 
   def scroll_down
 
+    @dynamo.bitmap.clear
+
     @scroll_idx -= 1    
           @pagemod = 1
 
@@ -1680,6 +1715,8 @@ class List
 
   def scroll_up
 
+    @dynamo.bitmap.clear
+
     @scroll_idx += 1    
           @pagemod = -1
 
@@ -1691,7 +1728,7 @@ class List
     dur = 200
     ease = :quad_in_out
 
-  	draw_item(@data[@scroll_idx + @per_page - 1],@dynamo,@page_idx == @per_page)
+  	draw_item(@data[@scroll_idx + @per_page],@dynamo,@page_idx == @per_page)
 
   	@dynamo.do(go("y",-@item_space,dur,ease))
   	@dynamo.do(go("opacity",50,dur,ease))
@@ -2038,11 +2075,12 @@ end
 
 def grp(*args)
 	return Group.new(args)
-end"ß#==============================================================================
+end"#==============================================================================
 # ** Item Functions
 #==============================================================================
 
 def gold(amount,type='f')
+	sys('coins')
 	$party.add_gold(amount)
 	pop_gold(amount,type)
 end
@@ -2062,7 +2100,7 @@ def item(id,number=1,type='f')
 		number = 1
 	end
 	$party.add_item(id,number)
-	pop_item(id,number,type)
+	pop_item(id,number,type) if type != 's'
 end
 
 def unitem(id,number=1)
@@ -2073,9 +2111,10 @@ def item?(id,number=1)
 	$party.has_item?(id,number)
 end
 
-def all_items
-	$data.items.each{ |i|
-		item(i.id,99)
+def grant_items
+	$data.items.each{ |k,v|
+		log_scr(v.id)
+		item(v.id,99,'s')
 	}
 end
 
@@ -2097,14 +2136,7 @@ def open_shop_sell
 	$game.menu_page = "Shop"
 	$game.push_scene(Scene_Menu.new)
 end
-"-
-def vnmode
-
-end
-
-def vnexit
-
-end"
+"
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -2515,7 +2547,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"gWORLD_MAP_ID = 25
+"WORLD_MAP_ID = 25
 
 def transfer(map,room)
 
@@ -2547,7 +2579,29 @@ def transfer_map(dir=nil)
 
 end
 
+def transfer_house_in(dir=nil)
+	transfer_in(dir)
+	$player.trans_type = :fade
+end
+
+def transfer_house_out(dir=nil)
+	transfer_out(dir)
+	$player.trans_type = :fade
+end
+
+def transfer_cave_in(dir=nil)
+	transfer_in(dir)
+	$player.trans_type = :cave
+end
+
+def transfer_cave_out(dir=nil)
+	transfer_out(dir)
+	$player.trans_type = :cave
+end
+
 def transfer_in(dir=nil)
+
+	$player.trans_type = :cross
 
 	# Get name of transfer
 	room = $map.events[me].name
@@ -2566,6 +2620,8 @@ def transfer_in(dir=nil)
 end
 
 def transfer_out(dir=nil)
+
+	$player.trans_type = :cross
 
 	# Get name of transfer
 	room = $map.events[me].name
@@ -2876,7 +2932,7 @@ class CharView < SpriteGroup
 
 	end
 
-end"¿
+end"Â
 class ItemCmd
 
 	def initialize(vp)
@@ -2907,9 +2963,9 @@ class ItemCmd
 		@list.setup(data)
 		@list.refresh
 
-		@box = Item_Box.new(vp)
-		@box.item('covey')
-		@box.move(320,140)
+		#@box = Item_Box.new(vp)
+		#@box.item('covey')
+		#@box.move(320,140)
 
 		@list.opacity = 0
 		@window.opacity = 0
@@ -3519,7 +3575,7 @@ class Ui_Grid
 
 	end
 
-end"4#==============================================================================
+end"C#==============================================================================
 # Ui_Info
 #==============================================================================
 
@@ -3530,26 +3586,38 @@ class Ui_Info < SpriteGroup
 
 		# Map
 		@map = Label.new(vp)
-		#@map.font = 
+		@map.font = $fonts.pop_type
 		@map.icon = $cache.icon("items/map")
-		@map.text = "Wintershireton"
+		@map.text = $map.name
 		add(@map,0,0)
 
 		@gold = Label.new(vp)
-		#@map.font = 
+		@gold.font = $fonts.pop_type
 		@gold.icon = $cache.icon("misc/coins")
-		@gold.text = 250.to_s
+		@gold.text = $party.gold.to_s
 		add(@gold,560,0)
 
 		move(0,415)
 
+		#refresh
+
+	end
+
+	def update
+		super
+		#refresh if @visible_gold != $party.gold || @visible_map != $map.name
 	end
 
 	def refresh
+		@visible_gold = $party.gold
+		@visible_map = $map.name
+
+		@map.text = $visible_map
+		@gold.text = $visible_gold.to_s
 
 	end
 
-end"WG#==============================================================================
+end"]G#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -3656,8 +3724,8 @@ class Ui_Message
     @sprites.add(@textbox)
     @sprites.add(@lastchar)
 
-    @sprites.add(@namebox,20,-@namebox.height)
-    @sprites.add(@nametext,40,-@namebox.height+5)
+    @sprites.add(@namebox,20,-@namebox.height+16)
+    @sprites.add(@nametext,40,-@namebox.height+19)
 
     #@sprites.add(@next)
     @sprites.add(@face)
@@ -3700,8 +3768,8 @@ class Ui_Message
         #h = true
       end
       if y < 46
-        y = 290
-        h = true
+        #y = 290
+        #h = true
       end
       if x > 640-@width-10
         x = 640-@width-10
@@ -4503,7 +4571,48 @@ class Mnu_Base
 		return @closing # && NO TWEENS GOING
 	end
 
-end" "
+end"Â#==============================================================================
+# ** Mnu_Char
+#==============================================================================
+
+class Mnu_Char < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change($menu.char)
+
+		#@tabs.push("all")
+		#@tabs.push("potions")
+		#@tabs.push("keys")
+
+		data = []
+		data.push(['Equip',"misc/unknown"])
+		data.push(['Skills',"misc/unknown"])
+		data.push(['Status',"misc/unknown"])
+
+		@menu.list.type = :misc
+		@menu.list.setup(data)
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+	end
+
+	def update
+		super
+		
+	end
+
+	def change(option)
+		
+	end
+
+	def select(option)	
+		
+	end
+
+end"
 class Mnu_Equip < Mnu_Base
 
 	def initialize(vp)
@@ -4548,7 +4657,7 @@ class Mnu_Equip < Mnu_Base
 		
 	end
 
-end"H#==============================================================================
+end"9#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -4563,10 +4672,7 @@ class Mnu_Items < Mnu_Base
 		#@tabs.push("potions")
 		#@tabs.push("keys")
 
-		data = []
-		data.push('covey')
-		data.push('covey')
-		data.push('covey')
+		data = $party.item_list
 
 		@menu.list.setup(data)
 
@@ -4575,6 +4681,7 @@ class Mnu_Items < Mnu_Base
 
 		@item_box = Item_Box.new(vp)
 		@item_box.center(462,130)
+		@item_box.hide
 		self.right.push(@item_box)
 
 	end
@@ -4586,6 +4693,7 @@ class Mnu_Items < Mnu_Base
 
 	def change(option)
 		@info.title.text = option
+		#@item_box.show
 		@item_box.item(option)
 		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 	end
@@ -4699,7 +4807,7 @@ class Mnu_Load < Mnu_Base
 		
 	end
 
-end"ø#==============================================================================
+end"#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -4712,41 +4820,65 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		@chars = []
 
 		# Active Characters
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.1"
+
+		charbox = Char_Box_Large.new(vp,$party.active[0])
+		charbox.box.name = "C.0"
 		charbox.move(200,15)
 		@chars.push(charbox)
 
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.2"
-		charbox.move(420,15)
-		@chars.push(charbox)
+		if $party.active.count > 1
+			charbox = Char_Box_Large.new(vp,$party.active[1])
+			charbox.box.name = "C.1"
+			charbox.move(420,15)
+			@chars.push(charbox)
+		end
 
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.3"
-		charbox.move(200,198)
-		@chars.push(charbox)
+		if $party.active.count > 2
+			charbox = Char_Box_Large.new(vp,$party.active[2])
+			charbox.box.name = "C.2"
+			charbox.move(200,198)
+			@chars.push(charbox)
+		end
 
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.4"
-		charbox.move(420,198)
-		@chars.push(charbox)
+		if $party.active.count > 3
+			charbox = Char_Box_Large.new(vp,$party.active[3])
+			charbox.box.name = "C.3"
+			charbox.move(420,198)
+			@chars.push(charbox)
+		end
 
 		# Reserve Characters
-		charbox = Char_Box_Small.new(vp)
-		charbox.box.name = "C.5"
-		charbox.move(200,381)
-		@chars.push(charbox)
 
-		charbox = Char_Box_Small.new(vp)
-		charbox.box.name = "C.6"
-		charbox.move(347,381)
-		@chars.push(charbox)
+		if $party.reserve.count > 0
+			charbox = Char_Box_Small.new(vp,$party.reserve[0])
+			charbox.box.name = "R.0"
+			charbox.move(200,381)
+			@chars.push(charbox)
+		end
 
-		charbox = Char_Box_Small.new(vp)
-		charbox.box.name = "C.7"
-		charbox.move(492,381)
-		@chars.push(charbox)
+		if $party.reserve.count > 1
+			charbox = Char_Box_Small.new(vp,$party.reserve[1])
+			charbox.box.name = "R.1"
+			charbox.move(347,381)
+			@chars.push(charbox)
+		end
+
+		if $party.reserve.count > 2
+			charbox = Char_Box_Small.new(vp,$party.reserve[2])
+			charbox.box.name = "R.2"
+			charbox.move(492,381)
+			@chars.push(charbox)
+		end
+
+		# Special Positioning
+		if $party.active.count == 1
+			@chars[0].move(310,140)
+		end
+
+		if $party.active.count == 2
+			@chars[0].move(200,140)
+			@chars[1].move(420,140)
+		end
 
 
 		@data = ['Journal','Items','Equip','Skills',
@@ -4997,6 +5129,16 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 				$scene.open_sub(Mnu_Save.new(@vp))
 			when "Char"
 				$scene.open_sub(Mnu_Char.new(@vp))
+			else
+				# C.1
+				num = option.split(".")[1].to_i
+				if option.include?("C")
+					$menu.char = $party.active[num]
+				else # Reserve
+					$menu.char = $party.reserve[num]
+				end
+				$scene.open_sub(Mnu_Char.new(@vp))
+
 		end
 
 	end
@@ -5281,13 +5423,13 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"	
+end"ì
 
 class Char_Box_Large < SpriteGroup
 
 	attr_accessor :box
 
-	def initialize(vp)
+	def initialize(vp,char)
 
 		super()
 
@@ -5297,7 +5439,7 @@ class Char_Box_Large < SpriteGroup
 		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.face(["boy",'hib','mys','rob','row'].sample)
+		@port.bitmap = $cache.face(char)
 		@port.src_rect.width = 155
 		add(@port,42,-20)
 		@port.z += 50
@@ -5354,13 +5496,13 @@ class Char_Box_Large < SpriteGroup
 
 	end
 
-end"^
+end"c
 
 class Char_Box_Small < SpriteGroup
 
 	attr_accessor :box
 
-	def initialize(vp)
+	def initialize(vp,char)
 
 		super()
 
@@ -5440,7 +5582,7 @@ class Info_Box < SpriteGroup
 
 	end
 
-end"Ó
+end"Õ
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -5490,6 +5632,7 @@ class Item_Box < SpriteGroup
     	item('unknown')
 
 	end
+
 
 	def center(x,y)
 		move(x-150,y-60)
@@ -7809,7 +7952,7 @@ class Game_Character
 
 
 end
-"¡8#==============================================================================
+"í8#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -8228,6 +8371,10 @@ class Game_Event < Game_Character
       @trigger = 2
     end
 
+    if @character_name == "Common"
+      @direction_fix = true
+    end
+
   end
   
   def read_comment_data
@@ -8396,7 +8543,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"¥Z#==============================================================================
+end"ÑZ#==============================================================================
 # ** Interpreter (part 1)
 #------------------------------------------------------------------------------
 #  This interpreter runs event commands. This class is used within the
@@ -8579,6 +8726,7 @@ class Interpreter
 
       # Misc hud busy
       return if $scene.is_a?(Scene_Menu)
+      return if $scene.is_a?(Scene_Battle)
       return if $scene.busy?
 
       # If waiting for move to end
@@ -9199,7 +9347,7 @@ class Interpreter
   end
 
 end
-")#==============================================================================
+"y)#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -9259,6 +9407,10 @@ class Game_Map
     end
     return 50
   end
+
+  def name
+    return @map_name
+  end
   
   #--------------------------------------------------------------------------
   # * Setup
@@ -9286,13 +9438,13 @@ class Game_Map
     @need_refresh = false
     
 
-
-    # Disregard if battle map? or use battle zone?
+        # Disregard if battle map? or use battle zone?
     # Or various battle zones?
 
     # What is the zone
     autoplay = false
     newzone = get_zone(@id)
+    newzone = "@" + newzone.split("@")[1]
     if newzone != @zone.id
 
       @zone = $data.zones[newzone]
@@ -9310,9 +9462,7 @@ class Game_Map
         autoplay = true
       else
 
-        # Play music from the zone
-        $audio.music(@zone.music)
-        $audio.atmosphere(@zone.atmosphere)
+        
         $audio.change_mode(@zone.reverb)
 
         # Init tints and that
@@ -9334,17 +9484,22 @@ class Game_Map
       $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
     end
 
-
-
-
         # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
     }
-    
+
   end
 
+  def setup_audio
+
+    # Play music from the zone
+    $audio.music(@zone.music)
+    $audio.atmosphere(@zone.atmosphere)
+
+  end
+  
   def display_x
     return @display_x + (@cam_ox*4)
   end
@@ -9638,7 +9793,7 @@ class Moblin
 
 	end
 
-end"º(#==============================================================================
+end"¥*#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -9649,12 +9804,14 @@ end"º(#========================================================================
 class Game_Player < Game_Character
 
   attr_accessor :transferring      # player place movement flag
+  attr_accessor :trans_type 
 
   def initialize
     super
     looklike("boy")
     @transferring = false
     @xfer_data = nil
+    @trans_type = :cross
     @static = false
   end
 
@@ -9967,16 +10124,36 @@ class Game_Player < Game_Character
 
       $game.update
 
-      $scene.overlay.opacity = 255
+      # If next zone is different, start fading?
+      $audio.fadeout
+
+      
+
+      case @trans_type
+
+        when :cross
+          Graphics.transition(16)
+
+        when :cave
+          $scene.overlay.opacity = 255
+          Graphics.transition(45,'Graphics/Transitions/cave') 
+          Graphics.freeze
+          $scene.overlay.opacity = 0
+          Graphics.transition(45,'Graphics/Transitions/cave_inv')   
+
+        when :fade
+          $scene.overlay.opacity = 255
+          Graphics.transition(45) 
+          Graphics.freeze
+          $scene.overlay.opacity = 0
+          Graphics.transition(45)    
+
+      end
 
 
-      #Graphics.transition(16)
-       Graphics.transition(45,'Graphics/Transitions/cave') 
 
-       Graphics.freeze
-
-       $scene.overlay.opacity = 0
-       Graphics.transition(45,'Graphics/Transitions/cave_inv')      
+      # Now do the zone etc
+      $map.setup_audio
 
     #end
 
@@ -9991,21 +10168,23 @@ class Game_Player < Game_Character
   end
 
 end
-"L
+"ž
 class Game_Battle
 
   attr_accessor :map, :weather
 
   attr_reader :enemies
   attr_reader :enemy_types
+  attr_reader :enemy_list
 
 	def initialize
     @enemy_types = []
+    @enemy_list = []
 		@enemies = []
     @props = []
     @actor_index = 0
 
-    @map = 26
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -10016,6 +10195,7 @@ class Game_Battle
   def add(enemy)
     battler = Game_Battler.new
     battler.init_enemy(enemy)
+    @enemy_list.push(enemy)
     @enemies.push(battler)
   end
 
@@ -10188,32 +10368,18 @@ end
 
 # Then play it out
 # Cacl the results at the start of each attack
-# Instead of at the start of the whole thing"‹
+# Instead of at the start of the whole thing"«
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
-class DataBox
-	attr_accessor :type
-	attr_accessor :text
-	attr_accessor :icon
-	attr_accessor :misc
+class MenuState
 
-	def initialize(type,text,icon="",misc="")
-		@type = type
-		@text = text
-		@icon = icon
-		@misc = misc
-	end
+	attr_accessor :char
 
-end
+	#attr_accessor :category
+	#attr_accessor :tab
 
-class MenuData
-
-	attr_accessor :actor
-	attr_accessor :category
-	attr_accessor :tab
-
-end"·#==============================================================================
+end"0#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -10330,6 +10496,14 @@ class Game_Party
     @gold += n
     @gold = 0 if @gold < 0
     $map.need_refresh = true
+  end
+
+  def item_list
+    items = []
+    @items.each{ |k,v|
+      items.push(k) if v > 0
+    }
+    return items
   end
 
 
@@ -10571,7 +10745,7 @@ end"class State
 	end
 
 end
-"Ã#==============================================================================
+" #==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -10741,17 +10915,45 @@ class Scene_Base
 
   def change_panoramas(panos)
 
-      @panoramas.each{ |p| p.dispose }
+    @panoramas.each{ |p| p.dispose }
     @panoramas.clear
+
+   
 
     data = panos.split("\n")
 
-    data.each{ |p|
+    data.each{ |pano|
 
-      pano = Panorama.new(@vp_under)
+       panorama = Panorama.new(@vp_under)
+
+      # Any extra data
+      dta = pano.split(" | ")
+
+      if dta.count > 1
+        dta.each_index{ |i|
+          next if i == 0
+          d = dta[i].split("=>")
+
+          case d[0]
+            when 'ax'; panorama.att_x = d[1].to_f
+            when 'ay'; panorama.att_y = d[1].to_f
+            when 'sx'; panorama.spd_x = d[1].to_f
+            when 'sy'; panorama.spd_y = d[1].to_f
+            when 'ox'; panorama.start_x = d[1].to_f
+            when 'oy'; panorama.start_y = d[1].to_f
+            when 'px'; panorama.pad_x = d[1].to_f
+            when 'py'; panorama.pad_y = d[1].to_f
+            when 'r'; panorama.repeat = d[1].to_b
+
+          end
+
+        }
+      end
+
+      
       #pano.z = -1000
-      pano.bitmap = $cache.panorama(p)
-      @panoramas.push(pano)
+      panorama.bitmap = $cache.panorama(dta[0])
+      @panoramas.push(panorama)
 
     }
 
@@ -10786,7 +10988,7 @@ class Scene_Base
   def pop_dmg(target,amount)
     #ev = gev(target)
     pop = Popper.new(@vp_over)
-    pop.value = 0#amount #- amount/10
+    pop.value = amount #- amount/10
     pop.x = target.screen_x-200-20
     pop.y = target.screen_y-40-12+45
     @pops.push(pop)
@@ -10800,7 +11002,7 @@ class Scene_Base
   end
 
 end
-"6#==============================================================================
+"Ü#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -10844,6 +11046,7 @@ class Scene_Battle < Scene_Base
     # Find battler events
     [0,1,2,3].each{ |i| 
       ev = @map.event_by_evname("A.#{i}")
+      next if ev == nil
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
@@ -10855,12 +11058,17 @@ class Scene_Battle < Scene_Base
     }
     [0,1,2,3,4].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
+      next if ev == nil
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
+        ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
       end
     }
 
     reload_map
+
+    sys('battlestart')
+    music("rivals",0.6)
         
     Graphics.transition(20,'Graphics/Transitions/trans') 
             
@@ -11122,7 +11330,7 @@ class Scene_Battle
     
   end
 
-end"'
+end"7
 class Scene_Battle
 
   def phase_main_init
@@ -11189,8 +11397,8 @@ class Scene_Battle
 
     @attack_results.each{ |result|
       x = result.target.ev.screen_x
-      y = result.target.ev.screen_y
-      add_spark('redstar',x,y)
+      y = result.target.ev.screen_y - 32
+      add_spark(@attack_round.anim_b,x,y)
     }
 
     # Hit anim if there is one
@@ -11276,7 +11484,7 @@ class Scene_Battle
 
   end
 
-end"#==============================================================================
+end"+#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -11289,6 +11497,7 @@ class Scene_Map < Scene_Base
 
     # Setup
     @map.setup($data.system.start_map_id)
+    @map.setup_audio
     @player.moveto($data.system.start_x, $data.system.start_y)
 
     @map.camera_to(@player)
@@ -12087,7 +12296,7 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"É#==============================================================================
+end"’#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -12196,6 +12405,11 @@ class AudioManager
     
   end
 
+  def fadeout
+    @music_target = 0.0
+    @atmosphere_target = 0.0
+  end
+
   def env(file,pos)
     @environmental.each{ |snd|
       if snd.file == file
@@ -12206,21 +12420,23 @@ class AudioManager
     @environmental.push(EnviroSource.new(file,pos))
   end
 
-  def music(file)
+  def music(file,vol=1.0)
     if file == nil || file == ''
       @music.stop
       return
     end
+    @music.gain = vol
     @music.stream = Seal::Stream.open("Audio/Music/#{file}.ogg")
     @music.play
   end
 
   def atmosphere(file)
+    @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
       return
     end
-    @atmosphere.gain = 0.3
+    #@atmosphere.gain = 0.3
     @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
   end
@@ -12304,12 +12520,14 @@ class AudioManager
   def change_mode(mode)
 
     @mode = mode
+    preset = nil
 
     # Create new effect and volume modifier
     case mode
       when 'normal', ''
+        preset = nil
         @effect = nil
-        return
+        
 
       when 'cave'
         preset = Seal::Reverb::Preset::CAVE
@@ -12317,11 +12535,25 @@ class AudioManager
     end
 
     # Prepare the effect to be added to each newly created source
-    @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+    if preset != nil
+      @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+    end
+
+    #@sfx.each{ |s| s.dispose }
+    @sfx = []
+
    
   end
 
   def update
+
+    if @atmosphere_target != @atmosphere.gain
+      if @atmosphere_target > @atmosphere.gain
+        @atmosphere.gain -= 0.05
+      else
+        @atmosphere.gain += 0.05
+      end
+    end
 
     @environmental.each{ |e| e.update }
 
@@ -12964,7 +13196,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"à#==============================================================================
+end"û#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -12997,6 +13229,7 @@ class GameManager
     $progress = Progress.new
     $state = State.new
     $party = Game_Party.new
+    $menu = MenuState.new
     $battle = Game_Battle.new    
 
     # Make scene object (title screen)
@@ -13058,7 +13291,7 @@ class GameManager
     showm.call(18,0,2,0)
   end
 
-end"Ô#============================================================================== 
+end"ñ#============================================================================== 
 # ** Input
 #==============================================================================
 
@@ -13082,7 +13315,7 @@ class InputManager
 	end
 
 	def cancel?
-		return $keyboard.press?(VK_ESC)
+		return $keyboard.press?(VK_ESC) || $keyboard.press?(VK_NUM0)
 	end
 
 	def rclick?
@@ -13113,7 +13346,7 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"^#==============================================================================
+end"n#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
 
@@ -13126,6 +13359,8 @@ VK_TAB = 9
 VK_ENTER = 13
 VK_SHIFT = 16
 VK_ESC = 27
+VK_NUM0 = 96
+
 VK_SPACE = 32
 VK_TILDE = 192
 
@@ -14037,7 +14272,7 @@ end"~# if !ACE_MODE
 # end
 
 
-" class Array
+"4 class Array
  	def count
  		return length
  	end
@@ -14056,6 +14291,9 @@ end"~# if !ACE_MODE
   def numeric?
     return true if self =~ /\A\d+\Z/
     true if Float(self) rescue false
+  end
+  def to_b
+    return self == "true"
   end
 end
 

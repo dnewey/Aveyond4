@@ -105,8 +105,8 @@ class Ui_Message
     @sprites.add(@textbox)
     @sprites.add(@lastchar)
 
-    @sprites.add(@namebox,20,-@namebox.height)
-    @sprites.add(@nametext,40,-@namebox.height+5)
+    @sprites.add(@namebox,20,-@namebox.height+16)
+    @sprites.add(@nametext,40,-@namebox.height+19)
 
     #@sprites.add(@next)
     @sprites.add(@face)
@@ -149,8 +149,8 @@ class Ui_Message
         #h = true
       end
       if y < 46
-        y = 290
-        h = true
+        #y = 290
+        #h = true
       end
       if x > 640-@width-10
         x = 640-@width-10

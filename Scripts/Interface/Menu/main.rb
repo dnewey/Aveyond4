@@ -11,41 +11,65 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		@chars = []
 
 		# Active Characters
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.1"
+
+		charbox = Char_Box_Large.new(vp,$party.active[0])
+		charbox.box.name = "C.0"
 		charbox.move(200,15)
 		@chars.push(charbox)
 
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.2"
-		charbox.move(420,15)
-		@chars.push(charbox)
+		if $party.active.count > 1
+			charbox = Char_Box_Large.new(vp,$party.active[1])
+			charbox.box.name = "C.1"
+			charbox.move(420,15)
+			@chars.push(charbox)
+		end
 
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.3"
-		charbox.move(200,198)
-		@chars.push(charbox)
+		if $party.active.count > 2
+			charbox = Char_Box_Large.new(vp,$party.active[2])
+			charbox.box.name = "C.2"
+			charbox.move(200,198)
+			@chars.push(charbox)
+		end
 
-		charbox = Char_Box_Large.new(vp)
-		charbox.box.name = "C.4"
-		charbox.move(420,198)
-		@chars.push(charbox)
+		if $party.active.count > 3
+			charbox = Char_Box_Large.new(vp,$party.active[3])
+			charbox.box.name = "C.3"
+			charbox.move(420,198)
+			@chars.push(charbox)
+		end
 
 		# Reserve Characters
-		charbox = Char_Box_Small.new(vp)
-		charbox.box.name = "C.5"
-		charbox.move(200,381)
-		@chars.push(charbox)
 
-		charbox = Char_Box_Small.new(vp)
-		charbox.box.name = "C.6"
-		charbox.move(347,381)
-		@chars.push(charbox)
+		if $party.reserve.count > 0
+			charbox = Char_Box_Small.new(vp,$party.reserve[0])
+			charbox.box.name = "R.0"
+			charbox.move(200,381)
+			@chars.push(charbox)
+		end
 
-		charbox = Char_Box_Small.new(vp)
-		charbox.box.name = "C.7"
-		charbox.move(492,381)
-		@chars.push(charbox)
+		if $party.reserve.count > 1
+			charbox = Char_Box_Small.new(vp,$party.reserve[1])
+			charbox.box.name = "R.1"
+			charbox.move(347,381)
+			@chars.push(charbox)
+		end
+
+		if $party.reserve.count > 2
+			charbox = Char_Box_Small.new(vp,$party.reserve[2])
+			charbox.box.name = "R.2"
+			charbox.move(492,381)
+			@chars.push(charbox)
+		end
+
+		# Special Positioning
+		if $party.active.count == 1
+			@chars[0].move(310,140)
+		end
+
+		if $party.active.count == 2
+			@chars[0].move(200,140)
+			@chars[1].move(420,140)
+		end
 
 
 		@data = ['Journal','Items','Equip','Skills',
@@ -296,6 +320,16 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 				$scene.open_sub(Mnu_Save.new(@vp))
 			when "Char"
 				$scene.open_sub(Mnu_Char.new(@vp))
+			else
+				# C.1
+				num = option.split(".")[1].to_i
+				if option.include?("C")
+					$menu.char = $party.active[num]
+				else # Reserve
+					$menu.char = $party.reserve[num]
+				end
+				$scene.open_sub(Mnu_Char.new(@vp))
+
 		end
 
 	end

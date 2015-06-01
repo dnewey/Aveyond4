@@ -58,6 +58,10 @@ class Game_Map
     end
     return 50
   end
+
+  def name
+    return @map_name
+  end
   
   #--------------------------------------------------------------------------
   # * Setup
@@ -85,13 +89,13 @@ class Game_Map
     @need_refresh = false
     
 
-
-    # Disregard if battle map? or use battle zone?
+        # Disregard if battle map? or use battle zone?
     # Or various battle zones?
 
     # What is the zone
     autoplay = false
     newzone = get_zone(@id)
+    newzone = "@" + newzone.split("@")[1]
     if newzone != @zone.id
 
       @zone = $data.zones[newzone]
@@ -109,9 +113,7 @@ class Game_Map
         autoplay = true
       else
 
-        # Play music from the zone
-        $audio.music(@zone.music)
-        $audio.atmosphere(@zone.atmosphere)
+        
         $audio.change_mode(@zone.reverb)
 
         # Init tints and that
@@ -133,17 +135,22 @@ class Game_Map
       $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
     end
 
-
-
-
         # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
     }
-    
+
   end
 
+  def setup_audio
+
+    # Play music from the zone
+    $audio.music(@zone.music)
+    $audio.atmosphere(@zone.atmosphere)
+
+  end
+  
   def display_x
     return @display_x + (@cam_ox*4)
   end
