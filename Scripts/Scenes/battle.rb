@@ -42,6 +42,7 @@ class Scene_Battle < Scene_Base
     # Find battler events
     [0,1,2,3].each{ |i| 
       ev = @map.event_by_evname("A.#{i}")
+      next if ev == nil
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
@@ -53,12 +54,17 @@ class Scene_Battle < Scene_Base
     }
     [0,1,2,3,4].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
+      next if ev == nil
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
+        ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
       end
     }
 
     reload_map
+
+    sys('battlestart')
+    music("rivals",0.6)
         
     Graphics.transition(20,'Graphics/Transitions/trans') 
             

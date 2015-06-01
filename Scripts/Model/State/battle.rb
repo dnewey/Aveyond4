@@ -5,14 +5,16 @@ class Game_Battle
 
   attr_reader :enemies
   attr_reader :enemy_types
+  attr_reader :enemy_list
 
 	def initialize
     @enemy_types = []
+    @enemy_list = []
 		@enemies = []
     @props = []
     @actor_index = 0
 
-    @map = 26
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -23,6 +25,7 @@ class Game_Battle
   def add(enemy)
     battler = Game_Battler.new
     battler.init_enemy(enemy)
+    @enemy_list.push(enemy)
     @enemies.push(battler)
   end
 

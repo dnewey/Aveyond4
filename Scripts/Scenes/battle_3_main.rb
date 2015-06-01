@@ -65,8 +65,8 @@ class Scene_Battle
 
     @attack_results.each{ |result|
       x = result.target.ev.screen_x
-      y = result.target.ev.screen_y
-      add_spark('redstar',x,y)
+      y = result.target.ev.screen_y - 32
+      add_spark(@attack_round.anim_b,x,y)
     }
 
     # Hit anim if there is one

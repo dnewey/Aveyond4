@@ -181,6 +181,7 @@ class Interpreter
 
       # Misc hud busy
       return if $scene.is_a?(Scene_Menu)
+      return if $scene.is_a?(Scene_Battle)
       return if $scene.busy?
 
       # If waiting for move to end

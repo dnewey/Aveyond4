@@ -29,9 +29,9 @@ class ItemCmd
 		@list.setup(data)
 		@list.refresh
 
-		@box = Item_Box.new(vp)
-		@box.item('covey')
-		@box.move(320,140)
+		#@box = Item_Box.new(vp)
+		#@box.item('covey')
+		#@box.move(320,140)
 
 		@list.opacity = 0
 		@window.opacity = 0

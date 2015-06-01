@@ -11,6 +11,7 @@ class Scene_Map < Scene_Base
 
     # Setup
     @map.setup($data.system.start_map_id)
+    @map.setup_audio
     @player.moveto($data.system.start_x, $data.system.start_y)
 
     @map.camera_to(@player)
