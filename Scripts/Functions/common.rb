@@ -20,8 +20,6 @@ end
 
 def gid(str)
 
-
-
 	if str == 'me'
 		return me
 	end

@@ -25,7 +25,6 @@ def complete?(id)
 	return $progress.quest_complete?(id)
 end
 
-
 # Progress
 def progress(id) $progress.progress(id) end
 def progress?(id) return $progress.progress?(id) end

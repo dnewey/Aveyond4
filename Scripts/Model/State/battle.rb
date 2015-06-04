@@ -14,7 +14,7 @@ class Game_Battle
     @props = []
     @actor_index = 0
 
-    @map = 65 #26
+    @map = 26 #65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -33,8 +33,8 @@ class Game_Battle
     $game.push_scene(Scene_Battle.new)
   end
 
-  def win?
-    return false
+  def victory?
+    return @enemies.select{ |e| !e.down? }.empty?
   end
 
 
@@ -65,12 +65,15 @@ class Game_Battle
 
 
     # Use up the item or mana for the skill used
+    # Put it in the attack plan probably
 
 
     return plan
 
   end
 
+  # Happens at the time of using the skill
+  # Uses states applied etc realtime
   def build_attack_results(attacker,skill)
 
     results = []
@@ -84,8 +87,29 @@ class Game_Battle
       result = Attack_Result.new
 
       result.target = t
-      result.damage = 154
+      # Check damage effects
 
+      dmg_base = 0
+      dmg_mod = 0
+
+      skill.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        case data[0]
+          when 'dmg-base'
+            dmg_base = data[1].to_i
+          when 'dmg-mod'
+            dmg_mod = data[1].to_f
+          when 'state-add'
+            result.state_add = data[1]
+          when 'state-remove'
+            result.state_remove = data[1]
+          when 'transform'
+            result.transform = data[1]
+        end
+      }
+
+      # Build final damage
+      result.damage = dmg_base + (attacker.str * dmg_mod)
 
       results.push(result)
 
@@ -103,14 +127,18 @@ class Game_Battle
       when 'one', 'ally', 'down'
 
         # Will be in attacker, already chosen
-        return [attacker.target]
+        targets = [attacker.target]
 
-      when 'random'
+        # If the target is not attackable, do somethingelse
+        # TODO TODO
+        return targets
+
+      when 'rand' # Single random target
 
         if attacker.is_actor?
-          return @enemies.select{ |b| b.attackable? }.sample
+          return [@enemies.select{ |b| b.attackable? }.sample]
         else
-          return $party.active.select{ |b| b.attackable? }.sample
+          return [$party.active.select{ |b| b.attackable? }.sample]
         end
 
       when 'two'
@@ -149,6 +177,10 @@ class Game_Battle
           return @enemies.select{ |b| b.attackable? }
         end
 
+      when 'self'
+
+        return [attacker]
+
     end
 
     return []
@@ -185,17 +217,3 @@ class Game_Battle
 
   
 end
-
-
-# BATTLE SYSTEM!!!!!!!!
-
-# THEN START BUILDING THE ACTIONS ARRAY
-# WILL BE EASY AS
-  
-# Can't calc damage or anything yet
-# Can only make a list of skills
-# [hit,hit,heal]
-
-# Then play it out
-# Cacl the results at the start of each attack
-# Instead of at the start of the whole thing

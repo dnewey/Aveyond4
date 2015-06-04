@@ -1,45 +1,25 @@
 
-class SkillCmd
+class SkillCmd < ItemCmd
 
-	def initialize(vp)
+	def setup(battler)
 
-		#@text.bitmap = $cache.menu("battle/text.png")
+		@battler = battler
 
-		# Customized per character, but always as a nice list of types?
-		# Skill would maybe be the only category for these?
-		# All could be disable if need be
+		@list.opacity = 255
+		@window.opacity = 255
+		@box.opacity = 255
 
+		skill_list = @battler.skill_list
+
+		log_info(skill_list)
+		@box.type = :skill
+		@list.type = :skill
+		@list.setup(skill_list)
+		change(skill_list[0])
 	end
-
-	def setup(char)
-
-		case char.id
-			when 'boy'; setup_boy
-			when 'ing'; setup_ing
-		end
-	end
-
-	def setup_boy
-
-
-	end
-
-	def setup_ing
-
-	end
-
-	def close
-
-	end
-
-	def update
-
-	end
-
-	
 
 	def get_skill
-		return @skill
+		return @item
 	end
 
 end

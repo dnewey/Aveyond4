@@ -63,6 +63,11 @@ class CharView < SpriteGroup
 		@hp_bar.value = @battler.hp
 		@hp_bar.max = @battler.maxhp
 
+		# If a state, change background
+		if @battler.state?('power')
+			@box.wallpaper = $cache.menu_wallpaper("lightning")
+		end
+
 	end
 
 end

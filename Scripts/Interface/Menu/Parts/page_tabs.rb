@@ -10,6 +10,8 @@ class Page_Tabs < Sprite
 
   SPACING = 5
 
+  attr_accessor :tab_proc
+
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
@@ -62,11 +64,13 @@ class Page_Tabs < Sprite
   	# Check inputs and that
   	if $input.right?
       @idx += 1
+      @tab_proc.call(@tabs[@idx]) if @tab_proc
       refresh      
   	end
 
   	if $input.left? #&& @dynamo.done?
       @idx -= 1
+      @tab_proc.call(@tabs[@idx]) if @tab_proc
       refresh  
   	end
 

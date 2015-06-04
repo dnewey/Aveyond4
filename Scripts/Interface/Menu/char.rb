@@ -9,6 +9,8 @@ class Mnu_Char < Mnu_Base
 
 		@title.change($menu.char)
 
+		@subtitle.text = "Master of deception"
+
 		#@tabs.push("all")
 		#@tabs.push("potions")
 		#@tabs.push("keys")

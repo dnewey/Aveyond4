@@ -61,10 +61,16 @@ class Scene_Battle < Scene_Base
       end
     }
 
+    # And the minion
+    @minion = @map.event_by_evname("MINION")
+    @minion.character_name = 'Player/minion-rat'
+    #hide(@minion)
+
+
     reload_map
 
     sys('battlestart')
-    music("rivals",0.6)
+    #music("rivals",0.6)
         
     Graphics.transition(20,'Graphics/Transitions/trans') 
             
@@ -79,7 +85,7 @@ class Scene_Battle < Scene_Base
   end
 
   def wait(w)
-    @wait_frames = w
+    @wait_frames += w
   end
 
   #--------------------------------------------------------------------------
@@ -141,14 +147,20 @@ class Scene_Battle < Scene_Base
         phase_main_attack
       when :main_defend
         phase_main_defend
+      when :main_transform
+        phase_main_transform
       when :main_hit
         phase_main_hit
       when :main_crit
         phase_main_crit
       when :main_state
         phase_main_state
+      when :main_fall
+        phase_main_fall
       when :main_next
         phase_main_next
+      when :main_end
+        phase_main_end
 
       # Victory Phase
       when :victory_init

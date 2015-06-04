@@ -12,11 +12,13 @@ end
 class GearData
 	attr_reader :id
 	attr_reader :name
+	attr_reader :slot
+	attr_reader :geartype
 	attr_reader :description
-	attr_reader :category
+	attr_reader :stats
+	attr_reader :mods
 	attr_reader :icon
-	attr_reader :price
-	attr_reader :action
+	attr_reader :source
 end
 
 class SkillData
@@ -24,6 +26,7 @@ class SkillData
 	attr_reader :name
 	attr_reader :book
 	attr_reader :description
+	attr_reader :icon
 	attr_reader :hits
 	attr_reader :scope
 	attr_reader :anim_a
@@ -98,3 +101,4 @@ class NumberData
 	attr_reader :value
 	attr_reader :notes
 end
+

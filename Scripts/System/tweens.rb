@@ -29,6 +29,11 @@ class TweenManager
 		@tweens.delete_if{ |n| n.parent == object } 
 	end
 
+	def resolve(object)
+		@tweens.each{ |n| n.update(5000) if n.parent == object }
+		clear(object)
+	end
+
 	def clear_all
 		@tweens.clear
 	end

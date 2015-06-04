@@ -13,12 +13,9 @@ class Mnu_Shop < Mnu_Base
 		#@tabs.push("potions")
 		#@tabs.push("keys")
 
-		data = []
-		data.push('covey')
-		data.push('covey')
-		data.push('covey')
+		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
 
-		@menu.list.setup(data)
+		@menu.list.setup($menu.shop)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -26,6 +23,8 @@ class Mnu_Shop < Mnu_Base
 		@item_box = Item_Box.new(vp)
 		@item_box.center(462,130)
 		self.right.push(@item_box)
+
+		change_tab("Items")
 
 	end
 
@@ -42,6 +41,17 @@ class Mnu_Shop < Mnu_Base
 
 	def select(option)	
 		
+	end
+
+	def change_tab(tab)
+
+		# Change list to certain items only
+		list = []
+		$menu.shop.each{ |item|
+			list.push(item) if $data.items[item].category == tab
+		}
+		@menu.list.setup(list)
+
 	end
 
 end

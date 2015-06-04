@@ -14,6 +14,10 @@
     "edit": "area"
   },
   {
+    "field": "icon",
+    "edit": "icon"
+  },
+  {
     "field": "hits",
     "default": "1"
   },
@@ -27,10 +31,6 @@
   },
   {
     "field": "anim_b"
-  },
-  {
-    "field": "stats",
-    "edit": "area"
   },
   {
     "field": "effects",

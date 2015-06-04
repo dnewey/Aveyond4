@@ -36,8 +36,7 @@ end
 
 def grant_items
 	$data.items.each{ |k,v|
-		log_scr(v.id)
+		#log_scr(v.id)
 		item(v.id,99,'s')
 	}
 end
-

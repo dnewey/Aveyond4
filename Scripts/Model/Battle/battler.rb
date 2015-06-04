@@ -7,7 +7,8 @@
 class Game_Battler
  
   attr_reader :id
-  attr_reader :actions
+
+  attr_reader :transform
 
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
@@ -22,6 +23,7 @@ class Game_Battler
   def initialize
 
     @is_actor = true
+    @transform = nil
 
     # Current values
     @hp = 0
@@ -72,10 +74,14 @@ class Game_Battler
     data = $data.actors[id]
     @id = id
 
+    @looklike = id
+
     @name = data.name
 
+    @slots = data.slots.split(" | ")
+
     # Prepare equipment slots
-    data.slots.split(" | ").each{ |s|
+    @slots.each{ |s|
       @equips[s] = nil
     }
     
@@ -117,6 +123,28 @@ class Game_Battler
     return @is_actor
   end
 
+  def actions
+    if !@transform
+      return @actions
+    else
+      return $data.actors[@transform].actions.split(" | ")
+    end
+  end
+
+  #--------------------------------------------------------------------------
+  # * Transform into something
+  #--------------------------------------------------------------------------
+  
+  def transform(into)
+
+    @transform = into
+    log_scr("TRANSFORM NOW")
+
+    ev.character_name = "Player/frog"
+    ev.direction = 4
+
+  end
+
   #--------------------------------------------------------------------------
   # * Recover All
   #--------------------------------------------------------------------------
@@ -131,6 +159,7 @@ class Game_Battler
   
   def damage(amount)
     @hp -= amount
+    @hp = 0 if @hp < 0
   end
 
   def heal(amount)

@@ -5,7 +5,11 @@ class Attack_Result
 	
 	attr_accessor :damage
 	attr_accessor :critical
+
 	attr_accessor :state_add
+	attr_accessor :state_remove
+
+	attr_accessor :transform
 
 end
 

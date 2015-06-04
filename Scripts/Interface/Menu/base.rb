@@ -20,6 +20,11 @@ class Mnu_Base
 		@tabs = Page_Tabs.new(vp)
 		@left.push(@tabs)
 
+		@subtitle = Label.new(vp)
+		@subtitle.move(116,74)
+		@left.push(@subtitle)
+
+
 		@menu = List_Common.new(vp)
 		@menu.list.select = Proc.new{ |option| self.select(option) }
 		@menu.list.cancel = Proc.new{ |option| self.cancel(option) }

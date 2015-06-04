@@ -18,6 +18,8 @@ class Game_Party
   #--------------------------------------------------------------------------
   def initialize
 
+    $party = self
+
     # Create all actors    
     @actors = {}
     $data.actors.each{ |k,v| 
@@ -36,18 +38,10 @@ class Game_Party
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
     @weapons = {}
-    @armors = {}
-    
-    # TEMP DISABLE
-    set_active("boy")
-    # set_active("ing")
-    # set_active("phy")
-    # set_active("rob")
+    @armors = {}    
 
-    @leader = 'boy'
-
-    @actors["boy"].learn('fireburn')
-    @actors["boy"].learn('flames')
+    # Hardcode Party Data
+    init_party
 
   end
 
@@ -56,6 +50,10 @@ class Game_Party
   #--------------------------------------------------------------------------
   def max_level
     return @actors.max_by(&:level).level
+  end
+
+  def get(a)
+    return actor_by_id(a)
   end
 
   def actor_by_id(actor)
@@ -99,13 +97,13 @@ class Game_Party
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
-  def add_item(id,n) 
+  def add_item(id,n=1) 
     @items.has_key?(id) ? @items[id] += n : @items[id] = n
     @items[id] = 0 if @items[id] < 0 
-    $map.need_refresh = true
+    $map.need_refresh = true if $map
   end
 
-  def lose_item(id,n) add_item(id,-n) end
+  def lose_item(id,n=1) add_item(id,-n) end
   
   def item_number(id) return @items.has_key?(id) ? @items[id] : 0 end
   def has_item?(id) item_number(id) > 0 end
@@ -125,12 +123,16 @@ class Game_Party
     return items
   end
 
+  def battle_item_list
+    return ['covey','cheese','mir-wood']
+  end
+
 
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead
   #--------------------------------------------------------------------------
-  def all_dead?
-    return @active.select{ |a| @actors[a].hp > 0}.empty?
+  def defeated?
+    return @active.select{ |a| !@actors[a].down? }.empty?
   end
 
   #--------------------------------------------------------------------------
@@ -199,5 +201,92 @@ class Game_Party
       end
     end
   end
+
+
+  #--------------------------------------------------------------------------
+  # ● Initialize Party Data
+  #--------------------------------------------------------------------------
+
+  def init_party
+
+    @leader = 'boy'
+
+    # -----------------------------------
+    # Initial Party Members
+    # -----------------------------------
+
+    set_active("boy")
+    #set_active("ing")
+    #set_active("mys")
+    #set_active("rob")
+    #set_active("hib")
+    #set_active("row")
+    #set_active("phy")   
+  
+    # ----------------------------------
+    # Initial Gear
+
+    # Boyle
+    @actors['boy'].equip('staff','boy-staff')
+    @actors['boy'].equip('mid','boy-arm-s')
+
+    # Ingrid
+    @actors['ing'].equip('wand','ing-wep-s')
+    @actors['ing'].equip('athame','ing-athame-s')
+    @actors['ing'].equip('light','ing-arm-s')
+
+    # Myst
+    @actors['mys'].equip('claw1','mys-wep-s')
+    @actors['mys'].equip('claw2','mys-wep-s')
+    @actors['mys'].equip('light','mys-arm-s')
+
+    # Robin
+    @actors['rob'].equip('sword','rob-wep-s')
+    @actors['rob'].equip('heavy','rob-arm-s')
+
+    # Hiberu
+    @actors['hib'].equip('book','hib-wep-s')
+    @actors['hib'].equip('mid','hib-arm-s')
+    # Give accessory
+
+    # Rowen
+    @actors['row'].equip('dagger','row-wep-s')
+    @actors['row'].equip('light','row-arm-s')
+    # Give extra gadget
+
+    # Phye
+    @actors['phy'].equip('staff','phy-sword')
+    @actors['phy'].equip('heavy','phy-arm-s')
+    # Give him helm
+
+
+    # Initial skills per actor
+    @actors["boy"].learn('fireburn')
+    @actors["boy"].learn('flames')
+
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 end

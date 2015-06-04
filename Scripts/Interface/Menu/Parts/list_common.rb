@@ -15,10 +15,11 @@ class List_Common < SpriteGroup
 		# Left side list
 		@list = List.new()
 
+		@list.per_page = 8
 		@list.item_width = 288
 		@list.item_height = 34
 
-		@list.item_space = 35
+		@list.item_space = 1
 		add(@list,6,6)
 
 

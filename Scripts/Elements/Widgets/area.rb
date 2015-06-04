@@ -62,7 +62,7 @@ class Area < Sprite
   		end
   	}
 
-  	log_scr(lines)
+  	#log_scr(lines)
 
   	height = $fonts.size("Happy",@font).height
 

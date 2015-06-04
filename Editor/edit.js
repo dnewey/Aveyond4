@@ -304,12 +304,14 @@ build_select = function(type)
     if (type == "scope")
     {
         return '[{value: "one", text: "one"},' 
+            + '{value: "rand", text: "rand"},'
             + '{value: "two", text: "two"},'
             + '{value: "three", text: "three"},'
             + '{value: "all", text: "all"},'
             + '{value: "ally", text: "ally"},'
             + '{value: "party", text: "party"},'
             + '{value: "down", text: "down"},'
+            + '{value: "self", text: "self"},'
             + ']'
     }
 
@@ -459,7 +461,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-05-26
+// Sort by last modified 2015-06-02
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()

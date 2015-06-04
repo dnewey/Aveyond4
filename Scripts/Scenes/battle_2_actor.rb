@@ -73,7 +73,7 @@ class Scene_Battle
 
     if $input.action?
       @skill_cmd.close
-      @active_battler.skill_id = @item_cmd.get_skill
+      @active_battler.skill_id = @skill_cmd.get_skill
       @phase = :actor_strategize
     end
 
@@ -110,13 +110,13 @@ class Scene_Battle
     # Get the skill or item
 
     # If single, targetable?
-    #if ["one","ally"].include?($data.skills[id].scope)
+    if ["one","ally"].include?($data.skills[@active_battler.skill_id].scope)
       targets = $battle.enemies #$battle.build_target_list(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      
-    #else
-    #  @phase = :actor_next
-    #end
+    else
+      @phase = :actor_next
+    end
 
   end
 

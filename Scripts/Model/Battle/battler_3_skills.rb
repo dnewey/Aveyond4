@@ -4,6 +4,10 @@ class Game_Battler
   	@skills.push(skill)
   end
 
+  def skill_list
+    return @skills
+  end
+
 
   def skills_for(action)
 

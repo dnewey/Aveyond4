@@ -7,39 +7,25 @@ class Mnu_Skills < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('skills')
+		@title.change('Skills')
 
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		@subtitle.text = "Master of deception"
 
-		@menu.list.type = :quest
+		@menu.list.type = :skill
+		@menu.list.setup($party.get('boy').skill_list)
 
-		data = $progress.quests
-
-		@menu.list.setup(data)
-
-		@page = Right_Page.new(vp)
-		@right.push(@page)
-
-		change(data[0]) if !data.empty?
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
 
 	end
 
 	def update
 		super
-
-		# Inputs maybe?
-
-		# Probably for using healing items?
-
+		
 	end
 
 	def change(option)
-
-		@page.clear
-
-
+		
 	end
 
 	def select(option)	

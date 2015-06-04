@@ -9,7 +9,7 @@
     "field": "slot"
   },
   {
-    "field": "type",
+    "field": "geartype",
     "edit": "select"
   },
   {

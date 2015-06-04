@@ -39,10 +39,10 @@ class DataManager
 
     # Load up json data
     
-    @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
-    # shop somehow
-
-    @gear = load_json("gear",GearData)
+    @items = load_json("items",ItemData)
+    @items = @items.merge(load_json("keyitems",ItemData))
+    @items = @items.merge(load_json("gear",GearData))
+    # Show in here too
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
