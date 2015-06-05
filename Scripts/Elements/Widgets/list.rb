@@ -60,13 +60,31 @@ class List
     @select_sprite = Sprite.new(@vp)    
     @content_sprite = Sprite.new(@vp)
 
+    @scroll_box = Sprite.new()
+    @scroll_box.bitmap = $cache.menu_common('scroll-box')
+    @scroll_box.x = 234
+    @scroll_box.y = 422
+    @scroll_box.z = 5000
+
+    @scroll_down = Button.new()
+    @scroll_down.bitmap = $cache.menu_common('scroll-down')
+    @scroll_down.x = 239
+    @scroll_down.y = 424
+    @scroll_down.z = 5000
+    @scroll_down.press = Proc.new{ self.scrollbar_down }
+
+    @scroll_up = Button.new()
+    @scroll_up.bitmap = $cache.menu_common('scroll-up')
+    @scroll_up.x = 262
+    @scroll_up.y = 424
+    @scroll_up.z = 5000
+    @scroll_up.press = Proc.new{ self.scrollbar_up }
+
     # Setup
     @select_sprite.bitmap = $cache.menu_common('list-bar-on')
     
 
     @active = true
-
-    $debug.track(self,"scroll_idx")
 
   end
 
@@ -132,36 +150,26 @@ class List
     rows.times{ 
       @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
       # Draw each row
-      draw(@data[@scroll_idx + i],i)
+      draw(@data[@scroll_idx + i-1],i)
       i += 1
     }
 
   end
 
   # ADD THIS MOUSE CONTROL
-  # def scrollbar_down
-  #     if !@dynamo.done?
-  #       refresh
-  #       @page_idx += @pagemod
-  #       @dynamo.opacity = 0
-  #       $tweens.clear_all
-  #     end
-  #     @page_idx += 1;self.refresh; self.scroll_up 
-  # end
+  def scrollbar_down
+      @page_idx += 1
+      scroll_up 
+  end
 
-  # def scrollbar_up
-  #     if !@dynamo.done?
-  #       refresh
-  #       @page_idx += @pagemod
-  #       @dynamo.opacity = 0
-  #       $tweens.clear_all
-  #     end
-  #     @page_idx -= 1; self.refresh; self.scroll_down
-  # end
+  def scrollbar_up
+      @page_idx -= 1
+      scroll_down
+  end
 
   def current
     return @current[0] if @type == :misc
-    return @current
+    return @data[idx]
   end
 
   def draw(data,row)
@@ -189,10 +197,13 @@ class List
     item = $data.items[data]
 
     ico = $cache.icon(item.icon)
+
+    number = $party.item_number(data)
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
 
   end
 
@@ -267,6 +278,9 @@ class List
 
     return if !$tweens.done?(@back_sprite)
 
+    @scroll_down.update
+    @scroll_up.update
+
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN)
 
@@ -292,7 +306,7 @@ class List
   		 # refresh
       end
       
-      #@change.call(current) if !@change.nil?
+      @change.call(current) if !@change.nil?
 
   	end
 
@@ -316,7 +330,7 @@ class List
         scroll_down
       end
       
-      #@change.call(current) if !@change.nil?
+      @change.call(current) if !@change.nil?
 
   	end
 

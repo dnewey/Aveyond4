@@ -11,19 +11,26 @@ class Info_Box < SpriteGroup
     	@window.wallpaper = $cache.menu_wallpaper("diamonds")
     	add(@window)
 
-    	@title = Label.new(vp)
-    	@title.fixed_width = 250
-    	@title.icon = $cache.icon("items/map")
-    	@title.text = "Active Quests:"
-    	add(@title,12,13)
+    	@gold = Label.new(vp)
+    	@gold.font = $fonts.pop_type
+    	@gold.icon = $cache.icon("misc/coins")
+    	@gold.text = "250G"
+    	add(@gold,12,8)
+
+    	@zone = Label.new(vp)
+    	@zone.font = $fonts.pop_type
+    	@zone.icon = $cache.icon("misc/coins")
+    	@zone.text = "Whisper Woods"
+    	add(@zone,100,8)
     	
-    	move(10,410)
+    	move(10,440)
 
 	end
 
 	def dispose
 		@window.dispose
-		@title.dispose
+		@gold.dispose
+		@zone.dispose
 	end
 
 	def update

@@ -8,10 +8,11 @@ class Mnu_Items < Mnu_Base
 		super(vp)
 
 		@title.change('items')
+		@subtitle.text = "Various items of collection"
 
 		@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
+		@tabs.push("main")
+		@tabs.push("side")
 
 		data = $party.item_list
 
@@ -21,22 +22,24 @@ class Mnu_Items < Mnu_Base
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
-		@item_box.center(462,130)
+		@item_box.center(462,180)
 		@item_box.hide
 		self.right.push(@item_box)
+
+		grant_items
 
 	end
 
 	def update
 		super
+		# Keep checking if item box changed
 		
 	end
 
 	def change(option)
-		@info.title.text = option
 		#@item_box.show
 		@item_box.item(option)
-		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
 	end
 
 	def select(option)	

@@ -2,12 +2,6 @@
 # ** Ui_Grid
 #==============================================================================
 
-# Cut the old layout system
-# Change to a dynamic style
-# add_vert and add_hor
-# Adds to the right or below, perhaps above even?
-# Above could be used for bottom bar?
-
 class Ui_Grid
 
 	attr_reader :idx
@@ -25,6 +19,8 @@ class Ui_Grid
 
 		@boxes = []
 		@contents = []
+		@types = []
+		@stats = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -44,6 +40,27 @@ class Ui_Grid
 		@cy = y
 	end
 
+	def opacity=(o)
+
+	end
+	def opacity
+		return 255
+	end
+
+	def x=(v)
+		@cx = v
+	end
+	def x
+		return @cx
+	end
+
+	def y=(v)
+		@cy = v
+	end
+	def y
+		return @cy
+	end
+
 	def dispose
 
 		$tweens.clear(@glow)
@@ -56,7 +73,7 @@ class Ui_Grid
 	def add_button(name,text,icon)
 
 		# Create new things
-		btn = Box.new(@vp,170,45)
+		btn = Box.new(@vp,300,60)
      	btn.skin = $cache.menu_common("skin-plain")
      	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
      	btn.name = name
@@ -70,9 +87,25 @@ class Ui_Grid
      	cont.text = text
      	@contents.push(cont)
 
+     	type = Label.new(@vp)
+    	type.fixed_width = 250
+    	type.font = $fonts.pop_type
+    	type.align = 0
+    	type.text = "WEAPON"
+    	@types.push(type)
+
+		stat = Label.new(@vp)
+    	stat.fixed_width = 250
+    	stat.font = $fonts.pop_type
+    	stat.align = 0
+    	stat.text = "15 Strength"
+    	@stats.push(stat)
+
      	# Position
      	btn.move(@cx,@cy)
-     	cont.move(@cx+10,@cy+10)
+     	cont.move(@cx+10,@cy+7)
+     	type.move(@cx+220,@cy+7)
+     	stat.move(@cx+32, @cy+32)
 
      	if @boxes.count == 1
      		choose(@boxes[0].name)
@@ -80,91 +113,29 @@ class Ui_Grid
 
      	# Next
      	if @layout == :vertical
-     		@cy += 50
+     		@cy += 65
      	end
-
-	end
-
-	def add_image(image)
 
 	end
 
 	def update
 		return if @boxes.empty?
 
-		if $input.right?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x + box.width
-			sy = box.y + box.height/2
-			search(sx,sy,3,1)
-
-		end
-
-		if $input.left?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x
-			sy = box.y + box.height/2
-			search(sx,sy,-3,1)
-
-		end
-
 		if $input.down?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x + box.width/2		
-			sy = box.y + box.height
+			sx = @selected_box.x + @selected_box.width/2		
+			sy = @selected_box.y + @selected_box.height
 			search(sx,sy,1,3)
-
 		end
 
 		if $input.up?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x + box.width/2		
-			sy = box.y
+			sx = @selected_box.x + @selected_box.width/2		
+			sy = @selected_box.y
 			search(sx,sy,1,-3)
-
 		end
 
 	end
 
 	def search(sx,sy,x,y)
-
-		before = @selected
 
 		cx = sx
 		cy = sy
@@ -176,6 +147,7 @@ class Ui_Grid
 			cy += y
 
 			@boxes.each{ |box|
+				next if box == @selected_box
 				if box.window.within?(cx,cy)
 					return choose(box.name)
 				end
@@ -211,6 +183,7 @@ class Ui_Grid
 		sys('select')
 
 		@selected = target
+		@selected_box = @boxes.find{ |b| b.name == target }
 
 		# Find the icon if this is journal
 		@idx = nil
@@ -226,10 +199,7 @@ class Ui_Grid
 
 		end
 
-		glowon = @boxes.find{ |b| b.name == target }
-
-		# Test for changing skin on selected
-		#glowon.skin = $cache.menu_common("skin-gold")
+		glowon = @selected_box
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
      	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))

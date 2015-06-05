@@ -27,7 +27,7 @@ class Page_Tabs < Sprite
 
   	@idx = 0
 
-    move(120,78)
+    move(20,108)
 
   end
 
@@ -39,6 +39,8 @@ class Page_Tabs < Sprite
   end
 
   def refresh
+
+    return if @gfx.empty?
 
     # Calc width
     width = @gfx.inject(0){ |t,b| t += b.width + SPACING } - SPACING

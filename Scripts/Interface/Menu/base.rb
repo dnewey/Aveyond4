@@ -31,8 +31,8 @@ class Mnu_Base
 		@menu.list.change = Proc.new{ |option| self.change(option) }
 		@left.push(@menu)
 
-		@info = Info_Box.new(vp)
-		@left.push(@info)
+		 @info = Info_Box.new(vp)
+		 @left.push(@info)
 
 		# Anything else is per page
 

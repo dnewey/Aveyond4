@@ -6,20 +6,15 @@ class Mnu_Party < Mnu_Base
 
 		@title.change('party')
 
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		
 
-		@menu.list.type = :quest
-
-		data = $progress.quests
-
-		@menu.list.setup(data)
-
-		@page = Right_Page.new(vp)
-		@right.push(@page)
-
-		change(data[0]) if !data.empty?
+		@menu.hide
+		
+		@grid = Ui_Grid.new(vp)
+		@grid.move(15,115)
+		@grid.add_button("Test","Change Party","misc/unknown")
+		@grid.add_button("Test","Choose Leader","misc/unknown")
+		@grid.add_button("Test","Friendships","misc/unknown")
 
 	end
 

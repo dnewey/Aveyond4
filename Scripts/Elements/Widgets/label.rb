@@ -83,13 +83,13 @@ class Label < Sprite
     # Draw the icon
     if @icon
 
-      self.bitmap.blt(@padding,(size.height-28)/2,@icon,@icon.rect)
+      self.bitmap.blt(@padding,(size.height-28)/2+3,@icon,@icon.rect)
 
     end
 
     # Draw the text
     x = @padding
-    x += 32 if @icon
+    x += 26 if @icon
     y = @padding
     w = self.bitmap.width-@padding*2
     h = self.bitmap.height-@padding*2

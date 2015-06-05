@@ -23,7 +23,7 @@ class List_Common < SpriteGroup
 		add(@list,6,6)
 
 
-		move(10,110)
+		move(10,140)
 		@list.refresh
 
 	end
@@ -35,6 +35,10 @@ class List_Common < SpriteGroup
 
 	def update
 		@list.update
+	end
+
+	def hide
+		move(-1000,-1000)
 	end
 
 	# All the various data that can be shown
