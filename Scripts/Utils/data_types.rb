@@ -1,12 +1,31 @@
 
-class ItemData
+class UsableData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
-	attr_reader :category
-	attr_reader :icon
 	attr_reader :price
 	attr_reader :action
+	attr_reader :icon
+	attr_reader :battle
+	attr_accessor :tab
+end
+
+class KeyItemData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :icon
+	attr_reader :chapter
+	attr_accessor :tab
+end
+
+class ShopData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :icon
+	attr_reader :value
+	attr_accessor :tab
 end
 
 class GearData
@@ -19,6 +38,7 @@ class GearData
 	attr_reader :mods
 	attr_reader :icon
 	attr_reader :source
+	attr_accessor :tab
 end
 
 class SkillData
@@ -36,7 +56,10 @@ class SkillData
 end
 
 class StateData
-
+	attr_reader :id
+	attr_reader :name
+	attr_reader :stats
+	attr_reader :mods
 end
 
 class ActorData

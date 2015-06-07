@@ -1,4 +1,4 @@
-[Ä"∞#==============================================================================
+[}"∞#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -862,7 +862,7 @@ class Weather_DarkDots
 
 	end
 
-end"J#==============================================================================
+end"K#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -926,7 +926,7 @@ class Area < Sprite
   		end
   	}
 
-  	log_scr(lines)
+  	#log_scr(lines)
 
   	height = $fonts.size("Happy",@font).height
 
@@ -1002,7 +1002,7 @@ class Bar < Sprite
 
 	end
 
-end"m	
+end"©	
 class Box 
 
 	attr_accessor :name
@@ -1071,11 +1071,13 @@ class Box
 	end
 
 	def hide
-		self.opacity = 0
+		@wallpaper.opacity = 0
+		@window.opacity = 0
 	end
 
 	def show 
-		self.opacity = 255
+		@wallpaper.opacity = 255
+		@window.opacity = 255
 	end
 
 	def x=(v)
@@ -1168,7 +1170,7 @@ class Box
 
 	end
 
-end"d	#==============================================================================
+end"h	#==============================================================================
 # Button
 #==============================================================================
 
@@ -1180,7 +1182,7 @@ class Button < Sprite
   #--------------------------------------------------------------------------
   # * Init
   #--------------------------------------------------------------------------
-  def initialize(vp)
+  def initialize(vp=nil)
        
     super(vp)
 
@@ -1254,7 +1256,7 @@ class Button < Sprite
     log_info("UNPROC")
   end
 
-end"Í	#==============================================================================
+end"Ï	#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -1339,13 +1341,13 @@ class Label < Sprite
     # Draw the icon
     if @icon
 
-      self.bitmap.blt(@padding,(size.height-28)/2,@icon,@icon.rect)
+      self.bitmap.blt(@padding,(size.height-28)/2+3,@icon,@icon.rect)
 
     end
 
     # Draw the text
     x = @padding
-    x += 32 if @icon
+    x += 26 if @icon
     y = @padding
     w = self.bitmap.width-@padding*2
     h = self.bitmap.height-@padding*2
@@ -1364,11 +1366,416 @@ class Label < Sprite
         
   end
   
-end"k#==============================================================================
-# The magical list
+end"-"#==============================================================================
+# The magical list REDUX
 #==============================================================================
 
 class List
+      
+  attr_accessor :x, :y
+  attr_accessor :per_page
+  attr_accessor :item_width, :item_height
+  attr_accessor :item_ox, :item_space
+
+  attr_accessor :select, :cancel, :change
+
+  attr_accessor :active
+
+  attr_reader :page_idx
+
+  attr_accessor :type
+
+  attr_reader :scroll_idx
+
+  #--------------------------------------------------------------------------
+  # * Init
+  #--------------------------------------------------------------------------
+  def initialize() 
+
+    # Make own viewport
+    @vp = Viewport.new(0,0,1000,1000)
+    @vp.z = 4500
+
+    @font = Font.new
+    @font.name = "Verdana"
+    @font.size = 20 #was 26
+    @font.color = Color.new(245,223,200)
+
+    @item_width = 0
+    @item_height = 0
+
+    @item_ox = 0
+    @item_space = 0
+
+    # Procs
+    @select = nil
+    @cancel = nil
+    @change = nil
+
+  	@x = 0
+  	@y = 0
+
+    @type = :item
+  	@data = []
+
+  	@scroll_idx = 0
+  	@page_idx = 0
+
+  	@max_per_page = 8
+
+  	# Sprites
+    @back_sprite = Sprite.new(@vp)
+    @select_sprite = Sprite.new(@vp)    
+    @content_sprite = Sprite.new(@vp)
+
+    @scroll_box = Sprite.new()
+    @scroll_box.bitmap = $cache.menu_common('scroll-box')
+    @scroll_box.x = 234
+    @scroll_box.y = 422
+    @scroll_box.z = 5000
+
+    @scroll_down = Button.new()
+    @scroll_down.bitmap = $cache.menu_common('scroll-down')
+    @scroll_down.x = 239
+    @scroll_down.y = 424
+    @scroll_down.z = 5000
+    @scroll_down.press = Proc.new{ self.scrollbar_down }
+
+    @scroll_up = Button.new()
+    @scroll_up.bitmap = $cache.menu_common('scroll-up')
+    @scroll_up.x = 262
+    @scroll_up.y = 424
+    @scroll_up.z = 5000
+    @scroll_up.press = Proc.new{ self.scrollbar_up }
+
+    # Setup
+    @select_sprite.bitmap = $cache.menu_common('list-bar-on')
+    
+
+    @active = true
+
+  end
+
+  def move(x,y)
+    @x = x
+    @y = y
+  end
+
+  def opacity=(o)
+    @back_sprite.opacity = o
+    @content_sprite.opacity = o
+    @select_sprite.opacity = o
+  end
+
+  def dispose
+  	@back_sprite.dispose
+    @select_sprite.dispose
+    @content_sprite.dispose
+  end
+
+  def setup(data)
+    log_sys(data)
+  	@data = data
+    # Need an original per page in case less items are given
+    # And then aditional items are given
+    #@per_page = @data.count if @data.count < @per_page
+    #@per_page = 1 if @per_page == 0
+  	refresh
+  end
+
+  def idx
+    return @scroll_idx + @page_idx
+  end
+
+  def row_height
+    @item_height + @item_space
+  end
+
+  def can_scroll?
+    @data.count > @max_per_page
+  end
+
+  # When data changes
+  def refresh
+
+    @vp.rect = Rect.new(@x,@y,@item_width,row_height*@max_per_page)
+
+    # Draw the background sprite and position it
+    rows = [@max_per_page,@data.count].min
+    rows += 2 if can_scroll?
+    rows = 1 if rows == 0
+    height = row_height * rows
+
+    @back_sprite.bitmap = Bitmap.new(@item_width,height)
+    @content_sprite.bitmap = Bitmap.new(@item_width,height)
+
+    @back_sprite.y = -row_height if can_scroll?
+    @content_sprite.y = -row_height if can_scroll?
+
+    src = $cache.menu_common('list-bar')
+
+    i = 0
+    rows.times{ 
+      @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
+      # Draw each row
+      draw(@data[@scroll_idx + i-1],i)
+      i += 1
+    }
+
+  end
+
+  # ADD THIS MOUSE CONTROL
+  def scrollbar_down
+      @page_idx += 1
+      scroll_up 
+  end
+
+  def scrollbar_up
+      @page_idx -= 1
+      scroll_down
+  end
+
+  def current
+    return @current[0] if @type == :misc
+    return @data[idx]
+  end
+
+  def draw(data,row)
+
+    return if data == nil # For above or below accessible
+
+    # Drw the contents
+    case @type
+      when :item
+        draw_item(data,row)
+      when :equip
+        draw_equip(data,row)
+      when :skill
+        draw_skill(data,row)
+      when :quest
+        draw_quest(data,row)
+      when :misc
+        draw_misc(data,row)
+    end
+
+  end
+
+  def draw_item(data,row)
+
+    item = $data.items[data]
+
+    ico = $cache.icon(item.icon)
+
+    number = $party.item_number(data)
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+
+  end
+
+  def draw_equip(data,row)
+
+    if data == nil
+      icon =  $cache.icon("misc/unknown")
+      name = "Nothing"
+      slot = "NONE"
+    else
+      item = $data.items[data]
+      name = item.name
+      icon =  $cache.icon(item.icon)
+      slot = item.slot
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,icon,icon.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+
+    #sprite.bitmap.font = @font 
+    #sprite.bitmap.draw_text(-10,-1,@item_width,@item_height,slot,2)
+
+  end
+
+  def draw_skill(data,row)
+
+    item = $data.skills[data]
+
+    ico = $cache.icon(item.icon)
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+
+  end
+
+  def draw_quest(data,row)
+
+    item = $data.quests[data]
+
+    ico = $cache.icon('items/map')
+    
+    sprite.bitmap.blt(8,5,ico,ico.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
+
+  end
+
+  def draw_misc(data,row)
+
+    ico = $cache.icon(data[1])
+    
+    sprite.bitmap.blt(8,5,ico,ico.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,data[0],0)
+
+  end
+
+
+
+
+
+
+
+  def update
+
+    @vp.rect.x = @x
+    @vp.rect.y = @y
+
+    return if !@active
+
+    return if !$tweens.done?(@back_sprite)
+
+    @scroll_down.update
+    @scroll_up.update
+
+  	# Check inputs and that
+  	if $keyboard.press?(VK_DOWN)
+
+      return if idx >= @data.count - 2
+
+      # If the tweens are going, skip to done
+      $tweens.resolve(@back_sprite)
+      $tweens.resolve(@content_sprite)
+      $tweens.resolve(@select_sprite)
+
+      sys('select')
+
+      # Move the sprite down
+      @select_sprite.y += row_height
+  		
+      @page_idx += 1
+  		
+      #if @data.count > @max_per_page
+
+      if can_scroll? && @page_idx == 5 && @scroll_idx < (@data.count - @max_per_page) -1
+        scroll_up
+  		#else
+  		 # refresh
+      end
+      
+      @change.call(current) if !@change.nil?
+
+  	end
+
+  	if $keyboard.press?(VK_UP) #&& @dynamo.done?
+
+      return if idx <= 0
+
+      # If the tweens are going, skip to done
+      $tweens.resolve(@back_sprite)
+      $tweens.resolve(@content_sprite)
+      $tweens.resolve(@select_sprite)
+
+      sys('select')      
+      
+      # Move the sprite down
+      @select_sprite.y -= row_height
+
+  		@page_idx -= 1
+
+  		if can_scroll? && @scroll_idx > 0 && @page_idx == 3
+        scroll_down
+      end
+      
+      @change.call(current) if !@change.nil?
+
+  	end
+
+    # pos = $mouse.position
+    # pos[0] -= @x
+    # pos[1] -= @y
+    # if pos[0] < @item_width
+    #   row = pos[1] / row_height
+    #   @select_sprite.y = row * row_height
+    #   sys('select')
+    # end
+
+    # Selection
+    if !@select.nil? && ($input.action? || $input.click?)
+      @select.call(current)
+    end
+
+    # Cancel
+    if !@cancel.nil? && ($input.cancel? || $input.rclick?)
+      sys('cancel')
+      @cancel.call(current)
+    end
+
+  end
+
+  def scroll_down
+
+    
+    @scroll_idx -= 1    
+    #      @pagemod = 1
+
+
+    dur = 180
+    ease = :quad_in_out
+
+    @back_sprite.do(go("y",row_height,dur,ease))
+    @content_sprite.do(go("y",row_height,dur,ease))
+    @select_sprite.do(go("y",row_height,dur,ease))
+
+    @back_sprite.do(proc(Proc.new{
+      @page_idx += 1
+      refresh
+
+    },dur+1))
+
+  end
+
+  def scroll_up
+
+    @scroll_idx += 1    
+          #@pagemod = -1
+
+    dur = 180
+    ease = :quad_in_out
+
+  	#draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)
+
+  	@back_sprite.do(go("y",-row_height,dur,ease))
+    @content_sprite.do(go("y",-row_height,dur,ease))
+    @select_sprite.do(go("y",-row_height,dur,ease))
+
+  	@back_sprite.do(proc(Proc.new{
+
+      @page_idx -= 1
+      refresh
+      
+
+    },dur+1))
+
+  end
+
+ end
+"®"#==============================================================================
+# The magical list
+#==============================================================================
+
+class OLDList
       
   attr_accessor :x, :y
   attr_accessor :per_page
@@ -1453,8 +1860,11 @@ class List
   end
 
   def setup(data)
+    log_sys(data)
   	@data = data
-    @per_page = @data.count
+    # Need an original per page in case less items are given
+    # And then aditional items are given
+    #@per_page = @data.count if @data.count < @per_page
     @per_page = 1 if @per_page == 0
   	refresh
   end
@@ -1472,17 +1882,17 @@ class List
   	cy = 0#@y
 
     if !@data.empty?
-  	(0..@per_page-1).each{ |i|
-      next if @sprites[i] == nil
-  		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
-      @current = @data[i+@scroll_idx] if i == @page_idx
-  		@sprites[i].y = cy
-  		@sprites[i].x = 0#@x
-      @sprites[i].opacity = 255
-  		cy += @item_space
-      #@sprites[i].bitmap.height
-  	}
-  end
+    	(0..@per_page-1).each{ |i|
+        next if @sprites[i] == nil
+    		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
+        @current = @data[i+@scroll_idx] if i == @page_idx
+    		@sprites[i].y = cy
+    		@sprites[i].x = 0#@x
+        @sprites[i].opacity = 255
+    		cy += @item_space
+        #@sprites[i].bitmap.height
+    	}
+    end
 
   	@cybt = cy
 
@@ -1536,12 +1946,14 @@ class List
   	sprite.bitmap = Bitmap.new(src.width,src.height)
     sprite.bitmap.blt(0,0,src,src.rect)
 
-    return if data == nil
+    #return if data == nil
 
     # Drw the contents
     case @type
       when :item
         draw_item(data,sprite,on)
+      when :equip
+        draw_equip(data,sprite,on)
       when :skill
         draw_skill(data,sprite,on)
       when :quest
@@ -1556,7 +1968,6 @@ class List
 
     #return if $data.items.has_key?(data)
 
-
     return if data == nil
 
     item = $data.items[data]
@@ -1569,7 +1980,41 @@ class List
 
   end
 
+  def draw_equip(data,sprite,on)
+
+    if data == nil
+      icon =  $cache.icon("misc/unknown")
+      name = "Nothing"
+      slot = "NONE"
+    else
+      item = $data.items[data]
+      name = item.name
+      icon =  $cache.icon(item.icon)
+      slot = item.slot
+    end
+    
+    sprite.bitmap.blt(8,5,icon,icon.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,name,0)
+
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(-10,-1,@item_width,@item_height,slot,2)
+
+  end
+
   def draw_skill(data,sprite,on)
+
+    return if data == nil
+
+    #log_info(data)
+
+    item = $data.skills[data]
+
+    ico = $cache.icon(item.icon)
+    
+    sprite.bitmap.blt(8,5,ico,ico.rect)
+    sprite.bitmap.font = @font 
+    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
 
   end
 
@@ -1616,7 +2061,7 @@ class List
         $tweens.clear_all
       end
   		@page_idx += 1
-  		if @page_idx > 3
+  		if @data.count > @per_page && @page_idx > 3
         refresh
   			scroll_up
   		else
@@ -1728,7 +2173,7 @@ class List
     dur = 200
     ease = :quad_in_out
 
-  	draw_item(@data[@scroll_idx + @per_page],@dynamo,@page_idx == @per_page)
+  	draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)
 
   	@dynamo.do(go("y",-@item_space,dur,ease))
   	@dynamo.do(go("opacity",50,dur,ease))
@@ -1825,36 +2270,7 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"£
-
-def sfx(file,vol=1.0)
-	$audio.sfx(file,vol)
-end
-
-def sys(file,vol=1.0)
-	$audio.sys(file,vol)
-end
-
-def music(file,vol=1.0)
-	$audio.music(file,vol)
-end"<
-def start_battle
-	log_scr "STARTING BATTLE NOW"
-end"L#==============================================================================
-# ** Camera Functions
-#==============================================================================
-
-def camera(e,spd='mid')
-	$map.camera_to(gev(e),spd)
-end
-
-def camera_xy(x,y,spd='mid')
-	$map.camera_xy(x,y,spd)
-end
-
-def scenecam()
-
-end"	#==============================================================================
+end"	#==============================================================================
 # ** Common Functions
 #==============================================================================
 
@@ -1875,8 +2291,6 @@ def dummy
 end
 
 def gid(str)
-
-
 
 	if str == 'me'
 		return me
@@ -1974,7 +2388,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end")#==============================================================================
+end"÷#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -2004,26 +2418,6 @@ end
 
 def roll(range)
 	gev(me).random = rand(range) + 1
-end"©#==============================================================================
-# ** General Functions
-#==============================================================================
-
-def text()
-
-end
-
-def w(f=5)
-	$map.interpreter.wait_count = f
-end
-
-def fadeout(f=30)
-	$scene.overlay.do(to("opacity",255,255/f))
-	w f
-end
-
-def fadein(f=30)
-	$scene.overlay.do(to("opacity",0,-255/30))
-	w f
 end
 
 def fade(ev)
@@ -2034,228 +2428,7 @@ def gfx(ev,name)
 	gev(ev).character_name = name	
 end
 
-def cam_oy(amount)
-	$map.do(go("cam_oy",amount,amount.abs*6,:qio))
-end
-
-def cam_ox(amount)
-	$map.do(go("cam_ox",amount,amount.abs*6,:qio))
-end
-"»
-class Group
-
-	def initialize(args)
-
-		@events = args
-
-	end
-
-	def method_missing(m,*args)
-
-		@events.each{ |ev|
-			if ev.is_a?(String)
-				argstring = " '#{ev}',"
-			else
-				argstring = " #{ev},"
-			end
-
-			args.each{ |a|
-				if a.is_a?(String)
-					argstring+=(" '"+a+"',")
-				else
-					argstring+=(" "+a+",")
-				end
-			}
-			eval(m.to_s[1..-1]+argstring.chop)
-		}
-
-	end
-
-end
-
-def grp(*args)
-	return Group.new(args)
-end"#==============================================================================
-# ** Item Functions
-#==============================================================================
-
-def gold(amount,type='f')
-	sys('coins')
-	$party.add_gold(amount)
-	pop_gold(amount,type)
-end
-
-def ungold(amount)
-	$party.lose_gold(amount)
-end
-
-def gold?(amount)
-	return $party.has_gold?(amount)
-end
-
-
-def item(id,number=1,type='f')
-	if !number.is_a?(Integer)
-		type = number
-		number = 1
-	end
-	$party.add_item(id,number)
-	pop_item(id,number,type) if type != 's'
-end
-
-def unitem(id,number=1)
-	$party.lose_item(id,number)
-end
-
-def item?(id,number=1)
-	$party.has_item?(id,number)
-end
-
-def grant_items
-	$data.items.each{ |k,v|
-		log_scr(v.id)
-		item(v.id,99,'s')
-	}
-end
-
-":
-def open_main_menu
-	sys('action')
-	$game.menu_page = "Main"
-	$game.push_scene(Scene_Menu.new)
-end
-
-def open_shop_buy
-	sys('action')
-	$game.menu_page = "Shop"
-	$game.push_scene(Scene_Menu.new)
-end
-
-def open_shop_sell
-	sys('action')
-	$game.menu_page = "Shop"
-	$game.push_scene(Scene_Menu.new)
-end
-"
-def pop_item(item,number,type)
-
-	data = $data.items[item]
-	
-	b = data.name
-	ib = $cache.icon(data.icon)
-	if number > 1 
-		b = data.name + " x #{number}"
-	end		
-
-	pop_get(type,b,ib)
-
-end
-
-def pop_gold(number,type)
-
-	ib = $cache.icon('misc/coins')
-	b = "#{number} Gold"	
-
-	pop_get(type,b,ib)
-
-end
-
-def pop_get(type,b,ib)
-
-	case type
-
-		when 'f'
-			a = "You found: "
-			ia = nil
-
-		when 'r'
-			a = "You receive: "
-			ia = nil
-
-		when 'fang'
-			a = "Fang receives: "
-			ia = nil
-
-		when 'rat'
-			a = "Trevor found: "
-			ia = nil
-
-		when 'boy','ing','hib','mys','phy','rob','row'
-			a = $data.actors[type].name+" receives: "
-			ia = $cache.icon("faces/#{type}")
-
-		when 's'
-			return
-
-	end
-
-	popper = $scene.hud.open_popper
-	popper.color = 'blue'
-	popper.setup(a,ia,b,ib)
-
-end
-
-def pop_friends
-
-	a = "Hi'beru and "
-	ia = $cache.icon("faces/hib")
-	
-	b = "Rowen are good now friends"
-	ib = $cache.icon("faces/row")
-
-	popper = $scene.hud.open_popper
-	popper.setup(a,ia,b,ib)
-
-end
-
-def pop_quest(q)
-
-	popper = $scene.hud.open_popper
-	popper.setup("New quest: ",nil,$data.quests[q].name,nil)
-
-end
-
-def pop_unquest(q)
-
-	popper = $scene.hud.open_popper
-	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
-
-end"›#==============================================================================
-# ** Progress Functions
-#==============================================================================
-
-# Quests
-def quest(id) 
-	$progress.add_quest(id) 
-	pop_quest(id)
-end
-
-def unquest(id)
-	$progress.end_quest(id)
-	pop_unquest(id)
-end
-
-def quest?(id)
-	return active?(id) || complete?(id)
-end
-
-def active?(id)
-	return $progress.quest_active?(id)
-end
-
-def complete?(id)
-	return $progress.quest_complete?(id)
-end
-
-
-# Progress
-def progress(id) $progress.progress(id) end
-def progress?(id) return $progress.progress?(id) end
-
-def before?(id) return $progress.before?(id) end
-def beyond?(id) return $progress.beyond?(id) end"„#==============================================================================
-# ** Route Functions
-#==============================================================================
+# Routes
 
 def wfc
 	$map.interpreter.command_210
@@ -2452,7 +2625,164 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"≤
+"#==============================================================================
+# ** Item Functions
+#==============================================================================
+
+def gold(amount,type='f')
+	sys('coins')
+	$party.add_gold(amount)
+	pop_gold(amount,type)
+end
+
+def ungold(amount)
+	$party.lose_gold(amount)
+end
+
+def gold?(amount)
+	return $party.has_gold?(amount)
+end
+
+
+def item(id,number=1,type='f')
+	if !number.is_a?(Integer)
+		type = number
+		number = 1
+	end
+	$party.add_item(id,number)
+	pop_item(id,number,type) if type != 's'
+end
+
+def unitem(id,number=1)
+	$party.lose_item(id,number)
+end
+
+def item?(id,number=1)
+	$party.has_item?(id,number)
+end
+
+def grant_items
+	$data.items.each{ |k,v|
+		#log_scr(v.id)
+		item(v.id,99,'s')
+	}
+end"
+def pop_item(item,number,type)
+
+	data = $data.items[item]
+	
+	b = data.name
+	ib = $cache.icon(data.icon)
+	if number > 1 
+		b = data.name + " x #{number}"
+	end		
+
+	pop_get(type,b,ib)
+
+end
+
+def pop_gold(number,type)
+
+	ib = $cache.icon('misc/coins')
+	b = "#{number} Gold"	
+
+	pop_get(type,b,ib)
+
+end
+
+def pop_get(type,b,ib)
+
+	case type
+
+		when 'f'
+			a = "You found: "
+			ia = nil
+
+		when 'r'
+			a = "You receive: "
+			ia = nil
+
+		when 'fang'
+			a = "Fang receives: "
+			ia = nil
+
+		when 'rat'
+			a = "Trevor found: "
+			ia = nil
+
+		when 'boy','ing','hib','mys','phy','rob','row'
+			a = $data.actors[type].name+" receives: "
+			ia = $cache.icon("faces/#{type}")
+
+		when 's'
+			return
+
+	end
+
+	popper = $scene.hud.open_popper
+	popper.color = 'blue'
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_friends
+
+	a = "Hi'beru and "
+	ia = $cache.icon("faces/hib")
+	
+	b = "Rowen are good now friends"
+	ib = $cache.icon("faces/row")
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_quest(q)
+
+	popper = $scene.hud.open_popper
+	popper.setup("New quest: ",nil,$data.quests[q].name,nil)
+
+end
+
+def pop_unquest(q)
+
+	popper = $scene.hud.open_popper
+	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
+
+end"€#==============================================================================
+# ** Progress Functions
+#==============================================================================
+
+# Quests
+def quest(id) 
+	$progress.add_quest(id) 
+	pop_quest(id)
+end
+
+def unquest(id)
+	$progress.end_quest(id)
+	pop_unquest(id)
+end
+
+def quest?(id)
+	return active?(id) || complete?(id)
+end
+
+def active?(id)
+	return $progress.quest_active?(id)
+end
+
+def complete?(id)
+	return $progress.quest_complete?(id)
+end
+
+# Progress
+def progress(id) $progress.progress(id) end
+def progress?(id) return $progress.progress?(id) end
+
+def before?(id) return $progress.before?(id) end
+def beyond?(id) return $progress.beyond?(id) end"≤
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2547,7 +2877,80 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"WORLD_MAP_ID = 25
+"
+# Misc
+
+def text()
+
+end
+
+def w(f=5)
+	$map.interpreter.wait_count = f
+end
+
+# Camera
+
+def camera(e,spd='mid')
+	$map.camera_to(gev(e),spd)
+end
+
+def camera_xy(x,y,spd='mid')
+	$map.camera_xy(x,y,spd)
+end
+
+def cam_oy(amount)
+	$map.do(go("cam_oy",amount,amount.abs*6,:qio))
+end
+
+def cam_ox(amount)
+	$map.do(go("cam_ox",amount,amount.abs*6,:qio))
+end
+
+# Audio
+
+def sfx(file,vol=1.0)
+	$audio.sfx(file,vol)
+end
+
+def sys(file,vol=1.0)
+	$audio.sys(file,vol)
+end
+
+def music(file,vol=1.0)
+	$audio.music(file,vol)
+end
+
+# Menus Access
+
+def open_main_menu
+	sys('action')
+	$game.menu_page = "Main"
+	$game.push_scene(Scene_Menu.new)
+end
+
+def open_shop_buy
+	sys('action')
+	$game.menu_page = "Shop"
+	$game.push_scene(Scene_Menu.new)
+end
+
+def open_shop_sell
+	sys('action')
+	$game.menu_page = "Shop"
+	$game.push_scene(Scene_Menu.new)
+end
+
+# Fades
+
+def fadeout(f=30)
+	$scene.overlay.do(to("opacity",255,255/f))
+	w f
+end
+
+def fadein(f=30)
+	$scene.overlay.do(to("opacity",0,-255/30))
+	w f
+end"WORLD_MAP_ID = 25
 
 def transfer(map,room)
 
@@ -2865,7 +3268,7 @@ class ActorCmd
 
 	end
 
-end")
+end"–
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -2883,8 +3286,8 @@ class CharView < SpriteGroup
 		add(@box)   
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.menu_char("boy")
-		add(@port,34,-20)
+		@port.bitmap = $cache.face_battle(char.id)
+		add(@port,153-@port.width-10,135-@port.height-10)
 
 		@shadow = Sprite.new(vp)
 		@shadow.bitmap = $cache.menu_char("battlehud-shadow")
@@ -2930,9 +3333,14 @@ class CharView < SpriteGroup
 		@hp_bar.value = @battler.hp
 		@hp_bar.max = @battler.maxhp
 
+		# If a state, change background
+		if @battler.state?('power')
+			@box.wallpaper = $cache.menu_wallpaper("lightning")
+		end
+
 	end
 
-end"¬
+end"Q
 class ItemCmd
 
 	def initialize(vp)
@@ -2941,31 +3349,27 @@ class ItemCmd
 		@window = Box.new(vp,300,242)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
-    	@window.move(10,64)
+    	@window.move(10,66)
 
 		# Left side list
 		@list = List.new()
-		@list.move(16,70)
+		@list.move(16,72)
 
-		@list.per_page = 9
+		@list.per_page = 6
 		@list.item_width = 288
 		@list.item_height = 34
 
 		@list.item_space = 35	
 
 		@list.change = Proc.new{ |option| self.change(option) }
-		
-		data = []
-		data.push('covey')
-		data.push('covey')
-		data.push('covey')
 
-		@list.setup(data)
+		@list.setup([])
 		@list.refresh
 
-		#@box = Item_Box.new(vp)
-		#@box.item('covey')
-		#@box.move(320,140)
+		@box = Item_Box.new(vp)
+		@box.item('covey')
+		@box.move(320,140)
+		@box.opacity = 0
 
 		@list.opacity = 0
 		@window.opacity = 0
@@ -2975,11 +3379,17 @@ class ItemCmd
 	def setup
 		@list.opacity = 255
 		@window.opacity = 255
+		@box.opacity = 255
+
+		item_list = $party.battle_item_list
+		@list.setup(item_list)
+		change(item_list[0])
 	end
 
 	def close
 		@list.opacity = 0
 		@window.opacity = 0
+		@box.opacity = 0
 	end
 
 	def update
@@ -2988,54 +3398,36 @@ class ItemCmd
 
 	def change(option)
 		@item = option
+		@box.item(option)
+		@box.center(462,130+@list.page_idx*@list.item_height)
 	end
 
 	def get_item
 		return @item
 	end
 
-end"
-class SkillCmd
+end"g
+class SkillCmd < ItemCmd
 
-	def initialize(vp)
+	def setup(battler)
 
-		#@text.bitmap = $cache.menu("battle/text.png")
+		@battler = battler
 
-		# Customized per character, but always as a nice list of types?
-		# Skill would maybe be the only category for these?
-		# All could be disable if need be
+		@list.opacity = 255
+		@window.opacity = 255
+		@box.opacity = 255
 
+		skill_list = @battler.skill_list
+
+		log_info(skill_list)
+		@box.type = :skill
+		@list.type = :skill
+		@list.setup(skill_list)
+		change(skill_list[0])
 	end
-
-	def setup(char)
-
-		case char.id
-			when 'boy'; setup_boy
-			when 'ing'; setup_ing
-		end
-	end
-
-	def setup_boy
-
-
-	end
-
-	def setup_ing
-
-	end
-
-	def close
-
-	end
-
-	def update
-
-	end
-
-	
 
 	def get_skill
-		return @skill
+		return @item
 	end
 
 end"b
@@ -3330,15 +3722,9 @@ class Ui_Bar < SpriteGroup
 		super()
 	end
 
-end"N#==============================================================================
+end"O#==============================================================================
 # ** Ui_Grid
 #==============================================================================
-
-# Cut the old layout system
-# Change to a dynamic style
-# add_vert and add_hor
-# Adds to the right or below, perhaps above even?
-# Above could be used for bottom bar?
 
 class Ui_Grid
 
@@ -3357,6 +3743,8 @@ class Ui_Grid
 
 		@boxes = []
 		@contents = []
+		@types = []
+		@stats = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -3376,6 +3764,27 @@ class Ui_Grid
 		@cy = y
 	end
 
+	def opacity=(o)
+
+	end
+	def opacity
+		return 255
+	end
+
+	def x=(v)
+		@cx = v
+	end
+	def x
+		return @cx
+	end
+
+	def y=(v)
+		@cy = v
+	end
+	def y
+		return @cy
+	end
+
 	def dispose
 
 		$tweens.clear(@glow)
@@ -3388,7 +3797,7 @@ class Ui_Grid
 	def add_button(name,text,icon)
 
 		# Create new things
-		btn = Box.new(@vp,170,45)
+		btn = Box.new(@vp,300,60)
      	btn.skin = $cache.menu_common("skin-plain")
      	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
      	btn.name = name
@@ -3402,9 +3811,25 @@ class Ui_Grid
      	cont.text = text
      	@contents.push(cont)
 
+     	type = Label.new(@vp)
+    	type.fixed_width = 250
+    	type.font = $fonts.pop_type
+    	type.align = 0
+    	type.text = "WEAPON"
+    	@types.push(type)
+
+		stat = Label.new(@vp)
+    	stat.fixed_width = 250
+    	stat.font = $fonts.pop_type
+    	stat.align = 0
+    	stat.text = "15 Strength"
+    	@stats.push(stat)
+
      	# Position
      	btn.move(@cx,@cy)
-     	cont.move(@cx+10,@cy+10)
+     	cont.move(@cx+10,@cy+7)
+     	type.move(@cx+220,@cy+7)
+     	stat.move(@cx+32, @cy+32)
 
      	if @boxes.count == 1
      		choose(@boxes[0].name)
@@ -3412,91 +3837,29 @@ class Ui_Grid
 
      	# Next
      	if @layout == :vertical
-     		@cy += 50
+     		@cy += 65
      	end
-
-	end
-
-	def add_image(image)
 
 	end
 
 	def update
 		return if @boxes.empty?
 
-		if $input.right?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x + box.width
-			sy = box.y + box.height/2
-			search(sx,sy,3,1)
-
-		end
-
-		if $input.left?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x
-			sy = box.y + box.height/2
-			search(sx,sy,-3,1)
-
-		end
-
 		if $input.down?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x + box.width/2		
-			sy = box.y + box.height
+			sx = @selected_box.x + @selected_box.width/2		
+			sy = @selected_box.y + @selected_box.height
 			search(sx,sy,1,3)
-
 		end
 
 		if $input.up?
-
-			box = nil
-			@boxes.each{ |b| 
-			
-				if b.name == @selected 
-					box = b 
-					break
-				end
-			}
-
-			sx = box.x + box.width/2		
-			sy = box.y
+			sx = @selected_box.x + @selected_box.width/2		
+			sy = @selected_box.y
 			search(sx,sy,1,-3)
-
 		end
 
 	end
 
 	def search(sx,sy,x,y)
-
-		before = @selected
 
 		cx = sx
 		cy = sy
@@ -3508,6 +3871,7 @@ class Ui_Grid
 			cy += y
 
 			@boxes.each{ |box|
+				next if box == @selected_box
 				if box.window.within?(cx,cy)
 					return choose(box.name)
 				end
@@ -3543,6 +3907,7 @@ class Ui_Grid
 		sys('select')
 
 		@selected = target
+		@selected_box = @boxes.find{ |b| b.name == target }
 
 		# Find the icon if this is journal
 		@idx = nil
@@ -3558,10 +3923,7 @@ class Ui_Grid
 
 		end
 
-		glowon = @boxes.find{ |b| b.name == target }
-
-		# Test for changing skin on selected
-		#glowon.skin = $cache.menu_common("skin-gold")
+		glowon = @selected_box
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
      	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
@@ -4498,7 +4860,7 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end"Ö#==============================================================================
+end"€#==============================================================================
 # ** Mnu_Base
 #==============================================================================
 
@@ -4520,14 +4882,19 @@ class Mnu_Base
 		@tabs = Page_Tabs.new(vp)
 		@left.push(@tabs)
 
+		@subtitle = Label.new(vp)
+		@subtitle.move(116,74)
+		@left.push(@subtitle)
+
+
 		@menu = List_Common.new(vp)
 		@menu.list.select = Proc.new{ |option| self.select(option) }
 		@menu.list.cancel = Proc.new{ |option| self.cancel(option) }
 		@menu.list.change = Proc.new{ |option| self.change(option) }
 		@left.push(@menu)
 
-		@info = Info_Box.new(vp)
-		@left.push(@info)
+		 @info = Info_Box.new(vp)
+		 @left.push(@info)
 
 		# Anything else is per page
 
@@ -4571,7 +4938,7 @@ class Mnu_Base
 		return @closing # && NO TWEENS GOING
 	end
 
-end"¬#==============================================================================
+end"Ó#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -4581,6 +4948,8 @@ class Mnu_Char < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
+
+		@subtitle.text = "Master of deception"
 
 		#@tabs.push("all")
 		#@tabs.push("potions")
@@ -4612,52 +4981,57 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"
+end"Ó#==============================================================================
+# ** Mnu_Equip
+#==============================================================================
+
 class Mnu_Equip < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
 
-		@title.change('equip')
+		@title.change('Equip')
 
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		@subtitle.text = "Master of deception"
 
-		@menu.list.type = :quest
+		#@tabs.push("all")
+		#@tabs.push("potions")
+		#@tabs.push("keys")
 
-		data = $progress.quests
+		@menu.dispose
+		self.left.delete(@menu)
+		
+		@grid = Ui_Grid.new(vp)
+		@grid.move(15,115)
+		@grid.add_button("staff","Staff of Boyle","misc/unknown")
+		@grid.add_button("minion","Minion of Boy","misc/unknown")
+		@grid.add_button("mid","Protective Armor","misc/unknown")
+		@grid.add_button("helm","Some Shoes","misc/unknown")
+		@grid.add_button("accessory","Accessorizer","misc/unknown")
+		self.left.push(@grid)
 
-		@menu.list.setup(data)
 
-		@page = Right_Page.new(vp)
-		@right.push(@page)
-
-		change(data[0]) if !data.empty?
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
 
 	end
 
 	def update
 		super
 
-		# Inputs maybe?
-
-		# Probably for using healing items?
-
+		@grid.update
+		
 	end
 
 	def change(option)
-
-		@page.clear
-
-
+		
 	end
 
 	def select(option)	
 		
 	end
 
-end"9#==============================================================================
+end"Ç#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -4667,10 +5041,11 @@ class Mnu_Items < Mnu_Base
 		super(vp)
 
 		@title.change('items')
+		@subtitle.text = "Various items of collection"
 
 		@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
+		@tabs.push("main")
+		@tabs.push("side")
 
 		data = $party.item_list
 
@@ -4680,22 +5055,24 @@ class Mnu_Items < Mnu_Base
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
-		@item_box.center(462,130)
+		@item_box.center(462,180)
 		@item_box.hide
 		self.right.push(@item_box)
+
+		grant_items
 
 	end
 
 	def update
 		super
+		# Keep checking if item box changed
 		
 	end
 
 	def change(option)
-		@info.title.text = option
 		#@item_box.show
 		@item_box.item(option)
-		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
 	end
 
 	def select(option)	
@@ -5192,7 +5569,7 @@ class Mnu_Options < Mnu_Base
 		
 	end
 
-end"
+end"
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -5200,20 +5577,15 @@ class Mnu_Party < Mnu_Base
 
 		@title.change('party')
 
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		
 
-		@menu.list.type = :quest
-
-		data = $progress.quests
-
-		@menu.list.setup(data)
-
-		@page = Right_Page.new(vp)
-		@right.push(@page)
-
-		change(data[0]) if !data.empty?
+		@menu.hide
+		
+		@grid = Ui_Grid.new(vp)
+		@grid.move(15,115)
+		@grid.add_button("Test","Change Party","misc/unknown")
+		@grid.add_button("Test","Choose Leader","misc/unknown")
+		@grid.add_button("Test","Friendships","misc/unknown")
 
 	end
 
@@ -5329,7 +5701,7 @@ class Mnu_Save < Mnu_Base
 	def select(option)	
 		
 	end
-end"I#==============================================================================
+end"#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -5344,12 +5716,9 @@ class Mnu_Shop < Mnu_Base
 		#@tabs.push("potions")
 		#@tabs.push("keys")
 
-		data = []
-		data.push('covey')
-		data.push('covey')
-		data.push('covey')
+		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
 
-		@menu.list.setup(data)
+		@menu.list.setup($menu.shop)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -5357,6 +5726,8 @@ class Mnu_Shop < Mnu_Base
 		@item_box = Item_Box.new(vp)
 		@item_box.center(462,130)
 		self.right.push(@item_box)
+
+		change_tab("Items")
 
 	end
 
@@ -5375,7 +5746,18 @@ class Mnu_Shop < Mnu_Base
 		
 	end
 
-end"«#==============================================================================
+	def change_tab(tab)
+
+		# Change list to certain items only
+		list = []
+		$menu.shop.each{ |item|
+			list.push(item) if $data.items[item].category == tab
+		}
+		@menu.list.setup(list)
+
+	end
+
+end":#==============================================================================
 # ** Mnu_Skills
 #==============================================================================
 
@@ -5384,46 +5766,32 @@ class Mnu_Skills < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('skills')
+		@title.change('Skills')
 
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		@subtitle.text = "Master of deception"
 
-		@menu.list.type = :quest
+		@menu.list.type = :skill
+		@menu.list.setup($party.get('boy').skill_list)
 
-		data = $progress.quests
-
-		@menu.list.setup(data)
-
-		@page = Right_Page.new(vp)
-		@right.push(@page)
-
-		change(data[0]) if !data.empty?
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
 
 	end
 
 	def update
 		super
-
-		# Inputs maybe?
-
-		# Probably for using healing items?
-
+		
 	end
 
 	def change(option)
-
-		@page.clear
-
-
+		
 	end
 
 	def select(option)	
 		
 	end
 
-end"Ï
+end"ó
 
 class Char_Box_Large < SpriteGroup
 
@@ -5439,44 +5807,47 @@ class Char_Box_Large < SpriteGroup
 		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.face(char)
-		@port.src_rect.width = 155
-		add(@port,42,-20)
+		@port.bitmap = $cache.face_large(char)
+		#@port.src_rect.width = 155
+		add(@port,205-@port.width-9,168-@port.height-8)
 		@port.z += 50
 
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient")
 		@gradient.opacity = 160
-		add(@gradient,2,50)
-
-
+		add(@gradient,2,55)
+		@gradient.z += 50
 
 
 		@mp_bar = Bar.new(vp,180,8)
-		add(@mp_bar,11,102)
+		add(@mp_bar,11,112)
+		@mp_bar.z += 50
 
 		@mp_label = Sprite.new(vp)
 		@mp_label.bitmap = $cache.menu_char("label-mp")
 		@mp_label.opacity = 200
-		add(@mp_label,12,94)
-
+		add(@mp_label,12,104)
+		@mp_label.z += 50
 
 		@hp_bar = Bar.new(vp,180,8)
-		add(@hp_bar,11,120)
+		add(@hp_bar,11,130)
+		@hp_bar.z += 50
 
 		@hp_label = Sprite.new(vp)
 		@hp_label.bitmap = $cache.menu_char("label-hp")
 		@hp_label.opacity = 200
-		add(@hp_label,12,112)
-
+		add(@hp_label,12,122)
+		@hp_label.z += 50
 
 		@xp_bar = Bar.new(vp,180,8)
-		add(@xp_bar,11,138)
+		add(@xp_bar,11,148)
+		@xp_bar.z += 50
 
 		@xp_label = Sprite.new(vp)
 		@xp_label.bitmap = $cache.menu_char("label-rp")
 		@xp_label.opacity = 200
-		add(@xp_label,12,130)
+		add(@xp_label,12,140)
+		@xp_label.z += 50
 
 
 
@@ -5545,7 +5916,7 @@ class Char_Box_Small < SpriteGroup
 
 	end
 
-end"N
+end"˛
 class Info_Box < SpriteGroup
 
 	attr_accessor :title
@@ -5558,19 +5929,26 @@ class Info_Box < SpriteGroup
     	@window.wallpaper = $cache.menu_wallpaper("diamonds")
     	add(@window)
 
-    	@title = Label.new(vp)
-    	@title.fixed_width = 250
-    	@title.icon = $cache.icon("items/map")
-    	@title.text = "Active Quests:"
-    	add(@title,12,13)
+    	@gold = Label.new(vp)
+    	@gold.font = $fonts.pop_type
+    	@gold.icon = $cache.icon("misc/coins")
+    	@gold.text = "250G"
+    	add(@gold,12,8)
+
+    	@zone = Label.new(vp)
+    	@zone.font = $fonts.pop_type
+    	@zone.icon = $cache.icon("misc/coins")
+    	@zone.text = "Whisper Woods"
+    	add(@zone,100,8)
     	
-    	move(10,410)
+    	move(10,440)
 
 	end
 
 	def dispose
 		@window.dispose
-		@title.dispose
+		@gold.dispose
+		@zone.dispose
 	end
 
 	def update
@@ -5582,13 +5960,17 @@ class Info_Box < SpriteGroup
 
 	end
 
-end"’
+end
+"⁄
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
+    attr_accessor :type
 
 	def initialize(vp)
 		super()		
+
+        @type = :item
 
 		# Resize to whatever is needed
 		@window = Box.new(vp,300,120)
@@ -5603,12 +5985,12 @@ class Item_Box < SpriteGroup
     	@title.text = "Active Quests:"
     	add(@title,16,10)
 
-    	@type = Label.new(vp)
-    	@type.fixed_width = 250
-    	@type.font = $fonts.pop_type
-    	@type.align = 0
-    	@type.text = "POTION"
-    	add(@type,226,13)
+    	@cat = Label.new(vp)
+    	@cat.fixed_width = 250
+    	@cat.font = $fonts.pop_type
+    	@cat.align = 0
+    	@cat.text = "POTION"
+    	add(@cat,226,13)
 
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
@@ -5621,8 +6003,6 @@ class Item_Box < SpriteGroup
     	@stat_a.font = $fonts.pop_text
     	@stat_a.text = "Restores 10HP"
     	add(@stat_a,36,70)
-
-
 
     	@stat_b = Label.new(vp)
     	@stat_c = Label.new(vp)
@@ -5652,8 +6032,18 @@ class Item_Box < SpriteGroup
 
 	def item(id)
 
-		item = $data.items[id]
-		log_info(item)
+        if @type == :item
+		  item = $data.items[id]
+        elsif @type == :skill
+          item = $data.skills[id]
+        end
+		#log_info(item)
+
+        if item == nil
+            log_sys(id)
+            log_sys(@type)
+            return
+        end
 
 		# Set values
 		@title.text = item.name
@@ -5666,7 +6056,7 @@ class Item_Box < SpriteGroup
 
 	end
 
-end"x
+end"µ
 class List_Common < SpriteGroup
 
 	attr_reader :list
@@ -5683,14 +6073,15 @@ class List_Common < SpriteGroup
 		# Left side list
 		@list = List.new()
 
+		@list.per_page = 8
 		@list.item_width = 288
 		@list.item_height = 34
 
-		@list.item_space = 35
+		@list.item_space = 1
 		add(@list,6,6)
 
 
-		move(10,110)
+		move(10,140)
 		@list.refresh
 
 	end
@@ -5702,6 +6093,10 @@ class List_Common < SpriteGroup
 
 	def update
 		@list.update
+	end
+
+	def hide
+		move(-1000,-1000)
 	end
 
 	# All the various data that can be shown
@@ -5771,7 +6166,7 @@ end
 
 def _db(*args)
 	DataBox.new(args[0],args[1],args[2],args[3])
-end"˛#==============================================================================
+end"ò#==============================================================================
 # Tabs
 #==============================================================================
 
@@ -5782,6 +6177,8 @@ end"˛#========================================================================
 class Page_Tabs < Sprite
 
   SPACING = 5
+
+  attr_accessor :tab_proc
 
   #--------------------------------------------------------------------------
   # * Init
@@ -5798,7 +6195,7 @@ class Page_Tabs < Sprite
 
   	@idx = 0
 
-    move(120,78)
+    move(20,108)
 
   end
 
@@ -5810,6 +6207,8 @@ class Page_Tabs < Sprite
   end
 
   def refresh
+
+    return if @gfx.empty?
 
     # Calc width
     width = @gfx.inject(0){ |t,b| t += b.width + SPACING } - SPACING
@@ -5835,11 +6234,13 @@ class Page_Tabs < Sprite
   	# Check inputs and that
   	if $input.right?
       @idx += 1
+      @tab_proc.call(@tabs[@idx]) if @tab_proc
       refresh      
   	end
 
   	if $input.left? #&& @dynamo.done?
       @idx -= 1
+      @tab_proc.call(@tabs[@idx]) if @tab_proc
       refresh  
   	end
 
@@ -5887,7 +6288,7 @@ class Page_Title < SpriteGroup
 
 	end
 
-end"}#==============================================================================
+end"è#==============================================================================
 # ** Part_Char
 #==============================================================================
 
@@ -5897,8 +6298,9 @@ class Port_Full < Sprite
 	def initialize(vp)
 		super(vp)
 
-		self.bitmap = $cache.menu("tempboyle")
+		self.bitmap = $cache.face_menu("mys-h")
 		self.x = 330
+		#self.x -= 20
 
 	end
 
@@ -6017,7 +6419,7 @@ class Right_Page < SpriteGroup
 
     end
 
-end"0#==============================================================================
+end"{#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -6026,7 +6428,8 @@ end"0#========================================================================
 class Game_Battler
  
   attr_reader :id
-  attr_reader :actions
+
+  attr_reader :transform
 
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
@@ -6041,6 +6444,7 @@ class Game_Battler
   def initialize
 
     @is_actor = true
+    @transform = nil
 
     # Current values
     @hp = 0
@@ -6091,10 +6495,14 @@ class Game_Battler
     data = $data.actors[id]
     @id = id
 
+    @looklike = id
+
     @name = data.name
 
+    @slots = data.slots.split(" | ")
+
     # Prepare equipment slots
-    data.slots.split(" | ").each{ |s|
+    @slots.each{ |s|
       @equips[s] = nil
     }
     
@@ -6136,6 +6544,28 @@ class Game_Battler
     return @is_actor
   end
 
+  def actions
+    if !@transform
+      return @actions
+    else
+      return $data.actors[@transform].actions.split(" | ")
+    end
+  end
+
+  #--------------------------------------------------------------------------
+  # * Transform into something
+  #--------------------------------------------------------------------------
+  
+  def transform(into)
+
+    @transform = into
+    log_scr("TRANSFORM NOW")
+
+    ev.character_name = "Player/frog"
+    ev.direction = 4
+
+  end
+
   #--------------------------------------------------------------------------
   # * Recover All
   #--------------------------------------------------------------------------
@@ -6150,6 +6580,7 @@ class Game_Battler
   
   def damage(amount)
     @hp -= amount
+    @hp = 0 if @hp < 0
   end
 
   def heal(amount)
@@ -6361,10 +6792,14 @@ class Game_Battler
     end
   end
 
- end"¥class Game_Battler
+ end"„class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
+  end
+
+  def skill_list
+    return @skills
   end
 
 
@@ -6401,15 +6836,30 @@ class Game_Battler
     return true
   end
 
-end"v
+end"ä
 class Game_Battler
 
-	def change_equip(slot,new_equip)
+	def equip(slot,new_equip)
 
-		if @equips[slot] == nil
-			
+		if @equips[slot] != nil # Remove existing
+			$party.add_item(@equips[slot])
+			@equips[slot] = nil
 		end
 
+		if new_equip != nil
+			$party.lose_item(new_equip)
+			@equips[slot] = new_equip
+		end
+
+	end
+
+	def equip_list
+		list = []
+		@slots.each{ |s|
+			list.push(@equips[s])
+		}
+		log_info(list)
+		return list
 	end
 
 end"
@@ -6427,14 +6877,18 @@ class Game_Battler
   end
 
 
-end"Ã
+end"	
 class Attack_Result
 
 	attr_accessor :target
 	
 	attr_accessor :damage
 	attr_accessor :critical
+
 	attr_accessor :state_add
+	attr_accessor :state_remove
+
+	attr_accessor :transform
 
 end
 
@@ -10168,7 +10622,7 @@ class Game_Player < Game_Character
   end
 
 end
-"û
+"+
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -10184,7 +10638,7 @@ class Game_Battle
     @props = []
     @actor_index = 0
 
-    @map = 65 #26
+    @map = 26 #65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -10203,8 +10657,8 @@ class Game_Battle
     $game.push_scene(Scene_Battle.new)
   end
 
-  def win?
-    return false
+  def victory?
+    return @enemies.select{ |e| !e.down? }.empty?
   end
 
 
@@ -10235,12 +10689,15 @@ class Game_Battle
 
 
     # Use up the item or mana for the skill used
+    # Put it in the attack plan probably
 
 
     return plan
 
   end
 
+  # Happens at the time of using the skill
+  # Uses states applied etc realtime
   def build_attack_results(attacker,skill)
 
     results = []
@@ -10254,8 +10711,29 @@ class Game_Battle
       result = Attack_Result.new
 
       result.target = t
-      result.damage = 154
+      # Check damage effects
 
+      dmg_base = 0
+      dmg_mod = 0
+
+      skill.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        case data[0]
+          when 'dmg-base'
+            dmg_base = data[1].to_i
+          when 'dmg-mod'
+            dmg_mod = data[1].to_f
+          when 'state-add'
+            result.state_add = data[1]
+          when 'state-remove'
+            result.state_remove = data[1]
+          when 'transform'
+            result.transform = data[1]
+        end
+      }
+
+      # Build final damage
+      result.damage = dmg_base + (attacker.str * dmg_mod)
 
       results.push(result)
 
@@ -10273,14 +10751,18 @@ class Game_Battle
       when 'one', 'ally', 'down'
 
         # Will be in attacker, already chosen
-        return [attacker.target]
+        targets = [attacker.target]
 
-      when 'random'
+        # If the target is not attackable, do somethingelse
+        # TODO TODO
+        return targets
+
+      when 'rand' # Single random target
 
         if attacker.is_actor?
-          return @enemies.select{ |b| b.attackable? }.sample
+          return [@enemies.select{ |b| b.attackable? }.sample]
         else
-          return $party.active.select{ |b| b.attackable? }.sample
+          return [$party.active.select{ |b| b.attackable? }.sample]
         end
 
       when 'two'
@@ -10319,6 +10801,10 @@ class Game_Battle
           return @enemies.select{ |b| b.attackable? }
         end
 
+      when 'self'
+
+        return [attacker]
+
     end
 
     return []
@@ -10354,32 +10840,32 @@ class Game_Battle
   end
 
   
-end
-
-
-# BATTLE SYSTEM!!!!!!!!
-
-# THEN START BUILDING THE ACTIONS ARRAY
-# WILL BE EASY AS
-  
-# Can't calc damage or anything yet
-# Can only make a list of skills
-# [hit,hit,heal]
-
-# Then play it out
-# Cacl the results at the start of each attack
-# Instead of at the start of the whole thing"´
+end"P
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
 class MenuState
 
 	attr_accessor :char
+	attr_accessor :shop
 
 	#attr_accessor :category
 	#attr_accessor :tab
 
-end"0#==============================================================================
+	def initialize
+		@char = 'boy'
+		@shop = []
+	end
+
+	def shop_init
+		@shop = []
+	end
+
+	def shop_add(item)
+		@shop.push(item)
+	end
+
+end"Æ#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -10399,6 +10885,8 @@ class Game_Party
   #--------------------------------------------------------------------------
   def initialize
 
+    $party = self
+
     # Create all actors    
     @actors = {}
     $data.actors.each{ |k,v| 
@@ -10417,18 +10905,10 @@ class Game_Party
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
     @weapons = {}
-    @armors = {}
-    
-    # TEMP DISABLE
-    set_active("boy")
-    # set_active("ing")
-    # set_active("phy")
-    # set_active("rob")
+    @armors = {}    
 
-    @leader = 'boy'
-
-    @actors["boy"].learn('fireburn')
-    @actors["boy"].learn('flames')
+    # Hardcode Party Data
+    init_party
 
   end
 
@@ -10437,6 +10917,10 @@ class Game_Party
   #--------------------------------------------------------------------------
   def max_level
     return @actors.max_by(&:level).level
+  end
+
+  def get(a)
+    return actor_by_id(a)
   end
 
   def actor_by_id(actor)
@@ -10480,13 +10964,13 @@ class Game_Party
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
-  def add_item(id,n) 
+  def add_item(id,n=1) 
     @items.has_key?(id) ? @items[id] += n : @items[id] = n
     @items[id] = 0 if @items[id] < 0 
-    $map.need_refresh = true
+    $map.need_refresh = true if $map
   end
 
-  def lose_item(id,n) add_item(id,-n) end
+  def lose_item(id,n=1) add_item(id,-n) end
   
   def item_number(id) return @items.has_key?(id) ? @items[id] : 0 end
   def has_item?(id) item_number(id) > 0 end
@@ -10506,12 +10990,16 @@ class Game_Party
     return items
   end
 
+  def battle_item_list
+    return ['covey','cheese','mir-wood']
+  end
+
 
   #--------------------------------------------------------------------------
   # * Determine Everyone is Dead
   #--------------------------------------------------------------------------
-  def all_dead?
-    return @active.select{ |a| @actors[a].hp > 0}.empty?
+  def defeated?
+    return @active.select{ |a| !@actors[a].down? }.empty?
   end
 
   #--------------------------------------------------------------------------
@@ -10580,6 +11068,93 @@ class Game_Party
       end
     end
   end
+
+
+  #--------------------------------------------------------------------------
+  # ‚óè Initialize Party Data
+  #--------------------------------------------------------------------------
+
+  def init_party
+
+    @leader = 'boy'
+
+    # -----------------------------------
+    # Initial Party Members
+    # -----------------------------------
+
+    set_active("boy")
+    set_active("ing")
+    #set_active("mys")
+    set_active("rob")
+    set_active("hib")
+    set_reserve("row")
+    set_reserve("phy")   
+  
+    # ----------------------------------
+    # Initial Gear
+
+    # Boyle
+    @actors['boy'].equip('staff','boy-staff')
+    @actors['boy'].equip('mid','boy-arm-s')
+
+    # Ingrid
+    @actors['ing'].equip('wand','ing-wep-s')
+    @actors['ing'].equip('athame','ing-athame-s')
+    @actors['ing'].equip('light','ing-arm-s')
+
+    # Myst
+    @actors['mys'].equip('claw1','mys-wep-s')
+    @actors['mys'].equip('claw2','mys-wep-s')
+    @actors['mys'].equip('light','mys-arm-s')
+
+    # Robin
+    @actors['rob'].equip('sword','rob-wep-s')
+    @actors['rob'].equip('heavy','rob-arm-s')
+
+    # Hiberu
+    @actors['hib'].equip('book','hib-wep-s')
+    @actors['hib'].equip('mid','hib-arm-s')
+    # Give accessory
+
+    # Rowen
+    @actors['row'].equip('dagger','row-wep-s')
+    @actors['row'].equip('light','row-arm-s')
+    # Give extra gadget
+
+    # Phye
+    @actors['phy'].equip('staff','phy-sword')
+    @actors['phy'].equip('heavy','phy-arm-s')
+    # Give him helm
+
+
+    # Initial skills per actor
+    @actors["boy"].learn('fireburn')
+    @actors["boy"].learn('flames')
+
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
 end"5class Progress
 
@@ -11002,7 +11577,7 @@ class Scene_Base
   end
 
 end
-"‹#==============================================================================
+"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -11050,7 +11625,7 @@ class Scene_Battle < Scene_Base
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
-      ev.direction = 2
+      #ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
@@ -11065,10 +11640,16 @@ class Scene_Battle < Scene_Base
       end
     }
 
+    # And the minion
+    #@minion = @map.event_by_evname("MINION")
+    #@minion.character_name = 'Player/minion-rat'
+    #hide(@minion)
+
+
     reload_map
 
     sys('battlestart')
-    music("rivals",0.6)
+    #music("rivals",0.6)
         
     Graphics.transition(20,'Graphics/Transitions/trans') 
             
@@ -11083,7 +11664,7 @@ class Scene_Battle < Scene_Base
   end
 
   def wait(w)
-    @wait_frames = w
+    @wait_frames += w
   end
 
   #--------------------------------------------------------------------------
@@ -11145,14 +11726,20 @@ class Scene_Battle < Scene_Base
         phase_main_attack
       when :main_defend
         phase_main_defend
+      when :main_transform
+        phase_main_transform
       when :main_hit
         phase_main_hit
       when :main_crit
         phase_main_crit
       when :main_state
         phase_main_state
+      when :main_fall
+        phase_main_fall
       when :main_next
         phase_main_next
+      when :main_end
+        phase_main_end
 
       # Victory Phase
       when :victory_init
@@ -11169,7 +11756,7 @@ class Scene_Battle
     @phase = :actor_init
   end
 
-end"æ
+end"—
 
 class Scene_Battle
 
@@ -11244,7 +11831,7 @@ class Scene_Battle
 
     if $input.action?
       @skill_cmd.close
-      @active_battler.skill_id = @item_cmd.get_skill
+      @active_battler.skill_id = @skill_cmd.get_skill
       @phase = :actor_strategize
     end
 
@@ -11281,13 +11868,13 @@ class Scene_Battle
     # Get the skill or item
 
     # If single, targetable?
-    #if ["one","ally"].include?($data.skills[id].scope)
+    if ["one","ally"].include?($data.skills[@active_battler.skill_id].scope)
       targets = $battle.enemies #$battle.build_target_list(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      
-    #else
-    #  @phase = :actor_next
-    #end
+    else
+      @phase = :actor_next
+    end
 
   end
 
@@ -11330,7 +11917,7 @@ class Scene_Battle
     
   end
 
-end"7
+end"¸
 class Scene_Battle
 
   def phase_main_init
@@ -11377,15 +11964,16 @@ class Scene_Battle
   # Show anim on attacker
   def phase_main_attack
 
-    # x = @active_battler.ev.screen_x
-    # y = @active_battler.ev.screen_y
-    # add_spark(x,y)
+    @attack_results.each{ |result|
 
-    # Hit anim if there is one
-    if @attack_round.anim_a == nil
-      @phase = :main_defend # RENAME TO MAIN_ANIM_HIT
-      return
-    end
+      if @attack_round.anim_a
+        # Show the hit animation
+        x = result.target.ev.screen_x
+        y = result.target.ev.screen_y - 32
+        add_spark(@attack_round.anim_a,x,y)
+      end
+
+    }
 
     @phase = :main_defend
     wait(20)
@@ -11396,26 +11984,41 @@ class Scene_Battle
   def phase_main_defend
 
     @attack_results.each{ |result|
-      x = result.target.ev.screen_x
-      y = result.target.ev.screen_y - 32
-      add_spark(@attack_round.anim_b,x,y)
+
+      if @attack_round.anim_b
+        # Show the hit animation
+        x = result.target.ev.screen_x
+        y = result.target.ev.screen_y - 32
+        add_spark(@attack_round.anim_b,x,y)
+      end
+
     }
 
-    # Hit anim if there is one
-    if @attack_round.anim_b == nil
-      @phase = :main_hit # RENAME TO MAIN_ANIM_HIT
-      return
-    end
-
   	# Onto the next
-  	@phase = :main_hit
-    #wait(20)
+  	@phase = :main_transform
+    # Some anims might have a pause before hit
+    # Might use the sound delay on the anim
+    #wait(20) 
+
+  end
+
+  def phase_main_transform
+
+    @attack_results.each{ |result|      
+      if result.transform
+        result.target.transform(result.transform)
+      end
+    }
+
+    # Onto the next
+    @phase = :main_hit
 
   end
 
   def phase_main_hit
 
     # Show the damage of @attack-result on each guy hit
+    # There might not even be damage but
     # Better figure damage pops
     @attack_results.each{ |result|
 
@@ -11441,16 +12044,61 @@ class Scene_Battle
 
   def phase_main_state
 
+    @attack_results.each{ |result|
+
+      if result.state_add
+        result.target.add_state(result.state_add)
+        log_sys(result.state_add)
+      end
+
+    }
+
+    @phase = :main_fall
+    wait(30) # Might wait if a state was aded
+
+  end
+
+  def phase_main_fall
+
+    # Anybody defeated should leave now
+    @attack_results.each{ |result|
+
+      if result.target.down?
+        sys('fall')
+        fade(result.target.ev)
+        wait(60)
+      end
+
+
+    }
+
+
     # Onto the next
     @phase = :main_next
-    wait(1)
+
 
   end
 
   def phase_main_next
 
+    # If one side has been defeated, that's it
+    if $party.defeated?
+      # Fade out show defeat screen etc
+      $game.push_scene(Scene_GameOver.new)
+      @phase = :LOSE
+      return
+    end
+
+    if $battle.victory?
+      @phase = :victory_init
+      return
+    end
+
   	# If a multi stage, go back to attack
     if !@attack_plan.done?
+
+      # End multi stage attacks early if user is incapable of attack
+
       @active_attack = @attack_plan.next_attack
       @phase = :main_start
       return
@@ -11466,25 +12114,64 @@ class Scene_Battle
 
     end
 
-    # Go to next turn, actor select
-    @phase = :actor_init
+    # Attack phase done, finalize
+    @phase = :main_end    
 
 	end
 
   # NOT CURRENTLY ACTIVATED
   def phase_main_end
-    # Remove stats and that before next turn starts
+    
+    # Remove states and that before next turn starts
+
+    # Go to next turn, actor select
+    @phase = :actor_init
+
   end
 
 end
-"E
+"G
 class Scene_Battle
 
   def phase_victory_init
 
   end
 
-end"+#==============================================================================
+
+end"ﬂ#==============================================================================
+# ** Scene_GameOver
+#==============================================================================
+
+class Scene_GameOver
+
+  #--------------------------------------------------------------------------
+  # * Set up the scene
+  #--------------------------------------------------------------------------
+  def initialize
+
+    $scene = self
+
+    # Make viewports - Also in the scene
+    @vp = Viewport.new(0,0,$game.width,$game.height)
+    @vp.z = 3999
+
+    @bg = Sprite.new(@vp)
+    @bg.z = -100
+    @bg.bitmap = $cache.menu_background("game-over")
+               
+  end
+  
+  def terminate
+
+
+  end
+
+  def update
+
+  end
+
+end
+"+#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -12571,8 +13258,7 @@ class AudioManager
 
   end
 
-end"]
-
+end" 
 class CacheManager
 
     def initialize
@@ -12610,6 +13296,9 @@ class CacheManager
     def face(filename) load("Faces/Message/", filename) end
     def face_vn(filename) load("Faces/Vn/", filename) end
     def face_small(filename) load("Faces/Small/", filename) end
+    def face_large(filename) load("Faces/Large/", filename) end
+    def face_menu(filename) load("Faces/Menu/", filename) end
+    def face_battle(filename) load("Faces/Battle/", filename) end
     
 
 
@@ -12658,7 +13347,7 @@ class CacheManager
       GC.start
     end
 
-  end"–#==============================================================================
+  end"ª#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -12698,11 +13387,16 @@ class DataManager
     create_icon_list if DEBUG
 
     # Load up json data
-    
-    @items = load_json("items",ItemData).merge(load_json("keyitems",ItemData))
-    # shop somehow
+    usable = load_json("items",UsableData)
+    usable.each{ |k,i| i.tab = "usable"}
+    keys = load_json("keyitems",KeyItemData)
+    keys.each{ |k,i| i.tab = "keys"}
+    shop = load_json("shop",ShopData)
+    shop.each{ |k,i| i.tab = "shop"}
+    gear = load_json("gear",GearData)
+    gear.each{ |k,i| i.tab = "gear"}
 
-    @gear = load_json("gear",GearData)
+    @items = usable.merge(keys).merge(shop).merge(gear)
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
@@ -13685,7 +14379,7 @@ log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
 
 	end
 
-end"##==============================================================================
+end"é#==============================================================================
 # ** Nano Manager
 #==============================================================================
 
@@ -13714,6 +14408,11 @@ class TweenManager
 
 	def clear(object)
 		@tweens.delete_if{ |n| n.parent == object } 
+	end
+
+	def resolve(object)
+		@tweens.each{ |n| n.update(5000) if n.parent == object }
+		clear(object)
 	end
 
 	def clear_all
@@ -13855,25 +14554,47 @@ end"¯class Bitmap
 	end
 
 end
-"é
-class ItemData
+"t
+class UsableData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
-	attr_reader :category
-	attr_reader :icon
 	attr_reader :price
 	attr_reader :action
+	attr_reader :icon
+	attr_reader :battle
+	attr_accessor :tab
+end
+
+class KeyItemData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :icon
+	attr_reader :chapter
+	attr_accessor :tab
+end
+
+class ShopData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :icon
+	attr_reader :value
+	attr_accessor :tab
 end
 
 class GearData
 	attr_reader :id
 	attr_reader :name
+	attr_reader :slot
+	attr_reader :geartype
 	attr_reader :description
-	attr_reader :category
+	attr_reader :stats
+	attr_reader :mods
 	attr_reader :icon
-	attr_reader :price
-	attr_reader :action
+	attr_reader :source
+	attr_accessor :tab
 end
 
 class SkillData
@@ -13881,6 +14602,7 @@ class SkillData
 	attr_reader :name
 	attr_reader :book
 	attr_reader :description
+	attr_reader :icon
 	attr_reader :hits
 	attr_reader :scope
 	attr_reader :anim_a
@@ -13890,7 +14612,10 @@ class SkillData
 end
 
 class StateData
-
+	attr_reader :id
+	attr_reader :name
+	attr_reader :stats
+	attr_reader :mods
 end
 
 class ActorData
@@ -13955,6 +14680,7 @@ class NumberData
 	attr_reader :value
 	attr_reader :notes
 end
+
 "r#==============================================================================
 # ** Gradient Font Color
 #------------------------------------------------------------------------------
@@ -14073,6 +14799,40 @@ class Bitmap
 
   end
 
+end"»
+class Group
+
+	def initialize(args)
+
+		@events = args
+
+	end
+
+	def method_missing(m,*args)
+
+		@events.each{ |ev|
+			if ev.is_a?(String)
+				argstring = " '#{ev}',"
+			else
+				argstring = " #{ev},"
+			end
+
+			args.each{ |a|
+				if a.is_a?(String)
+					argstring+=(" '"+a+"',")
+				else
+					argstring+=(" "+a+",")
+				end
+			}
+			eval(m.to_s[1..-1]+argstring.chop)
+		}
+
+	end
+
+end
+
+def grp(*args)
+	return Group.new(args)
 end"~# if !ACE_MODE
 #   class Font
 #     attr_accessor :outline, :shadow

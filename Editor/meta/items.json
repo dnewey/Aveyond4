@@ -21,10 +21,6 @@
     "edit": "icon"
   },
   {
-    "field": "category",
-    "edit": "select"
-  },
-  {
-    "field": "note"
+    "field": "battle"
   }
 ]

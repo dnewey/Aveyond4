@@ -38,11 +38,16 @@ class DataManager
     create_icon_list if DEBUG
 
     # Load up json data
-    
-    @items = load_json("items",ItemData)
-    @items = @items.merge(load_json("keyitems",ItemData))
-    @items = @items.merge(load_json("gear",GearData))
-    # Show in here too
+    usable = load_json("items",UsableData)
+    usable.each{ |k,i| i.tab = "usable"}
+    keys = load_json("keyitems",KeyItemData)
+    keys.each{ |k,i| i.tab = "keys"}
+    shop = load_json("shop",ShopData)
+    shop.each{ |k,i| i.tab = "shop"}
+    gear = load_json("gear",GearData)
+    gear.each{ |k,i| i.tab = "gear"}
+
+    @items = usable.merge(keys).merge(shop).merge(gear)
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
@@ -61,7 +66,6 @@ class DataManager
     @clones = load_clones
 
 		# Convert to json
-    # Currently doesn't work in ace
     @commons = load_data("Data/CommonEvents.rxdata")
     @tilesets = load_data("Data/Tilesets.rxdata")
     @system = load_data("Data/System.rxdata")

@@ -16,8 +16,8 @@ class CharView < SpriteGroup
 		add(@box)   
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.menu_char("boy")
-		add(@port,34,-20)
+		@port.bitmap = $cache.face_battle(char.id)
+		add(@port,153-@port.width-10,135-@port.height-10)
 
 		@shadow = Sprite.new(vp)
 		@shadow.bitmap = $cache.menu_char("battlehud-shadow")

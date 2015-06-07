@@ -36,6 +36,9 @@ class CacheManager
     def face(filename) load("Faces/Message/", filename) end
     def face_vn(filename) load("Faces/Vn/", filename) end
     def face_small(filename) load("Faces/Small/", filename) end
+    def face_large(filename) load("Faces/Large/", filename) end
+    def face_menu(filename) load("Faces/Menu/", filename) end
+    def face_battle(filename) load("Faces/Battle/", filename) end
     
 
 

@@ -20,6 +20,12 @@
 "misc/settings",
 "misc/sweat",
 "misc/unknown",
+"potions/bread",
+"potions/cassia",
+"potions/cheese",
+"potions/covey",
+"potions/haunch",
+"potions/mutton",
 "stats/attack",
 "stats/restore",
 ""

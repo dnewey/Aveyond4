@@ -46,7 +46,7 @@ class Scene_Battle < Scene_Base
       act = $party.actor_by_index(i).id
       ev.character_name = "Player/#{act}-idle"
       ev.pattern = rand(4)
-      ev.direction = 2
+      #ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
@@ -62,8 +62,8 @@ class Scene_Battle < Scene_Base
     }
 
     # And the minion
-    @minion = @map.event_by_evname("MINION")
-    @minion.character_name = 'Player/minion-rat'
+    #@minion = @map.event_by_evname("MINION")
+    #@minion.character_name = 'Player/minion-rat'
     #hide(@minion)
 
 
