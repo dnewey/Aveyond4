@@ -1,4 +1,10 @@
 [
+"battle/boy-items-on",
+"battle/boy-items",
+"battle/boy-skills-on",
+"battle/boy-skills",
+"battle/boy-staff-on",
+"battle/boy-staff",
 "faces/boy",
 "faces/hib",
 "faces/ing",
@@ -28,5 +34,7 @@
 "potions/mutton",
 "stats/attack",
 "stats/restore",
+"stats/targets",
+"weapons/boy-staff-1",
 ""
 ]

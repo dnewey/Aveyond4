@@ -18,6 +18,10 @@
     "edit": "icon"
   },
   {
+    "field": "cost",
+    "default": "0"
+  },
+  {
     "field": "hits",
     "default": "1"
   },

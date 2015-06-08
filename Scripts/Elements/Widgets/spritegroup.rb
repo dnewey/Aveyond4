@@ -22,6 +22,10 @@ class SpriteGroup
 		@sprites.push([spr,ox,oy])
 	end
 
+	def delete(spr)
+		@sprites.delete_if{ |a| a[0] == spr}
+	end
+
 	def change(spr,ox,oy)
 		@sprites.each{ |s|
 			if s[0] == spr

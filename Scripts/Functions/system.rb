@@ -61,6 +61,16 @@ def open_shop_sell
 	$game.push_scene(Scene_Menu.new)
 end
 
+def open_difficulty_options
+	grid = $scene.hud.open_grid
+	grid.x = 70
+	grid.y = 70
+	grid.add_difficulty('easy')
+	grid.add_difficulty('normal')
+	grid.add_difficulty('expert')
+	return grid
+end
+
 # Fades
 
 def fadeout(f=30)

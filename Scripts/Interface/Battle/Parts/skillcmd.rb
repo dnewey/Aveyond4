@@ -5,10 +5,6 @@ class SkillCmd < ItemCmd
 
 		@battler = battler
 
-		@list.opacity = 255
-		@window.opacity = 255
-		@box.opacity = 255
-
 		skill_list = @battler.skill_list
 
 		log_info(skill_list)
@@ -16,10 +12,18 @@ class SkillCmd < ItemCmd
 		@list.type = :skill
 		@list.setup(skill_list)
 		change(skill_list[0])
+
+		open
 	end
 
 	def get_skill
 		return @item
+	end
+
+	def change(option)
+		@item = option
+		@box.skill(option)
+		#@box.center(462,130+@list.page_idx*@list.item_height)
 	end
 
 end

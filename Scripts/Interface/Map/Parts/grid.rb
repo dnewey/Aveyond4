@@ -19,8 +19,6 @@ class Ui_Grid
 
 		@boxes = []
 		@contents = []
-		@types = []
-		@stats = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -29,10 +27,17 @@ class Ui_Grid
      	@glow.z += 50
 
      	@idx = 0
+
+     	@type = :slot
+     	@char = 'boy'
      	
      	#@selected = "Journal"
      	#choose(@selected)
 
+	end
+
+	def update
+		@boxes.each{ |box| box.update }
 	end
 
 	def move(x,y)
@@ -70,7 +75,7 @@ class Ui_Grid
 
 	end
 
-	def add_button(name,text,icon)
+	def add_slot(slot)
 
 		# Create new things
 		btn = Box.new(@vp,300,60)
@@ -87,33 +92,45 @@ class Ui_Grid
      	cont.text = text
      	@contents.push(cont)
 
-     	type = Label.new(@vp)
-    	type.fixed_width = 250
-    	type.font = $fonts.pop_type
-    	type.align = 0
-    	type.text = "WEAPON"
-    	@types.push(type)
+     	# Position
+     	btn.move(@cx,@cy)
+     	cont.move(@cx+10,@cy+7)
 
-		stat = Label.new(@vp)
-    	stat.fixed_width = 250
-    	stat.font = $fonts.pop_type
-    	stat.align = 0
-    	stat.text = "15 Strength"
-    	@stats.push(stat)
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + 5
+     	end
+
+	end
+
+	def add_difficulty(diff)
+
+		# Create new things
+		btn = Box.new(@vp,500,100)
+     	btn.skin = $cache.menu_common("skin-plain")
+     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
+     	btn.name = diff
+     	@boxes.push(btn)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	#cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = diff
+     	@contents.push(cont)
 
      	# Position
      	btn.move(@cx,@cy)
      	cont.move(@cx+10,@cy+7)
-     	type.move(@cx+220,@cy+7)
-     	stat.move(@cx+32, @cy+32)
 
-     	if @boxes.count == 1
-     		choose(@boxes[0].name)
-     	end
+     	choose(@boxes[0].name) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
-     		@cy += 65
+     		@cy += btn.height + 5
      	end
 
 	end

@@ -173,6 +173,11 @@ class TimedTween < Tween
 	end
 
 	def update(delta)
+
+		# Error with list with setting x, for now it doesn't slide
+		return if @parent.is_a?(Sprite) && @parent.disposed?
+
+
 		@elapsed += delta
 		@elapsed = @duration if @elapsed > @duration
 		var = easing(elapsed, @initial, @amount, @duration, @ease)

@@ -14,7 +14,7 @@ class Game_Battle
     @props = []
     @actor_index = 0
 
-    @map = 26 #65 #26
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data

@@ -94,6 +94,10 @@ class Game_Party
     @reserve.delete(actor)
   end
 
+  def all
+    return @active + @reserve
+  end
+
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
@@ -216,12 +220,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
+    #set_active("ing")
     #set_active("mys")
-    set_active("rob")
-    set_active("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    #set_active("rob")
+    #set_active("hib")
+    #set_reserve("row")
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear

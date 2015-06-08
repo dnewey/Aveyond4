@@ -26,6 +26,14 @@ def unhide(e)
 	gev(e).opacity = 255
 end
 
+def unhide3(*args)
+	args.each{ |a|
+		unhide(a+'3')
+	}
+end
+
+
+
 def roll(range)
 	gev(me).random = rand(range) + 1
 end

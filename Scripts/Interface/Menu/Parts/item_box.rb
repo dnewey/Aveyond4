@@ -7,6 +7,7 @@ class Item_Box < SpriteGroup
 	def initialize(vp)
 		super()		
 
+        @vp = vp
         @type = :item
 
 		# Resize to whatever is needed
@@ -34,15 +35,10 @@ class Item_Box < SpriteGroup
     	@desc.text = "Missing Descriptor"
     	add(@desc,16,42)
 
-    	@stat_a = Label.new(vp)
-		@stat_a.fixed_width = 250
-    	@stat_a.icon = $cache.icon("stats/restore")
-    	@stat_a.font = $fonts.pop_text
-    	@stat_a.text = "Restores 10HP"
-    	add(@stat_a,36,70)
+        @stats = []
+        @cy = 42
 
-    	@stat_b = Label.new(vp)
-    	@stat_c = Label.new(vp)
+    	
     	
     	move(0,0)
 
@@ -67,30 +63,78 @@ class Item_Box < SpriteGroup
 		@window.update
 	end
 
+    def get_data(id)
+        if @type == :item
+          return $data.items[id]
+        elsif @type == :skill
+          return $data.skills[id]
+        end
+    end
+
+    def base(data)
+
+        # Set values
+        @title.text = data.name
+        @desc.text = data.description
+
+        @stats.each{ |s| 
+            s.dispose
+            delete(s)
+            s.dispose 
+        }
+        @stats = []
+        @cy = 42 + @desc.height 
+
+    end
+
+    def newsize
+        @window.resize(300,64 + @desc.height + @stats.count*20)
+    end
+
+    def stat(icon,text)
+
+        stat = Label.new(@vp)
+        stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/#{icon}")
+        stat.font = $fonts.pop_text
+        stat.text = text
+        @stats.push(stat)
+        add(stat,36,@cy)
+        @cy += 20
+
+    end
+
 	def item(id)
 
-        if @type == :item
-		  item = $data.items[id]
-        elsif @type == :skill
-          item = $data.skills[id]
-        end
-		#log_info(item)
+        data = get_data(id)       
+        base(data)
 
-        if item == nil
-            log_sys(id)
-            log_sys(@type)
-            return
-        end
-
-		# Set values
-		@title.text = item.name
-		@desc.text = item.description
+        #return if data == nil
+        stat("targets","Hit ALL")
+		
 		#@type.text = item.type
+
+        newsize
+        remove
 
 	end
 
 	def skill(id)
 
+        data = get_data(id)       
+        base(data)
+
+        #if data.scope == 'all'
+            stat("targets","Hit ALL")
+        #end
+
+        newsize
+        remove
+
 	end
+
+    def gear(id)
+
+    end
 
 end

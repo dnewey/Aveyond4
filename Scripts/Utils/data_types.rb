@@ -47,6 +47,7 @@ class SkillData
 	attr_reader :book
 	attr_reader :description
 	attr_reader :icon
+	attr_reader :cost
 	attr_reader :hits
 	attr_reader :scope
 	attr_reader :anim_a
@@ -105,7 +106,7 @@ class QuestData
 	attr_reader :location
 	attr_reader :req
 	attr_reader :reward
-	attr_reader :chapter
+	attr_reader :type
 end
 
 class AnimData

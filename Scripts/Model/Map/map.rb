@@ -145,6 +145,9 @@ class Game_Map
 
   def setup_audio
 
+    # Fadeout previous
+    
+
     # Play music from the zone
     $audio.music(@zone.music)
     $audio.atmosphere(@zone.atmosphere)

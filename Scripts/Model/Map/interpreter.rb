@@ -1,8 +1,5 @@
 #==============================================================================
-# ** Interpreter (part 1)
-#------------------------------------------------------------------------------
-#  This interpreter runs event commands. This class is used within the
-#  Game_System class and the Game_Event class.
+# ** Interpreter
 #==============================================================================
 
 class Interpreter
@@ -446,6 +443,19 @@ class Interpreter
   #--------------------------------------------------------------------------
   def command_115
     command_end
+    return true
+  end
+
+  def command_117
+    # Get common event
+    common_event = $data.commons[@parameters[0]]
+    # If common event is valid
+    if common_event != nil
+      # Make child interpreter
+      @child_interpreter = Interpreter.new(@depth + 1)
+      @child_interpreter.setup(common_event.list, @event_id)
+    end
+    # Continue
     return true
   end
 

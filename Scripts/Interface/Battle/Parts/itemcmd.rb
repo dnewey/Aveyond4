@@ -7,17 +7,17 @@ class ItemCmd
 		@window = Box.new(vp,300,242)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
-    	@window.move(10,66)
+    	@window.move(14,66)
 
 		# Left side list
 		@list = List.new()
-		@list.move(16,72)
+		@list.move(20,72)
 
 		@list.per_page = 6
 		@list.item_width = 288
 		@list.item_height = 34
 
-		@list.item_space = 35	
+		@list.item_space = 1
 
 		@list.change = Proc.new{ |option| self.change(option) }
 
@@ -26,7 +26,7 @@ class ItemCmd
 
 		@box = Item_Box.new(vp)
 		@box.item('covey')
-		@box.move(320,140)
+		@box.move(326,100)
 		@box.opacity = 0
 
 		@list.opacity = 0
@@ -35,19 +35,49 @@ class ItemCmd
 	end
 
 	def setup
-		@list.opacity = 255
-		@window.opacity = 255
-		@box.opacity = 255
 
 		item_list = $party.battle_item_list
 		@list.setup(item_list)
 		change(item_list[0])
+
+		open
 	end
 
-	def close
+	def open
+		$tweens.clear(@list)
+		$tweens.clear(@window)
+		$tweens.clear(@box)
+
 		@list.opacity = 0
 		@window.opacity = 0
 		@box.opacity = 0
+
+		@list.x = -132
+		@list.do(go("x",150,250,:qio))
+		@list.do(go("opacity",255,250,:qio))
+
+		@window.x = -138
+		@window.do(go("x",150,250,:qio))
+		@window.do(go("opacity",255,250,:qio))
+
+		@box.x = 326+150
+		@box.do(go("x",-150,250,:qio))
+		@box.do(go("opacity",255,250,:qio))
+	end
+
+	def close
+		$tweens.clear(@list)
+		$tweens.clear(@window)
+		$tweens.clear(@box)
+
+		@list.do(go("x",-150,250,:qio))
+		@list.do(go("opacity",-255,250,:qio))
+
+		@window.do(go("x",-150,250,:qio))
+		@window.do(go("opacity",-255,250,:qio))
+
+		@box.do(go("x",150,250,:qio))
+		@box.do(go("opacity",-255,250,:qio))
 	end
 
 	def update
@@ -57,7 +87,7 @@ class ItemCmd
 	def change(option)
 		@item = option
 		@box.item(option)
-		@box.center(462,130+@list.page_idx*@list.item_height)
+		#@box.center(462,130+@list.page_idx*@list.item_height)
 	end
 
 	def get_item

@@ -66,6 +66,10 @@ class Box
 		@window.opacity = o
 	end
 
+	def opacity
+		return @window.opacity
+	end
+
 	def hide
 		@wallpaper.opacity = 0
 		@window.opacity = 0

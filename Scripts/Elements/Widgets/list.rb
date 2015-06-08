@@ -99,6 +99,10 @@ class List
     @select_sprite.opacity = o
   end
 
+  def opacity
+    return @back_sprite.opacity
+  end
+
   def dispose
   	@back_sprite.dispose
     @select_sprite.dispose
@@ -239,17 +243,20 @@ class List
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
 
+    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"-"+item.cost.to_s,0)
+
   end
 
   def draw_quest(data,row)
 
     item = $data.quests[data]
 
-    ico = $cache.icon('items/map')
+    ico = $cache.icon('misc/unknown')
+
     
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
 
   end
 
@@ -284,7 +291,7 @@ class List
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN)
 
-      return if idx >= @data.count - 2
+      return if idx >= @data.count - 1
 
       # If the tweens are going, skip to done
       $tweens.resolve(@back_sprite)

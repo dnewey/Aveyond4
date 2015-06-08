@@ -73,6 +73,7 @@ class Ui_Message
     @box = Box.new(vp)
     @box.skin = $cache.menu_common("skin")
     @box.wallpaper = $cache.menu_wallpaper("diamonds")
+    @box.scroll(0.1,0.1)
 
     # Setup sprites    
     @textbox = Sprite.new(vp)
@@ -278,24 +279,27 @@ class Ui_Message
     end
 
     # System message
-    if speaker == 'sys'
+    if speaker.split("-")[0] == 'sys'
+      if speaker.split("-").count > 1
+        @box.wallpaper = $cache.menu_wallpaper(speaker.split("-")[1])
+      end
       speaker = nil
       name = ''
       @mode = :sys
       @tail.hide
     end
-
-    # Have to split name by '-' to make expressions work
-    # GET RID OF IT
     
     # If in party, show as player and change player graphic
-    if $data.actors.has_key?(name.split('-')[0]) && @mode == :message
+    if $party.all.include?(speaker.split('-')[0]) && @mode == :message
       @speaker = $player
       $player.looklike(name.split('-')[0])
     elsif speaker != nil
-      @speaker = gev(speaker)
+      @speaker = gev(speaker.split("-")[0])
       @mode = :sys if @speaker == nil
     end
+
+    # Force name to not have the number
+    name.delete!('123456789')
 
     # Get face and name of player characters
     if $data.actors.has_key?(name.split('-')[0])
@@ -337,7 +341,7 @@ class Ui_Message
     # Would need to be put in update
     @sprites.change(@tail,@width/2-2,@height)
     #@sprites.change(@next,@width/2,@height-20)
-
+    $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
@@ -487,7 +491,7 @@ class Ui_Message
         open_choices
       else
         @state = :done
-        @box.skin = $cache.menu_common("skin-gold")
+        #@box.skin = $cache.menu_common("skin-gold")
       end
     else
       @word_idx = 0
@@ -619,9 +623,9 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
-      @sprites.opacity = 0
+      #@sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
-      #@sprites.do(go("opacity",-255,300,:quad_in_out))
+      @sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
 

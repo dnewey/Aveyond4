@@ -2,88 +2,28 @@
 # ** Audio Manager
 #==============================================================================
 
-class EnviroSource < Seal::Source
-
-  attr_reader :file
-
-  def initialize(sound,pos)
-    super()
-
-    @file = sound
-
-    @positions = [pos]
-    self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
-    self.looping = true
-    self.play
-
-    @short = 96 * 4 # *4 to convert to REAL coords
-    @long = 320 * 4
-
-  end
-
-  def addpos(pos)
-
-    @positions.push(pos)
-
-  end
-
-  def update
-
-    # Use player pos for now
-    px = $player.real_x
-    py = $player.real_y
-
-    # Find closest point
-    src = nil
-    mn = 999999999
-    @positions.each{ |p| 
-      dist = ((px-p[0]) * (px-p[0])) +
-             ((py-p[1]) * (py-p[1]))
-      if dist < mn
-        mn = dist
-        src = p
-      end
-    }
-
-    # Use distance to figure volume
-    dist = ((px-src[0]) * (px-src[0])) +
-           ((py-src[1]) * (py-src[1]))
-
-    dist = Math.sqrt(dist)
-
-    # If under min, full volume
-    if dist < @short
-      self.gain = 1.0
-      return
-    end
-
-    # If over max, off
-    if dist > @long
-      self.gain = 0.0
-      return
-    end
-
-    # Scale
-    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
-
-
-  end
-
-end
-
 class AudioManager
 
 
   def initialize
 
     begin
-    Seal.startup
-  rescue
-    retry
-  end
+      Seal.startup
+    rescue
+      retry
+    end
 
     @music = Seal::Source.new
+    @music_in = Seal::Source.new
+
     @atmosphere = Seal::Source.new
+    @atmostphere_in = Seal::Source.new
+
+    # Fade targets
+    @music_target = 1.0
+    @music_in_target = 1.0
+    @atmosphere_target = 1.0
+    @atmosphere_in_target = 1.0
 
     # Looping, fade by distance
     @environmental = [] 
@@ -97,7 +37,6 @@ class AudioManager
     # Queue of sfx to play [[file,delay,vol]]
     @queue = [] 
 
-
     @mode = :normal
     @effect = nil
 
@@ -105,6 +44,13 @@ class AudioManager
 
     #change_mode(:cave)
     
+  end
+
+  def dispose
+
+    # Destroy all the sources
+
+    Seal.cleanup
   end
 
   def fadeout
@@ -270,6 +216,75 @@ class AudioManager
     }
 
     @queue.delete_if{ |i| i[1] <= 0 }
+
+  end
+
+end
+
+class EnviroSource < Seal::Source
+
+  attr_reader :file
+
+  def initialize(sound,pos)
+    super()
+
+    @file = sound
+
+    @positions = [pos]
+    self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
+    self.looping = true
+    self.play
+
+    @short = 96 * 4 # *4 to convert to REAL coords
+    @long = 320 * 4
+
+  end
+
+  def addpos(pos)
+
+    @positions.push(pos)
+
+  end
+
+  def update
+
+    # Use player pos for now
+    px = $player.real_x
+    py = $player.real_y
+
+    # Find closest point
+    src = nil
+    mn = 999999999
+    @positions.each{ |p| 
+      dist = ((px-p[0]) * (px-p[0])) +
+             ((py-p[1]) * (py-p[1]))
+      if dist < mn
+        mn = dist
+        src = p
+      end
+    }
+
+    # Use distance to figure volume
+    dist = ((px-src[0]) * (px-src[0])) +
+           ((py-src[1]) * (py-src[1]))
+
+    dist = Math.sqrt(dist)
+
+    # If under min, full volume
+    if dist < @short
+      self.gain = 1.0
+      return
+    end
+
+    # If over max, off
+    if dist > @long
+      self.gain = 0.0
+      return
+    end
+
+    # Scale
+    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
+
 
   end
 

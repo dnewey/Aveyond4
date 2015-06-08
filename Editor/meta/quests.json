@@ -21,7 +21,6 @@
     "help": "Format - id:count or gold:count"
   },
   {
-    "field": "chapter",
-    "edit": "select"
+    "field": "type"
   }
 ]

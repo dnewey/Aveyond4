@@ -39,8 +39,11 @@ def aveyond4
     
     # Set the windowed mode for next time
     $settings.conclude
+    $audio.dispose
 
 rescue StandardError => e
+
+  $audio.dispose
     
   line = e.message.split(":")[1].to_i      
   log_err e.inspect

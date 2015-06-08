@@ -23,9 +23,9 @@ class CharView < SpriteGroup
 		@shadow.bitmap = $cache.menu_char("battlehud-shadow")
 		add(@shadow,6,74)
 
-		@xform = Sprite.new(vp)
-		@xform.bitmap = $cache.menu_char("Transforms/frog") if rand(10) > 3
-		add(@xform,15,65)
+		# @xform = Sprite.new(vp)
+		# @xform.bitmap = $cache.menu_char("Transforms/frog") if rand(10) > 3
+		# add(@xform,15,65)
 
 		# Health
 		#bars
