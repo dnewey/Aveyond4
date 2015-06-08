@@ -23,6 +23,7 @@ class Ui_Grid
 
 		@boxes = []
 		@contents = []
+		@extra = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -142,23 +143,49 @@ class Ui_Grid
 	def add_difficulty(diff)
 
 		# Create new things
-		btn = Box.new(@vp,500,100)
+		btn = Box.new(@vp,500,116)
      	btn.skin = $cache.menu_common("skin-plain")
      	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
      	btn.name = diff
      	@boxes.push(btn)
+     	btn.move(@cx,@cy)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
      	cont.shadow = $fonts.list_shadow
-     	#cont.icon = $cache.icon(icon)
+     	cont.icon = $cache.icon("misc/diff-#{diff}")
      	cont.gradient = true
-     	cont.text = diff
+     	cont.text = diff_name(diff)
      	@contents.push(cont)
+     	cont.move(@cx+10,@cy+7)
+
+     	stat = Label.new(@vp)
+        #stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/attack")
+        stat.font = $fonts.pop_text
+        stat.text = "Enemies do 25% less damage"
+        @extra.push(stat)
+        stat.move(@cx+22,@cy+34)
+
+        stat = Label.new(@vp)
+        #stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/targets")
+        stat.font = $fonts.pop_text
+        stat.text = "Enemies respawn"
+        @extra.push(stat)
+        stat.move(@cx+22,@cy+57)
+
+        stat = Label.new(@vp)
+        #stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/restore")
+        stat.font = $fonts.pop_text
+        stat.text = "Health is not restored when gaining levels"
+        @extra.push(stat)
+        stat.move(@cx+22,@cy+80)
 
      	# Position
-     	btn.move(@cx,@cy)
-     	cont.move(@cx+10,@cy+7)
+     	
+     	
 
      	choose(@boxes[0].name) if @boxes.count == 1
 
@@ -167,6 +194,17 @@ class Ui_Grid
      		@cy += btn.height + 5
      	end
 
+	end
+
+	def diff_name(diff)
+		case diff
+			when 'easy'
+				return "Bunny Protector - Easy Mode"
+			when 'mid'
+				return "Villain - Normal Mode"
+			when 'hard'
+				return "Super Villain - Expert Mode"
+		end
 	end
 
 	def update

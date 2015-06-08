@@ -1,4 +1,4 @@
-[}"°#==============================================================================
+[~"Ø#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -39,8 +39,11 @@ def aveyond4
     
     # Set the windowed mode for next time
     $settings.conclude
+    $audio.dispose
 
 rescue StandardError => e
+
+  $audio.dispose
     
   line = e.message.split(":")[1].to_i      
   log_err e.inspect
@@ -1002,7 +1005,7 @@ class Bar < Sprite
 
 	end
 
-end"©	
+end"Ù	
 class Box 
 
 	attr_accessor :name
@@ -1068,6 +1071,10 @@ class Box
 	def opacity=(o)
 		@wallpaper.opacity = o
 		@window.opacity = o
+	end
+
+	def opacity
+		return @window.opacity
 	end
 
 	def hide
@@ -1366,7 +1373,7 @@ class Label < Sprite
         
   end
   
-end"-"#==============================================================================
+end"##==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1465,6 +1472,10 @@ class List
     @back_sprite.opacity = o
     @content_sprite.opacity = o
     @select_sprite.opacity = o
+  end
+
+  def opacity
+    return @back_sprite.opacity
   end
 
   def dispose
@@ -1607,17 +1618,20 @@ class List
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
 
+    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"-"+item.cost.to_s,0)
+
   end
 
   def draw_quest(data,row)
 
     item = $data.quests[data]
 
-    ico = $cache.icon('items/map')
+    ico = $cache.icon('misc/unknown')
+
     
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
 
   end
 
@@ -1652,7 +1666,7 @@ class List
   	# Check inputs and that
   	if $keyboard.press?(VK_DOWN)
 
-      return if idx >= @data.count - 2
+      return if idx >= @data.count - 1
 
       # If the tweens are going, skip to done
       $tweens.resolve(@back_sprite)
@@ -2196,7 +2210,7 @@ class OLDList
   end
 
  end
-" "À
+" "
 class SpriteGroup
 
 	attr_reader :sprites
@@ -2218,6 +2232,10 @@ class SpriteGroup
 
 	def add(spr,ox=0,oy=0)
 		@sprites.push([spr,ox,oy])
+	end
+
+	def delete(spr)
+		@sprites.delete_if{ |a| a[0] == spr}
 	end
 
 	def change(spr,ox,oy)
@@ -2388,7 +2406,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"Ö#==============================================================================
+end"#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -2415,6 +2433,14 @@ end
 def unhide(e)
 	gev(e).opacity = 255
 end
+
+def unhide3(*args)
+	args.each{ |a|
+		unhide(a+'3')
+	}
+end
+
+
 
 def roll(range)
 	gev(me).random = rand(range) + 1
@@ -2666,7 +2692,7 @@ def grant_items
 		#log_scr(v.id)
 		item(v.id,99,'s')
 	}
-end"
+end"?
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -2696,6 +2722,10 @@ def pop_get(type,b,ib)
 
 		when 'f'
 			a = "You found: "
+			ia = nil
+
+		when 'b'
+			a = "You bought: "
 			ia = nil
 
 		when 'r'
@@ -2782,7 +2812,29 @@ def progress(id) $progress.progress(id) end
 def progress?(id) return $progress.progress?(id) end
 
 def before?(id) return $progress.before?(id) end
-def beyond?(id) return $progress.beyond?(id) end"²
+def beyond?(id) return $progress.beyond?(id) end"Ï
+
+def shop_choice
+
+	case $menu.grid_action
+
+		when 'Buy'
+
+			# Have money, buy it
+			item(gev(me).name,'b')
+
+
+		when 'Info'
+
+			text("That's a covey balm")
+
+
+		when 'Cancel'
+
+	end
+
+
+end"²
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2877,7 +2929,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"
+"Õ
 # Misc
 
 def text()
@@ -2940,6 +2992,16 @@ def open_shop_sell
 	$game.push_scene(Scene_Menu.new)
 end
 
+def open_difficulty_options
+	grid = $scene.hud.open_grid
+	grid.x = 70
+	grid.y = 60
+	grid.add_difficulty('easy')
+	grid.add_difficulty('mid')
+	grid.add_difficulty('hard')
+	return grid
+end
+
 # Fades
 
 def fadeout(f=30)
@@ -2950,9 +3012,9 @@ end
 def fadein(f=30)
 	$scene.overlay.do(to("opacity",0,-255/30))
 	w f
-end"WORLD_MAP_ID = 25
+end"	WORLD_MAP_ID = 25
 
-def transfer(map,room)
+def transfer(map,room=nil)
 
 	id = find_map_id(map)
 	$player.transfer_to(id,room)
@@ -3154,7 +3216,7 @@ class Popper < Sprite
 
 	end
 
-end"j
+end"Y
 class ActorCmd
 
 	def initialize(vp)
@@ -3181,16 +3243,20 @@ class ActorCmd
 		@battler.actions.each{ |action|
 			# Add an icon?
 			spr = Sprite.new(@vp)
-			spr.bitmap = $cache.icon("misc/bulb")
+			spr.bitmap = $cache.icon("battle/boy-staff")
+			spr.ox = spr.width/2
+			spr.oy = spr.height
 			@icons.push(spr)
 		}
 
 
 
 		# Position the things
-		reposition
+		
 
 		select
+
+		reposition
 
 		# Prep the text
 		#@text.bitmap = Cache.menu("Battle/text")
@@ -3199,13 +3265,27 @@ class ActorCmd
 	end
 
 	def close
+		return if !@icons || @icons.empty?
 		@icons.each{ |i|
 			$tweens.clear(i)
 		}
-		@icons.each{ |i| i.dispose }
+
+		@icons[0].do(go("opacity",-255,250,:qio))
+			@icons[1].do(go("opacity",-255,250,:qio))
+			@icons[2].do(go("opacity",-255,250,:qio))
+
+		@icons[0].do(go("x",36,250,:qio))
+			@icons[0].do(go("y",16,250,:qio))
+			#@icons[1].move(sx,sy-25)
+			@icons[1].do(go("y",25,250,:qio))
+			#@icons[2].move(sx+36,sy-16)
+			@icons[2].do(go("x",-36,250,:qio))
+			@icons[2].do(go("y",16,250,:qio))
+
+		#@icons.each{ |i| i.dispose }
 		#@text.bitmap = nil
-		@icons = []
-		@battler = nil
+		#@icons = []
+		#@battler = nil
 	end
 
 	def get_action
@@ -3214,12 +3294,30 @@ class ActorCmd
 
 	def reposition
 		sx = @battler.ev.screen_x
-		sy = @battler.ev.screen_y-50
+		sy = @battler.ev.screen_y-44
 
 		if @icons.count == 3
-			@icons[0].center(sx-36,sy-16)
-			@icons[1].center(sx,sy-25)
-			@icons[2].center(sx+36,sy-16)
+
+			@icons[0].opacity = 0
+			@icons[1].opacity = 0
+			@icons[2].opacity = 0
+
+			@icons[0].move(sx,sy+12)
+			@icons[1].move(sx,sy+12)
+			@icons[2].move(sx,sy+12)
+
+			@icons[0].do(go("opacity",255,250,:qio))
+			@icons[1].do(go("opacity",255,250,:qio))
+			@icons[2].do(go("opacity",255,250,:qio))
+
+			#@icons[0].move(sx-36,sy-16)
+			@icons[0].do(go("x",-36,250,:qio))
+			@icons[0].do(go("y",-16,250,:qio))
+			#@icons[1].move(sx,sy-25)
+			@icons[1].do(go("y",-25,250,:qio))
+			#@icons[2].move(sx+36,sy-16)
+			@icons[2].do(go("x",36,250,:qio))
+			@icons[2].do(go("y",-16,250,:qio))
 		end
 
 		if @icons.count == 4
@@ -3233,12 +3331,22 @@ class ActorCmd
 	end
 
 	def select
+		sys('select')
+		idx = 0
 		@icons.each{ |i|
 			$tweens.clear(i)
+			i.bitmap = $cache.icon("battle/#{@battler.id}-#{@battler.actions[idx]}")
+			i.ox = i.width/2
+			i.oy = i.height
+			idx += 1
 		}
-		reposition
-		seq = sequence(go("y",-8,250,:quad_in_out),go("y",8,250,:cubic_in_out))
+		#reposition
+		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.id}-#{@battler.actions[@idx]}-on")
+		#seq = sequence(go("y",-3,400),go("y",3,400))
 		@icons[@idx].do(repeat(seq))
+		$scene.hud.set_help(@battler.actions[@idx])
+		@icons[@idx].ox = @icons[@idx].width/2
+		@icons[@idx].oy = @icons[@idx].height
 	end
 
 	def update
@@ -3246,29 +3354,28 @@ class ActorCmd
 		return if @battler.nil?
 
 		# Left and right to change
-		if $input.right?
-			@idx += 1 if @idx < @icons.count-1
-			$scene.hud.set_help(@battler.actions[@idx])
+		if $input.right? && @idx < @icons.count-1
+			@idx += 1
 			select
 		end
 
-		if $input.left?
-			@idx -= 1 if @idx > 0
-			$scene.hud.set_help(@battler.actions[@idx])
+		if $input.left? && @idx > 0
+			@idx -= 1 			
 			select
 		end
 
 		pos = $mouse.position
-		@icons.each{ |i|
+			@icons.each{ |i|
 			if i.within?(pos[0],pos[1])
+				break if @icons.index(i) == @idx
 				@idx = @icons.index(i)
-				$scene.hud.set_help(@battler.actions[@idx])
+				select
 			end
 		}
 
 	end
 
-end"Ð
+end"Ö
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -3293,9 +3400,9 @@ class CharView < SpriteGroup
 		@shadow.bitmap = $cache.menu_char("battlehud-shadow")
 		add(@shadow,6,74)
 
-		@xform = Sprite.new(vp)
-		@xform.bitmap = $cache.menu_char("Transforms/frog") if rand(10) > 3
-		add(@xform,15,65)
+		# @xform = Sprite.new(vp)
+		# @xform.bitmap = $cache.menu_char("Transforms/frog") if rand(10) > 3
+		# add(@xform,15,65)
 
 		# Health
 		#bars
@@ -3340,7 +3447,7 @@ class CharView < SpriteGroup
 
 	end
 
-end"Q
+end"Ç
 class ItemCmd
 
 	def initialize(vp)
@@ -3349,17 +3456,17 @@ class ItemCmd
 		@window = Box.new(vp,300,242)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
-    	@window.move(10,66)
+    	@window.move(14,66)
 
 		# Left side list
 		@list = List.new()
-		@list.move(16,72)
+		@list.move(20,72)
 
 		@list.per_page = 6
 		@list.item_width = 288
 		@list.item_height = 34
 
-		@list.item_space = 35	
+		@list.item_space = 1
 
 		@list.change = Proc.new{ |option| self.change(option) }
 
@@ -3368,7 +3475,7 @@ class ItemCmd
 
 		@box = Item_Box.new(vp)
 		@box.item('covey')
-		@box.move(320,140)
+		@box.move(326,100)
 		@box.opacity = 0
 
 		@list.opacity = 0
@@ -3377,19 +3484,49 @@ class ItemCmd
 	end
 
 	def setup
-		@list.opacity = 255
-		@window.opacity = 255
-		@box.opacity = 255
 
 		item_list = $party.battle_item_list
 		@list.setup(item_list)
 		change(item_list[0])
+
+		open
 	end
 
-	def close
+	def open
+		$tweens.clear(@list)
+		$tweens.clear(@window)
+		$tweens.clear(@box)
+
 		@list.opacity = 0
 		@window.opacity = 0
 		@box.opacity = 0
+
+		@list.x = -132
+		@list.do(go("x",150,250,:qio))
+		@list.do(go("opacity",255,250,:qio))
+
+		@window.x = -138
+		@window.do(go("x",150,250,:qio))
+		@window.do(go("opacity",255,250,:qio))
+
+		@box.x = 326+150
+		@box.do(go("x",-150,250,:qio))
+		@box.do(go("opacity",255,250,:qio))
+	end
+
+	def close
+		$tweens.clear(@list)
+		$tweens.clear(@window)
+		$tweens.clear(@box)
+
+		@list.do(go("x",-150,250,:qio))
+		@list.do(go("opacity",-255,250,:qio))
+
+		@window.do(go("x",-150,250,:qio))
+		@window.do(go("opacity",-255,250,:qio))
+
+		@box.do(go("x",150,250,:qio))
+		@box.do(go("opacity",-255,250,:qio))
 	end
 
 	def update
@@ -3399,23 +3536,19 @@ class ItemCmd
 	def change(option)
 		@item = option
 		@box.item(option)
-		@box.center(462,130+@list.page_idx*@list.item_height)
+		#@box.center(462,130+@list.page_idx*@list.item_height)
 	end
 
 	def get_item
 		return @item
 	end
 
-end"g
+end"¨
 class SkillCmd < ItemCmd
 
 	def setup(battler)
 
 		@battler = battler
-
-		@list.opacity = 255
-		@window.opacity = 255
-		@box.opacity = 255
 
 		skill_list = @battler.skill_list
 
@@ -3424,10 +3557,18 @@ class SkillCmd < ItemCmd
 		@list.type = :skill
 		@list.setup(skill_list)
 		change(skill_list[0])
+
+		open
 	end
 
 	def get_skill
 		return @item
+	end
+
+	def change(option)
+		@item = option
+		@box.skill(option)
+		#@box.center(462,130+@list.page_idx*@list.item_height)
 	end
 
 end"b
@@ -3554,7 +3695,8 @@ class TargetCmd
 	end
 
 end
-"§#==============================================================================
+"Í
+#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -3573,8 +3715,6 @@ class Ui_Screen
 		
 		@info = Ui_Info.new(vp)
 
-
-		@shop = nil
 		@popper = nil
 		@grid = nil
 		@item = nil
@@ -3597,9 +3737,17 @@ class Ui_Screen
 		if @grid
 			@grid.update 
 			if $input.action?
+				# Record action and close
+				$menu.grid_action = @grid.get_chosen
+
 				$tweens.clear(@grid)
 				@grid.dispose
 				@grid = nil
+				if @item
+					$tweens.clear(@item)
+					@item.dispose
+					@item = nil
+				end
 			end
 		end
 
@@ -3612,15 +3760,6 @@ class Ui_Screen
 			end
 		end
 
-		if @shop
-			@shop.update 
-			if $input.action?
-				$tweens.clear(@shop)
-				@shop.dispose
-				@shop = nil
-			end
-		end
-
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || $input.rclick?
@@ -3629,10 +3768,49 @@ class Ui_Screen
 
 	end
 
-	def open_item(i)
+	def open_buy_item(i)
 		@item = Item_Box.new(@vp)
 		@item.item(i)
-		@item.move(40,40)
+		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+
+		# Also grid opens
+		grid = open_grid
+		grid.spacing = 0
+		grid.x = @item.x#$player.screen_x
+		grid.y = @item.y+@item.height
+		grid.add_button('Buy',"Buy",'misc/unknown')
+		grid.add_button('Info',"Info",'misc/unknown')
+		grid.add_button('Cancel',"Cancel",'misc/unknown')
+	end
+
+	def open_sell_item(i)
+		@item = Item_Box.new(@vp)
+		@item.item(i)
+		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+
+		# Also grid opens
+		grid = open_grid
+		grid.spacing = 0
+		grid.x = @item.x#$player.screen_x
+		grid.y = @item.y+@item.height
+		grid.add_button('Buy',"Buy",'misc/unknown')
+		grid.add_button('Info',"Info",'misc/unknown')
+		grid.add_button('Cancel',"Cancel",'misc/unknown')
+	end
+
+	def open_empty_item
+		@item = Item_Box.new(@vp)
+		@item.item(i)
+		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+
+		# Also grid opens
+		grid = open_grid
+		grid.spacing = 0
+		grid.x = @item.x#$player.screen_x
+		grid.y = @item.y+@item.height
+		grid.add_button('Buy',"Buy",'misc/unknown')
+		grid.add_button('Info',"Info",'misc/unknown')
+		grid.add_button('Cancel',"Cancel",'misc/unknown')
 	end
 
 	def open_popper()
@@ -3642,18 +3820,11 @@ class Ui_Screen
 
 	def open_grid()
 		@grid = Ui_Grid.new(@vp)
-		@grid.add_button('first','MEMO','faces/hib')
-		@grid.add_button('sfirst','MEMO','faces/hib')
 		return @grid
 	end
 
-	def open_shop()
-		@shop = Ui_Shop.new(@vp)
-		return @shop
-	end
-
     def busy?() 
-    	return @message.busy? || @item || @popper || @grid || @shop
+    	return @message.busy? || @item || @popper || @grid
     end
 
 end"é#==============================================================================
@@ -3722,13 +3893,15 @@ class Ui_Bar < SpriteGroup
 		super()
 	end
 
-end"O#==============================================================================
+end"ù#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
 class Ui_Grid
 
 	attr_reader :idx
+
+	attr_accessor :spacing
 
 	def initialize(vp)
 
@@ -3739,12 +3912,13 @@ class Ui_Grid
 		@cx = 0
 		@cy = 0
 
+		@spacing = 5
+
 		@fix_width = 0
 
 		@boxes = []
 		@contents = []
-		@types = []
-		@stats = []
+		@extra = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -3753,10 +3927,17 @@ class Ui_Grid
      	@glow.z += 50
 
      	@idx = 0
+
+     	@type = :slot
+     	@char = 'boy'
      	
      	#@selected = "Journal"
      	#choose(@selected)
 
+	end
+
+	def update
+		@boxes.each{ |box| box.update }
 	end
 
 	def move(x,y)
@@ -3797,6 +3978,36 @@ class Ui_Grid
 	def add_button(name,text,icon)
 
 		# Create new things
+		btn = Box.new(@vp,120,46)
+     	btn.skin = $cache.menu_common("skin-plain")
+     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
+     	btn.name = name
+     	@boxes.push(btn)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = text
+     	@contents.push(cont)
+
+     	# Position
+     	btn.move(@cx,@cy)
+     	cont.move(@cx+10,@cy+7)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + @spacing
+     	end
+
+	end
+
+	def add_slot(slot)
+
+		# Create new things
 		btn = Box.new(@vp,300,60)
      	btn.skin = $cache.menu_common("skin-plain")
      	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
@@ -3811,35 +4022,84 @@ class Ui_Grid
      	cont.text = text
      	@contents.push(cont)
 
-     	type = Label.new(@vp)
-    	type.fixed_width = 250
-    	type.font = $fonts.pop_type
-    	type.align = 0
-    	type.text = "WEAPON"
-    	@types.push(type)
-
-		stat = Label.new(@vp)
-    	stat.fixed_width = 250
-    	stat.font = $fonts.pop_type
-    	stat.align = 0
-    	stat.text = "15 Strength"
-    	@stats.push(stat)
-
      	# Position
      	btn.move(@cx,@cy)
      	cont.move(@cx+10,@cy+7)
-     	type.move(@cx+220,@cy+7)
-     	stat.move(@cx+32, @cy+32)
 
-     	if @boxes.count == 1
-     		choose(@boxes[0].name)
-     	end
+     	choose(@boxes[0].name) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
-     		@cy += 65
+     		@cy += btn.height + 5
      	end
 
+	end
+
+	def add_difficulty(diff)
+
+		# Create new things
+		btn = Box.new(@vp,500,116)
+     	btn.skin = $cache.menu_common("skin-plain")
+     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
+     	btn.name = diff
+     	@boxes.push(btn)
+     	btn.move(@cx,@cy)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon("misc/diff-#{diff}")
+     	cont.gradient = true
+     	cont.text = diff_name(diff)
+     	@contents.push(cont)
+     	cont.move(@cx+10,@cy+7)
+
+     	stat = Label.new(@vp)
+        #stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/attack")
+        stat.font = $fonts.pop_text
+        stat.text = "Enemies do 25% less damage"
+        @extra.push(stat)
+        stat.move(@cx+22,@cy+34)
+
+        stat = Label.new(@vp)
+        #stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/targets")
+        stat.font = $fonts.pop_text
+        stat.text = "Enemies respawn"
+        @extra.push(stat)
+        stat.move(@cx+22,@cy+57)
+
+        stat = Label.new(@vp)
+        #stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/restore")
+        stat.font = $fonts.pop_text
+        stat.text = "Health is not restored when gaining levels"
+        @extra.push(stat)
+        stat.move(@cx+22,@cy+80)
+
+     	# Position
+     	
+     	
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + 5
+     	end
+
+	end
+
+	def diff_name(diff)
+		case diff
+			when 'easy'
+				return "Bunny Protector - Easy Mode"
+			when 'mid'
+				return "Villain - Normal Mode"
+			when 'hard'
+				return "Super Villain - Expert Mode"
+		end
 	end
 
 	def update
@@ -3931,10 +4191,8 @@ class Ui_Grid
 
 	end
 
-	def select(option)
-
-		
-
+	def get_chosen
+		return @selected
 	end
 
 end"C#==============================================================================
@@ -3979,7 +4237,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"]G#==============================================================================
+end"4H#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -4054,6 +4312,7 @@ class Ui_Message
     @box = Box.new(vp)
     @box.skin = $cache.menu_common("skin")
     @box.wallpaper = $cache.menu_wallpaper("diamonds")
+    @box.scroll(0.1,0.1)
 
     # Setup sprites    
     @textbox = Sprite.new(vp)
@@ -4259,24 +4518,27 @@ class Ui_Message
     end
 
     # System message
-    if speaker == 'sys'
+    if speaker.split("-")[0] == 'sys'
+      if speaker.split("-").count > 1
+        @box.wallpaper = $cache.menu_wallpaper(speaker.split("-")[1])
+      end
       speaker = nil
       name = ''
       @mode = :sys
       @tail.hide
     end
-
-    # Have to split name by '-' to make expressions work
-    # GET RID OF IT
     
     # If in party, show as player and change player graphic
-    if $data.actors.has_key?(name.split('-')[0]) && @mode == :message
+    if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
       @speaker = $player
       $player.looklike(name.split('-')[0])
     elsif speaker != nil
-      @speaker = gev(speaker)
+      @speaker = gev(speaker.split("-")[0])
       @mode = :sys if @speaker == nil
     end
+
+    # Force name to not have the number
+    name.delete!('123456789')
 
     # Get face and name of player characters
     if $data.actors.has_key?(name.split('-')[0])
@@ -4318,7 +4580,7 @@ class Ui_Message
     # Would need to be put in update
     @sprites.change(@tail,@width/2-2,@height)
     #@sprites.change(@next,@width/2,@height-20)
-
+    $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
@@ -4468,7 +4730,7 @@ class Ui_Message
         open_choices
       else
         @state = :done
-        @box.skin = $cache.menu_common("skin-gold")
+        #@box.skin = $cache.menu_common("skin-gold")
       end
     else
       @word_idx = 0
@@ -4600,9 +4862,9 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
-      @sprites.opacity = 0
+      #@sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
-      #@sprites.do(go("opacity",-255,300,:quad_in_out))
+      @sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
 
@@ -5701,7 +5963,7 @@ class Mnu_Save < Mnu_Base
 	def select(option)	
 		
 	end
-end"#==============================================================================
+end"(#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -5724,7 +5986,7 @@ class Mnu_Shop < Mnu_Base
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
-		@item_box.center(462,130)
+		@item_box.center(472,250)
 		self.right.push(@item_box)
 
 		change_tab("Items")
@@ -5739,7 +6001,7 @@ class Mnu_Shop < Mnu_Base
 	def change(option)
 		@info.title.text = option
 		@item_box.item(option)
-		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 	end
 
 	def select(option)	
@@ -5747,6 +6009,7 @@ class Mnu_Shop < Mnu_Base
 	end
 
 	def change_tab(tab)
+		return
 
 		# Change list to certain items only
 		list = []
@@ -5961,7 +6224,7 @@ class Info_Box < SpriteGroup
 	end
 
 end
-"Ú
+"ñ	
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -5970,6 +6233,7 @@ class Item_Box < SpriteGroup
 	def initialize(vp)
 		super()		
 
+        @vp = vp
         @type = :item
 
 		# Resize to whatever is needed
@@ -5997,21 +6261,24 @@ class Item_Box < SpriteGroup
     	@desc.text = "Missing Descriptor"
     	add(@desc,16,42)
 
-    	@stat_a = Label.new(vp)
-		@stat_a.fixed_width = 250
-    	@stat_a.icon = $cache.icon("stats/restore")
-    	@stat_a.font = $fonts.pop_text
-    	@stat_a.text = "Restores 10HP"
-    	add(@stat_a,36,70)
+        @stats = []
+        @cy = 42
 
-    	@stat_b = Label.new(vp)
-    	@stat_c = Label.new(vp)
+    	
     	
     	move(0,0)
 
     	item('unknown')
 
 	end
+
+    def width
+        return @window.width
+    end
+
+    def height
+        return @window.height
+    end
 
 
 	def center(x,y)
@@ -6030,31 +6297,79 @@ class Item_Box < SpriteGroup
 		@window.update
 	end
 
+    def get_data(id)
+        if @type == :item
+          return $data.items[id]
+        elsif @type == :skill
+          return $data.skills[id]
+        end
+    end
+
+    def base(data)
+
+        # Set values
+        @title.text = data.name
+        @desc.text = data.description
+
+        @stats.each{ |s| 
+            s.dispose
+            delete(s)
+            s.dispose 
+        }
+        @stats = []
+        @cy = 42 + @desc.height 
+
+    end
+
+    def newsize
+        @window.resize(300,64 + @desc.height + @stats.count*20)
+    end
+
+    def stat(icon,text)
+
+        stat = Label.new(@vp)
+        stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/#{icon}")
+        stat.font = $fonts.pop_text
+        stat.text = text
+        @stats.push(stat)
+        add(stat,36,@cy)
+        @cy += 20
+
+    end
+
 	def item(id)
 
-        if @type == :item
-		  item = $data.items[id]
-        elsif @type == :skill
-          item = $data.skills[id]
-        end
-		#log_info(item)
+        data = get_data(id)       
+        base(data)
 
-        if item == nil
-            log_sys(id)
-            log_sys(@type)
-            return
-        end
-
-		# Set values
-		@title.text = item.name
-		@desc.text = item.description
+        #return if data == nil
+        stat("targets","Hit ALL")
+		
 		#@type.text = item.type
+
+        newsize
+        remove
 
 	end
 
 	def skill(id)
 
+        data = get_data(id)       
+        base(data)
+
+        #if data.scope == 'all'
+            stat("targets","Hit ALL")
+        #end
+
+        newsize
+        remove
+
 	end
+
+    def gear(id)
+
+    end
 
 end"µ
 class List_Common < SpriteGroup
@@ -8997,11 +9312,8 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"ÑZ#==============================================================================
-# ** Interpreter (part 1)
-#------------------------------------------------------------------------------
-#  This interpreter runs event commands. This class is used within the
-#  Game_System class and the Game_Event class.
+end"a[#==============================================================================
+# ** Interpreter
 #==============================================================================
 
 class Interpreter
@@ -9448,6 +9760,19 @@ class Interpreter
     return true
   end
 
+  def command_117
+    # Get common event
+    common_event = $data.commons[@parameters[0]]
+    # If common event is valid
+    if common_event != nil
+      # Make child interpreter
+      @child_interpreter = Interpreter.new(@depth + 1)
+      @child_interpreter.setup(common_event.list, @event_id)
+    end
+    # Continue
+    return true
+  end
+
   #--------------------------------------------------------------------------
   # * Label
   #--------------------------------------------------------------------------
@@ -9801,7 +10126,7 @@ class Interpreter
   end
 
 end
-"y)#==============================================================================
+"™)#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -9947,6 +10272,9 @@ class Game_Map
   end
 
   def setup_audio
+
+    # Fadeout previous
+    
 
     # Play music from the zone
     $audio.music(@zone.music)
@@ -10622,7 +10950,7 @@ class Game_Player < Game_Character
   end
 
 end
-"+
+"'
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -10638,7 +10966,7 @@ class Game_Battle
     @props = []
     @actor_index = 0
 
-    @map = 26 #65 #26
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -10840,7 +11168,7 @@ class Game_Battle
   end
 
   
-end"P
+end"
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -10848,6 +11176,7 @@ class MenuState
 
 	attr_accessor :char
 	attr_accessor :shop
+	attr_accessor :grid_action # <- menu selection
 
 	#attr_accessor :category
 	#attr_accessor :tab
@@ -10865,7 +11194,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"®#==============================================================================
+end"æ#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -10959,6 +11288,10 @@ class Game_Party
   def back_to_pavillion(actor)
     @actors.delete(actor)
     @reserve.delete(actor)
+  end
+
+  def all
+    return @active + @reserve
   end
 
   #--------------------------------------------------------------------------
@@ -11083,12 +11416,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
+    #set_active("ing")
     #set_active("mys")
-    set_active("rob")
-    set_active("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    #set_active("rob")
+    #set_active("hib")
+    #set_reserve("row")
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -12983,78 +13316,9 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"’#==============================================================================
+end"»#==============================================================================
 # ** Audio Manager
 #==============================================================================
-
-class EnviroSource < Seal::Source
-
-  attr_reader :file
-
-  def initialize(sound,pos)
-    super()
-
-    @file = sound
-
-    @positions = [pos]
-    self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
-    self.looping = true
-    self.play
-
-    @short = 96 * 4 # *4 to convert to REAL coords
-    @long = 320 * 4
-
-  end
-
-  def addpos(pos)
-
-    @positions.push(pos)
-
-  end
-
-  def update
-
-    # Use player pos for now
-    px = $player.real_x
-    py = $player.real_y
-
-    # Find closest point
-    src = nil
-    mn = 999999999
-    @positions.each{ |p| 
-      dist = ((px-p[0]) * (px-p[0])) +
-             ((py-p[1]) * (py-p[1]))
-      if dist < mn
-        mn = dist
-        src = p
-      end
-    }
-
-    # Use distance to figure volume
-    dist = ((px-src[0]) * (px-src[0])) +
-           ((py-src[1]) * (py-src[1]))
-
-    dist = Math.sqrt(dist)
-
-    # If under min, full volume
-    if dist < @short
-      self.gain = 1.0
-      return
-    end
-
-    # If over max, off
-    if dist > @long
-      self.gain = 0.0
-      return
-    end
-
-    # Scale
-    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
-
-
-  end
-
-end
 
 class AudioManager
 
@@ -13062,13 +13326,22 @@ class AudioManager
   def initialize
 
     begin
-    Seal.startup
-  rescue
-    retry
-  end
+      Seal.startup
+    rescue
+      retry
+    end
 
     @music = Seal::Source.new
+    @music_in = Seal::Source.new
+
     @atmosphere = Seal::Source.new
+    @atmostphere_in = Seal::Source.new
+
+    # Fade targets
+    @music_target = 1.0
+    @music_in_target = 1.0
+    @atmosphere_target = 1.0
+    @atmosphere_in_target = 1.0
 
     # Looping, fade by distance
     @environmental = [] 
@@ -13082,7 +13355,6 @@ class AudioManager
     # Queue of sfx to play [[file,delay,vol]]
     @queue = [] 
 
-
     @mode = :normal
     @effect = nil
 
@@ -13090,6 +13362,13 @@ class AudioManager
 
     #change_mode(:cave)
     
+  end
+
+  def dispose
+
+    # Destroy all the sources
+
+    Seal.cleanup
   end
 
   def fadeout
@@ -13258,6 +13537,75 @@ class AudioManager
 
   end
 
+end
+
+class EnviroSource < Seal::Source
+
+  attr_reader :file
+
+  def initialize(sound,pos)
+    super()
+
+    @file = sound
+
+    @positions = [pos]
+    self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
+    self.looping = true
+    self.play
+
+    @short = 96 * 4 # *4 to convert to REAL coords
+    @long = 320 * 4
+
+  end
+
+  def addpos(pos)
+
+    @positions.push(pos)
+
+  end
+
+  def update
+
+    # Use player pos for now
+    px = $player.real_x
+    py = $player.real_y
+
+    # Find closest point
+    src = nil
+    mn = 999999999
+    @positions.each{ |p| 
+      dist = ((px-p[0]) * (px-p[0])) +
+             ((py-p[1]) * (py-p[1]))
+      if dist < mn
+        mn = dist
+        src = p
+      end
+    }
+
+    # Use distance to figure volume
+    dist = ((px-src[0]) * (px-src[0])) +
+           ((py-src[1]) * (py-src[1]))
+
+    dist = Math.sqrt(dist)
+
+    # If under min, full volume
+    if dist < @short
+      self.gain = 1.0
+      return
+    end
+
+    # If over max, off
+    if dist > @long
+      self.gain = 0.0
+      return
+    end
+
+    # Scale
+    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
+
+
+  end
+
 end" 
 class CacheManager
 
@@ -13347,7 +13695,7 @@ class CacheManager
       GC.start
     end
 
-  end"»#==============================================================================
+  end"–#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -13415,7 +13763,6 @@ class DataManager
     @clones = load_clones
 
 		# Convert to json
-    # Currently doesn't work in ace
     @commons = load_data("Data/CommonEvents.rxdata")
     @tilesets = load_data("Data/Tilesets.rxdata")
     @system = load_data("Data/System.rxdata")
@@ -14554,7 +14901,7 @@ end"øclass Bitmap
 	end
 
 end
-"t
+"…
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -14603,6 +14950,7 @@ class SkillData
 	attr_reader :book
 	attr_reader :description
 	attr_reader :icon
+	attr_reader :cost
 	attr_reader :hits
 	attr_reader :scope
 	attr_reader :anim_a
@@ -14661,7 +15009,7 @@ class QuestData
 	attr_reader :location
 	attr_reader :req
 	attr_reader :reward
-	attr_reader :chapter
+	attr_reader :type
 end
 
 class AnimData
@@ -16415,7 +16763,7 @@ end"A
 	def done?
 		return $tweens.done?(self)
 	end
-end"Î
+end"J
 def sequence(*args)
 	return SequenceTween.new(*args)
 end
@@ -16590,6 +16938,11 @@ class TimedTween < Tween
 	end
 
 	def update(delta)
+
+		# Error with list with setting x, for now it doesn't slide
+		return if @parent.is_a?(Sprite) && @parent.disposed?
+
+
 		@elapsed += delta
 		@elapsed = @duration if @elapsed > @duration
 		var = easing(elapsed, @initial, @amount, @duration, @ease)

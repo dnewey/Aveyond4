@@ -290,7 +290,7 @@ class Ui_Message
     end
     
     # If in party, show as player and change player graphic
-    if $party.all.include?(speaker.split('-')[0]) && @mode == :message
+    if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
       @speaker = $player
       $player.looklike(name.split('-')[0])
     elsif speaker != nil

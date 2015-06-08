@@ -64,10 +64,10 @@ end
 def open_difficulty_options
 	grid = $scene.hud.open_grid
 	grid.x = 70
-	grid.y = 70
+	grid.y = 60
 	grid.add_difficulty('easy')
-	grid.add_difficulty('normal')
-	grid.add_difficulty('expert')
+	grid.add_difficulty('mid')
+	grid.add_difficulty('hard')
 	return grid
 end
 
