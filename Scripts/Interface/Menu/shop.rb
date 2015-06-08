@@ -21,7 +21,7 @@ class Mnu_Shop < Mnu_Base
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
-		@item_box.center(462,130)
+		@item_box.center(472,250)
 		self.right.push(@item_box)
 
 		change_tab("Items")
@@ -36,7 +36,7 @@ class Mnu_Shop < Mnu_Base
 	def change(option)
 		@info.title.text = option
 		@item_box.item(option)
-		@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 	end
 
 	def select(option)	
@@ -44,6 +44,7 @@ class Mnu_Shop < Mnu_Base
 	end
 
 	def change_tab(tab)
+		return
 
 		# Change list to certain items only
 		list = []

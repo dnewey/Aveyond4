@@ -30,6 +30,10 @@ def pop_get(type,b,ib)
 			a = "You found: "
 			ia = nil
 
+		when 'b'
+			a = "You bought: "
+			ia = nil
+
 		when 'r'
 			a = "You receive: "
 			ia = nil

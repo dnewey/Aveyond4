@@ -6,6 +6,7 @@ class MenuState
 
 	attr_accessor :char
 	attr_accessor :shop
+	attr_accessor :grid_action # <- menu selection
 
 	#attr_accessor :category
 	#attr_accessor :tab

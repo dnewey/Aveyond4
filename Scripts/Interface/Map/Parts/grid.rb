@@ -6,6 +6,8 @@ class Ui_Grid
 
 	attr_reader :idx
 
+	attr_accessor :spacing
+
 	def initialize(vp)
 
 		@vp = vp
@@ -14,6 +16,8 @@ class Ui_Grid
 
 		@cx = 0
 		@cy = 0
+
+		@spacing = 5
 
 		@fix_width = 0
 
@@ -72,6 +76,36 @@ class Ui_Grid
 		@glow.dispose
 		@contents.each{ |i| i.dispose }
 		@boxes.each{ |i| i.dispose }
+
+	end
+
+	def add_button(name,text,icon)
+
+		# Create new things
+		btn = Box.new(@vp,120,46)
+     	btn.skin = $cache.menu_common("skin-plain")
+     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
+     	btn.name = name
+     	@boxes.push(btn)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = text
+     	@contents.push(cont)
+
+     	# Position
+     	btn.move(@cx,@cy)
+     	cont.move(@cx+10,@cy+7)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + @spacing
+     	end
 
 	end
 
@@ -224,10 +258,8 @@ class Ui_Grid
 
 	end
 
-	def select(option)
-
-		
-
+	def get_chosen
+		return @selected
 	end
 
 end

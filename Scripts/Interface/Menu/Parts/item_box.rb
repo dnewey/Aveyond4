@@ -46,6 +46,14 @@ class Item_Box < SpriteGroup
 
 	end
 
+    def width
+        return @window.width
+    end
+
+    def height
+        return @window.height
+    end
+
 
 	def center(x,y)
 		move(x-150,y-60)

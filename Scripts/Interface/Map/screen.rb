@@ -17,8 +17,6 @@ class Ui_Screen
 		
 		@info = Ui_Info.new(vp)
 
-
-		@shop = nil
 		@popper = nil
 		@grid = nil
 		@item = nil
@@ -41,9 +39,17 @@ class Ui_Screen
 		if @grid
 			@grid.update 
 			if $input.action?
+				# Record action and close
+				$menu.grid_action = @grid.get_chosen
+
 				$tweens.clear(@grid)
 				@grid.dispose
 				@grid = nil
+				if @item
+					$tweens.clear(@item)
+					@item.dispose
+					@item = nil
+				end
 			end
 		end
 
@@ -56,15 +62,6 @@ class Ui_Screen
 			end
 		end
 
-		if @shop
-			@shop.update 
-			if $input.action?
-				$tweens.clear(@shop)
-				@shop.dispose
-				@shop = nil
-			end
-		end
-
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || $input.rclick?
@@ -73,10 +70,49 @@ class Ui_Screen
 
 	end
 
-	def open_item(i)
+	def open_buy_item(i)
 		@item = Item_Box.new(@vp)
 		@item.item(i)
-		@item.move(40,40)
+		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+
+		# Also grid opens
+		grid = open_grid
+		grid.spacing = 0
+		grid.x = @item.x#$player.screen_x
+		grid.y = @item.y+@item.height
+		grid.add_button('Buy',"Buy",'misc/unknown')
+		grid.add_button('Info',"Info",'misc/unknown')
+		grid.add_button('Cancel',"Cancel",'misc/unknown')
+	end
+
+	def open_sell_item(i)
+		@item = Item_Box.new(@vp)
+		@item.item(i)
+		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+
+		# Also grid opens
+		grid = open_grid
+		grid.spacing = 0
+		grid.x = @item.x#$player.screen_x
+		grid.y = @item.y+@item.height
+		grid.add_button('Buy',"Buy",'misc/unknown')
+		grid.add_button('Info',"Info",'misc/unknown')
+		grid.add_button('Cancel',"Cancel",'misc/unknown')
+	end
+
+	def open_empty_item
+		@item = Item_Box.new(@vp)
+		@item.item(i)
+		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+
+		# Also grid opens
+		grid = open_grid
+		grid.spacing = 0
+		grid.x = @item.x#$player.screen_x
+		grid.y = @item.y+@item.height
+		grid.add_button('Buy',"Buy",'misc/unknown')
+		grid.add_button('Info',"Info",'misc/unknown')
+		grid.add_button('Cancel',"Cancel",'misc/unknown')
 	end
 
 	def open_popper()
@@ -89,13 +125,8 @@ class Ui_Screen
 		return @grid
 	end
 
-	def open_shop()
-		@shop = Ui_Shop.new(@vp)
-		return @shop
-	end
-
     def busy?() 
-    	return @message.busy? || @item || @popper || @grid || @shop
+    	return @message.busy? || @item || @popper || @grid
     end
 
 end
