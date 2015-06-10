@@ -7,6 +7,12 @@ def transfer(map,room=nil)
 
 end
 
+def transfer_same(dir=nil)
+	id = $scene.map.id
+	room = $map.events[me].name
+	$player.transfer_to(id,room)
+end
+
 def transfer_world(dir=nil)
 
 	# Get name of transfer
