@@ -3,7 +3,7 @@ WORLD_MAP_ID = 25
 def transfer(map,room=nil)
 
 	id = find_map_id(map)
-	$player.transfer_to(id,room)
+	$player.transfer_to(id,map)
 
 end
 
