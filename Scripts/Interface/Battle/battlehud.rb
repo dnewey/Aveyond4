@@ -34,6 +34,10 @@ class BattleHud
 
 	end
 
+	def dispose
+
+	end
+
 	def set_help(text)
 
 		@help_text.bitmap.clear

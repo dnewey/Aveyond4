@@ -223,7 +223,7 @@ class Game_Party
     set_active("ing")
     set_active("mys")
     set_active("rob")
-    set_active("hib")
+    set_reserve("hib")
     set_reserve("row")
     set_reserve("phy")   
   
@@ -267,6 +267,8 @@ class Game_Party
     # Initial skills per actor
     @actors["boy"].learn('fireburn')
     @actors["boy"].learn('flames')
+
+    @actors["ing"].learn('xform-snake')
 
   end
 

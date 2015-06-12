@@ -41,7 +41,7 @@ class Scene_Battle
           @item_cmd.setup
           @phase = :actor_item
 
-        when "skills"
+        when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
 
           @skill_cmd.setup(@active_battler)
           @phase = :actor_skill
@@ -111,7 +111,7 @@ class Scene_Battle
 
     # If single, targetable?
     if ["one","ally"].include?($data.skills[@active_battler.skill_id].scope)
-      targets = $battle.enemies #$battle.build_target_list(@active_battler)
+      targets = $battle.possible_targets(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      
     else

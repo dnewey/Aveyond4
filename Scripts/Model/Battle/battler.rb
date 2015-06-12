@@ -140,7 +140,7 @@ class Game_Battler
     @transform = into
     log_scr("TRANSFORM NOW")
 
-    ev.character_name = "Player/frog"
+    ev.character_name = "Player/#{@id}-snake"
     ev.direction = 4
 
   end

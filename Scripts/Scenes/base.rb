@@ -63,7 +63,7 @@ class Scene_Base
   def terminate
 
     # Dispose of things
-    @panorama.dispose
+    @panoramas.each{ |s| s.dispose }
     @tilemap.dispose
     @characters.each{ |s| s.dispose }
     @sparks.each{ |s| s.dispose }
@@ -79,8 +79,8 @@ class Scene_Base
     @vp_over.dispose
     @vp_ui.dispose
 
-    @map.dispose
-    @player.dispose
+    #@map.dispose
+    #@player.dispose
 
   end
 
