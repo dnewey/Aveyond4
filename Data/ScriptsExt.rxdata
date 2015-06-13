@@ -3130,7 +3130,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"é
+ end"
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -3163,6 +3163,10 @@ class BattleHud
 	    @help_text.bitmap.font = $fonts.message
 	    @help_text.bitmap.draw_text(0,0,300,50,"Shadow - Gain Darkness",1)
 		@help_text.move(166,9)
+
+	end
+
+	def dispose
 
 	end
 
@@ -3222,7 +3226,7 @@ class Popper < Sprite
 
 	end
 
-end"Y
+end"ù
 class ActorCmd
 
 	def initialize(vp)
@@ -3230,6 +3234,7 @@ class ActorCmd
 		@vp = vp
 
 		@icons = []
+		@texts = []
 		#@text = Sprite.new(@vp)
 
 		@idx = 0
@@ -3245,24 +3250,25 @@ class ActorCmd
 		@icons.each{ |i| i.dispose }
 		@icons = []
 
+		@texts.each{ |i| i.dispose }
+		@texts = []
+
 		# Read the categories for this guy
 		@battler.actions.each{ |action|
 			# Add an icon?
 			spr = Sprite.new(@vp)
-			spr.bitmap = $cache.icon("battle/boy-staff")
-			spr.ox = spr.width/2
-			spr.oy = spr.height
 			@icons.push(spr)
+
+			spr = Sprite.new(@vp)
+			@texts.push(spr)
 		}
 
-
-
 		# Position the things
+		#@idx = 1
 		
 
-		select
-
 		reposition
+		select
 
 		# Prep the text
 		#@text.bitmap = Cache.menu("Battle/text")
@@ -3272,26 +3278,58 @@ class ActorCmd
 
 	def close
 		return if !@icons || @icons.empty?
+
 		@icons.each{ |i|
 			$tweens.clear(i)
 		}
+		@texts.each{ |i|
+			$tweens.clear(i)
+		}
 
-		@icons[0].do(go("opacity",-255,250,:qio))
-			@icons[1].do(go("opacity",-255,250,:qio))
-			@icons[2].do(go("opacity",-255,250,:qio))
+		if @icons.count == 2
 
-		@icons[0].do(go("x",36,250,:qio))
-			@icons[0].do(go("y",16,250,:qio))
-			#@icons[1].move(sx,sy-25)
+			@icons[0].do(go("x",18,250,:qio))
+			@icons[0].do(go("y",25,250,:qio))
+
+			@icons[1].do(go("x",-18,250,:qio))
 			@icons[1].do(go("y",25,250,:qio))
-			#@icons[2].move(sx+36,sy-16)
+
+		end
+
+		if @icons.count == 3
+
+			@icons[0].do(go("x",36,250,:qio))
+			@icons[0].do(go("y",16,250,:qio))
+
+			@icons[1].do(go("y",25,250,:qio))
+
 			@icons[2].do(go("x",-36,250,:qio))
 			@icons[2].do(go("y",16,250,:qio))
 
-		#@icons.each{ |i| i.dispose }
-		#@text.bitmap = nil
-		#@icons = []
-		#@battler = nil
+		end
+
+		if @icons.count == 4
+
+			@icons[0].do(go("x",54,250,:qio))
+			@icons[0].do(go("y",16,250,:qio))
+
+			@icons[1].do(go("x",18,250,:qio))
+			@icons[1].do(go("y",25,250,:qio))
+
+			@icons[2].do(go("x",-18,250,:qio))
+			@icons[2].do(go("y",25,250,:qio))
+
+			@icons[3].do(go("x",-54,250,:qio))
+			@icons[3].do(go("y",16,250,:qio))
+
+		end
+
+		(@texts + @icons).each{ |i|
+			i.do(go("opacity",-255,250,:qio))
+			i.do(go("opacity",-255,250,:qio))
+			i.do(go("opacity",-255,250,:qio))
+		}
+
 	end
 
 	def get_action
@@ -3302,35 +3340,90 @@ class ActorCmd
 		sx = @battler.ev.screen_x
 		sy = @battler.ev.screen_y-44
 
+		@icons.each{ |i|
+
+				# Hide and fade in
+				i.opacity = 0
+				i.do(go("opacity",255,250,:qio))
+
+				# Move
+				i.move(sx,sy+12)
+
+			}
+
+		if @icons.count == 2
+
+			cx = -18
+
+			@icons[0].do(go("x",cx,250,:qio))
+			@icons[0].do(go("y",-25,250,:qio))
+
+			@texts[0].move(sx+cx+2,sy-35)
+
+			cx += 36
+
+			@icons[1].do(go("x",cx,250,:qio))
+			@icons[1].do(go("y",-25,250,:qio))
+
+			@texts[1].move(sx+cx+2,sy-35-9)
+
+		end
+
 		if @icons.count == 3
 
-			@icons[0].opacity = 0
-			@icons[1].opacity = 0
-			@icons[2].opacity = 0
+			cx = -36
 
-			@icons[0].move(sx,sy+12)
-			@icons[1].move(sx,sy+12)
-			@icons[2].move(sx,sy+12)
-
-			@icons[0].do(go("opacity",255,250,:qio))
-			@icons[1].do(go("opacity",255,250,:qio))
-			@icons[2].do(go("opacity",255,250,:qio))
-
-			#@icons[0].move(sx-36,sy-16)
-			@icons[0].do(go("x",-36,250,:qio))
+			@icons[0].do(go("x",cx,250,:qio))
 			@icons[0].do(go("y",-16,250,:qio))
-			#@icons[1].move(sx,sy-25)
+
+			@texts[0].move(sx+cx+2,sy-35)
+
+			cx += 36
+
+			@icons[1].do(go("x",cx,250,:qio))
 			@icons[1].do(go("y",-25,250,:qio))
-			#@icons[2].move(sx+36,sy-16)
-			@icons[2].do(go("x",36,250,:qio))
+
+			@texts[1].move(sx+cx+2,sy-35-9)
+
+			cx += 36
+
+			@icons[2].do(go("x",cx,250,:qio))
 			@icons[2].do(go("y",-16,250,:qio))
+
+			@texts[2].move(sx+cx+2,sy-35)
+
 		end
 
 		if @icons.count == 4
-			@icons[0].center(sx-48,sy-16)
-			@icons[1].center(sx-18,sy-25)
-			@icons[2].center(sx+18,sy-25)
-			@icons[3].center(sx+48,sy-16)
+
+			cx = -36-18
+
+			@icons[0].do(go("x",cx,250,:qio))
+			@icons[0].do(go("y",-16,250,:qio))
+
+			@texts[0].move(sx+cx+2,sy-35)
+
+			cx += 36
+
+			@icons[1].do(go("x",cx,250,:qio))
+			@icons[1].do(go("y",-25,250,:qio))
+
+			@texts[1].move(sx+cx+2,sy-35-9)
+
+			cx += 36
+
+			@icons[2].do(go("x",cx,250,:qio))
+			@icons[2].do(go("y",-25,250,:qio))
+
+			@texts[2].move(sx+cx+2,sy-35-9)
+
+			cx += 36
+
+			@icons[3].do(go("x",cx,250,:qio))
+			@icons[3].do(go("y",-16,250,:qio))
+
+			@texts[3].move(sx+cx+2,sy-35)
+			
 		end
 
 
@@ -3338,21 +3431,49 @@ class ActorCmd
 
 	def select
 		sys('select')
+		
 		idx = 0
 		@icons.each{ |i|
-			$tweens.clear(i)
-			i.bitmap = $cache.icon("battle/#{@battler.id}-#{@battler.actions[idx]}")
+			#$tweens.resolve(i)
+			
+			i.bitmap = $cache.icon("battle/#{@battler.actions[idx]}")
+
 			i.ox = i.width/2
 			i.oy = i.height
 			idx += 1
 		}
+		idx = 0
+		@texts.each{ |i|
+			$tweens.resolve(i)
+
+			i.opacity = 0
+			
+			i.bitmap = $cache.icon("texts/#{@battler.actions[idx]}")
+
+			i.ox = i.width/2
+			i.oy = i.height
+			idx += 1
+		}
+
+		
 		#reposition
-		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.id}-#{@battler.actions[@idx]}-on")
+		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.actions[@idx]}-on")
 		#seq = sequence(go("y",-3,400),go("y",3,400))
 		@icons[@idx].do(repeat(seq))
 		$scene.hud.set_help(@battler.actions[@idx])
 		@icons[@idx].ox = @icons[@idx].width/2
 		@icons[@idx].oy = @icons[@idx].height
+
+		@texts[@idx].y -= 10
+		@texts[@idx].do(go("y",10,250,:qio))
+		@texts[@idx].do(go("opacity",255,250,:qio))
+
+		#@texts[@idx].zoom_x -= 10
+		@icons[@idx].zoom_x = 1.0
+		@icons[@idx].zoom_y = 1.0
+		@icons[@idx].do(seq(go("zoom_x",0.2,50,:qio),go("zoom_x",-0.2,50,:qio)))
+		@icons[@idx].do(seq(go("zoom_y",0.2,50,:qio),go("zoom_y",-0.2,50,:qio)))
+
 	end
 
 	def update
@@ -6740,7 +6861,7 @@ class Right_Page < SpriteGroup
 
     end
 
-end"{#==============================================================================
+end"ƒ#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -6882,7 +7003,7 @@ class Game_Battler
     @transform = into
     log_scr("TRANSFORM NOW")
 
-    ev.character_name = "Player/frog"
+    ev.character_name = "Player/#{@id}-snake"
     ev.direction = 4
 
   end
@@ -10132,7 +10253,7 @@ class Interpreter
   end
 
 end
-"™)#==============================================================================
+"³)#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -10285,6 +10406,10 @@ class Game_Map
     # Play music from the zone
     $audio.music(@zone.music)
     $audio.atmosphere(@zone.atmosphere)
+
+  end
+
+  def dispose
 
   end
   
@@ -10956,7 +11081,7 @@ class Game_Player < Game_Character
   end
 
 end
-"'
+"
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -10972,7 +11097,7 @@ class Game_Battle
     @props = []
     @actor_index = 0
 
-    @map = 65 #26
+    @map = 26 #65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -11074,6 +11199,18 @@ class Game_Battle
     }
 
     return results    
+
+  end
+
+  def possible_targets(attacker)
+
+    skill = $data.skills[attacker.skill_id]
+
+    if skill.scope == 'one'
+      return $battle.enemies
+    elsif skill.scope == 'ally'
+      return $party.active_battlers
+    end
 
   end
 
@@ -11200,7 +11337,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"æ#==============================================================================
+end"#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -11422,12 +11559,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
-    #set_active("mys")
-    #set_active("rob")
-    #set_active("hib")
-    #set_reserve("row")
-    #set_reserve("phy")   
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
+    set_reserve("hib")
+    set_reserve("row")
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -11469,6 +11606,8 @@ class Game_Party
     # Initial skills per actor
     @actors["boy"].learn('fireburn')
     @actors["boy"].learn('flames')
+
+    @actors["ing"].learn('xform-snake')
 
   end
 
@@ -11659,7 +11798,7 @@ end"class State
 	end
 
 end
-" #==============================================================================
+"±#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -11724,7 +11863,7 @@ class Scene_Base
   def terminate
 
     # Dispose of things
-    @panorama.dispose
+    @panoramas.each{ |s| s.dispose }
     @tilemap.dispose
     @characters.each{ |s| s.dispose }
     @sparks.each{ |s| s.dispose }
@@ -11740,8 +11879,8 @@ class Scene_Base
     @vp_over.dispose
     @vp_ui.dispose
 
-    @map.dispose
-    @player.dispose
+    #@map.dispose
+    #@player.dispose
 
   end
 
@@ -12095,7 +12234,7 @@ class Scene_Battle
     @phase = :actor_init
   end
 
-end"Ñ
+end"ü
 
 class Scene_Battle
 
@@ -12138,7 +12277,7 @@ class Scene_Battle
           @item_cmd.setup
           @phase = :actor_item
 
-        when "skills"
+        when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
 
           @skill_cmd.setup(@active_battler)
           @phase = :actor_skill
@@ -12208,7 +12347,7 @@ class Scene_Battle
 
     # If single, targetable?
     if ["one","ally"].include?($data.skills[@active_battler.skill_id].scope)
-      targets = $battle.enemies #$battle.build_target_list(@active_battler)
+      targets = $battle.possible_targets(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      
     else
@@ -12469,10 +12608,12 @@ class Scene_Battle
   end
 
 end
-"G
+"]
 class Scene_Battle
 
   def phase_victory_init
+
+  	$game.pop_scene
 
   end
 
@@ -13322,7 +13463,7 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"»#==============================================================================
+end"ß#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -13403,6 +13544,7 @@ class AudioManager
   end
 
   def atmosphere(file)
+    return
     @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
@@ -13414,6 +13556,7 @@ class AudioManager
   end
 
   def sys(file,vol=1.0)
+    return
 
     #log_scr(@sys.count)
 
@@ -13437,6 +13580,7 @@ class AudioManager
   end
 
   def sfx(file,vol=1.0)
+    return
 
     #log_scr(@sfx.count)
 
@@ -14120,8 +14264,7 @@ class FileManager
   end
   
 end
-"
-
+"H
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
@@ -14134,6 +14277,8 @@ class FontManager
 	attr_reader :page_ttl, :page_sub, :page_text
 
 	attr_reader :hud_hp
+
+	attr_reader :mini, :mini_b
 
 
 	def initialize
@@ -14235,6 +14380,18 @@ class FontManager
 	    @hud_hp.size = 20
 	    @hud_hp.color = Color.new(99,99,99)
 
+	    @mini = Font.new
+	    @mini.name = "Verdana"
+	    @mini.size = 12
+	    @mini.bold = true
+	    @mini.color = Color.new(255,255,255)
+
+	    @mini_b = Font.new
+	    @mini_b.name = "Verdana"
+	    @mini_b.size = 12
+	    @mini_b.bold = true
+	    @mini_b.color = Color.new(0,0,0)
+
 
 	end
 
@@ -14243,7 +14400,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"û#==============================================================================
+end"#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -14304,6 +14461,7 @@ class GameManager
 
   def pop_scene
     #Graphics.freeze
+    $tweens.clear_all
     @scenes.shift.terminate
     $scene = @scenes[0]
   end
