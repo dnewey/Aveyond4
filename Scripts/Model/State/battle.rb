@@ -14,7 +14,7 @@ class Game_Battle
     @props = []
     @actor_index = 0
 
-    @map = 65 #26
+    @map = 26 #65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -116,6 +116,18 @@ class Game_Battle
     }
 
     return results    
+
+  end
+
+  def possible_targets(attacker)
+
+    skill = $data.skills[attacker.skill_id]
+
+    if skill.scope == 'one'
+      return $battle.enemies
+    elsif skill.scope == 'ally'
+      return $party.active_battlers
+    end
 
   end
 

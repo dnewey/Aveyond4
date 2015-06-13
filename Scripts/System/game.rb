@@ -59,6 +59,7 @@ class GameManager
 
   def pop_scene
     #Graphics.freeze
+    $tweens.clear_all
     @scenes.shift.terminate
     $scene = @scenes[0]
   end

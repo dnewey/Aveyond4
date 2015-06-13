@@ -12,6 +12,8 @@ class FontManager
 
 	attr_reader :hud_hp
 
+	attr_reader :mini, :mini_b
+
 
 	def initialize
 
@@ -111,6 +113,18 @@ class FontManager
 		@hud_hp.name = "Bitter"
 	    @hud_hp.size = 20
 	    @hud_hp.color = Color.new(99,99,99)
+
+	    @mini = Font.new
+	    @mini.name = "Verdana"
+	    @mini.size = 12
+	    @mini.bold = true
+	    @mini.color = Color.new(255,255,255)
+
+	    @mini_b = Font.new
+	    @mini_b.name = "Verdana"
+	    @mini_b.size = 12
+	    @mini_b.bold = true
+	    @mini_b.color = Color.new(0,0,0)
 
 
 	end

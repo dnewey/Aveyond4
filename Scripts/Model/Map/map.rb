@@ -153,6 +153,10 @@ class Game_Map
     $audio.atmosphere(@zone.atmosphere)
 
   end
+
+  def dispose
+
+  end
   
   def display_x
     return @display_x + (@cam_ox*4)
