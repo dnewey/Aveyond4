@@ -122,8 +122,9 @@ class List
     # And then aditional items are given
     #@per_page = @data.count if @data.count < @per_page
     #@per_page = 1 if @per_page == 0
-    #@scroll_idx = 0
-    #@page_idx = 0
+    @scroll_idx = 0
+    @page_idx = 0
+    @select_sprite.y = idx * row_height
     @active = true
   	refresh
   end
@@ -142,9 +143,9 @@ class List
 
   def call_change
 
-    i = idx
-        i -= 1 if !can_scroll?
-        @change.call(@data[i]) if !@change.nil?
+        i = idx
+        #i -= 1 if !can_scroll?
+        @change.call(current) if !@change.nil?
 
   end
 
@@ -164,8 +165,10 @@ class List
     @back_sprite.bitmap = Bitmap.new(@item_width,height)
     @content_sprite.bitmap = Bitmap.new(@item_width,height)
 
-    @back_sprite.y = -row_height if can_scroll?
-    @content_sprite.y = -row_height if can_scroll?
+    @back_sprite.y = can_scroll? ? -row_height : 0
+    @content_sprite.y = can_scroll? ? -row_height : 0
+
+
 
     src = $cache.menu_common('list-bar')
 
@@ -173,7 +176,7 @@ class List
     rows.times{ 
       @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
       # Draw each row
-      draw(@data[@scroll_idx + i-1],i)
+      draw(@data[@scroll_idx + i],i)
       i += 1
     }
 
@@ -194,12 +197,13 @@ class List
 
   def current
     return @current[0] if @type == :misc
+    return @data[idx+1] if can_scroll?
     return @data[idx]
   end
 
   def draw(data,row)
 
-    return if data == nil # For above or below accessible
+    #return if data == nil # For above or below accessible
 
     # Drw the contents
     case @type
@@ -221,14 +225,22 @@ class List
 
     item = $data.items[data]
 
-    ico = $cache.icon(item.icon)
-
-    number = $party.item_number(data)
+    if item != nil
+      name = item.name
+      ico = $cache.icon(item.icon)
+      number = $party.item_number(data)
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+      number = 0
+    end
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
-    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
-    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    if number > 0
+      @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    end
 
   end
 
@@ -321,21 +333,26 @@ class List
 
       sys('select')
 
-      # Move the sprite down
-      @select_sprite.y += row_height
-  		
+      # Move the sprite down, but not too far!
+      @select_sprite.y += row_height  		
       @page_idx += 1
+
+      if @select_sprite.y > (@per_page-1) * row_height
+        @select_sprite.y -= row_height
+        @page_idx -= 1
+      end
   		
       #if @data.count > @max_per_page
 
-      if can_scroll? && @page_idx == 5 && @scroll_idx < (@data.count - @max_per_page) -1
+      if can_scroll? && @page_idx >= 6 && @scroll_idx < (@data.count - @max_per_page) -1
         scroll_up
   		else
         i = idx
-        i -= 1 if !can_scroll?
-  		  @change.call(@data[i]) if !@change.nil?
+        #i -= 1 if !can_scroll?
+  		  @change.call(current) if !@change.nil?
       end
       
+
       #@change.call(current) if !@change.nil?
 
   	end
@@ -353,29 +370,39 @@ class List
       
       # Move the sprite down
       @select_sprite.y -= row_height
-
   		@page_idx -= 1
 
-  		if can_scroll? && @scroll_idx > 0 && @page_idx == 3
+       if @select_sprite.y < 0
+        @select_sprite.y += row_height
+        @page_idx += 1
+      end
+
+  		if can_scroll? && @scroll_idx > 0 && @page_idx <= 1
         scroll_down
       else
         i = idx
-        i -= 1 if !can_scroll?
-        @change.call(@data[i]) if !@change.nil?
+        #i -= 1 if !can_scroll?
+        @change.call(current) if !@change.nil?
       end
       
       #@change.call(current) if !@change.nil?
 
   	end
 
-    # pos = $mouse.position
-    # pos[0] -= @x
-    # pos[1] -= @y
-    # if pos[0] < @item_width
-    #   row = pos[1] / row_height
-    #   @select_sprite.y = row * row_height
-    #   sys('select')
-    # end
+    pos = $mouse.position
+    pos[0] -= @x
+    pos[1] -= @y
+    if pos[0] < @item_width
+      row = pos[1] / row_height
+      return if row < 0
+      return if row >= @per_page
+      return if row >= @data.count
+      return if row == @page_idx
+      @select_sprite.y = row * row_height
+      @page_idx = row
+      @change.call(current) if !@change.nil?
+      #sys('select')
+    end
 
     # Selection
     if !@select.nil? && ($input.action? || $input.click?)
@@ -392,11 +419,13 @@ class List
 
   def scroll_down
 
+    
     @change.call(current) if !@change.nil?
-
     
     @scroll_idx -= 1    
     #      @pagemod = 1
+
+
 
 
     dur = 180
@@ -417,10 +446,12 @@ class List
 
   def scroll_up
 
-    @change.call(current) if !@change.nil?
+     @change.call(current) if !@change.nil?
 
     @scroll_idx += 1    
           #@pagemod = -1
+
+         
 
     dur = 180
     ease = :quad_in_out

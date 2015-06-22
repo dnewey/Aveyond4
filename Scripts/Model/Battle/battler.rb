@@ -6,7 +6,7 @@
 
 class Game_Battler
  
-  attr_reader :id, :name
+  attr_reader :id, :name, :level
 
   attr_reader :transform
 

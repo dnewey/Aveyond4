@@ -73,6 +73,7 @@ class Ui_Message
     @box = Box.new(vp)
     @box.skin = $cache.menu_common("skin")
     @box.wallpaper = $cache.menu_wallpaper("diamonds")
+    #@box.wallpaper = $cache.menu_wallpaper("fangder")
     @box.scroll(0.1,0.1)
 
     # Setup sprites    
@@ -124,6 +125,15 @@ class Ui_Message
     @choices = []
     @last_choice = ''
 
+  end
+
+  def wallpaper=(w)
+    @box.wallpaper = $cache.menu_wallpaper(w)
+    if w == 'fangder'
+      @box.alpha = 255
+    else
+      @box.alpha = 230
+    end
   end
   
   #--------------------------------------------------------------------------
@@ -188,6 +198,8 @@ class Ui_Message
     #   @skip_all = true
     # end
 
+
+
     case @state
 
       when :closed
@@ -201,11 +213,23 @@ class Ui_Message
 
       when :texting
         @next_char -= 1
-        if @next_char <= 0 || $keyboard.state?(VK_ENTER)
+        if @next_char <= 0
           #log_err "DOING"
           update_message
         end
         redraw
+
+        if $input.action? || $input.click?
+      
+          @super_skipping = true
+          while @state == :texting
+
+            update_message           
+          end
+          @super_skipping = false
+          redraw
+          
+        end
         
       when :waiting
         update_waiting
@@ -236,6 +260,8 @@ class Ui_Message
   # Show Convo
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
+
+    $tweens.clear(@sprites)
 
     @mode = :message
 
@@ -343,6 +369,7 @@ class Ui_Message
     #@sprites.change(@next,@width/2,@height-20)
     $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
+    
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
     # Start writing    
@@ -411,10 +438,13 @@ class Ui_Message
     
     x = @sprites.x + @cx+size.width
     y = @sprites.y + @cy
-    sprk = Spark.new("message.28",x+4,y+16,@vp)
+
+    return if @super_skipping #|| (@char_idx >= @word.length-1 && @char_idx > 0)
+
+    sprk = Spark.new("message.28",x-4,y+16,@vp) # Faster with higher opacity perhaps
     #sprk.center()
     #sprk.blend_type = 1
-    sprk.opacity = 20
+    sprk.opacity = 30
     @sparks.push(sprk)
     
     # AUTO PAUSE AFTER SENTENCE HERE
@@ -623,9 +653,9 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
-      #@sprites.opacity = 0
+      @sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
-      @sprites.do(go("opacity",-255,100,:quad_in_out))
+      #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
 

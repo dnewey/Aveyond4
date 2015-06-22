@@ -21,6 +21,7 @@ class SkillCmd < ItemCmd
 	end
 
 	def change(option)
+		return if !@box
 		@item = option
 		@box.skill(option)
 		#@box.center(462,130+@list.page_idx*@list.item_height)

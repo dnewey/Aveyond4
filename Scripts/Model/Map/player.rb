@@ -190,25 +190,41 @@ class Game_Player < Game_Character
         #turn_toward_pos(mx,my)
         
         # Run Pathfinding
-        evt = $map.event_at(mx, my)
-        if evt == nil
+        @event_at_path = $map.event_at(mx, my)
+        @event_at_path = nil if @event_at_path && @event_at_path.through
+        if @event_at_path == nil
           find_path(mx, my)
-          @eventarray = @runpath ? $map.events_at(mx, my) : nil
+          #@eventarray = @runpath ? $map.events_at(mx, my) : nil
         else
-           find_path(evt.x+1, evt.y+1)
-           @eventarray = [evt]
+
+          dx = @x - @event_at_path.x
+          dy = @y - @event_at_path.y
+
+          if dx.abs > dy.abs
+            if dx > 0
+              find_path(@event_at_path.x+1, @event_at_path.y)
+              @turn_after_path = 'l'
+            else
+              find_path(@event_at_path.x-1, @event_at_path.y)
+              @turn_after_path = 'r'
+            end
+          else
+            if dy > 0
+              find_path(@event_at_path.x, @event_at_path.y+1)
+              @turn_after_path = 'u'
+            else
+              find_path(@event_at_path.x, @event_at_path.y-1)
+              @turn_after_path = 'd'
+            end
+          end
+
         end
-        
-        # If Event At Grid Location
-        unless @eventarray.nil?
-          @eventarray = nil if @eventarray.empty?
-        end
-        
+                
       end
     
     if @move_route_forcing == true
       clear_path
-      @eventarray = nil
+      @event_at_path = nil
     end
 
     # Clear path if any direction keys pressed
@@ -235,56 +251,38 @@ class Game_Player < Game_Character
    
     # If not moving
     unless moving?
+      
       # If player was moving last time
       if last_moving
         # Event determinant is via touch of same position event
         result = check_event_trigger_here([1,2])
       end
+
       # If C button was pressed
       if $input.action?
         # Same position and front event determinant
         check_event_trigger_here([0])
         check_event_trigger_there([0,1,2])
       end
+
+      unless @runpath == true
+        if @event_at_path != nil
+          case @turn_after_path
+            when 'd'
+              @direction = 2
+            when 'l'
+              @direction = 4
+            when 'r'
+              @direction = 6
+            when 'u'
+              @direction = 8
+          end
+          @event_at_path.start
+          @event_at_path = nil
+        end
+      end
+
     end
-    
-    # If Non-nil Event Autostarter
-    if @eventarray != nil && !moving? && # @mouse_event_autostarter != nil && !moving? &&
-      (!@ovrdest || @map.nil? || @map[@x,@y] == 1)
-
-      @eventarray.each do |event|
-      
-        # If Event Within Range
-        # if event and (event.at?(@x,@y) || @ovrdest
-          
-        #   # SHAZ - trigger event when:
-        #   # - Autotouch and standing on or beside, or with a counter between
-        #   # - player/event touch and standing as close as possible (on, if possible)
-        #   distance = Math.hypot(@x - event.x, @y - event.y)
-
-        #   dir = @x < event.x ? 6 : @x > event.x ? 4 : @y < event.y ? 2 : @y > event.y ? 8 : 0
-
-        #   # if (event.trigger == 0 and (distance < 2 or (distance == 2 and 
-        #   #   $map.counter?((@x+event.x)/2, (@y+event.y)/2))))             or ([1,2].include?(event.trigger) and ((distance == 0 and $game_player.passable?(@x, @y, dir))             or (distance == 1 and (@ovrdest || !$game_player.passable?(@x, @y, dir)))))
-
-        #   #   # Turn toward Event
-        #   #   if @x == event.x
-        #   #     @y > event.y ? turn_up : turn_down
-        #   #   else
-        #   #     @x > event.x ? turn_left : turn_right
-        #   #   end
-
-        #   #   # Start Event
-        #   #   clear_path
-        #   #   event.start
-        #   #   @eventarray.delete(event)
-        #   #   @eventarray = nil if @eventarray.empty?
-
-        #   # end
-        # end
-      end      
-    end
-    
 
   end
 

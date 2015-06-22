@@ -81,6 +81,9 @@ class Item_Box < SpriteGroup
 
     def base(data)
 
+        log_scr(data)
+        return if data == nil
+
         # Set values
         @title.text = data.name
         @desc.text = data.description

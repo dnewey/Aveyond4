@@ -228,9 +228,15 @@ class Ui_Grid
 		log_info(slot)
 
 		item = $data.items[eq]
-		name= item.name
-		text = item.name
-		icon = "misc/unknown"
+
+		if item != nil
+			
+			text = item.name
+			icon = item.icon
+		else
+			icon = "misc/unknown"
+			text = 'Empty'
+		end
 
 		# Create new things
 		btn = add_part_box(slot,300,61)
@@ -323,15 +329,16 @@ class Ui_Grid
 
 	end
 
-	def add_party_mem(id)
+	def add_party_mem(box,id)
 
 		char = $party.get(id)
 
 		name = "- Empty -"
 		name = char.name if char
+		name += " - Lvl #{char.level.to_s}" if char
 
 		# Create new things
-		btn = add_part_box(name,300,70)
+		btn = add_part_box(box,300,70)
 
 		cont = Label.new(@vp)
 	    cont.font = $fonts.list
@@ -339,7 +346,7 @@ class Ui_Grid
 	    cont.gradient = true
 	    cont.text = name
 	    @contents.push(cont)
-	    cont.move(@cx+20,@cy+7)
+	    cont.move(@cx+15,@cy+7)
 
 		if char == nil
 
@@ -354,22 +361,11 @@ class Ui_Grid
 			port.move(@cx+btn.width-port.width-9,@cy+62-port.src_rect.height)
 			port.z += 50
 
-			hp_bar = Bar.new(@vp,180,8)
+			hp_bar = Bar.new(@vp,170,8)
 			@extra.push(hp_bar)
+			hp_bar.opacity = 200
 			hp_bar.move(@cx+20,@cy+42)
-
-			hp_label = Sprite.new(@vp)
-			hp_label.bitmap = $cache.menu_char("label-hp")
-			hp_label.opacity = 200
-			@extra.push(hp_label)
-			hp_label.move(@cx+20,@cy+34)
 			
-
-	     	# Position
-	     	
-	     	#hp_bar.move(@cx + 42,@cy+14)
-	     	#mp_bar.move(@cx + 42,@cy+14+12)
-
 	     	choose(@boxes[0].name) if @boxes.count == 1
 
 	     end
@@ -402,7 +398,7 @@ class Ui_Grid
 	end
 
 	def get_box(option)
-		return @boxes[0]
+		return @boxes.select{ |b| b.name == option }[0]
 	end
 
 	def update

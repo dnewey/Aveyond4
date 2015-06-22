@@ -5,6 +5,10 @@ def text()
 
 end
 
+def text_wall(w='diamonds')
+	$scene.hud.message.wallpaper = w
+end
+
 def w(f=5)
 	$map.interpreter.wait_count = f
 end

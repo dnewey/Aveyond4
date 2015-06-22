@@ -29,7 +29,7 @@ class Ui_Screen
 		#@info.update
 		if @popper
 			@popper.update 
-			if $input.action?
+			if $input.action? || $input.click?
 				$tweens.clear(@popper)
 				@popper.dispose
 				@popper = nil
@@ -38,7 +38,7 @@ class Ui_Screen
 
 		if @grid
 			@grid.update 
-			if $input.action?
+			if $input.action? || $input.click?
 				# Record action and close
 				$menu.grid_action = @grid.get_chosen
 
@@ -55,7 +55,7 @@ class Ui_Screen
 
 		if @item
 			@item.update 
-			if $input.action?
+			if $input.action? || $input.click?
 				$tweens.clear(@item)
 				@item.dispose
 				@item = nil

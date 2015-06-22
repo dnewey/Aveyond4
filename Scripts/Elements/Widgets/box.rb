@@ -4,6 +4,8 @@ class Box
 	attr_accessor :name
 	attr_accessor :window
 
+	attr_accessor :alpha
+	
 	def initialize(vp,w=100,h=100)
 
 		@wallpaper = Sprite.new(vp)

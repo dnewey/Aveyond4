@@ -19,7 +19,7 @@ class Scene_Battle
 
     @actor_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       if @actor_idx != 0
         @actor_idx -= 1
         @active_battler = $party.actor_by_index(@actor_idx)
@@ -28,7 +28,7 @@ class Scene_Battle
     end
 
     # Player command inputs section
-    if $input.action?
+    if $input.action? || $input.click?
 
       action = @actor_cmd.get_action
       @active_battler.action = action
@@ -65,13 +65,13 @@ class Scene_Battle
 
     @skill_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       @actor_idx -= 1
       @phase = :actor_next
       @skill_cmd.close
     end
 
-    if $input.action?
+    if $input.action? || $input.click?
       @skill_cmd.close
       @active_battler.skill_id = @skill_cmd.get_skill
       @phase = :actor_strategize
@@ -87,13 +87,13 @@ class Scene_Battle
 
     @item_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       @actor_idx -= 1
       @phase = :actor_next
       @item_cmd.close
     end
 
-    if $input.action?
+    if $input.action? || $input.click?
       @item_cmd.close
       @active_battler.item_id = @item_cmd.get_item
       @phase = :actor_strategize
@@ -128,13 +128,13 @@ class Scene_Battle
 
     @target_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       @target_cmd.close
       @actor_idx -= 1
       @phase = :actor_next
     end
 
-    if $input.action?
+    if $input.action? || $input.click?
       @active_battler.target = @target_cmd.active
       @target_cmd.close
       @phase = :actor_next

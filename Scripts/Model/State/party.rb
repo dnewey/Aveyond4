@@ -13,6 +13,8 @@ class Game_Party
 
   attr_reader :leader
 
+  attr_reader :items
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -94,16 +96,57 @@ class Game_Party
     @reserve.delete(actor)
   end
 
+
+  def swap(a,b)
+    return if a == b
+
+    first = nil
+    dta = a.split('.')
+    if dta[0] == 'a'
+      first = @active[dta[1].to_i]
+    else
+      first = @reserve[dta[1].to_i]
+    end
+
+    second = nil
+    dta2 = b.split('.')
+    if dta2[0] == 'a'
+      second = @active[dta2[1].to_i]
+    else
+      second = @reserve[dta2[1].to_i]
+    end
+
+    # Put second in first
+    if dta[0] == 'a'
+      @active[dta[1].to_i] = second
+    else
+      @reserve[dta[1].to_i] = second
+    end
+
+    # Put first in second
+    if dta2[0] == 'a'
+      @active[dta2[1].to_i] = first
+    else
+      @reserve[dta2[1].to_i] = first
+    end
+
+    @active.compact!
+    @reserve.compact!
+
+  end
+
+
   def all
     return @active + @reserve
   end
+
 
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
   def add_item(id,n=1) 
     @items.has_key?(id) ? @items[id] += n : @items[id] = n
-    @items[id] = 0 if @items[id] < 0 
+    @items.delete(id) if @items[id] <= 0 
     $map.need_refresh = true if $map
   end
 

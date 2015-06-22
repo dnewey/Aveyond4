@@ -264,6 +264,8 @@ class ActorCmd
 		end
 
 		pos = $mouse.position
+		pos[0] += 13
+		pos[1] += 34
 			@icons.each{ |i|
 			if i.within?(pos[0],pos[1])
 				break if @icons.index(i) == @idx

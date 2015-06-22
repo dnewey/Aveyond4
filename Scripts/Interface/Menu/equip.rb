@@ -17,7 +17,8 @@ class Mnu_Equip < Mnu_Base
 		#@tabs.push("potions")
 		#@tabs.push("keys")
 
-		#@menu.hide
+		@menu.opacity = 0
+		@menu.move(15,180)
 		#@menu.opacity = 0
 		
 		@menu.list.per_page = 7
@@ -56,13 +57,13 @@ class Mnu_Equip < Mnu_Base
 		@grid.update if !@menu.list.active
 
 		# Get chosen grid option
-		if $input.action?
+		if $input.action? || $input.click?
 			log_scr("GO")
 			choose(@grid.get_chosen)
 		end
 
 		# Cancel out of grid
-		if $input.cancel?
+		if $input.cancel? || $input.rclick?
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
@@ -86,10 +87,11 @@ class Mnu_Equip < Mnu_Base
 		# Populate the list
 
 		# Find gear for this slot
-		items = $data.items.values.select{ |i|
-			i.is_a?(GearData) && i.slot == @slot
+		items = $party.items.keys.select{ |i|
+			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
 		}
-		@menu.list.setup(items.map{|i| i.id})
+		items.push(nil) if @char.equips[@slot] != nil
+		@menu.list.setup(items)
 
 		# Bring in the list
 		@menu.opacity = 255
@@ -108,7 +110,12 @@ class Mnu_Equip < Mnu_Base
 
 
 		# Change the item box to show this
-		@item_box.item(option)
+		if option != nil
+			@item_box.item(option)
+			@item_box.show
+		else
+			@item_box.hide
+		end
 		#@item_box.comparison(option,@char.equips[@slot])
 		
 	end
@@ -116,7 +123,8 @@ class Mnu_Equip < Mnu_Base
 	def select(option)	
 
 		# Replace the gear in the slot hahahhahah
-
+		log_scr(@slot)
+		log_scr(option)
 		@char.equip(@slot,option)
 		back_to_slots
 		
@@ -139,6 +147,8 @@ class Mnu_Equip < Mnu_Base
 		 @char.slots.each{ |slot| 
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
+
+		 @grid.choose(@slot)
 
 		 @item_box.hide
 

@@ -7,7 +7,7 @@ class Mnu_Char < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('boy')
+		@title.change($menu.char)
 
 		@subtitle.text = "Master of deception"
 
@@ -36,6 +36,14 @@ class Mnu_Char < Mnu_Base
 		super
 
 		@grid.update
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			close
+		end
 		
 	end
 

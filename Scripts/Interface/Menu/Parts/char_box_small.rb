@@ -8,20 +8,36 @@ class Char_Box_Small < SpriteGroup
 
 		super()
 
+		@char = $party.get(char)
+
 		@box = Box.new(vp,132,87)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("portback")
 		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.face_small(["boy",'hib','row'].sample)
-		add(@port,31,-10)
+		@port.bitmap = $cache.face_small(char)
+		add(@port,123-@port.width,78-@port.height)
 		@port.z += 50
 
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient-small")
 		@gradient.opacity = 160
 		add(@gradient,5,30)
+
+		@name = Label.new(vp)
+	    @name.font = $fonts.list
+	    @name.shadow = $fonts.list_shadow
+	    @name.gradient = true
+	    @name.text = @char.name
+	    add(@name,6,4)
+
+		@level = Label.new(vp)
+	    @level.font = $fonts.list
+	    @level.shadow = $fonts.list_shadow
+	    @level.gradient = true
+	    @level.text = "15"
+	    add(@level,20,27)
 
 		@xp_bar = Bar.new(vp,106,8)
 		add(@xp_bar,11,64)

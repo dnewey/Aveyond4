@@ -43,10 +43,10 @@ class List_Common < SpriteGroup
 
 	# All the various data that can be shown
 	def setup_items(category)
-		items = $data.items.values.select{ |i|
-			i.is_a?(UsableData) # &&
+		items = $party.items.keys.select{ |i|
+			$data.items[i].is_a?(UsableData) # &&
 		}
-		@list.setup(items.map{|i| i.id})
+		@list.setup(items)
 	end
 
 	def setup_gear(slot)

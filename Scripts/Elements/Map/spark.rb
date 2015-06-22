@@ -14,7 +14,7 @@ class Spark < Sprite
 
 		# Defaults
 		@frames = 25
-		@delay = 2
+		@delay = 0
 
 		@fade_out = true
 
@@ -91,6 +91,7 @@ class Spark < Sprite
 
 			self.opacity -= 30 if @idx >= @frames - 2
 
+			idx = @idx
 			if @reverse
 				idx = @frames - @idx
 			end

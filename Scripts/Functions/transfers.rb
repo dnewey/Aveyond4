@@ -4,7 +4,7 @@ def transfer(map,room=nil,dir=nil)
 
 	id = find_map_id(map) if map.is_a?(String)
 	room = map if room == nil
-	$player.transfer_to(id,map,dir)
+	$player.transfer_to(id,room,dir)
 
 end
 
