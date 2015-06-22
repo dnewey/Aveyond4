@@ -1,10 +1,26 @@
 WORLD_MAP_ID = 25
 
-def transfer(map,room=nil)
+def transfer(map,room=nil,dir=nil)
 
-	id = find_map_id(map)
-	$player.transfer_to(id,map)
+	id = find_map_id(map) if map.is_a?(String)
+	room = map if room == nil
+	$player.transfer_to(id,map,dir)
 
+end
+
+def transfer_cross(map,room=nil,dir=nil)
+	$player.trans_type = :cross
+	transfer(map,room,dir)
+end
+
+def transfer_fade(map,room=nil,dir=nil)
+	$player.trans_type = :fade
+	transfer(map,room,dir)
+end
+
+def transfer_cave(map,room=nil,dir=nil)
+	$player.trans_type = :cave
+	transfer(map,room,dir)
 end
 
 def transfer_same(dir=nil)

@@ -8,7 +8,7 @@ class Port_Full < Sprite
 	def initialize(vp)
 		super(vp)
 
-		self.bitmap = $cache.face_menu("mys-h")
+		self.bitmap = $cache.face_menu("boy-w")
 		self.x = 330
 		#self.x -= 20
 

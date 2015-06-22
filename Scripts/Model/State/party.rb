@@ -270,6 +270,11 @@ class Game_Party
 
     @actors["ing"].learn('xform-snake')
 
+    item('boy-arm-s','s')
+    item('hib-arm-s','s')
+
+    
+
   end
 
 

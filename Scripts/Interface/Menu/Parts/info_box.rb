@@ -23,7 +23,7 @@ class Info_Box < SpriteGroup
     	@zone.text = "Whisper Woods"
     	add(@zone,100,8)
     	
-    	move(10,440)
+    	move(15,440)
 
 	end
 

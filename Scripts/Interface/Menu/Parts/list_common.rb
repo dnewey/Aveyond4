@@ -1,7 +1,7 @@
 
 class List_Common < SpriteGroup
 
-	attr_reader :list
+	attr_accessor :list, :window
 
 	def initialize(vp)
 		super()
@@ -23,7 +23,7 @@ class List_Common < SpriteGroup
 		add(@list,6,6)
 
 
-		move(10,140)
+		move(15,140)
 		@list.refresh
 
 	end
@@ -42,8 +42,15 @@ class List_Common < SpriteGroup
 	end
 
 	# All the various data that can be shown
-	def items(category)
+	def setup_items(category)
+		items = $data.items.values.select{ |i|
+			i.is_a?(UsableData) # &&
+		}
+		@list.setup(items.map{|i| i.id})
+	end
 
-	end	
+	def setup_gear(slot)
+
+	end
 
 end

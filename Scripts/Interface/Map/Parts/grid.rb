@@ -6,11 +6,13 @@ class Ui_Grid
 
 	attr_reader :idx
 
-	attr_accessor :spacing
+	attr_accessor :spacing, :cx, :cy
 
 	def initialize(vp)
 
 		@vp = vp
+
+		@active = true
 
 		@layout = :vertical
 
@@ -41,8 +43,14 @@ class Ui_Grid
 
 	end
 
-	def update
-		@boxes.each{ |box| box.update }
+	def enable
+		@active = true
+		choose(@selected)
+	end
+
+	def disable
+		@active = false
+		@glow.move(-1000,-1000)
 	end
 
 	def move(x,y)
@@ -76,18 +84,99 @@ class Ui_Grid
 		$tweens.clear(@glow)
 		@glow.dispose
 		@contents.each{ |i| i.dispose }
+		@extra.each{ |i| i.dispose }
 		@boxes.each{ |i| i.dispose }
+
+	end
+
+	def clear
+		@contents.each{ |i| i.dispose }
+		@extra.each{ |i| i.dispose }
+		@boxes.each{ |i| i.dispose }
+		@contents = []
+		@boxes = []
+		@extras = []
+
+		@cx = 0
+		@cy = 0
+
+	end
+
+	def add_active(id)
+
+		char = $party.get(id)
+
+		# Create new things
+		btn = add_part_box(char.name,148,46)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon("faces/#{id}")
+     	#cont.gradient = true
+     	cont.text = ' '
+     	@contents.push(cont)
+
+     	hp_bar = Bar.new(@vp,92,8)
+		@extra.push(hp_bar)
+
+		mp_bar = Bar.new(@vp,92,8)
+		@extra.push(mp_bar)
+
+     	# Position
+     	cont.move(@cx+8,@cy+7)
+     	hp_bar.move(@cx + 42,@cy+14)
+     	mp_bar.move(@cx + 42,@cy+14+12)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @boxes.count % 2 == 0
+  			@cy += btn.height + @spacing - 2
+  			@cx -= btn.width + @spacing - 1
+  		else
+			@cx += btn.width + @spacing - 1
+  		end
+
+	end
+
+	def add_reserve(id)
+
+		char = $party.get(id)
+
+		# Create new things
+		btn = add_part_box(char.name,97,46)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon("faces/#{id}")
+     	#cont.gradient = true
+     	cont.text = ' '
+     	@contents.push(cont)
+
+     	hp_bar = Bar.new(@vp,42,8)
+		@extra.push(hp_bar)
+
+		mp_bar = Bar.new(@vp,42,8)
+		@extra.push(mp_bar)
+
+     	# Position
+     	cont.move(@cx+8,@cy+7)
+     	hp_bar.move(@cx + 42,@cy+14)
+     	mp_bar.move(@cx + 42,@cy+14+12)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+		@cx += btn.width + @spacing - 1
 
 	end
 
 	def add_button(name,text,icon)
 
 		# Create new things
-		btn = Box.new(@vp,120,46)
-     	btn.skin = $cache.menu_common("skin-plain")
-     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
-     	btn.name = name
-     	@boxes.push(btn)
+		btn = add_part_box(name,120,46)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -98,7 +187,6 @@ class Ui_Grid
      	@contents.push(cont)
 
      	# Position
-     	btn.move(@cx,@cy)
      	cont.move(@cx+10,@cy+7)
 
      	choose(@boxes[0].name) if @boxes.count == 1
@@ -110,14 +198,10 @@ class Ui_Grid
 
 	end
 
-	def add_slot(slot)
+	def add_wide(name,text,icon)
 
 		# Create new things
-		btn = Box.new(@vp,300,60)
-     	btn.skin = $cache.menu_common("skin-plain")
-     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
-     	btn.name = name
-     	@boxes.push(btn)
+		btn = add_part_box(name,300,46)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -128,14 +212,62 @@ class Ui_Grid
      	@contents.push(cont)
 
      	# Position
-     	btn.move(@cx,@cy)
      	cont.move(@cx+10,@cy+7)
 
      	choose(@boxes[0].name) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
-     		@cy += btn.height + 5
+     		@cy += btn.height + @spacing
+     	end
+
+	end
+
+	def add_slot(slot,eq)
+
+		log_info(slot)
+
+		item = $data.items[eq]
+		name= item.name
+		text = item.name
+		icon = "misc/unknown"
+
+		# Create new things
+		btn = add_part_box(slot,300,61)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = text
+     	@contents.push(cont)
+
+     	stat = Label.new(@vp)
+     	stat.font = $fonts.pop_type
+     	#stat.shadow = $fonts.list_shadow
+     	stat.icon = $cache.icon("stats/attack")
+     	#stat.gradient = true
+     	stat.text = "24 Strength"
+     	@extra.push(stat)
+
+     	cat = Label.new(@vp)
+    	cat.fixed_width = 250
+    	cat.font = $fonts.pop_type
+    	cat.align = 0
+    	cat.text = slot
+    	@extra.push(cat)
+
+     	# Position
+     	cont.move(@cx+10,@cy+7)
+     	stat.move(@cx+25,@cy+28)
+     	cat.move(@cx+245,@cy+8)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + 4
      	end
 
 	end
@@ -143,12 +275,7 @@ class Ui_Grid
 	def add_difficulty(diff)
 
 		# Create new things
-		btn = Box.new(@vp,500,116)
-     	btn.skin = $cache.menu_common("skin-plain")
-     	btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
-     	btn.name = diff
-     	@boxes.push(btn)
-     	btn.move(@cx,@cy)
+		btn = add_part_box(diff,500,116)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -196,6 +323,73 @@ class Ui_Grid
 
 	end
 
+	def add_party_mem(id)
+
+		char = $party.get(id)
+
+		name = "- Empty -"
+		name = char.name if char
+
+		# Create new things
+		btn = add_part_box(name,300,70)
+
+		cont = Label.new(@vp)
+	    cont.font = $fonts.list
+	    cont.shadow = $fonts.list_shadow
+	    cont.gradient = true
+	    cont.text = name
+	    @contents.push(cont)
+	    cont.move(@cx+20,@cy+7)
+
+		if char == nil
+
+
+
+		else
+
+	     	port = Sprite.new(@vp)
+			port.bitmap = $cache.face_small(id)
+			port.src_rect.height = port.height() - 14
+			@extra.push(port)
+			port.move(@cx+btn.width-port.width-9,@cy+62-port.src_rect.height)
+			port.z += 50
+
+			hp_bar = Bar.new(@vp,180,8)
+			@extra.push(hp_bar)
+			hp_bar.move(@cx+20,@cy+42)
+
+			hp_label = Sprite.new(@vp)
+			hp_label.bitmap = $cache.menu_char("label-hp")
+			hp_label.opacity = 200
+			@extra.push(hp_label)
+			hp_label.move(@cx+20,@cy+34)
+			
+
+	     	# Position
+	     	
+	     	#hp_bar.move(@cx + 42,@cy+14)
+	     	#mp_bar.move(@cx + 42,@cy+14+12)
+
+	     	choose(@boxes[0].name) if @boxes.count == 1
+
+	     end
+
+     	# Next
+		@cy += btn.height + @spacing + 3
+
+	end
+
+	def add_part_box(name,w,h)
+		btn = Box.new(@vp,w,h)
+     	btn.skin = $cache.menu_common("skin-plain")
+     	btn.wallpaper = $cache.menu_wallpaper('diamonds')
+     	#btn.wallpaper = $cache.menu_wallpaper(["blue",'green','orange','diamonds'].sample)
+     	btn.name = name
+     	@boxes.push(btn)
+     	btn.move(@cx,@cy)
+     	return btn
+	end
+
 	def diff_name(diff)
 		case diff
 			when 'easy'
@@ -207,20 +401,51 @@ class Ui_Grid
 		end
 	end
 
+	def get_box(option)
+		return @boxes[0]
+	end
+
 	def update
+		return if !@active
 		return if @boxes.empty?
 
-		if $input.down?
+		if @boxes.count > 1 && $input.down?
 			sx = @selected_box.x + @selected_box.width/2		
 			sy = @selected_box.y + @selected_box.height
 			search(sx,sy,1,3)
 		end
 
-		if $input.up?
+		if @boxes.count > 1 && $input.up?
 			sx = @selected_box.x + @selected_box.width/2		
 			sy = @selected_box.y
 			search(sx,sy,1,-3)
 		end
+
+		if @boxes.count > 1 && $input.right?		
+			sx = @selected_box.x + @selected_box.width
+			sy = @selected_box.y + @selected_box.height/2	
+			search(sx,sy,3,1)
+		end
+
+		if @boxes.count > 1 && $input.left?
+			sx = @selected_box.x
+			sy = @selected_box.y + @selected_box.height/2
+			search(sx,sy,-3,1)
+		end
+
+
+		pos = $mouse.position
+		@boxes.each{ |b| 
+
+			next if b == @selected_box
+			next if pos[0] < b.x
+		    next if pos[1] < b.y
+		    next if pos[0] > b.x + b.width
+		    next if pos[1] > b.y + b.height
+			choose(b.name)
+			break
+
+		}
 
 	end
 
@@ -236,7 +461,7 @@ class Ui_Grid
 			cy += y
 
 			@boxes.each{ |box|
-				next if box == @selected_box
+				next if box == @selected_box 
 				if box.window.within?(cx,cy)
 					return choose(box.name)
 				end
@@ -255,6 +480,7 @@ class Ui_Grid
 
 		@glow.show
 		@contents.each{ |i| i.show }
+		@extra.each{ |i| i.show }
 		@boxes.each{ |i| i.show }
 
 	end
@@ -263,6 +489,7 @@ class Ui_Grid
 
 		@glow.hide
 		@contents.each{ |i| i.hide }
+		@extra.each{ |i| i.hide }
 		@boxes.each{ |i| i.hide }
 
 	end

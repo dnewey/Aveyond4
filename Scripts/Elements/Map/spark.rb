@@ -4,6 +4,8 @@ class Spark < Sprite
 	def initialize(fx,x,y,vp)
 		super(vp)
 
+		@reverse = false
+
 
 		# fx is database id, also gfx name
 		# If not in database, use defaults
@@ -56,6 +58,10 @@ class Spark < Sprite
 
 	end
 
+	def reverse
+		@reverse = true
+	end
+
 	def width
 		return self.bitmap.width / 5
 	end
@@ -85,8 +91,12 @@ class Spark < Sprite
 
 			self.opacity -= 30 if @idx >= @frames - 2
 
-			fx = @idx % 5 # frames_per_row
-			fy = @idx / 5
+			if @reverse
+				idx = @frames - @idx
+			end
+
+			fx = idx % 5 # frames_per_row
+			fy = idx / 5
 
 
 

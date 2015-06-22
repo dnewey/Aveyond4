@@ -6,7 +6,7 @@
 
 class Game_Battler
  
-  attr_reader :id
+  attr_reader :id, :name
 
   attr_reader :transform
 
@@ -16,6 +16,8 @@ class Game_Battler
   attr_accessor :ev
 
   attr_reader :hp, :mp
+
+  attr_reader :slots, :equips
 
   #--------------------------------------------------------------------------
   # * Object Initialization

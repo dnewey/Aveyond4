@@ -13,16 +13,20 @@ class Mnu_Journal < Mnu_Base
 		@tabs.push("main")
 		@tabs.push("side")
 
+		log_scr("HUH")
+
 		@menu.list.type = :quest
 
 		data = $progress.quests
 
-		@menu.list.setup(data)
-
 		@page = Right_Page.new(vp)
 		self.right.push(@page)
 
-		change(data[0]) if !data.empty?
+		@menu.list.setup(data)
+
+		
+
+		#change(data[0]) if !data.empty?
 
 	end
 
@@ -37,7 +41,7 @@ class Mnu_Journal < Mnu_Base
 
 	def change(option)
 
-		return
+		#return
 
 		@page.clear
 
@@ -46,6 +50,8 @@ class Mnu_Journal < Mnu_Base
 
 		@page.title = $data.quests[option].name
 		@page.description = $data.quests[option].description
+
+		@page.add_reqs($data.quests[option].req)
 		@page.add_zone($data.quests[option].location)
 
 	end

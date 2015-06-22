@@ -108,6 +108,14 @@ class Box
 	def width() return @width end
 	def height() return @height end
 
+	def height=(h)
+		resize(@width,h)
+	end
+
+	def width=(w)
+		resize(w,@height)
+	end
+
 	def resize(w,h)
 		@width = w
 		@height = h

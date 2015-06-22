@@ -97,6 +97,9 @@ class List
     @back_sprite.opacity = o
     @content_sprite.opacity = o
     @select_sprite.opacity = o
+    @scroll_box.opacity = 0
+    @scroll_down.opacity = 0
+    @scroll_up.opacity = 0
   end
 
   def opacity
@@ -107,6 +110,9 @@ class List
   	@back_sprite.dispose
     @select_sprite.dispose
     @content_sprite.dispose
+    @scroll_box.dispose
+    @scroll_down.dispose
+    @scroll_up.dispose
   end
 
   def setup(data)
@@ -116,6 +122,9 @@ class List
     # And then aditional items are given
     #@per_page = @data.count if @data.count < @per_page
     #@per_page = 1 if @per_page == 0
+    #@scroll_idx = 0
+    #@page_idx = 0
+    @active = true
   	refresh
   end
 
@@ -131,6 +140,14 @@ class List
     @data.count > @max_per_page
   end
 
+  def call_change
+
+    i = idx
+        i -= 1 if !can_scroll?
+        @change.call(@data[i]) if !@change.nil?
+
+  end
+
   # When data changes
   def refresh
 
@@ -141,6 +158,8 @@ class List
     rows += 2 if can_scroll?
     rows = 1 if rows == 0
     height = row_height * rows
+
+    log_info(rows)
 
     @back_sprite.bitmap = Bitmap.new(@item_width,height)
     @content_sprite.bitmap = Bitmap.new(@item_width,height)
@@ -157,6 +176,8 @@ class List
       draw(@data[@scroll_idx + i-1],i)
       i += 1
     }
+
+    call_change
 
   end
 
@@ -309,11 +330,13 @@ class List
 
       if can_scroll? && @page_idx == 5 && @scroll_idx < (@data.count - @max_per_page) -1
         scroll_up
-  		#else
-  		 # refresh
+  		else
+        i = idx
+        i -= 1 if !can_scroll?
+  		  @change.call(@data[i]) if !@change.nil?
       end
       
-      @change.call(current) if !@change.nil?
+      #@change.call(current) if !@change.nil?
 
   	end
 
@@ -335,9 +358,13 @@ class List
 
   		if can_scroll? && @scroll_idx > 0 && @page_idx == 3
         scroll_down
+      else
+        i = idx
+        i -= 1 if !can_scroll?
+        @change.call(@data[i]) if !@change.nil?
       end
       
-      @change.call(current) if !@change.nil?
+      #@change.call(current) if !@change.nil?
 
   	end
 
@@ -365,6 +392,8 @@ class List
 
   def scroll_down
 
+    @change.call(current) if !@change.nil?
+
     
     @scroll_idx -= 1    
     #      @pagemod = 1
@@ -378,6 +407,7 @@ class List
     @select_sprite.do(go("y",row_height,dur,ease))
 
     @back_sprite.do(proc(Proc.new{
+
       @page_idx += 1
       refresh
 
@@ -386,6 +416,8 @@ class List
   end
 
   def scroll_up
+
+    @change.call(current) if !@change.nil?
 
     @scroll_idx += 1    
           #@pagemod = -1
@@ -402,8 +434,7 @@ class List
   	@back_sprite.do(proc(Proc.new{
 
       @page_idx -= 1
-      refresh
-      
+      refresh      
 
     },dur+1))
 

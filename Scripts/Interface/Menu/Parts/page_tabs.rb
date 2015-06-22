@@ -63,6 +63,8 @@ class Page_Tabs < Sprite
 
   def update
 
+    return if @names.empty?
+
   	# Check inputs and that
   	if $input.right?
       @idx += 1

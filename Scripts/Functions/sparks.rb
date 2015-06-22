@@ -5,6 +5,11 @@ def spark(ev,fx,ox=0,oy=0)
 
 end
 
+def spark_r(ev,fx,ox=0,oy=0)
+	sprk = $scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
+	sprk.reverse
+end
+
 def pop_huh(ev)
 
 	pop_icon(ev,"misc/exclaim")
