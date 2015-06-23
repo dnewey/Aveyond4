@@ -17,6 +17,11 @@ class Scene_Battle
 
   def phase_actor_action
 
+    if !@active_battler.can_attack?
+      @phase = :actor_next
+      return
+    end
+
     @actor_cmd.update
 
     if $input.cancel? || $input.rclick?

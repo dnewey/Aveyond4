@@ -145,8 +145,9 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if result.target.down?
-        sys('fall')
-        fade(result.target.ev)
+        #sys('fall')
+        result.target.fall
+        #fade(result.target.ev)
         wait(60)
       end
 

@@ -140,11 +140,25 @@ class Game_Battler
   def transform(into)
 
     @transform = into
+
+    @transform = nil if @transform == 'nil'
     log_scr("TRANSFORM NOW")
 
-    ev.character_name = "Player/#{@id}-snake"
-    ev.direction = 4
+    if @transform != nil
 
+      ev.character_name = "Player/#{@id}-#{into}"
+      ev.direction = 4
+
+    else
+
+      ev.character_name = "Player/#{@id}-idle"
+
+    end
+
+  end
+
+  def fall
+    ev.character_name = "Player/#{@id}-down"
   end
 
   #--------------------------------------------------------------------------
@@ -175,6 +189,10 @@ class Game_Battler
     @hp == 0 
   end
   def attackable?
+    return !down?
+  end
+
+  def can_attack?
     return !down?
   end
 

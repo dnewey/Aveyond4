@@ -79,7 +79,7 @@ class AudioManager
   end
 
   def atmosphere(file)
-    return
+    #return
     @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
@@ -91,7 +91,7 @@ class AudioManager
   end
 
   def sys(file,vol=1.0)
-    return
+    #return
 
     #log_scr(@sys.count)
 
@@ -115,7 +115,7 @@ class AudioManager
   end
 
   def sfx(file,vol=1.0)
-    return
+    #return
 
     #log_scr(@sfx.count)
 

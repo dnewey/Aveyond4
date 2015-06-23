@@ -653,6 +653,7 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
+      $tweens.clear(@sprites)
       @sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
