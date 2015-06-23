@@ -692,7 +692,7 @@ end"# #======================================================================
 #   #--------------------------------------------------------------------------
 #   def dead?() return self.opacity <= 0 end
 
-# end"n
+# end"c
 class Spark < Sprite
 
 	def initialize(fx,x,y,vp)
@@ -708,7 +708,7 @@ class Spark < Sprite
 
 		# Defaults
 		@frames = 25
-		@delay = 2
+		@delay = 0
 
 		@fade_out = true
 
@@ -786,9 +786,7 @@ class Spark < Sprite
 			self.opacity -= 30 if @idx >= @frames - 2
 
 			idx = @idx
-			
 			if @reverse
-				
 				idx = @frames - @idx
 			end
 
@@ -1018,13 +1016,15 @@ class Bar < Sprite
 
 	end
 
-end"3
+end"M
 
 class Box 
 
 	attr_accessor :name
 	attr_accessor :window
 
+	attr_accessor :alpha
+	
 	def initialize(vp,w=100,h=100)
 
 		@wallpaper = Sprite.new(vp)
@@ -1395,7 +1395,7 @@ class Label < Sprite
         
   end
   
-end"²%#==============================================================================
+end"‰(#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1519,8 +1519,9 @@ class List
     # And then aditional items are given
     #@per_page = @data.count if @data.count < @per_page
     #@per_page = 1 if @per_page == 0
-    #@scroll_idx = 0
-    #@page_idx = 0
+    @scroll_idx = 0
+    @page_idx = 0
+    @select_sprite.y = idx * row_height
     @active = true
   	refresh
   end
@@ -1539,9 +1540,9 @@ class List
 
   def call_change
 
-    i = idx
-        i -= 1 if !can_scroll?
-        @change.call(@data[i]) if !@change.nil?
+        i = idx
+        #i -= 1 if !can_scroll?
+        @change.call(current) if !@change.nil?
 
   end
 
@@ -1561,8 +1562,10 @@ class List
     @back_sprite.bitmap = Bitmap.new(@item_width,height)
     @content_sprite.bitmap = Bitmap.new(@item_width,height)
 
-    @back_sprite.y = -row_height if can_scroll?
-    @content_sprite.y = -row_height if can_scroll?
+    @back_sprite.y = can_scroll? ? -row_height : 0
+    @content_sprite.y = can_scroll? ? -row_height : 0
+
+
 
     src = $cache.menu_common('list-bar')
 
@@ -1570,7 +1573,7 @@ class List
     rows.times{ 
       @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
       # Draw each row
-      draw(@data[@scroll_idx + i-1],i)
+      draw(@data[@scroll_idx + i],i)
       i += 1
     }
 
@@ -1591,12 +1594,13 @@ class List
 
   def current
     return @current[0] if @type == :misc
+    return @data[idx+1] if can_scroll?
     return @data[idx]
   end
 
   def draw(data,row)
 
-    return if data == nil # For above or below accessible
+    #return if data == nil # For above or below accessible
 
     # Drw the contents
     case @type
@@ -1618,14 +1622,22 @@ class List
 
     item = $data.items[data]
 
-    ico = $cache.icon(item.icon)
-
-    number = $party.item_number(data)
+    if item != nil
+      name = item.name
+      ico = $cache.icon(item.icon)
+      number = $party.item_number(data)
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+      number = 0
+    end
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
-    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
-    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    if number > 0
+      @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    end
 
   end
 
@@ -1718,21 +1730,26 @@ class List
 
       sys('select')
 
-      # Move the sprite down
-      @select_sprite.y += row_height
-  		
+      # Move the sprite down, but not too far!
+      @select_sprite.y += row_height  		
       @page_idx += 1
+
+      if @select_sprite.y > (@per_page-1) * row_height
+        @select_sprite.y -= row_height
+        @page_idx -= 1
+      end
   		
       #if @data.count > @max_per_page
 
-      if can_scroll? && @page_idx == 5 && @scroll_idx < (@data.count - @max_per_page) -1
+      if can_scroll? && @page_idx >= 6 && @scroll_idx < (@data.count - @max_per_page) -1
         scroll_up
   		else
         i = idx
-        i -= 1 if !can_scroll?
-  		  @change.call(@data[i]) if !@change.nil?
+        #i -= 1 if !can_scroll?
+  		  @change.call(current) if !@change.nil?
       end
       
+
       #@change.call(current) if !@change.nil?
 
   	end
@@ -1750,29 +1767,39 @@ class List
       
       # Move the sprite down
       @select_sprite.y -= row_height
-
   		@page_idx -= 1
 
-  		if can_scroll? && @scroll_idx > 0 && @page_idx == 3
+       if @select_sprite.y < 0
+        @select_sprite.y += row_height
+        @page_idx += 1
+      end
+
+  		if can_scroll? && @scroll_idx > 0 && @page_idx <= 1
         scroll_down
       else
         i = idx
-        i -= 1 if !can_scroll?
-        @change.call(@data[i]) if !@change.nil?
+        #i -= 1 if !can_scroll?
+        @change.call(current) if !@change.nil?
       end
       
       #@change.call(current) if !@change.nil?
 
   	end
 
-    # pos = $mouse.position
-    # pos[0] -= @x
-    # pos[1] -= @y
-    # if pos[0] < @item_width
-    #   row = pos[1] / row_height
-    #   @select_sprite.y = row * row_height
-    #   sys('select')
-    # end
+    pos = $mouse.position
+    pos[0] -= @x
+    pos[1] -= @y
+    if pos[0] < @item_width
+      row = pos[1] / row_height
+      return if row < 0
+      return if row >= @per_page
+      return if row >= @data.count
+      return if row == @page_idx
+      @select_sprite.y = row * row_height
+      @page_idx = row
+      @change.call(current) if !@change.nil?
+      #sys('select')
+    end
 
     # Selection
     if !@select.nil? && ($input.action? || $input.click?)
@@ -1789,11 +1816,13 @@ class List
 
   def scroll_down
 
+    
     @change.call(current) if !@change.nil?
-
     
     @scroll_idx -= 1    
     #      @pagemod = 1
+
+
 
 
     dur = 180
@@ -1814,10 +1843,12 @@ class List
 
   def scroll_up
 
-    @change.call(current) if !@change.nil?
+     @change.call(current) if !@change.nil?
 
     @scroll_idx += 1    
           #@pagemod = -1
+
+         
 
     dur = 180
     ease = :quad_in_out
@@ -2988,11 +3019,15 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"Õ
+"
 # Misc
 
 def text()
 
+end
+
+def text_wall(w='diamonds')
+	$scene.hud.message.wallpaper = w
 end
 
 def w(f=5)
@@ -3301,7 +3336,7 @@ class Popper < Sprite
 
 	end
 
-end"ù
+end"
 class ActorCmd
 
 	def initialize(vp)
@@ -3567,6 +3602,8 @@ class ActorCmd
 		end
 
 		pos = $mouse.position
+		pos[0] += 13
+		pos[1] += 34
 			@icons.each{ |i|
 			if i.within?(pos[0],pos[1])
 				break if @icons.index(i) == @idx
@@ -3745,7 +3782,7 @@ class ItemCmd
 		return @item
 	end
 
-end"¨
+end"»
 class SkillCmd < ItemCmd
 
 	def setup(battler)
@@ -3768,6 +3805,7 @@ class SkillCmd < ItemCmd
 	end
 
 	def change(option)
+		return if !@box
 		@item = option
 		@box.skill(option)
 		#@box.center(462,130+@list.page_idx*@list.item_height)
@@ -3897,8 +3935,7 @@ class TargetCmd
 	end
 
 end
-"Í
-#==============================================================================
+" #==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -3929,7 +3966,7 @@ class Ui_Screen
 		#@info.update
 		if @popper
 			@popper.update 
-			if $input.action?
+			if $input.action? || $input.click?
 				$tweens.clear(@popper)
 				@popper.dispose
 				@popper = nil
@@ -3938,7 +3975,7 @@ class Ui_Screen
 
 		if @grid
 			@grid.update 
-			if $input.action?
+			if $input.action? || $input.click?
 				# Record action and close
 				$menu.grid_action = @grid.get_chosen
 
@@ -3955,7 +3992,7 @@ class Ui_Screen
 
 		if @item
 			@item.update 
-			if $input.action?
+			if $input.action? || $input.click?
 				$tweens.clear(@item)
 				@item.dispose
 				@item = nil
@@ -4095,7 +4132,7 @@ class Ui_Bar < SpriteGroup
 		super()
 	end
 
-end"²(#==============================================================================
+end"B(#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -4325,9 +4362,15 @@ class Ui_Grid
 		log_info(slot)
 
 		item = $data.items[eq]
-		name= item.name
-		text = item.name
-		icon = "misc/unknown"
+
+		if item != nil
+			
+			text = item.name
+			icon = item.icon
+		else
+			icon = "misc/unknown"
+			text = 'Empty'
+		end
 
 		# Create new things
 		btn = add_part_box(slot,300,61)
@@ -4420,15 +4463,16 @@ class Ui_Grid
 
 	end
 
-	def add_party_mem(id)
+	def add_party_mem(box,id)
 
 		char = $party.get(id)
 
 		name = "- Empty -"
 		name = char.name if char
+		name += " - Lvl #{char.level.to_s}" if char
 
 		# Create new things
-		btn = add_part_box(name,300,70)
+		btn = add_part_box(box,300,70)
 
 		cont = Label.new(@vp)
 	    cont.font = $fonts.list
@@ -4436,7 +4480,7 @@ class Ui_Grid
 	    cont.gradient = true
 	    cont.text = name
 	    @contents.push(cont)
-	    cont.move(@cx+20,@cy+7)
+	    cont.move(@cx+15,@cy+7)
 
 		if char == nil
 
@@ -4451,22 +4495,11 @@ class Ui_Grid
 			port.move(@cx+btn.width-port.width-9,@cy+62-port.src_rect.height)
 			port.z += 50
 
-			hp_bar = Bar.new(@vp,180,8)
+			hp_bar = Bar.new(@vp,170,8)
 			@extra.push(hp_bar)
+			hp_bar.opacity = 200
 			hp_bar.move(@cx+20,@cy+42)
-
-			hp_label = Sprite.new(@vp)
-			hp_label.bitmap = $cache.menu_char("label-hp")
-			hp_label.opacity = 200
-			@extra.push(hp_label)
-			hp_label.move(@cx+20,@cy+34)
 			
-
-	     	# Position
-	     	
-	     	#hp_bar.move(@cx + 42,@cy+14)
-	     	#mp_bar.move(@cx + 42,@cy+14+12)
-
 	     	choose(@boxes[0].name) if @boxes.count == 1
 
 	     end
@@ -4499,7 +4532,7 @@ class Ui_Grid
 	end
 
 	def get_box(option)
-		return @boxes[0]
+		return @boxes.select{ |b| b.name == option }[0]
 	end
 
 	def update
@@ -4666,7 +4699,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"4H#==============================================================================
+end"›J#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -4741,6 +4774,7 @@ class Ui_Message
     @box = Box.new(vp)
     @box.skin = $cache.menu_common("skin")
     @box.wallpaper = $cache.menu_wallpaper("diamonds")
+    #@box.wallpaper = $cache.menu_wallpaper("fangder")
     @box.scroll(0.1,0.1)
 
     # Setup sprites    
@@ -4792,6 +4826,15 @@ class Ui_Message
     @choices = []
     @last_choice = ''
 
+  end
+
+  def wallpaper=(w)
+    @box.wallpaper = $cache.menu_wallpaper(w)
+    if w == 'fangder'
+      @box.alpha = 255
+    else
+      @box.alpha = 230
+    end
   end
   
   #--------------------------------------------------------------------------
@@ -4856,6 +4899,8 @@ class Ui_Message
     #   @skip_all = true
     # end
 
+
+
     case @state
 
       when :closed
@@ -4869,11 +4914,23 @@ class Ui_Message
 
       when :texting
         @next_char -= 1
-        if @next_char <= 0 || $keyboard.state?(VK_ENTER)
+        if @next_char <= 0
           #log_err "DOING"
           update_message
         end
         redraw
+
+        if $input.action? || $input.click?
+      
+          @super_skipping = true
+          while @state == :texting
+
+            update_message           
+          end
+          @super_skipping = false
+          redraw
+          
+        end
         
       when :waiting
         update_waiting
@@ -4904,6 +4961,8 @@ class Ui_Message
   # Show Convo
   #--------------------------------------------------------------------------
   def start(text, choices = nil)
+
+    $tweens.clear(@sprites)
 
     @mode = :message
 
@@ -5011,6 +5070,7 @@ class Ui_Message
     #@sprites.change(@next,@width/2,@height-20)
     $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
+    
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
     # Start writing    
@@ -5079,10 +5139,13 @@ class Ui_Message
     
     x = @sprites.x + @cx+size.width
     y = @sprites.y + @cy
-    sprk = Spark.new("message.28",x+4,y+16,@vp)
+
+    return if @super_skipping #|| (@char_idx >= @word.length-1 && @char_idx > 0)
+
+    sprk = Spark.new("message.28",x-4,y+16,@vp) # Faster with higher opacity perhaps
     #sprk.center()
     #sprk.blend_type = 1
-    sprk.opacity = 20
+    sprk.opacity = 30
     @sparks.push(sprk)
     
     # AUTO PAUSE AFTER SENTENCE HERE
@@ -5291,9 +5354,9 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
-      #@sprites.opacity = 0
+      @sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
-      @sprites.do(go("opacity",-255,100,:quad_in_out))
+      #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
 
@@ -5629,7 +5692,7 @@ class Mnu_Base
 		return @closing # && NO TWEENS GOING
 	end
 
-end"Œ#==============================================================================
+end"Z#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -5638,7 +5701,7 @@ class Mnu_Char < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('boy')
+		@title.change($menu.char)
 
 		@subtitle.text = "Master of deception"
 
@@ -5667,6 +5730,14 @@ class Mnu_Char < Mnu_Base
 		super
 
 		@grid.update
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			close
+		end
 		
 	end
 
@@ -5678,7 +5749,8 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"ë	#==============================================================================
+end"í
+#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -5697,7 +5769,8 @@ class Mnu_Equip < Mnu_Base
 		#@tabs.push("potions")
 		#@tabs.push("keys")
 
-		#@menu.hide
+		@menu.opacity = 0
+		@menu.move(15,180)
 		#@menu.opacity = 0
 		
 		@menu.list.per_page = 7
@@ -5736,13 +5809,13 @@ class Mnu_Equip < Mnu_Base
 		@grid.update if !@menu.list.active
 
 		# Get chosen grid option
-		if $input.action?
+		if $input.action? || $input.click?
 			log_scr("GO")
 			choose(@grid.get_chosen)
 		end
 
 		# Cancel out of grid
-		if $input.cancel?
+		if $input.cancel? || $input.rclick?
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
@@ -5766,10 +5839,11 @@ class Mnu_Equip < Mnu_Base
 		# Populate the list
 
 		# Find gear for this slot
-		items = $data.items.values.select{ |i|
-			i.is_a?(GearData) && i.slot == @slot
+		items = $party.items.keys.select{ |i|
+			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
 		}
-		@menu.list.setup(items.map{|i| i.id})
+		items.push(nil) if @char.equips[@slot] != nil
+		@menu.list.setup(items)
 
 		# Bring in the list
 		@menu.opacity = 255
@@ -5788,7 +5862,12 @@ class Mnu_Equip < Mnu_Base
 
 
 		# Change the item box to show this
-		@item_box.item(option)
+		if option != nil
+			@item_box.item(option)
+			@item_box.show
+		else
+			@item_box.hide
+		end
 		#@item_box.comparison(option,@char.equips[@slot])
 		
 	end
@@ -5796,7 +5875,8 @@ class Mnu_Equip < Mnu_Base
 	def select(option)	
 
 		# Replace the gear in the slot hahahhahah
-
+		log_scr(@slot)
+		log_scr(option)
 		@char.equip(@slot,option)
 		back_to_slots
 		
@@ -5819,6 +5899,8 @@ class Mnu_Equip < Mnu_Base
 		 @char.slots.each{ |slot| 
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
+
+		 @grid.choose(@slot)
 
 		 @item_box.hide
 
@@ -6380,7 +6462,7 @@ class Mnu_Options < Mnu_Base
 		
 	end
 
-end":
+end"•
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -6397,28 +6479,59 @@ class Mnu_Party < Mnu_Base
 		@active = Sprite.new(vp)
 		@active.bitmap = $cache.menu_tab('all')
 		@active.move(140,105)
+		@left.push(@active)
 
 		@reserve = Sprite.new(vp)
 		@reserve.bitmap = $cache.menu_tab('all')
 		@reserve.move(450,105)
+		@right.push(@reserve)
 		
 		@grid = Ui_Grid.new(vp)
+		@other.push(@grid)
+		setup_grid
+
+	end
+
+	def setup_grid
+		
 		@grid.move(15,128)
 
-		$party.active.each{ |m|
-			@grid.add_party_mem(m)
-		}
-		@grid.add_party_mem(nil) if $party.active.count < 4
-		@grid.add_party_mem(nil) if $party.active.count < 3
-		@grid.add_party_mem(nil) if $party.active.count < 2
+		@grid.add_party_mem('a.0',$party.active[0])
+		if $party.active.count > 1
+			@grid.add_party_mem('a.1',$party.active[1])
+		else
+			@grid.add_party_mem('a.1',nil)
+		end
+		if $party.active.count > 2
+			@grid.add_party_mem('a.2',$party.active[2])
+		else
+			@grid.add_party_mem('a.2',nil)
+		end
+		if $party.active.count > 3
+			@grid.add_party_mem('a.3',$party.active[3])
+		else
+			@grid.add_party_mem('a.3',nil)
+		end
+
 		@grid.cx = 324
 		@grid.cy = 128
-		$party.reserve.each{ |m|
-			@grid.add_party_mem(m)
-		}
-		@grid.add_party_mem(nil) if $party.reserve.count < 4
-		@grid.add_party_mem(nil) if $party.reserve.count < 3
-		@grid.add_party_mem(nil) if $party.reserve.count < 3
+
+		@grid.add_party_mem('r.0',$party.reserve[0])
+		if $party.reserve.count > 1
+			@grid.add_party_mem('r.1',$party.reserve[1])
+		else
+			@grid.add_party_mem('r.1',nil)
+		end
+		if $party.reserve.count > 2
+			@grid.add_party_mem('r.2',$party.reserve[2])
+		else
+			@grid.add_party_mem('r.2',nil)
+		end
+		if $party.reserve.count > 3
+			@grid.add_party_mem('r.3',$party.reserve[3])
+		else
+			@grid.add_party_mem('r.3',nil)
+		end
 
 	end
 
@@ -6428,8 +6541,16 @@ class Mnu_Party < Mnu_Base
 		@grid.update
 
 		# Get chosen grid option
-		if $input.action?
+		if $input.action? || $input.click?
 			choose(@grid.get_chosen)
+		end
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			close
 		end
 
 	end
@@ -6439,7 +6560,11 @@ class Mnu_Party < Mnu_Base
 			@first = option
 			@grid.get_box(option).wallpaper = $cache.menu_wallpaper('blue')
 		else
-
+			$party.swap(@first,option)
+			@first = nil			
+			@grid.clear
+			setup_grid
+			@grid.choose(option)
 		end
 	end
 
@@ -6637,7 +6762,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"—
+end"Y
 
 class Char_Box_Large < SpriteGroup
 
@@ -6647,9 +6772,11 @@ class Char_Box_Large < SpriteGroup
 
 		super()
 
+		@char = $party.get(char)
+
 		@box = Box.new(vp,205,168)
 		@box.skin = $cache.menu_common("skin")
-		@box.wallpaper = $cache.menu_wallpaper("lightning")
+		@box.wallpaper = $cache.menu_wallpaper("portback")
 		add(@box)
 
 		@port = Sprite.new(vp)
@@ -6661,22 +6788,37 @@ class Char_Box_Large < SpriteGroup
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient")
 		@gradient.opacity = 160
-		add(@gradient,2,55)
+		add(@gradient,9,100)
 		@gradient.z += 50
 
+		@name = Label.new(vp)
+	    @name.font = $fonts.list
+	    @name.shadow = $fonts.list_shadow
+	    @name.gradient = true
+	    @name.text = @char.name
+	    add(@name,15,7)
 
-		@mp_bar = Bar.new(vp,180,8)
-		add(@mp_bar,11,112)
-		@mp_bar.z += 50
+		@level = Label.new(vp)
+	    @level.font = $fonts.list
+	    @level.shadow = $fonts.list_shadow
+	    @level.gradient = true
+	    @level.text = "15"
+	    add(@level,20,27)
 
-		@mp_label = Sprite.new(vp)
-		@mp_label.bitmap = $cache.menu_char("label-mp")
-		@mp_label.opacity = 200
-		add(@mp_label,12,104)
-		@mp_label.z += 50
+
+		# @mp_bar = Bar.new(vp,180,8)
+		# add(@mp_bar,11,112)
+		# @mp_bar.z += 50
+
+		# @mp_label = Sprite.new(vp)
+		# @mp_label.bitmap = $cache.menu_char("label-mp")
+		# @mp_label.opacity = 200
+		# add(@mp_label,12,104)
+		# @mp_label.z += 50
 
 		@hp_bar = Bar.new(vp,180,8)
 		add(@hp_bar,11,130)
+		@hp_bar.opacity = 180
 		@hp_bar.z += 50
 
 		@hp_label = Sprite.new(vp)
@@ -6687,6 +6829,7 @@ class Char_Box_Large < SpriteGroup
 
 		@xp_bar = Bar.new(vp,180,8)
 		add(@xp_bar,11,148)
+		@xp_bar.opacity = 180
 		@xp_bar.z += 50
 
 		@xp_label = Sprite.new(vp)
@@ -6709,11 +6852,11 @@ class Char_Box_Large < SpriteGroup
 		@box.update
 	end
 
-	def setup(char)
+	def choose()
 
 	end
 
-end"c
+end"è
 
 class Char_Box_Small < SpriteGroup
 
@@ -6723,20 +6866,36 @@ class Char_Box_Small < SpriteGroup
 
 		super()
 
+		@char = $party.get(char)
+
 		@box = Box.new(vp,132,87)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("portback")
 		add(@box)
 
 		@port = Sprite.new(vp)
-		@port.bitmap = $cache.face_small(["boy",'hib','row'].sample)
-		add(@port,31,-10)
+		@port.bitmap = $cache.face_small(char)
+		add(@port,123-@port.width,78-@port.height)
 		@port.z += 50
 
 		@gradient = Sprite.new(vp)
 		@gradient.bitmap = $cache.menu_common("charbox-gradient-small")
 		@gradient.opacity = 160
 		add(@gradient,5,30)
+
+		@name = Label.new(vp)
+	    @name.font = $fonts.list
+	    @name.shadow = $fonts.list_shadow
+	    @name.gradient = true
+	    @name.text = @char.name
+	    add(@name,6,4)
+
+		@level = Label.new(vp)
+	    @level.font = $fonts.list
+	    @level.shadow = $fonts.list_shadow
+	    @level.gradient = true
+	    @level.text = "15"
+	    add(@level,20,27)
 
 		@xp_bar = Bar.new(vp,106,8)
 		add(@xp_bar,11,64)
@@ -6807,7 +6966,8 @@ class Info_Box < SpriteGroup
 	end
 
 end
-"ñ	
+")
+
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -6890,6 +7050,9 @@ class Item_Box < SpriteGroup
 
     def base(data)
 
+        log_scr(data)
+        return if data == nil
+
         # Set values
         @title.text = data.name
         @desc.text = data.description
@@ -6954,7 +7117,7 @@ class Item_Box < SpriteGroup
 
     end
 
-end"T
+end"R
 class List_Common < SpriteGroup
 
 	attr_accessor :list, :window
@@ -6999,10 +7162,10 @@ class List_Common < SpriteGroup
 
 	# All the various data that can be shown
 	def setup_items(category)
-		items = $data.items.values.select{ |i|
-			i.is_a?(UsableData) # &&
+		items = $party.items.keys.select{ |i|
+			$data.items[i].is_a?(UsableData) # &&
 		}
-		@list.setup(items.map{|i| i.id})
+		@list.setup(items)
 	end
 
 	def setup_gear(slot)
@@ -7195,7 +7358,7 @@ class Page_Title < SpriteGroup
 
 	end
 
-end"#==============================================================================
+end"™#==============================================================================
 # ** Part_Char
 #==============================================================================
 
@@ -7205,7 +7368,7 @@ class Port_Full < Sprite
 	def initialize(vp)
 		super(vp)
 
-		self.bitmap = $cache.face_menu("boy-w")
+		self.bitmap = $cache.face_menu("#{$menu.char}-w")
 		self.x = 330
 		#self.x -= 20
 
@@ -7350,7 +7513,7 @@ class Right_Page < SpriteGroup
     	@cy += @txt_zone.height
     end
 
-end"«#==============================================================================
+end"³#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -7358,7 +7521,7 @@ end"«#========================================================================
 
 class Game_Battler
  
-  attr_reader :id, :name
+  attr_reader :id, :name, :level
 
   attr_reader :transform
 
@@ -11197,7 +11360,7 @@ class Moblin
 
 	end
 
-end"¥*#==============================================================================
+end"(#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -11389,25 +11552,41 @@ class Game_Player < Game_Character
         #turn_toward_pos(mx,my)
         
         # Run Pathfinding
-        evt = $map.event_at(mx, my)
-        if evt == nil
+        @event_at_path = $map.event_at(mx, my)
+        @event_at_path = nil if @event_at_path && @event_at_path.through
+        if @event_at_path == nil
           find_path(mx, my)
-          @eventarray = @runpath ? $map.events_at(mx, my) : nil
+          #@eventarray = @runpath ? $map.events_at(mx, my) : nil
         else
-           find_path(evt.x+1, evt.y+1)
-           @eventarray = [evt]
+
+          dx = @x - @event_at_path.x
+          dy = @y - @event_at_path.y
+
+          if dx.abs > dy.abs
+            if dx > 0
+              find_path(@event_at_path.x+1, @event_at_path.y)
+              @turn_after_path = 'l'
+            else
+              find_path(@event_at_path.x-1, @event_at_path.y)
+              @turn_after_path = 'r'
+            end
+          else
+            if dy > 0
+              find_path(@event_at_path.x, @event_at_path.y+1)
+              @turn_after_path = 'u'
+            else
+              find_path(@event_at_path.x, @event_at_path.y-1)
+              @turn_after_path = 'd'
+            end
+          end
+
         end
-        
-        # If Event At Grid Location
-        unless @eventarray.nil?
-          @eventarray = nil if @eventarray.empty?
-        end
-        
+                
       end
     
     if @move_route_forcing == true
       clear_path
-      @eventarray = nil
+      @event_at_path = nil
     end
 
     # Clear path if any direction keys pressed
@@ -11434,56 +11613,38 @@ class Game_Player < Game_Character
    
     # If not moving
     unless moving?
+      
       # If player was moving last time
       if last_moving
         # Event determinant is via touch of same position event
         result = check_event_trigger_here([1,2])
       end
+
       # If C button was pressed
       if $input.action?
         # Same position and front event determinant
         check_event_trigger_here([0])
         check_event_trigger_there([0,1,2])
       end
+
+      unless @runpath == true
+        if @event_at_path != nil
+          case @turn_after_path
+            when 'd'
+              @direction = 2
+            when 'l'
+              @direction = 4
+            when 'r'
+              @direction = 6
+            when 'u'
+              @direction = 8
+          end
+          @event_at_path.start
+          @event_at_path = nil
+        end
+      end
+
     end
-    
-    # If Non-nil Event Autostarter
-    if @eventarray != nil && !moving? && # @mouse_event_autostarter != nil && !moving? &&
-      (!@ovrdest || @map.nil? || @map[@x,@y] == 1)
-
-      @eventarray.each do |event|
-      
-        # If Event Within Range
-        # if event and (event.at?(@x,@y) || @ovrdest
-          
-        #   # SHAZ - trigger event when:
-        #   # - Autotouch and standing on or beside, or with a counter between
-        #   # - player/event touch and standing as close as possible (on, if possible)
-        #   distance = Math.hypot(@x - event.x, @y - event.y)
-
-        #   dir = @x < event.x ? 6 : @x > event.x ? 4 : @y < event.y ? 2 : @y > event.y ? 8 : 0
-
-        #   # if (event.trigger == 0 and (distance < 2 or (distance == 2 and 
-        #   #   $map.counter?((@x+event.x)/2, (@y+event.y)/2))))             or ([1,2].include?(event.trigger) and ((distance == 0 and $game_player.passable?(@x, @y, dir))             or (distance == 1 and (@ovrdest || !$game_player.passable?(@x, @y, dir)))))
-
-        #   #   # Turn toward Event
-        #   #   if @x == event.x
-        #   #     @y > event.y ? turn_up : turn_down
-        #   #   else
-        #   #     @x > event.x ? turn_left : turn_right
-        #   #   end
-
-        #   #   # Start Event
-        #   #   clear_path
-        #   #   event.start
-        #   #   @eventarray.delete(event)
-        #   #   @eventarray = nil if @eventarray.empty?
-
-        #   # end
-        # end
-      end      
-    end
-    
 
   end
 
@@ -11828,7 +11989,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"L#==============================================================================
+end"3 #==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -11842,6 +12003,8 @@ class Game_Party
   attr_accessor :all_actors
 
   attr_reader :leader
+
+  attr_reader :items
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -11924,16 +12087,57 @@ class Game_Party
     @reserve.delete(actor)
   end
 
+
+  def swap(a,b)
+    return if a == b
+
+    first = nil
+    dta = a.split('.')
+    if dta[0] == 'a'
+      first = @active[dta[1].to_i]
+    else
+      first = @reserve[dta[1].to_i]
+    end
+
+    second = nil
+    dta2 = b.split('.')
+    if dta2[0] == 'a'
+      second = @active[dta2[1].to_i]
+    else
+      second = @reserve[dta2[1].to_i]
+    end
+
+    # Put second in first
+    if dta[0] == 'a'
+      @active[dta[1].to_i] = second
+    else
+      @reserve[dta[1].to_i] = second
+    end
+
+    # Put first in second
+    if dta2[0] == 'a'
+      @active[dta2[1].to_i] = first
+    else
+      @reserve[dta2[1].to_i] = first
+    end
+
+    @active.compact!
+    @reserve.compact!
+
+  end
+
+
   def all
     return @active + @reserve
   end
+
 
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
   #--------------------------------------------------------------------------
   def add_item(id,n=1) 
     @items.has_key?(id) ? @items[id] += n : @items[id] = n
-    @items[id] = 0 if @items[id] < 0 
+    @items.delete(id) if @items[id] <= 0 
     $map.need_refresh = true if $map
   end
 
@@ -12730,7 +12934,7 @@ class Scene_Battle
     @phase = :actor_init
   end
 
-end"ü
+end"ˆ
 
 class Scene_Battle
 
@@ -12751,7 +12955,7 @@ class Scene_Battle
 
     @actor_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       if @actor_idx != 0
         @actor_idx -= 1
         @active_battler = $party.actor_by_index(@actor_idx)
@@ -12760,7 +12964,7 @@ class Scene_Battle
     end
 
     # Player command inputs section
-    if $input.action?
+    if $input.action? || $input.click?
 
       action = @actor_cmd.get_action
       @active_battler.action = action
@@ -12797,13 +13001,13 @@ class Scene_Battle
 
     @skill_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       @actor_idx -= 1
       @phase = :actor_next
       @skill_cmd.close
     end
 
-    if $input.action?
+    if $input.action? || $input.click?
       @skill_cmd.close
       @active_battler.skill_id = @skill_cmd.get_skill
       @phase = :actor_strategize
@@ -12819,13 +13023,13 @@ class Scene_Battle
 
     @item_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       @actor_idx -= 1
       @phase = :actor_next
       @item_cmd.close
     end
 
-    if $input.action?
+    if $input.action? || $input.click?
       @item_cmd.close
       @active_battler.item_id = @item_cmd.get_item
       @phase = :actor_strategize
@@ -12860,13 +13064,13 @@ class Scene_Battle
 
     @target_cmd.update
 
-    if $input.cancel?
+    if $input.cancel? || $input.rclick?
       @target_cmd.close
       @actor_idx -= 1
       @phase = :actor_next
     end
 
-    if $input.action?
+    if $input.action? || $input.click?
       @active_battler.target = @target_cmd.active
       @target_cmd.close
       @phase = :actor_next
@@ -15153,7 +15357,7 @@ class KeyboardManager
 
   end
 
-end"'#============================================================================== 
+end",#============================================================================== 
 # ** Modules.Mouse Input (7.0)              By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -15182,7 +15386,7 @@ class MouseManager
   def position() @pos; end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
-    y = (@pos[1] + $map.display_y / 4) / 32
+    y = (@pos[1] + 14 + $map.display_y / 4) / 32
     return [x.to_i,y.to_i]
   end
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
