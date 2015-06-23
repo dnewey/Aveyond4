@@ -74,6 +74,34 @@ def pop_friends
 
 end
 
+def pop_join(who)
+
+	char = $party.get(who)
+	a = "#{char.name} joins the party"
+	ia = $cache.icon("faces/#{who}")
+	
+	b = ""
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_leave(who)
+
+	char = $party.get(who)
+	a = "#{char.name} leaves the party"
+	ia = $cache.icon("faces/#{who}")
+	
+	b = ""
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
 def pop_quest(q)
 
 	popper = $scene.hud.open_popper

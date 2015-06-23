@@ -6,20 +6,34 @@ class Game_Battle
   attr_reader :enemies
   attr_reader :enemy_types
   attr_reader :enemy_list
+  attr_reader :queue2
 
 	def initialize
+
     @enemy_types = []
-    @enemy_list = []
+
+    @enemy_list = []    
 		@enemies = []
+
     @props = []
+
     @actor_index = 0
 
-    @map = 26 #65 #26
+    @queue2 = nil
+
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data
   def change_enemies(enemies)
     @enemy_types = enemies.split("\n")
+  end
+
+  def clear
+    @enemy_list = []
+    @enemies = []
+    @props = []
+    @queue2 = nil
   end
 
   def add(enemy)
@@ -29,7 +43,12 @@ class Game_Battle
     @enemies.push(battler)
   end
 
+  def queue(enemy_id,skill)
+    @queue2 = [enemy_id,skill]
+  end
+
   def start
+    $scene.hud.hide
     $game.push_scene(Scene_Battle.new)
   end
 
@@ -54,6 +73,7 @@ class Game_Battle
     hits.times{ |t|
 
       round = Attack_Round.new
+      round.text = skill.text if skill.text.length > 0
       round.anim_a = skill.anim_a
       round.anim_b = skill.anim_b
       round.skill = skill
@@ -110,6 +130,11 @@ class Game_Battle
 
       # Build final damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
+
+      # If there was no attack, don't have a damage amount
+      if result.damage == 0
+        result.damage = nil
+      end
 
       results.push(result)
 

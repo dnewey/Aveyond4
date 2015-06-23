@@ -6,12 +6,14 @@ class Progress
 		@quests = []
 		@complete = []
 		@progress = 0
+
+		add_quest('ch0-domination')
 	end
 
 
 	def add_quest(q)
 		@quests.push(q)
-		$map.need_refresh = true
+		$map.need_refresh = true if $map
 		log_info("Quest Added: #{q}")
 	end
 

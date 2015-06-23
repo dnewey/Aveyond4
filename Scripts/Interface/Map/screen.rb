@@ -23,7 +23,17 @@ class Ui_Screen
 
 	end
 
+	def hide
+		@bar.hide
+		@info.hide
+	end
+	def show
+		@bar.show
+		@info.show
+	end
+
 	def update
+
 		@message.update
 		@bar.update
 		#@info.update

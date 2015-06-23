@@ -3,6 +3,8 @@
 
 class CharView < SpriteGroup
 
+	attr_reader :box, :port
+
 	def initialize(vp,char,id)
 
 		super()
@@ -68,6 +70,10 @@ class CharView < SpriteGroup
 			@box.wallpaper = $cache.menu_wallpaper("lightning")
 		end
 
+	end
+
+	def grin
+		@port.bitmap = $cache.face_battle(@battler.id+'-h')
 	end
 
 end

@@ -55,6 +55,7 @@ class Game_Battler
   end
 
   def stat_base(stat)
+    return 1
     return 0 if !is_actor?
     $data.numbers["#{stat}-base"].value + ($data.numbers["#{stat}-per"].value * (@level-1))
   end

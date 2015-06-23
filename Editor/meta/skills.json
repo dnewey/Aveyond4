@@ -31,6 +31,9 @@
     "color": "true"
   },
   {
+    "field": "text"
+  },
+  {
     "field": "anim_a"
   },
   {

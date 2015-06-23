@@ -41,3 +41,30 @@ def grant_items
 		item(v.id,99,'s')
 	}
 end
+
+
+#==============================================================================
+# ** Members
+#==============================================================================
+
+# Only this one will do popper
+def join(who)
+	$party.set_active(who)
+	pop_join(who)
+end
+
+def unjoin(who)
+	pop_leave(who)
+	$party.back_to_pavillion(who)
+end
+
+def make_reserve(who)
+	$party.set_reserve(who)
+end
+
+def make_active(who)
+	$party.set_active(who)
+end
+
+
+

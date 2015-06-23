@@ -6,14 +6,20 @@
 
 class BattleHud
 
+	attr_reader :chars
+
 	def initialize(vp)
 
 		# Bottom bar
 		@chars = []
 		idx = 0
+		cx = 5
+		cx = 240 if $party.active.count == 1
+		cx = 170 if $party.active.count == 2
+		cx = 60 if $party.active.count == 3
 		$party.active.each{ |char|
 			char = CharView.new(vp,$party.actor_by_id(char),idx)
-			char.x = 5 + (idx * 158)
+			char.x = cx + (idx * 158)
 			char.y = 340
 			@chars.push(char)
 			idx += 1
@@ -36,6 +42,10 @@ class BattleHud
 
 	def dispose
 
+	end
+
+	def all_grin
+		@chars.each{ |c| c.grin }
 	end
 
 	def set_help(text)

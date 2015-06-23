@@ -69,6 +69,10 @@ class AudioManager
   end
 
   def music(file,vol=1.0)
+
+    # More likely just make the volume zero so it can be turned back on
+    return if !$settings.music
+
     if file == nil || file == ''
       @music.stop
       return
@@ -79,19 +83,22 @@ class AudioManager
   end
 
   def atmosphere(file)
-    #return
+    
+    return if !$settings.music
+
     @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
       return
     end
-    #@atmosphere.gain = 0.3
+    @atmosphere.gain = 0.3
     @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
   end
 
   def sys(file,vol=1.0)
-    #return
+
+    return if !$settings.sound
 
     #log_scr(@sys.count)
 
@@ -115,7 +122,8 @@ class AudioManager
   end
 
   def sfx(file,vol=1.0)
-    #return
+    
+    return if !$settings.sound
 
     #log_scr(@sfx.count)
 
@@ -198,13 +206,13 @@ class AudioManager
 
   def update
 
-    if @atmosphere_target != @atmosphere.gain
-      if @atmosphere_target > @atmosphere.gain
-        @atmosphere.gain -= 0.05
-      else
-        @atmosphere.gain += 0.05
-      end
-    end
+    # if @atmosphere_target != @atmosphere.gain
+    #   if @atmosphere_target > @atmosphere.gain
+    #     @atmosphere.gain -= 0.05
+    #   else
+    #     @atmosphere.gain += 0.05
+    #   end
+    # end
 
     @environmental.each{ |e| e.update }
 

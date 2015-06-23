@@ -4,7 +4,7 @@
 
 class Scene_Battle < Scene_Base
 
-  attr_accessor :phase
+  attr_accessor :phase, :message
 
   def initialize
     super
@@ -35,6 +35,8 @@ class Scene_Battle < Scene_Base
     @skill_cmd = SkillCmd.new(@vp_ui)
     @item_cmd = ItemCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
+
+    @message = Ui_Message.new(@vp_ui)
 
     #$map = @map
     #$player = @player
@@ -69,7 +71,7 @@ class Scene_Battle < Scene_Base
 
     reload_map
 
-    sys('battlestart')
+    #sys('battlestart')
     #music("rivals",0.6)
         
     Graphics.transition(20,'Graphics/Transitions/trans') 
@@ -96,6 +98,9 @@ class Scene_Battle < Scene_Base
 
     super
 
+    @hud.update
+    @message.update
+
     # Draw phase
     #@dbg_phase.bitmap.fill(Color.new(0,0,0))
     #@dbg_phase.bitmap.draw_text(10,0,150,30,@phase.to_s,0)
@@ -111,6 +116,14 @@ class Scene_Battle < Scene_Base
     # Wait count here
     if @wait_frames > 0
       @wait_frames -= 1
+      return
+    end
+
+    if @message.busy?
+      return
+    end
+
+    if @map.interpreter.running?
       return
     end
 
@@ -143,6 +156,8 @@ class Scene_Battle < Scene_Base
         phase_main_prep
       when :main_start
         phase_main_start
+      when :main_text
+        phase_main_text
       when :main_attack
         phase_main_attack
       when :main_defend
@@ -165,6 +180,12 @@ class Scene_Battle < Scene_Base
       # Victory Phase
       when :victory_init
         phase_victory_init
+      when :victory_xp
+        phase_victory_xp
+      when :victory_level
+        phase_victory_level
+      when :victory_end
+        phase_victory_end
 
     end
 

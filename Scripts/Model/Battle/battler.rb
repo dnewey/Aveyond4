@@ -176,6 +176,7 @@ class Game_Battler
   def damage(amount)
     @hp -= amount
     @hp = 0 if @hp < 0
+    log_sys @hp
   end
 
   def heal(amount)
@@ -186,7 +187,7 @@ class Game_Battler
 
   # perhamps cut these things
   def down?
-    @hp == 0 
+    @hp <= 0 
   end
   def attackable?
     return !down?

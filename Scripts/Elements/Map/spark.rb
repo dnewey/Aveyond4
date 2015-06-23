@@ -4,6 +4,9 @@ class Spark < Sprite
 	def initialize(fx,x,y,vp)
 		super(vp)
 
+		#self.zoom_x = 1.2
+		#self.zoom_y = 1.2
+
 		@reverse = false
 
 

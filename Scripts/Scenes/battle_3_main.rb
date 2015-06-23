@@ -36,7 +36,20 @@ class Scene_Battle
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
-    # Attack anim if there is one
+    # Show text if there is
+    @phase = :main_text
+
+  end
+
+  # Show text on attacker
+  def phase_main_text
+
+    if @attack_round.text
+      $scene.message.force_name = @active_battler.name
+      $scene.message.start('A.0:'+@attack_round.text)
+      #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
+    end
+
     @phase = :main_attack
     wait(20)
 
@@ -100,12 +113,11 @@ class Scene_Battle
 
     # Show the damage of @attack-result on each guy hit
     # There might not even be damage but
-    # Better figure damage pops
+    # Better figure damage pops    
     @attack_results.each{ |result|
-
+        next if result.damage == nil
         result.target.damage(result.damage)
         pop_num(result.target.ev,result.damage)
-
     }
 
     # Onto the next

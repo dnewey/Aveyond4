@@ -50,6 +50,7 @@ class SkillData
 	attr_reader :cost
 	attr_reader :hits
 	attr_reader :scope
+	attr_reader :text
 	attr_reader :anim_a
 	attr_reader :anim_b
 	attr_reader :stats

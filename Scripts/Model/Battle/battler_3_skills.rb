@@ -24,6 +24,11 @@ class Game_Battler
     @target = $party.actor_by_id('boy')
   end  
 
+  def set_action(skill)
+    @action = 'attack'
+    @skill_id = skill
+  end
+
   #--------------------------------------------------------------------------
   # * Determine Usable Skills
   #     skill_id : skill ID

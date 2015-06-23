@@ -76,23 +76,42 @@ class Game_Party
   #--------------------------------------------------------------------------
   def set_active(actor)
 
-    # if @active.size < 4 and not @actors.include?(actor)
-      
-      @active.push(actor)
+    # If already active, forget it
+    return if @active.include?(actor)
 
-    # end
-   # if !@active.include?(actor)
-   #    @reserve.push(actor)
-   #  end
+    # If active is full, somebody gets removed
+    if @active.count > 3
+      set_reserve(@active[3])
+      @active.delete(@active[3])
+    end
+
+    # Make sure this actor is not in reserve
+    @reserve.delete(actor)
+      
+    @active.push(actor)
 
   end
 
   def set_reserve(actor)
+
+    # If already active, forget it
+    return if @reserve.include?(actor)
+
+    # If active is full, somebody gets removed
+    if @reserve.count > 3
+      set_active(@reserve[3])
+      @reserve.delete(@reserve[3])
+    end
+
+    # Make sure this actor is not in active
+    @active.delete(actor)
+      
     @reserve.push(actor)
+
   end
 
   def back_to_pavillion(actor)
-    @actors.delete(actor)
+    @active.delete(actor)
     @reserve.delete(actor)
   end
 
@@ -263,12 +282,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
-    set_active("rob")
-    set_reserve("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    #set_active("ing")
+    #set_active("mys")
+    #set_active("rob")
+    #set_reserve("hib")
+    #set_reserve("row")
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear

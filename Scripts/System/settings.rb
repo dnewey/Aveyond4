@@ -31,11 +31,17 @@ class SettingsManager
     @effects = false
     @mouse = false
 
-    # Debug options - keys 1-9
+    # Debug options
     @debug_skip_title = true
     @debug_draw_fps = true
     @debug_draw_names = false
     @debug_draw_sprites = false
+
+    # Create the settings file if needed
+    if !FileTest.exist?($appdata+'\settings.txt')
+      file = File.new($appdata+'\settings.txt', "w+")
+      file.close
+    end
         
     # Load from settings file real quick   
     File.open($appdata+'\settings.txt', "r").each do |line|
@@ -70,6 +76,7 @@ class SettingsManager
 
   def conclude
     @window = Win32API.new('Utils', "IsFullScreen", ["V"], "I").call
+    save
   end
 
 end

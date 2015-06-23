@@ -25,6 +25,7 @@ class Ui_Message
   SPEED_5 = 2
 
   attr_reader :last_choice
+  attr_accessor :force_name
   
   #--------------------------------------------------------------------------
   # Prepare
@@ -65,8 +66,10 @@ class Ui_Message
 
     @mode = :speaker # speaker, system or vn
     @speaker = nil
+    @force_name = nil
 
     @vn_port = Sprite.new(vp)
+    @vn_port.opacity = 0
 
     @sprites = SpriteGroup.new
 
@@ -186,6 +189,7 @@ class Ui_Message
     end
 
     @box.update
+    @sparks.delete_if { |s| s.done? }
     @sparks.each{ |s| s.update }
     
 #~     if Input.press?(:SHIFT)
@@ -283,6 +287,7 @@ class Ui_Message
     @lines = split_text(text_data[1]) 
 
     # Figure things out from speaker
+    speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
     speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
@@ -298,9 +303,10 @@ class Ui_Message
       @vn_port.bitmap = $cache.face_vn(speaker)
       @vn_port.x = ($game.width - @vn_port.width)/2
       @vn_port.y = $game.height - @vn_port.height
-      @vn_port.opacity = 0
+      #@vn_port.opacity = 0
+      $tweens.clear(@vn_port)
       @vn_port.do(go("opacity",255,400,:quad_in_out))
-      speaker = nil
+      #speaker = nil
 
     end
 
@@ -316,12 +322,14 @@ class Ui_Message
     end
     
     # If in party, show as player and change player graphic
-    if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
-      @speaker = $player
-      $player.looklike(name.split('-')[0])
-    elsif speaker != nil
-      @speaker = gev(speaker.split("-")[0])
-      @mode = :sys if @speaker == nil
+    if @mode != :vn
+      if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
+        @speaker = $player
+        $player.looklike(name.split('-')[0])
+      elsif speaker != nil
+        @speaker = gev(speaker.split("-")[0])
+        @mode = :sys if @speaker == nil
+      end
     end
 
     # Force name to not have the number
@@ -387,6 +395,8 @@ class Ui_Message
   end
 
   def build_namebox(name)
+
+      name = @force_name if @force_name != nil
 
       # Create the namebox
       @nametext.bitmap.clear
@@ -656,6 +666,8 @@ class Ui_Message
       $tweens.clear(@sprites)
       @sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
+      $tweens.clear(@vn_port)
+      @vn_port.do(to("opacity",0,-11))
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
@@ -677,6 +689,7 @@ class Ui_Message
       @textbox.bitmap.clear
       @sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
+
       #@sprites.do(go("opacity",-255,300,:quad_in_out))
     end
   end

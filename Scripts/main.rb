@@ -41,6 +41,11 @@ def aveyond4
     $settings.conclude
     $audio.dispose
 
+rescue SystemExit
+
+    $settings.conclude
+    $audio.dispose
+
 rescue StandardError => e
 
   $audio.dispose
