@@ -110,7 +110,7 @@ class CallTween < Tween
 	end
 
 	def copy
-		return CallTween(@script)
+		return self
 	end
 
 end

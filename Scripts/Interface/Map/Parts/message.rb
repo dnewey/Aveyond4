@@ -292,6 +292,9 @@ class Ui_Message
     speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 
+    # Special allowance for names of ???
+    name = "???" if speaker.include?("???")
+
 
     # Check the mode
     if speaker.include?("vn-")
