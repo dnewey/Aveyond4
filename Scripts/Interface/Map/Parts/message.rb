@@ -347,6 +347,9 @@ class Ui_Message
 
     # Textbox size
     @width = max_width + PADDING_X * 2
+    if (@namebox.width + 44) > @width
+      @width = @namebox.width + 44 
+    end
     @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
 
     # Position the face
@@ -377,6 +380,8 @@ class Ui_Message
     #@sprites.change(@next,@width/2,@height-20)
     $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
+    $tweens.clear(@tail)
+    @tail.do(go("opacity",255,500,:quad_in_out))
     
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
@@ -668,6 +673,7 @@ class Ui_Message
       @box.skin = $cache.menu_common("skin")
       $tweens.clear(@vn_port)
       @vn_port.do(to("opacity",0,-11))
+      @tail.opacity = 0
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
@@ -688,6 +694,7 @@ class Ui_Message
       @state = :closing
       @textbox.bitmap.clear
       @sprites.opacity = 0
+      @tail.opacity = 0
       @box.skin = $cache.menu_common("skin")
 
       #@sprites.do(go("opacity",-255,300,:quad_in_out))
