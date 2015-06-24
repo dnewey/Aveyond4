@@ -202,6 +202,8 @@ class Game_Event < Game_Character
       # Flag
       when '?flag'
           return false if !flag?(cond[1])
+      when '?nflag'
+          return false if flag?(cond[1])
               
       # Progress
       when '?before'
@@ -217,6 +219,13 @@ class Game_Event < Game_Character
           return false if !$state.state?(gid(cond[1]),cond[2])
         else
           return false if !$state.state?(@id,cond[1])
+        end
+
+      when '?nstate'
+        if cond.count > 2
+          return false if $state.state?(gid(cond[1]),cond[2])
+        else
+          return false if $state.state?(@id,cond[1])
         end
 
       # Active Quest
@@ -250,10 +259,15 @@ class Game_Event < Game_Character
       # Inventory
       when '?gold'
         return false if !$party.has_gold?(cond[1].to_i)
+      when '?ngold'
+        return false if $party.has_gold?(cond[1].to_i)
 
       when '?item'
         cond[2] = 1 if cond.count < 3
         return false if !($party.item_number(cond[1]) >= cond[2].to_i)
+      when '?nitem'
+        cond[2] = 1 if cond.count < 3
+        return false if ($party.item_number(cond[1]) >= cond[2].to_i)
 
 
 

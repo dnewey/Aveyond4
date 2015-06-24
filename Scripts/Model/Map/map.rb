@@ -28,35 +28,28 @@ class Game_Map
 
   attr_reader :map
 
+  attr_accessor :cam_x, :cam_y
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
     @interpreter = Interpreter.new(0,true)
 
+    @cam_x = 0
+    @cam_y = 0
+
     @cam_target = $player
     @cam_xy = [0,0]
-    @cam_snap = false
+    @cam_snap = true
     @cam_ox = 0
     @cam_oy = 0#-16
-    @cam_speed = 'mid'
+    @cam_dur = nil
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
 
     @namecache = {}
-  end
-
-  def cam_speed
-    case @cam_speed
-      when 'slow'
-        return 10
-      when 'mid'
-        return 20
-      when 'fast'
-        return 30
-    end
-    return 50
   end
 
   def name
@@ -82,8 +75,8 @@ class Game_Map
     @passages = @tileset.passages 
     
     # Initialize displayed coordinates
-    @display_x = 0
-    @display_y = 0
+    @cam_x = 0
+    @cam_y = 0
     @target = $player
     
     @need_refresh = false
@@ -159,11 +152,19 @@ class Game_Map
   end
   
   def display_x
-    return @display_x + (@cam_ox*4)
+    # cam_x = @cam_x
+    # cam_x = 0 if cam_x < 0
+    # w = ($map.width * 128) - ($game.width * 4)
+    # cam_x = w if cam_x > w
+    return @cam_x + (@cam_ox*4)
   end
 
   def display_y
-    return @display_y + (@cam_oy*4)
+    # cam_y = @cam_y
+    # cam_y = 0 if cam_y < 0
+    # h = ($map.height * 128) - ($game.height * 4)
+    # cam_y = h if cam_y > h
+    return @cam_y + (@cam_oy*4)
   end
 
   #--------------------------------------------------------------------------
@@ -177,17 +178,21 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Camera
   #--------------------------------------------------------------------------
-  def camera_to(ev,spd=0.15)
+  def camera_to(ev,dur=nil)
     @cam_target = ev
     @cam_snap = false
-    @cam_speed = spd
+    @cam_dur = dur
   end
 
-  def camera_xy(x,y,spd=0.15)
+  def camera_xy(x,y,dur=nil)
     @cam_xy = [x,y]
     @cam_target = nil
     @cam_snap = false
-    @cam_speed = spd
+    @cam_dur=dur
+  end
+
+  def camera_moving?
+    return !$tweens.done?(self)
   end
 
   def camera_snap
@@ -241,6 +246,10 @@ class Game_Map
           $mouse.change_cursor('Speak')
         when 'I'
           $mouse.change_cursor('Inspect')
+        when 'U'
+          $mouse.change_cursor('Use')
+        when 'B'
+          $mouse.change_cursor('Battle')
         when 'T'
           $mouse.change_cursor('Transfer')
         else
@@ -260,13 +269,7 @@ class Game_Map
 
   def update_camera
 
-    if @cam_target != nil
-      @target_x = @cam_target.real_x- (128 * 9.5)
-      @target_y = @cam_target.real_y- (128 * 7)
-    else
-      @target_x = @cam_xy[0] * 64
-      @target_y = @cam_xy[1] * 64
-    end
+
 
     # if @target_x != @display_x
     #   @display_x += [(@target_x-@display_x) * 0.15,cam_speed].min
@@ -276,56 +279,100 @@ class Game_Map
     #   @display_y += [(@target_y-@display_y) * 0.15,cam_speed].min
     # end
 
-    # calc dx and dx
-    dx = @target_x - @display_x
-    dy = @target_y - @display_y
-
-    dist = dx+dy
-
-    # calc ratio
-    if (dx - dy).abs < 5
-      r = 0.5
+    if @cam_target != nil
+      new_target_x = @cam_target.real_x- (128 * 9.5)
+      new_target_y = @cam_target.real_y- (128 * 7)
     else
-      if dy == 0
-        r = 1
-      else
-        r = dx/dy
-      end
+      new_target_x = @cam_xy[0] * 64
+      new_target_y = @cam_xy[1] * 64
     end
 
-    # Limit
-    dist *= 0.15
-    dist = 40 if dist > 40
 
-    # move by speed
-    sx = dist * r 
-    sy = dist * (1-r)
+    # If the target has changed
+    if !@cam_snap    
 
-    @display_x += sx
-    @display_y += sy
+      if (new_target_x != @target_x) || (new_target_y != @target_y)
+
+          @target_x = new_target_x
+          @target_y = new_target_y
+
+          #@target_x = 0 if @target_x < 0
+          #@target_y = 0 if @target_y < 0
+
+          dx = @target_x - @cam_x
+          dy = @target_y - @cam_y
+
+          # Check if close
+          x_snap = dx.abs < 10
+          y_snap = dy.abs < 10
+
+          if !x_snap
+            x_snap = true if @cam_x <= 0 && dx < 0
+          end
+
+          if !y_snap
+            y_snap = true if @cam_x <= 0 && dx < 0
+          end
+
+          can_snap = true if x_snap && y_snap
+          
+
+          if can_snap
+
+            @cam_x = @target_x
+            @cam_y = @target_y
+            @cam_snap = true
+
+          else
+
+            # slide it
+            $tweens.clear(self)     
+
+            # Compensate for cam_x or cam_y being off screen, that is, jump to 0
+            if @cam_x + dx < 0
+              dx = -@cam_x
+            end
+
+            if @cam_y + dy < 0
+              dy = -@cam_y
+            end
+            
+
+            dur = (dx.abs + dy.abs) / 2
+            if @cam_dur != nil
+              dur = @cam_dur
+              @cam_dur = nil
+            end
+
+            # Limit movement if will go off edge of map
+
+            self.do(go("cam_x",dx,dur,:qio))
+            self.do(go("cam_y",dy,dur,:qio))
 
 
-    if (dx) < 5 && (dx) < 5
-      #@cam_snap = true
-      @display_x = @target_x
-      @display_y = @target_y
+          end
+
+        end
+
     end
 
-    # if @cam_snap
-       @display_x = @target_x
-       @display_y = @target_y
-    # end
+    if @cam_snap
 
+      @cam_x = new_target_x
+      @cam_y = new_target_y
+
+    end
 
     # Limit cam to screen
-    @display_x = 0 if @display_x < 0
-    @display_y = 0 if @display_y < 0
+    # Maybe do this with display_x
+    @cam_x = 0 if @cam_x < 0
+    @cam_y = 0 if @cam_y < 0
 
-    w = ($map.width * 32) - $game.width
-    h = ($map.height * 32) - $game.height
+    w = ($map.width * 128) - ($game.width * 4)
+    h = ($map.height * 128) - ($game.height * 4)
 
-    #@display_x = w if @display_x > w
-    #@display_y = w if @display_y > h
+    @cam_x = w if @cam_x > w
+    @cam_y = h if @cam_y > h
 
   end
   #--------------------------------------------------------------------------
@@ -395,7 +442,10 @@ class Game_Map
   def event_at(x, y) @events.values.find{ |e| e.at?(x,y) } end
   def events_at(x, y) @events.values.select{ |e| e.at?(x,y) } end
   def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
-  
+
+  def find_other(name,id)
+    @events.values.find{ |e| e.name == name && e.id != id }
+  end  
 
   def starting_events() @events.values.select{ |e| e.starting } end
 

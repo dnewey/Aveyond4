@@ -36,15 +36,17 @@ class Spark < Sprite
 			self.opacity = anim.opacity
 			case anim.order
 				when 'below'
+					self.z = 0
 				when 'same'
 				when 'above'
+					self.z = 5000
 			end
 
 			#self.blend_type = anim.blend
 
 			# Split sound input
 			if anim.sound != ''
-				dta = anim.split(':')
+				dta = anim.sound.split('=>')
 				if dta.count > 1
 					@sound_delay = dta[1].to_i
 				end
@@ -93,6 +95,10 @@ class Spark < Sprite
 			@idx = @frames if @idx > @frames
 
 			self.opacity -= 30 if @idx >= @frames - 2
+
+			if @sound && @idx == @sound_delay
+				sfx(@sound)
+			end
 
 			idx = @idx
 			if @reverse

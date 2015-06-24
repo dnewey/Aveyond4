@@ -180,6 +180,8 @@ class Interpreter
       return if $scene.is_a?(Scene_Menu)
       return if $scene.is_a?(Scene_Battle)
       return if $scene.busy?
+      
+      return if $scene.map.camera_moving?
 
       # If waiting for move to end
       if @move_route_waiting

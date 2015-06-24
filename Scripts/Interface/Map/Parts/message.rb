@@ -182,9 +182,7 @@ class Ui_Message
       x = @speaker.screen_x - 12# - @width/2
       y = @speaker.screen_y - 70# - @height
 
-      @tail.move(x,y)
-
-      
+      @tail.move(x,y)      
 
     end
 
@@ -286,6 +284,11 @@ class Ui_Message
     speaker = text_data[0]
     @lines = split_text(text_data[1]) 
 
+    if speaker.include?("x-")
+      @mode = :x
+      speaker = speaker.sub("x-",'')
+    end
+
     # Figure things out from speaker
     speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
@@ -294,7 +297,6 @@ class Ui_Message
 
     # Special allowance for names of ???
     name = "???" if speaker.include?("???")
-
 
     # Check the mode
     if speaker.include?("vn-")
@@ -326,7 +328,7 @@ class Ui_Message
     
     # If in party, show as player and change player graphic
     if @mode != :vn
-      if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
+      if speaker != nil && $party.all.include?(speaker.split('-')[0]) && (@mode == :message || @mode==:x)
         @speaker = $player
         $player.looklike(name.split('-')[0])
       elsif speaker != nil
@@ -340,7 +342,7 @@ class Ui_Message
 
     # Get face and name of player characters
     if $data.actors.has_key?(name.split('-')[0])
-      @face.bitmap = $cache.face(name) if @mode == :message
+      @face.bitmap = $cache.face(name) if @mode == :message || @mode == :x
       name = $data.actors[name.split('-')[0]].name
     end
 
@@ -359,7 +361,8 @@ class Ui_Message
     if @face.bitmap
       @width += @face.width 
       @height = MIN_HEIGHT_FACE  + PADDING_Y * 2
-      fx = -10 + max_width + PADDING_X + PADDING_X
+      #fx = -10 + max_width + PADDING_X + PADDING_X # OLD, NOT SURE WHAT IT WAS TRYING TO DO
+      fx = -10 + @width - @face.width
       fy = 7 + @height - @face.height - PADDING_Y
       @sprites.change(@face,fx,fy)
     end
@@ -393,6 +396,10 @@ class Ui_Message
 
     # Position for system messages
     if @mode == :vn
+      @sprites.move(($game.width-@width)/2,320)
+    end
+
+    if @mode == :x
       @sprites.move(($game.width-@width)/2,320)
     end
 

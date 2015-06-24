@@ -115,13 +115,12 @@ class Sprite_Character < Sprite
       #self.bitmap.blt(0,0,bmp,Rect.new(0,0,bmp.width,16))
 
     #end
-    
-    # Animation
-    # if @character.animation_id != 0
-    #   animation = $data_animations[@character.animation_id]
-    #   animation(animation, true)
-    #   @character.animation_id = 0
-    # end
+
+    # Flash effect
+    if @character.flash_dur != nil
+      self.flash(Color.new(255,255,255,160),@character.flash_dur)
+      @character.flash_dur = nil
+    end
 
   end
 end

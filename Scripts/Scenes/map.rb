@@ -15,6 +15,7 @@ class Scene_Map < Scene_Base
     @player.moveto($data.system.start_x, $data.system.start_y)
 
     @map.camera_to(@player)
+    @map.camera_snap
 
     $map = @map
     $player = @player

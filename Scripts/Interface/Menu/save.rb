@@ -37,7 +37,6 @@ class Mnu_Save < Mnu_Base
 
 	def change(option)
 
-		@page.clear
 
 
 	end

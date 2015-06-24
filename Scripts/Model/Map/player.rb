@@ -182,7 +182,7 @@ class Game_Player < Game_Character
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        $scene.add_spark('click',$mouse.x+($map.display_x/4)+3,$mouse.y+($map.display_y/4)+5)
+        
         $audio.sys('walkto',0.7)
         
         
@@ -193,9 +193,16 @@ class Game_Player < Game_Character
         @event_at_path = $map.event_at(mx, my)
         @event_at_path = nil if @event_at_path && @event_at_path.through
         if @event_at_path == nil
+
+          # If walk to empty pos, show fx
+          $scene.add_spark('click',$mouse.x+($map.display_x/4)+3,$mouse.y+($map.display_y/4)+5)
+
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil
         else
+
+          # Flash target event
+          flash(@event_at_path)
 
           dx = @x - @event_at_path.x
           dy = @y - @event_at_path.y
@@ -302,6 +309,7 @@ class Game_Player < Game_Character
     end
 
       ev = gev(@xfer_data[1])
+      
       if @xfer_data[2] != nil
         case @xfer_data[2]
           when 'd'
@@ -321,6 +329,8 @@ class Game_Player < Game_Character
       dy = 1 if @direction == 2
       dy = -1 if @direction == 8
       $player.moveto(ev.x+dx,ev.y+dy)
+
+
       #$player.direction = @xfer_data[3]
 
       $player.straighten  

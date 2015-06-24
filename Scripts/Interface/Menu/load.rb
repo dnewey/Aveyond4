@@ -37,9 +37,6 @@ class Mnu_Load < Mnu_Base
 
 	def change(option)
 
-		@page.clear
-
-
 	end
 
 	def select(option)	

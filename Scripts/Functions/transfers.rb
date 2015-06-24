@@ -2,6 +2,7 @@ WORLD_MAP_ID = 25
 
 def transfer(map,room=nil,dir=nil)
 
+	id = map
 	id = find_map_id(map) if map.is_a?(String)
 	room = map if room == nil
 	$player.transfer_to(id,room,dir)
@@ -25,7 +26,8 @@ end
 
 def transfer_same(dir=nil)
 	id = $scene.map.id
-	room = $map.events[me].name
+	name = $map.events[me].name
+	room = $map.find_other(name,me)
 	$player.transfer_to(id,room)
 end
 
