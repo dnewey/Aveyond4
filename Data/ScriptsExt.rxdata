@@ -1,4 +1,4 @@
-[~"Ø#==============================================================================
+[~"#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -38,6 +38,11 @@ def aveyond4
     $game.update until $game.quit?
     
     # Set the windowed mode for next time
+    $settings.conclude
+    $audio.dispose
+
+rescue SystemExit
+
     $settings.conclude
     $audio.dispose
 
@@ -692,11 +697,14 @@ end"# #======================================================================
 #   #--------------------------------------------------------------------------
 #   def dead?() return self.opacity <= 0 end
 
-# end"c
+# end"‘
 class Spark < Sprite
 
 	def initialize(fx,x,y,vp)
 		super(vp)
+
+		#self.zoom_x = 1.2
+		#self.zoom_y = 1.2
 
 		@reverse = false
 
@@ -2735,7 +2743,8 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"8#==============================================================================
+"
+#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -2777,7 +2786,35 @@ def grant_items
 		#log_scr(v.id)
 		item(v.id,99,'s')
 	}
-end"?
+end
+
+
+#==============================================================================
+# ** Members
+#==============================================================================
+
+# Only this one will do popper
+def join(who)
+	$party.set_active(who)
+	pop_join(who)
+end
+
+def unjoin(who)
+	pop_leave(who)
+	$party.back_to_pavillion(who)
+end
+
+def make_reserve(who)
+	$party.set_reserve(who)
+end
+
+def make_active(who)
+	$party.set_active(who)
+end
+
+
+
+"é
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -2847,6 +2884,34 @@ def pop_friends
 	
 	b = "Rowen are good now friends"
 	ib = $cache.icon("faces/row")
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_join(who)
+
+	char = $party.get(who)
+	a = "#{char.name} joins the party"
+	ia = $cache.icon("faces/#{who}")
+	
+	b = ""
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_leave(who)
+
+	char = $party.get(who)
+	a = "#{char.name} leaves the party"
+	ia = $cache.icon("faces/#{who}")
+	
+	b = ""
+	ib = nil
 
 	popper = $scene.hud.open_popper
 	popper.setup(a,ia,b,ib)
@@ -3240,7 +3305,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"
+ end"Î
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -3248,14 +3313,20 @@ def find_child_id(parent_id,name)
 
 class BattleHud
 
+	attr_reader :chars
+
 	def initialize(vp)
 
 		# Bottom bar
 		@chars = []
 		idx = 0
+		cx = 5
+		cx = 240 if $party.active.count == 1
+		cx = 170 if $party.active.count == 2
+		cx = 60 if $party.active.count == 3
 		$party.active.each{ |char|
 			char = CharView.new(vp,$party.actor_by_id(char),idx)
-			char.x = 5 + (idx * 158)
+			char.x = cx + (idx * 158)
 			char.y = 340
 			@chars.push(char)
 			idx += 1
@@ -3278,6 +3349,10 @@ class BattleHud
 
 	def dispose
 
+	end
+
+	def all_grin
+		@chars.each{ |c| c.grin }
 	end
 
 	def set_help(text)
@@ -3614,10 +3689,12 @@ class ActorCmd
 
 	end
 
-end"Ö
+end"<
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
+
+	attr_reader :box, :port
 
 	def initialize(vp,char,id)
 
@@ -3684,6 +3761,10 @@ class CharView < SpriteGroup
 			@box.wallpaper = $cache.menu_wallpaper("lightning")
 		end
 
+	end
+
+	def grin
+		@port.bitmap = $cache.face_battle(@battler.id+'-h')
 	end
 
 end"Ç
@@ -3935,7 +4016,7 @@ class TargetCmd
 	end
 
 end
-" #==============================================================================
+"\#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -3960,7 +4041,17 @@ class Ui_Screen
 
 	end
 
+	def hide
+		@bar.hide
+		@info.hide
+	end
+	def show
+		@bar.show
+		@info.show
+	end
+
 	def update
+
 		@message.update
 		@bar.update
 		#@info.update
@@ -4699,7 +4790,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"›J#==============================================================================
+end"]M#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -4726,6 +4817,7 @@ class Ui_Message
   SPEED_5 = 2
 
   attr_reader :last_choice
+  attr_accessor :force_name
   
   #--------------------------------------------------------------------------
   # Prepare
@@ -4766,8 +4858,10 @@ class Ui_Message
 
     @mode = :speaker # speaker, system or vn
     @speaker = nil
+    @force_name = nil
 
     @vn_port = Sprite.new(vp)
+    @vn_port.opacity = 0
 
     @sprites = SpriteGroup.new
 
@@ -4887,6 +4981,7 @@ class Ui_Message
     end
 
     @box.update
+    @sparks.delete_if { |s| s.done? }
     @sparks.each{ |s| s.update }
     
 #~     if Input.press?(:SHIFT)
@@ -4984,9 +5079,13 @@ class Ui_Message
     @lines = split_text(text_data[1]) 
 
     # Figure things out from speaker
+    speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
     speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
+
+    # Special allowance for names of ???
+    name = "???" if speaker.include?("???")
 
 
     # Check the mode
@@ -4999,9 +5098,10 @@ class Ui_Message
       @vn_port.bitmap = $cache.face_vn(speaker)
       @vn_port.x = ($game.width - @vn_port.width)/2
       @vn_port.y = $game.height - @vn_port.height
-      @vn_port.opacity = 0
+      #@vn_port.opacity = 0
+      $tweens.clear(@vn_port)
       @vn_port.do(go("opacity",255,400,:quad_in_out))
-      speaker = nil
+      #speaker = nil
 
     end
 
@@ -5017,12 +5117,14 @@ class Ui_Message
     end
     
     # If in party, show as player and change player graphic
-    if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
-      @speaker = $player
-      $player.looklike(name.split('-')[0])
-    elsif speaker != nil
-      @speaker = gev(speaker.split("-")[0])
-      @mode = :sys if @speaker == nil
+    if @mode != :vn
+      if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
+        @speaker = $player
+        $player.looklike(name.split('-')[0])
+      elsif speaker != nil
+        @speaker = gev(speaker.split("-")[0])
+        @mode = :sys if @speaker == nil
+      end
     end
 
     # Force name to not have the number
@@ -5040,6 +5142,9 @@ class Ui_Message
 
     # Textbox size
     @width = max_width + PADDING_X * 2
+    if (@namebox.width + 44) > @width
+      @width = @namebox.width + 44 
+    end
     @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
 
     # Position the face
@@ -5070,6 +5175,8 @@ class Ui_Message
     #@sprites.change(@next,@width/2,@height-20)
     $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
+    $tweens.clear(@tail)
+    @tail.do(go("opacity",255,500,:quad_in_out))
     
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
@@ -5088,6 +5195,8 @@ class Ui_Message
   end
 
   def build_namebox(name)
+
+      name = @force_name if @force_name != nil
 
       # Create the namebox
       @nametext.bitmap.clear
@@ -5354,8 +5463,12 @@ class Ui_Message
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
+      $tweens.clear(@sprites)
       @sprites.opacity = 0
       @box.skin = $cache.menu_common("skin")
+      $tweens.clear(@vn_port)
+      @vn_port.do(to("opacity",0,-11))
+      @tail.opacity = 0
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
@@ -5376,7 +5489,9 @@ class Ui_Message
       @state = :closing
       @textbox.bitmap.clear
       @sprites.opacity = 0
+      @tail.opacity = 0
       @box.skin = $cache.menu_common("skin")
+
       #@sprites.do(go("opacity",-255,300,:quad_in_out))
     end
   end
@@ -7513,7 +7628,7 @@ class Right_Page < SpriteGroup
     	@cy += @txt_zone.height
     end
 
-end"³#==============================================================================
+end"Ð#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -7655,11 +7770,25 @@ class Game_Battler
   def transform(into)
 
     @transform = into
+
+    @transform = nil if @transform == 'nil'
     log_scr("TRANSFORM NOW")
 
-    ev.character_name = "Player/#{@id}-snake"
-    ev.direction = 4
+    if @transform != nil
 
+      ev.character_name = "Player/#{@id}-#{into}"
+      ev.direction = 4
+
+    else
+
+      ev.character_name = "Player/#{@id}-idle"
+
+    end
+
+  end
+
+  def fall
+    ev.character_name = "Player/#{@id}-down"
   end
 
   #--------------------------------------------------------------------------
@@ -7677,6 +7806,7 @@ class Game_Battler
   def damage(amount)
     @hp -= amount
     @hp = 0 if @hp < 0
+    log_sys @hp
   end
 
   def heal(amount)
@@ -7687,15 +7817,19 @@ class Game_Battler
 
   # perhamps cut these things
   def down?
-    @hp == 0 
+    @hp <= 0 
   end
   def attackable?
     return !down?
   end
 
+  def can_attack?
+    return !down?
+  end
+
 
 end
-"À
+"Î
 class Game_Battler
 
   #--------------------------------------------------------------------------
@@ -7752,6 +7886,7 @@ class Game_Battler
   end
 
   def stat_base(stat)
+    return 1
     return 0 if !is_actor?
     $data.numbers["#{stat}-base"].value + ($data.numbers["#{stat}-per"].value * (@level-1))
   end
@@ -7888,7 +8023,7 @@ class Game_Battler
     end
   end
 
- end"ãclass Game_Battler
+ end"4class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -7913,6 +8048,11 @@ class Game_Battler
     @skill_id = 'attack'
     @target = $party.actor_by_id('boy')
   end  
+
+  def set_action(skill)
+    @action = 'attack'
+    @skill_id = skill
+  end
 
   #--------------------------------------------------------------------------
   # * Determine Usable Skills
@@ -7973,7 +8113,7 @@ class Game_Battler
   end
 
 
-end"	
+end"
 class Attack_Result
 
 	attr_accessor :target
@@ -7992,6 +8132,7 @@ class Attack_Round
 
 	attr_accessor :anim_a
 	attr_accessor :anim_b
+	attr_accessor :text
 
 	attr_accessor :skill
 
@@ -8017,7 +8158,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"Ðª#==============================================================================
+end"þª#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -8134,12 +8275,14 @@ class Game_Character
 
   # For offsets > 32, snap the position and remove offset
   def snap_offset
+    #log_sys @off_y
     @y += @off_y / 32
     @x += @off_x / 32
     @real_x = @x * 128
     @real_y = @y * 128
-    @off_y = @off_y % 32
-    @off_x = @off_x % 32
+    @off_y = 0#@off_y % 32
+    @off_x = 0#@off_x % 32
+    #log_sys @off_y
   end
 
   #--------------------------------------------------------------------------
@@ -11733,7 +11876,7 @@ class Game_Player < Game_Character
   end
 
 end
-"
+"À
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -11741,20 +11884,34 @@ class Game_Battle
   attr_reader :enemies
   attr_reader :enemy_types
   attr_reader :enemy_list
+  attr_reader :queue2
 
 	def initialize
+
     @enemy_types = []
-    @enemy_list = []
+
+    @enemy_list = []    
 		@enemies = []
+
     @props = []
+
     @actor_index = 0
 
-    @map = 26 #65 #26
+    @queue2 = nil
+
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data
   def change_enemies(enemies)
     @enemy_types = enemies.split("\n")
+  end
+
+  def clear
+    @enemy_list = []
+    @enemies = []
+    @props = []
+    @queue2 = nil
   end
 
   def add(enemy)
@@ -11764,7 +11921,12 @@ class Game_Battle
     @enemies.push(battler)
   end
 
+  def queue(enemy_id,skill)
+    @queue2 = [enemy_id,skill]
+  end
+
   def start
+    $scene.hud.hide
     $game.push_scene(Scene_Battle.new)
   end
 
@@ -11789,6 +11951,7 @@ class Game_Battle
     hits.times{ |t|
 
       round = Attack_Round.new
+      round.text = skill.text if skill.text.length > 0
       round.anim_a = skill.anim_a
       round.anim_b = skill.anim_b
       round.skill = skill
@@ -11845,6 +12008,11 @@ class Game_Battle
 
       # Build final damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
+
+      # If there was no attack, don't have a damage amount
+      if result.damage == 0
+        result.damage = nil
+      end
 
       results.push(result)
 
@@ -11989,7 +12157,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"3 #==============================================================================
+end""#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -12067,23 +12235,42 @@ class Game_Party
   #--------------------------------------------------------------------------
   def set_active(actor)
 
-    # if @active.size < 4 and not @actors.include?(actor)
-      
-      @active.push(actor)
+    # If already active, forget it
+    return if @active.include?(actor)
 
-    # end
-   # if !@active.include?(actor)
-   #    @reserve.push(actor)
-   #  end
+    # If active is full, somebody gets removed
+    if @active.count > 3
+      set_reserve(@active[3])
+      @active.delete(@active[3])
+    end
+
+    # Make sure this actor is not in reserve
+    @reserve.delete(actor)
+      
+    @active.push(actor)
 
   end
 
   def set_reserve(actor)
+
+    # If already active, forget it
+    return if @reserve.include?(actor)
+
+    # If active is full, somebody gets removed
+    if @reserve.count > 3
+      set_active(@reserve[3])
+      @reserve.delete(@reserve[3])
+    end
+
+    # Make sure this actor is not in active
+    @active.delete(actor)
+      
     @reserve.push(actor)
+
   end
 
   def back_to_pavillion(actor)
-    @actors.delete(actor)
+    @active.delete(actor)
     @reserve.delete(actor)
   end
 
@@ -12254,12 +12441,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
-    set_active("rob")
-    set_reserve("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    #set_active("ing")
+    #set_active("mys")
+    #set_active("rob")
+    #set_reserve("hib")
+    #set_reserve("row")
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -12334,7 +12521,7 @@ class Game_Party
 
 
         
-end"5class Progress
+end"^class Progress
 
 	attr_accessor :quests, :complete
 
@@ -12342,12 +12529,14 @@ end"5class Progress
 		@quests = []
 		@complete = []
 		@progress = 0
+
+		add_quest('ch0-domination')
 	end
 
 
 	def add_quest(q)
 		@quests.push(q)
-		$map.need_refresh = true
+		$map.need_refresh = true if $map
 		log_info("Quest Added: #{q}")
 	end
 
@@ -12755,13 +12944,13 @@ class Scene_Base
   end
 
 end
-"#==============================================================================
+"œ#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
 class Scene_Battle < Scene_Base
 
-  attr_accessor :phase
+  attr_accessor :phase, :message
 
   def initialize
     super
@@ -12792,6 +12981,8 @@ class Scene_Battle < Scene_Base
     @skill_cmd = SkillCmd.new(@vp_ui)
     @item_cmd = ItemCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
+
+    @message = Ui_Message.new(@vp_ui)
 
     #$map = @map
     #$player = @player
@@ -12826,7 +13017,7 @@ class Scene_Battle < Scene_Base
 
     reload_map
 
-    sys('battlestart')
+    #sys('battlestart')
     #music("rivals",0.6)
         
     Graphics.transition(20,'Graphics/Transitions/trans') 
@@ -12853,6 +13044,9 @@ class Scene_Battle < Scene_Base
 
     super
 
+    @hud.update
+    @message.update
+
     # Draw phase
     #@dbg_phase.bitmap.fill(Color.new(0,0,0))
     #@dbg_phase.bitmap.draw_text(10,0,150,30,@phase.to_s,0)
@@ -12868,6 +13062,14 @@ class Scene_Battle < Scene_Base
     # Wait count here
     if @wait_frames > 0
       @wait_frames -= 1
+      return
+    end
+
+    if @message.busy?
+      return
+    end
+
+    if @map.interpreter.running?
       return
     end
 
@@ -12900,6 +13102,8 @@ class Scene_Battle < Scene_Base
         phase_main_prep
       when :main_start
         phase_main_start
+      when :main_text
+        phase_main_text
       when :main_attack
         phase_main_attack
       when :main_defend
@@ -12922,19 +13126,39 @@ class Scene_Battle < Scene_Base
       # Victory Phase
       when :victory_init
         phase_victory_init
+      when :victory_xp
+        phase_victory_xp
+      when :victory_level
+        phase_victory_level
+      when :victory_end
+        phase_victory_end
 
     end
 
   end
 
-end"[
+end"v
 class Scene_Battle
 
   def phase_intro_init
+
+  	# If there is a queue skill, start with that
+  	if $battle.queue2 != nil
+
+  		$battle.enemies[$battle.queue2[0]].set_action($battle.queue2[1])
+
+  		  @battle_queue = []
+		  @active_battler = $battle.enemies[$battle.queue2[0]]
+		  @phase = :main_prep
+		  return
+
+	 end
+
     @phase = :actor_init
+
   end
 
-end"ˆ
+end"â
 
 class Scene_Battle
 
@@ -12952,6 +13176,11 @@ class Scene_Battle
   #==============================================================================
 
   def phase_actor_action
+
+    if !@active_battler.can_attack?
+      @phase = :actor_next
+      return
+    end
 
     @actor_cmd.update
 
@@ -13095,7 +13324,7 @@ class Scene_Battle
     
   end
 
-end"ü
+end"t
 class Scene_Battle
 
   def phase_main_init
@@ -13133,7 +13362,20 @@ class Scene_Battle
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
-    # Attack anim if there is one
+    # Show text if there is
+    @phase = :main_text
+
+  end
+
+  # Show text on attacker
+  def phase_main_text
+
+    if @attack_round.text
+      $scene.message.force_name = @active_battler.name
+      $scene.message.start('A.0:'+@attack_round.text)
+      #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
+    end
+
     @phase = :main_attack
     wait(20)
 
@@ -13197,12 +13439,11 @@ class Scene_Battle
 
     # Show the damage of @attack-result on each guy hit
     # There might not even be damage but
-    # Better figure damage pops
+    # Better figure damage pops    
     @attack_results.each{ |result|
-
+        next if result.damage == nil
         result.target.damage(result.damage)
         pop_num(result.target.ev,result.damage)
-
     }
 
     # Onto the next
@@ -13242,8 +13483,9 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if result.target.down?
-        sys('fall')
-        fade(result.target.ev)
+        #sys('fall')
+        result.target.fall
+        #fade(result.target.ev)
         wait(60)
       end
 
@@ -13308,13 +13550,43 @@ class Scene_Battle
   end
 
 end
-"]
+"Y
 class Scene_Battle
 
   def phase_victory_init
 
-  	$game.pop_scene
+  	$battle.clear
 
+  	# Everybody grin
+  	@hud.all_grin
+
+  	$scene.message.start("sys:Battle Victory")
+
+  	@phase = :victory_xp  	
+
+  end
+
+  def phase_victory_xp
+
+	$scene.message.start("sys:100 XP GAINED!")
+
+	@phase = :victory_level
+
+  end
+
+  def phase_victory_level
+
+  	# Show level up wallpapers
+  	@hud.chars.each{ |c| c.box.wallpaper = $cache.menu_wallpaper("green")}
+
+  	$scene.message.start("sys:Boyle is now level 1000!")
+
+	@phase = :victory_end
+
+  end
+
+  def phase_victory_end
+  	$game.pop_scene
   end
 
 
@@ -14163,7 +14435,7 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"ß#==============================================================================
+end"¥#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -14234,6 +14506,10 @@ class AudioManager
   end
 
   def music(file,vol=1.0)
+
+    # More likely just make the volume zero so it can be turned back on
+    return if !$settings.music
+
     if file == nil || file == ''
       @music.stop
       return
@@ -14244,19 +14520,22 @@ class AudioManager
   end
 
   def atmosphere(file)
-    return
+    
+    return if !$settings.music
+
     @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
       return
     end
-    #@atmosphere.gain = 0.3
+    @atmosphere.gain = 0.3
     @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
   end
 
   def sys(file,vol=1.0)
-    return
+
+    return if !$settings.sound
 
     #log_scr(@sys.count)
 
@@ -14280,7 +14559,8 @@ class AudioManager
   end
 
   def sfx(file,vol=1.0)
-    return
+    
+    return if !$settings.sound
 
     #log_scr(@sfx.count)
 
@@ -14363,13 +14643,13 @@ class AudioManager
 
   def update
 
-    if @atmosphere_target != @atmosphere.gain
-      if @atmosphere_target > @atmosphere.gain
-        @atmosphere.gain -= 0.05
-      else
-        @atmosphere.gain += 0.05
-      end
-    end
+    # if @atmosphere_target != @atmosphere.gain
+    #   if @atmosphere_target > @atmosphere.gain
+    #     @atmosphere.gain -= 0.05
+    #   else
+    #     @atmosphere.gain += 0.05
+    #   end
+    # end
 
     @environmental.each{ |e| e.update }
 
@@ -15483,7 +15763,7 @@ class Sprite_Mouse < Sprite
     
   end
 end
-"&#==============================================================================
+"Ö#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -15516,11 +15796,17 @@ class SettingsManager
     @effects = false
     @mouse = false
 
-    # Debug options - keys 1-9
+    # Debug options
     @debug_skip_title = true
     @debug_draw_fps = true
     @debug_draw_names = false
     @debug_draw_sprites = false
+
+    # Create the settings file if needed
+    if !FileTest.exist?($appdata+'\settings.txt')
+      file = File.new($appdata+'\settings.txt', "w+")
+      file.close
+    end
         
     # Load from settings file real quick   
     File.open($appdata+'\settings.txt', "r").each do |line|
@@ -15555,6 +15841,7 @@ class SettingsManager
 
   def conclude
     @window = Win32API.new('Utils', "IsFullScreen", ["V"], "I").call
+    save
   end
 
 end"Õ
@@ -15764,7 +16051,7 @@ end"øclass Bitmap
 	end
 
 end
-"…
+"­
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -15816,6 +16103,7 @@ class SkillData
 	attr_reader :cost
 	attr_reader :hits
 	attr_reader :scope
+	attr_reader :text
 	attr_reader :anim_a
 	attr_reader :anim_b
 	attr_reader :stats
@@ -15869,6 +16157,7 @@ class QuestData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
+	attr_reader :icon
 	attr_reader :location
 	attr_reader :req
 	attr_reader :reward
@@ -17626,7 +17915,7 @@ end"A
 	def done?
 		return $tweens.done?(self)
 	end
-end"J
+end"<
 def sequence(*args)
 	return SequenceTween.new(*args)
 end
@@ -17738,7 +18027,7 @@ class CallTween < Tween
 	end
 
 	def copy
-		return CallTween(@script)
+		return self
 	end
 
 end

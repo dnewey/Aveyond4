@@ -10,6 +10,34 @@ def spark_r(ev,fx,ox=0,oy=0)
 	sprk.reverse
 end
 
+def flash(ev,dur=20)
+	gev(ev).flash_dur = dur
+end
+
+
+def shake_1
+
+	amount = 20
+	dur = 70
+	rep = 3
+	e = :qio
+
+	$scene.map.do(
+		repeat(
+			seq(
+				go(
+					"cam_ox",amount,dur,e
+					),
+				go(
+					"cam_ox",-amount,dur,e
+					)
+			),rep
+		)
+	)
+
+end
+
+
 def pop_huh(ev)
 
 	pop_icon(ev,"misc/exclaim")

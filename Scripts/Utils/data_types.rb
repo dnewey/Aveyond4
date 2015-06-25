@@ -104,6 +104,7 @@ class QuestData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
+	attr_reader :icon
 	attr_reader :location
 	attr_reader :req
 	attr_reader :reward

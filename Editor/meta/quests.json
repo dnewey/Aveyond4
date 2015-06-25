@@ -10,6 +10,10 @@
     "edit": "area"
   },
   {
+    "field": "icon",
+    "edit": "icon"
+  },
+  {
     "field": "location"
   },
   {

@@ -44,6 +44,8 @@ class Game_Character
   
   # Custom
   attr_accessor :off_x, :off_y
+
+  attr_accessor :flash_dur
   
    
   
@@ -111,6 +113,9 @@ class Game_Character
     @ignore_movement = false
 
     @opacity = 255
+
+    @flash_dur = nil
+
   end
 
   # For offsets > 32, snap the position and remove offset

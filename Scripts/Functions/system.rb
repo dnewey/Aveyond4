@@ -15,12 +15,14 @@ end
 
 # Camera
 
-def camera(e,spd='mid')
-	$map.camera_to(gev(e),spd)
+def camera(e,dur=nil)
+	$map.camera_to(gev(e),dur)
+	w 1
 end
 
-def camera_xy(x,y,spd='mid')
-	$map.camera_xy(x,y,spd)
+def camera_xy(x,y,dur=nil)
+	$map.camera_xy(x,y,dur)
+	w 1
 end
 
 def cam_oy(amount)
@@ -64,6 +66,7 @@ def open_shop_sell
 	$game.menu_page = "Shop"
 	$game.push_scene(Scene_Menu.new)
 end
+
 
 def open_difficulty_options
 	grid = $scene.hud.open_grid

@@ -116,7 +116,7 @@ class List
   end
 
   def setup(data)
-    log_sys(data)
+    #log_sys(data)
   	@data = data
     # Need an original per page in case less items are given
     # And then aditional items are given
@@ -160,7 +160,7 @@ class List
     rows = 1 if rows == 0
     height = row_height * rows
 
-    log_info(rows)
+    #log_info(rows)
 
     @back_sprite.bitmap = Bitmap.new(@item_width,height)
     @content_sprite.bitmap = Bitmap.new(@item_width,height)
@@ -176,7 +176,8 @@ class List
     rows.times{ 
       @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
       # Draw each row
-      draw(@data[@scroll_idx + i],i)
+      draw(@data[@scroll_idx + i-1],i) # -1 makes the first row visible on can scrolls
+      #draw(@data[@scroll_idx + i],i)
       i += 1
     }
 
@@ -217,6 +218,8 @@ class List
         draw_quest(data,row)
       when :misc
         draw_misc(data,row)
+      when :file
+        draw_file(data,row)
     end
 
   end
@@ -304,9 +307,23 @@ class List
   end
 
 
+  def draw_file(data,row)
 
+    item = $files.headers[data]
 
+    #ico = $cache.icon(item.icon)
 
+    if item == nil
+      name = "Save #{data}"
+    else
+      name = "Save #{item[:progress]}"
+    end
+    
+    #@content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+
+  end
 
 
   def update
@@ -344,7 +361,7 @@ class List
   		
       #if @data.count > @max_per_page
 
-      if can_scroll? && @page_idx >= 6 && @scroll_idx < (@data.count - @max_per_page) -1
+      if can_scroll? && @page_idx >= 6 && @scroll_idx < (@data.count - @max_per_page) #-1 # makes bottom row not visible on can_scroll
         scroll_up
   		else
         i = idx

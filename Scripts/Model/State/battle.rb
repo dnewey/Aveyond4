@@ -47,6 +47,15 @@ class Game_Battle
     @queue2 = [enemy_id,skill]
   end
 
+  def setup(src_event)
+
+    # Find all enemies in the group
+    # Character name = enemy name
+
+    log_sys ("START BATTLE WITH #{src_event.character_name}")
+
+  end
+
   def start
     $scene.hud.hide
     $game.push_scene(Scene_Battle.new)

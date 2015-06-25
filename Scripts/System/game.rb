@@ -27,6 +27,8 @@ class GameManager
     @scenes = []
     @queue = nil
 
+    @need_reload = false
+
     # Game State Objects
     $progress = Progress.new
     $state = State.new
@@ -41,6 +43,19 @@ class GameManager
       push_scene(Scene_Splash.new)
     end
 
+  end
+
+  def reload
+    @need_reload = true
+  end
+
+  def do_reload
+    @need_reload = false
+    $scene = nil
+    @scenes.each{ |s| s.terminate }
+    @scenes = []
+    push_scene(Scene_Map.new($map,$player))
+    $map.resetup
   end
 
   def resize(w,h)
@@ -83,6 +98,9 @@ class GameManager
       push_scene(@queue)
       @queue = nil
     end
+
+    # Reload here
+    do_reload if @need_reload
 
   end
 

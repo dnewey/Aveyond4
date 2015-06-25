@@ -130,6 +130,17 @@ class Ui_Message
 
   end
 
+  def dispose
+    @box.dispose
+    @textbox.dispose
+    @lastchar.dispose
+    @namebox.dispose
+    @nametext.dispose
+    @face.dispose
+    @tail.dispose
+    @sparks.each{ |s| s.dispose }
+  end
+
   def wallpaper=(w)
     @box.wallpaper = $cache.menu_wallpaper(w)
     if w == 'fangder'
@@ -182,9 +193,7 @@ class Ui_Message
       x = @speaker.screen_x - 12# - @width/2
       y = @speaker.screen_y - 70# - @height
 
-      @tail.move(x,y)
-
-      
+      @tail.move(x,y)      
 
     end
 
@@ -286,12 +295,19 @@ class Ui_Message
     speaker = text_data[0]
     @lines = split_text(text_data[1]) 
 
+    if speaker.include?("x-")
+      @mode = :x
+      speaker = speaker.sub("x-",'')
+    end
+
     # Figure things out from speaker
     speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
     speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 
+    # Special allowance for names of ???
+    name = "???" if speaker.include?("???")
 
     # Check the mode
     if speaker.include?("vn-")
@@ -323,7 +339,7 @@ class Ui_Message
     
     # If in party, show as player and change player graphic
     if @mode != :vn
-      if speaker != nil && $party.all.include?(speaker.split('-')[0]) && @mode == :message
+      if speaker != nil && $party.all.include?(speaker.split('-')[0]) && (@mode == :message || @mode==:x)
         @speaker = $player
         $player.looklike(name.split('-')[0])
       elsif speaker != nil
@@ -337,7 +353,7 @@ class Ui_Message
 
     # Get face and name of player characters
     if $data.actors.has_key?(name.split('-')[0])
-      @face.bitmap = $cache.face(name) if @mode == :message
+      @face.bitmap = $cache.face(name) if @mode == :message || @mode == :x
       name = $data.actors[name.split('-')[0]].name
     end
 
@@ -347,13 +363,17 @@ class Ui_Message
 
     # Textbox size
     @width = max_width + PADDING_X * 2
+    if (@namebox.width + 44) > @width
+      @width = @namebox.width + 44 
+    end
     @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
 
     # Position the face
     if @face.bitmap
       @width += @face.width 
       @height = MIN_HEIGHT_FACE  + PADDING_Y * 2
-      fx = -10 + max_width + PADDING_X + PADDING_X
+      #fx = -10 + max_width + PADDING_X + PADDING_X # OLD, NOT SURE WHAT IT WAS TRYING TO DO
+      fx = -10 + @width - @face.width
       fy = 7 + @height - @face.height - PADDING_Y
       @sprites.change(@face,fx,fy)
     end
@@ -377,6 +397,8 @@ class Ui_Message
     #@sprites.change(@next,@width/2,@height-20)
     $tweens.clear(@sprites)
     @sprites.do(go("opacity",255,500,:quad_in_out))
+    $tweens.clear(@tail)
+    @tail.do(go("opacity",255,500,:quad_in_out))
     
     #@sprites.do(go("y",-25,500,:quad_in_out))
 
@@ -385,6 +407,10 @@ class Ui_Message
 
     # Position for system messages
     if @mode == :vn
+      @sprites.move(($game.width-@width)/2,320)
+    end
+
+    if @mode == :x
       @sprites.move(($game.width-@width)/2,320)
     end
 
@@ -668,6 +694,7 @@ class Ui_Message
       @box.skin = $cache.menu_common("skin")
       $tweens.clear(@vn_port)
       @vn_port.do(to("opacity",0,-11))
+      @tail.opacity = 0
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
@@ -688,6 +715,7 @@ class Ui_Message
       @state = :closing
       @textbox.bitmap.clear
       @sprites.opacity = 0
+      @tail.opacity = 0
       @box.skin = $cache.menu_common("skin")
 
       #@sprites.do(go("opacity",-255,300,:quad_in_out))

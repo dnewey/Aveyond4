@@ -2,8 +2,32 @@
 # ** Save File Manager
 #==============================================================================
 
-# 99 save files
+SAVE_FILES = 99
+
+class SaveData
+  attr_accessor :name
+end
+
 class FileManager
+
+  attr_accessor :headers
+
+  def initialize
+
+    @headers = []
+
+    # Load save headers
+    i = 0
+    while i <= SAVE_FILES
+      if file_exists?(i)
+        @headers.push(load_header(i))
+      else
+        @headers.push(nil)
+      end
+      i += 1
+    end
+
+  end
   
   #--------------------------------------------------------------------------
   # * Determine Existence of Save File
@@ -15,42 +39,84 @@ class FileManager
   #--------------------------------------------------------------------------
   # * Determine Existence of Save File
   #--------------------------------------------------------------------------
-  def file_exists?(which)
-    file = 'Av4-'+which+'.save'
-    File.exist?($appPath + file)
+  def file_exists?(i)
+    file = "\\Av4-#{i}.save"
+    File.exist?($appdata + file)
+  end
+
+  def save_file_list
+    i = 0
+    list = []
+    while i <= SAVE_FILES
+      list.push(i)
+      i+=1
+    end
+    return list
   end
   
   #--------------------------------------------------------------------------
   # * Create Filename
   #--------------------------------------------------------------------------
-  def make_filename()
-    file = "Av4-"+$settings.value('active')+".dean"
+  def make_filename(i)
+    file = "\\Av4-#{i}.save"
     return $appdata + file
   end
 
   #--------------------------------------------------------------------------
   # * Execute Save (No Exception Processing)
   #--------------------------------------------------------------------------
-  def save_game
-    File.open(make_filename(), "wb") { |file|
+  def save_game(i)
+    File.open(make_filename(i), "wb") { |file|
       header = make_save_header  
       body = make_save_contents
       Marshal.dump(header, file)
       Marshal.dump(body, file)
-      @last_savefile_index = index
+      @last_savefile_index = i
     }
+
+    # Open the temp file and resize it
+    temp = Graphics.snap_to_bitmap#Bitmap.new("#{$appdata}//temp.png")
+
+    #temp.radialblur!
+    mini = Bitmap.new(320,192)
+
+    x = (640-320)/2
+    y = (480-192)/2
+    rect = Rect.new(x,y,320,192)
+    mini.blt(0,0,temp,rect)
+    #mini2 = Bitmap.new(320,240)
+    #mini = Bitmap.new(320,240)
+    #mini.stretch_blt(mini.rect,temp,temp.rect)
+    #mini2.stretch_blt(mini2.rect,mini,mini.rect)
+    #mini.stretch_blend_blt(mini.rect,temp,temp.rect)
+
+
+
+    #mini2.stretch_blt(mini.rect,temp,temp.rect)
+
+    mini.export("#{$appdata}//temp3.png")
+
+    #mini.blur!(1)
+    #mini.sharp!
+
+    #mini.pencil!
+
+    #mini.blt(0,0,mini2,mini.rect,150)
+
+    #mini2.export("#{$appdata}//temp2.png")
+
     return true
   end
   
   #--------------------------------------------------------------------------
   # * Execute Load (No Exception Processing)
   #--------------------------------------------------------------------------
-  def load_game
-    File.open(make_filename(), "rb") do |file|
+  def load_game(i)
+    File.open(make_filename(i), "rb") do |file|
       Marshal.load(file)
       extract_save_contents(Marshal.load(file))
-      reload_map_if_updated
-      @index = index
+      $game.reload
+      @index = i
     end
     return true
   end
@@ -58,8 +124,8 @@ class FileManager
   #--------------------------------------------------------------------------
   # * Load Save Header (No Exception Processing)
   #--------------------------------------------------------------------------
-  def load_header
-    File.open(make_filename(), "rb") do |file|
+  def load_header(i)
+    File.open(make_filename(i), "rb") do |file|
       return Marshal.load(file)
     end
     return nil
@@ -78,6 +144,7 @@ class FileManager
   def make_save_header
     header = {}
     header[:progress] = 140
+    # Location, party, playtime, quest?, gold
     #header[:characters] = $game_party.characters_for_savefile
     #header[:playtime_s] = $game_system.playtime_s
     header
@@ -87,27 +154,36 @@ class FileManager
   # * Create Save Contents
   #--------------------------------------------------------------------------
   def make_save_contents
+    
     contents = {}
-    contents[:state]       = $state
-    contents[:progress]         = $progress
-    contents[:party]      = $party
-    contents[:battle]     = $battle
 
-    contents[:map]        = $map
-    contents[:player]        = $player
+    contents[:battle]       = $battle
+    contents[:menu]         = $menu
+    contents[:party]        = $party
+    contents[:progress]     = $progress
+    contents[:state]        = $state
+
+    contents[:map]          = $map
+    contents[:player]       = $player
+
     contents
+
   end
   
   #--------------------------------------------------------------------------
   # * Extract Save Contents
   #--------------------------------------------------------------------------
   def extract_save_contents(contents)
-    $journal       = contents[:journal]
-    $flags         = contents[:flags]
-    $switches      = contents[:switches]
-    $variables     = contents[:variables]
-    $states        = contents[:states]
-    $harvey        = contents[:harvey]
+
+    $battle =    contents[:battle]
+    $menu =      contents[:menu]    
+    $party =     contents[:party]   
+    $progress =  contents[:progress]
+    $state =     contents[:state]   
+
+    $map =       contents[:map]     
+    $player =    contents[:player]  
+
   end
   
   #--------------------------------------------------------------------------

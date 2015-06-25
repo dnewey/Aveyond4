@@ -26,6 +26,11 @@ class Ui_Info < SpriteGroup
 
 	end
 
+	def dispose
+		@map.dispose
+		@gold.dispose
+	end
+
 	def update
 		super
 		#refresh if @visible_gold != $party.gold || @visible_map != $map.name
