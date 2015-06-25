@@ -130,6 +130,17 @@ class Ui_Message
 
   end
 
+  def dispose
+    @box.dispose
+    @textbox.dispose
+    @lastchar.dispose
+    @namebox.dispose
+    @nametext.dispose
+    @face.dispose
+    @tail.dispose
+    @sparks.each{ |s| s.dispose }
+  end
+
   def wallpaper=(w)
     @box.wallpaper = $cache.menu_wallpaper(w)
     if w == 'fangder'

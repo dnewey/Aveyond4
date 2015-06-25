@@ -15,8 +15,8 @@ class DebugManager
 	INFO_COLOR = Color.new(220,171,1,OSD_OPACITY)
 	SCRIPT_COLOR = Color.new(128,0,64,OSD_OPACITY)
 	ERROR_COLOR = Color.new(202,0,0,OSD_OPACITY)
-	SYSTEM_COLOR = Color.new(128,0,128,OSD_OPACITY)
-	EVENT_COLOR = Color.new(0,128,128,OSD_OPACITY)
+	SYSTEM_COLOR = Color.new(0,128,128,OSD_OPACITY)
+	EVENT_COLOR = Color.new(128,128,128,OSD_OPACITY)
 
 	attr_reader :last_color
 

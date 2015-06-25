@@ -9,20 +9,23 @@ class Mnu_Save < Mnu_Base
 
 		@title.change('save')
 
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		#@tabs.push("recent") # Could keep 10 auto saves?
+		#@tabs.push("saves")
+		#@tabs.push("autos") # Could keep 10 auto saves?
 
-		@menu.list.type = :quest
+		@menu.list.type = :file
 
-		data = $progress.quests
+		# Saves can be named somehow
+		# Grid pops up, "replace", "rename"?
+
+		data = $files.save_file_list
 
 		@menu.list.setup(data)
 
 		@page = Right_Page.new(vp)
 		@right.push(@page)
 
-		change(data[0]) if !data.empty?
+		#change(data[0]) if !data.empty?
 
 	end
 
@@ -38,10 +41,12 @@ class Mnu_Save < Mnu_Base
 	def change(option)
 
 
-
 	end
 
 	def select(option)	
+
+		log_info(option)
+		$files.save_game(option)
 		
 	end
 end

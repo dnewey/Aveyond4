@@ -60,6 +60,17 @@ class Ui_Bar < SpriteGroup
 
 	end
 
+	def dispose
+		@base.dispose
+		@quit.dispose
+		@char.dispose
+		@save.dispose
+		@journal.dispose
+		@items.dispose
+		@settings.dispose
+		@help.dispose
+	end
+
 	def update
 		super()
 	end

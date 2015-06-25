@@ -55,6 +55,12 @@ class Game_Map
   def name
     return @map_name
   end
+
+  def resetup
+    @zone = nil
+    setup(@id)
+    setup_audio
+  end
   
   #--------------------------------------------------------------------------
   # * Setup

@@ -4,18 +4,25 @@
 
 class Scene_Map < Scene_Base
 
-   def initialize
-    super
+   def initialize(map=nil,player=nil)
+    super()
 
     @moblins = []
 
     # Setup
-    @map.setup($data.system.start_map_id)
-    @map.setup_audio
-    @player.moveto($data.system.start_x, $data.system.start_y)
-
-    @map.camera_to(@player)
-    @map.camera_snap
+    if !map
+      @map.setup($data.system.start_map_id)
+      @map.setup_audio
+    else
+      @map = map
+    end
+    if !player
+      @player.moveto($data.system.start_x, $data.system.start_y)
+      @map.camera_to(@player)
+      @map.camera_snap
+    else
+      @player = player
+    end
 
     $map = @map
     $player = @player

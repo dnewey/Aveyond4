@@ -23,6 +23,12 @@ class Ui_Screen
 
 	end
 
+	def dispose
+		@message.dispose
+		@bar.dispose
+		@info.dispose
+	end
+
 	def hide
 		@bar.hide
 		@info.hide
@@ -75,6 +81,7 @@ class Ui_Screen
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || $input.rclick?
+      	Snapshot.snap
       	open_main_menu
       end
 

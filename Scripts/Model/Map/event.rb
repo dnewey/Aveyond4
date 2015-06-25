@@ -426,7 +426,7 @@ class Game_Event < Game_Character
     end
 
     # Change enemy gfx
-    if @character_name == "!!!Monster"
+    if @character_name == "!!Monster"
       @character_name = "Monsters/#{$battle.enemy_types[@pattern]}"
       @trigger = 2
     end
