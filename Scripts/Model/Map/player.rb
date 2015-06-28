@@ -177,7 +177,7 @@ class Game_Player < Game_Character
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 
-    if $input.click?
+    if $mouse.y < 448 && $input.click?
 
         # Gets Mouse X & Y
         mx, my = *$mouse.grid

@@ -19,11 +19,13 @@ class Mnu_Char < Mnu_Base
 		self.left.delete(@menu)
 		
 		@grid = Ui_Grid.new(vp)
-		@grid.move(15,115)
-		@grid.add_wide("equip","Equip","misc/unknown")
-		@grid.add_wide("skills","Skills","misc/unknown")
-		@grid.add_wide("status","Status","misc/unknown")
-		@grid.add_wide("profile","Profile","misc/unknown")
+		@grid.move(15,113)
+		@grid.add_wide("equip","Change Equipment","misc/unknown")
+		@grid.add_wide("skills","Use Skills","skills/spells")
+		@grid.add_wide("status","View Status","misc/unknown")
+		@grid.add_wide("profile","View Profile","faces/boy")
+		@grid.add_wide("leader","Set as Leader","misc/unknown")
+		@grid.add_wide("creatures","Creature Hunting","misc/unknown")
 		self.left.push(@grid)
 
 

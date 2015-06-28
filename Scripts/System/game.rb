@@ -6,6 +6,7 @@ class GameManager
 
   attr_reader :width, :height
   attr_accessor :menu_page
+  attr_accessor :snapshot
 
 	def initialize
 
@@ -105,6 +106,7 @@ class GameManager
   end
 
   def flip_window
+    $settings.fullscreen = !$settings.fullscreen
     showm = Win32API.new('user32', 'keybd_event', %w(l l l l), '')
     showm.call(18,0,0,0)
     showm.call(13,0,0,0)

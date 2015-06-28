@@ -218,7 +218,7 @@ class Ui_Grid
 
      	# Next
      	if @layout == :vertical
-     		@cy += btn.height + @spacing
+     		@cy += btn.height + @spacing - 1
      	end
 
 	end

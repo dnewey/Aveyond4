@@ -14,20 +14,14 @@ class Game_Map
   # Camera offsets
   attr_accessor :cam_ox, :cam_oy
 
-
   attr_accessor :need_refresh             # refresh request flag
-
   attr_reader   :map_name                 # name of the map
-
   attr_reader :interpreter
-
   attr_reader :id
 
   # Try to cut this
   attr_reader :events
-
   attr_reader :map
-
   attr_accessor :cam_x, :cam_y
 
   #--------------------------------------------------------------------------
@@ -239,6 +233,11 @@ class Game_Map
 
   def update_mouse
 
+    if $mouse.y > 448
+      $mouse.change_cursor('Default')
+      return
+    end
+
     # Mouse position
     mx, my = *$mouse.grid
 
@@ -375,7 +374,7 @@ class Game_Map
     @cam_y = 0 if @cam_y < 0
 
     w = ($map.width * 128) - ($game.width * 4)
-    h = ($map.height * 128) - ($game.height * 4)
+    h = ($map.height * 128) - (($game.height+32) * 4) # Add 32 for bottom bar
 
     @cam_x = w if @cam_x > w
     @cam_y = h if @cam_y > h

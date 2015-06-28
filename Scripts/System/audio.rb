@@ -71,7 +71,7 @@ class AudioManager
   def music(file,vol=1.0)
 
     # More likely just make the volume zero so it can be turned back on
-    return if !$settings.music
+    #return if !$settings.music
 
     if file == nil || file == ''
       @music.stop
@@ -84,7 +84,7 @@ class AudioManager
 
   def atmosphere(file)
     
-    return if !$settings.music
+    #return if !$settings.music
 
     @atmosphere_target = 0.3
     if file == nil  || file == ''
@@ -98,7 +98,7 @@ class AudioManager
 
   def sys(file,vol=1.0)
 
-    return if !$settings.sound
+    #return if !$settings.sound
 
     #log_scr(@sys.count)
 
@@ -123,7 +123,7 @@ class AudioManager
 
   def sfx(file,vol=1.0)
     
-    return if !$settings.sound
+    #return if !$settings.sound
 
     #log_scr(@sfx.count)
 
@@ -202,6 +202,14 @@ class AudioManager
     @sfx = []
 
    
+  end
+
+  def refresh_music_volume
+
+  end
+
+  def refresh_sound_volume
+
   end
 
   def update

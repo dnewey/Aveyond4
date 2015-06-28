@@ -8,37 +8,47 @@ class Mnu_Save < Mnu_Base
 		super(vp)
 
 		@title.change('save')
+		@subtitle.text = "Choose a file to save!"
 
 		#@tabs.push("recent") # Could keep 10 auto saves?
 		#@tabs.push("saves")
 		#@tabs.push("autos") # Could keep 10 auto saves?
 
-		@menu.list.type = :file
-
 		# Saves can be named somehow
 		# Grid pops up, "replace", "rename"?
 
-		data = $files.save_file_list
-
-		@menu.list.setup(data)
+		@menu.list.type = :file
+		@menu.list.setup($files.save_file_list)
 
 		@page = Right_Page.new(vp)
 		@right.push(@page)
 
-		#change(data[0]) if !data.empty?
+		@pic = Sprite.new(vp)
+		@pic.bitmap = Bitmap.new("#{$appdata}//Av4-1.png")
+		@pic.move(340,280)
 
 	end
 
 	def update
 		super
 
-		# Inputs maybe?
-
-		# Probably for using healing items?
 
 	end
 
 	def change(option)
+
+		# Load up the header
+		file = $files.headers[option]
+
+		if file == nil
+
+			@page.title = "NO FILE"
+
+		else
+
+			@page.title = file[:name]
+
+		end
 
 
 	end

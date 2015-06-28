@@ -81,7 +81,7 @@ class Ui_Screen
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || $input.rclick?
-      	Snapshot.snap
+      	$game.snapshot = Graphics.snap_to_bitmap
       	open_main_menu
       end
 

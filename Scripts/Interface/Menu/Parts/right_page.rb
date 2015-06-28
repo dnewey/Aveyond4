@@ -18,8 +18,6 @@ class Right_Page < SpriteGroup
     	@page_title.text = "Board the Ferry"
     	add(@page_title,340,154)
 
-
-
     	# # SUBTEXTS!!!!!!!!!!
 
     	# cy = 180

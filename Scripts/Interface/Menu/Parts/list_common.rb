@@ -22,8 +22,7 @@ class List_Common < SpriteGroup
 		@list.item_space = 1
 		add(@list,6,6)
 
-
-		move(15,140)
+		move(15,116)
 		@list.refresh
 
 	end

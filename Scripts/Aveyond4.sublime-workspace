@@ -520,83 +520,42 @@
 	"buffers":
 	[
 		{
-			"file": "System/files.rb",
+			"file": "Interface/Menu/save.rb",
 			"settings":
 			{
-				"buffer_size": 5674,
+				"buffer_size": 1010,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Model/Map/map.rb",
+			"file": "System/settings.rb",
 			"settings":
 			{
-				"buffer_size": 11630,
+				"buffer_size": 2256,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "System/game.rb",
+			"file": "Interface/Menu/options.rb",
 			"settings":
 			{
-				"buffer_size": 2012,
+				"buffer_size": 2966,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "System/cache.rb",
+			"file": "Interface/Menu/Parts/info_box.rb",
 			"settings":
 			{
-				"buffer_size": 2759,
+				"buffer_size": 721,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Utils/Extensions/picsave2.rb",
+			"file": "Interface/Menu/items.rb",
 			"settings":
 			{
-				"buffer_size": 6065,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "=begin\n#===============================================================================\n Title: Map Screenshot\n Author: Hime\n Date: Dec 7, 2014\n--------------------------------------------------------------------------------\n ** Change log\n Dec 7, 2014\n   - added option to draw certain events\n Apr 15, 2013\n   - updated script to use GDI+ interface\n   - added support for region map overlay and passage map overlay\n Apr 6, 2013\n   - fixed bug where drawing events crashed the game\n Apr 2, 2013\n   - map data is now setup by an instance of Game_Map, to account for custom\n     map scripts adding to the map\n Jul 27\n   - Export dirNames are now optional\n May 28\n   - updated overlay mapping compatibility to draw the overlays \n     based on the player's current position\n   - fixed issue where import hash was commented out\n   - Added support for Yami's overlay mapping\n May 24, 2012\n   - fixed large characters\n   - some optimizations for calculating bounds and dimensions\n May 5, 2012\n   - fixed waterfall autotile\n   - added screenshot feature\n May 4, 2012\n   - fixed tiles with alpha channel\n   - fixed shadows\n   - fixed wall autotiles\n May 1, 2012\n   - fixed wall autotile, although there is still an issue with some tiles\n Apr 29, 2012\n   - fixed shadow map drawing\n   - added region highlighting\n   - added damage tile highlighting\n Apr 28, 2012\n   - Initial Release\n------------------------------------------------------------------------------\n ** Description\n \n This script allows you to take a full image of any of your game's maps\n and export. An image of the map is referred to as a \"mapshot\" (as opposed to\n screenshot).\n \n The script provides various configuration options to control what kinds of\n things you want to see on your map, such as events, vehicles, region ID's, or\n specific tile properties.\n \n------------------------------------------------------------------------------\n ** Usage\n \n The default key for taking a mapshot is F7. This can be changed in the\n configuration section.\n \n To take a mapshot, first start the game, and then hit F7.\n A message will appear informing you that a mapshot was successfully taken.\n \n Alternatively, you can use script calls to take mapshots.\n\n    Map_Saver.new(map_id).export\n    \n Aside from exporting images, you are able to use the image that the\n map saver captures.\n \n   ms = Map_Saver.new(map_id)\n   bmp = ms.map_image\n   \n This gives you a reference to a Bitmap object that contains an image of\n your map.\n--------------------------------------------------------------------------------\n  ** Credits\n \n  Cremno\n    -GDI+ interface code\n  Cidiomar\n    -for drawing autotiles and shadows, \n    -providing efficient bmp and png exporters\n  Moon\n    -auto-tile related info\n  Mephistox\n    -testing and suggestions\n================================================================================\n=end\n$imported = {} if $imported.nil?\n$imported[\"TH_MapSaver\"] = true\n#===============================================================================\n# ** Configuration\n#===============================================================================\nmodule TH\n  module Map_Saver\n    \n    #Mapshot options. This takes an image of the entire map\n    Mapshot_Button = Input::F7\n    Mapshot_Scale = 1\n    \n    #Screenshot options. This takes an image of the visible map\n    Screenshot_Button = Input::F6\n    Screenshot_Scale = 1\n    \n    #Folder that the map will be exported to\n    Mapshot_Directory = \"Mapshots\"\n    Screenshot_Directory = \"Screenshots\"\n    \n    # format you want to export to. You should stick with png.\n    # Options: [bmp, png] \n    Export_Format = \"png\"\n    \n    # Sprite draw options\n    Draw_Events = false\n    Draw_Player = false\n    Draw_Followers = false\n    Draw_Vehicles = false\n    \n    #Should shadows be drawn? What color?\n    Draw_Shadow = true\n    Shadow_Color = Color.new(0, 0, 0, 128)\n    \n    # Should regions be drawn? Requires \"Region Overlay Map\" script\n    Draw_Regions = false\n    \n    # Should passage settings be drawn? Requires \"Passage Overlay Map\" script\n    Draw_Passages = false\n    \n    #Should damage tiles be highlighted? What color?\n    Highlight_Damage = true\n    Damage_Color = Color.new(128, 0, 0, 128)\n  end\nend\n\n#==============================================================================\n# ** Module: Map_Tiles\n# Contains data and methods useful for working with maps and tiles\n#==============================================================================\n\nmodule Map_Tiles\n  AUTOTILE_PARTS = [[18,17,14,13], [ 2,14,17,18], [13, 3,17,18], [ 2, 3,17,18],\n                    [13,14,17, 7], [ 2,14,17, 7], [13, 3,17, 7], [ 2, 3,17, 7],\n                    [13,14, 6,18], [ 2,14, 6,18], [13, 3, 6,18], [ 2, 3, 6,18],\n                    [13,14, 6, 7], [ 2,14, 6, 7], [13, 3, 6, 7], [ 2, 3, 6, 7],\n                    [16,17,12,13], [16, 3,12,13], [16,17,12, 7], [12, 3,16, 7], \n                    [10, 9,14,13], [10, 9,14, 7], [10, 9, 6,13], [10, 9, 6, 7],\n                    [18,19,14,15], [18,19, 6,15], [ 2,19,14,15], [ 2,19, 6,15],\n                    [18,17,22,21], [ 2,17,22,21], [18, 3,22,21], [ 2, 3,21,22],\n                    [16,19,12,15], [10, 9,22,21], [ 8, 9,12,13], [ 8, 9,12, 7],\n                    [10,11,14,15], [10,11, 6,15], [18,19,22,23], [ 2,19,22,23],\n                    [16,17,20,21], [16, 3,20,21], [ 8,11,12,15], [ 8, 9,20,21],\n                    [16,19,20,23], [10,11,22,23], [ 8,11,20,23], [ 0, 1, 4, 5]]\n  WATERFALL_PIECES = [[ 2, 1, 6, 5], [ 0, 1, 4, 5], [ 2, 3, 6, 7], [0, 3, 4, 7]]\n  WALL_PIECES =  [[10, 9, 6, 5], [ 8, 9, 4, 5], [ 2, 1, 6, 5], [ 0, 1, 4, 5],\n                  [10,11, 6, 7], [ 8,11, 4, 7], [ 2, 3, 6, 7], [ 0, 3, 4, 7],\n                  [10, 9,14,13], [ 8, 9,12,13], [ 2, 1,14,13], [ 0, 1,12,13],\n                  [10,11,14,15], [8, 11,12,15], [ 2, 3,14,15], [ 0, 3,12,15]]\n\n  A1_TILES = [[0, 0], [0, 96], [192, 0], [192, 96],\n               [256, 0], [448, 0], [256, 96], [448, 96],\n               [0, 192], [192, 192], [0, 288], [192, 288],\n               [256, 192], [448, 192], [256, 288], [448, 288]]\n    \n  \n  #--------------------------------------------------------------------------\n  # * Checks if a tile is a wall\n  #--------------------------------------------------------------------------\n  def is_wall?(data)\n    return true if data.between?(2288, 2335)\n    return true if data.between?(2384, 2431)\n    return true if data.between?(2480, 2527)\n    return true if data.between?(2576, 2623)\n    return true if data.between?(2672, 2719)\n    return true if data.between?(2768, 2815)\n    return true if data.between?(4736, 5119)\n    return true if data.between?(5504, 5887)\n    return true if data.between?(6272, 6655)\n    return true if data.between?(7040, 7423)\n    return true if data > 7807\n    false\n  end\n  #--------------------------------------------------------------------------\n  # * Checks if a tile is roof\n  #--------------------------------------------------------------------------\n  def is_roof?(data)\n    return true if data.between?(4352, 4735)\n    return true if data.between?(5120, 5503)\n    return true if data.between?(5888, 6271)\n    return true if data.between?(6656, 7039)\n    return true if data.between?(7424, 7807)\n    false\n  end  \n  #--------------------------------------------------------------------------\n  # * Checks if a tile is soil\n  #--------------------------------------------------------------------------\n  def is_soil?(data)\n    return true if data.between?(2816, 4351) && !is_table?(data)\n    return true if data > 1663 && !is_stair?(data)\n    false\n  end    \n  #--------------------------------------------------------------------------\n  # * Checks if a tile is a stair\n  #--------------------------------------------------------------------------\n  def is_stair?(data)\n     return true if data.between?(1541, 1542)\n     return true if data.between?(1549, 1550)\n     return true if data.between?(1600, 1615)\n     false\n  end\n  #--------------------------------------------------------------------------\n  # * Checks if a tile is a table\n  #--------------------------------------------------------------------------\n  def is_table?(data)\n    return true if data.between?(3152, 3199)\n    return true if data.between?(3536, 3583)\n    return true if data.between?(3920, 3967)\n    return true if data.between?(4304, 4351)\n    false\n  end\n \n  #--------------------------------------------------------------------------\n  # * The tileset to be used\n  #--------------------------------------------------------------------------\n  def tileset\n    $data_tilesets[@tileset_id]\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Region ID\n  #--------------------------------------------------------------------------\n  def region_id(x, y)\n    valid?(x, y) ? @map.data[x, y, 3] >> 8 : 0\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Gets all of the tiles for each layer at position x,y\n  #--------------------------------------------------------------------------\n  def layered_tiles(x, y)\n    [2, 1, 0].collect {|z| @map.data[x, y, z] }\n  end\n  \n  def layered_tiles_flag?(x, y, bit)\n    layered_tiles(x, y).any? {|tile_id| tileset.flags[tile_id] & bit != 0 }\n  end\n   \n  def valid?(x, y)\n    x >= 0 && x < width && y >= 0 && y < height\n  end\n  \n  def damage_floor?(x, y)\n    valid?(x, y) && layered_tiles_flag?(x, y, 0x100)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Specifies which type of autotile is used\n  #--------------------------------------------------------------------------\n  def auto_tile(id)\n    id / 48\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Specifies the specific arrangement of autotiles used\n  #--------------------------------------------------------------------------\n  def auto_index(id)\n    id % 48\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Put the auto-tile pieces together\n  #--------------------------------------------------------------------------\n  def make_autotile(rects, sx, sy)\n    @tile.clear\n    for i in 0...4\n      @auto_rect.x = (rects[i] % 4) * 16 + sx\n      @auto_rect.y = (rects[i] / 4) * 16 + sy\n      @tile.blt((i % 2) * 16,(i / 2) * 16, @tilemap, @auto_rect)\n    end\n  end\n     \n  #--------------------------------------------------------------------------\n  # * Get auto-tile A1 tiles\n  #--------------------------------------------------------------------------\n  def autotile_A1(tile_id)\n    @tilemap = @bitmaps[0]\n    autotile = tile_id / 48\n    auto_id = tile_id % 48\n    sx, sy = A1_TILES[autotile]\n    if is_wall?(tile_id + 2048)\n      rects = WATERFALL_PIECES[auto_id]\n    else  \n      rects = AUTOTILE_PARTS[auto_id]\n    end\n    make_autotile(rects, sx, sy)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get auto-tile A2 tiles.\n  # 64x96 tiles, 8 per row, 4 rows\n  #--------------------------------------------------------------------------\n  def autotile_A2(tile_id)\n    autotile = tile_id / 48\n    auto_id = tile_id % 48\n    @tilemap = @bitmaps[1]\n    sx = (autotile % 8) * 64\n    sy = (autotile / 8 % 4) * 96\n    rects = AUTOTILE_PARTS[auto_id]\n    make_autotile(rects, sx, sy)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get auto-tile A3 tiles.\n  # 64x64 tiles, 8 per row, 4 rows\n  #--------------------------------------------------------------------------\n  def autotile_A3(tid)\n    @tilemap = @bitmaps[2]\n    sx = (auto_tile(tid) % 8) * 64\n    sy = (auto_tile(tid) / 8 % 4) * 64\n    rects = WALL_PIECES[auto_index(tid)]\n    make_autotile(rects, sx, sy)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get auto-tile A4 tiles (walls)\n  #--------------------------------------------------------------------------\n  def autotile_A4(tile_id)\n    @tilemap = @bitmaps[3]\n    autotile = tile_id / 48\n    auto_id = tile_id % 48\n    sx = (autotile % 8) * 64\n    sy = (autotile / 16 * 160) + (autotile / 8 % 2) * 96\n    if is_wall?(tile_id + 5888)\n      rects = WALL_PIECES[auto_id]\n    else\n      rects = AUTOTILE_PARTS[auto_id]\n    end \n    make_autotile(rects, sx, sy)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get auto-tile A5 tiles (normal)\n  #--------------------------------------------------------------------------\n  def autotile_A5(tile_id)\n    @tilemap = @bitmaps[4]\n    sx = (tile_id) % 8 * tilesize\n    sy = (tile_id) / 8 * tilesize\n    @src_rect.set(sx, sy, tilesize, tilesize)\n    @tile.clear\n    @tile.blt(0, 0, @tilemap, @src_rect)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get normal tiles B, C, D, E\n  #--------------------------------------------------------------------------\n  def normal_tile(tile_id)\n    @tilemap = @bitmaps[5 + tile_id / 256]\n    sx = (tile_id / 128 % 2 * 8 + tile_id % 8) * tilesize;\n    sy = (tile_id % 256 / 8 % 16) * tilesize;\n    @src_rect.set(sx, sy, tilesize, tilesize)\n    @tile.clear\n    @tile.blt(0, 0, @tilemap, @src_rect)\n  end\n   \n  #--------------------------------------------------------------------------\n  # * Get bitmap for the specified tile id\n  #--------------------------------------------------------------------------\n  def get_bitmap(id)\n    if id < 1024\n      normal_tile(id)\n    elsif id < 1664\n      autotile_A5(id - 1536)\n    elsif id < 2816\n      autotile_A1(id - 2048)\n    elsif id < 4352\n      autotile_A2(id - 2816)\n    elsif id < 5888\n      autotile_A3(id - 4352)\n    else\n      autotile_A4(id - 5888)\n    end\n  end\nend\n\n#==============================================================================\n# ** \n#==============================================================================\n\nclass Game_Player < Game_Character\n  \n  alias :th_mapsaver_update :update\n  def update\n    th_mapsaver_update\n    if Input.trigger?(TH::Map_Saver::Mapshot_Button)\n      s = Map_Saver.new($game_map.map_id)\n      s.set_scale(TH::Map_Saver::Mapshot_Scale)\n      s.mapshot\n    end\n    if Input.trigger?(TH::Map_Saver::Screenshot_Button)\n      s = Map_Saver.new($game_map.map_id)\n      s.set_scale(TH::Map_Saver::Screenshot_Scale)\n      s.screenshot\n    end\n  end\nend\n\nclass Game_Vehicle < Game_Character\n  attr_reader :map_id\nend\n\nclass Game_Map\n  attr_reader :map\nend\n\n#==============================================================================\n# ** \n#==============================================================================\n\nclass Map_Saver\n  include TH::Map_Saver\n  include Map_Tiles\n  #--------------------------------------------------------------------------\n  # * Constants\n  #--------------------------------------------------------------------------\n\n  SHADOW_COLOR = TH::Map_Saver::Shadow_Color\n  DAMAGE_COLOR = TH::Map_Saver::Damage_Color\n\n  #--------------------------------------------------------------------------\n  # * Public instance variables\n  #--------------------------------------------------------------------------\n  attr_reader :map_image\n  \n  def initialize(map_id=$game_map.map_id, x=$game_player.x, y=$game_player.y)\n    @scale = 1\n    @local_x = x\n    @local_y = y\n    @screen_local = false\n    @shadow_bitmap = Bitmap.new(128, 128)\n    @draw_layer0 = true\n    @draw_layer1 = true\n    @draw_layer2 = true\n    @draw_events = Draw_Events\n    @draw_vehicles = Draw_Vehicles\n    @draw_player = Draw_Player\n    @draw_followers = Draw_Followers\n    @draw_shadow = Draw_Shadow\n    @draw_damage = Highlight_Damage\n    @draw_regions = Draw_Regions\n    @draw_passages = Draw_Passages\n    @tile = Bitmap.new(32, 32) #stores the current tile to be drawn\n    @tilemap = nil\n    @src_rect = Rect.new\n    @auto_rect = Rect.new(0, 0, tilesize / 2, tilesize/ 2) #constant\n    @tile_rect = Rect.new(0, 0, tilesize, tilesize)        #constant\n  end\n  \n  def load_tilesets\n    bitmaps = []\n    tileset.tileset_names.each_with_index do |name, i|\n      bitmaps[i] = Cache.tileset(name)\n    end\n    return bitmaps\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Refresh, possibly with a new map\n  #--------------------------------------------------------------------------\n  def redraw(map_id=$game_map.map_id, x=$game_player.x, y=$game_player.y)\n    @map_image.dispose if @map_image\n    @map_id = map_id\n    @local_x = x\n    @local_y = y\n    @game_map = Game_Map.new\n    @game_map.setup(map_id)\n    @map = @game_map.map\n    @map_info = $data_mapinfos[map_id]\n    @screen = $game_map.screen\n    @tileset_id = @game_map.tileset.id\n    @bitmaps = load_tilesets\n    \n    get_bounds\n    @map_image = Bitmap.new(@width * tilesize, @height * tilesize)\n    draw_map\n    scale_map if @scale != 1\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Pre-process. These will never change when drawing the map. \n  #--------------------------------------------------------------------------\n  def get_bounds\n    @start_x = start_x\n    @start_y = start_y\n    @end_x = end_x\n    @end_y = end_y\n    @width = width\n    @height = height\n    @tilesize = tilesize\n  end\n  \n  def screen_tile_x\n    Graphics.width / 32\n  end\n  \n  def screen_tile_y\n    Graphics.height / 32\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Sets the scale for the map\n  #--------------------------------------------------------------------------\n  def set_scale(scale)\n    @scale = scale\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Size of a tile\n  #--------------------------------------------------------------------------\n  def tilesize\n    32\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Width and height of the map, both locally and globally\n  #--------------------------------------------------------------------------\n  def width\n    end_x - @start_x\n  end\n  \n  def height\n    end_y - @start_y\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Starting and end positions, relative to the screen or map\n  #--------------------------------------------------------------------------\n  def start_x\n    @screen_local ? [[$game_player.x - screen_tile_x / 2, @map.width - screen_tile_x].min, 0].max : 0\n  end\n\n  def start_y\n    @screen_local ? [[$game_player.y - screen_tile_y / 2, @map.height - screen_tile_y].min, 0].max : 0\n  end\n  \n  def end_x\n    @screen_local ? [[screen_tile_x, @local_x + screen_tile_x / 2 + 1].max, @map.width].min : @map.width\n  end\n  \n  def end_y\n    @screen_local ? [[screen_tile_y, @local_y + screen_tile_y / 2 + 1].max, @map.height].min : @map.height\n  end\n\n  #--------------------------------------------------------------------------\n  # * Draw tile onto image. x and y values are absolute coords. They should\n  # be re-mapped based on the start_x and start_y values\n  #--------------------------------------------------------------------------\n  def draw_tile(x, y, tile, rect)\n    ox = (x - @start_x) * tilesize\n    oy = (y - @start_y) * tilesize\n    @map_image.blt(ox, oy, tile, rect)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get bitmap for the specified character\n  #--------------------------------------------------------------------------\n  def get_character_bitmap(name)\n    charmap = Cache.character(name)\n    sign = name[/^[\\!\\$]./]\n    if sign && sign.include?('$')\n      cw = charmap.width / 3\n      ch = charmap.height / 4\n    else\n      cw = charmap.width / 12\n      ch = charmap.height / 8\n    end\n    return charmap, cw, ch\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Draw the character onto the tile\n  #--------------------------------------------------------------------------\n  def set_character_bitmap(character, x, y)\n    charmap, cw, ch = get_character_bitmap(character.character_name)\n    index = character.character_index\n    pattern = character.pattern < 3 ? character.pattern : 1\n    sx = (index % 4 * 3 + pattern) * cw\n    sy = (index / 4 * 4 + (character.direction - 2) / 2) * ch\n    @src_rect.set(sx, sy, cw, ch)\n    x -= cw / (@tilesize * 2) if cw >= @tilesize\n    y -= ch / (@tilesize * 2) if ch >= @tilesize  \n    draw_tile(x, y, charmap, @src_rect)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * create the shadow map\n  #--------------------------------------------------------------------------\n  def make_shadow_map\n    for s in 0 ... 16\n      x = s % 4\n      y = s / 4\n      if s & 0b1000 == 0b1000\n        @shadow_bitmap.fill_rect(x*tilesize+16, y*@tilesize+16, 16, 16, SHADOW_COLOR)\n      end\n      if s & 0b0100 == 0b0100\n        @shadow_bitmap.fill_rect(x*tilesize, y*@tilesize+16, 16, 16, SHADOW_COLOR)\n      end\n      if s & 0b0010 == 0b0010\n        @shadow_bitmap.fill_rect(x*tilesize+16, y*@tilesize, 16, 16, SHADOW_COLOR)\n      end\n      if s & 0b0001 == 0b0001\n        @shadow_bitmap.fill_rect(x*tilesize, y*@tilesize, 16, 16, SHADOW_COLOR)\n      end\n    end\n  end\n  \n  def draw_parallax\n    image = Cache.parallax(@map.parallax_name)\n    @src_rect.set(0, 0, image.width, image.height)\n    @map_image.blt(0, 0, image, @src_rect)\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Draw the shadow map\n  #--------------------------------------------------------------------------\n  def draw_shadow_map\n    for x in @start_x ... @end_x\n      for y in @start_y ... @end_y\n      _x, _y = x*@tilesize, y*@tilesize\n        s = @map.data[x, y, 3]  & 0b1111\n        if s != 0\n          x_ = (s % 4) * @tilesize\n          y_ = (s / 4) * @tilesize\n          @src_rect.set(x_, y_, @tilesize, @tilesize)\n          draw_tile(x, y, @shadow_bitmap, @src_rect)\n        end\n      end\n    end\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Draw the specified layer\n  #--------------------------------------------------------------------------\n  def draw_layer(layer)\n    for x in @start_x ... @end_x\n      for y in @start_y ... @end_y\n        _x, _y = x*@tilesize, y*@tilesize\n        tile_id = @map.data[x, y, layer]\n        next if tile_id == 0\n        get_bitmap(tile_id)\n        draw_tile(x, y, @tile, @tile_rect)\n      end\n    end\n  end\n  \n  #-----------------------------------------------------------------------------\n  # Draw game regions\n  #-----------------------------------------------------------------------------\n  def draw_regions\n    if $imported[\"TH_RegionOverlay\"]\n      image = SceneManager.scene.instance_variable_get(:@spriteset).instance_variable_get(:@region_map).bitmap\n      @src_rect.set(@start_x * tilesize, @start_y * tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect, 255)\n    end\n  end\n  \n  def draw_passages\n    if $imported[\"TH_OverlayPassageMap\"]\n      image = SceneManager.scene.instance_variable_get(:@spriteset).instance_variable_get(:@passage_map).bitmap\n      @src_rect.set(@start_x * tilesize, @start_y * tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect, 255)\n    end\n  end\n\n  #--------------------------------------------------------------------------\n  # * Draw the game player\n  #--------------------------------------------------------------------------\n  def draw_player\n    set_character_bitmap($game_player, $game_player.x, $game_player.y) if @map_id == $game_map.map_id\n  end\n  \n  def draw_followers\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Draw map events\n  #--------------------------------------------------------------------------\n  def draw_events\n    @map.events.values.each do |event|\n      canDraw = event.pages[0].list.any? do |cmd|\n        cmd.code == 108 && cmd.parameters[0] =~ /<screenshot:\\s*tile\\s*>/i\n      end\n      next unless @draw_events || canDraw\n      id = event.pages[0].graphic.tile_id\n      char_name = event.pages[0].graphic.character_name\n      if id > 0\n        normal_tile(id)\n        draw_tile(event.x, event.y, @tilemap, @src_rect)\n      elsif char_name != \"\"\n        set_character_bitmap(event.pages[0].graphic, event.x, event.y)\n      end\n    end\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Draw map vehicles\n  #--------------------------------------------------------------------------\n  def draw_vehicles\n    $game_map.vehicles.each do |vehicle|\n      set_character_bitmap(vehicle, vehicle.x, vehicle.y,) if @map_id == vehicle.map_id\n    end\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Draw map sprites\n  #--------------------------------------------------------------------------\n  def draw_sprites\n    draw_events\n    draw_vehicles if @draw_vehicles\n    draw_player if @draw_player\n    draw_followers if @draw_followers\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Highlight damage tiles\n  #--------------------------------------------------------------------------\n  def draw_damage\n    @tile.clear\n    @tile.fill_rect(0, 0, @tilesize, @tilesize, DAMAGE_COLOR)\n    @src_rect.set(0, 0, @tilesize, @tilesize)\n    for x in @start_x ... @end_x\n      for y in @start_y ... @end_y\n        _x, _y = x*@tilesize, y*@tilesize\n        if damage_floor?(x, y)\n          draw_tile(x, y, @tile, @src_rect)\n        end\n      end\n    end\n  end\n  \n  def draw_screen_effects\n  end\n  #--------------------------------------------------------------------------\n  # * Draw the map\n  #--------------------------------------------------------------------------\n  def draw_map\n    make_shadow_map if @draw_shadow\n    draw_parallax\n    draw_layer(0)\n    draw_layer(1)\n    draw_shadow_map\n    draw_layer(2)\n    draw_damage if @draw_damage\n    draw_regions if @draw_regions\n    draw_passages if @draw_passages\n    draw_sprites\n    draw_screen_effects\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Scale the map\n  #--------------------------------------------------------------------------\n  def scale_map\n    nw = @width * @scale\n    nh = @height * @scale\n    @src_rect.set(0, 0, @width, @height)\n    scaled_map = Bitmap.new(nw, nh)\n    scaled_rect = Rect.new(0, 0, nw, nh)\n    scaled_map.stretch_blt(scaled_rect, @map_image, @src_rect)\n    @map_image = scaled_map\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Take a mapshot of the map\n  #--------------------------------------------------------------------------\n  def mapshot\n    @screen_local = false\n    redraw\n    export(TH::Map_Saver::Mapshot_Directory)\n    $game_message.add(\"Mapshot taken\")\n  end\n    \n  #--------------------------------------------------------------------------\n  # * Take a screenshot of the map\n  #--------------------------------------------------------------------------\n  def screenshot\n    @screen_local = true\n    redraw\n    export(TH::Map_Saver::Screenshot_Directory)\n    $game_message.add(\"Screenshot taken\")\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Get the format to export to\n  #--------------------------------------------------------------------------\n  def get_format\n    TH::Map_Saver::Export_Format\n  end\n  \n  #--------------------------------------------------------------------------\n  # * Export the map to a file\n  #--------------------------------------------------------------------------\n  def export(dirName=\"\")\n    format = get_format\n    #name = @map.display_name != \"\" ? @map.display_name : @map_info.name\n    name = sprintf(\"Map%03d\" %[@map_id])\n    Dir.mkdir(dirName) unless File.directory?(dirName)\n    name = \n    filename = \"%s\\\\%s.%s\" %[dirName, name, format]\n    t1 = Time.now\n    @map_image.save(filename)\n    t2 = Time.now\n    $game_message.add(\"Exported in %f seconds\" %[t2 - t1])\n  end\nend\n\nclass Bitmap\n \n  def save(filename, options = {})\n    options.merge!(format: File.extname(filename)[1..-1].to_sym)\n    retval = false\n    #bitmap = Gdiplus::Bitmap.new(:hbitmap, hbitmap)\n    #bitmap = Gdiplus::Bitmap.new(:gdidib, *gdidib)\n    # this seems to be the fastest one (RGSS 3.0.1, Windows 8 64-bit)\n    bitmap = Gdiplus::Bitmap.new(:scan0, width, height, scan0)\n    if bitmap\n      retval = bitmap.save(:file, filename, options[:format])\n      bitmap.dispose\n    end\n    retval\n  end\n \nprivate\n \n  def _data_struct(offset = 0)\n    @_data_struct ||= (DL::CPtr.new((object_id << 1) + 16).ptr + 8).ptr\n    (@_data_struct + offset).ptr.to_i\n  end\n \n  def gdidib\n     [_data_struct(8), _data_struct(16)]\n  end\n \n  def hbitmap\n    _data_struct(44)\n  end\n \n  def scan0\n    _data_struct(12)\n  end\n \nend\n\n# ★ GDI+ interface\n# ★★★★★★★★★★★★\n#\n# Author : Cremno\n#\n \nmodule Gdiplus\n  DLL = 'gdiplus.dll'\n \n  def self.get_function name, import, export = 'L'\n    Win32API.new DLL, name, import, export\n  end\n \n  FUNCTIONS = {\n    GdiplusStartup: get_function('GdiplusStartup', 'PPP'),\n    GdiplusShutdown: get_function('GdiplusShutdown', 'P', 'V'),\n    GdipDisposeImage: get_function('GdipDisposeImage', 'P'),\n    GdipSaveImageToFile: get_function('GdipSaveImageToFile', 'PPPP'),\n    GdipCreateBitmapFromGdiDib: get_function('GdipCreateBitmapFromGdiDib', 'LLP'),\n    GdipCreateBitmapFromHBITMAP: get_function('GdipCreateBitmapFromHBITMAP', 'LLP'),\n    GdipCreateBitmapFromScan0: get_function('GdipCreateBitmapFromScan0', 'LLLLPP')\n  }\n \n  @@token = [0].pack('I')\n  def self.token\n    @@token\n  end\n \n  @@clsids = {}\n  def self.clsids\n    @@clsids\n  end\n \n  def self.gen_clsids\n    return unless @@clsids.empty?\n    func = Win32API.new('rpcrt4.dll', 'UuidFromString', 'PP', 'L')\n    {\n      bmp:  '557cf400-1a04-11d3-9a73-0000f81ef32e',\n      jpeg: '557cf401-1a04-11d3-9a73-0000f81ef32e',\n      gif:  '557cf402-1a04-11d3-9a73-0000f81ef32e',\n      tiff: '557cf405-1a04-11d3-9a73-0000f81ef32e',\n      png:  '557cf406-1a04-11d3-9a73-0000f81ef32e'\n    }.each_pair do |k, v|\n      clsid = [0].pack('I')\n      func.call(v, clsid)\n      @@clsids[k] = clsid\n    end\n    @@clsids[:jpg] = @@clsids[:jpeg]\n    @@clsids[:tif] = @@clsids[:tiff]\n  end\n \n  # TODO: prepend prefix (Gdip or Gdiplus) automatically\n  def self.call(*args)\n    name = args.shift\n    func = FUNCTIONS[name]\n    v = func.call(*args)\n    if v && v != 0\n      msgbox \"GDI+ error: #{v}\\n\\nFunction: #{name}\\nArguments: #{args.inspect}\"\n      false\n    else\n      true\n    end\n  end\n \n  def self.startup\n    call :GdiplusStartup, @@token, [1, 0, 0, 0].pack('L4'), 0\n  end\n \n  def self.shutdown\n    call :GdiplusShutdown, @@token\n  end\n \n  class Image\n \n    attr_reader :instance\n    def initialize\n      @instance = 0\n      true\n    end\n \n    def save(destination, *args)\n      case destination\n      when :file\n        filename = args.shift << \"\\0\"\n        filename.encode!('UTF-16LE')\n        argv = [:GdipSaveImageToFile, filename, Gdiplus.clsids[args.shift], 0]\n      else\n        raise ArgumentError, \"unknown GDI+ image destination: #{source}\"\n      end\n      argv.insert(1, @instance)\n      Gdiplus.call *argv\n    end\n \n    def dispose\n      Gdiplus.call :GdipDisposeImage, @instance\n    end\n  end\n \n  class Bitmap < Image\n \n    def initialize source, *args\n      case source\n      when :gdidib\n        argv = [:GdipCreateBitmapFromGdiDib, args.shift, args.shift]\n      when :hbitmap\n        argv = [:GdipCreateBitmapFromHBITMAP, args.shift, 0]\n      when :scan0\n        w = args.shift\n        h = args.shift\n        argv = [:GdipCreateBitmapFromScan0, w, h, w * -4, 0x26200a, args.shift]\n      else\n        raise ArgumentError, \"unknown GDI+ bitmap source: #{source}\"\n      end\n      argv.push([0].pack('I'))\n      retval = Gdiplus.call *argv\n      @instance = retval ? argv.last.unpack('I').first : 0\n      retval\n    end\n  end\nend\n \nif Gdiplus.startup\n  Gdiplus.gen_clsids\n  class << SceneManager\n    alias_method :run_wo_gdip_shutdown, :run\n    def run\n      run_wo_gdip_shutdown\n      Gdiplus.shutdown\n    end\n  end\nend\n\n#==============================================================================\n# * Compatibility add-ons\n#==============================================================================\n#Yami overlays\nif $imported[\"YSE-OverlayMapping\"]\n  class Map_Saver\n    def draw_overlay_map_ground\n      filename = YSA::OVERLAY::GROUND\n      filename += $game_map.map_id.to_s\n      filename += \"-\" + $game_variables[YSA::OVERLAY::GROUND_VARIABLE].to_s\n      p filename\n      image = Cache.overlay(filename)\n      @src_rect.set(@start_x*tilesize, @start_y*tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect)\n    end\n    \n    def draw_overlay_map_parallax\n      filename = YSA::OVERLAY::PARALLAX\n      filename += $game_map.map_id.to_s\n      filename += \"-\" + $game_variables[YSA::OVERLAY::PARALLAX_VARIABLE].to_s\n      image = Cache.overlay(filename)\n      @src_rect.set(@start_x*tilesize, @start_y*tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect)\n    end\n    \n    def draw_overlay_map_light\n      filename = YSA::OVERLAY::LIGHT\n      filename += $game_map.map_id.to_s\n      filename += \"-\" + $game_variables[YSA::OVERLAY::LIGHT_VARIABLE].to_s\n      image = Cache.overlay(filename)\n      @src_rect.set(@start_x*tilesize, @start_y*tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect, 10)\n    end\n    \n    def draw_overlay_map_shadow\n      filename = YSA::OVERLAY::SHADOW\n      filename += $game_map.map_id.to_s\n      filename += \"-\" + $game_variables[YSA::OVERLAY::SHADOW_VARIABLE].to_s\n      image = Cache.overlay(filename)\n      @src_rect.set(@start_x*tilesize, @start_y*tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect, 10)\n    end\n  \n    alias :th_map_overlay_draw_map :draw_map\n    def draw_map\n      th_map_overlay_draw_map\n      draw_overlay_map_ground if $game_switches[YSA::OVERLAY::GROUND_SWITCH] \n      draw_overlay_map_parallax if $game_switches[YSA::OVERLAY::PARALLAX_SWITCH] \n      draw_overlay_map_shadow if $game_switches[YSA::OVERLAY::SHADOW_SWITCH]\n      draw_overlay_map_light if $game_switches[YSA::OVERLAY::LIGHT_SWITCH]\n    end\n  end\nend\n\nif $imported[\"TH_AreaOverlay\"]\n  class Map_Saver\n    def draw_overlay_area_map\n      image = SceneManager.scene.instance_variable_get(:@spriteset).instance_variable_get(:@area_map).bitmap\n      @src_rect.set(@start_x * tilesize, @start_y * tilesize, image.width, image.height)\n      @map_image.blt(0, 0, image, @src_rect, 255)\n    end\n    \n    alias :th_area_overlay_draw_map :draw_map\n    def draw_map\n      th_area_overlay_draw_map\n      draw_overlay_area_map\n    end\n  end\nend",
-			"settings":
-			{
-				"buffer_size": 34866,
-				"line_ending": "Windows",
-				"name": "=begin"
-			}
-		},
-		{
-			"file": "Utils/Extensions/screenshot.rb",
-			"settings":
-			{
-				"buffer_size": 449,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "System/mouse.rb",
-			"settings":
-			{
-				"buffer_size": 3779,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/Map/player.rb",
-			"settings":
-			{
-				"buffer_size": 10130,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Interface/Map/screen.rb",
-			"settings":
-			{
-				"buffer_size": 2857,
+				"buffer_size": 1125,
 				"line_ending": "Windows"
 			}
 		},
@@ -604,15 +563,103 @@
 			"file": "Elements/Widgets/list.rb",
 			"settings":
 			{
-				"buffer_size": 10490,
+				"buffer_size": 10648,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Interface/Menu/save.rb",
+			"file": "System/audio.rb",
 			"settings":
 			{
-				"buffer_size": 829,
+				"buffer_size": 5314,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/system.rb",
+			"settings":
+			{
+				"buffer_size": 1228,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/screen.rb",
+			"settings":
+			{
+				"buffer_size": 2884,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/Parts/bar.rb",
+			"settings":
+			{
+				"buffer_size": 2859,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Menu/char.rb",
+			"settings":
+			{
+				"buffer_size": 1202,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Menu/party.rb",
+			"settings":
+			{
+				"buffer_size": 2080,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/Parts/grid.rb",
+			"settings":
+			{
+				"buffer_size": 9785,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Elements/Widgets/button.rb",
+			"settings":
+			{
+				"buffer_size": 2290,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Model/Map/map.rb",
+			"settings":
+			{
+				"buffer_size": 11735,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "System/mouse.rb",
+			"settings":
+			{
+				"buffer_size": 3798,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Model/Map/player.rb",
+			"settings":
+			{
+				"buffer_size": 10148,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "System/game.rb",
+			"settings":
+			{
+				"buffer_size": 2087,
 				"line_ending": "Windows"
 			}
 		}
@@ -734,6 +781,32 @@
 	],
 	"file_history":
 	[
+		"/F/hahahahhaha/Modules/suplex/scene/effects/pyro.monkey",
+		"/F/hahahahhaha/Modules/suplex/scene/stackmap/stacksprite.monkey",
+		"/F/hahahahhaha/Modules/suplex/scene/stackmap/stackmap.monkey",
+		"/F/hahahahhaha/Modules/suplex/managers/data.monkey",
+		"/F/hahahahhaha/Games/TestZone/misc/widgets.monkey",
+		"/F/hahahahhaha/Games/TestZone/misc/pyro_ed.monkey",
+		"/C/Aveyond4/Scripts/Model/State/party.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts/grid.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/main.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/char.rb",
+		"/C/Aveyond4/Scripts/System/cache.rb",
+		"/C/Aveyond4/Scripts/System/files.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
+		"/C/Aveyond4/Scripts/Scenes/menu.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/page_tabs.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_common.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/options.rb",
+		"/C/Aveyond4/Scripts/System/settings.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_page.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
+		"/C/Aveyond4/Scripts/Model/Map/player.rb",
+		"/C/Aveyond4/Scripts/System/mouse.rb",
+		"/C/Aveyond4/Scripts/Utils/Extensions/screenshot.rb",
+		"/C/Aveyond4/Scripts/System/game.rb",
+		"/C/Aveyond4/Scripts/Model/Map/map.rb",
+		"/C/Aveyond4/Scripts/Utils/Extensions/picsave2.rb",
 		"/C/Aveyond4/Scripts/Utils/Extensions/BitmapEx.rb",
 		"/C/Aveyond4/Scripts/Utils/Extensions/baseEX.rb",
 		"/C/Aveyond4/Scripts/System/debug.rb",
@@ -741,20 +814,14 @@
 		"/C/Users/Dan/AppData/Local/Temp/7zO33D4.tmp/main.rb",
 		"/C/Users/Dan/AppData/Local/Temp/7zOEFD1.tmp/base.rb",
 		"/C/Aveyond4/Scripts/Utils/Extensions/picsave.rb",
-		"/C/Aveyond4/Scripts/Utils/Extensions/picsave2.rb",
 		"/C/Aveyond4/README.md",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/info.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/bar.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/panorama.rb",
 		"/C/Aveyond4/Scripts/Scenes/base.rb",
 		"/C/Aveyond4/Scripts/Scenes/map.rb",
-		"/C/Aveyond4/Scripts/Model/Map/player.rb",
 		"/C/Aveyond4/Scripts/Model/Map/event.rb",
-		"/C/Aveyond4/Scripts/System/game.rb",
-		"/C/Aveyond4/Scripts/System/files.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/save.rb",
 		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/spritegroup.rb",
@@ -762,11 +829,9 @@
 		"/C/Aveyond4/Scripts/Model/Map/interpreter.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/load.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/quit.rb",
-		"/C/Aveyond4/Scripts/Model/Map/map.rb",
 		"/C/Aveyond4/Scripts/System/tweens.rb",
 		"/C/Aveyond4/Scripts/Functions/transfers.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/character.rb",
-		"/C/Aveyond4/Scripts/System/mouse.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/charview.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/battlehud.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_1_intro.rb",
@@ -779,9 +844,7 @@
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/port_full.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/party.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/char.rb",
 		"/C/Aveyond4/Scripts/System/audio.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/main.rb",
 		"/C/Aveyond4/Editor/meta/skills.json",
 		"/C/Aveyond4/Scripts/Elements/Map/spark.rb",
 		"/C/Aveyond4/Scripts/Functions/poppers.rb",
@@ -790,22 +853,17 @@
 		"/C/Aveyond4/Scripts/Model/Battle/result.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_3_main.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_2_actor.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_common.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/item_box.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/skillcmd.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/Parts/grid.rb",
 		"/C/Aveyond4/Scripts/Functions/party.rb",
 		"/C/Aveyond4/Scripts/Model/State/progress.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/box.rb",
-		"/C/Aveyond4/Scripts/Model/State/party.rb",
 		"/C/Aveyond4/Scripts/main.rb",
 		"/C/Aveyond4/Scripts/Model/Map/character.rb",
 		"/C/Aveyond4/Scripts/Functions/effects.rb",
-		"/C/Aveyond4/Scripts/System/settings.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_3_skills.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/equip.rb",
 		"/C/Aveyond4/Scripts/System/fonts.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/page_tabs.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_small.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/info_box.rb",
@@ -814,7 +872,6 @@
 		"/C/Aveyond4/Scripts/Interface/Menu/items.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/journal.rb",
 		"/C/Aveyond4/Scripts/Functions/sparks.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_page.rb",
 		"/C/Aveyond4/Scripts/System/data.rb",
 		"/C/Aveyond4/Scripts/Functions/shop.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/itemcmd.rb",
@@ -826,7 +883,6 @@
 		"/C/Aveyond4/Scripts/Functions/common.rb",
 		"/C/Aveyond4/Editor/meta/zones.json",
 		"/C/Aveyond4/Scripts/Elements/Widgets/button.rb",
-		"/C/Aveyond4/Scripts/System/cache.rb",
 		"/C/Aveyond4/Editor/meta/items.json",
 		"/C/Aveyond4/Scripts/Elements/Widgets/label.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/old_list.rb",
@@ -847,21 +903,12 @@
 		"/C/Aveyond4/Scripts/Functions/menus.rb",
 		"/C/Aveyond4/Scripts/Functions/audio.rb",
 		"/C/Aveyond4/Scripts/Functions/message.rb",
-		"/C/Aveyond4/Scripts/Scenes/menu.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/shop.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
 		"/C/Aveyond4/Editor/meta/actors.json",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_2_states.rb",
 		"/C/Aveyond4/Editor/edit.html",
-		"/C/Aveyond4/Editor/meta/numbers.json",
-		"/C/Aveyond4/Scripts/Functions/battle.rb",
-		"/C/Aveyond4/Scripts/Elements/Map/weather.rb",
-		"/C/Aveyond4/Editor/meta/states.json",
-		"/C/Aveyond4/Editor/meta/shop.json",
-		"/C/Aveyond4/Scripts/Model/Map/moblin.rb",
-		"/C/Aveyond4/Editor/meta/progress.json",
-		"/C/Aveyond4/Scripts/Interface/Battle/Parts/targetcmd.rb",
-		"/C/Aveyond4/Editor/meta/keyitems.json"
+		"/C/Aveyond4/Editor/meta/numbers.json"
 	],
 	"find":
 	{
@@ -888,6 +935,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"add_wide",
+			"current",
+			"HUH",
+			"setup",
+			"data[2]",
+			"draw_misc",
+			"open_main_menu",
+			"refresh",
 			"blur",
 			"DL",
 			"export",
@@ -1007,15 +1062,7 @@
 			"interpreter.running?",
 			"update",
 			"turn_rig",
-			"passab",
-			"passable",
-			"def gold",
-			"transfer",
-			"fadein",
-			"\"ADDING",
-			"('ADDING",
-			"ADDING",
-			"@"
+			"passab"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1063,24 +1110,24 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 9,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "System/files.rb",
+					"file": "Interface/Menu/save.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5674,
+						"buffer_size": 1010,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2144,
-								2144
+								528,
+								528
 							]
 						],
 						"settings":
@@ -1089,36 +1136,6 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
@@ -1129,563 +1146,54 @@
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1688.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Model/Map/map.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11630,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1387,
-								1387
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 627.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "System/game.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2012,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1155,
-								1155
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 456.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "System/cache.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2759,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2205,
-								2221
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1026.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Utils/Extensions/picsave2.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6065,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5572,
-								5572
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1710.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 34866,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								28819,
-								28819
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_name": "=begin",
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 15365.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "Utils/Extensions/screenshot.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 449,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								449,
-								230
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1695,20 +1203,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "System/mouse.rb",
+					"buffer": 1,
+					"file": "System/settings.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3779,
+						"buffer_size": 2256,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								281,
-								281
+								257,
+								257
+							],
+							[
+								284,
+								284
 							]
 						],
 						"settings":
@@ -1717,36 +1229,6 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
@@ -1757,25 +1239,857 @@
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1026.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Interface/Menu/options.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2966,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2380,
+								2380
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1710.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Interface/Menu/Parts/info_box.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 721,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								584,
+								584
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Interface/Menu/items.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1125,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								265,
+								265
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Elements/Widgets/list.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10648,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3920,
+								3920
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3281.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "System/audio.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5314,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3768,
+								3768
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3420.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Functions/system.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1228,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								20
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Interface/Map/screen.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2884,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1349,
+								1349
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1083.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Interface/Map/Parts/bar.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2859,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2462,
+								2462
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"spell_check": true,
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1083.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Interface/Menu/char.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1202,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								751,
+								751
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1785,20 +2099,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "Model/Map/player.rb",
-					"semi_transient": false,
+					"buffer": 11,
+					"file": "Interface/Menu/party.rb",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 10130,
+						"buffer_size": 2080,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5355,
-								5361
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1806,36 +2120,6 @@
 							"BracketHighlighterBusy": false,
 							"bh_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
@@ -1846,48 +2130,344 @@
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 342.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "Interface/Map/Parts/grid.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9785,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6879,
+								6983
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 6359.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "Elements/Widgets/button.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2290,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1920,
+								1920
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 912.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "Model/Map/map.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11735,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6162,
+								6162
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2958.0,
+						"translation.y": 4592.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "Interface/Map/screen.rb",
+					"buffer": 15,
+					"file": "System/mouse.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2857,
+						"buffer_size": 3798,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1322,
-								1322
+								879,
+								879
 							]
 						],
 						"settings":
@@ -1896,36 +2476,6 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
@@ -1936,47 +2486,78 @@
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 1115.0,
+						"translation.x": -0.0,
+						"translation.y": 114.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "Elements/Widgets/list.rb",
+					"buffer": 16,
+					"file": "Model/Map/player.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10490,
+						"buffer_size": 10148,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6949,
-								6949
+								5454,
+								5454
 							]
 						],
 						"settings":
@@ -1985,36 +2566,6 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
@@ -2025,48 +2576,78 @@
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5960.0,
+						"translation.y": 2907.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "Interface/Menu/save.rb",
+					"buffer": 17,
+					"file": "System/game.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 829,
+						"buffer_size": 2087,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								593,
-								593
+								2026,
+								2026
 							]
 						],
 						"settings":
@@ -2075,36 +2656,6 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
@@ -2115,30 +2666,61 @@
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 57.0,
+						"translation.y": 1653.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 17,
 					"type": "text"
 				}
 			]
@@ -2197,8 +2779,20 @@
 		"selected_items":
 		[
 			[
+				"par",
+				"Scripts\\Model\\State\\party.rb"
+			],
+			[
+				"grid",
+				"Scripts\\Interface\\Map\\Parts\\grid.rb"
+			],
+			[
 				"cache",
 				"Scripts\\System\\cache.rb"
+			],
+			[
+				"mouse",
+				"Scripts\\System\\mouse.rb"
 			],
 			[
 				"player",
@@ -2406,10 +3000,6 @@
 			],
 			[
 				"ouse",
-				"Scripts\\System\\mouse.rb"
-			],
-			[
-				"mouse",
 				"Scripts\\System\\mouse.rb"
 			],
 			[

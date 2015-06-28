@@ -20,6 +20,7 @@ class MouseManager
     @sprite = Sprite.new()
     @sprite.z = 6000
     @sprite.ox = 4
+    @sprite.oy = 4
     change_cursor("Default")
   end
 

@@ -40,7 +40,7 @@ class Button < Sprite
       check_nhover($mouse.position)
       if @state == :active
         if $input.click?
-          @press.call()
+          @press.call() if @press
         end
       end
     end
@@ -66,7 +66,6 @@ class Button < Sprite
     return if pos[1] > self.y + self.height
     @state = :active
     @select.call() if @select
-    log_info("PROC")
   end
 
   def check_nhover(pos)
@@ -80,8 +79,7 @@ class Button < Sprite
     w = true if pos[1] > self.y + self.height
     return if w == false
     @state = :idle
-    @deselect.call() if @select
-    log_info("UNPROC")
+    @deselect.call() if @deselect
   end
 
 end

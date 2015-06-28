@@ -8,7 +8,7 @@ class Mnu_Items < Mnu_Base
 		super(vp)
 
 		@title.change('items')
-		@subtitle.text = "Various items of collection"
+		#@subtitle.text = "Various items of collection"
 
 		@tabs.push("all")
 		@tabs.push("main")

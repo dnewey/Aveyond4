@@ -4,11 +4,12 @@
 
 class SettingsManager
 
-  attr_accessor :music
-  attr_accessor :sound
-  attr_accessor :window
+  attr_accessor :fullscreen
+  attr_accessor :music_vol
+  attr_accessor :sound_vol  
   attr_accessor :effects
   attr_accessor :mouse
+  attr_accessor :tutorial
 
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
@@ -25,11 +26,12 @@ class SettingsManager
   def initialize
 
     # Defaults
-    @music = false
-    @sound = true
-    @window = false
+    @fullscreen = false
+    @music_vol = 1.0
+    @sound_vol = 1.0    
     @effects = false
     @mouse = false
+    @tutorial = false
 
     # Debug options
     @debug_skip_title = true

@@ -27,7 +27,7 @@ class Page_Tabs < Sprite
 
   	@idx = 0
 
-    move(20,108)
+    move(116,75)
 
   end
 

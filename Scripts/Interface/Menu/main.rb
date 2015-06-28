@@ -72,8 +72,8 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		end
 
 
-		@data = ['Journal','Items','Equip','Skills',
-  	 		     'Party','Options','Quit','Load','Save']
+		@data = ['Journal','Items','Party','Progress',
+  	 		     'Options','Help','Quit','Load','Save']
 
 		cy = 15
 

@@ -13,11 +13,12 @@ class List
 
   attr_accessor :active
 
-  attr_reader :page_idx
+
 
   attr_accessor :type
 
-  attr_reader :scroll_idx
+  attr_accessor :page_idx
+  attr_accessor :scroll_idx
 
   #--------------------------------------------------------------------------
   # * Init
@@ -115,7 +116,7 @@ class List
     @scroll_up.dispose
   end
 
-  def setup(data)
+  def setup(data,idx=0)
     #log_sys(data)
   	@data = data
     # Need an original per page in case less items are given
@@ -123,10 +124,10 @@ class List
     #@per_page = @data.count if @data.count < @per_page
     #@per_page = 1 if @per_page == 0
     @scroll_idx = 0
-    @page_idx = 0
+    @page_idx = idx
     @select_sprite.y = idx * row_height
     @active = true
-  	refresh
+  	refresh(false)
   end
 
   def idx
@@ -150,7 +151,7 @@ class List
   end
 
   # When data changes
-  def refresh
+  def refresh(ch=true)
 
     @vp.rect = Rect.new(@x,@y,@item_width,row_height*@max_per_page)
 
@@ -168,20 +169,19 @@ class List
     @back_sprite.y = can_scroll? ? -row_height : 0
     @content_sprite.y = can_scroll? ? -row_height : 0
 
-
-
     src = $cache.menu_common('list-bar')
 
     i = 0
     rows.times{ 
       @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
       # Draw each row
-      draw(@data[@scroll_idx + i-1],i) # -1 makes the first row visible on can scrolls
+      draw(@data[@scroll_idx + i-1],i) if can_scroll? # -1 makes the first row visible on can scrolls
+      draw(@data[@scroll_idx + i],i) if !can_scroll?
       #draw(@data[@scroll_idx + i],i)
       i += 1
     }
 
-    call_change
+    call_change if ch
 
   end
 
@@ -197,7 +197,7 @@ class List
   end
 
   def current
-    return @current[0] if @type == :misc
+    #return @current[0] if @type == :misc
     return @data[idx+1] if can_scroll?
     return @data[idx]
   end
@@ -298,11 +298,11 @@ class List
 
   def draw_misc(data,row)
 
-    ico = $cache.icon(data[1])
+    ico = $cache.icon(data[2])
     
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,data[0],0)
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,data[1],0)
 
   end
 

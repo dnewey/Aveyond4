@@ -18,7 +18,7 @@ class Scene_Menu
     # Background
     @bg = Sprite.new(@vp)
     @bg.z = -100
-    @bg.bitmap = $cache.menu_background("sample")
+    @bg.bitmap = $cache.menu_background("sample") #$game.snapshot#
     #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
 
     # Choose background by location

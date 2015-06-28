@@ -74,38 +74,17 @@ class FileManager
       @last_savefile_index = i
     }
 
-    # Open the temp file and resize it
-    temp = Graphics.snap_to_bitmap#Bitmap.new("#{$appdata}//temp.png")
-
-    #temp.radialblur!
-    mini = Bitmap.new(320,192)
-
-    x = (640-320)/2
-    y = (480-192)/2
-    rect = Rect.new(x,y,320,192)
-    mini.blt(0,0,temp,rect)
-    #mini2 = Bitmap.new(320,240)
-    #mini = Bitmap.new(320,240)
-    #mini.stretch_blt(mini.rect,temp,temp.rect)
-    #mini2.stretch_blt(mini2.rect,mini,mini.rect)
-    #mini.stretch_blend_blt(mini.rect,temp,temp.rect)
-
-
-
-    #mini2.stretch_blt(mini.rect,temp,temp.rect)
-
-    mini.export("#{$appdata}//temp3.png")
-
-    #mini.blur!(1)
-    #mini.sharp!
-
-    #mini.pencil!
-
-    #mini.blt(0,0,mini2,mini.rect,150)
-
-    #mini2.export("#{$appdata}//temp2.png")
-
+    # Save pic for save file
+    w = 256
+    h = 192
+    x = (640-w)/2
+    y = (480-h)/2
+    rect = Rect.new(x,y,w,h)
+    mini = Bitmap.new(w,h)
+    mini.blt(0,0,$game.snapshot,rect)
+    mini.export("#{$appdata}//Av4-#{i}.png")
     return true
+
   end
   
   #--------------------------------------------------------------------------
@@ -144,6 +123,7 @@ class FileManager
   def make_save_header
     header = {}
     header[:progress] = 140
+    header[:name] = "Save Name"
     # Location, party, playtime, quest?, gold
     #header[:characters] = $game_party.characters_for_savefile
     #header[:playtime_s] = $game_system.playtime_s
