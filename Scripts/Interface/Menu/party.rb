@@ -26,6 +26,9 @@ class Mnu_Party < Mnu_Base
 		@other.push(@grid)
 		setup_grid
 
+		@info.dispose
+		self.left.delete(@info)
+
 	end
 
 	def setup_grid

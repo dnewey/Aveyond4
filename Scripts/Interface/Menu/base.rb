@@ -53,9 +53,9 @@ class Mnu_Base
 
 	def close
 		@closing = true
-		@left.each{ |i|
+		#@left.each{ |i|
 			# Animate each thing sliding left and fading out
-		}
+		#}
 	end
 
 	def open

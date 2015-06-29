@@ -45,6 +45,7 @@ class Scene_Menu
     end
 
     @sub = nil
+    @next_sub = nil
 
     Graphics.transition(20,'Graphics/Transitions/trans')     
 
@@ -65,16 +66,28 @@ class Scene_Menu
   #--------------------------------------------------------------------------
   def update
 
-    if @sub == nil || @sub.done?
-      @menu.update
-    else
-      @sub.update
-    end
-
     if @sub != nil && @sub.done? # CLOSE SELF
       @sub.dispose
       @sub = nil
       @menu.open
+      log_sys("CLOSE SUB")
+    end
+
+
+    if @sub == nil   
+      if @next_sub != nil
+        case @next_sub
+          when "Char"
+            open_sub(Mnu_Char.new(@vp))
+          when "Equip"
+            open_sub(Mnu_Equip.new(@vp))
+        end
+        @next_sub = nil
+      else
+        @menu.update    
+      end
+    else
+      @sub.update
     end
 
     if ($input.cancel? || $input.rclick?) || (@sub == nil && @menu.done?)
@@ -89,6 +102,10 @@ class Scene_Menu
     @menu.close
     @sub = menu
     @sub.open
+  end
+
+  def change_sub(menu)
+    @next_sub = menu
   end
 
   # def close_sub

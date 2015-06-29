@@ -210,6 +210,8 @@ class List
     case @type
       when :item
         draw_item(data,row)
+      when :shop
+        draw_shop(data,row)
       when :equip
         draw_equip(data,row)
       when :skill
@@ -242,7 +244,33 @@ class List
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if number > 0
+
       @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    end
+
+  end
+
+  def draw_shop(data,row)
+
+    item = $data.items[data]
+
+    if item != nil
+      name = item.name
+      ico = $cache.icon(item.icon)
+      price = item.price
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+      price = 0
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    if price > 0
+      ico = $cache.icon("misc/coins")
+      @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
     end
 
   end
@@ -423,12 +451,12 @@ class List
     pos = $mouse.position
     pos[0] -= @x
     pos[1] -= @y
-    
-    if within?(pos)
 
-      if !@select.nil? && ($input.action? || $input.click?)
-        @select.call(current)
-      end
+    if !@select.nil? && ($input.action? || ($input.click?&&within?(pos)))
+      @select.call(current)
+    end
+
+    if within?(pos)
       
       row = pos[1] / row_height
       @select_sprite.y = row * row_height

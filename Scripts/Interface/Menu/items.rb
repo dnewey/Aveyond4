@@ -36,8 +36,6 @@ class Mnu_Items < Mnu_Base
 		#@grid.hide
 		self.right.push(@grid)
 
-		grant_items
-
 		@menu.setup_items('all')
 
 	end

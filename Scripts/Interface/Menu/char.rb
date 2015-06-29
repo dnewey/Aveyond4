@@ -25,7 +25,10 @@ class Mnu_Char < Mnu_Base
 		@grid.add_wide("status","View Status","misc/unknown")
 		@grid.add_wide("profile","View Profile","faces/boy")
 		@grid.add_wide("leader","Set as Leader","misc/unknown")
-		@grid.add_wide("creatures","Creature Hunting","misc/unknown")
+		
+		@grid.add_wide("creatures","Creature Hunting","misc/unknown") if $menu.char == 'boy'
+		@grid.add_wide("potions","Potion Making","misc/unknown") if $menu.char == 'ing'
+
 		self.left.push(@grid)
 
 
@@ -56,9 +59,24 @@ class Mnu_Char < Mnu_Base
 
 	def choose(option)
 		case option
+			when 'equip'
+				$scene.change_sub("Equip")
+				self.cancel
+
+			when 'skills'
+
+			when 'status'
+
+			when 'profile'
+
 			when 'leader'
 				$party.leader = $menu.char
 				$scene.close_all
+
+			when 'creatures'
+
+			when 'potions'
+
 		end
 	end
 

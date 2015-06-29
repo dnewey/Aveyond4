@@ -8,6 +8,8 @@ class Ui_Grid
 
 	attr_accessor :spacing, :cx, :cy
 
+	attr_reader :active
+
 	def initialize(vp)
 
 		@vp = vp
@@ -239,7 +241,7 @@ class Ui_Grid
 		end
 
 		# Create new things
-		btn = add_part_box(slot,300,61)
+		btn = add_part_box(slot,300,66)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -266,14 +268,14 @@ class Ui_Grid
 
      	# Position
      	cont.move(@cx+10,@cy+7)
-     	stat.move(@cx+25,@cy+28)
+     	stat.move(@cx+25,@cy+31)
      	cat.move(@cx+245,@cy+8)
 
      	choose(@boxes[0].name) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
-     		@cy += btn.height + 4
+     		@cy += btn.height + 6
      	end
 
 	end

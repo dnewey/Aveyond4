@@ -35,7 +35,7 @@ class Game_Party
     @reserve = []
 
     # Initialize amount of gold
-    @gold = 0
+    @gold = 250
 
     # Create amount in possession hash for items, weapons, and armor
     @items = {}

@@ -15,6 +15,7 @@ class Mnu_Shop < Mnu_Base
 
 		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
 
+		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
 
 		@port = Port_Full.new(vp)
@@ -40,7 +41,12 @@ class Mnu_Shop < Mnu_Base
 	end
 
 	def select(option)	
-		
+		item = $data.items[option]
+		if $party.gold >= item.price
+			$party.add_item(option)
+			$party.add_gold(-item.price)
+			sys("coins")
+		end
 	end
 
 	def change_tab(tab)

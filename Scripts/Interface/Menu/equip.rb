@@ -45,6 +45,9 @@ class Mnu_Equip < Mnu_Base
 		@item_box.hide
 		#self.right.push(@item_box)
 
+		@info.dispose
+		self.left.delete(@info)
+
 		# Selected slot
 		@slot = nil
 
@@ -130,9 +133,13 @@ class Mnu_Equip < Mnu_Base
 		
 	end
 
-	def cancel(option)
-
-		back_to_slots
+	 def cancel
+	 	if @grid.active
+	 		$scene.change_sub("Char")
+	 		super
+	 	else
+	 		back_to_slots
+	 	end
 	end
 
 	def back_to_slots
