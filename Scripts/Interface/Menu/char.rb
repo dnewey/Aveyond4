@@ -46,15 +46,20 @@ class Mnu_Char < Mnu_Base
 			@other.each{ |a| $tweens.clear(a) }
 			close
 		end
+
+		# Get chosen grid option
+		if $input.action? || $input.click?
+			choose(@grid.get_chosen)
+		end
 		
 	end
 
-	def change(option)
-		
-	end
-
-	def select(option)	
-		
+	def choose(option)
+		case option
+			when 'leader'
+				$party.leader = $menu.char
+				$scene.close_all
+		end
 	end
 
 end

@@ -11,7 +11,7 @@ class Game_Party
 
   attr_accessor :all_actors
 
-  attr_reader :leader
+  attr_accessor :leader
 
   attr_reader :items
 

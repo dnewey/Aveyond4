@@ -81,7 +81,7 @@ class Item_Box < SpriteGroup
 
     def base(data)
 
-        log_scr(data)
+        #log_scr(data)
         return if data == nil
 
         # Set values

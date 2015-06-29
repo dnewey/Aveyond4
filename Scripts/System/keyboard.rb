@@ -5,6 +5,7 @@
 
 VK_LBUTTON = 1
 VK_RBUTTON = 2
+VK_MBUTTON = 4
 
 VK_BS = 8
 VK_TAB = 9
@@ -20,6 +21,11 @@ VK_LEFT = 37
 VK_UP = 38
 VK_RIGHT = 39
 VK_DOWN = 40
+
+VK_A = 65
+VK_W = 87
+VK_D = 68
+VK_S = 83
 
 class KeyboardManager
 

@@ -14,16 +14,13 @@ class AudioManager
     end
 
     @music = Seal::Source.new
-    @music_in = Seal::Source.new
-
     @atmosphere = Seal::Source.new
-    @atmostphere_in = Seal::Source.new
 
     # Fade targets
+    @music_gain = 1.0
     @music_target = 1.0
-    @music_in_target = 1.0
+    @atmosphere_gain = 1.0
     @atmosphere_target = 1.0
-    @atmosphere_in_target = 1.0
 
     # Looping, fade by distance
     @environmental = [] 
@@ -70,9 +67,6 @@ class AudioManager
 
   def music(file,vol=1.0)
 
-    # More likely just make the volume zero so it can be turned back on
-    #return if !$settings.music
-
     if file == nil || file == ''
       @music.stop
       return
@@ -83,10 +77,7 @@ class AudioManager
   end
 
   def atmosphere(file)
-    
-    #return if !$settings.music
 
-    @atmosphere_target = 0.3
     if file == nil  || file == ''
       @atmosphere.stop
       return
@@ -98,14 +89,11 @@ class AudioManager
 
   def sys(file,vol=1.0)
 
-    #return if !$settings.sound
-
-    #log_scr(@sys.count)
-
     # Check through sources, if empty, use, if none, add
     @sys.each{ |src|
       if !src.playing?
         src.buffer = Seal::Buffer.new("Audio/Sys/#{file}.ogg")
+        src.gain = vol * $settings.sound_vol
         src.play
         return
       end
@@ -114,7 +102,7 @@ class AudioManager
     # Add new
     src = Seal::Source.new
     buf = Seal::Buffer.new("Audio/Sys/#{file}.ogg")
-    src.gain = vol
+    src.gain = vol * $settings.sound_vol
     src.buffer = buf
     src.play
     @sys.push(src)
@@ -122,16 +110,12 @@ class AudioManager
   end
 
   def sfx(file,vol=1.0)
-    
-    #return if !$settings.sound
-
-    #log_scr(@sfx.count)
 
     # Check through sources, if empty, use, if none, add
     @sfx.each{ |src|
       if !src.playing?
         src.buffer = Seal::Buffer.new("Audio/Sounds/#{file}.ogg")
-        
+        src.gain = vol * $settings.sound_vol
         src.play
         return
       end
@@ -141,7 +125,7 @@ class AudioManager
     src = Seal::Source.new
     buf = Seal::Buffer.new("Audio/Sounds/#{file}.ogg")
     src.buffer = buf
-    src.gain = vol
+    src.gain = vol * $settings.sound_vol
     src.feed(@effect, 0) if @effect != nil
     src.play
     @sfx.push(src)
@@ -157,15 +141,6 @@ class AudioManager
     # Dip the music while the src plays then fade up
 
   end
-
-
-  # send_blank to force start music
-  def play_bgm(bgm)
-    @bgm = bgm
-    Audio.bgm_play("Audio/BGM/" + bgm)
-  end
-
-
 
   def pause
     @music.pause
@@ -185,8 +160,7 @@ class AudioManager
     case mode
       when 'normal', ''
         preset = nil
-        @effect = nil
-        
+        @effect = nil        
 
       when 'cave'
         preset = Seal::Reverb::Preset::CAVE
@@ -200,27 +174,36 @@ class AudioManager
 
     #@sfx.each{ |s| s.dispose }
     @sfx = []
-
    
   end
 
-  def refresh_music_volume
-
-  end
-
   def refresh_sound_volume
-
+    (@sys + @sfx).each{ |s| s.gain = $settings.sound_vol}
   end
 
   def update
 
-    # if @atmosphere_target != @atmosphere.gain
-    #   if @atmosphere_target > @atmosphere.gain
-    #     @atmosphere.gain -= 0.05
-    #   else
-    #     @atmosphere.gain += 0.05
-    #   end
-    # end
+    if @atmosphere_target != @atmosphere_gain
+      if @atmosphere_target > @atmosphere.gain
+        @atmosphere_gain += 0.05
+        @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
+      else
+        @atmosphere_gain -= 0.05
+        @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
+      end      
+    end
+    @atmosphere.gain = @atmosphere_gain * $settings.music_vol
+
+    if @music_target != @music_gain
+      if @music_target > @music.gain
+        @music_gain += 0.05
+        @music_gain = 1.0 if @music_gain > 1.0
+      else
+        @music_gain -= 0.05
+        @music_gain = 0.0 if @music_gain < 0.0
+      end      
+    end
+    @music.gain = @music_gain * $settings.music_vol
 
     @environmental.each{ |e| e.update }
 

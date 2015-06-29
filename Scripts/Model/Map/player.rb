@@ -168,6 +168,10 @@ class Game_Player < Game_Character
 
     return if @static
 
+    if @character_name != "Player/#{$party.leader}"
+      self.character_name = "Player/#{$party.leader}"
+    end
+
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
     return super(true) if $map.interpreter.running? # Still finish turn anim

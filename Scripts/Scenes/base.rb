@@ -7,7 +7,8 @@ class Scene_Base
   attr_reader :map, :player
 
   attr_reader :panorama, :tilemap
-  attr_reader :weather, :fog, :overlay
+  attr_reader :weather, :fog
+  attr_reader :overlay, :black
 
   attr_reader :hud
 
@@ -48,12 +49,19 @@ class Scene_Base
     @weather = nil#Weather.new(@vp_over)
     @fog = Plane.new(@vp_over)
 
-    # Put this where?
+    # Misc Overlay
     @overlay = Sprite.new(@vp_over)
     @overlay.bitmap = Bitmap.new($game.width,$game.height)
     @overlay.bitmap.fill(Color.new(0,0,0))
     @overlay.opacity = 0
     @overlay.z = 999
+
+    # Fadeout
+    @black = Sprite.new(@vp_over)
+    @black.bitmap = Bitmap.new($game.width,$game.height)
+    @black.bitmap.fill(Color.new(0,0,0))
+    @black.opacity = 0
+    @black.z = 1000
     
     # UI
     @hud = nil # Define in sub
@@ -71,6 +79,7 @@ class Scene_Base
     @weather.dispose if @eather
     @fog.dispose
     @overlay.dispose
+    @black.dispose
     @hud.dispose
     
     # Dispose of viewports

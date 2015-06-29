@@ -50,8 +50,18 @@ end
 # Menus Access
 
 def open_main_menu
-	sys('action')
 	$game.menu_page = "Main"
+	$game.push_scene(Scene_Menu.new)
+end
+
+def open_sub_menu(which)
+	$game.menu_page = which
+	$game.push_scene(Scene_Menu.new)
+end
+
+def open_char_menu(who)
+	$menu.char = who
+	$game.menu_page = "Char"
 	$game.push_scene(Scene_Menu.new)
 end
 
@@ -81,11 +91,22 @@ end
 # Fades
 
 def fadeout(f=30)
-	$scene.overlay.do(to("opacity",255,255/f))
+	$scene.black.do(to("opacity",255,255/f))
 	w f
 end
 
 def fadein(f=30)
-	$scene.overlay.do(to("opacity",0,-255/30))
+	$scene.black.do(to("opacity",0,-255/f))
+	w f
+end
+
+def overlay(bmp,f=30)
+	$scene.overlay.bitmap = $cache.overlay(bmp)
+	$scene.overlay.do(to("opacity",255,255/f))
+	w f
+end
+
+def noverlay(f=30)
+	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
 end

@@ -81,14 +81,6 @@ class Mnu_Party < Mnu_Base
 			choose(@grid.get_chosen)
 		end
 
-		# Cancel out of grid
-		if $input.cancel? || $input.rclick?
-			@left.each{ |a| $tweens.clear(a) }
-			@right.each{ |a| $tweens.clear(a) }
-			@other.each{ |a| $tweens.clear(a) }
-			close
-		end
-
 	end
 
 	def choose(option)

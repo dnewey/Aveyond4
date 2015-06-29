@@ -27,6 +27,8 @@ class Page_Tabs < Sprite
 
   	@idx = 0
 
+    @total_width = 0
+
     move(116,75)
 
   end
@@ -48,6 +50,8 @@ class Page_Tabs < Sprite
 
     self.bitmap = Bitmap.new(width,height)
 
+    @ranges = []
+
     # Draw the tabs
     cx = 0
     idx = 0
@@ -55,9 +59,12 @@ class Page_Tabs < Sprite
       src = b
       src = @gfx_on[idx] if idx == @idx
       self.bitmap.blt(cx,0,src,src.rect)
+      @ranges.push([cx,cx+b.width])
       cx += b.width + SPACING
       idx += 1
     }
+
+    @total_width = cx
 
   end
 
@@ -68,22 +75,55 @@ class Page_Tabs < Sprite
   	# Check inputs and that
   	if $input.right?
       @idx += 1
-      @tab_proc.call(@tabs[@idx]) if @tab_proc
+      if @idx > @names.count - 1
+        @idx = @names.count - 1
+        return
+      end
+      @tab_proc.call(@names[@idx]) if @tab_proc
       refresh      
   	end
 
   	if $input.left? #&& @dynamo.done?
       @idx -= 1
-      @tab_proc.call(@tabs[@idx]) if @tab_proc
+      if @idx < 0
+        @idx = 0
+        return
+      end
+      @tab_proc.call(@names[@idx]) if @tab_proc
       refresh  
   	end
 
     pos = $mouse.position
 
+    #return if pos[0] > @total_width
+    return if pos[0] < self.x
+
+    pos[0] -= self.x
+
+
+
     # Check mouseover
-    # @sprites.each_index{ |i|
+    @ranges.each_index{ |i|
+
+      next if i == @idx
+
+      range = @ranges[i]
+
+      next if pos[1] < self.y
+      next if pos[1] > self.y + 20
+
+      next if pos[0] < range[0]
+      next if pos[0] > range[1]
+
+      if $input.click?
+
+        @idx = i
+        @tab_proc.call(@names[@idx]) if @tab_proc
+        refresh  
+
+      end
       
-    # }
+    }
 
   end
 

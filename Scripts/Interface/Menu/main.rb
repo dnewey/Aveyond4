@@ -312,6 +312,8 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 				$scene.open_sub(Mnu_Party.new(@vp))
 			when "Options"
 				$scene.open_sub(Mnu_Options.new(@vp))
+			when "Help"
+				$scene.open_sub(Mnu_Help.new(@vp))
 			when "Quit"
 				$scene.open_sub(Mnu_Quit.new(@vp))
 			when "Load"

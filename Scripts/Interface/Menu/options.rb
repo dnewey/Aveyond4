@@ -76,8 +76,7 @@ class Mnu_Options < Mnu_Base
 					
 					$settings.music_vol = 1.0 if $settings.music_vol > 1.0
 					$settings.music_vol = 0.0 if $settings.music_vol < 0.0
-					$audio.refresh_music_volume
-
+					
 				when "sound"
 					if left
 						$settings.sound_vol -= 0.1
@@ -121,7 +120,6 @@ class Mnu_Options < Mnu_Base
 			when "music"
 				$settings.music_vol += 0.1
 				$settings.music_vol = 1.0 if $settings.music_vol > 1.0
-				$audio.refresh_music_volume
 			when "sound"
 				$settings.sound_vol += 0.1
 				$settings.sound_vol = 1.0 if $settings.sound_vol > 1.0

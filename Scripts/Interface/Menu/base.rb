@@ -27,7 +27,7 @@ class Mnu_Base
 
 		@menu = List_Common.new(vp)
 		@menu.list.select = Proc.new{ |option| self.select(option) }
-		@menu.list.cancel = Proc.new{ |option| self.cancel(option) }
+		#@menu.list.cancel = Proc.new{ |option| self.cancel(option) }
 		@menu.list.change = Proc.new{ |option| self.change(option) }
 		@left.push(@menu)
 
@@ -46,6 +46,9 @@ class Mnu_Base
 		(@left + @right + @other).each{ |i| i.update }
 
 		# If anim in done, change state
+		if $input.cancel? || $input.rclick?
+			self.cancel
+		end
 	end
 
 	def close
@@ -65,7 +68,7 @@ class Mnu_Base
 		@other.each{ |i| i.do(go("opacity",255,500,:qio))}
 	end
 
-	def cancel(option)
+	def cancel
 		@left.each{ |a| $tweens.clear(a) }
 		@right.each{ |a| $tweens.clear(a) }
 		@other.each{ |a| $tweens.clear(a) }

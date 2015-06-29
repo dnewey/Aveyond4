@@ -10,7 +10,7 @@ class FontManager
 
 	attr_reader :page_ttl, :page_sub, :page_text
 
-	attr_reader :hud_hp
+	attr_reader :hud_hp, :hud_hp_b
 
 	attr_reader :mini, :mini_b
 
@@ -110,9 +110,15 @@ class FontManager
 		# Misc
 
 		@hud_hp = Font.new
-		@hud_hp.name = "Bitter"
-	    @hud_hp.size = 20
-	    @hud_hp.color = Color.new(99,99,99)
+		@hud_hp.name = "Georgia"
+	    @hud_hp.size = 16
+	    @hud_hp.color = Color.new(255,255,255)
+
+	    @hud_hp_b = Font.new
+		@hud_hp_b.name = "Bitter"
+		@hud_hp_b.bold = true
+	    @hud_hp_b.size = 16
+	    @hud_hp_b.color = Color.new(99,99,99)
 
 	    @mini = Font.new
 	    @mini.name = "Verdana"

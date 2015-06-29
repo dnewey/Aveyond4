@@ -333,13 +333,19 @@ class List
 
     return if !@active
 
-    return if !$tweens.done?(@back_sprite)
+    if !$tweens.done?(@back_sprite)
+
+      # Still use up the inputs
+      #$input.action? || $input.click? || $input.cancel? || $input.rclick?
+      return
+
+    end
 
     @scroll_down.update
     @scroll_up.update
 
   	# Check inputs and that
-  	if $keyboard.press?(VK_DOWN)
+  	if $input.down?
 
       return if idx >= @data.count - 1
 
@@ -374,7 +380,7 @@ class List
 
   	end
 
-  	if $keyboard.press?(VK_UP) #&& @dynamo.done?
+  	if $input.up? #&& @dynamo.done?
 
       return if idx <= 0
 
@@ -406,44 +412,53 @@ class List
 
   	end
 
+    # Selection
+
+
+    # Cancel
+    if !@cancel.nil? && ($input.cancel? || $input.rclick?)
+      @cancel.call(current)
+    end
+
     pos = $mouse.position
     pos[0] -= @x
     pos[1] -= @y
-    if pos[0] < @item_width
+    
+    if within?(pos)
+
+      if !@select.nil? && ($input.action? || $input.click?)
+        @select.call(current)
+      end
+      
       row = pos[1] / row_height
-      return if row < 0
-      return if row >= @per_page
-      return if row >= @data.count
-      return if row == @page_idx
       @select_sprite.y = row * row_height
       @page_idx = row
       @change.call(current) if !@change.nil?
       #sys('select')
-    end
 
-    # Selection
-    if !@select.nil? && ($input.action? || $input.click?)
-      @select.call(current)
-    end
-
-    # Cancel
-    if !@cancel.nil? && ($input.cancel? || $input.rclick?)
-      sys('cancel')
-      @cancel.call(current)
     end
 
   end
 
-  def scroll_down
+  def within?(pos)
+    
+    return false if pos[0] < 0
+    return false if pos[0] > @item_width
+    row = pos[1] / row_height
+    return false if row < 0
+    return false if row >= @per_page
+    return false if row >= @data.count
+    return false if row == @page_idx
+    return true
 
+  end
+
+  def scroll_down
     
     @change.call(current) if !@change.nil?
     
     @scroll_idx -= 1    
     #      @pagemod = 1
-
-
-
 
     dur = 180
     ease = :quad_in_out

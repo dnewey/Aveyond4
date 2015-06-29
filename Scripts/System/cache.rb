@@ -15,7 +15,8 @@ class CacheManager
 
     
     def panorama(filename) load("Panoramas/", filename) end
-    def fog(filename) load("Fogs/", filename, hue) end
+    def fog(filename) load("Fogs/", filename) end
+    def overlay(filename) load("Overlays/", filename) end
     def particle(filename) load("Particles/", filename) end
 
 
