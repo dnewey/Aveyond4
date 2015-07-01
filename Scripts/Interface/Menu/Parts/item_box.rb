@@ -36,9 +36,7 @@ class Item_Box < SpriteGroup
     	add(@desc,16,42)
 
         @stats = []
-        @cy = 42
-
-    	
+        @cy = 42    	
     	
     	move(0,0)
 
@@ -86,6 +84,7 @@ class Item_Box < SpriteGroup
 
         # Set values
         @title.text = data.name
+        @title.icon = $cache.icon(data.icon)
         @desc.text = data.description
 
         @stats.each{ |s| 
@@ -111,7 +110,40 @@ class Item_Box < SpriteGroup
         stat.text = text
         @stats.push(stat)
         add(stat,36,@cy)
-        @cy += 20
+        @cy += 22
+
+    end
+
+    def stats(list)
+
+        list.split("\n").each{ |action|
+            
+            dta = action.split("=>")
+
+            case dta[0]
+
+                when "heal"
+                    stat("heal","Heal #{dta[1]} HP")
+
+                when "mana"
+                    stat("mana","Restore #{dta[1]} MP")
+
+                when "revive"
+                    stat("revive","Revive party member")
+
+                when "str"
+                    stat("str","#{dta[1]} Strength")
+
+                when "def"
+                    stat("def","#{dta[1]} Defense")
+
+
+
+            end
+            #return if data == nil
+            #stat("targets","Hit ALL")
+
+        }
 
     end
 
@@ -120,8 +152,7 @@ class Item_Box < SpriteGroup
         data = get_data(id)       
         base(data)
 
-        #return if data == nil
-        stat("targets","Hit ALL")
+        stats(data.action)
 		
 		#@type.text = item.type
 
@@ -129,6 +160,23 @@ class Item_Box < SpriteGroup
         remove
 
 	end
+
+    def equip(id)
+
+        data = get_data(id)       
+        base(data)
+
+        stats(data.stats)
+
+        # Now draw the comparison
+        stat("heal","Change 10 -> 15")
+        
+        #@type.text = item.type
+
+        newsize
+        remove
+
+    end
 
 	def skill(id)
 

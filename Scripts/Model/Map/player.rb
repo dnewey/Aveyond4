@@ -175,9 +175,15 @@ class Game_Player < Game_Character
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
     return super(true) if $map.interpreter.running? # Still finish turn anim
-    
 
     transfer_player if @transferring 
+
+    # Try menu here
+    if !moving? && $menu.menu_page != nil
+      clear_path
+      $game.queue = Scene_Menu.new
+      return
+    end
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 

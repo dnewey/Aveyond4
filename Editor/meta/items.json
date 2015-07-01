@@ -14,7 +14,8 @@
     "field": "price"
   },
   {
-    "field": "action"
+    "field": "action",
+    "edit": "area"
   },
   {
     "field": "icon",

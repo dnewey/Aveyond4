@@ -8,11 +8,14 @@ class MenuState
 	attr_accessor :shop
 	attr_accessor :grid_action # <- menu selection
 
+	attr_accessor :menu_page
+
 	#attr_accessor :category
 	#attr_accessor :tab
 
 	def initialize
 		@char = 'boy'
+		@menu_page = nil
 		@shop = []
 	end
 

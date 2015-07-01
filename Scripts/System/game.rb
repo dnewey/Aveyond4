@@ -5,8 +5,9 @@
 class GameManager
 
   attr_reader :width, :height
-  attr_accessor :menu_page
   attr_accessor :snapshot
+
+  attr_accessor :queue
 
 	def initialize
 

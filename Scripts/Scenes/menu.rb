@@ -26,7 +26,7 @@ class Scene_Menu
     # Choose background by location
 
     # The current menu
-    case $game.menu_page
+    case $menu.menu_page
 
       when "Main"; @menu = Mnu_Main.new(@vp)
       when "Shop"; @menu = Mnu_Shop.new(@vp)
@@ -43,6 +43,8 @@ class Scene_Menu
       when "Char"; @menu = Mnu_Char.new(@vp)
 
     end
+
+    $menu.menu_page = nil
 
     @sub = nil
     @next_sub = nil
@@ -81,6 +83,20 @@ class Scene_Menu
             open_sub(Mnu_Char.new(@vp))
           when "Equip"
             open_sub(Mnu_Equip.new(@vp))
+          when "Skills"
+            open_sub(Mnu_Skills.new(@vp))
+          when "Status"
+            open_sub(Mnu_Status.new(@vp))
+          when "Profile"
+            open_sub(Mnu_Profile.new(@vp))
+          when "Creatures"
+            open_sub(Mnu_Creatures.new(@vp))
+          when "Witchery"
+            open_sub(Mnu_Witchery.new(@vp))
+          when "Dreaming"
+            open_sub(Mnu_Dreaming.new(@vp))
+          when "Demons"
+            open_sub(Mnu_Demons.new(@vp))
         end
         @next_sub = nil
       else

@@ -253,10 +253,15 @@ class Ui_Grid
 
      	stat = Label.new(@vp)
      	stat.font = $fonts.pop_type
-     	#stat.shadow = $fonts.list_shadow
-     	stat.icon = $cache.icon("stats/attack")
-     	#stat.gradient = true
-     	stat.text = "24 Strength"
+
+     	if item != nil
+	     	data = item.stats.split("/n")[0].split("=>")
+	     	stat.icon = $cache.icon("stats/#{data[0]}")
+	     	stat.text = "#{data[1]} Strength"
+	     end
+
+
+
      	@extra.push(stat)
 
      	cat = Label.new(@vp)
@@ -268,7 +273,7 @@ class Ui_Grid
 
      	# Position
      	cont.move(@cx+10,@cy+7)
-     	stat.move(@cx+25,@cy+31)
+     	stat.move(@cx+25,@cy+32)
      	cat.move(@cx+245,@cy+8)
 
      	choose(@boxes[0].name) if @boxes.count == 1

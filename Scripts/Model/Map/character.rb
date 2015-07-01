@@ -395,6 +395,7 @@ class Game_Character
       move_type_custom
       return
     end
+
     # When waiting for event execution or locked
     if @starting or lock?
       # Not moving by self

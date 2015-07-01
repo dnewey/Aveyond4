@@ -50,31 +50,24 @@ end
 # Menus Access
 
 def open_main_menu
-	$game.menu_page = "Main"
-	$game.push_scene(Scene_Menu.new)
+	$menu.menu_page = "Main"
 end
 
 def open_sub_menu(which)
-	$game.menu_page = which
-	$game.push_scene(Scene_Menu.new)
+	$menu.menu_page = which
 end
 
 def open_char_menu(who)
 	$menu.char = who
-	$game.menu_page = "Char"
-	$game.push_scene(Scene_Menu.new)
+	$menu.menu_page = "Char"
 end
 
 def open_shop_buy
-	sys('action')
-	$game.menu_page = "Shop"
-	$game.push_scene(Scene_Menu.new)
+	$menu.menu_page = "Shop"
 end
 
 def open_shop_sell
-	sys('action')
-	$game.menu_page = "Shop"
-	$game.push_scene(Scene_Menu.new)
+	$menu.menu_page = "Shop"
 end
 
 

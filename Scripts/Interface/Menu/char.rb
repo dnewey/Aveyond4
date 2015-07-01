@@ -64,18 +64,36 @@ class Mnu_Char < Mnu_Base
 				self.cancel
 
 			when 'skills'
+				$scene.change_sub("Skills")
+				self.cancel
 
 			when 'status'
+				$scene.change_sub("Status")
+				self.cancel
 
 			when 'profile'
+				$scene.change_sub("Profile")
+				self.cancel
 
 			when 'leader'
 				$party.leader = $menu.char
 				$scene.close_all
 
 			when 'creatures'
+				$scene.change_sub("Creatures")
+				self.cancel
 
-			when 'potions'
+			when 'witchery'
+				$scene.change_sub("Witchery")
+				self.cancel
+
+			when 'dreaming'
+				$scene.change_sub("Dreaming")
+				self.cancel
+
+			when 'demons'
+				$scene.change_sub("Demons")
+				self.cancel
 
 		end
 	end

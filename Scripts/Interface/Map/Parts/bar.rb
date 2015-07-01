@@ -85,7 +85,9 @@ class Ui_Bar < SpriteGroup
 			# Add icon
 			icon = Button.new(vp)
 			icon.bitmap = $cache.icon("faces/#{m}")
-			icon.press = Proc.new{ open_char_menu(m) }
+			icon.press = Proc.new{ 
+				$tweens.clear(icon); icon.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio),call("open_char_menu('#{m}')")))				 
+			}
 			icon.select = Proc.new{ $tweens.clear(icon); icon.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
 			icon.deselect = Proc.new{ $tweens.clear(icon); icon.oy = 0 }
 			add(icon,238+i*98,4)
