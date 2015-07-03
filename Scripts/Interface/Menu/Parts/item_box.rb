@@ -183,9 +183,22 @@ class Item_Box < SpriteGroup
         data = get_data(id)       
         base(data)
 
-        #if data.scope == 'all'
-            stat("targets","Hit ALL")
-        #end
+        if data.hits > 1
+            stat("targets","Hits #{data.hits} Times")
+        end
+
+        case data.scope
+            when 'rand'
+                stat("targets","Targets a Random Enemy")
+            when 'two'
+                stat("targets","Targets 2 Enemies")
+            when 'three'
+                stat("targets","Targets 3 Enemies")
+            when 'all'
+                stat("targets","Targets All Enemies")
+            when 'party'
+                stat("targets","Targets All Allies")
+        end
 
         newsize
         remove

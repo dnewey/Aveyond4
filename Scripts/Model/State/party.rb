@@ -70,6 +70,18 @@ class Game_Party
     return @active.map{ |a| @actors[a] }
   end
 
+  def attackable_battlers
+    return active_battlers.select{ |a| a.attackable? }
+  end
+
+  def alive_battlers
+    return active_battlers.select{ |a| !a.down? }
+  end
+
+  def alive_members
+    return @active.map{ |a| @actors[a] }.select{ |a| !a.down? }
+  end
+
   #--------------------------------------------------------------------------
   # * Add an Actor
   #     actor_id : actor ID
@@ -331,6 +343,13 @@ class Game_Party
     @actors["boy"].learn('flames')
 
     @actors["ing"].learn('xform-snake')
+
+    @actors["rob"].learn("team-boy")
+    @actors["rob"].learn("team-ing")
+    @actors["rob"].learn("team-mys")
+    @actors["rob"].learn("team-row")
+    @actors["rob"].learn("team-hib")
+    @actors["rob"].learn("team-phy")
 
     item('boy-arm-s','s')
     item('hib-arm-s','s')

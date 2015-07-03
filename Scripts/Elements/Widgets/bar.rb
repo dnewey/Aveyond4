@@ -44,7 +44,7 @@ class Bar < Sprite
 		@drawn = @value
 
 		@target = @value
-		@max = 100
+		@max = 1.0
 
 		@width = w
 		@height = h

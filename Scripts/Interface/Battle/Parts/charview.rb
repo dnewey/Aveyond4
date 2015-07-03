@@ -34,6 +34,7 @@ class CharView < SpriteGroup
 
 		@hp_bar = Bar.new(vp,130,8)
 		@hp_bar.for(:hp)
+		@hp_bar.value = @battler.hp_percent
 		add(@hp_bar,11,118)
 
 		@hp_label = Sprite.new(vp)
@@ -42,13 +43,14 @@ class CharView < SpriteGroup
 		add(@hp_label,12,110)
 
 		@hp_value = Sprite.new(vp)
-		@hp_value.bitmap = build_value_bmp(rand*1000)
+		@hp_value.bitmap = build_value_bmp(@battler.hp)
 		@hp_value.opacity = 200
 		add(@hp_value,140-@hp_value.bitmap.width,111)
 		@hp_value.z += 50
 
 
 		@mp_bar = Bar.new(vp,130,8)
+		@mp_bar.value = @battler.mp_percent
 		add(@mp_bar,11,100)
 
 		@mp_label = Sprite.new(vp)
@@ -57,7 +59,7 @@ class CharView < SpriteGroup
 		add(@mp_label,12,92)
 
 		@mp_value = Sprite.new(vp)
-		@mp_value.bitmap = build_value_bmp(rand*1000)
+		@mp_value.bitmap = build_value_bmp(@battler.mp)
 		@mp_value.opacity = 200
 		add(@mp_value,140-@mp_value.bitmap.width,93)
 		@mp_value.z += 50
@@ -70,6 +72,7 @@ class CharView < SpriteGroup
 			else
 				@mp_label.hide
 				@mp_bar.hide
+				@mp_value.hide
 		end		
 
 	end
@@ -80,9 +83,11 @@ class CharView < SpriteGroup
 		@hp_bar.update
 		@mp_bar.update
 
-		#@hp_text.text = @battler.hp
-		@hp_bar.value = @battler.hp
-		@hp_bar.max = @battler.maxhp
+		@hp_bar.value = @battler.hp_percent
+		@mp_bar.value = @battler.mp_percent
+
+		@hp_value.bitmap = build_value_bmp(@battler.hp)
+		@mp_value.bitmap = build_value_bmp(@battler.mp)
 
 		# If a state, change background
 		if @battler.state?('power')

@@ -20,6 +20,8 @@ class Game_Event < Game_Character
   attr_reader :page_idx
 
   attr_reader :deleted, :disabled, :erased
+
+  attr_reader :monster
       
 
   #--------------------------------------------------------------------------
@@ -95,6 +97,13 @@ class Game_Event < Game_Character
     end
     
     refresh
+  end
+
+  def force_clone(src)
+      unlock
+      clone_ev = $data.clones[src]
+      @pages = clone_ev.pages
+      refresh
   end
 
   #--------------------------------------------------------------------------
@@ -428,6 +437,7 @@ class Game_Event < Game_Character
     # Change enemy gfx
     if @character_name == "!!Monster"
       @character_name = "Monsters/#{$battle.enemy_types[@pattern]}"
+      @monster = @character_name.split("/")[1]
       @trigger = 2
     end
 

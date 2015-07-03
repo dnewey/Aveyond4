@@ -148,13 +148,13 @@ class Game_Player < Game_Character
       if event.at?(x,y) and [1,2].include?(event.trigger)
         # If starting determinant is front event (other than jumping)
         if not event.jumping? and not event.over_trigger?
-          if event.trigger == 2
-            $battle.setup(event)
-            return true
-          else
+          #if event.trigger == 2
+            #$battle.setup(event)
+            #return true
+          #else
             event.start
             result = true
-          end
+          #end
         end
       end
     end

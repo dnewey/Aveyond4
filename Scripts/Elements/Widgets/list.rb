@@ -127,7 +127,7 @@ class List
     @page_idx = idx
     @select_sprite.y = idx * row_height
     @active = true
-  	refresh(false)
+  	refresh(false) if !data.empty?
   end
 
   def idx
@@ -216,6 +216,10 @@ class List
         draw_equip(data,row)
       when :skill
         draw_skill(data,row)
+      when :skill_boy
+        draw_skill_boy(data,row)
+      when :skill_phy
+        draw_skill_phy(data,row)
       when :quest
         draw_quest(data,row)
       when :misc
@@ -307,7 +311,44 @@ class List
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
 
-    @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"-"+item.cost.to_s,0)
+    # Mana
+    ico = $cache.icon("misc/mana")
+    @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
+    @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
+
+  end
+
+  def draw_skill_boy(data,row)
+
+    item = $data.skills[data]
+
+    ico = $cache.icon(item.icon)
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+
+    # Mana
+    ico = $cache.icon("misc/darkness")
+    @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
+    @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
+
+  end
+
+  def draw_skill_phy(data,row)
+
+    item = $data.skills[data]
+
+    ico = $cache.icon(item.icon)
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+
+    # Mana
+    ico = $cache.icon("misc/rage")
+    @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
+    @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
 
   end
 

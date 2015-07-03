@@ -468,6 +468,10 @@ class Game_Map
     return ev
   end
 
+  def all_by_name(name)
+     return @events.values.select{ |e| e.name == name }
+  end
+
   #--------------------------------------------------------------------------
   # Find the zone name for this map
   #--------------------------------------------------------------------------

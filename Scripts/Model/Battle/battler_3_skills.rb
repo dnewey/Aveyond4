@@ -4,8 +4,14 @@ class Game_Battler
   	@skills.push(skill)
   end
 
-  def skill_list
-    return @skills
+  def skill_list(action)
+    result = @skills.select{ |s| $data.skills[s].book == action }
+    if action == "team"
+      result = result.select{ |s|
+        $party.active.include?(s.split("-")[1])
+      }
+    end
+    return result
   end
 
 
@@ -21,7 +27,7 @@ class Game_Battler
   def choose_action
   	@action = 'attack'
     @skill_id = 'attack'
-    @target = $party.actor_by_id('boy')
+    @target = $party.attackable_battlers.sample
   end  
 
   def set_action(skill)

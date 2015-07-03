@@ -15,7 +15,19 @@
     "edit": "area"
   },
   {
-    "field": "loot"
+    "field": "xp"
+  },
+  {
+    "field": "gold",
+    "help": "amount:chance"
+  },
+  {
+    "field": "drops",
+    "edit": "area"
+  },
+  {
+    "field": "loot",
+    "edit": "area"
   },
   {
     "field": "zone"

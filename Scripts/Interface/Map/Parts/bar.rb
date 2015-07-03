@@ -76,6 +76,9 @@ class Ui_Bar < SpriteGroup
 		@save.deselect = Proc.new{ $tweens.clear(@save); @save.oy = 0 }
 		add(@save,cx,4)
 
+		@hp_bars = []
+		@mp_bars = []
+
 		# Chars
 		i = 0
 		$party.active.each{ |m|
@@ -96,6 +99,7 @@ class Ui_Bar < SpriteGroup
 			mp_bar.opacity = 200
 			mp_bar.for(:mp)
 			add(mp_bar,27+238+i*98,9)
+			@mp_bars.push(mp_bar)
 
 			case m
 				when 'boy', 'ing', 'hib', 'phy'
@@ -108,6 +112,7 @@ class Ui_Bar < SpriteGroup
 			hp_bar.opacity = 200
 			hp_bar.for(:hp)
 			add(hp_bar,27+238+i*98,17)
+			@hp_bars.push(hp_bar)
 
 			i += 1
 
@@ -123,6 +128,15 @@ class Ui_Bar < SpriteGroup
 
 	def update
 		super()
+
+		# Update the bars
+		$party.active.each_index{ |i|
+			@hp_bars[i].value = $party.get($party.active[i]).hp_percent
+			@mp_bars[i].value = $party.get($party.active[i]).mp_percent
+		}
+
+		(@mp_bars+@hp_bars).each{ |b| b.update }
+
 	end
 
 end

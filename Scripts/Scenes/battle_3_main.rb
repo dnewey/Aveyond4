@@ -58,6 +58,8 @@ class Scene_Battle
   # Show anim on attacker
   def phase_main_attack
 
+    # Probably never used?
+
     @attack_results.each{ |result|
 
       if @attack_round.anim_a
@@ -70,7 +72,7 @@ class Scene_Battle
     }
 
     @phase = :main_defend
-    wait(20)
+    #wait(20)
 
   end
 
@@ -89,7 +91,17 @@ class Scene_Battle
     }
 
   	# Onto the next
-  	@phase = :main_transform
+  	@phase = :main_cost
+
+  end
+
+  def phase_main_cost
+
+    # Use up mana or items or add cooldown
+    @active_battler.lose_mana(@attack_round.skill.cost)
+
+    # Onto the next
+    @phase = :main_transform
     # Some anims might have a pause before hit
     # Might use the sound delay on the anim
     #wait(20) 
@@ -129,6 +141,20 @@ class Scene_Battle
   def phase_main_crit
 
     # Onto the next
+
+    @phase = :main_gain
+    wait(1)
+
+  end
+
+  def phase_main_gain
+
+    # Show gains of hp or mana or darkness
+    @attack_results.each{ |result|
+        next if result.gain_mana == nil
+        @active_battler.gain_mana(result.gain_mana)
+        pop_num(@active_battler.ev,result.gain_mana)
+    }
 
     @phase = :main_state
     wait(1)

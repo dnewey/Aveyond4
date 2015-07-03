@@ -142,6 +142,10 @@ class Scene_Battle < Scene_Base
         phase_actor_skill
       when :actor_item
         phase_actor_item
+      when :actor_transform
+        phase_actor_transform
+      when :actor_re_action
+        phase_actor_re_action
       when :actor_strategize
         phase_actor_strategize
       when :actor_target
@@ -162,12 +166,16 @@ class Scene_Battle < Scene_Base
         phase_main_attack
       when :main_defend
         phase_main_defend
+      when :main_cost
+        phase_main_cost
       when :main_transform
         phase_main_transform
       when :main_hit
         phase_main_hit
       when :main_crit
         phase_main_crit
+      when :main_gain
+        phase_main_gain
       when :main_state
         phase_main_state
       when :main_fall

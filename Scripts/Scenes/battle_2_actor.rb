@@ -48,8 +48,12 @@ class Scene_Battle
 
         when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
 
-          @skill_cmd.setup(@active_battler)
+          @skill_cmd.setup(@active_battler,action)
           @phase = :actor_skill
+
+        when "two-legs", "four-legs"
+          @last_action = action
+          @phase = :actor_transform
 
         else
 
@@ -103,6 +107,36 @@ class Scene_Battle
       @active_battler.item_id = @item_cmd.get_item
       @phase = :actor_strategize
     end
+
+  end
+
+  #==============================================================================
+  # ** actor_transform
+  #==============================================================================
+
+  def phase_actor_transform
+
+    x = @active_battler.ev.screen_x
+    y = @active_battler.ev.screen_y - 24
+    add_spark('myst',x,y)
+
+    if @last_action == "four-legs"
+      @active_battler.transform('fox')
+    else
+      @active_battler.transform('nil')
+    end
+
+    # Repeat back to myst turn
+    wait(40)
+    @phase = :actor_re_action 
+
+  end
+
+  def phase_actor_re_action
+
+    @active_battler = $party.actor_by_index(@actor_idx)
+    @actor_cmd.setup(@active_battler)
+    @phase = :actor_action 
 
   end
 

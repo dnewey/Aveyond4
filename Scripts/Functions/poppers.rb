@@ -61,6 +61,11 @@ def pop_get(type,b,ib)
 
 end
 
+def pop_nothing
+	popper = $scene.hud.open_popper
+	popper.setup("You found: Nothing",nil,nil,nil)
+end
+
 def pop_friends
 
 	a = "Hi'beru and "

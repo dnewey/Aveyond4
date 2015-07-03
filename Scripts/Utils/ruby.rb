@@ -2,8 +2,19 @@
  	def count
  		return length
  	end
- 	def sample
+ 	def sample(n=nil)
+    if n != nil
+      result = []
+      data = shuffle
+      n.times{
+        next if data.empty?
+        result.push(data.shift)
+      }
+      return result      
+    else
       self[rand(length)]
+    end
+      #
   end
   def shuffle
     return self.sort_by { rand }

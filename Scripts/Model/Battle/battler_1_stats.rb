@@ -1,6 +1,15 @@
 
 class Game_Battler
 
+  # For displays
+  def hp_percent
+    return @hp / maxhp
+  end
+
+  def mp_percent 
+    return @mp / maxmp
+  end
+
   #--------------------------------------------------------------------------
   # * Stat Calcs
   #--------------------------------------------------------------------------
@@ -55,7 +64,7 @@ class Game_Battler
   end
 
   def stat_base(stat)
-    return 1
+    #return 1
     return 0 if !is_actor?
     $data.numbers["#{stat}-base"].value + ($data.numbers["#{stat}-per"].value * (@level-1))
   end

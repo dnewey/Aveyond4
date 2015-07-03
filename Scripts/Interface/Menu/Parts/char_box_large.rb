@@ -46,6 +46,7 @@ class Char_Box_Large < SpriteGroup
 		add(@mp_bar,11,112)
 		@mp_bar.opacity = 180
 		@mp_bar.for(:mp)
+		@mp_bar.value = @char.mp_percent
 		@mp_bar.z += 50
 
 		@mp_label = Sprite.new(vp)
@@ -55,7 +56,7 @@ class Char_Box_Large < SpriteGroup
 		@mp_label.z += 50
 
 		@mp_value = Sprite.new(vp)
-		@mp_value.bitmap = build_value_bmp(rand*1000)
+		@mp_value.bitmap = build_value_bmp(@char.mp)
 		@mp_value.opacity = 200
 		add(@mp_value,186-@mp_value.bitmap.width,105)
 		@mp_value.z += 50
@@ -79,6 +80,7 @@ class Char_Box_Large < SpriteGroup
 		@hp_bar = Bar.new(vp,180,9)
 		add(@hp_bar,11,130)
 		@hp_bar.opacity = 180
+		@hp_bar.value = @char.hp_percent
 		@hp_bar.for(:hp)
 		@hp_bar.z += 50
 
@@ -89,7 +91,7 @@ class Char_Box_Large < SpriteGroup
 		@hp_label.z += 50
 
 		@hp_value = Sprite.new(vp)
-		@hp_value.bitmap = build_value_bmp(rand*1000)
+		@hp_value.bitmap = build_value_bmp(@char.hp)
 		@hp_value.opacity = 200
 		add(@hp_value,186-@hp_value.bitmap.width,123)
 		@hp_value.z += 50
@@ -107,7 +109,7 @@ class Char_Box_Large < SpriteGroup
 		@xp_label.z += 50
 
 		@xp_value = Sprite.new(vp)
-		@xp_value.bitmap = build_value_bmp(rand*1000)
+		@xp_value.bitmap = build_value_bmp(@char.xp)
 		@xp_value.opacity = 200
 		add(@xp_value,186-@hp_value.bitmap.width,141)
 		@xp_value.z += 50

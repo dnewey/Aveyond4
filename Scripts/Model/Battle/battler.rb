@@ -15,7 +15,7 @@ class Game_Battler
   attr_accessor :target_type, :target_idx
   attr_accessor :ev
 
-  attr_reader :hp, :mp
+  attr_reader :hp, :mp, :xp
 
   attr_reader :slots, :equips
 
@@ -111,6 +111,8 @@ class Game_Battler
     data = $data.enemies[id]
     @id = id
 
+    @xp = data.xp
+
     # Get stat plus per enemy
     if data.stats != ""
       data.stats.split("\n").each{ |m|
@@ -166,12 +168,13 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def recover_all
     @hp = maxhp
-    @mp = maxmp
+    if ['ing','hib'].include?(@id)
+      @mp = maxmp
+    end
    # for i in @states.clone
    #   remove_state(i)
    # end
   end
-
   
   def damage(amount)
     @hp -= amount
@@ -181,6 +184,16 @@ class Game_Battler
 
   def heal(amount)
 
+  end
+
+  def gain_mana(amount)
+    @mp+=amount
+    @mp = maxmp if @mp > maxmp
+  end
+
+  def lose_mana(amount)
+    @mp-=amount
+    @mp = 0 if @mp < 0
   end
 
 

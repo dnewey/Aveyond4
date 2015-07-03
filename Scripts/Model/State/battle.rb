@@ -21,7 +21,7 @@ class Game_Battle
 
     @queue2 = nil
 
-    @map = 65 #26
+    @map = 26#65 #26
 	end
 
   # Enemies for this zone from zone data
@@ -50,9 +50,93 @@ class Game_Battle
   def setup(src_event)
 
     # Find all enemies in the group
-    # Character name = enemy name
+    $map.all_by_name(src_event.name).each{ |mon|
 
-    log_sys ("START BATTLE WITH #{src_event.character_name}")
+      # Add this guy to battle using name
+      enemy = mon.monster
+      add(enemy)
+
+    }
+
+    start
+
+  end
+
+  def replace_with_loot(src_event)
+
+    $map.all_by_name(src_event.name).each{ |mon|
+      # Add this guy to battle using name
+      mon.force_clone("loot")
+    }
+
+  end
+
+  def xp_total
+    total = 0
+    log_sys(@enemies)
+    @enemies.each{ |enemy|
+      total += enemy.xp.to_i if enemy.xp != nil
+    }
+    return total
+  end
+
+  def loot_for(src_event)
+    data = $data.enemies[src_event.monster]
+
+    # Check drops first
+    if data.drops != nil
+      data.drops.split("/n").each{ |item|
+
+        log_sys(item)
+        # If possible, give it
+        dta = item.split("=>")
+        type = dta[1]
+        req = dta[2]
+        chance = dta[3].to_f
+        next if rand > chance
+        pass = case type
+            when 'q'
+              $progress.quest_active?(req)
+            when 'f'
+              $state.flag?(req)
+            when 'i'
+              $party.has_item?(req)
+          end
+        if pass
+          return item(dta[0])
+        end
+      }
+    end
+
+    # Check gold
+    if data.gold != nil
+      dta = data.gold.split("=>")
+      golds = dta[0].split("-")
+      chance = dta[1].to_f
+      log_info(chance)
+      if rand <= chance
+        if golds.count == 1
+          return gold(golds[0].to_i)
+        else
+          return gold(golds[0].to_i + rand(golds[1].to_i-golds[0].to_i))
+        end
+      end
+    end
+
+    # Check loot
+    if data.loot != nil
+      possible = []
+      data.loot.split("/n").each{ |item| 
+        dta = item.split("=>")
+        dta[1].to_i.times{
+          possible.push(dta[0])
+        }
+      }
+      return item(possible.sample)
+    end
+
+    # Nothing!
+    pop_nothing    
 
   end
 
@@ -128,6 +212,8 @@ class Game_Battle
             dmg_base = data[1].to_i
           when 'dmg-mod'
             dmg_mod = data[1].to_f
+          when 'gain-mana'
+            result.gain_mana = data[1].to_i
           when 'state-add'
             result.state_add = data[1]
           when 'state-remove'
@@ -184,7 +270,7 @@ class Game_Battle
         if attacker.is_actor?
           return [@enemies.select{ |b| b.attackable? }.sample]
         else
-          return [$party.active.select{ |b| b.attackable? }.sample]
+          return [$party.active_battlers.select{ |b| b.attackable? }.sample]
         end
 
       when 'two'
@@ -193,7 +279,7 @@ class Game_Battle
         if attacker.is_actor?
           return @enemies.select{ |b| b.attackable? }.sample(2)
         else
-          return $party.active.select{ |b| b.attackable? }.sample(2)
+          return $party.active_battlers.select{ |b| b.attackable? }.sample(2)
         end
 
       when 'three'
@@ -202,7 +288,7 @@ class Game_Battle
         if attacker.is_actor?
           return @enemies.select{ |b| b.attackable? }.sample(3)
         else
-          return $party.active.select{ |b| b.attackable? }.sample(3)
+          return $party.active_battlers.select{ |b| b.attackable? }.sample(3)
         end
 
       when 'all'
@@ -211,14 +297,14 @@ class Game_Battle
         if attacker.is_actor?
           return @enemies.select{ |b| b.attackable? }
         else
-          return $party.active.select{ |b| b.attackable? }
+          return $party.active_battlers.select{ |b| b.attackable? }
         end
 
       when 'party'
 
         # All allies
         if attacker.is_actor?
-          return $party.active.select{ |b| b.attackable? }
+          return $party.active_battlers.select{ |b| b.attackable? }
         else          
           return @enemies.select{ |b| b.attackable? }
         end

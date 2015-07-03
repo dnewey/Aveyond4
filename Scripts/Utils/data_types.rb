@@ -79,6 +79,9 @@ class EnemyData
 	attr_reader :name
 	attr_reader :actions
 	attr_reader :stats
+	attr_reader :xp
+	attr_reader :gold
+	attr_reader :drops
 	attr_reader :loot
 end
 
