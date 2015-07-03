@@ -261,7 +261,7 @@ class List
     if item != nil
       name = item.name
       ico = $cache.icon(item.icon)
-      price = item.price
+      price = item.price.to_i
     else
       name = "Remove"
       ico = $cache.icon("misc/unknown")

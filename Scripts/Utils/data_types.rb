@@ -32,8 +32,8 @@ class GearData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :slot
-	attr_reader :geartype
 	attr_reader :description
+	attr_reader :price
 	attr_reader :stats
 	attr_reader :mods
 	attr_reader :icon
@@ -51,8 +51,7 @@ class SkillData
 	attr_reader :hits
 	attr_reader :scope
 	attr_reader :text
-	attr_reader :anim_a
-	attr_reader :anim_b
+	attr_reader :anim
 	attr_reader :stats
 	attr_reader :effects
 end
@@ -67,9 +66,7 @@ end
 class ActorData
 	attr_reader :id
 	attr_reader :name
-	attr_reader :profile
 	attr_reader :actions
-	attr_reader :resource
 	attr_reader :slots
 	attr_reader :mods
 end
@@ -110,7 +107,6 @@ class QuestData
 	attr_reader :icon
 	attr_reader :location
 	attr_reader :req
-	attr_reader :reward
 	attr_reader :type
 end
 
@@ -128,6 +124,11 @@ end
 class NumberData
 	attr_reader :id
 	attr_reader :value
-	attr_reader :notes
 end
 
+class ProfileData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :age
+	attr_reader :desc
+end

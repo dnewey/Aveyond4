@@ -149,6 +149,8 @@ class Item_Box < SpriteGroup
 
 	def item(id)
 
+        id = 'covey'
+
         data = get_data(id)       
         base(data)
 

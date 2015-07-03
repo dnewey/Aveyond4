@@ -9,12 +9,11 @@
     "field": "slot"
   },
   {
-    "field": "geartype",
-    "edit": "select"
-  },
-  {
     "field": "description",
     "edit": "area"
+  },
+  {
+    "field": "price"
   },
   {
     "field": "stats",

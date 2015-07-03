@@ -34,10 +34,7 @@
     "field": "text"
   },
   {
-    "field": "anim_a"
-  },
-  {
-    "field": "anim_b"
+    "field": "anim"
   },
   {
     "field": "effects",

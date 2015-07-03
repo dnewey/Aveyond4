@@ -50,34 +50,13 @@ class Scene_Battle
       #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
     end
 
-    @phase = :main_attack
+    @phase = :main_anim
     wait(20)
 
   end
 
-  # Show anim on attacker
-  def phase_main_attack
-
-    # Probably never used?
-
-    @attack_results.each{ |result|
-
-      if @attack_round.anim_a
-        # Show the hit animation
-        x = result.target.ev.screen_x
-        y = result.target.ev.screen_y - 32
-        add_spark(@attack_round.anim_a,x,y)
-      end
-
-    }
-
-    @phase = :main_defend
-    #wait(20)
-
-  end
-
   # Show anim on defender
-  def phase_main_defend
+  def phase_main_anim
 
     @attack_results.each{ |result|
 

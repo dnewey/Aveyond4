@@ -167,8 +167,7 @@ class Game_Battle
 
       round = Attack_Round.new
       round.text = skill.text if skill.text.length > 0
-      round.anim_a = skill.anim_a
-      round.anim_b = skill.anim_b
+      round.anim = skill.anim
       round.skill = skill
 
       plan.add(round)

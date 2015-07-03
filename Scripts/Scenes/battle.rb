@@ -162,10 +162,8 @@ class Scene_Battle < Scene_Base
         phase_main_start
       when :main_text
         phase_main_text
-      when :main_attack
-        phase_main_attack
-      when :main_defend
-        phase_main_defend
+      when :main_anim
+        phase_main_anim
       when :main_cost
         phase_main_cost
       when :main_transform

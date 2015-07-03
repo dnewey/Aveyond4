@@ -6,13 +6,7 @@
     "field": "name"
   },
   {
-    "field": "actions"
-  },
-  {
-    "field": "slots"
-  },
-  {
-    "field": "mods",
+    "field": "desc",
     "edit": "area"
   }
 ]

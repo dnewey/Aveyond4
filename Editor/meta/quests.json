@@ -21,10 +21,6 @@
     "help": "Format - type:id:count Item, Var or Flag"
   },
   {
-    "field": "reward",
-    "help": "Format - id:count or gold:count"
-  },
-  {
     "field": "type"
   }
 ]

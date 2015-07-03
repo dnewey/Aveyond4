@@ -17,8 +17,7 @@ end
 
 class Attack_Round
 
-	attr_accessor :anim_a
-	attr_accessor :anim_b
+	attr_accessor :anim
 	attr_accessor :text
 
 	attr_accessor :skill
