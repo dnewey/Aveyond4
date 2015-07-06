@@ -40,6 +40,8 @@ class Mnu_Items < Mnu_Base
 
 		@menu.setup_items('all')
 
+		open
+
 	end
 
 	def update
@@ -49,9 +51,20 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def change(option)
+
+
 		#@item_box.show
+		
 		@item_box.item(option)
 		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
+
+		if @last_option != option
+			@last_option = option
+			$tweens.clear(@item_box)
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+		end
+		
 	end
 
 	def select(option)	

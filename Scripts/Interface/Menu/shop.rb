@@ -7,11 +7,8 @@ class Mnu_Shop < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('shop-buy')
-
-		@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
+		@title.change('Smith')
+		@subtitle.text = "Armors and Weapons"
 
 		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
 
@@ -25,6 +22,13 @@ class Mnu_Shop < Mnu_Base
 		@item_box.center(472,250)
 		self.right.push(@item_box)
 
+		# Extra info grid
+		@users = Ui_Grid.new(vp)
+		@users.move(@item_box.x,@item_box.y + @item_box.height + 3)
+		@users.disable
+		# #@grid.hide
+		self.right.push(@users)
+
 		change_tab("Items")
 
 	end
@@ -35,9 +39,18 @@ class Mnu_Shop < Mnu_Base
 	end
 
 	def change(option)
-		@info.title.text = option
+		#@info.title.text = option
 		@item_box.item(option)
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		@users.clear
+		@users.move(@item_box.x,@item_box.y + @item_box.height)
+		@users.add_users(option)
+		data = $data.items[option]
+		if data.is_a?(GearData)
+			$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
+				@users.add_compare(option,u)
+			}
+		end
 	end
 
 	def select(option)	

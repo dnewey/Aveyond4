@@ -24,18 +24,14 @@ class Mnu_Journal < Mnu_Base
 
 		@menu.list.setup(data)
 
-		
-
 		#change(data[0]) if !data.empty?
+
+		open
 
 	end
 
 	def update
 		super
-
-		# Inputs maybe?
-
-		# Probably for using healing items?
 
 	end
 
@@ -59,6 +55,5 @@ class Mnu_Journal < Mnu_Base
 	def select(option)	
 		
 	end
-
 
 end

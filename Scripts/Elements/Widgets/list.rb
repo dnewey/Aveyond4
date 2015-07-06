@@ -303,6 +303,8 @@ class List
 
   def draw_skill(data,row)
 
+    log_sys(data)
+
     item = $data.skills[data]
 
     ico = $cache.icon(item.icon)
@@ -402,6 +404,8 @@ class List
 
     return if !@active
 
+    @select_sprite.update
+
     if !$tweens.done?(@back_sprite)
 
       # Still use up the inputs
@@ -433,6 +437,8 @@ class List
         @select_sprite.y -= row_height
         @page_idx -= 1
       end
+
+      @select_sprite.flash(Color.new(255,255,255,40),20)
   		
       #if @data.count > @max_per_page
 
@@ -468,6 +474,8 @@ class List
         @select_sprite.y += row_height
         @page_idx += 1
       end
+
+      @select_sprite.flash(Color.new(255,255,255,40),20)
 
   		if can_scroll? && @scroll_idx > 0 && @page_idx <= 1
         scroll_down

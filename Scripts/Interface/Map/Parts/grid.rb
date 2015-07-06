@@ -10,6 +10,8 @@ class Ui_Grid
 
 	attr_reader :active
 
+	attr_reader :selected_box
+
 	def initialize(vp)
 
 		@vp = vp
@@ -43,6 +45,10 @@ class Ui_Grid
      	#@selected = "Journal"
      	#choose(@selected)
 
+	end
+
+	def hide_glow
+		@glow.hide
 	end
 
 	def enable
@@ -79,6 +85,10 @@ class Ui_Grid
 	end
 	def y
 		return @cy
+	end
+
+	def all
+		return @contents + @extra + @boxes
 	end
 
 	def dispose
@@ -261,7 +271,6 @@ class Ui_Grid
 	     end
 
 
-
      	@extra.push(stat)
 
      	cat = Label.new(@vp)
@@ -282,6 +291,60 @@ class Ui_Grid
      	if @layout == :vertical
      		@cy += btn.height + 6
      	end
+
+	end
+
+	def add_users(gear)
+
+		data = $data.items[gear]
+
+		btn = add_part_box('users',300,46)
+
+		ocx = @cx
+
+		@cx += 4
+		@cy += 2
+
+		# Find all users
+		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
+
+		# Draw all of the icons now
+		tick = Sprite.new(@vp)
+		tick.bitmap = $cache.icon("misc/tick")
+		tick.move(@cx+10,@cy+10)
+		@extra.push(tick)
+		@cx += 28
+
+		users.each{ |u|
+			icon = Sprite.new(@vp)
+			icon.bitmap = $cache.icon("faces/#{u.id}")
+			icon.move(@cx+10,@cy+7)
+			@extra.push(icon)
+			@cx += 28
+		}
+
+		@cy += 46
+		@cx = ocx
+
+	end
+
+	def add_compare(gear,user)
+
+		data = $data.items[gear]
+
+		btn = add_part_box('user',300,46)
+
+		# Find all users
+		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
+
+     	stat = Label.new(@vp)
+        stat.icon = $cache.icon("faces/#{user.id}")
+        stat.font = $fonts.pop_text
+        stat.text = "20 -> 35 (+15)"
+        @extra.push(stat)
+     	stat.move(@cx+10,@cy+7)
+
+     	@cy += 46
 
 	end
 
@@ -412,6 +475,8 @@ class Ui_Grid
 		return if !@active
 		return if @boxes.empty?
 
+		@boxes.each{ |b| b.update }
+
 		if @boxes.count > 1 && $input.down?
 			sx = @selected_box.x + @selected_box.width/2		
 			sy = @selected_box.y + @selected_box.height
@@ -519,6 +584,7 @@ class Ui_Grid
 		end
 
 		glowon = @selected_box
+		@selected_box.flash_light
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
      	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))

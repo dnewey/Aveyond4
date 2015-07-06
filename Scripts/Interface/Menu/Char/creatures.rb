@@ -8,6 +8,7 @@ class Mnu_Creatures < Mnu_Base
 		super(vp)
 
 		@title.change('Equip')
+		@title.icon($menu.char)
 
 		@char = $party.get('boy')
 

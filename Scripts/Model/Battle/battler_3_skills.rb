@@ -14,6 +14,11 @@ class Game_Battler
     return result
   end
 
+  def all_skill_list
+    result = @skills
+    return result
+  end
+
 
   def skills_for(action)
 

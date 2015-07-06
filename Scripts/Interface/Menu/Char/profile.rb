@@ -8,6 +8,7 @@ class Mnu_Profile < Mnu_Base
 		super(vp)
 
 		@title.change('Profile')
+		@title.icon($menu.char)
 		@subtitle.text = "Master of deception"
 
 		@char = $party.get($menu.char)
@@ -52,6 +53,7 @@ class Mnu_Profile < Mnu_Base
     	@desc.font = $fonts.pop_text
     	@desc.text = "Boyle Wolfman, more wolf than man and even less man than dingo. Next line."
     	@desc.move(cx,cy)
+    	self.left.push(@desc)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -62,15 +64,19 @@ class Mnu_Profile < Mnu_Base
 	end
 
 	def update
-		super
 
 		@grid.update
-
+		
 		# Cancel out of grid
-		if $input.cancel? || $input.rclick? || $input.action? || $input.click?
-			$scene.change_sub("Char")
-	 		cancel
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Char")
+			close_now
 		end
+		
+		super
 		
 	end
 

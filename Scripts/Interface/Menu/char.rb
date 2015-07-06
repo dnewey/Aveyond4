@@ -20,21 +20,37 @@ class Mnu_Char < Mnu_Base
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(15,113)
-		@grid.add_wide("equip","Change Equipment","misc/unknown")
-		@grid.add_wide("skills","Use Skills","skills/spells")
-		@grid.add_wide("status","View Status","misc/unknown")
-		@grid.add_wide("profile","View Profile","faces/boy")
-		@grid.add_wide("leader","Set as Leader","misc/unknown")
+		@grid.add_wide("Equip","Change Equipment","misc/unknown")
+		@grid.add_wide("Skills","Use Skills","skills/spells")
+		@grid.add_wide("Status","View Status","misc/unknown")
+		@grid.add_wide("Profile","View Profile","faces/boy")
+		@grid.add_wide("Leader","Set as Leader","misc/unknown")
 		
-		@grid.add_wide("creatures","Creature Hunting","misc/unknown") if $menu.char == 'boy'
-		@grid.add_wide("potions","Potion Making","misc/unknown") if $menu.char == 'ing'
+		@grid.add_wide("Creatures","Creature Hunting","misc/unknown") if $menu.char == 'boy'
+		@grid.add_wide("Potions","Potion Making","misc/unknown") if $menu.char == 'ing'
+
+		@grid.choose($menu.char_cursor)
 
 		self.left.push(@grid)
 
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
+		open
+
+	end
+
+	def dispose
+		super
+		@grid.dispose
 	end
 
 	def update
@@ -47,7 +63,7 @@ class Mnu_Char < Mnu_Base
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
-			close
+			close_now
 		end
 
 		# Get chosen grid option
@@ -58,44 +74,54 @@ class Mnu_Char < Mnu_Base
 	end
 
 	def choose(option)
+
 		case option
-			when 'equip'
-				$scene.change_sub("Equip")
-				self.cancel
 
-			when 'skills'
-				$scene.change_sub("Skills")
-				self.cancel
+			when 'Equip'
+				$scene.queue_menu("Equip")
 
-			when 'status'
-				$scene.change_sub("Status")
-				self.cancel
+			when 'Skills'
+				$scene.queue_menu("Skills")
 
-			when 'profile'
-				$scene.change_sub("Profile")
-				self.cancel
+			when 'Status'
+				$scene.queue_menu("Status")
 
-			when 'leader'
+			when 'Profile'
+				$scene.queue_menu("Profile")
+
+			when 'Leader'
 				$party.leader = $menu.char
-				$scene.close_all
 
-			when 'creatures'
-				$scene.change_sub("Creatures")
-				self.cancel
+			when 'Creatures'
+				$scene.queue_menu("Creatures")
 
-			when 'witchery'
-				$scene.change_sub("Witchery")
-				self.cancel
+			when 'Witchery'
+				$scene.queue_menu("Witchery")
 
-			when 'dreaming'
-				$scene.change_sub("Dreaming")
-				self.cancel
+			when 'Dreaming'
+				$scene.queue_menu("Dreaming")
 
-			when 'demons'
-				$scene.change_sub("Demons")
-				self.cancel
+			when 'Demons'
+				$scene.queue_menu("Demons")
 
 		end
+
+		$menu.char_cursor = option
+		@grid.selected_box.flash_heavy
+		self.close_soon
+
+	end
+
+	def close
+		super
+
+		@grid.hide_glow
+
+		dist = 30
+		@grid.all.each{ |b|
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
 	end
 
 end

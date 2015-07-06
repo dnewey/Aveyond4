@@ -6,8 +6,6 @@ class DataManager
 
   # JsonData
 	attr_reader :items
-  attr_reader :shop
-  attr_reader :gear
 
   attr_reader :actors
   attr_reader :enemies

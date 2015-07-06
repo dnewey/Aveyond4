@@ -8,8 +8,9 @@ class Mnu_Equip < Mnu_Base
 		super(vp)
 
 		@title.change('Equip')
+		@title.icon($menu.char)
 
-		@char = $party.get('boy')
+		@char = $party.get($menu.char)
 
 		@subtitle.text = "Master of deception"
 
@@ -33,7 +34,6 @@ class Mnu_Equip < Mnu_Base
 		 @char.slots.each{ |slot| 
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
-		#@grid.add_slot('staff',char.equips['staff'])
 		self.left.push(@grid)
 
 
@@ -45,38 +45,61 @@ class Mnu_Equip < Mnu_Base
 		@item_box.hide
 		#self.right.push(@item_box)
 
+		# Party grid hahahha
+		@users = Ui_Grid.new(vp)
+		@users.move(@item_box.x,@item_box.y + @item_box.height + 3)
+		#@grid.add_compare('mid-arm-windshire')
+		@users.disable
+		#@grid.hide
+		self.right.push(@users)
+
 		@info.dispose
 		self.left.delete(@info)
 
 		# Selected slot
 		@slot = nil
 
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+
+		open
+
 	end
 
-	def update
+	def dispose
+		@grid.dispose
 		super
+	end
+
+	def update		
+
+		return if @closing
 
 		@menu.update if @menu.list.active
 		@grid.update if !@menu.list.active
 
 		# Get chosen grid option
 		if $input.action? || $input.click?
-			log_scr("GO")
 			choose(@grid.get_chosen)
 		end
 
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
-			@left.each{ |a| $tweens.clear(a) }
-			@right.each{ |a| $tweens.clear(a) }
-			@other.each{ |a| $tweens.clear(a) }
-			close
+			cancel
 		end
 		
+		super
+
 	end
 
 	# Grid
 	def choose(option)
+
 
 		@slot = option
 
@@ -97,8 +120,15 @@ class Mnu_Equip < Mnu_Base
 		@menu.list.setup(items)
 
 		# Bring in the list
-		@menu.opacity = 255
+		@menu.opacity = 0
 		@menu.move(15,192)
+
+		dur = 200
+		dist = 30
+
+		@menu.do(go("opacity",255,dur,:qio))
+		@menu.x -= dist
+		@menu.do(go("x",dist,dur,:qio))
 
 		@menu.list.active = true
 
@@ -110,16 +140,17 @@ class Mnu_Equip < Mnu_Base
 	# Equip List
 	def change(option)
 
-
-
 		# Change the item box to show this
 		if option != nil
-			@item_box.equip(option)
+			@item_box.item(option)
 			@item_box.show
+			@users.clear
+			@users.move(@item_box.x,@item_box.y + @item_box.height)
+			@users.add_compare(option,@char)			
 		else
 			@item_box.hide
+			@users.clear
 		end
-		#@item_box.comparison(option,@char.equips[@slot])
 		
 	end
 
@@ -135,18 +166,23 @@ class Mnu_Equip < Mnu_Base
 
 	 def cancel
 	 	if @grid.active
-	 		$scene.change_sub("Char")
-	 		super
+	 		$scene.queue_menu("Char")
+	 		$tweens.clear(@menu)
+	 		close_now
 	 	else
 	 		back_to_slots
 	 	end
 	end
 
 	def back_to_slots
-		@menu.opacity = 0
-		@menu.move(15,180)
 
 		@menu.list.active = false
+
+		dur = 200
+		dist = 30
+
+		@menu.do(go("opacity",-255,dur,:qio))
+		@menu.do(go("x",-dist,dur,:qio))
 
 		@grid.enable
 		@grid.clear
@@ -158,6 +194,19 @@ class Mnu_Equip < Mnu_Base
 		 @grid.choose(@slot)
 
 		 @item_box.hide
+
+	end
+
+	def close
+		super
+
+		dist = 30
+		@grid.hide_glow
+		@grid.all.each{ |b|
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		self.do(delay(201))
 
 	end
 

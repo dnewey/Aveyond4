@@ -7,7 +7,8 @@ class Mnu_Dreaming < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('Equip')
+		@title.change('Dreaming')
+		@title.icon($menu.char)
 
 		@char = $party.get('boy')
 

@@ -123,12 +123,16 @@ class ProcTween < Tween
 	end
 
 	def done?
-		return @delay <= 0
+		if @delay <= 0
+			@proc.call()
+			return true
+		end
+		return false
 	end
 
 	def update(delta)
 		@delay -= delta
-		@proc.call() if done?
+		#@proc.call() if done?
 	end
 
 end

@@ -9,7 +9,9 @@ class Scene_Menu
   #--------------------------------------------------------------------------
   def initialize
 
-    Graphics.freeze
+    #Graphics.freeze
+
+    @closing = false
 
     $mouse.change_cursor('Default')
 
@@ -17,20 +19,106 @@ class Scene_Menu
     @vp = Viewport.new(0,0,$game.width,$game.height)
     @vp.z = 3500
 
+    @snap = Sprite.new(@vp)
+    @snap.z = -101
+    @snap.bitmap = $game.snapshot
+
     # Background
     @bg = Sprite.new(@vp)
     @bg.z = -100
-    @bg.bitmap = $cache.menu_background("sample") #$game.snapshot#
-    #@bg.do(repeat(sequence(go("x",-50,7000),go("x",50,7000))))
+    #@bg.bitmap = Bitmap.new(640,480)
+    #@bg.bitmap.fill(Color.new(0,0,0,180))
+    @bg.bitmap = $cache.menu_background("sample")
+    @bg.opacity = 0
+    @bg.do(go("opacity",255,300))
+    #@bg.y = 30
+    #@bg.do(seq(go("y",-50,150,:qio),go("y",20,150,:qio)))
 
-    # Choose background by location
+    #self.do(delay(300))
+
+    @next_menu = $menu.menu_page
+    $menu.menu_page = nil
+
+    @menu = nil
+
+    #Graphics.transition(20,'Graphics/Transitions/trans')     
+
+  end
+  
+  def terminate
+
+    @menu.dispose if @menu != nil
+
+    @bg.dispose
+    @snap.dispose
+
+    @vp.dispose
+
+  end
+
+  #--------------------------------------------------------------------------
+  # * Update 
+  #--------------------------------------------------------------------------
+  def update
+
+    if @closing && $tweens.done?(self)
+      $tweens.clear_all
+      $game.pop_scene
+    end
+
+    return if @closing
+
+
+    if @menu == nil
+
+      # Open next menu if not fading in
+      if @next_menu == nil
+        close
+      else
+        if $tweens.done?(self)
+          open_next_menu
+        end
+      end
+
+    else
+
+      @menu.update
+      if @menu.done?
+        
+        if @next_menu == nil
+          @menu = nil
+          close
+        else
+          open_next_menu
+        end
+      end
+
+    end
+
+
+
+    # if ($input.cancel? || $input.rclick?) #|| (@next_menu == nil && @menu.done?)
+    #   close
+    # end
+    
+  end
+
+
+  def open_next_menu
+
+    if @menu != nil
+      @menu.dispose
+      @menu = nil
+    end
+
+    log_scr("OPEN #{@next_menu}")
 
     # The current menu
-    case $menu.menu_page
+    case @next_menu
 
       when "Main"; @menu = Mnu_Main.new(@vp)
       when "Shop"; @menu = Mnu_Shop.new(@vp)
-      #when "Wizard"; @menu = Mnu_Shop.new(@vp) # Wizard shop
+      when "Wizard"; @menu = Mnu_Shop.new(@vp) # Wizard shop
 
       when "Quit"; @menu = Mnu_Quit.new(@vp)
       when "Journal"; @menu = Mnu_Journal.new(@vp)
@@ -42,87 +130,39 @@ class Scene_Menu
 
       when "Char"; @menu = Mnu_Char.new(@vp)
 
+      when "Equip"; @menu = Mnu_Equip.new(@vp)
+      when "Skills"; @menu = Mnu_Skills.new(@vp)
+      when "Status"; @menu = Mnu_Status.new(@vp)
+      when "Profile"; @menu = Mnu_Profile.new(@vp)
+
+      when "Creatures"; @menu = Mnu_Creatures.new(@vp)
+      when "Witchery"; @menu = Mnu_Witchery.new(@vp)
+      when "Dreaming"; @menu = Mnu_Dreaming.new(@vp)
+      when "Demons"; @menu = Mnu_Demons.new(@vp)
+
     end
 
-    $menu.menu_page = nil
-
-    @sub = nil
-    @next_sub = nil
-
-    Graphics.transition(20,'Graphics/Transitions/trans')     
-
-  end
-  
-  def terminate
-
-    @menu.dispose if @menu != nil
-    @sub.dispose if @sub != nil
-    @bg.dispose
-
-    @vp.dispose
+    @next_menu = nil
 
   end
 
-  #--------------------------------------------------------------------------
-  # * Update 
-  #--------------------------------------------------------------------------
-  def update
+  def queue_menu(menu)
 
-    if @sub != nil && @sub.done? # CLOSE SELF
-      @sub.dispose
-      @sub = nil
-      @menu.open
-      log_sys("CLOSE SUB")
-    end
+    @next_menu = menu
 
-
-    if @sub == nil   
-      if @next_sub != nil
-        case @next_sub
-          when "Char"
-            open_sub(Mnu_Char.new(@vp))
-          when "Equip"
-            open_sub(Mnu_Equip.new(@vp))
-          when "Skills"
-            open_sub(Mnu_Skills.new(@vp))
-          when "Status"
-            open_sub(Mnu_Status.new(@vp))
-          when "Profile"
-            open_sub(Mnu_Profile.new(@vp))
-          when "Creatures"
-            open_sub(Mnu_Creatures.new(@vp))
-          when "Witchery"
-            open_sub(Mnu_Witchery.new(@vp))
-          when "Dreaming"
-            open_sub(Mnu_Dreaming.new(@vp))
-          when "Demons"
-            open_sub(Mnu_Demons.new(@vp))
-        end
-        @next_sub = nil
-      else
-        @menu.update    
-      end
-    else
-      @sub.update
-    end
-
-    if ($input.cancel? || $input.rclick?) || (@sub == nil && @menu.done?)
-      sys('cancel')
-      $tweens.clear_all
-      $game.pop_scene
-    end
-    
   end
 
-  def open_sub(menu)
-    @menu.close
-    @sub = menu
-    @sub.open
-  end
 
-  def change_sub(menu)
-    @next_sub = menu
-  end
+
+  # def open_sub(menu)
+  #   @menu.close
+  #   @sub = menu
+  #   @sub.open
+  # end
+
+  # def change_sub(menu)
+  #   @next_sub = menu
+  # end
 
   # def close_sub
   #   @sub.close
@@ -130,9 +170,10 @@ class Scene_Menu
   #   @menu.open
   # end
 
-  def close_all
-    $tweens.clear_all
-    $game.pop_scene
+  def close
+    @closing = true
+    @bg.do(go("opacity",-255,300))
+    self.do(delay(300))
   end
 
 

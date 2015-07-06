@@ -667,8 +667,13 @@ class Ui_Message
     @state = :choice
     @grid = Ui_Grid.new(@vp)
     @grid.move(@box.x,@box.y+@box.height)
-    @grid.add_button('a',@choices[0].split(": ")[1],'faces/rob')
-    @grid.add_button('b',@choices[1].split(": ")[1],'faces/rob')
+    @choices.each{ |c|
+      data = c.split(": ")
+      log_info(data)
+      log_info(data[0])
+      log_info(data[1])
+      @grid.add_button(data[0],data[1],'faces/rob')
+    }
   end
 
   #--------------------------------------------------------------------------

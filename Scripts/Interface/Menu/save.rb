@@ -27,6 +27,8 @@ class Mnu_Save < Mnu_Base
 		@pic.bitmap = Bitmap.new("#{$appdata}//Av4-1.png")
 		@pic.move(340,280)
 
+		open
+
 	end
 
 	def update

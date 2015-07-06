@@ -20,6 +20,8 @@ class Mnu_Quit < Mnu_Base
 		@grid.add_wide("continue","Continue Playing","misc/unknown")
 		self.left.push(@grid)
 
+		open
+
 	end
 
 	def update

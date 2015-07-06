@@ -57,6 +57,32 @@ def tl(e) gev(e).turn_left end
 def tr(e) gev(e).turn_right end
 def tu(e) gev(e).turn_up end
 
+
+def approach(ev,target)
+
+	# Walk over to and face an event, position will be the closest side
+	char = gev(ev)
+	other = gev(target)
+
+	dx = other.x - char.x
+	dy = other.y - char.y
+
+	if dx.abs >= dy.abs
+		if dx < 0
+			path(ev,other.x+1,other.y,'l')
+		else
+			path(ev,other.x-1,other.y,'r')
+		end
+	else
+		if dy < 0
+			path(ev,other.x,other.y+1,'u')
+		else
+			path(ev,other.x,other.y-1,'d')
+		end
+	end
+
+end
+
 def path(ev,tx,ty,after=nil)
 
 	char = gev(ev)

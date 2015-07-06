@@ -25,6 +25,8 @@ class Mnu_Help < Mnu_Base
 
 		#change(data[0]) if !data.empty?
 
+		open
+
 	end
 
 	def update

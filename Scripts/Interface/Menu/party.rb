@@ -7,8 +7,8 @@ class Mnu_Party < Mnu_Base
 		@title.change('party')
 		@subtitle.text = "Change up your party members"
 
-		@menu.hide
-		@menu.list.active = false
+		@menu.dispose
+		self.left.delete(@menu)
 
 		@first = nil
 
@@ -29,9 +29,18 @@ class Mnu_Party < Mnu_Base
 		@info.dispose
 		self.left.delete(@info)
 
+		open
+
+		@grid.all.each{ |a|
+			a.opacity = 0
+			a.do(go("opacity",255,200,:qio))
+		}
+
 	end
 
 	def setup_grid
+
+
 		
 		@grid.move(15,128)
 
@@ -74,6 +83,10 @@ class Mnu_Party < Mnu_Base
 
 	end
 
+	def dispose
+		@grid.dispose
+	end
+
 	def update
 		super
 
@@ -108,6 +121,16 @@ class Mnu_Party < Mnu_Base
 
 	def select(option)	
 		
+	end
+
+	def close
+		super
+
+		@grid.hide_glow
+		@grid.all.each{ |a|
+			a.do(go("opacity",-255,200,:qio))
+		}
+
 	end
 
 end

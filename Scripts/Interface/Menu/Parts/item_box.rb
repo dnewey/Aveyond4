@@ -23,12 +23,12 @@ class Item_Box < SpriteGroup
     	@title.text = "Active Quests:"
     	add(@title,16,10)
 
-    	@cat = Label.new(vp)
-    	@cat.fixed_width = 250
-    	@cat.font = $fonts.pop_type
-    	@cat.align = 0
-    	@cat.text = "POTION"
-    	add(@cat,226,13)
+    	# @cat = Label.new(vp)
+    	# @cat.fixed_width = 250
+    	# @cat.font = $fonts.pop_type
+    	# @cat.align = 0
+    	# @cat.text = "POTION"
+    	# add(@cat,226,13)
 
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
@@ -114,6 +114,35 @@ class Item_Box < SpriteGroup
 
     end
 
+    def gains(stats,user)
+
+        stat = Label.new(@vp)
+        stat.fixed_width = 250
+        stat.icon = $cache.icon("stats/str")
+        stat.font = $fonts.pop_text
+        stat.text = text
+        @stats.push(stat)
+        add(stat,36,@cy)
+        @cy += 22
+
+         stats.split("\n").each{ |action|
+            
+            dta = action.split("=>")
+
+            case dta[0]
+
+                when "str"
+                    stat.text = "#{user.name}: #{user.stat('str')} -> #{dta[1]}"
+
+                when "def"
+                    stat.text = "#{user.name}: #{user.stat('str')} -> #{dta[1]}"
+
+            end
+
+        }
+
+    end
+
     def stats(list)
 
         list.split("\n").each{ |action|
@@ -137,8 +166,6 @@ class Item_Box < SpriteGroup
                 when "def"
                     stat("def","#{dta[1]} Defense")
 
-
-
             end
             #return if data == nil
             #stat("targets","Hit ALL")
@@ -147,14 +174,26 @@ class Item_Box < SpriteGroup
 
     end
 
+    # Shop display of items
 	def item(id)
 
-        id = 'covey'
+        id = 'mid-arm-windshire' if id == "unknown"
+        #log_sys(id)
 
         data = get_data(id)       
         base(data)
 
-        stats(data.action)
+        if data.is_a?(GearData)
+            stats(data.stats)
+            stats(data.mods)
+            #gains(data.stats,$party.get('boy'))
+        elsif data.is_a?(KeyItemData)
+            
+        elsif data.is_a?(UsableData)
+            stats(data.action)
+        elsif data.is_a?(ShopData)
+
+        end
 		
 		#@type.text = item.type
 
@@ -163,23 +202,25 @@ class Item_Box < SpriteGroup
 
 	end
 
-    def equip(id)
+    # # Equip display of items
+    # def equip(id)
 
-        data = get_data(id)       
-        base(data)
+    #     data = get_data(id)       
+    #     base(data)
 
-        stats(data.stats)
+    #     stats(data.stats)
 
-        # Now draw the comparison
-        stat("heal","Change 10 -> 15")
+    #     # Now draw the comparison
+    #     #stat("heal","Change 10 -> 15")
         
-        #@type.text = item.type
+    #     #@type.text = item.type
 
-        newsize
-        remove
+    #     newsize
+    #     remove
 
-    end
+    # end
 
+    # Battle display of skills, maybe different to menu display
 	def skill(id)
 
         data = get_data(id)       

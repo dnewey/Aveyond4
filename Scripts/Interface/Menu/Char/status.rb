@@ -8,6 +8,7 @@ class Mnu_Status < Mnu_Base
 		super(vp)
 
 		@title.change('Status')
+		@title.icon($menu.char)
 		@subtitle.text = "Master of deception"
 
 		@char = $party.get($menu.char)
@@ -64,15 +65,19 @@ class Mnu_Status < Mnu_Base
 	end
 
 	def update
-		super
 
 		@grid.update
-
+		
 		# Cancel out of grid
-		if $input.cancel? || $input.rclick? || $input.action? || $input.click?
-			$scene.change_sub("Char")
-	 		cancel
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Char")
+			close_now
 		end
+		
+		super
 		
 	end
 

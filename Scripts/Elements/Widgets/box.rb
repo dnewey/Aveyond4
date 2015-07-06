@@ -5,6 +5,8 @@ class Box
 	attr_accessor :window
 
 	attr_accessor :alpha
+
+	attr_accessor :px, :py
 	
 	def initialize(vp,w=100,h=100)
 
@@ -33,6 +35,18 @@ class Box
 		@sx = 0.0#0.2
 		@sy = 0.0#0.2
 
+	end
+
+	# def wall_sprite
+	# 	return @wallpaper
+	# end
+
+	def flash_light
+		@wallpaper.flash(Color.new(255,255,255,40),20)
+	end
+
+	def flash_heavy
+		@wallpaper.flash(Color.new(255,255,255,100),20)
 	end
 
 	def scroll(x,y)
@@ -132,6 +146,8 @@ class Box
 	end
 
 	def update
+
+		@wallpaper.update
 
 		# Redraw the bmp if needed
 		@px += @sx

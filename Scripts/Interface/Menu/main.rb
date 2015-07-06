@@ -7,6 +7,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	def initialize(vp)
 
 		@vp = vp
+		@closing = false
+		@close_soon = false
+		@close_delay = 0
 
 		@chars = []
 
@@ -118,8 +121,27 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
      	@sr = 0
 
      	@boxes = @buttons + @chars.map{ |c| c.box }
+
+     	# Everything fade in
+     	(@chars + @buttons+@texts+@icons).each{ |c|
+     		c.opacity = 0
+     		c.do(go("opacity",255,200,:linear))
+     	}
+
+     	dist = 30
+     	@chars.each{ |c| 
+     		c.x += dist
+     		c.do(go("x",-dist,200,:qio))
+     	}
+
+     	(@buttons+@texts+@icons).each{ |c|
+			c.x -= dist
+     		c.do(go("x",dist,200,:qio))
+     	}
+
+     	self.do(delay(200))
      	
-     	@selected = "Journal"
+     	@selected = $menu.menu_cursor #{}"Journal"
      	@selected_box = nil
      	choose(@selected,false)
 
@@ -138,10 +160,24 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	def update
 		#@menu.update
-		#@chars.each{ |c| c.update }
+		@chars.each{ |c| c.update }
+		@boxes.each{ |b| b.update }
+
+		@glow.move(@selected_box.x+6,@selected_box.y+6)
 
 		if $input.action? || $input.click?
 			select(@selected)
+		end
+
+		if $input.cancel? || $input.rclick?
+			close_soon
+		end
+
+		if @close_soon && !@closing
+			@close_delay -= 1
+			if @close_delay <= 0
+				close
+			end
 		end
 
 		# Just remember selected I would suppose
@@ -217,26 +253,6 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	end
 
-	def open
-
-		@chars.each{ |c| c.show } 
-
-		@glow.show
-		@icons.each{ |i| i.show }
-		@texts.each{ |i| i.show }
-		@buttons.each{ |i| i.show }
-	end
-
-	def close
-
-		@chars.each{ |c| c.hide } 
-
-		@glow.hide
-		@icons.each{ |i| i.hide }
-		@texts.each{ |i| i.hide }
-		@buttons.each{ |i| i.hide }
-	end
-
 	def choose(target,dosound=true)
 
 		sys('select') if dosound
@@ -250,7 +266,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		@icons.each{ |i|
 			i.src_rect = Rect.new(36,0,120,50)
 			i.y = 25+(idx2*51)-23
-			$tweens.clear(i)
+			#i.x = @buttons[idx2].x
+			#i.do(go("y"))
+			$tweens.clear(i) if dosound
 			idx2 += 1
 		}
 
@@ -274,7 +292,17 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 		@selected_box = @boxes.find{ |b| b.name == target }
 
+		@chars.each{ |c| c.deselect }
+
+		# If selected in chars list
+		if @chars.map{ |c| c.box }.include?(@selected_box)
+			i = @chars.map{ |c| c.box }.index(@selected_box)			
+			@chars[i].select
+		end
+
 		glowon = @selected_box
+
+		@selected_box.flash_light
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
      	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
@@ -300,28 +328,8 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		sys('action')
 
 		case option
-			when "Journal"
-				$scene.open_sub(Mnu_Journal.new(@vp))
-			when "Items"
-				$scene.open_sub(Mnu_Items.new(@vp))
-			when "Equip"
-				$scene.open_sub(Mnu_Equip.new(@vp))
-			when "Skills"
-				$scene.open_sub(Mnu_Skills.new(@vp))
-			when "Party"
-				$scene.open_sub(Mnu_Party.new(@vp))
-			when "Options"
-				$scene.open_sub(Mnu_Options.new(@vp))
-			when "Help"
-				$scene.open_sub(Mnu_Help.new(@vp))
-			when "Quit"
-				$scene.open_sub(Mnu_Quit.new(@vp))
-			when "Load"
-				$scene.open_sub(Mnu_Load.new(@vp))
-			when "Save"
-				$scene.open_sub(Mnu_Save.new(@vp))
-			when "Char"
-				$scene.open_sub(Mnu_Char.new(@vp))
+			when "Journal", "Items", "Party", "Progress", "Options", "Help", "Quit", "Load", "Save"
+				$scene.queue_menu(option)
 			else
 				# C.1
 				num = option.split(".")[1].to_i
@@ -330,14 +338,52 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 				else # Reserve
 					$menu.char = $party.reserve[num]
 				end
-				$scene.open_sub(Mnu_Char.new(@vp))
+				$scene.queue_menu("Char")
 
 		end
 
+		@selected_box.flash_heavy
+		$menu.menu_cursor = option
+
+		close_soon
+
+	end
+
+	def close_soon
+		@close_soon = true
+		@close_delay = 10
+	end
+
+	def close
+
+		@closing = true
+
+		     	# Everything fade in
+     	(@chars + @buttons+@texts+@icons).each{ |c|
+     		c.do(go("opacity",-255,200,:linear))
+     	}
+
+     	dist = 30
+     	@chars.each{ |c| 
+     		c.do(go("x",dist,200,:qio))
+     	}
+
+     	(@buttons+@texts+@icons).each{ |c|
+     		c.do(go("x",-dist,200,:qio))
+     	}
+
+     	@glow.hide
+     	self.do(delay(200))
+
+	end
+
+
+	def closing?
+		return @closing
 	end
 
 	def done?
-		return false
+		return @closing && $tweens.done?(self)
 	end
 
 end

@@ -12,7 +12,7 @@ class Char_Box_Large < SpriteGroup
 
 		@box = Box.new(vp,205,168)
 		@box.skin = $cache.menu_common("skin")
-		@box.wallpaper = $cache.menu_wallpaper("portback")
+		@box.wallpaper = $cache.menu_wallpaper(char)
 		add(@box)
 
 		@port = Sprite.new(vp)
@@ -128,6 +128,17 @@ class Char_Box_Large < SpriteGroup
 
 	def choose()
 
+	end
+
+	def select
+		#$tweens.clear(self)
+		@port.do(go("oy",6,100,:qio))
+		@box.flash_light
+	end
+
+	def deselect
+		#$tweens.clear(self)
+		@port.do(to("oy",0,-2))
 	end
 
 end

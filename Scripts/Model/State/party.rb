@@ -70,6 +70,10 @@ class Game_Party
     return @active.map{ |a| @actors[a] }
   end
 
+  def all_battlers
+    return (@active+@reserve).map{ |a| @actors[a] }
+  end
+
   def attackable_battlers
     return active_battlers.select{ |a| a.attackable? }
   end
@@ -297,9 +301,9 @@ class Game_Party
     set_active("ing")
     set_active("mys")
     set_active("rob")
-    #set_reserve("hib")
-    #set_reserve("row")
-    #set_reserve("phy")   
+    set_reserve("hib")
+    set_reserve("row")
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -340,7 +344,7 @@ class Game_Party
 
     # Initial skills per actor
     @actors["boy"].learn('fireburn')
-    @actors["boy"].learn('flames')
+    @actors["boy"].learn('fireburn')
 
     @actors["ing"].learn('xform-snake')
 

@@ -9,6 +9,8 @@ class Mnu_Base
 	def initialize(vp)
 
 		@closing = false
+		@close_soon = false
+		@close_delay = 0
 
 		@left = []
 		@right = []
@@ -36,6 +38,8 @@ class Mnu_Base
 
 		# Anything else is per page
 
+		
+
 	end
 
 	def dispose
@@ -45,38 +49,67 @@ class Mnu_Base
 	def update
 		(@left + @right + @other).each{ |i| i.update }
 
+		if @close_soon && !@closing
+			@close_delay -= 1
+			if @close_delay <= 0
+				close
+			end
+		end
+
 		# If anim in done, change state
 		if $input.cancel? || $input.rclick?
-			self.cancel
+			close_now
+			$scene.queue_menu("Main")
 		end
 	end
 
 	def close
-		@closing = true
-		#@left.each{ |i|
-			# Animate each thing sliding left and fading out
-		#}
-	end
 
-	def open
-		# Hide everything, animate in
-		(@left + @right + @other).each{ |i| i.opacity = 0 }
-		@left.each{ |i| i.do(go("opacity",255,400,:qio))}
-		@left.each{ |i| i.x -= 50; i.do(go("x",50,400,:qio))}
-		@right.each{ |i| i.do(go("opacity",255,500,:qio))}
-		@right.each{ |i| i.x += 50; i.do(go("x",-50,400,:qio))}
-		@other.each{ |i| i.do(go("opacity",255,500,:qio))}
-	end
-
-	def cancel
 		@left.each{ |a| $tweens.clear(a) }
 		@right.each{ |a| $tweens.clear(a) }
 		@other.each{ |a| $tweens.clear(a) }
-		close
+
+		dur = 200
+		dist = 30
+
+		@closing = true
+		#(@left + @right + @other).each{ |i| i.opacity = 0 }
+		@left.each{ |i| i.do(go("opacity",-255,dur,:qio))}
+		@left.each{ |i| i.do(go("x",-dist,dur,:qio))}
+		@right.each{ |i| i.do(go("opacity",-255,dur,:qio))}
+		@right.each{ |i| i.do(go("x",dist,dur,:qio))}
+		@other.each{ |i| i.do(go("opacity",-255,dur,:qio))}
+		self.do(delay(dur))
+
+	end
+
+	def open
+
+		dur = 200
+		dist = 30
+
+		# Hide everything, animate in
+		(@left + @right + @other).each{ |i| i.opacity = 0 }
+		@left.each{ |i| i.do(go("opacity",255,dur,:qio))}
+		@left.each{ |i| i.x -= dist; i.do(go("x",dist,dur,:qio))}
+		@right.each{ |i| i.do(go("opacity",255,dur,:qio))}
+		@right.each{ |i| i.x += dist; i.do(go("x",-dist,dur,:qio))}
+		@other.each{ |i| i.do(go("opacity",255,dur,:qio))}
+		self.do(delay(dur))
+	end
+
+	def close_soon
+		@close_soon = true
+		@close_delay = 10	
+	end
+
+	def close_now
+		@close_soon = true
+		@close_delay = 0
 	end
 
 	def done?
-		return @closing # && NO TWEENS GOING
+		return @closing && $tweens.done?(self)
 	end
 
 end

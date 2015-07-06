@@ -18,6 +18,8 @@ class Mnu_Options < Mnu_Base
 
 		#change(data[0]) if !data.empty?
 
+		open
+
 	end
 
 	def build_list

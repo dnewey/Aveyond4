@@ -10,6 +10,9 @@ class MenuState
 
 	attr_accessor :menu_page
 
+	attr_accessor :menu_cursor
+	attr_accessor :char_cursor
+
 	#attr_accessor :category
 	#attr_accessor :tab
 
@@ -17,6 +20,9 @@ class MenuState
 		@char = 'boy'
 		@menu_page = nil
 		@shop = []
+
+		@menu_cursor = "Journal"
+		@char_cursor = 'Equip'
 	end
 
 	def shop_init
