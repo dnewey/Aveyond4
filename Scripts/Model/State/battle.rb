@@ -160,13 +160,20 @@ class Game_Battle
 
     plan = Attack_Plan.new
 
-    skill = $data.skills[attacker.skill_id]
+    skill = nil
+    if attacker.action == "items"
+      skill = $data.items[attacker.item_id]
+    else
+      skill = $data.skills[attacker.skill_id]
+    end
+
+    # How many times does this skill hit
     hits = calc_hits(skill)
 
     hits.times{ |t|
 
       round = Attack_Round.new
-      round.text = skill.text if skill.text.length > 0
+      round.text = skill.text if skill.text && skill.text.length > 0
       round.anim = skill.anim
       round.skill = skill
 
@@ -204,7 +211,15 @@ class Game_Battle
       dmg_base = 0
       dmg_mod = 0
 
-      skill.effects.split("\n").each{ |effect|
+      # Items have actions, skills have effects, they are the same
+      effects = nil
+      if skill.is_a?(UsableData)
+        effects = skill.action
+      else
+        effects = skill.effects
+      end
+
+      effects.split("\n").each{ |effect|
         data = effect.split("=>")      
         case data[0]
           when 'dmg-base'
@@ -224,6 +239,7 @@ class Game_Battle
 
       # Build final damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
+      result.damage -= (t.def) # Remove damage of the defense
 
       # If there was no attack, don't have a damage amount
       if result.damage == 0
@@ -240,11 +256,16 @@ class Game_Battle
 
   def possible_targets(attacker)
 
-    skill = $data.skills[attacker.skill_id]
+    data = nil
+    if attacker.action == "items"
+      data = $data.items[attacker.item_id]
+    else
+      data = $data.skills[attacker.skill_id]
+    end
 
-    if skill.scope == 'one'
+    if data.scope == 'one'
       return $battle.enemies
-    elsif skill.scope == 'ally'
+    elsif data.scope == 'ally'
       return $party.active_battlers
     end
 
@@ -319,6 +340,8 @@ class Game_Battle
   end
 
   def calc_hits(skill)
+    log_sys(skill)
+    return 1 if skill.is_a?(UsableData)
     hits = skill.hits
     if hits.include?("-")
       data = hits.split("-")

@@ -79,10 +79,10 @@ def pop_num(ev,number)
 	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
 
 	x = gev(ev).screen_x+2
-	y = gev(ev).screen_y - 70
+	y = gev(ev).screen_y - ev.height - 20
 	$scene.add_num(number,x,y,:blast,:fade)
 
-	sfx('jump')
+	#sfx('jump')
 
 end
 

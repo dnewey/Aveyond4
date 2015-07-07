@@ -3,9 +3,12 @@ class UsableData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
-	attr_reader :price
-	attr_reader :action
 	attr_reader :icon
+	attr_reader :price
+	attr_reader :scope
+	attr_reader :text
+	attr_reader :anim
+	attr_reader :action
 	attr_reader :battle
 	attr_accessor :tab
 end

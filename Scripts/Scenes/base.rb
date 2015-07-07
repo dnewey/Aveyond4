@@ -247,20 +247,20 @@ class Scene_Base
 
   end
 
-  def pop_dmg(target,amount)
-    #ev = gev(target)
-    pop = Popper.new(@vp_over)
-    pop.value = amount #- amount/10
-    pop.x = target.screen_x-200-20
-    pop.y = target.screen_y-40-12+45
-    @pops.push(pop)
+  # def pop_dmg(target,amount)
+  #   #ev = gev(target)
+  #   pop = Popper.new(@vp_over)
+  #   pop.value = amount #- amount/10
+  #   pop.x = target.screen_x-200-20
+  #   pop.y = target.screen_y-40-12+45
+  #   @pops.push(pop)
 
-    pop.opacity = 1
-    pop.do(go("value",amount,700,:quad_in_out))
-    pop.do(sequence(go("opacity",254,500),go("opacity",0,1500),go("opacity",-255,500)))
-    pop.do(sequence(go("y",-30,500,:quad_in_out),go("y",-20,1500),go("y",-30,500,:quad_in_out)))
+  #   pop.opacity = 1
+  #   pop.do(go("value",amount,700,:quad_in_out))
+  #   pop.do(sequence(go("opacity",254,500),go("opacity",0,1500),go("opacity",-255,500)))
+  #   pop.do(sequence(go("y",-30,500,:quad_in_out),go("y",-20,1500),go("y",-30,500,:quad_in_out)))
 
 
-  end
+  # end
 
 end

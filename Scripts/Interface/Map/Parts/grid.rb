@@ -340,7 +340,7 @@ class Ui_Grid
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")
         stat.font = $fonts.pop_text
-        stat.text = "20 -> 35 (+15)"
+        stat.text = "change is (#{user.equip_result(data)})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
 

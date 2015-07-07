@@ -46,7 +46,8 @@ class Char_Box_Large < SpriteGroup
 		add(@mp_bar,11,112)
 		@mp_bar.opacity = 180
 		@mp_bar.for(:mp)
-		@mp_bar.value = @char.mp_percent
+		@mp_bar.value = @char.mp
+		@mp_bar.max = @char.maxmp
 		@mp_bar.z += 50
 
 		@mp_label = Sprite.new(vp)
@@ -80,7 +81,8 @@ class Char_Box_Large < SpriteGroup
 		@hp_bar = Bar.new(vp,180,9)
 		add(@hp_bar,11,130)
 		@hp_bar.opacity = 180
-		@hp_bar.value = @char.hp_percent
+		@hp_bar.value = @char.hp
+		@hp_bar.max = @char.maxhp
 		@hp_bar.for(:hp)
 		@hp_bar.z += 50
 
@@ -99,6 +101,8 @@ class Char_Box_Large < SpriteGroup
 		@xp_bar = Bar.new(vp,180,9)
 		add(@xp_bar,11,148)
 		@xp_bar.opacity = 180
+		@xp_bar.value = @char.xp
+		@xp_bar.max = @char.next_exp
 		@xp_bar.for(:xp)
 		@xp_bar.z += 50
 

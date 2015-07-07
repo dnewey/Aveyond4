@@ -18,10 +18,11 @@ class BattleHud
 		cx = 170 if $party.active.count == 2
 		cx = 60 if $party.active.count == 3
 		$party.active.each{ |char|
-			char = CharView.new(vp,$party.actor_by_id(char),idx)
-			char.x = cx + (idx * 158)
-			char.y = 340
-			@chars.push(char)
+			view = CharView.new(vp,$party.actor_by_id(char),idx)
+			view.x = cx + (idx * 158)
+			view.y = 340
+			@chars.push(view)
+			$party.get(char).view = view
 			idx += 1
 		}
 
@@ -38,14 +39,22 @@ class BattleHud
 	    @help_text.bitmap.draw_text(0,0,300,50,"Shadow - Gain Darkness",1)
 		@help_text.move(166,9)
 
+		# Try hiding the info box
+		@help_box.hide
+		@help_text.hide
+
 	end
 
 	def dispose
 
 	end
 
-	def all_grin
-		@chars.each{ |c| c.grin }
+	def all_win
+		@chars.each{ |c| c.win }
+	end
+
+	def deselect_all
+		@chars.each{ |c| c.deselect }
 	end
 
 	def set_help(text)

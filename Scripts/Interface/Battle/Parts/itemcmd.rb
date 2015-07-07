@@ -87,7 +87,15 @@ class ItemCmd
 	def change(option)
 		@item = option
 		@box.item(option)
-		#@box.center(462,130+@list.page_idx*@list.item_height)
+		@box.move(326,100) if @box
+
+		if @box && @last_option != option
+			@last_option = option
+			$tweens.clear(@box)
+			@box.y -= 7
+			@box.do(go("y",7,150,:qio))
+		end
+
 	end
 
 	def get_item

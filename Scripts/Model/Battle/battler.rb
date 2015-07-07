@@ -13,7 +13,7 @@ class Game_Battler
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
   attr_accessor :target_type, :target_idx
-  attr_accessor :ev
+  attr_accessor :ev, :view
 
   attr_reader :hp, :mp, :xp
 
@@ -57,11 +57,12 @@ class Game_Battler
     @target_type = nil # <-- Scope?
     @target_index = -1
 
-    @ev = nil # Mid battle hold even number for easy access
+    @ev = nil # Mid battle hold event number for easy access
+    @view = nil # Hold charview for quick access
 
     @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting
 
-    recover_all
+
 
   end
 
@@ -101,6 +102,7 @@ class Game_Battler
       }
     end
 
+    recover_all
 
   end
 
@@ -120,6 +122,8 @@ class Game_Battler
         @stat_plus[md[0]] = md[1].to_i
       }
     end
+
+    recover_all
 
   end
   
@@ -179,7 +183,6 @@ class Game_Battler
   def damage(amount)
     @hp -= amount
     @hp = 0 if @hp < 0
-    log_sys @hp
   end
 
   def heal(amount)

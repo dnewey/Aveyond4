@@ -23,8 +23,14 @@ class Scene_Battle
 
   	# Calculate results now, then play out the anims
   	@attack_plan = $battle.build_attack_plan(@active_battler)
-
     @attack_round = @attack_plan.next_attack
+
+    # If this player has been defeated, skip
+    if @active_battler.down?
+      @attack_plan.cancel
+      @phase = :main_next
+      return
+    end
 
   	@phase = :main_start
 
@@ -36,8 +42,11 @@ class Scene_Battle
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
+    @active_battler.ev.flash_dur = 15
+
     # Show text if there is
     @phase = :main_text
+    wait(30)
 
   end
 
@@ -60,11 +69,11 @@ class Scene_Battle
 
     @attack_results.each{ |result|
 
-      if @attack_round.anim_b
+      if @attack_round.anim
         # Show the hit animation
         x = result.target.ev.screen_x
         y = result.target.ev.screen_y - 32
-        add_spark(@attack_round.anim_b,x,y)
+        add_spark(@attack_round.anim,x,y)
       end
 
     }
@@ -77,7 +86,12 @@ class Scene_Battle
   def phase_main_cost
 
     # Use up mana or items or add cooldown
-    @active_battler.lose_mana(@attack_round.skill.cost)
+    if @active_battler.action == "items"
+      # Use up the item now
+      $party.lose_item(@active_battler.item_id)
+    else
+      @active_battler.lose_mana(@attack_round.skill.cost)
+    end
 
     # Onto the next
     @phase = :main_transform
@@ -109,6 +123,9 @@ class Scene_Battle
         next if result.damage == nil
         result.target.damage(result.damage)
         pop_num(result.target.ev,result.damage)
+        if result.target.view != nil
+          result.target.view.damage
+        end
     }
 
     # Onto the next
@@ -164,6 +181,7 @@ class Scene_Battle
       if result.target.down?
         #sys('fall')
         result.target.fall
+        result.target.view.down if result.target.view
         #fade(result.target.ev)
         wait(60)
       end
@@ -201,7 +219,10 @@ class Scene_Battle
       @active_attack = @attack_plan.next_attack
       @phase = :main_start
       return
+
     end
+
+    log_sys("ALMOST DONE")
 
   	# Onto the next battler
 	  if !@battle_queue.empty?

@@ -80,7 +80,13 @@ class Game_Battler
   def stat_from_equip(stat)
     total = 0
     @equips.values.each{ |e|
-      
+      next if e == nil
+      $data.items[e].stats.split("/n").each{ |s|
+        dta = s.split("=>")
+        if dta[0] == stat
+          total += dta[1].to_i
+        end
+      }
     }
     return total
   end

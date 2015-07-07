@@ -43,6 +43,8 @@ class Char_Box_Small < SpriteGroup
 	    @level.z += 50
 
 		@xp_bar = Bar.new(vp,106,8)
+		@xp_bar.value = @char.xp
+		@xp_bar.max = @char.next_exp
 		add(@xp_bar,11,64)
 		@xp_bar.z += 50
 

@@ -29,6 +29,7 @@ class Attack_Plan
 	def initialize
 
 		@attacks = []
+		@cancel = false
 
 	end
 
@@ -40,7 +41,12 @@ class Attack_Plan
 		return @attacks.shift
 	end
 
+	def cancel
+		@cancel = true
+	end
+
 	def done?
+		return true if @cancel
 		return @attacks.empty?
 	end
 

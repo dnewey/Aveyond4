@@ -6,7 +6,7 @@ class Scene_Battle
   	
 
   	# Everybody grin
-  	@hud.all_grin
+  	@hud.all_win
 
   	$scene.message.start("sys:Battle Victory")
 

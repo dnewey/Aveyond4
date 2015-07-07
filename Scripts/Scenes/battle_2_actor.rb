@@ -28,7 +28,10 @@ class Scene_Battle
       if @actor_idx != 0
         @actor_idx -= 1
         @active_battler = $party.actor_by_index(@actor_idx)
+        
+        $scene.hud.deselect_all
         @actor_cmd.setup(@active_battler)
+        @active_battler.view.select
       end
     end
 
@@ -82,6 +85,7 @@ class Scene_Battle
 
     if $input.action? || $input.click?
       @skill_cmd.close
+      @active_battler.item_id = nil
       @active_battler.skill_id = @skill_cmd.get_skill
       @phase = :actor_strategize
     end
@@ -104,6 +108,7 @@ class Scene_Battle
 
     if $input.action? || $input.click?
       @item_cmd.close
+      @active_battler.skill_id = nil
       @active_battler.item_id = @item_cmd.get_item
       @phase = :actor_strategize
     end
@@ -146,16 +151,24 @@ class Scene_Battle
 
   def phase_actor_strategize
 
+    data = nil
+
     # Get the skill or item
+    if @active_battler.action == "items"
+      data = $data.items[@active_battler.item_id]
+    else
+      data = $data.skills[@active_battler.skill_id]
+    end
 
     # If single, targetable?
-    if ["one","ally"].include?($data.skills[@active_battler.skill_id].scope)
+    if ["one","ally"].include?(data.scope)
       targets = $battle.possible_targets(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      
     else
       @phase = :actor_next
     end
+
 
   end
 
@@ -192,8 +205,14 @@ class Scene_Battle
       @phase = :main_init
     else
       @active_battler = $party.actor_by_index(@actor_idx)
-      @actor_cmd.setup(@active_battler)
-      @phase = :actor_action 
+      if @active_battler.down?
+        return # Get the next one, this actor is done
+      else
+        $scene.hud.deselect_all
+        @actor_cmd.setup(@active_battler)
+        @active_battler.view.select
+        @phase = :actor_action 
+      end
     end
     
   end

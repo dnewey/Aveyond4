@@ -131,8 +131,10 @@ class Ui_Bar < SpriteGroup
 
 		# Update the bars
 		$party.active.each_index{ |i|
-			@hp_bars[i].value = $party.get($party.active[i]).hp_percent
-			@mp_bars[i].value = $party.get($party.active[i]).mp_percent
+			@hp_bars[i].value = $party.get($party.active[i]).hp
+			@mp_bars[i].value = $party.get($party.active[i]).mp
+			@hp_bars[i].max = $party.get($party.active[i]).maxhp
+			@mp_bars[i].max = $party.get($party.active[i]).maxmp
 		}
 
 		(@mp_bars+@hp_bars).each{ |b| b.update }

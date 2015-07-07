@@ -54,12 +54,10 @@ class Pop < Sprite
 	    nums = []
 	    data.each{ |n| nums.push(n.to_i) }
 
-	    size = 22
-
 	    # build the gfx of this number
-	    src = $cache.numbers('pop_'+size.to_s)
+	    src = $cache.numbers('pop_18')
 	    cw = src.width/10
-	    ch = src.height/7
+	    ch = src.height
 
 	    # Colors
 	    colors = [:yellow,:orange,:purple,:green,:red,:gray,:white]

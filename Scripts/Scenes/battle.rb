@@ -52,6 +52,10 @@ class Scene_Battle < Scene_Base
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
+        if $party.get(act).down?
+          $party.get(act).fall
+          $party.get(act).view.down if $party.get(act).view
+        end
       end
     }
     [0,1,2,3,4].each{ |i| 
@@ -59,6 +63,8 @@ class Scene_Battle < Scene_Base
       next if ev == nil
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
+        log_sys("HP")
+        log_sys($battle.enemies[i].stat('hp'))
         ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
       end
     }

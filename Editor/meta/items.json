@@ -11,17 +11,28 @@
     "edit": "area"
   },
   {
+    "field": "icon",
+    "edit": "icon"
+  },
+  {
     "field": "price"
+  },
+  {
+    "field": "scope",
+    "edit": "select",
+    "color": "true"
+  },
+  {
+    "field": "text"
+  },
+  {
+    "field": "anim"
   },
   {
     "field": "action",
     "edit": "area"
   },
   {
-    "field": "icon",
-    "edit": "icon"
-  },
-  {
-    "field": "battle"
+    "field": "menu"
   }
 ]

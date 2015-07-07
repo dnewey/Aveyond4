@@ -316,6 +316,14 @@ class Game_Character
 
   end
 
+  def width
+    $cache.get(@character_name).width
+  end
+
+  def height
+    $cache.get(@character_name).height
+  end
+
   #--------------------------------------------------------------------------
   # * Get Thicket Depth
   #--------------------------------------------------------------------------
