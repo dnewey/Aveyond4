@@ -60,7 +60,7 @@ class Game_Battler
     val += stat_from_states(stat)   
     val *= stat_mod_from_states(stat)   
     val *= stat_mod_from_difficulty(stat) 
-    return val
+    return val.to_i
   end
 
   def stat_base(stat)

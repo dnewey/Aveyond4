@@ -69,6 +69,10 @@ class Scene_Battle < Scene_Base
       end
     }
 
+    #$battle.add_prop('money')
+
+
+
     # And the minion
     #@minion = @map.event_by_evname("MINION")
     #@minion.character_name = 'Player/minion-rat'

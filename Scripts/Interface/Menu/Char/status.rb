@@ -27,34 +27,92 @@ class Mnu_Status < Mnu_Base
 		@grid.add_wide('done',"Done","misc/unknown")
 		self.left.push(@grid)
 
-		data = []
-		data.push(["faces/boy","Level 1 (20 of 600 XP)"])
-		data.push(["faces/boy","Health 100 / 5000"])
-		data.push(["faces/boy","Shadow 100 / 5000"])
-		data.push(["faces/boy","Strength 34 (20 + 14)"])
-		data.push(["faces/boy","Defense 34"])
-		data.push(["faces/boy","Evasion 34"])
-		data.push(["faces/boy","Critical 34"])
-		data.push(["faces/boy","Luck 34"])
-		data.push(["faces/boy","Luck 34"])
-
-
-		cx = 30
+		cx = 28
 		cy = 125
 
-		data.each{ |d|
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Primary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
-			lbl = Label.new(vp)
-			lbl.icon = $cache.icon(d[0])
-	     	lbl.font = $fonts.list
-	     	lbl.shadow = $fonts.list_shadow
-	     	lbl.text = d[1]
-	     	lbl.move(cx,cy)
-	     	self.left.push(lbl)
+	    cx = 34
+	    cy += 30
 
-	     	cy += 31
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Health: #{@char.maxhp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
-	     }
+	   	cy += 26
+
+	   	lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/mana")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Mana: #{@char.maxmp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/str")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Strength: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/def")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Defense: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 28
+		cy += 32
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/secondary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Secondary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/eva")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Evasion: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/luck")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Luck: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/res")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Resist: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)

@@ -316,11 +316,13 @@ class Ui_Grid
 		@cx += 28
 
 		users.each{ |u|
-			icon = Sprite.new(@vp)
-			icon.bitmap = $cache.icon("faces/#{u.id}")
+			icon = Label.new(@vp)
+			icon.icon = $cache.icon("faces/#{u.id}")
+			icon.font = $fonts.pop_text
+			icon.text = u.equip_result(data)
 			icon.move(@cx+10,@cy+7)
 			@extra.push(icon)
-			@cx += 28
+			@cx += 80
 		}
 
 		@cy += 46
@@ -337,10 +339,12 @@ class Ui_Grid
 		# Find all users
 		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
 
+		res = user.equip_result(data)
+
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")
         stat.font = $fonts.pop_text
-        stat.text = "change is (#{user.equip_result(data)})"
+        stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
 

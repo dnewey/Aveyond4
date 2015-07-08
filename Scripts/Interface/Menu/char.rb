@@ -22,9 +22,9 @@ class Mnu_Char < Mnu_Base
 		@grid.move(15,113)
 		@grid.add_wide("Equip","Change Equipment","misc/unknown")
 		@grid.add_wide("Skills","Use Skills","skills/spells")
-		@grid.add_wide("Status","View Status","misc/unknown")
-		@grid.add_wide("Profile","View Profile","faces/boy")
-		@grid.add_wide("Leader","Set as Leader","misc/unknown")
+		@grid.add_wide("Status","View Status","misc/primary")
+		@grid.add_wide("Profile","View Profile","misc/profile")
+		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
 		@grid.add_wide("Creatures","Creature Hunting","misc/unknown") if $menu.char == 'boy'
 		@grid.add_wide("Potions","Potion Making","misc/unknown") if $menu.char == 'ing'

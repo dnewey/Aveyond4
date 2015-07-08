@@ -46,11 +46,11 @@ class Mnu_Shop < Mnu_Base
 		@users.move(@item_box.x,@item_box.y + @item_box.height)
 		@users.add_users(option)
 		data = $data.items[option]
-		if data.is_a?(GearData)
-			$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
-				@users.add_compare(option,u)
-			}
-		end
+		# if data.is_a?(GearData)
+		# 	$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
+		# 		@users.add_compare(option,u)
+		# 	}
+		# end
 	end
 
 	def select(option)	

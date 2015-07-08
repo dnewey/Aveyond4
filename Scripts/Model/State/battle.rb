@@ -21,7 +21,7 @@ class Game_Battle
 
     @queue2 = nil
 
-    @map = 26#65 #26
+    @map = 65 #26
 	end
 
   # Enemies for this zone from zone data
