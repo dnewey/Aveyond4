@@ -15,6 +15,8 @@ class Game_Party
 
   attr_reader :items
 
+  attr_accessor :potion, :potion_state, :potion_level, :potion_result
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -39,8 +41,11 @@ class Game_Party
 
     # Create amount in possession hash for items, weapons, and armor
     @items = {}
-    @weapons = {}
-    @armors = {}    
+
+    @potion = []
+    @potion_state = 'empty'
+    @potion_id = nil
+    @potion_level = 0
 
     # Hardcode Party Data
     init_party
@@ -206,31 +211,15 @@ class Game_Party
   end
 
   def battle_item_list
-    return ['covey','cheese','mir-wood']
+    return @items.select{ |i| true }
   end
 
 
   #--------------------------------------------------------------------------
-  # * Determine Everyone is Dead
+  # * Determine Everyone is Down
   #--------------------------------------------------------------------------
   def defeated?
     return @active.select{ |a| !@actors[a].down? }.empty?
-  end
-
-  #--------------------------------------------------------------------------
-  # * Slip Damage Check (for map)
-  #--------------------------------------------------------------------------
-  def check_map_slip_damage
-    for actor in @active + @reserve
-      if actor.hp > 0 and actor.slip_damage?
-        actor.hp -= [actor.maxhp / 100, 1].max
-        if actor.hp == 0
-          $audio.play_se($data_system.actor_collapse_se)
-        end
-        $map.world.start_flash(Color.new(255,0,0,128), 4)
-        $temp.gameover = $party.all_dead?
-      end
-    end
   end
   
   #--------------------------------------------------------------------------
@@ -239,51 +228,6 @@ class Game_Party
   def has_member?(guy)
     return (@active + @reserve).include?(guy)
   end
-
-  #--------------------------------------------------------------------------
-  # ● check if all actors are 'normal' state
-  #--------------------------------------------------------------------------  
-  def all_normal
-    for i in 0..LAST_ACTOR_ID
-      actor = @all_actors[i]
-      if actor != nil && $game_player.is_present(actor.id)
-        if (actor.states & ([1] + BAD_STATES)).size > 0 # non-shield status inflicted
-          return false
-        end
-      end
-    end
-    
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # ● remove inflictions
-  #--------------------------------------------------------------------------  
-  def remove_inflictions()
-    for i in 0..LAST_ACTOR_ID
-      actor = @all_actors[i]
-      if actor != nil && $game_player.is_present(actor.id)
-        for state in BAD_STATES
-          actor.remove_state(state, true)
-        end
-      end
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # ● Actor Lineup
-  #   Provides a list of party members
-  #-------------------------------------------------------------------------- 
-  def actor_lineup()
-    @lineup = []
-    for i in 1..LAST_ACTOR_ID
-      actor = @all_actors[i]
-      if actor != nil and !@lineup.include?(actor) && $game_player.is_present(actor.id)
-        @lineup.push(actor)
-      end
-    end
-  end
-
 
   #--------------------------------------------------------------------------
   # ● Initialize Party Data
@@ -361,28 +305,5 @@ class Game_Party
     
 
   end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         
 end

@@ -210,6 +210,33 @@ class Ui_Grid
 
 	end
 
+	def add_choice(name,text,w)
+
+		# Create new things
+		btn = add_part_box(name,w,46)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	#cont.icon = $cache.icon(icon)
+     	#cont.gradient = true
+     	cont.align = 1
+     	cont.fixed_width = w #- 10
+     	cont.text = text
+     	@contents.push(cont)
+
+     	# Position
+     	cont.move(@cx,@cy+7)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height #+ @spacing
+     	end
+
+	end
+
 	def add_wide(name,text,icon)
 
 		# Create new things

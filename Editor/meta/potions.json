@@ -1,0 +1,19 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "name"
+  },
+  {
+    "field": "ingredients",
+    "edit": "area"
+  },
+  {
+  	"field": "problems",
+    "edit": "area"
+  },
+  {
+  	"field": "result"
+  }
+]

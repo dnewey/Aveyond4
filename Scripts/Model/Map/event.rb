@@ -493,6 +493,9 @@ class Game_Event < Game_Character
         when "#object"
           @character_name = "Objects/#{data[1]}"
 
+        when "#cauldron"
+          cauldron_graphic(self)
+
         when "#door"
           @character_name = "Doors/#{data[1]}"
 
