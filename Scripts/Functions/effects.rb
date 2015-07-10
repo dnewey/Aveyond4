@@ -37,32 +37,54 @@ def shake_1
 
 end
 
+def shake_tiny
+
+	amount = 5
+	dur = 150
+	rep = 2
+	e = :qio
+
+	$scene.map.do(
+		repeat(
+			seq(
+				go(
+					"cam_ox",amount,dur,e
+					),
+				go(
+					"cam_ox",-amount,dur,e
+					)
+			),rep
+		)
+	)
+
+end
+
 
 def pop_huh(ev)
 
-	pop_icon(ev,"misc/exclaim")
+	pop_icon(ev,"misc/exclaim","jump")
 
 end
 
 def pop_wha(ev)
 
-	pop_icon(ev,"misc/unknown")
+	pop_icon(ev,"misc/unknown","jump")
 
 end
 
 def pop_sweat(ev)
-	pop_icon(ev,"misc/sweat")
+	pop_icon(ev,"misc/sweat","jump")
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots")
+	pop_icon(ev,"misc/dots","jump")
 end
 
 def pop_bulb(ev)
-	pop_icon(ev,"misc/bulb")
+	pop_icon(ev,"misc/bulb","bulb")
 end
 
-def pop_icon(ev,icon)
+def pop_icon(ev,icon,sfx)
 
 	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
 
@@ -70,7 +92,7 @@ def pop_icon(ev,icon)
 	y = gev(ev).screen_y - 70
 	$scene.add_icon(icon,x,y,:blast,:fade)
 
-	sfx('jump')
+	sfx(sfx)
 
 end
 

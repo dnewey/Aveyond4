@@ -304,7 +304,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   def screen_z(height = 0)
 
-    return 0 if @below
+    return 0 if @below2
+    return 1 if @below
     return 999 if @above
 
     # Get screen coordinates from real coordinates and map display position
@@ -316,11 +317,11 @@ class Game_Character
 
   end
 
-  def width
+  def gfx_width
     $cache.get(@character_name).width
   end
 
-  def height
+  def gfx_height
     $cache.get(@character_name).height
   end
 

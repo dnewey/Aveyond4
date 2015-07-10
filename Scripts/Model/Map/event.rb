@@ -16,12 +16,15 @@ class Game_Event < Game_Character
 
   attr_reader :above
   attr_reader :below
+  attr_reader :below2
 
   attr_reader :page_idx
 
   attr_reader :deleted, :disabled, :erased
 
   attr_reader :monster
+
+  attr_reader :width, :height
       
 
   #--------------------------------------------------------------------------
@@ -45,6 +48,7 @@ class Game_Event < Game_Character
     @through = true
     @above = false
     @below = false
+    @below2 = false
 
     @width = 1
     @height = 1
@@ -464,6 +468,8 @@ class Game_Event < Game_Character
           @above = true
         when '#below'
           @below = true
+        when '#below2'
+          @below2 = true
 
         when '#opacity'
           self.opacity = data[1].to_i

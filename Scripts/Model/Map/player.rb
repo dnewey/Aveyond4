@@ -338,7 +338,23 @@ class Game_Player < Game_Character
       dx = -1 if @direction == 4
       dy = 1 if @direction == 2
       dy = -1 if @direction == 8
-      $player.moveto(ev.x+dx,ev.y+dy)
+
+
+      tx = ev.x + dx
+      ty = ev.y + dy
+
+      if ev.width > 1
+        tx += ev.width/2
+      end
+
+      if ev.height > 1
+        ty += ev.height/2
+      end
+
+      log_scr(tx)
+      log_scr(ty)
+
+      $player.moveto(tx,ty)
 
 
       #$player.direction = @xfer_data[3]
