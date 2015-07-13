@@ -18,7 +18,7 @@ class KeyItemData
 	attr_reader :name
 	attr_reader :description
 	attr_reader :icon
-	attr_reader :chapter
+	attr_reader :notes
 	attr_accessor :tab
 end
 

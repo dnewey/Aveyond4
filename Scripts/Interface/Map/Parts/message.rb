@@ -288,6 +288,8 @@ class Ui_Message
     @cx = PADDING_X
     @cy = PADDING_Y
 
+    @tail.show
+
     return log_err "Must specify speaker" if !text.include?(':')
     text_data = text.split(":")
 
@@ -296,6 +298,7 @@ class Ui_Message
     @lines = split_text(text_data[1]) 
 
     if speaker.include?("x-")
+      @tail.hide
       @mode = :x
       speaker = speaker.sub("x-",'')
     end
@@ -314,6 +317,8 @@ class Ui_Message
       speaker = speaker.sub("vn-",'')
       name = name.sub("vn-",'')
       @mode = :vn
+
+      @tail.hide
 
       # Set vn face
       @vn_port.bitmap = $cache.face_vn(speaker)
@@ -700,6 +705,7 @@ class Ui_Message
       $tweens.clear(@vn_port)
       @vn_port.do(to("opacity",0,-11))
       @tail.opacity = 0
+      @tail.hide
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
@@ -721,6 +727,7 @@ class Ui_Message
       @textbox.bitmap.clear
       @sprites.opacity = 0
       @tail.opacity = 0
+      @tail.hide
       @box.skin = $cache.menu_common("skin")
 
       #@sprites.do(go("opacity",-255,300,:quad_in_out))

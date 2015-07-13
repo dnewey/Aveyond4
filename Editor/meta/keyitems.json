@@ -15,7 +15,6 @@
     "edit": "icon"
   },
   {
-    "field": "chapter",
-    "edit": "select"
+    "field": "notes"
   }
 ]

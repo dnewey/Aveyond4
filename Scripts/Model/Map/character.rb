@@ -355,6 +355,9 @@ class Game_Character
       @showdir = @direction
     end
 
+    # Reset animation on 
+    @pattern = 0 if mini
+
     return if mini && !jumping? # Force jumps to finish
 
 

@@ -351,9 +351,6 @@ class Game_Player < Game_Character
         ty += ev.height/2
       end
 
-      log_scr(tx)
-      log_scr(ty)
-
       $player.moveto(tx,ty)
 
 
