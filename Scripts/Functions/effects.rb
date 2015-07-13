@@ -66,6 +66,12 @@ def pop_huh(ev)
 
 end
 
+def pop_huh_r(ev)
+
+	pop_icon_r(ev,"misc/exclaim-r","jump")
+
+end
+
 def pop_wha(ev)
 
 	pop_icon(ev,"misc/unknown","jump")
@@ -90,6 +96,18 @@ def pop_icon(ev,icon,sfx)
 
 	x = gev(ev).screen_x+2
 	y = gev(ev).screen_y - 70
+	$scene.add_icon(icon,x,y,:blast,:fade)
+
+	sfx(sfx)
+
+end
+
+def pop_icon_r(ev,icon,sfx)
+
+	gev(ev).do(seq(go("off_y",8,90,:qio),go("off_y",-8,90,:qio)))
+
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y + 10
 	$scene.add_icon(icon,x,y,:blast,:fade)
 
 	sfx(sfx)
