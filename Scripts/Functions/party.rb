@@ -51,11 +51,13 @@ end
 def join(who)
 	$party.set_active(who)
 	pop_join(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
 def unjoin(who)
 	pop_leave(who)
 	$party.back_to_pavillion(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
 def make_reserve(who)

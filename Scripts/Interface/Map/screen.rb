@@ -4,7 +4,7 @@
 
 class Ui_Screen
 
-	attr_reader :message
+	attr_reader :message, :bar
   
 	def initialize(vp)
 
