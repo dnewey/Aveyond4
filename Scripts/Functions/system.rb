@@ -62,6 +62,10 @@ def open_char_menu(who)
 	$menu.menu_page = "Char"
 end
 
+def open_potions_menu
+	$menu.menu_page = "Potions"
+end
+
 def open_shop_buy
 	$menu.menu_page = "Shop"
 end

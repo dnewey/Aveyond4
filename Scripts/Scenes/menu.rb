@@ -135,6 +135,8 @@ class Scene_Menu
       when "Status"; @menu = Mnu_Status.new(@vp)
       when "Profile"; @menu = Mnu_Profile.new(@vp)
 
+      when "Potions"; @menu = Mnu_Potions.new(@vp)
+
       when "Creatures"; @menu = Mnu_Creatures.new(@vp)
       when "Witchery"; @menu = Mnu_Witchery.new(@vp)
       when "Dreaming"; @menu = Mnu_Dreaming.new(@vp)
