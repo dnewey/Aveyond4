@@ -1,4 +1,4 @@
-[ˆ"#==============================================================================
+[‰"#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -2686,7 +2686,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"\
+end"x
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2754,6 +2754,12 @@ def pop_huh(ev)
 
 end
 
+def pop_huh_r(ev)
+
+	pop_icon_r(ev,"misc/exclaim-r","jump")
+
+end
+
 def pop_wha(ev)
 
 	pop_icon(ev,"misc/unknown","jump")
@@ -2778,6 +2784,18 @@ def pop_icon(ev,icon,sfx)
 
 	x = gev(ev).screen_x+2
 	y = gev(ev).screen_y - 70
+	$scene.add_icon(icon,x,y,:blast,:fade)
+
+	sfx(sfx)
+
+end
+
+def pop_icon_r(ev,icon,sfx)
+
+	gev(ev).do(seq(go("off_y",8,90,:qio),go("off_y",-8,90,:qio)))
+
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y + 10
 	$scene.add_icon(icon,x,y,:blast,:fade)
 
 	sfx(sfx)
@@ -3073,8 +3091,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"
-#==============================================================================
+"r#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3127,11 +3144,13 @@ end
 def join(who)
 	$party.set_active(who)
 	pop_join(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
 def unjoin(who)
 	pop_leave(who)
 	$party.back_to_pavillion(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
 def make_reserve(who)
@@ -3353,7 +3372,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"Ý
+"
 # Misc
 
 def text()
@@ -3415,6 +3434,10 @@ end
 def open_char_menu(who)
 	$menu.char = who
 	$menu.menu_page = "Char"
+end
+
+def open_potions_menu
+	$menu.menu_page = "Potions"
 end
 
 def open_shop_buy
@@ -4569,13 +4592,13 @@ class TargetCmd
 	end
 
 end
-"Ú#==============================================================================
+"à#==============================================================================
 # Ui_Screen
 #==============================================================================
 
 class Ui_Screen
 
-	attr_reader :message
+	attr_reader :message, :bar
   
 	def initialize(vp)
 
@@ -4718,7 +4741,7 @@ class Ui_Screen
     	return @message.busy? || @item || @popper || @grid
     end
 
-end"]#==============================================================================
+end"g#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -4726,6 +4749,8 @@ class Ui_Bar < SpriteGroup
 
 	def initialize(vp)
 		super()
+
+		@vp = vp
 
 		@base = Sprite.new(vp)
 		@base.bitmap = $cache.menu_common("bottom-bar")
@@ -4796,47 +4821,11 @@ class Ui_Bar < SpriteGroup
 		@save.deselect = Proc.new{ $tweens.clear(@save); @save.oy = 0 }
 		add(@save,cx,4)
 
+		@char_icons = []
 		@hp_bars = []
 		@mp_bars = []
 
-		# Chars
-		i = 0
-		$party.active.each{ |m|
-
-			char = $party.get(m)
-
-			# Add icon
-			icon = Button.new(vp)
-			icon.bitmap = $cache.icon("faces/#{m}")
-			icon.press = Proc.new{ 
-				$tweens.clear(icon); icon.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio),call("open_char_menu('#{m}')")))				 
-			}
-			icon.select = Proc.new{ $tweens.clear(icon); icon.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
-			icon.deselect = Proc.new{ $tweens.clear(icon); icon.oy = 0 }
-			add(icon,238+i*98,4)
-
-			mp_bar = Bar.new(vp,66,6)
-			mp_bar.opacity = 200
-			mp_bar.for(:mp)
-			add(mp_bar,27+238+i*98,9)
-			@mp_bars.push(mp_bar)
-
-			case m
-				when 'boy', 'ing', 'hib', 'phy'
-					mp_bar.for(m)
-				else
-					mp_bar.hide
-			end
-
-			hp_bar = Bar.new(vp,66,8)
-			hp_bar.opacity = 200
-			hp_bar.for(:hp)
-			add(hp_bar,27+238+i*98,17)
-			@hp_bars.push(hp_bar)
-
-			i += 1
-
-		}
+		refresh
 
 		move(0,480-32)
 
@@ -4858,6 +4847,63 @@ class Ui_Bar < SpriteGroup
 		}
 
 		(@mp_bars+@hp_bars).each{ |b| b.update }
+
+	end
+
+	def refresh
+
+		(@char_icons+@hp_bars+@mp_bars).each{ |i|
+
+			i.dispose
+			self.delete(i)
+
+		}
+
+		@char_icons = []
+		@hp_bars = []
+		@mp_bars = []
+
+		# Chars
+		i = 0
+		$party.active.each{ |m|
+
+			char = $party.get(m)
+
+			# Add icon
+			icon = Button.new(@vp)
+			icon.bitmap = $cache.icon("faces/#{m}")
+			icon.press = Proc.new{ 
+				$tweens.clear(icon); icon.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio),call("open_char_menu('#{m}')")))				 
+			}
+			icon.select = Proc.new{ $tweens.clear(icon); icon.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
+			icon.deselect = Proc.new{ $tweens.clear(icon); icon.oy = 0 }
+			add(icon,238+i*98,4)
+			@char_icons.push(icon)
+
+			mp_bar = Bar.new(@vp,66,6)
+			mp_bar.opacity = 200
+			mp_bar.for(:mp)
+			add(mp_bar,27+238+i*98,9)
+			@mp_bars.push(mp_bar)
+
+			case m
+				when 'boy', 'ing', 'hib', 'phy'
+					mp_bar.for(m)
+				else
+					mp_bar.hide
+			end
+
+			hp_bar = Bar.new(@vp,66,8)
+			hp_bar.opacity = 200
+			hp_bar.for(:hp)
+			add(hp_bar,27+238+i*98,17)
+			@hp_bars.push(hp_bar)
+
+			i += 1
+
+		}
+
+		move(0,480-32)
 
 	end
 
@@ -5537,7 +5583,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"{O#==============================================================================
+end"×O#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -5827,6 +5873,8 @@ class Ui_Message
     @cx = PADDING_X
     @cy = PADDING_Y
 
+    @tail.show
+
     return log_err "Must specify speaker" if !text.include?(':')
     text_data = text.split(":")
 
@@ -5835,6 +5883,7 @@ class Ui_Message
     @lines = split_text(text_data[1]) 
 
     if speaker.include?("x-")
+      @tail.hide
       @mode = :x
       speaker = speaker.sub("x-",'')
     end
@@ -5853,6 +5902,8 @@ class Ui_Message
       speaker = speaker.sub("vn-",'')
       name = name.sub("vn-",'')
       @mode = :vn
+
+      @tail.hide
 
       # Set vn face
       @vn_port.bitmap = $cache.face_vn(speaker)
@@ -6239,6 +6290,7 @@ class Ui_Message
       $tweens.clear(@vn_port)
       @vn_port.do(to("opacity",0,-11))
       @tail.opacity = 0
+      @tail.hide
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
     end
   end
@@ -6260,6 +6312,7 @@ class Ui_Message
       @textbox.bitmap.clear
       @sprites.opacity = 0
       @tail.opacity = 0
+      @tail.hide
       @box.skin = $cache.menu_common("skin")
 
       #@sprites.do(go("opacity",-255,300,:quad_in_out))
@@ -9940,6 +9993,59 @@ class Right_Page < SpriteGroup
     	@cy += @txt_zone.height
     end
 
+end"–#==============================================================================
+# ** Mnu_Potions
+#==============================================================================
+
+class Mnu_Potions < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('potions')
+		@subtitle.text = "Making potions"		
+
+		@menu.list.type = :potion
+
+		#data = $progress.potions
+
+		@page = Right_Page.new(vp)
+		self.right.push(@page)
+
+		#@menu.list.setup(data)
+
+		#change(data[0]) if !data.empty?
+
+		open
+
+	end
+
+	def update
+		super
+
+	end
+
+	def change(option)
+
+		#return
+
+		@page.clear
+
+		# Change page to show this quest
+		#@info.title.text = option
+
+		@page.title = $data.quests[option].name
+		@page.description = $data.quests[option].description
+
+		@page.add_reqs($data.quests[option].req)
+		@page.add_zone($data.quests[option].location)
+
+	end
+
+	def select(option)	
+		
+	end
+
 end"ó#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
@@ -10580,7 +10686,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"Õ«#==============================================================================
+end"¬#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -10936,6 +11042,9 @@ class Game_Character
     if @lockdir <= 0
       @showdir = @direction
     end
+
+    # Reset animation on 
+    @pattern = 0 if mini
 
     return if mini && !jumping? # Force jumps to finish
 
@@ -14034,7 +14143,7 @@ class Moblin
 
 	end
 
-end"ö*#==============================================================================
+end"Î*#==============================================================================
 # ** Game_Player
 #------------------------------------------------------------------------------
 #  This class handles the player. Its functions include event starting
@@ -14386,9 +14495,6 @@ class Game_Player < Game_Character
       if ev.height > 1
         ty += ev.height/2
       end
-
-      log_scr(tx)
-      log_scr(ty)
 
       $player.moveto(tx,ty)
 
@@ -16433,7 +16539,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"²#==============================================================================
+"è#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -16569,6 +16675,8 @@ class Scene_Menu
       when "Skills"; @menu = Mnu_Skills.new(@vp)
       when "Status"; @menu = Mnu_Status.new(@vp)
       when "Profile"; @menu = Mnu_Profile.new(@vp)
+
+      when "Potions"; @menu = Mnu_Potions.new(@vp)
 
       when "Creatures"; @menu = Mnu_Creatures.new(@vp)
       when "Witchery"; @menu = Mnu_Witchery.new(@vp)
@@ -18986,7 +19094,7 @@ end"øclass Bitmap
 	end
 
 end
-"	
+"	
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -19006,7 +19114,7 @@ class KeyItemData
 	attr_reader :name
 	attr_reader :description
 	attr_reader :icon
-	attr_reader :chapter
+	attr_reader :notes
 	attr_accessor :tab
 end
 
