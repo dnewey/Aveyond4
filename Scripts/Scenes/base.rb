@@ -47,7 +47,7 @@ class Scene_Base
 
     # weather in map data
     @weather = nil#Weather.new(@vp_over)
-    @fog = Plane.new(@vp_over)
+    @fogs = []
 
     # Misc Overlay
     @overlay = Sprite.new(@vp_over)
@@ -77,7 +77,7 @@ class Scene_Base
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
     @weather.dispose if @eather
-    @fog.dispose
+    @fogs.each{ |s| s.dispose }
     @overlay.dispose
     @black.dispose
     @hud.dispose
@@ -123,6 +123,7 @@ class Scene_Base
       #s.oy = @map.display_y/4
       s.update 
     }
+    @fogs.each{ |p| p.update }
     @weather.update if @weather
     #@fog.update
     #@overlay.update
@@ -171,16 +172,57 @@ class Scene_Base
     end
   end
 
-  def change_fog(fog)
+  def change_fogs(fogs)
+
+    @fogs.each{ |p| p.dispose }
+    @fogs.clear   
+
+    data = fogs.split("\n")
+
+    data.each{ |fg|
+
+       fog = Panorama.new(@vp_over)
+       fog.blend = 1
+       fog.opacity = 120
+
+      # Any extra data
+      dta = fg.split(" | ")
+
+      if dta.count > 1
+        dta.each_index{ |i|
+          next if i == 0
+          d = dta[i].split("=>")
+
+          case d[0]
+            when 'ax'; fog.att_x = d[1].to_f
+            when 'ay'; fog.att_y = d[1].to_f
+            when 'sx'; fog.spd_x = d[1].to_f
+            when 'sy'; fog.spd_y = d[1].to_f
+            when 'ox'; fog.start_x = d[1].to_f
+            when 'oy'; fog.start_y = d[1].to_f
+            when 'px'; fog.pad_x = d[1].to_f
+            when 'py'; fog.pad_y = d[1].to_f
+            when 'r'; fog.repeat = d[1].to_b
+
+          end
+
+        }
+      end
+
+      
+      #pano.z = -1000
+      fog.bitmap = $cache.fog(dta[0])
+      @fogs.push(fog)
+
+    }
+
 
   end
 
   def change_panoramas(panos)
 
     @panoramas.each{ |p| p.dispose }
-    @panoramas.clear
-
-   
+    @panoramas.clear   
 
     data = panos.split("\n")
 

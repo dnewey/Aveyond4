@@ -364,7 +364,8 @@ class Ui_Message
 
     build_namebox(name.split("-")[0])
 
-       
+    # Chance wallpaper as needed
+    build_wallpaper(name.split("-")[0])   
 
     # Textbox size
     @width = max_width + PADDING_X * 2
@@ -440,6 +441,20 @@ class Ui_Message
       @namebox.bitmap = Bitmap.new(size.width+40,40)
       @namebox.bitmap.hskin($cache.menu("Common/namebox"))
       @nametext.bitmap.draw_gtext(0,0,220,35,name,1)
+
+  end
+
+  def build_wallpaper(name)
+
+    case name
+
+      when 'Chester'
+        $scene.hud.message.wallpaper = 'Wizard'
+
+      else
+        $scene.hud.message.wallpaper = 'diamonds'
+
+    end
 
   end
 

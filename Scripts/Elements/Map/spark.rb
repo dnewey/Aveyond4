@@ -30,6 +30,7 @@ class Spark < Sprite
 		if $data.anims.has_key?(fx)
 
 			anim = $data.anims[fx]
+			@loop = anim.loop
 			@frames = anim.frames
 			@delay = anim.delay
 			@fadeout = anim.fadeout
@@ -77,7 +78,7 @@ class Spark < Sprite
 
 	def done?
 		return false if @fade_out && self.opacity > 0
-		return @idx == @frames
+		return @idx == @frames && !@loop
 	end
 
 	def update
@@ -92,9 +93,13 @@ class Spark < Sprite
 
 			@idx += 1
 
-			@idx = @frames if @idx > @frames
+			if @idx > @frames
+				@loop ? @idx = 0 : @idx = @frames 
+			end
 
-			self.opacity -= 30 if @idx >= @frames - 2
+			if @fadeout && !@loop
+				self.opacity -= 30 if @idx >= @frames - 2
+			end
 
 			if @sound && @idx == @sound_delay
 				sfx(@sound)
@@ -104,6 +109,8 @@ class Spark < Sprite
 			if @reverse
 				idx = @frames - @idx
 			end
+
+
 
 			fx = idx % 5 # frames_per_row
 			fy = idx / 5

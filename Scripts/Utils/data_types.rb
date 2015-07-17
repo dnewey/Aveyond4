@@ -122,6 +122,7 @@ class AnimData
 	attr_reader :blend
 	attr_reader :opacity
 	attr_reader :sound
+	attr_reader :loop
 end
 
 class NumberData

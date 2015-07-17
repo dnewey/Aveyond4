@@ -299,6 +299,16 @@ class Game_Event < Game_Character
       when '@second'
         return false if !state?(me,"second_#{this.page_idx}")
 
+      # Direction
+      when '@up'
+        return false if $player.direction != 8
+      when '@down'
+        return false if $player.direction != 2
+      when '@left'
+        return false if $player.direction != 4
+      when '@right'
+        return false if $player.direction != 6
+
       # Char in party
       when '@boy'
         return false if $party.leader != 'boy'      

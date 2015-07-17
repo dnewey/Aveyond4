@@ -111,7 +111,7 @@ class Game_Map
 
         # Init tints and that
         $scene.change_weather(@zone.weather)
-        $scene.change_fog(@zone.fog)
+        $scene.change_fogs(@zone.fog)
         $scene.change_tint(@zone.tint)
         $scene.change_panoramas(@zone.panoramas)
 

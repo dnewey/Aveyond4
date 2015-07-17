@@ -12,9 +12,9 @@ class SteamManager
 		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	
     	log_info Win32API.new('System/steamstub', "GetSteamAchievement", "P", "I").call("START_GAME")
-log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
+		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	log_info Win32API.new('System/steamstub', "SetSteamAchievement", "P", "I").call("START_GAME")
-log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
+		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	log_info Win32API.new('System/steamstub', "GetSteamAchievement", "P", "I").call("START_GAME")
     	log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	#stats =  Win32API.new('System/steam_api', "SteamUserStats", ["V"], "P").call     	

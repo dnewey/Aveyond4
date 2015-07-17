@@ -24,6 +24,14 @@ class Panorama
     @start_y = 0
 
   end
+
+  def blend=(b)
+    @sprite.blend_type = b
+  end
+
+  def opacity=(o)
+    @sprite.opacity = o
+  end
  
  def dispose
     @sprite.bitmap.dispose

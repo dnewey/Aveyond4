@@ -224,7 +224,7 @@ class MapWrap < Tilemap
 
 	end
 
-end"ã
+end"N
 class Panorama
 
   attr_accessor :spd_x, :spd_y # Speed
@@ -249,6 +249,14 @@ class Panorama
     @start_x = 0
     @start_y = 0
 
+  end
+
+  def blend=(b)
+    @sprite.blend_type = b
+  end
+
+  def opacity=(o)
+    @sprite.opacity = o
   end
  
  def dispose
@@ -694,7 +702,7 @@ end"# #======================================================================
 #   #--------------------------------------------------------------------------
 #   def dead?() return self.opacity <= 0 end
 
-# end"þ
+# end"f
 class Spark < Sprite
 
 	def initialize(fx,x,y,vp)
@@ -726,6 +734,7 @@ class Spark < Sprite
 		if $data.anims.has_key?(fx)
 
 			anim = $data.anims[fx]
+			@loop = anim.loop
 			@frames = anim.frames
 			@delay = anim.delay
 			@fadeout = anim.fadeout
@@ -773,7 +782,7 @@ class Spark < Sprite
 
 	def done?
 		return false if @fade_out && self.opacity > 0
-		return @idx == @frames
+		return @idx == @frames && !@loop
 	end
 
 	def update
@@ -788,9 +797,13 @@ class Spark < Sprite
 
 			@idx += 1
 
-			@idx = @frames if @idx > @frames
+			if @idx > @frames
+				@loop ? @idx = 0 : @idx = @frames 
+			end
 
-			self.opacity -= 30 if @idx >= @frames - 2
+			if @fadeout && !@loop
+				self.opacity -= 30 if @idx >= @frames - 2
+			end
 
 			if @sound && @idx == @sound_delay
 				sfx(@sound)
@@ -800,6 +813,8 @@ class Spark < Sprite
 			if @reverse
 				idx = @frames - @idx
 			end
+
+
 
 			fx = idx % 5 # frames_per_row
 			fy = idx / 5
@@ -5583,7 +5598,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"×O#==============================================================================
+end"êP#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -5949,7 +5964,8 @@ class Ui_Message
 
     build_namebox(name.split("-")[0])
 
-       
+    # Chance wallpaper as needed
+    build_wallpaper(name.split("-")[0])   
 
     # Textbox size
     @width = max_width + PADDING_X * 2
@@ -6025,6 +6041,20 @@ class Ui_Message
       @namebox.bitmap = Bitmap.new(size.width+40,40)
       @namebox.bitmap.hskin($cache.menu("Common/namebox"))
       @nametext.bitmap.draw_gtext(0,0,220,35,name,1)
+
+  end
+
+  def build_wallpaper(name)
+
+    case name
+
+      when 'Chester'
+        $scene.hud.message.wallpaper = 'Wizard'
+
+      else
+        $scene.hud.message.wallpaper = 'diamonds'
+
+    end
 
   end
 
@@ -12191,7 +12221,7 @@ class Game_Character
 
 
 end
-"F<#==============================================================================
+"j=#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -12491,6 +12521,16 @@ class Game_Event < Game_Character
         return false if state?(me,"second_#{this.page_idx}")
       when '@second'
         return false if !state?(me,"second_#{this.page_idx}")
+
+      # Direction
+      when '@up'
+        return false if $player.direction != 8
+      when '@down'
+        return false if $player.direction != 2
+      when '@left'
+        return false if $player.direction != 4
+      when '@right'
+        return false if $player.direction != 6
 
       # Char in party
       when '@boy'
@@ -13631,7 +13671,7 @@ class Interpreter
   end
 
 end
-"0#==============================================================================
+"0#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -13744,7 +13784,7 @@ class Game_Map
 
         # Init tints and that
         $scene.change_weather(@zone.weather)
-        $scene.change_fog(@zone.fog)
+        $scene.change_fogs(@zone.fog)
         $scene.change_tint(@zone.tint)
         $scene.change_panoramas(@zone.panoramas)
 
@@ -15430,7 +15470,7 @@ end"class State
 	end
 
 end
-"µ#==============================================================================
+"Œ#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -15479,7 +15519,7 @@ class Scene_Base
 
     # weather in map data
     @weather = nil#Weather.new(@vp_over)
-    @fog = Plane.new(@vp_over)
+    @fogs = []
 
     # Misc Overlay
     @overlay = Sprite.new(@vp_over)
@@ -15509,7 +15549,7 @@ class Scene_Base
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
     @weather.dispose if @eather
-    @fog.dispose
+    @fogs.each{ |s| s.dispose }
     @overlay.dispose
     @black.dispose
     @hud.dispose
@@ -15555,6 +15595,7 @@ class Scene_Base
       #s.oy = @map.display_y/4
       s.update 
     }
+    @fogs.each{ |p| p.update }
     @weather.update if @weather
     #@fog.update
     #@overlay.update
@@ -15603,16 +15644,57 @@ class Scene_Base
     end
   end
 
-  def change_fog(fog)
+  def change_fogs(fogs)
+
+    @fogs.each{ |p| p.dispose }
+    @fogs.clear   
+
+    data = fogs.split("\n")
+
+    data.each{ |fg|
+
+       fog = Panorama.new(@vp_over)
+       fog.blend = 1
+       fog.opacity = 120
+
+      # Any extra data
+      dta = fg.split(" | ")
+
+      if dta.count > 1
+        dta.each_index{ |i|
+          next if i == 0
+          d = dta[i].split("=>")
+
+          case d[0]
+            when 'ax'; fog.att_x = d[1].to_f
+            when 'ay'; fog.att_y = d[1].to_f
+            when 'sx'; fog.spd_x = d[1].to_f
+            when 'sy'; fog.spd_y = d[1].to_f
+            when 'ox'; fog.start_x = d[1].to_f
+            when 'oy'; fog.start_y = d[1].to_f
+            when 'px'; fog.pad_x = d[1].to_f
+            when 'py'; fog.pad_y = d[1].to_f
+            when 'r'; fog.repeat = d[1].to_b
+
+          end
+
+        }
+      end
+
+      
+      #pano.z = -1000
+      fog.bitmap = $cache.fog(dta[0])
+      @fogs.push(fog)
+
+    }
+
 
   end
 
   def change_panoramas(panos)
 
     @panoramas.each{ |p| p.dispose }
-    @panoramas.clear
-
-   
+    @panoramas.clear   
 
     data = panos.split("\n")
 
@@ -18887,7 +18969,7 @@ class SettingsManager
     save
   end
 
-end"Õ
+end"Ù
 class SteamManager
 
 	def initialize
@@ -18901,9 +18983,9 @@ class SteamManager
 		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	
     	log_info Win32API.new('System/steamstub', "GetSteamAchievement", "P", "I").call("START_GAME")
-log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
+		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	log_info Win32API.new('System/steamstub', "SetSteamAchievement", "P", "I").call("START_GAME")
-log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
+		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	log_info Win32API.new('System/steamstub', "GetSteamAchievement", "P", "I").call("START_GAME")
     	log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
     	#stats =  Win32API.new('System/steam_api', "SteamUserStats", ["V"], "P").call     	
@@ -19094,7 +19176,7 @@ end"øclass Bitmap
 	end
 
 end
-"	
+"%	
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -19218,6 +19300,7 @@ class AnimData
 	attr_reader :blend
 	attr_reader :opacity
 	attr_reader :sound
+	attr_reader :loop
 end
 
 class NumberData

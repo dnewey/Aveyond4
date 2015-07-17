@@ -18,7 +18,8 @@
     "field": "weather"
   },
   {
-    "field": "fog"
+    "field": "fog",
+    "edit": "area"
   },
   {
     "field": "panoramas",
