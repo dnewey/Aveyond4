@@ -8,6 +8,8 @@ class Game_Battle
   attr_reader :enemy_list
   attr_reader :queue2
 
+  attr_accessor :next_map
+
 	def initialize
 
     @enemy_types = []
@@ -21,7 +23,10 @@ class Game_Battle
 
     @queue2 = nil
 
-    @map = 65 #26
+    @default_map = 65
+    @zone_maps = []
+    @next_map = nil
+
 	end
 
   # Enemies for this zone from zone data
@@ -36,6 +41,10 @@ class Game_Battle
     @queue2 = nil
   end
 
+  def change_maps(maps)
+    @zone_maps = maps
+  end
+
   def add(enemy)
     battler = Game_Battler.new
     battler.init_enemy(enemy)
@@ -43,6 +52,8 @@ class Game_Battle
     @enemies.push(battler)
   end
 
+  # Queue up skills to use before battle starts
+  # Use this to do scenes perhaps
   def queue(enemy_id,skill)
     @queue2 = [enemy_id,skill]
   end
@@ -141,8 +152,22 @@ class Game_Battle
   end
 
   def start
+
+    # Set the map for this battle, whether custom or from zone data
+    if @next_map
+      @map = @next_map
+      @next_map = nil
+    else
+      if @zone_maps
+        @map = @zone_maps.sample.to_i
+      else
+        @map = @default_map
+      end
+    end
+
     $scene.hud.hide
     $game.push_scene(Scene_Battle.new)
+    
   end
 
   def victory?
