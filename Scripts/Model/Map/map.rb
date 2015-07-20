@@ -117,7 +117,7 @@ class Game_Map
 
         # Prep enemies for this zone
         $battle.change_enemies(@zone.enemies)
-        $battle.change_zones(@zone.battles)
+        $battle.change_maps(@zone.battles)
 
       end
 

@@ -114,15 +114,15 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
-		when :rotten
-			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 6
+		# when :rotten
+		# 	ev.character_name = 'Objects/cauldron-problem-a'
+		# 	ev.direction = 6
 
 		when :acidic # Soda ash
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
-		when :slimy
+		when :slimy # STARCH
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 2
 
@@ -130,9 +130,9 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
-		when :sour
-			ev.character_name = 'Objects/cauldron-problem-b'
-			ev.direction = 6
+		# when :sour
+		# 	ev.character_name = 'Objects/cauldron-problem-b'
+		# 	ev.direction = 6
 
 		when :volatile # Calm it somehow
 			ev.character_name = 'Objects/cauldron-problem-b'

@@ -133,7 +133,7 @@ class AudioManager
 
   end
 
-  def queue(file,vol=1.0,delay)
+  def queue(file,vol=1.0,delay=0)
     @queue.push([file,delay,vol])
   end
 

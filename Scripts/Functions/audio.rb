@@ -3,7 +3,7 @@
 
 def sfx(file,vol=1.0,delay=0)
 	if delay > 0
-		$audio.queue(file,vol)
+		$audio.queue(file,vol,delay)
 	else
 		$audio.sfx(file,vol)
 	end
