@@ -12,6 +12,8 @@ class Label < Sprite
   attr_accessor :padding
 
   attr_accessor :gradient
+
+  attr_accessor :icon_oy
     
   #--------------------------------------------------------------------------
   # * Init
@@ -29,6 +31,8 @@ class Label < Sprite
     @icon = nil
 
     @padding = 5
+
+    @icon_oy = 0
 
     # If there is a width, don't auto size width
     @fixed_width = 0
@@ -83,7 +87,7 @@ class Label < Sprite
     # Draw the icon
     if @icon
 
-      self.bitmap.blt(@padding,(size.height-28)/2+3,@icon,@icon.rect)
+      self.bitmap.blt(@padding,(size.height-28)/2+3+@icon_oy,@icon,@icon.rect)
 
     end
 

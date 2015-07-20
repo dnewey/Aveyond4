@@ -19,6 +19,8 @@ class DataManager
   attr_reader :anims
 
   attr_reader :numbers
+  attr_reader :potions
+  attr_reader :profiles
 
   # Clone events
   attr_reader :clones
@@ -59,6 +61,8 @@ class DataManager
     @anims = load_json("anims",AnimData)
 
     @numbers = load_json("numbers",NumberData)
+    @potions = load_json("potions",PotionData)
+    @profiles = load_json("profiles",ProfileData)
 
     @clones = load_clones
 

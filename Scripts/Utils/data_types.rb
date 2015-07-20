@@ -138,3 +138,12 @@ class ProfileData
 	attr_reader :age
 	attr_reader :desc
 end
+
+class PotionData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :ingredients
+	attr_reader :problems
+	attr_reader :result
+end

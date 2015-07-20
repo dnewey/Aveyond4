@@ -1,5 +1,5 @@
 
-class Right_Page < SpriteGroup
+class Right_Journal < SpriteGroup
 
 	def initialize(vp)
 		super()

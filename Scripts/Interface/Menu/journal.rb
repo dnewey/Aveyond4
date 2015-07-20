@@ -19,7 +19,7 @@ class Mnu_Journal < Mnu_Base
 
 		data = $progress.quests
 
-		@page = Right_Page.new(vp)
+		@page = Right_Journal.new(vp)
 		self.right.push(@page)
 
 		@menu.list.setup(data)
