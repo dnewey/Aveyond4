@@ -702,7 +702,7 @@ end"# #======================================================================
 #   #--------------------------------------------------------------------------
 #   def dead?() return self.opacity <= 0 end
 
-# end"f
+# end"x
 class Spark < Sprite
 
 	def initialize(fx,x,y,vp)
@@ -734,7 +734,7 @@ class Spark < Sprite
 		if $data.anims.has_key?(fx)
 
 			anim = $data.anims[fx]
-			@loop = anim.loop
+			@loop = true if anim.loop == "true"
 			@frames = anim.frames
 			@delay = anim.delay
 			@fadeout = anim.fadeout
@@ -2583,12 +2583,12 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"Þ
+end"ä
 # Audio
 
 def sfx(file,vol=1.0,delay=0)
 	if delay > 0
-		$audio.queue(file,vol)
+		$audio.queue(file,vol,delay)
 	else
 		$audio.sfx(file,vol)
 	end
@@ -3655,7 +3655,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"Ì	
+ end"á	
 # Potion making
 
 def potion_can_add?
@@ -3771,15 +3771,15 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
-		when :rotten
-			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 6
+		# when :rotten
+		# 	ev.character_name = 'Objects/cauldron-problem-a'
+		# 	ev.direction = 6
 
 		when :acidic # Soda ash
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
-		when :slimy
+		when :slimy # STARCH
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 2
 
@@ -3787,9 +3787,9 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
-		when :sour
-			ev.character_name = 'Objects/cauldron-problem-b'
-			ev.direction = 6
+		# when :sour
+		# 	ev.character_name = 'Objects/cauldron-problem-b'
+		# 	ev.direction = 6
 
 		when :volatile # Calm it somehow
 			ev.character_name = 'Objects/cauldron-problem-b'
@@ -13695,7 +13695,7 @@ class Interpreter
   end
 
 end
-"F0#==============================================================================
+"E0#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -13814,7 +13814,7 @@ class Game_Map
 
         # Prep enemies for this zone
         $battle.change_enemies(@zone.enemies)
-        $battle.change_zones(@zone.battles)
+        $battle.change_maps(@zone.battles)
 
       end
 
@@ -17526,7 +17526,7 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end".#==============================================================================
+end"0#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -17661,7 +17661,7 @@ class AudioManager
 
   end
 
-  def queue(file,vol=1.0,delay)
+  def queue(file,vol=1.0,delay=0)
     @queue.push([file,delay,vol])
   end
 

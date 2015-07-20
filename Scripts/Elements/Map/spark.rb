@@ -30,7 +30,7 @@ class Spark < Sprite
 		if $data.anims.has_key?(fx)
 
 			anim = $data.anims[fx]
-			@loop = anim.loop
+			@loop = true if anim.loop == "true"
 			@frames = anim.frames
 			@delay = anim.delay
 			@fadeout = anim.fadeout
