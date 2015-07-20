@@ -1,21 +1,43 @@
 
 # Potion making
 
+def potion_learn(potion)
+	return if potion_known?(potion)
+	$party.potions.push(potion)
+end
+
+def potion_known?(potion)
+	return $party.potions.include?(potion)
+end
+
 def potion_can_add?
 	return false if $party.potion.count >= 5
 	return [:empty,:adding].include?($party.potion_state)
 end
 
 def potion_full?
-	return $party.potion.count >= 5
+	return $party.potion_ings.count >= 5
 end
 
-def potion_add(item)
+def potion_equip(item)
+	$party.potion_item = item
+end
+
+def potion_dequip
+	$party.potion_item = nil
+end
+
+def potion_add
+
+	# Add your potion equip, dequip it, and use one up
 
 	# Maybe max 5
-
-	$party.potion.push(item)
+	$party.potion_ings.push(item)
 	@potion.state = :adding
+
+	# Remove the item from hand and party
+	$party.lose_item($party.potion_item)
+	$party.potion_item = nil
 
 end
 
@@ -25,7 +47,7 @@ end
 
 def potion_done?
 	problems = $data.potions[$party.potion_id].problems.split("\n")
-	return $party.potion.level >= problems.count
+	return $party.potion_level >= problems.count
 end
 
 def potion_hack(type)
@@ -65,7 +87,7 @@ def potion_mix
 
 	$data.potions.each{ |p|
 
-		if p.ingredients.split("/n").sort == $party.potion.sort
+		if p.ingredients.split("/n").sort == $party.potion_ings.sort
 			
 			# This is it!
 			$party.potion_id = p.id
@@ -73,10 +95,13 @@ def potion_mix
 			# Now step through the problems
 			$party.potion_level = -1
 			potion_next_problem
+			return
 
 		end
 
 	}
+
+	# Dud potion, uh-oh
 
 end
 
@@ -98,19 +123,19 @@ def cauldron_graphic(ev)
 
 	case $party.potion_state
 
-		when 'empty'
+		when :empty
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when 'adding'
+		when :adding
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 
-		when :hot # Cool
+		when :hot # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 2
 
-		when :claggy
+		when :claggy # MIXXER OF SOME SORT
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
@@ -122,11 +147,11 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
-		when :slimy # STARCH
+		when :slimy # Rock Powder
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 2
 
-		when :cold # Heat - dragon
+		when :cold # Baby Dragon
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
@@ -134,9 +159,13 @@ def cauldron_graphic(ev)
 		# 	ev.character_name = 'Objects/cauldron-problem-b'
 		# 	ev.direction = 6
 
-		when :volatile # Calm it somehow
+		when :volatile # MUSIC
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 8
+
+		when :done
+
+			# Depends on the potion you were trying to make
 
 	end
 

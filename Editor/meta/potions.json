@@ -6,6 +6,9 @@
     "field": "name"
   },
   {
+    "field": "description"
+  },
+  {
     "field": "ingredients",
     "edit": "area"
   },

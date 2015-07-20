@@ -13,9 +13,10 @@ class Game_Party
 
   attr_accessor :leader
 
-  attr_reader :items
+  attr_reader :items, :potions
 
-  attr_accessor :potion, :potion_state, :potion_level, :potion_result
+  # Potion making vars
+  attr_accessor :potion_ings, :potion_state, :potion_level, :potion_id, :potion_item
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -36,16 +37,19 @@ class Game_Party
     @active = []
     @reserve = []
 
-    # Initialize amount of gold
+    # Inventory
+    @items = {}
     @gold = 250
 
-    # Create amount in possession hash for items, weapons, and armor
-    @items = {}
+    # Other things you can have
+    @potions = []
 
-    @potion = []
-    @potion_state = 'empty'
-    @potion_id = nil
-    @potion_level = 0
+    # Current state of potions
+    @potion_ings = []
+    @potion_state = :empty # Current potion in progress
+    @potion_id = nil # Potion being made once in hack state
+    @potion_level = 0 # How many hacks have been completed
+    @potion_item = nil # What ingredient you are using
 
     # Hardcode Party Data
     init_party
@@ -242,7 +246,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
+    set_active("ing")
     set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
@@ -302,6 +306,7 @@ class Game_Party
     item('boy-arm-s','s')
     item('hib-arm-s','s')
 
+    potion_learn("truth")
     
 
   end

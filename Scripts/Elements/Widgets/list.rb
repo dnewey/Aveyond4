@@ -210,6 +210,8 @@ class List
     case @type
       when :item
         draw_item(data,row)
+      when :potion
+        draw_potion(data,row)
       when :shop
         draw_shop(data,row)
       when :equip
@@ -248,9 +250,27 @@ class List
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if number > 0
-
       @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
     end
+
+  end
+
+  def draw_potion(data,row)
+
+    item = $data.potions[data]
+
+    if item != nil
+      name = item.name
+      ico = $cache.icon("misc/unknown")
+      #ico = $cache.icon(item.icon)
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
 
   end
 

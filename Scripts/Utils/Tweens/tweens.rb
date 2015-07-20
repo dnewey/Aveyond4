@@ -99,6 +99,7 @@ class CallTween < Tween
 
 	def initialize(script)
 		@script = script
+		@stopit = false
 	end
 
 	def done?
@@ -106,11 +107,15 @@ class CallTween < Tween
 	end
 
 	def start
+		return if @stopit
 		eval(@script)
+		@stopit = true
 	end
 
 	def copy
-		return self
+		nano = CallTween.new(@script)
+		nano.set_parent(@parent)
+		return nano
 	end
 
 end
@@ -312,7 +317,9 @@ class LoopTween < Tween
 	end
 
 	def copy
-		return LoopTween.new(@child.copy, @times)
+		nano = LoopTween.new(@child.copy, @times)
+		nano.set_parent(@parent)
+		return nano
 	end
 
 end
@@ -369,6 +376,7 @@ class SequenceTween < Tween
 
 	def reverse
 		nano = SequenceTween.new()
+		nano.set_parent(@parent)
 		@sequence.reverse.each{ |n|
 			nano.push(n.copy)
 		}
@@ -377,6 +385,7 @@ class SequenceTween < Tween
 
 	def copy
 		nano = SequenceTween.new()
+		nano.set_parent(@parent)
 		@sequence.each{ |n|
 			nano.push(n.copy)
 		}

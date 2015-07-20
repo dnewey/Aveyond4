@@ -11,13 +11,12 @@ class Mnu_Potions < Mnu_Base
 		@subtitle.text = "Making potions"		
 
 		@menu.list.type = :potion
+		@menu.list.setup($party.potions)
 
-		#data = $progress.potions
-
-		@page = Right_Page.new(vp)
+		@page = Right_Potion.new(vp)
 		self.right.push(@page)
 
-		#@menu.list.setup(data)
+		@page.setup("truth")		
 
 		#change(data[0]) if !data.empty?
 
@@ -32,18 +31,7 @@ class Mnu_Potions < Mnu_Base
 
 	def change(option)
 
-		#return
-
-		@page.clear
-
-		# Change page to show this quest
-		#@info.title.text = option
-
-		@page.title = $data.quests[option].name
-		@page.description = $data.quests[option].description
-
-		@page.add_reqs($data.quests[option].req)
-		@page.add_zone($data.quests[option].location)
+		@page.setup(option)		
 
 	end
 

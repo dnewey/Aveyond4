@@ -126,6 +126,15 @@ def pop_num(ev,number)
 
 end
 
+def pop_icon_get(ev,item)
+
+	icon = $data.items[item].icon	
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 24
+	$scene.add_icon(icon,x,y,:fade,:fade)
+
+end
+
 def icon(ev,icon,ein=:blast,eout=:blast)
 
 	x = gev(ev).screen_x
