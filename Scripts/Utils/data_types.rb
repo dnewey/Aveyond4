@@ -95,6 +95,8 @@ class ZoneData
 	attr_reader :fog
 	attr_reader :panoramas
 	attr_reader :enemies
+	attr_reader :battles
+	attr_reader :indoor
 end
 
 class ProgressData

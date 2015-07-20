@@ -4,6 +4,7 @@
 
 class AudioManager
 
+  attr_accessor :music_target
 
   def initialize
 
@@ -132,14 +133,8 @@ class AudioManager
 
   end
 
-  def queue(file,delay,vol=1.0)
+  def queue(file,vol=1.0,delay)
     @queue.push([file,delay,vol])
-  end
-
-  def dip(src)
-
-    # Dip the music while the src plays then fade up
-
   end
 
   def pause
@@ -209,12 +204,10 @@ class AudioManager
 
     # Play sfx on delay
     @queue.each{ |i|
-
       i[1] -= 1
       if i[1] <= 0
         sfx(i[0],i[2])
       end
-
     }
 
     @queue.delete_if{ |i| i[1] <= 0 }

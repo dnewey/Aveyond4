@@ -33,19 +33,6 @@ def cam_ox(amount)
 	$map.do(go("cam_ox",amount,amount.abs*6,:qio))
 end
 
-# Audio
-
-def sfx(file,vol=1.0)
-	$audio.sfx(file,vol)
-end
-
-def sys(file,vol=1.0)
-	$audio.sys(file,vol)
-end
-
-def music(file,vol=1.0)
-	$audio.music(file,vol)
-end
 
 # Menus Access
 
