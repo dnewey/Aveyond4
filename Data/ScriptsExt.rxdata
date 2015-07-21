@@ -1,4 +1,4 @@
-[Š"#==============================================================================
+[Œ"#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1387,7 +1387,8 @@ class Button < Sprite
     @deselect.call() if @deselect
   end
 
-end"ì	#==============================================================================
+end"%
+#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -1401,6 +1402,8 @@ class Label < Sprite
   attr_accessor :padding
 
   attr_accessor :gradient
+
+  attr_accessor :icon_oy
     
   #--------------------------------------------------------------------------
   # * Init
@@ -1418,6 +1421,8 @@ class Label < Sprite
     @icon = nil
 
     @padding = 5
+
+    @icon_oy = 0
 
     # If there is a width, don't auto size width
     @fixed_width = 0
@@ -1472,7 +1477,7 @@ class Label < Sprite
     # Draw the icon
     if @icon
 
-      self.bitmap.blt(@padding,(size.height-28)/2+3,@icon,@icon.rect)
+      self.bitmap.blt(@padding,(size.height-28)/2+3+@icon_oy,@icon,@icon.rect)
 
     end
 
@@ -1497,7 +1502,7 @@ class Label < Sprite
         
   end
   
-end"v5#==============================================================================
+end"7#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1709,6 +1714,8 @@ class List
     case @type
       when :item
         draw_item(data,row)
+      when :potion
+        draw_potion(data,row)
       when :shop
         draw_shop(data,row)
       when :equip
@@ -1747,9 +1754,27 @@ class List
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if number > 0
-
       @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
     end
+
+  end
+
+  def draw_potion(data,row)
+
+    item = $data.potions[data]
+
+    if item != nil
+      name = item.name
+      ico = $cache.icon("misc/unknown")
+      #ico = $cache.icon(item.icon)
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
 
   end
 
@@ -2738,7 +2763,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"x
+end"
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2863,6 +2888,15 @@ def pop_num(ev,number)
 	$scene.add_num(number,x,y,:blast,:fade)
 
 	#sfx('jump')
+
+end
+
+def pop_icon_get(ev,item)
+
+	icon = $data.items[item].icon	
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 24
+	$scene.add_icon(icon,x,y,:fade,:fade)
 
 end
 
@@ -3655,8 +3689,17 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"á	
+ end"(
 # Potion making
+
+def potion_learn(potion)
+	return if potion_known?(potion)
+	$party.potions.push(potion)
+end
+
+def potion_known?(potion)
+	return $party.potions.include?(potion)
+end
 
 def potion_can_add?
 	return false if $party.potion.count >= 5
@@ -3664,15 +3707,28 @@ def potion_can_add?
 end
 
 def potion_full?
-	return $party.potion.count >= 5
+	return $party.potion_ings.count >= 5
 end
 
-def potion_add(item)
+def potion_equip(item)
+	$party.potion_item = item
+end
+
+def potion_dequip
+	$party.potion_item = nil
+end
+
+def potion_add
+
+	# Add your potion equip, dequip it, and use one up
 
 	# Maybe max 5
-
-	$party.potion.push(item)
+	$party.potion_ings.push(item)
 	@potion.state = :adding
+
+	# Remove the item from hand and party
+	$party.lose_item($party.potion_item)
+	$party.potion_item = nil
 
 end
 
@@ -3682,7 +3738,7 @@ end
 
 def potion_done?
 	problems = $data.potions[$party.potion_id].problems.split("\n")
-	return $party.potion.level >= problems.count
+	return $party.potion_level >= problems.count
 end
 
 def potion_hack(type)
@@ -3722,7 +3778,7 @@ def potion_mix
 
 	$data.potions.each{ |p|
 
-		if p.ingredients.split("/n").sort == $party.potion.sort
+		if p.ingredients.split("/n").sort == $party.potion_ings.sort
 			
 			# This is it!
 			$party.potion_id = p.id
@@ -3730,10 +3786,13 @@ def potion_mix
 			# Now step through the problems
 			$party.potion_level = -1
 			potion_next_problem
+			return
 
 		end
 
 	}
+
+	# Dud potion, uh-oh
 
 end
 
@@ -3755,19 +3814,19 @@ def cauldron_graphic(ev)
 
 	case $party.potion_state
 
-		when 'empty'
+		when :empty
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when 'adding'
+		when :adding
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 
-		when :hot # Cool
+		when :hot # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 2
 
-		when :claggy
+		when :claggy # MIXXER OF SOME SORT
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
@@ -3779,11 +3838,11 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
-		when :slimy # STARCH
+		when :slimy # Rock Powder
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 2
 
-		when :cold # Heat - dragon
+		when :cold # Baby Dragon
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
@@ -3791,15 +3850,22 @@ def cauldron_graphic(ev)
 		# 	ev.character_name = 'Objects/cauldron-problem-b'
 		# 	ev.direction = 6
 
-		when :volatile # Calm it somehow
+		when :volatile # MUSIC
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 8
+
+		when :done
+
+			# Depends on the potion you were trying to make
 
 	end
 
 end
 
-# Guilds"m
+# Guilds"
+def word_length
+
+end"m
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -6981,7 +7047,7 @@ class Mnu_Items < Mnu_Base
 		
 	end
 
-end"À#==============================================================================
+end"Ã#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -7002,7 +7068,7 @@ class Mnu_Journal < Mnu_Base
 
 		data = $progress.quests
 
-		@page = Right_Page.new(vp)
+		@page = Right_Journal.new(vp)
 		self.right.push(@page)
 
 		@menu.list.setup(data)
@@ -9910,8 +9976,8 @@ class Port_Full < Sprite
 
 	end
 
-end"]
-class Right_Page < SpriteGroup
+end"`
+class Right_Journal < SpriteGroup
 
 	def initialize(vp)
 		super()
@@ -10047,7 +10113,104 @@ class Right_Page < SpriteGroup
     	@cy += @txt_zone.height
     end
 
-end"–#==============================================================================
+end"X
+class Right_Potion < SpriteGroup
+
+	def initialize(vp)
+		super()
+	
+        @vp = vp
+
+		# Right side journal
+		@window = Box.new(vp,300,292)
+    	@window.skin = $cache.menu_common("skin-dry")
+    	@window.wallpaper = $cache.menu_wallpaper("journal_page_line")
+    	#@window.color = Color.new(47,45,41)
+    	add(@window,320,140)
+
+    	# Quest Name
+    	@page_title = Label.new(vp)
+    	@page_title.fixed_width = 250
+        @page_title.icon = $cache.icon("potions/hypercurium")
+        @page_title.icon_oy = -3
+    	@page_title.font = $fonts.page_ttl
+    	@page_title.text = "Choco Dream"
+    	add(@page_title,340,154)
+
+    	# # SUBTEXTS!!!!!!!!!!
+
+    	# cy = 180
+
+    	# # ALWAYS DESCRIPTION
+
+    	@txt_desc = Area.new(vp)
+    	@txt_desc.fixed_width =  260
+    	@txt_desc.font = $fonts.page_text
+    	@txt_desc.text = "Rescue them guys in the briar woods"
+    	add(@txt_desc,340,198)
+
+
+    	# Text sprites
+
+        @ingredients = []
+
+
+    	# cy += 30
+
+    	move(0,0)
+
+        #clear
+
+    end
+
+    def dispose
+        # Clear the extras!
+        @window.dispose
+        @page_title.dispose
+        @txt_desc.dispose
+        @ingredients.each{ |i| i.dispose }
+    end
+
+    def setup(potion)
+
+        # Get the data
+        data = $data.potions[potion]
+        ings = data.ingredients.split("\n")
+
+        # Clear out the previous
+
+        # Show the title of the potion
+        @page_title.icon = $cache.icon("potions/hypercurium")
+        @page_title.text = data.name
+
+        # Perhaps show a description here
+        @txt_desc.text = data.description
+        @cy = @txt_desc.y + @txt_desc.height
+
+
+        # Add ingredients display
+        ings.each{ |ing|
+
+            item = $data.items[ing]
+
+            new_ing = Label.new(@vp)
+            new_ing.font = $fonts.page_text
+            new_ing.icon = $cache.icon(item.icon)
+            new_ing.text = item.name
+            add(new_ing,340,@cy)
+
+            # Now add the tick icon
+            @cy += 26
+
+            @ingredients.push(new_ing)
+
+        }
+
+        move(0,0)
+
+    end
+
+end"‘#==============================================================================
 # ** Mnu_Potions
 #==============================================================================
 
@@ -10060,13 +10223,12 @@ class Mnu_Potions < Mnu_Base
 		@subtitle.text = "Making potions"		
 
 		@menu.list.type = :potion
+		@menu.list.setup($party.potions)
 
-		#data = $progress.potions
-
-		@page = Right_Page.new(vp)
+		@page = Right_Potion.new(vp)
 		self.right.push(@page)
 
-		#@menu.list.setup(data)
+		@page.setup("truth")		
 
 		#change(data[0]) if !data.empty?
 
@@ -10081,18 +10243,7 @@ class Mnu_Potions < Mnu_Base
 
 	def change(option)
 
-		#return
-
-		@page.clear
-
-		# Change page to show this quest
-		#@info.title.text = option
-
-		@page.title = $data.quests[option].name
-		@page.description = $data.quests[option].description
-
-		@page.add_reqs($data.quests[option].req)
-		@page.add_zone($data.quests[option].location)
+		@page.setup(option)		
 
 	end
 
@@ -15046,7 +15197,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"¸#==============================================================================
+end"¦#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15061,9 +15212,10 @@ class Game_Party
 
   attr_accessor :leader
 
-  attr_reader :items
+  attr_reader :items, :potions
 
-  attr_accessor :potion, :potion_state, :potion_level, :potion_result
+  # Potion making vars
+  attr_accessor :potion_ings, :potion_state, :potion_level, :potion_id, :potion_item
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -15084,16 +15236,19 @@ class Game_Party
     @active = []
     @reserve = []
 
-    # Initialize amount of gold
+    # Inventory
+    @items = {}
     @gold = 250
 
-    # Create amount in possession hash for items, weapons, and armor
-    @items = {}
+    # Other things you can have
+    @potions = []
 
-    @potion = []
-    @potion_state = 'empty'
-    @potion_id = nil
-    @potion_level = 0
+    # Current state of potions
+    @potion_ings = []
+    @potion_state = :empty # Current potion in progress
+    @potion_id = nil # Potion being made once in hack state
+    @potion_level = 0 # How many hacks have been completed
+    @potion_item = nil # What ingredient you are using
 
     # Hardcode Party Data
     init_party
@@ -15290,7 +15445,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
+    set_active("ing")
     set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
@@ -15350,6 +15505,7 @@ class Game_Party
     item('boy-arm-s','s')
     item('hib-arm-s','s')
 
+    potion_learn("truth")
     
 
   end
@@ -17901,7 +18057,7 @@ class CacheManager
       GC.start
     end
 
-  end"V#==============================================================================
+  end"ê#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -17922,6 +18078,8 @@ class DataManager
   attr_reader :anims
 
   attr_reader :numbers
+  attr_reader :potions
+  attr_reader :profiles
 
   # Clone events
   attr_reader :clones
@@ -17962,6 +18120,8 @@ class DataManager
     @anims = load_json("anims",AnimData)
 
     @numbers = load_json("numbers",NumberData)
+    @potions = load_json("potions",PotionData)
+    @profiles = load_json("profiles",ProfileData)
 
     @clones = load_clones
 
@@ -19219,7 +19379,7 @@ end"øclass Bitmap
 	end
 
 end
-"R	
+"õ	
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -19358,6 +19518,15 @@ class ProfileData
 	attr_reader :name
 	attr_reader :age
 	attr_reader :desc
+end
+
+class PotionData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :ingredients
+	attr_reader :problems
+	attr_reader :result
 end"r#==============================================================================
 # ** Gradient Font Color
 #------------------------------------------------------------------------------
@@ -21518,7 +21687,7 @@ end"A
 	def done?
 		return $tweens.done?(self)
 	end
-end"q
+end"K
 def sequence(*args)
 	return SequenceTween.new(*args)
 end
@@ -21619,6 +21788,7 @@ class CallTween < Tween
 
 	def initialize(script)
 		@script = script
+		@stopit = false
 	end
 
 	def done?
@@ -21626,11 +21796,15 @@ class CallTween < Tween
 	end
 
 	def start
+		return if @stopit
 		eval(@script)
+		@stopit = true
 	end
 
 	def copy
-		return self
+		nano = CallTween.new(@script)
+		nano.set_parent(@parent)
+		return nano
 	end
 
 end
@@ -21832,7 +22006,9 @@ class LoopTween < Tween
 	end
 
 	def copy
-		return LoopTween.new(@child.copy, @times)
+		nano = LoopTween.new(@child.copy, @times)
+		nano.set_parent(@parent)
+		return nano
 	end
 
 end
@@ -21889,6 +22065,7 @@ class SequenceTween < Tween
 
 	def reverse
 		nano = SequenceTween.new()
+		nano.set_parent(@parent)
 		@sequence.reverse.each{ |n|
 			nano.push(n.copy)
 		}
@@ -21897,6 +22074,7 @@ class SequenceTween < Tween
 
 	def copy
 		nano = SequenceTween.new()
+		nano.set_parent(@parent)
 		@sequence.each{ |n|
 			nano.push(n.copy)
 		}
