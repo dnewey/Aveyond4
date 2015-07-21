@@ -26,6 +26,7 @@ class Ui_Message
 
   attr_reader :last_choice
   attr_accessor :force_name
+  attr_accessor :force_vn
   
   #--------------------------------------------------------------------------
   # Prepare
@@ -67,6 +68,7 @@ class Ui_Message
     @mode = :speaker # speaker, system or vn
     @speaker = nil
     @force_name = nil
+    @force_vn = false
 
     @vn_port = Sprite.new(vp)
     @vn_port.opacity = 0
@@ -313,7 +315,7 @@ class Ui_Message
     name = "???" if speaker.include?("???")
 
     # Check the mode
-    if speaker.include?("vn-")
+    if speaker.include?("vn-") || @force_vn
       speaker = speaker.sub("vn-",'')
       name = name.sub("vn-",'')
       @mode = :vn
