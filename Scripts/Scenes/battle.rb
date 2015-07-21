@@ -9,7 +9,7 @@ class Scene_Battle < Scene_Base
   def initialize
     super
 
-    Graphics.freeze
+    #Graphics.freeze
 
     @phase = :intro_init
     @wait_frames = 0
@@ -18,16 +18,19 @@ class Scene_Battle < Scene_Base
     @map.setup($battle.map)
     @tilemap.refresh(@map)
 
-    # Could put the scrolling into battle in with this
-    # Char screenx comes from this, perhaps $scene.map
-   
+    # Init player and camera 
     @player.moveto(0,0)
     @player.static
     @map.camera_to(@player)
-    #@map.camera_xy(5,15)
-    #@map.cam_oy = 150
-    #@map.do(go("cam_oy",-250,2500,:quad_in_out))    
 
+    # Slide camera up
+    @map.cam_oy = 110
+    @map.do(
+      seq(
+        delay(100),
+        go("cam_oy",-110,1700,:quad_out)
+      )
+    )    
 
     # Create Hud Elements
     @hud = BattleHud.new(@vp_ui)
@@ -84,7 +87,7 @@ class Scene_Battle < Scene_Base
     #sys('battlestart')
     #music("rivals",0.6)
         
-    Graphics.transition(20,'Graphics/Transitions/trans') 
+    #Graphics.transition(20,'Graphics/Transitions/trans') 
             
   end
   

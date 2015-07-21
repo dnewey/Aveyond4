@@ -159,7 +159,7 @@ class Game_Battle
       @next_map = nil
     else
       if @zone_maps
-        @map = @zone_maps.sample.to_i
+        @map = @zone_maps.split(",").sample.to_i
       else
         @map = @default_map
       end

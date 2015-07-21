@@ -73,6 +73,7 @@ class AudioManager
       return
     end
     @music.gain = vol
+    @music.looping = true
     @music.stream = Seal::Stream.open("Audio/Music/#{file}.ogg")
     @music.play
   end
@@ -84,6 +85,7 @@ class AudioManager
       return
     end
     @atmosphere.gain = 0.3
+    @atmosphere.looping = true
     @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
   end
