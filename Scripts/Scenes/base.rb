@@ -169,6 +169,8 @@ class Scene_Base
     case weather
       when 'dark-dots'
         @weather = Weather_DarkDots.new(@vp_weather)
+      when 'rain'
+        @weather = Weather_Rain.new(@vp_weather)
     end
   end
 
