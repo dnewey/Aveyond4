@@ -27,6 +27,24 @@ class Sprite_Character < Sprite
   def update
     super
 
+    if @character.character_name.include?('mill')
+
+      if @character.pattern < 4
+        @character.pattern += 1
+      else
+
+        @character.pattern = 0
+
+        # Get num, next pic thanks
+        num = @character.character_name.split("-")[1].to_i
+        num+=1
+        num = 1 if num > 6
+        @character.character_name = 'Props/mill-'+num.to_s
+
+      end
+
+    end
+
     # If tile ID, file name, or hue are different from current ones
     if @character_name != @character.character_name
      
