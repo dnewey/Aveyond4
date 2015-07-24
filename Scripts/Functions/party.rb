@@ -54,8 +54,18 @@ def join(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
+def join_s(who)
+	$party.set_active(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
+end
+
 def unjoin(who)
 	pop_leave(who)
+	$party.back_to_pavillion(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
+end
+
+def unjoin_s(who)
 	$party.back_to_pavillion(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end

@@ -114,18 +114,6 @@ def pop_icon_r(ev,icon,sfx)
 
 end
 
-def pop_num(ev,number)
-
-	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
-
-	x = gev(ev).screen_x+2
-	y = gev(ev).screen_y - ev.height - 20
-	$scene.add_num(number,x,y,:blast,:fade)
-
-	#sfx('jump')
-
-end
-
 def pop_icon_get(ev,item)
 
 	icon = $data.items[item].icon	
@@ -142,3 +130,117 @@ def icon(ev,icon,ein=:blast,eout=:blast)
 	$scene.add_icon(icon,x,y,ein,eout)
 
 end
+
+
+
+
+
+
+# -------------------------------------------------------------------------
+# Battle System Pops
+# -------------------------------------------------------------------------
+
+def pop_num(ev,number)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x 
+	y = gev(ev).screen_y - 20
+
+	# Create the pop
+	pop = Pop.new(ein,eout,@vp_over)
+    pop.number = nm
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+
+def pop_dmg(ev,number)
+
+	# Jump the target? # Might will cut this
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 20
+	
+	# Create the pop
+	pop = Pop.new(:fall,:fade,@vp_over)
+    pop.number(number,:dmg)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_heal(ev,number)
+
+	# Jump the target? # Might will cut this
+	#gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 20
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.number(number,:hp)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_gain(ev,number,suffix)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 60
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.number(number,suffix,suffix)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_crit(ev)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y + 5
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.image('critical')
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_state(ev,state)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 50
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.image(state)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+# -------------------------------------------------------------------------
+
+
+
+
+

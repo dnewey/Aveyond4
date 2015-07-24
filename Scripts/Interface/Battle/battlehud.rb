@@ -16,7 +16,7 @@ class BattleHud
 		cx = 5
 		cx = 240 if $party.active.count == 1
 		cx = 170 if $party.active.count == 2
-		cx = 60 if $party.active.count == 3
+		cx = 85 if $party.active.count == 3
 		$party.active.each{ |char|
 			view = CharView.new(vp,$party.actor_by_id(char),idx)
 			view.x = cx + (idx * 158)

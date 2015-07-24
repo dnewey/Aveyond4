@@ -119,6 +119,7 @@ class Scene_Battle
   # ** actor_transform
   #==============================================================================
 
+  # Special myst transform
   def phase_actor_transform
 
     x = @active_battler.ev.screen_x
@@ -159,6 +160,8 @@ class Scene_Battle
     else
       data = $data.skills[@active_battler.skill_id]
     end
+
+    @active_battler.scope = data.scope
 
     # If single, targetable?
     if ["one","ally"].include?(data.scope)

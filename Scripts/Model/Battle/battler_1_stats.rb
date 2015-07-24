@@ -97,9 +97,9 @@ class Game_Battler
 
   def stat_from_states(stat)
     total = 0
-    @states.each{ |e|
+    #@states.each{ |e|
       
-    }
+    #}
     return total
   end
 

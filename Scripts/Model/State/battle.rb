@@ -166,7 +166,12 @@ class Game_Battle
     end
 
     $scene.hud.hide
+    $scene.overlay.opacity = 0
     $game.push_scene(Scene_Battle.new)
+
+    # Fade in from black
+    $scene.black.opacity = 255
+    $scene.black.do(to("opacity",0,-5))
     
   end
 

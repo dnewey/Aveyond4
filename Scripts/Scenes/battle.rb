@@ -11,6 +11,10 @@ class Scene_Battle < Scene_Base
 
     #Graphics.freeze
 
+    #noverlay(30)
+    #@overlay.opacity = 100
+    #@overlay.do(to("opacity",0,-20))
+
     @phase = :intro_init
     @wait_frames = 0
     @active_battler = nil
@@ -24,11 +28,12 @@ class Scene_Battle < Scene_Base
     @map.camera_to(@player)
 
     # Slide camera up
-    @map.cam_oy = 110
+    @map.cam_oy = 80
     @map.do(
       seq(
-        delay(100),
-        go("cam_oy",-110,1700,:quad_out)
+        delay(40),
+        #go("cam_oy",-110,1000,:quad_out)
+        go("cam_oy",-80,700,:quad_out)
       )
     )    
 
@@ -49,8 +54,13 @@ class Scene_Battle < Scene_Base
       ev = @map.event_by_evname("A.#{i}")
       next if ev == nil
       act = $party.actor_by_index(i).id
-      ev.character_name = "Player/#{act}-idle"
-      ev.pattern = rand(4)
+      #ev.character_name = "Player/#{act}-idle"
+      ev.character_name = "Player/#{act}"
+      #ev.x -= 1
+      #ev.move_left
+      ev.off_x = 32
+      ev.do(go("off_x",-32,800))
+      #ev.pattern = rand(4)
       #ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
@@ -60,7 +70,9 @@ class Scene_Battle < Scene_Base
           $party.get(act).view.down if $party.get(act).view
         end
       end
+
     }
+
     [0,1,2,3,4].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
       next if ev == nil
@@ -74,8 +86,6 @@ class Scene_Battle < Scene_Base
 
     #$battle.add_prop('money')
 
-
-
     # And the minion
     #@minion = @map.event_by_evname("MINION")
     #@minion.character_name = 'Player/minion-rat'
@@ -85,7 +95,7 @@ class Scene_Battle < Scene_Base
     reload_map
 
     #sys('battlestart')
-    #music("rivals",0.6)
+    #music("battle",0.6)
         
     #Graphics.transition(20,'Graphics/Transitions/trans') 
             
@@ -145,6 +155,12 @@ class Scene_Battle < Scene_Base
       # Introduction Phase
       when :intro_init
         phase_intro_init
+      when :intro_prep
+        phase_intro_prep
+      when :intro_action
+        phase_intro_action
+      when :intro_minion
+        phase_intro_minion
 
       # Actor Phase
       when :actor_init

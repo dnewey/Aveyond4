@@ -217,6 +217,10 @@ class Game_Event < Game_Character
           return false if !flag?(cond[1])
       when '?nflag'
           return false if flag?(cond[1])
+
+      # vars
+      when '?var'
+          return false if !var?(cond[1],cond[2].to_i)
               
       # Progress
       when '?before'

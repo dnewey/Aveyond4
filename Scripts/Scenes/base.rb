@@ -278,6 +278,7 @@ class Scene_Base
     ico = Pop.new(ein,eout,@vp_over)
     ico.icon = ic
     ico.move(x,y)
+    ico.start
     @pops.push(ico) # Could combine these with spark
 
   end
@@ -287,8 +288,13 @@ class Scene_Base
     ico = Pop.new(ein,eout,@vp_over)
     ico.number = nm
     ico.move(x,y)
+    ico.start
     @pops.push(ico) # Could combine these with spark
 
+  end
+
+  def add_pop(pop)
+    @pops.push(pop)
   end
 
   # def pop_dmg(target,amount)

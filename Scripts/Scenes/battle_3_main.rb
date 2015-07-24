@@ -39,6 +39,41 @@ class Scene_Battle
   # Start a round of the attack
   def phase_main_start
 
+    # -----------------------------
+    # ERROR CORRECTIONS 
+
+    # If specific target, random if down
+    if [:one,:ally].include?(@active_battler.scope)
+
+      # If a tranform, cancel
+      if @active_battler.skill_id.include("xform")
+        @attack_plan.cancel
+        @phase = :main_next
+        return
+      else
+        # Doesn't really work, hmmmmm
+        @active_battler.scope = :rand
+      end
+
+    end
+
+    # If rez, random if up, or cancel
+    if [:down].include?(@active_battler.scope)
+
+      # Check if target is down
+      if !@active.battler.target.down?
+
+        # Try to find an alternate target, else cancel
+
+      end
+
+      #@attack_plan.cancel
+      #@phase = :main_next
+      #return
+    end
+
+    # -----------------------------
+
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
@@ -122,7 +157,7 @@ class Scene_Battle
     @attack_results.each{ |result|
         next if result.damage == nil
         result.target.damage(result.damage)
-        pop_num(result.target.ev,result.damage)
+        pop_dmg(result.target.ev,result.damage)
         if result.target.view != nil
           result.target.view.damage
         end
@@ -136,8 +171,13 @@ class Scene_Battle
 
   def phase_main_crit
 
-    # Onto the next
+    @attack_results.each{ |result|
+      if result.critical
+        pop_crit(result.target.event)
+      end
+    }
 
+    # Onto the next
     @phase = :main_gain
     wait(1)
 
@@ -149,7 +189,7 @@ class Scene_Battle
     @attack_results.each{ |result|
         next if result.gain_mana == nil
         @active_battler.gain_mana(result.gain_mana)
-        pop_num(@active_battler.ev,result.gain_mana)
+        pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
     }
 
     @phase = :main_state
@@ -163,7 +203,11 @@ class Scene_Battle
 
       if result.state_add
         result.target.add_state(result.state_add)
-        log_sys(result.state_add)
+        pop_state(result.target.ev,result.state_add)
+        case result.state_add 
+          when "poison"
+            result.target.ev.pulse_color = Color.new(46,174,43,150)
+        end
       end
 
     }
@@ -186,13 +230,10 @@ class Scene_Battle
         wait(60)
       end
 
-
     }
-
 
     # Onto the next
     @phase = :main_next
-
 
   end
 
@@ -222,8 +263,6 @@ class Scene_Battle
 
     end
 
-    log_sys("ALMOST DONE")
-
   	# Onto the next battler
 	  if !@battle_queue.empty?
 		
@@ -239,7 +278,6 @@ class Scene_Battle
 
 	end
 
-  # NOT CURRENTLY ACTIVATED
   def phase_main_end
     
     # Remove states and that before next turn starts

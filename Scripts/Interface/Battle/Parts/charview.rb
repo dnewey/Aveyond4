@@ -15,6 +15,9 @@ class CharView < SpriteGroup
 
 		@battler = char
 
+		# Currently showing
+		@state = nil
+
 		@box = Box.new(vp)
 		@box.skin = $cache.menu_common("skin-plain")
     	@box.wallpaper = $cache.menu_wallpaper(char.id)
@@ -24,6 +27,10 @@ class CharView < SpriteGroup
 		@port = Sprite.new(vp)
 		@port.bitmap = $cache.face_battle(char.id)
 		add(@port,153-@port.width-10,135-@port.height-10)
+
+		@state_icon = Sprite.new(vp)
+		#@state_icon.bitmap = $cache.face_battle(char.id)
+		add(@state_icon,16,30)
 
 		@shadow = Sprite.new(vp)
 		@shadow.bitmap = $cache.menu_char("battlehud-shadow")
@@ -85,7 +92,6 @@ class CharView < SpriteGroup
 		@box.update
 		@port.update
 
-
 		@hp_bar.value = @battler.hp
 		@mp_bar.value = @battler.mp
 
@@ -106,9 +112,25 @@ class CharView < SpriteGroup
 			end
 		end
 
-		# If a state, change background
-		if @battler.state?('power')
-			@box.wallpaper = $cache.menu_wallpaper("lightning")
+		# Has the state changed?
+		if @battler.state != @state
+
+			@state = @battler.state
+
+			if @state == nil
+
+				@state_icon.bitmap = nil
+				@box.wallpaper = $cache.menu_wallpaper(char.id)
+				@box.scroll(0,0)
+
+			else
+
+				@state_icon.bitmap = $cache.icon("state-hud/#{@state}")
+				@box.wallpaper = $cache.menu_wallpaper(@state)
+				@box.scroll(0,0.2)
+
+			end
+
 		end
 
 	end

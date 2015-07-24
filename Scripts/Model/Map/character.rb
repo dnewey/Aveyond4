@@ -12,8 +12,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   attr_reader   :id                       # ID
   
-  attr_reader   :x                        # map x-coordinate (logical)
-  attr_reader   :y                        # map y-coordinate (logical)
+  attr_accessor   :x                        # map x-coordinate (logical)
+  attr_accessor  :y                        # map y-coordinate (logical)
   attr_reader   :real_x                   # map x-coordinate (real * 128) # For precision
   attr_reader   :real_y                   # map y-coordinate (real * 128)
   
@@ -46,6 +46,7 @@ class Game_Character
   attr_accessor :off_x, :off_y
 
   attr_accessor :flash_dur
+  attr_accessor :pulse_color
   
    
   
@@ -115,6 +116,7 @@ class Game_Character
     @opacity = 255
 
     @flash_dur = nil
+    @pulse_color = nil
 
   end
 
@@ -197,7 +199,7 @@ class Game_Character
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
 
-    return false if self != $player && $player.at?(new_x,new_y)
+    return false if self != $player && $player.at?(new_x,new_y) && !@through
        
     # If coordinates are outside of map
     return false unless $map.valid?(new_x, new_y)

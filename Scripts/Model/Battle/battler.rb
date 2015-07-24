@@ -12,7 +12,7 @@ class Game_Battler
 
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
-  attr_accessor :target_type, :target_idx
+  attr_accessor :scope, :target_idx
   attr_accessor :ev, :view
 
   attr_reader :hp, :mp, :xp
@@ -42,8 +42,8 @@ class Game_Battler
 
     @equips = {}
 
-    @states = []
-    @states_turn = {}
+    @state = nil
+    @state_counter = 0
 
     @skills = []
     @skill_cooldown = {}
@@ -54,14 +54,13 @@ class Game_Battler
     @item_id = nil
 
     @target = nil
-    @target_type = nil # <-- Scope?
+    @scope = nil # <-- Scope?
     @target_index = -1
 
     @ev = nil # Mid battle hold event number for easy access
     @view = nil # Hold charview for quick access
 
     @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting
-
 
 
   end
@@ -211,6 +210,22 @@ class Game_Battler
 
   def can_attack?
     return !down?
+  end
+
+
+  def resource
+
+    case id
+      when 'boy'
+        return :sp
+      when 'ing','hib'
+        return :mp
+      when 'phy'
+        return :rp
+      else
+        return nil
+    end
+
   end
 
 
