@@ -507,6 +507,9 @@ class Game_Event < Game_Character
         when "#prop"
           @character_name = "Props/#{data[1]}"
 
+        when "#player"
+          @character_name = "Player/#{data[1]}"
+
         when "#animal"
           @character_name = "Animals/#{data[1]}"
 
