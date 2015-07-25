@@ -74,7 +74,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"ˆ#==============================================================================
+end"ë#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -94,6 +94,7 @@ class Sprite_Character < Sprite
     super(viewport)
     @character = character
     @iconmode = false
+    @pulse_delay = 0
     update
   end
 
@@ -190,11 +191,6 @@ class Sprite_Character < Sprite
 
     # TODO auto name the helper icons
 
-    if $scene.is_a?(Scene_Map) && $settings.debug_draw_names
-      w = $scene.debug.bitmap.text_size(@character.name).width + 6 if @character != $player
-      $scene.debug.bitmap.fill_rect(self.x-w/2,self.y,w,20,Color.new(23,111,22,200)) if @character != $player
-      $scene.debug.bitmap.draw_text(self.x-w/2,self.y,w,20,@character.name,1) if @character != $player
-    end
     
     # Set opacity level, blend method, and bush depth
     self.opacity = @character.opacity
@@ -214,6 +210,15 @@ class Sprite_Character < Sprite
     if @character.flash_dur != nil
       self.flash(Color.new(255,255,255,160),@character.flash_dur)
       @character.flash_dur = nil
+    end
+
+    # Pulse effect
+    if @character.pulse_color
+      @pulse_delay -= 1
+      if @pulse_delay <= 0
+        @pulse_delay = 75
+        self.flash(@character.pulse_color,75)
+      end
     end
 
   end
@@ -328,15 +333,32 @@ class Panorama
 
    end
 
-end"3
+end"
+
 class Pop < Sprite
 
 	def initialize(ein,eout,vp)
 		super(vp)
 
+		@anim_in = ein
+		@anim_out = eout
+
+	end
+
+	def start
+
 		anim_seq = seq()
 
-		case ein
+		case @anim_in
+
+			when :rise
+				self.opacity = 0
+				anim_seq.push(go("opacity",255,300,:qio))
+				anim_seq.push(go("y",-20,1500,:qo))
+
+			when :fall
+				anim_seq.push(go("y",-5,100,:qio))
+				anim_seq.push(go("y",25,450,:bounce_o))
 
 			when :fade
 				self.opacity = 0
@@ -351,9 +373,9 @@ class Pop < Sprite
 
 		end
 
-		anim_seq.push(delay(1000))
+		anim_seq.push(delay(800))
 
-		case eout
+		case @anim_out
 
 			when :fade
 				anim_seq.push(go("opacity",-255,500,:qio))
@@ -377,41 +399,75 @@ class Pop < Sprite
 
 	end
 
-	def number=(num)
+	def number(num,color,suffix=nil)
 
 		# prepare number data
 	    data = num.to_i.to_s.split(//)
 	    nums = []
 	    data.each{ |n| nums.push(n.to_i) }
 
-	    # build the gfx of this number
-	    src = $cache.numbers('pop_18')
-	    cw = src.width/10
-	    ch = src.height
+
+	    # Default to dmg color for now
+	    #color = :dmg
 
 	    # Colors
-	    colors = [:yellow,:orange,:purple,:green,:red,:gray,:white]
-	    ic = 0#colors.index(color)
+	    colors = [:dmg,:mp,:sp,:rp,:hp,:hp2]
+	    ic = colors.index(color)
+
+
+	    # build the gfx of this number
+	    src = $cache.numbers('pops')
+	    cw = src.width/10
+	    ch = src.height/colors.count
+
+	    # Char width is now custom, same as cx
+	    offsets = [0,17,33,50,67,84,101,117,134,151]
+	    widths = [16,16,16,16,17,16,16,16,15,16]
 	    
 	    # prepare the final image
 	    width = 0
-	    nums.each{ |n| width+=cw*0.75 }
+	    nums.each{ |n| width+=cw }
+
+	    # Add suffix
+	    if suffix != nil
+	    	suff_bmp = $cache.numbers(suffix.to_s)
+	    	width += suff_bmp.width
+	    end
+
+	    # Create the bmp
 	    bmp = Bitmap.new(width,ch)
+	    
+	    # Cursor
 	    c = 0
 
 	    nums.each{ |n|
 
-	      s = n * cw
+	      s = offsets[n]
+	      cw = widths[n]
 
 	      bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
-	      c += cw*0.65
+	      c += cw - 3
 
 	    }
+
+	    # Blt the suffix
+	    if suffix != nil
+	    	bmp.blt(width-suff_bmp.width-3,3,suff_bmp,suff_bmp.rect)
+	    end
 
 	    self.bitmap = bmp
 	    
 		self.ox = width/2
 		self.oy = height/2 
+
+	end
+
+	def image(img)
+
+		# For critical and that
+		self.bitmap = $cache.numbers(img)
+		self.ox = self.bitmap.width/2
+		self.oy = self.bitmap.height/2
 
 	end
 
@@ -2904,7 +2960,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"
+end"
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -3020,18 +3076,6 @@ def pop_icon_r(ev,icon,sfx)
 
 end
 
-def pop_num(ev,number)
-
-	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
-
-	x = gev(ev).screen_x+2
-	y = gev(ev).screen_y - ev.height - 20
-	$scene.add_num(number,x,y,:blast,:fade)
-
-	#sfx('jump')
-
-end
-
 def pop_icon_get(ev,item)
 
 	icon = $data.items[item].icon	
@@ -3047,7 +3091,122 @@ def icon(ev,icon,ein=:blast,eout=:blast)
 	y = gev(ev).screen_y - 32
 	$scene.add_icon(icon,x,y,ein,eout)
 
-end"É#==============================================================================
+end
+
+
+
+
+
+
+# -------------------------------------------------------------------------
+# Battle System Pops
+# -------------------------------------------------------------------------
+
+def pop_num(ev,number)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x 
+	y = gev(ev).screen_y - 20
+
+	# Create the pop
+	pop = Pop.new(ein,eout,@vp_over)
+    pop.number = nm
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+
+def pop_dmg(ev,number)
+
+	# Jump the target? # Might will cut this
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 20
+	
+	# Create the pop
+	pop = Pop.new(:fall,:fade,@vp_over)
+    pop.number(number,:dmg)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_heal(ev,number)
+
+	# Jump the target? # Might will cut this
+	#gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 20
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.number(number,:hp)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_gain(ev,number,suffix)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 60
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.number(number,suffix,suffix)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_crit(ev)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y + 5
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.image('critical')
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_state(ev,state)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y - 50
+		
+	# Create the pop
+	pop = Pop.new(:rise,:fade,@vp_over)
+    pop.image(state)
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+# -------------------------------------------------------------------------
+
+
+
+
+
+"É#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3318,7 +3477,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"r#==============================================================================
+"E#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3374,8 +3533,18 @@ def join(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
+def join_s(who)
+	$party.set_active(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
+end
+
 def unjoin(who)
 	pop_leave(who)
+	$party.back_to_pavillion(who)
+	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
+end
+
+def unjoin_s(who)
 	$party.back_to_pavillion(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
@@ -3565,7 +3734,7 @@ def shop_choice
 	end
 
 
-end"G#==============================================================================
+end"H#==============================================================================
 # ** State Functions
 #==============================================================================
 
@@ -3576,7 +3745,7 @@ def flag?(id) return $state.flag?(id) end
 
 # Var shorthands
 def var(id,a=1) $state.var(id,a) end
-def unvar(id,a=1) $state.var(id,a) end
+#def unvar(id,a=1) $state.var(id,a) end
 def var?(id,a) return $state.var?(id,a) end
 #def gvar(id)
 
@@ -4024,7 +4193,7 @@ class BattleHud
 		cx = 5
 		cx = 240 if $party.active.count == 1
 		cx = 170 if $party.active.count == 2
-		cx = 60 if $party.active.count == 3
+		cx = 85 if $party.active.count == 3
 		$party.active.each{ |char|
 			view = CharView.new(vp,$party.actor_by_id(char),idx)
 			view.x = cx + (idx * 158)
@@ -4399,7 +4568,7 @@ class ActorCmd
 
 	end
 
-end",
+end"Ç
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -4416,6 +4585,9 @@ class CharView < SpriteGroup
 
 		@battler = char
 
+		# Currently showing
+		@state = nil
+
 		@box = Box.new(vp)
 		@box.skin = $cache.menu_common("skin-plain")
     	@box.wallpaper = $cache.menu_wallpaper(char.id)
@@ -4425,6 +4597,10 @@ class CharView < SpriteGroup
 		@port = Sprite.new(vp)
 		@port.bitmap = $cache.face_battle(char.id)
 		add(@port,153-@port.width-10,135-@port.height-10)
+
+		@state_icon = Sprite.new(vp)
+		#@state_icon.bitmap = $cache.face_battle(char.id)
+		add(@state_icon,16,30)
 
 		@shadow = Sprite.new(vp)
 		@shadow.bitmap = $cache.menu_char("battlehud-shadow")
@@ -4486,7 +4662,6 @@ class CharView < SpriteGroup
 		@box.update
 		@port.update
 
-
 		@hp_bar.value = @battler.hp
 		@mp_bar.value = @battler.mp
 
@@ -4507,9 +4682,25 @@ class CharView < SpriteGroup
 			end
 		end
 
-		# If a state, change background
-		if @battler.state?('power')
-			@box.wallpaper = $cache.menu_wallpaper("lightning")
+		# Has the state changed?
+		if @battler.state != @state
+
+			@state = @battler.state
+
+			if @state == nil
+
+				@state_icon.bitmap = nil
+				@box.wallpaper = $cache.menu_wallpaper(char.id)
+				@box.scroll(0,0)
+
+			else
+
+				@state_icon.bitmap = $cache.icon("state-hud/#{@state}")
+				@box.wallpaper = $cache.menu_wallpaper(@state)
+				@box.scroll(0,0.2)
+
+			end
+
 		end
 
 	end
@@ -10394,7 +10585,7 @@ class Mnu_Potions < Mnu_Base
 		
 	end
 
-end"ó#==============================================================================
+end"³#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -10408,7 +10599,7 @@ class Game_Battler
 
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
-  attr_accessor :target_type, :target_idx
+  attr_accessor :scope, :target_idx
   attr_accessor :ev, :view
 
   attr_reader :hp, :mp, :xp
@@ -10438,8 +10629,8 @@ class Game_Battler
 
     @equips = {}
 
-    @states = []
-    @states_turn = {}
+    @state = nil
+    @state_counter = 0
 
     @skills = []
     @skill_cooldown = {}
@@ -10450,14 +10641,13 @@ class Game_Battler
     @item_id = nil
 
     @target = nil
-    @target_type = nil # <-- Scope?
+    @scope = nil # <-- Scope?
     @target_index = -1
 
     @ev = nil # Mid battle hold event number for easy access
     @view = nil # Hold charview for quick access
 
     @form = nil # <- fox or frog or etc, maybe for battler? turn enemy to frog he shoot water at you? interesting
-
 
 
   end
@@ -10610,8 +10800,24 @@ class Game_Battler
   end
 
 
+  def resource
+
+    case id
+      when 'boy'
+        return :sp
+      when 'ing','hib'
+        return :mp
+      when 'phy'
+        return :rp
+      else
+        return nil
+    end
+
+  end
+
+
 end
-"ý
+"ÿ
 class Game_Battler
 
   # For displays
@@ -10710,9 +10916,9 @@ class Game_Battler
 
   def stat_from_states(stat)
     total = 0
-    @states.each{ |e|
+    #@states.each{ |e|
       
-    }
+    #}
     return total
   end
 
@@ -10725,7 +10931,7 @@ class Game_Battler
     return 1.0
   end
 
-end"(
+end"i
 class Game_Battler
 
 
@@ -10737,8 +10943,13 @@ class Game_Battler
     return @states.include?(state_id)
   end
 
+  def state
+    return @state
+  end
+
   def add_state(state_id)
-    @states.push(state_id)
+    @state = state_id
+    #@states.push(state_id)
   end
 
   def remove_state(id)
@@ -11034,7 +11245,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"¬#==============================================================================
+end"R¬#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -11048,8 +11259,8 @@ class Game_Character
   #--------------------------------------------------------------------------
   attr_reader   :id                       # ID
   
-  attr_reader   :x                        # map x-coordinate (logical)
-  attr_reader   :y                        # map y-coordinate (logical)
+  attr_accessor   :x                        # map x-coordinate (logical)
+  attr_accessor  :y                        # map y-coordinate (logical)
   attr_reader   :real_x                   # map x-coordinate (real * 128) # For precision
   attr_reader   :real_y                   # map y-coordinate (real * 128)
   
@@ -11082,6 +11293,7 @@ class Game_Character
   attr_accessor :off_x, :off_y
 
   attr_accessor :flash_dur
+  attr_accessor :pulse_color
   
    
   
@@ -11151,6 +11363,7 @@ class Game_Character
     @opacity = 255
 
     @flash_dur = nil
+    @pulse_color = nil
 
   end
 
@@ -11233,7 +11446,7 @@ class Game_Character
     new_x = x + (d == 6 ? 1 : d == 4 ? -1 : 0)
     new_y = y + (d == 2 ? 1 : d == 8 ? -1 : 0)
 
-    return false if self != $player && $player.at?(new_x,new_y)
+    return false if self != $player && $player.at?(new_x,new_y) && !@through
        
     # If coordinates are outside of map
     return false unless $map.valid?(new_x, new_y)
@@ -12539,7 +12752,7 @@ class Game_Character
 
 
 end
-"j=#==============================================================================
+"Ä=#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -12758,6 +12971,10 @@ class Game_Event < Game_Character
           return false if !flag?(cond[1])
       when '?nflag'
           return false if flag?(cond[1])
+
+      # vars
+      when '?var'
+          return false if !var?(cond[1],cond[2].to_i)
               
       # Progress
       when '?before'
@@ -14908,7 +15125,7 @@ class Game_Player < Game_Character
   end
 
 end
-" 
+"‹ 
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -15076,7 +15293,12 @@ class Game_Battle
     end
 
     $scene.hud.hide
+    $scene.overlay.opacity = 0
     $game.push_scene(Scene_Battle.new)
+
+    # Fade in from black
+    $scene.black.opacity = 255
+    $scene.black.do(to("opacity",0,-5))
     
   end
 
@@ -15819,7 +16041,7 @@ end"class State
 	end
 
 end
-"Ñ#==============================================================================
+"!#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -16099,6 +16321,7 @@ class Scene_Base
     ico = Pop.new(ein,eout,@vp_over)
     ico.icon = ic
     ico.move(x,y)
+    ico.start
     @pops.push(ico) # Could combine these with spark
 
   end
@@ -16108,8 +16331,13 @@ class Scene_Base
     ico = Pop.new(ein,eout,@vp_over)
     ico.number = nm
     ico.move(x,y)
+    ico.start
     @pops.push(ico) # Could combine these with spark
 
+  end
+
+  def add_pop(pop)
+    @pops.push(pop)
   end
 
   # def pop_dmg(target,amount)
@@ -16129,7 +16357,7 @@ class Scene_Base
   # end
 
 end
-"#==============================================================================
+"»#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -16141,6 +16369,10 @@ class Scene_Battle < Scene_Base
     super
 
     #Graphics.freeze
+
+    #noverlay(30)
+    #@overlay.opacity = 100
+    #@overlay.do(to("opacity",0,-20))
 
     @phase = :intro_init
     @wait_frames = 0
@@ -16155,11 +16387,12 @@ class Scene_Battle < Scene_Base
     @map.camera_to(@player)
 
     # Slide camera up
-    @map.cam_oy = 110
+    @map.cam_oy = 80
     @map.do(
       seq(
-        delay(100),
-        go("cam_oy",-110,1700,:quad_out)
+        delay(40),
+        #go("cam_oy",-110,1000,:quad_out)
+        go("cam_oy",-80,700,:quad_out)
       )
     )    
 
@@ -16180,8 +16413,13 @@ class Scene_Battle < Scene_Base
       ev = @map.event_by_evname("A.#{i}")
       next if ev == nil
       act = $party.actor_by_index(i).id
-      ev.character_name = "Player/#{act}-idle"
-      ev.pattern = rand(4)
+      #ev.character_name = "Player/#{act}-idle"
+      ev.character_name = "Player/#{act}"
+      #ev.x -= 1
+      #ev.move_left
+      ev.off_x = 32
+      ev.do(go("off_x",-32,800))
+      #ev.pattern = rand(4)
       #ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
@@ -16191,7 +16429,9 @@ class Scene_Battle < Scene_Base
           $party.get(act).view.down if $party.get(act).view
         end
       end
+
     }
+
     [0,1,2,3,4].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
       next if ev == nil
@@ -16205,8 +16445,6 @@ class Scene_Battle < Scene_Base
 
     #$battle.add_prop('money')
 
-
-
     # And the minion
     #@minion = @map.event_by_evname("MINION")
     #@minion.character_name = 'Player/minion-rat'
@@ -16216,7 +16454,7 @@ class Scene_Battle < Scene_Base
     reload_map
 
     #sys('battlestart')
-    #music("rivals",0.6)
+    #music("battle",0.6)
         
     #Graphics.transition(20,'Graphics/Transitions/trans') 
             
@@ -16276,6 +16514,12 @@ class Scene_Battle < Scene_Base
       # Introduction Phase
       when :intro_init
         phase_intro_init
+      when :intro_prep
+        phase_intro_prep
+      when :intro_action
+        phase_intro_action
+      when :intro_minion
+        phase_intro_minion
 
       # Actor Phase
       when :actor_init
@@ -16341,28 +16585,73 @@ class Scene_Battle < Scene_Base
 
   end
 
-end"v
+end"…
 class Scene_Battle
 
   def phase_intro_init
 
-  	# If there is a queue skill, start with that
-  	if $battle.queue2 != nil
+    wait(30)
+  	@phase = :intro_prep
 
-  		$battle.enemies[$battle.queue2[0]].set_action($battle.queue2[1])
+  end
 
-  		  @battle_queue = []
-		  @active_battler = $battle.enemies[$battle.queue2[0]]
-		  @phase = :main_prep
-		  return
+  def phase_intro_prep
 
-	 end
+    # Put actors in idle pose
+
+    [0,1,2,3].each{ |i| 
+
+      if $party.active.count > i
+
+        act = $party.actor_by_index(i).id
+        
+        if !$party.get(act).down?
+
+            ev = $party.actor_by_index(i).ev
+            next if ev == nil
+            act = $party.actor_by_index(i).id
+            ev.character_name = "Player/#{act}-idle"
+            ev.pattern = rand(4)
+            #ev.direction = 2
+            ev.step_anime = true
+
+        end
+      end
+
+    }
+
+    #wait(30)
+    @phase = :intro_action
+
+  end
+
+  def phase_intro_action
+
+
+    # If there is a queue skill, start with that
+    # Change this to be better than this
+    if $battle.queue2 != nil
+
+      $battle.enemies[$battle.queue2[0]].set_action($battle.queue2[1])
+
+        @battle_queue = []
+      @active_battler = $battle.enemies[$battle.queue2[0]]
+      @phase = :main_prep
+      return
+
+   end
+
+    @phase = :intro_minion
+
+  end
+
+  def phase_intro_minion
 
     @phase = :actor_init
 
   end
 
-end"
+end"[
 
 class Scene_Battle
 
@@ -16483,6 +16772,7 @@ class Scene_Battle
   # ** actor_transform
   #==============================================================================
 
+  # Special myst transform
   def phase_actor_transform
 
     x = @active_battler.ev.screen_x
@@ -16523,6 +16813,8 @@ class Scene_Battle
     else
       data = $data.skills[@active_battler.skill_id]
     end
+
+    @active_battler.scope = data.scope
 
     # If single, targetable?
     if ["one","ally"].include?(data.scope)
@@ -16581,7 +16873,7 @@ class Scene_Battle
     
   end
 
-end"
+end"
 class Scene_Battle
 
   def phase_main_init
@@ -16621,6 +16913,41 @@ class Scene_Battle
 
   # Start a round of the attack
   def phase_main_start
+
+    # -----------------------------
+    # ERROR CORRECTIONS 
+
+    # If specific target, random if down
+    if [:one,:ally].include?(@active_battler.scope)
+
+      # If a tranform, cancel
+      if @active_battler.skill_id.include("xform")
+        @attack_plan.cancel
+        @phase = :main_next
+        return
+      else
+        # Doesn't really work, hmmmmm
+        @active_battler.scope = :rand
+      end
+
+    end
+
+    # If rez, random if up, or cancel
+    if [:down].include?(@active_battler.scope)
+
+      # Check if target is down
+      if !@active.battler.target.down?
+
+        # Try to find an alternate target, else cancel
+
+      end
+
+      #@attack_plan.cancel
+      #@phase = :main_next
+      #return
+    end
+
+    # -----------------------------
 
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
@@ -16705,7 +17032,7 @@ class Scene_Battle
     @attack_results.each{ |result|
         next if result.damage == nil
         result.target.damage(result.damage)
-        pop_num(result.target.ev,result.damage)
+        pop_dmg(result.target.ev,result.damage)
         if result.target.view != nil
           result.target.view.damage
         end
@@ -16719,8 +17046,13 @@ class Scene_Battle
 
   def phase_main_crit
 
-    # Onto the next
+    @attack_results.each{ |result|
+      if result.critical
+        pop_crit(result.target.event)
+      end
+    }
 
+    # Onto the next
     @phase = :main_gain
     wait(1)
 
@@ -16732,7 +17064,7 @@ class Scene_Battle
     @attack_results.each{ |result|
         next if result.gain_mana == nil
         @active_battler.gain_mana(result.gain_mana)
-        pop_num(@active_battler.ev,result.gain_mana)
+        pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
     }
 
     @phase = :main_state
@@ -16746,7 +17078,11 @@ class Scene_Battle
 
       if result.state_add
         result.target.add_state(result.state_add)
-        log_sys(result.state_add)
+        pop_state(result.target.ev,result.state_add)
+        case result.state_add 
+          when "poison"
+            result.target.ev.pulse_color = Color.new(46,174,43,150)
+        end
       end
 
     }
@@ -16769,13 +17105,10 @@ class Scene_Battle
         wait(60)
       end
 
-
     }
-
 
     # Onto the next
     @phase = :main_next
-
 
   end
 
@@ -16805,8 +17138,6 @@ class Scene_Battle
 
     end
 
-    log_sys("ALMOST DONE")
-
   	# Onto the next battler
 	  if !@battle_queue.empty?
 		
@@ -16822,7 +17153,6 @@ class Scene_Battle
 
 	end
 
-  # NOT CURRENTLY ACTIVATED
   def phase_main_end
     
     # Remove states and that before next turn starts
@@ -16832,8 +17162,7 @@ class Scene_Battle
 
   end
 
-end
-"Z
+end"Z
 class Scene_Battle
 
   def phase_victory_init
