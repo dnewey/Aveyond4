@@ -506,24 +506,23 @@ class Game_Event < Game_Character
 
         when "#prop"
           @character_name = "Props/#{data[1]}"
-
         when "#player"
           @character_name = "Player/#{data[1]}"
-
         when "#animal"
           @character_name = "Animals/#{data[1]}"
-
         when "#object"
           @character_name = "Objects/#{data[1]}"
+        when "#door"
+          @character_name = "Doors/#{data[1]}"
+        when "#icon"
+          @character_name = "Icons/#{data[1]}"
 
         when "#cauldron"
           cauldron_graphic(self)
 
-        when "#door"
-          @character_name = "Doors/#{data[1]}"
-
-        when "#icon"
-          @character_name = "Icons/#{data[1]}"
+        when "#spark"
+          #spark(@id,data[1])
+          $scene.add_spark(data[1],self.real_x/4+16,self.real_y/4+16-10)
 
         when '#rand-pattern'
           @force_pattern = rand(3)

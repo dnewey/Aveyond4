@@ -43,7 +43,7 @@ class Spark < Sprite
 					self.z = 5000
 			end
 
-			#self.blend_type = anim.blend
+			#self.blend_type = anim.blend if anim.blend != nil
 
 			# Split sound input
 			if anim.sound != ''
