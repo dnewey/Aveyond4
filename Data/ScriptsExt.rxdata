@@ -74,7 +74,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"ë#==============================================================================
+end"f#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -95,6 +95,7 @@ class Sprite_Character < Sprite
     @character = character
     @iconmode = false
     @pulse_delay = 0
+    @fx_delay = 0
     update
   end
 
@@ -166,9 +167,7 @@ class Sprite_Character < Sprite
     #   self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
     # end
 
-    if @character.fxtrail != nil && @character.moving?
-      spark(@character.id,'redstar') if rand > 0.80
-    end
+
 
     # Set visible situation
     self.visible = !@character.transparent
@@ -210,6 +209,15 @@ class Sprite_Character < Sprite
     if @character.flash_dur != nil
       self.flash(Color.new(255,255,255,160),@character.flash_dur)
       @character.flash_dur = nil
+    end
+
+    # Spark trail
+    if @character.fxtrail != nil && @character.moving?
+      @fx_delay -= 1
+      if @fx_delay <= 0
+        @fx_delay = 8
+        spark(@character.id,@character.fxtrail,0,5)
+      end
     end
 
     # Pulse effect
@@ -776,7 +784,7 @@ end"# #======================================================================
 #   #--------------------------------------------------------------------------
 #   def dead?() return self.opacity <= 0 end
 
-# end"x
+# end"
 class Spark < Sprite
 
 	def initialize(fx,x,y,vp)
@@ -821,7 +829,7 @@ class Spark < Sprite
 					self.z = 5000
 			end
 
-			#self.blend_type = anim.blend
+			#self.blend_type = anim.blend if anim.blend != nil
 
 			# Split sound input
 			if anim.sound != ''
@@ -12752,7 +12760,7 @@ class Game_Character
 
 
 end
-">#==============================================================================
+"‡>#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13260,24 +13268,23 @@ class Game_Event < Game_Character
 
         when "#prop"
           @character_name = "Props/#{data[1]}"
-
         when "#player"
           @character_name = "Player/#{data[1]}"
-
         when "#animal"
           @character_name = "Animals/#{data[1]}"
-
         when "#object"
           @character_name = "Objects/#{data[1]}"
+        when "#door"
+          @character_name = "Doors/#{data[1]}"
+        when "#icon"
+          @character_name = "Icons/#{data[1]}"
 
         when "#cauldron"
           cauldron_graphic(self)
 
-        when "#door"
-          @character_name = "Doors/#{data[1]}"
-
-        when "#icon"
-          @character_name = "Icons/#{data[1]}"
+        when "#spark"
+          #spark(@id,data[1])
+          $scene.add_spark(data[1],self.real_x/4+16,self.real_y/4+16-10)
 
         when '#rand-pattern'
           @force_pattern = rand(3)
@@ -16044,7 +16051,7 @@ end"class State
 	end
 
 end
-"!#==============================================================================
+"5#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -16312,6 +16319,8 @@ class Scene_Base
   end
 
   def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
+
+    log_info(fx)
 
     sprk = Spark.new(fx,x,y,@vp_main)
     @sparks.push(sprk)
