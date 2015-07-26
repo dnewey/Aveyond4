@@ -267,6 +267,8 @@ class Scene_Base
 
   def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
 
+    log_info(fx)
+
     sprk = Spark.new(fx,x,y,@vp_main)
     @sparks.push(sprk)
     return sprk

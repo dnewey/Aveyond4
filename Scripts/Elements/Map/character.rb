@@ -19,6 +19,7 @@ class Sprite_Character < Sprite
     @character = character
     @iconmode = false
     @pulse_delay = 0
+    @fx_delay = 0
     update
   end
 
@@ -90,9 +91,7 @@ class Sprite_Character < Sprite
     #   self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
     # end
 
-    if @character.fxtrail != nil && @character.moving?
-      spark(@character.id,'redstar') if rand > 0.80
-    end
+
 
     # Set visible situation
     self.visible = !@character.transparent
@@ -134,6 +133,15 @@ class Sprite_Character < Sprite
     if @character.flash_dur != nil
       self.flash(Color.new(255,255,255,160),@character.flash_dur)
       @character.flash_dur = nil
+    end
+
+    # Spark trail
+    if @character.fxtrail != nil && @character.moving?
+      @fx_delay -= 1
+      if @fx_delay <= 0
+        @fx_delay = 8
+        spark(@character.id,@character.fxtrail,0,5)
+      end
     end
 
     # Pulse effect
