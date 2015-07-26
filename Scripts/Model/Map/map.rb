@@ -289,8 +289,8 @@ class Game_Map
       new_target_x = @cam_target.real_x- (128 * 9.5)
       new_target_y = @cam_target.real_y- (128 * 7)
     else
-      new_target_x = @cam_xy[0] * 64
-      new_target_y = @cam_xy[1] * 64
+      new_target_x = (@cam_xy[0] * 128) - (128 * 9.5)
+      new_target_y = (@cam_xy[1] * 128) - (128 * 7)
     end
 
 

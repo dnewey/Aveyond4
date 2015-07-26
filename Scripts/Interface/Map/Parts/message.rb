@@ -384,6 +384,8 @@ class Ui_Message
       fx = -10 + @width - @face.width
       fy = 7 + @height - @face.height - PADDING_Y
       @sprites.change(@face,fx,fy)
+      @face.ox = 15
+      @face.do(go("ox",-15,500,:qio))
     end
 
     if @mode == :vn
