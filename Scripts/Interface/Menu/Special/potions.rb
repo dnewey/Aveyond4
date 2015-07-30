@@ -13,12 +13,10 @@ class Mnu_Potions < Mnu_Base
 		@menu.list.type = :potion
 		@menu.list.setup($party.potions)
 
-		@page = Right_Potion.new(vp)
-		self.right.push(@page)
-
-		@page.setup("truth")		
-
-		#change(data[0]) if !data.empty?
+		@item_box = Item_Box.new(vp)
+		@item_box.center(472,260)
+		@item_box.hide
+		self.right.push(@item_box)
 
 		open
 
@@ -31,12 +29,23 @@ class Mnu_Potions < Mnu_Base
 
 	def change(option)
 
-		@page.setup(option)		
+		#@item_box.show
+		
+		@item_box.item(option)
+		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
 
+		if @last_option != option
+			@last_option = option
+			$tweens.clear(@item_box)
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+		end
+		
 	end
 
 	def select(option)	
-		
+		flag('potion-choose')
+		self.close_soon
 	end
 
 end
