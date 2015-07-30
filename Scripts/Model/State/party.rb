@@ -16,7 +16,7 @@ class Game_Party
   attr_reader :items, :potions
 
   # Potion making vars
-  attr_accessor :potion_ings, :potion_state, :potion_level, :potion_id, :potion_item
+  attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -45,7 +45,6 @@ class Game_Party
     @potions = []
 
     # Current state of potions
-    @potion_ings = []
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
@@ -306,7 +305,11 @@ class Game_Party
     item('boy-arm-s','s')
     item('hib-arm-s','s')
 
-    potion_learn("truth")
+    potion_learn("blabber")
+    potion_learn("blabber")
+    potion_learn("blabber")
+    potion_learn("blabber")
+    potion_learn("blabber")
     
 
   end

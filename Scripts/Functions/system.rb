@@ -53,6 +53,14 @@ def open_potions_menu
 	$menu.menu_page = "Potions"
 end
 
+def open_chooser_menu
+	$menu.menu_page = "Chooser"
+end
+
+def open_potions_book
+	$scene.hud.open_book
+end
+
 def open_shop_buy
 	$menu.menu_page = "Shop"
 end

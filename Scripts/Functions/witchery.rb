@@ -10,13 +10,8 @@ def potion_known?(potion)
 	return $party.potions.include?(potion)
 end
 
-def potion_can_add?
-	return false if $party.potion.count >= 5
-	return [:empty,:adding].include?($party.potion_state)
-end
-
-def potion_full?
-	return $party.potion_ings.count >= 5
+def potion_prep
+	$party.potion_state = :prepped
 end
 
 def potion_equip(item)
@@ -27,19 +22,6 @@ def potion_dequip
 	$party.potion_item = nil
 end
 
-def potion_add
-
-	# Add your potion equip, dequip it, and use one up
-
-	# Maybe max 5
-	$party.potion_ings.push(item)
-	@potion.state = :adding
-
-	# Remove the item from hand and party
-	$party.lose_item($party.potion_item)
-	$party.potion_item = nil
-
-end
 
 def potion_can_hack?
 	return !potion_can_add?
@@ -79,32 +61,6 @@ def potion_hack(type)
 
 end
 
-def potion_mix
-
-	# Check if this is a valid mix
-	# If so, go to fixing mode
-	# If no, ingrid say this isn't right
-
-	$data.potions.each{ |p|
-
-		if p.ingredients.split("/n").sort == $party.potion_ings.sort
-			
-			# This is it!
-			$party.potion_id = p.id
-
-			# Now step through the problems
-			$party.potion_level = -1
-			potion_next_problem
-			return
-
-		end
-
-	}
-
-	# Dud potion, uh-oh
-
-end
-
 def potion_next_problem
 
 	$party.potion_level += 1
@@ -127,7 +83,7 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when :adding
+		when :prepped
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 

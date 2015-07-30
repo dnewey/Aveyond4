@@ -28,6 +28,7 @@ class CacheManager
     def menu_tab(filename) load("Menus/Tabs/", filename) end
     def menu_char(filename) load("Menus/Char/", filename) end
     def menu_page(filename) load("Menus/Page/", filename) end
+    def menu_book(filename) load("Menus/Book/", filename) end
 
     def cursor(filename) load("Cursors/", filename) end
     def icon(filename) load("Icons/", filename) end

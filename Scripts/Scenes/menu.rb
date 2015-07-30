@@ -28,7 +28,8 @@ class Scene_Menu
     @bg.z = -100
     #@bg.bitmap = Bitmap.new(640,480)
     #@bg.bitmap.fill(Color.new(0,0,0,180))
-    @bg.bitmap = $cache.menu_background("sample")
+    #@bg.bitmap = $cache.menu_background("sample")
+    @bg.bitmap = $cache.menu_background("witch")
     @bg.opacity = 0
     @bg.do(go("opacity",255,300))
     #@bg.y = 30
@@ -136,6 +137,7 @@ class Scene_Menu
       when "Profile"; @menu = Mnu_Profile.new(@vp)
 
       when "Potions"; @menu = Mnu_Potions.new(@vp)
+      when "Chooser"; @menu = Mnu_Chooser.new(@vp)
 
       when "Creatures"; @menu = Mnu_Creatures.new(@vp)
       when "Witchery"; @menu = Mnu_Witchery.new(@vp)

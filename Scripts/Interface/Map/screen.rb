@@ -21,12 +21,15 @@ class Ui_Screen
 		@grid = nil
 		@item = nil
 
+		@book = nil
+
 	end
 
 	def dispose
 		@message.dispose
 		@bar.dispose
 		@info.dispose
+		@book.dispose
 	end
 
 	def hide
@@ -75,6 +78,15 @@ class Ui_Screen
 				$tweens.clear(@item)
 				@item.dispose
 				@item = nil
+			end
+		end
+
+		if @book
+			@book.update 
+			if $input.action? #|| $input.click?
+				$tweens.clear(@book)
+				@book.dispose
+				@book = nil
 			end
 		end
 
@@ -143,8 +155,12 @@ class Ui_Screen
 		return @grid
 	end
 
+	def open_book()
+		@book = Ui_Book.new(@vp)
+	end
+
     def busy?() 
-    	return @message.busy? || @item || @popper || @grid
+    	return @message.busy? || @item || @popper || @grid || @book
     end
 
 end

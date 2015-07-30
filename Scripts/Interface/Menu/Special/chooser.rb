@@ -1,22 +1,26 @@
 #==============================================================================
-# ** Mnu_Potions
+# ** Mnu_Chooser
 #==============================================================================
 
-class Mnu_Potions < Mnu_Base
+class Mnu_Chooser < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
 
-		@title.change('potions')
-		@subtitle.text = "Making potions"		
+		@title.change('items')
+		#@subtitle.text = "Various items of collection"
 
-		@menu.list.type = :potion
-		@menu.list.setup($party.potions)
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
 		@item_box.center(472,260)
 		@item_box.hide
 		self.right.push(@item_box)
+
+		grant_items
+
+		@menu.setup_items('all')
 
 		open
 
@@ -24,10 +28,12 @@ class Mnu_Potions < Mnu_Base
 
 	def update
 		super
-
+		# Keep checking if item box changed
+		
 	end
 
 	def change(option)
+
 
 		#@item_box.show
 		
@@ -45,7 +51,6 @@ class Mnu_Potions < Mnu_Base
 
 	def select(option)	
 		$menu.chosen = option
-		flag('potion-choose')
 		self.close_soon
 	end
 
