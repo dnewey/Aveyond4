@@ -341,17 +341,22 @@ class Panorama
 
    end
 
-end"
+end"ï
 
 class Pop < Sprite
+
+	attr_accessor :anim_delay
 
 	def initialize(ein,eout,vp)
 		super(vp)
 
 		@anim_in = ein
 		@anim_out = eout
+		@anim_delay = 800
 
 	end
+
+
 
 	def start
 
@@ -379,14 +384,21 @@ class Pop < Sprite
 				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
 				anim_seq.push(go("zoom_y",1,700,:bounce_o))
 
+			when :lower
+				self.opacity = 200
+				anim_seq.push(go("y",15,1050,:quad_in))
+
 		end
 
-		anim_seq.push(delay(800))
+		anim_seq.push(delay(@anim_delay))
 
 		case @anim_out
 
 			when :fade
 				anim_seq.push(go("opacity",-255,500,:qio))
+
+			when :fade_quick
+				anim_seq.push(go("opacity",-255,350,:qio))
 
 			when :blast
 				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
@@ -2968,7 +2980,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"
+end"Ì
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2984,6 +2996,27 @@ def flash(ev,dur=20)
 	gev(ev).flash_dur = dur
 end
 
+def shake_ev(ev)
+
+	amount = 20
+	dur = 70
+	rep = 50
+	e = :qio
+
+	ev.do(
+		repeat(
+			seq(
+				go(
+					"x",amount,dur,e
+					),
+				go(
+					"x",-amount,dur,e
+					)
+			),rep
+		)
+	)
+
+end
 
 def shake_1
 
@@ -3049,7 +3082,7 @@ def pop_wha(ev)
 end
 
 def pop_sweat(ev)
-	pop_icon(ev,"misc/sweat","jump")
+	pop_icon_sweat(ev,"misc/sweat","creak")
 end
 
 def pop_dots(ev)
@@ -3058,6 +3091,19 @@ end
 
 def pop_bulb(ev)
 	pop_icon(ev,"misc/bulb","bulb")
+end
+
+def pop_icon_sweat(ev,icon,sfx)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x + 10
+	y = gev(ev).screen_y - 45
+
+	$scene.add_icon(icon,x,y,:lower,:fade,1)
+
+	sfx(sfx)
+
 end
 
 def pop_icon(ev,icon,sfx)
@@ -16053,7 +16099,7 @@ end"class State
 	end
 
 end
-"5#==============================================================================
+"[#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -16330,11 +16376,12 @@ class Scene_Base
 
   end
 
-  def add_icon(ic,x,y,ein,eout)
+  def add_icon(ic,x,y,ein,eout,delay=800)
 
     ico = Pop.new(ein,eout,@vp_over)
     ico.icon = ic
     ico.move(x,y)
+    ico.anim_delay = delay
     ico.start
     @pops.push(ico) # Could combine these with spark
 

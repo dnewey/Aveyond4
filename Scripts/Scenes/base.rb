@@ -275,11 +275,12 @@ class Scene_Base
 
   end
 
-  def add_icon(ic,x,y,ein,eout)
+  def add_icon(ic,x,y,ein,eout,delay=800)
 
     ico = Pop.new(ein,eout,@vp_over)
     ico.icon = ic
     ico.move(x,y)
+    ico.anim_delay = delay
     ico.start
     @pops.push(ico) # Could combine these with spark
 

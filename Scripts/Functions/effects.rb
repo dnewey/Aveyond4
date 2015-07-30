@@ -14,6 +14,27 @@ def flash(ev,dur=20)
 	gev(ev).flash_dur = dur
 end
 
+def shake_ev(ev)
+
+	amount = 20
+	dur = 70
+	rep = 50
+	e = :qio
+
+	ev.do(
+		repeat(
+			seq(
+				go(
+					"x",amount,dur,e
+					),
+				go(
+					"x",-amount,dur,e
+					)
+			),rep
+		)
+	)
+
+end
 
 def shake_1
 
@@ -79,7 +100,7 @@ def pop_wha(ev)
 end
 
 def pop_sweat(ev)
-	pop_icon(ev,"misc/sweat","jump")
+	pop_icon_sweat(ev,"misc/sweat","creak")
 end
 
 def pop_dots(ev)
@@ -88,6 +109,19 @@ end
 
 def pop_bulb(ev)
 	pop_icon(ev,"misc/bulb","bulb")
+end
+
+def pop_icon_sweat(ev,icon,sfx)
+
+	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
+
+	x = gev(ev).screen_x + 10
+	y = gev(ev).screen_y - 45
+
+	$scene.add_icon(icon,x,y,:lower,:fade,1)
+
+	sfx(sfx)
+
 end
 
 def pop_icon(ev,icon,sfx)

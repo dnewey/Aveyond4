@@ -1,13 +1,18 @@
 
 class Pop < Sprite
 
+	attr_accessor :anim_delay
+
 	def initialize(ein,eout,vp)
 		super(vp)
 
 		@anim_in = ein
 		@anim_out = eout
+		@anim_delay = 800
 
 	end
+
+
 
 	def start
 
@@ -35,14 +40,21 @@ class Pop < Sprite
 				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
 				anim_seq.push(go("zoom_y",1,700,:bounce_o))
 
+			when :lower
+				self.opacity = 200
+				anim_seq.push(go("y",15,1050,:quad_in))
+
 		end
 
-		anim_seq.push(delay(800))
+		anim_seq.push(delay(@anim_delay))
 
 		case @anim_out
 
 			when :fade
 				anim_seq.push(go("opacity",-255,500,:qio))
+
+			when :fade_quick
+				anim_seq.push(go("opacity",-255,350,:qio))
 
 			when :blast
 				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
