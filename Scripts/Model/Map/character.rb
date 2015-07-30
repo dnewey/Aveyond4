@@ -47,6 +47,8 @@ class Game_Character
 
   attr_accessor :flash_dur
   attr_accessor :pulse_color
+
+  attr_accessor :move_type
   
    
   
@@ -424,8 +426,12 @@ class Game_Character
           move_type_random
         when 2  # Approach
           move_type_toward_player
+        
         when 3  # Custom
           move_type_custom
+
+        when 4  # Avoid
+          move_type_avoid_player          
       end
     end
 
@@ -606,8 +612,39 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_type_toward_player
     # Get difference in player coordinates
-    sx = @x - $game_player.x
-    sy = @y - $game_player.y
+    sx = @x - $player.x
+    sy = @y - $player.y
+    # Get absolute value of difference
+    abs_sx = sx > 0 ? sx : -sx
+    abs_sy = sy > 0 ? sy : -sy
+    # If separated by 20 or more tiles matching up horizontally and vertically
+    if sx + sy >= 20
+      # Random
+      move_random
+      return
+    end
+
+    # What if they follow more aggressively on harder difficulty?
+
+    # Branch by random numbers 0-5
+    case rand(6)
+    when 0..3  # Approach player
+      move_toward_player
+    when 4  # random
+      move_random
+    when 5  # 1 step forward
+      move_forward
+    end
+
+  end
+
+    #--------------------------------------------------------------------------
+  # * Move Type : Avoid
+  #--------------------------------------------------------------------------
+  def move_type_avoid_player
+    # Get difference in player coordinates
+    sx = @x - $player.x
+    sy = @y - $player.y
     # Get absolute value of difference
     abs_sx = sx > 0 ? sx : -sx
     abs_sy = sy > 0 ? sy : -sy
@@ -622,7 +659,7 @@ class Game_Character
     # Branch by random numbers 0-5
     case rand(6)
     when 0..3  # Approach player
-      move_toward_player
+      move_away_from_player
     when 4  # random
       move_random
     when 5  # 1 step forward

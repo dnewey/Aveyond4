@@ -32,7 +32,17 @@ def unhide3(*args)
 	}
 end
 
+def occupied?(e)
+	ev = gev(e)
+	return $map.events_at(ev.x,ev.y).count > 1
+end
 
+def other_here(e)
+	ev = gev(e)
+	list = $map.events_at(ev.x,ev.y)
+	list.delete(e)
+	return list[0].id
+end
 
 def roll(range)
 	gev(me).random = rand(range) + 1

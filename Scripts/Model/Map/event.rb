@@ -545,6 +545,9 @@ class Game_Event < Game_Character
         when '#fxtrail'
           @fxtrail = data[1]
 
+        when '#avoid'
+          self.move_type = 4
+
       end
     }
     
@@ -632,6 +635,8 @@ class Game_Event < Game_Character
   end
 
   def delete
+    self.x = 0
+    self.y = 0
     @deleted = true
     $state.delete(@id)
     self.opacity = 0
