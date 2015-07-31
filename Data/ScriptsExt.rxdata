@@ -1,4 +1,4 @@
-[Œ"#==============================================================================
+[Ž"#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -3260,7 +3260,7 @@ end
 
 
 
-"É#==============================================================================
+"‰#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3294,7 +3294,17 @@ def unhide3(*args)
 	}
 end
 
+def occupied?(e)
+	ev = gev(e)
+	return $map.events_at(ev.x,ev.y).count > 1
+end
 
+def other_here(e)
+	ev = gev(e)
+	list = $map.events_at(ev.x,ev.y)
+	list.delete(e)
+	return list[0].id
+end
 
 def roll(range)
 	gev(me).random = rand(range) + 1
@@ -3822,7 +3832,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"m
+"Þ
 # Misc
 
 def text()
@@ -3875,6 +3885,14 @@ end
 
 def open_potions_menu
 	$menu.menu_page = "Potions"
+end
+
+def open_chooser_menu
+	$menu.menu_page = "Chooser"
+end
+
+def open_potions_book
+	$scene.hud.open_book
 end
 
 def open_shop_buy
@@ -4053,7 +4071,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"(
+ end"ÿ
 # Potion making
 
 def potion_learn(potion)
@@ -4065,13 +4083,8 @@ def potion_known?(potion)
 	return $party.potions.include?(potion)
 end
 
-def potion_can_add?
-	return false if $party.potion.count >= 5
-	return [:empty,:adding].include?($party.potion_state)
-end
-
-def potion_full?
-	return $party.potion_ings.count >= 5
+def potion_prep
+	$party.potion_state = :prepped
 end
 
 def potion_equip(item)
@@ -4082,19 +4095,6 @@ def potion_dequip
 	$party.potion_item = nil
 end
 
-def potion_add
-
-	# Add your potion equip, dequip it, and use one up
-
-	# Maybe max 5
-	$party.potion_ings.push(item)
-	@potion.state = :adding
-
-	# Remove the item from hand and party
-	$party.lose_item($party.potion_item)
-	$party.potion_item = nil
-
-end
 
 def potion_can_hack?
 	return !potion_can_add?
@@ -4134,32 +4134,6 @@ def potion_hack(type)
 
 end
 
-def potion_mix
-
-	# Check if this is a valid mix
-	# If so, go to fixing mode
-	# If no, ingrid say this isn't right
-
-	$data.potions.each{ |p|
-
-		if p.ingredients.split("/n").sort == $party.potion_ings.sort
-			
-			# This is it!
-			$party.potion_id = p.id
-
-			# Now step through the problems
-			$party.potion_level = -1
-			potion_next_problem
-			return
-
-		end
-
-	}
-
-	# Dud potion, uh-oh
-
-end
-
 def potion_next_problem
 
 	$party.potion_level += 1
@@ -4182,7 +4156,7 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when :adding
+		when :prepped
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 
@@ -5083,7 +5057,7 @@ class TargetCmd
 	end
 
 end
-"à#==============================================================================
+"Ö#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -5106,12 +5080,15 @@ class Ui_Screen
 		@grid = nil
 		@item = nil
 
+		@book = nil
+
 	end
 
 	def dispose
 		@message.dispose
 		@bar.dispose
 		@info.dispose
+		@book.dispose
 	end
 
 	def hide
@@ -5160,6 +5137,15 @@ class Ui_Screen
 				$tweens.clear(@item)
 				@item.dispose
 				@item = nil
+			end
+		end
+
+		if @book
+			@book.update 
+			if $input.action? #|| $input.click?
+				$tweens.clear(@book)
+				@book.dispose
+				@book = nil
 			end
 		end
 
@@ -5228,8 +5214,12 @@ class Ui_Screen
 		return @grid
 	end
 
+	def open_book()
+		@book = Ui_Book.new(@vp)
+	end
+
     def busy?() 
-    	return @message.busy? || @item || @popper || @grid
+    	return @message.busy? || @item || @popper || @grid || @book
     end
 
 end"g#==============================================================================
@@ -5395,6 +5385,130 @@ class Ui_Bar < SpriteGroup
 		}
 
 		move(0,480-32)
+
+	end
+
+end"®#==============================================================================
+# Ui_Book
+#==============================================================================
+
+class Ui_Book < SpriteGroup
+
+	def initialize(vp)
+		super()
+
+		@base = Sprite.new(vp)
+		@base.bitmap = $cache.menu_book('base')
+		add(@base,0,0)
+
+		@page = Sprite.new(vp)
+		#@page.bitmap = $cache.menu_book('sampler')
+		add(@page,0,0)
+
+		@turner = Sprite.new(vp)
+		@turner.bitmap = $cache.menu_book('turn-1')
+		@turner.opacity = 0
+		add(@turner,0,0)
+
+		move(48,10)
+
+		@state = :idle
+
+		@page_idx = 0
+		@turn_step = 20
+		@turn_dir = 1
+
+		@page.bitmap = $cache.menu_book("page-#{@page_idx}")
+		@state = :fadein
+
+		#refresh
+
+	end
+
+	def dispose
+		@base.dispose
+		@page.dispose
+		@turner.dispose
+	end
+
+	def update
+		super
+
+		case @state
+
+			when :fadeout
+
+				@page.opacity -= 20
+				if @page.opacity <= 0
+					@state = :flip
+				end
+
+
+
+			when :flip
+
+				@turn_step += (6 * @turn_dir)
+				@turner.bitmap = $cache.menu_book("turn-#{@turn_step/20}")
+				@turner.opacity = 255
+				if (@turn_dir == 1 && @turn_step >= 119) || (@turn_dir == -1 && @turn_step <= 20)
+					@turner.opacity = 0
+					@state = :fadein
+					@page.bitmap = $cache.menu_book("page-#{@page_idx}")
+				end
+
+			when :fadein
+
+	
+				@page.opacity += 20
+				if @page.opacity >= 255
+					@turner.opacity = 0
+					@state = :idle
+				end
+
+		end
+
+		# Mouse cursor
+
+		if $mouse.x > 420 || $mouse.x < 220
+			$mouse.change_cursor('Use')
+		else
+			$mouse.change_cursor('Default')
+		end
+
+		# Check left and right inputs to change pages
+		return if @state != :idle
+		if @page_idx != 0 && $input.left?
+			@page_idx -= 1
+			@turn_step = 119
+			@turn_dir = -1
+			@state = :fadeout
+		end
+
+		if $input.right?
+			@page_idx += 1
+			@turn_step = 20
+			@turn_dir = 1
+			@state = :fadeout
+		end
+
+		if $input.click?
+
+			# If to the right
+			if $mouse.x > 420
+				@page_idx += 1
+				@turn_step = 20
+				@turn_dir = 1
+				@state = :fadeout
+			end
+
+			if @page_idx != 0 &&  $mouse.x < 220
+				@page_idx -= 1
+				@turn_step = 119
+				@turn_dir = -1
+				@state = :fadeout
+			end
+
+		end
 
 	end
 
@@ -10600,7 +10714,63 @@ class Right_Potion < SpriteGroup
 
     end
 
-end"‘#==============================================================================
+end"þ#==============================================================================
+# ** Mnu_Chooser
+#==============================================================================
+
+class Mnu_Chooser < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('items')
+		#@subtitle.text = "Various items of collection"
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+		@item_box = Item_Box.new(vp)
+		@item_box.center(472,260)
+		@item_box.hide
+		self.right.push(@item_box)
+
+		grant_items
+
+		@menu.setup_items('all')
+
+		open
+
+	end
+
+	def update
+		super
+		# Keep checking if item box changed
+		
+	end
+
+	def change(option)
+
+
+		#@item_box.show
+		
+		@item_box.item(option)
+		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
+
+		if @last_option != option
+			@last_option = option
+			$tweens.clear(@item_box)
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+		end
+		
+	end
+
+	def select(option)	
+		$menu.chosen = option
+		self.close_soon
+	end
+
+end"½#==============================================================================
 # ** Mnu_Potions
 #==============================================================================
 
@@ -10615,12 +10785,10 @@ class Mnu_Potions < Mnu_Base
 		@menu.list.type = :potion
 		@menu.list.setup($party.potions)
 
-		@page = Right_Potion.new(vp)
-		self.right.push(@page)
-
-		@page.setup("truth")		
-
-		#change(data[0]) if !data.empty?
+		@item_box = Item_Box.new(vp)
+		@item_box.center(472,260)
+		@item_box.hide
+		self.right.push(@item_box)
 
 		open
 
@@ -10633,12 +10801,24 @@ class Mnu_Potions < Mnu_Base
 
 	def change(option)
 
-		@page.setup(option)		
+		#@item_box.show
+		
+		@item_box.item(option)
+		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
 
+		if @last_option != option
+			@last_option = option
+			$tweens.clear(@item_box)
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+		end
+		
 	end
 
 	def select(option)	
-		
+		$menu.chosen = option
+		flag('potion-choose')
+		self.close_soon
 	end
 
 end"³#==============================================================================
@@ -11301,7 +11481,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"R¬#==============================================================================
+end"°#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -11350,6 +11530,8 @@ class Game_Character
 
   attr_accessor :flash_dur
   attr_accessor :pulse_color
+
+  attr_accessor :move_type
   
    
   
@@ -11727,8 +11909,12 @@ class Game_Character
           move_type_random
         when 2  # Approach
           move_type_toward_player
+        
         when 3  # Custom
           move_type_custom
+
+        when 4  # Avoid
+          move_type_avoid_player          
       end
     end
 
@@ -11909,8 +12095,39 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_type_toward_player
     # Get difference in player coordinates
-    sx = @x - $game_player.x
-    sy = @y - $game_player.y
+    sx = @x - $player.x
+    sy = @y - $player.y
+    # Get absolute value of difference
+    abs_sx = sx > 0 ? sx : -sx
+    abs_sy = sy > 0 ? sy : -sy
+    # If separated by 20 or more tiles matching up horizontally and vertically
+    if sx + sy >= 20
+      # Random
+      move_random
+      return
+    end
+
+    # What if they follow more aggressively on harder difficulty?
+
+    # Branch by random numbers 0-5
+    case rand(6)
+    when 0..3  # Approach player
+      move_toward_player
+    when 4  # random
+      move_random
+    when 5  # 1 step forward
+      move_forward
+    end
+
+  end
+
+    #--------------------------------------------------------------------------
+  # * Move Type : Avoid
+  #--------------------------------------------------------------------------
+  def move_type_avoid_player
+    # Get difference in player coordinates
+    sx = @x - $player.x
+    sy = @y - $player.y
     # Get absolute value of difference
     abs_sx = sx > 0 ? sx : -sx
     abs_sy = sy > 0 ? sy : -sy
@@ -11925,7 +12142,7 @@ class Game_Character
     # Branch by random numbers 0-5
     case rand(6)
     when 0..3  # Approach player
-      move_toward_player
+      move_away_from_player
     when 4  # random
       move_random
     when 5  # 1 step forward
@@ -12808,7 +13025,7 @@ class Game_Character
 
 
 end
-"‡>#==============================================================================
+"Þ>#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13355,6 +13572,9 @@ class Game_Event < Game_Character
         when '#fxtrail'
           @fxtrail = data[1]
 
+        when '#avoid'
+          self.move_type = 4
+
       end
     }
     
@@ -13442,6 +13662,8 @@ class Game_Event < Game_Character
   end
 
   def delete
+    self.x = 0
+    self.y = 0
     @deleted = true
     $state.delete(@id)
     self.opacity = 0
@@ -15585,7 +15807,7 @@ class Game_Battle
   end
 
   
-end"&
+end"S
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -15600,6 +15822,8 @@ class MenuState
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
 
+	attr_accessor :chosen
+
 	#attr_accessor :category
 	#attr_accessor :tab
 
@@ -15610,6 +15834,8 @@ class MenuState
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
+
+		@chosen = nil
 	end
 
 	def shop_init
@@ -15620,7 +15846,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"¦#==============================================================================
+end"÷#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15638,7 +15864,7 @@ class Game_Party
   attr_reader :items, :potions
 
   # Potion making vars
-  attr_accessor :potion_ings, :potion_state, :potion_level, :potion_id, :potion_item
+  attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -15667,7 +15893,6 @@ class Game_Party
     @potions = []
 
     # Current state of potions
-    @potion_ings = []
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
@@ -15928,7 +16153,11 @@ class Game_Party
     item('boy-arm-s','s')
     item('hib-arm-s','s')
 
-    potion_learn("truth")
+    potion_learn("blabber")
+    potion_learn("blabber")
+    potion_learn("blabber")
+    potion_learn("blabber")
+    potion_learn("blabber")
     
 
   end
@@ -17365,7 +17594,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"è#==============================================================================
+"O#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -17395,7 +17624,8 @@ class Scene_Menu
     @bg.z = -100
     #@bg.bitmap = Bitmap.new(640,480)
     #@bg.bitmap.fill(Color.new(0,0,0,180))
-    @bg.bitmap = $cache.menu_background("sample")
+    #@bg.bitmap = $cache.menu_background("sample")
+    @bg.bitmap = $cache.menu_background("witch")
     @bg.opacity = 0
     @bg.do(go("opacity",255,300))
     #@bg.y = 30
@@ -17503,6 +17733,7 @@ class Scene_Menu
       when "Profile"; @menu = Mnu_Profile.new(@vp)
 
       when "Potions"; @menu = Mnu_Potions.new(@vp)
+      when "Chooser"; @menu = Mnu_Chooser.new(@vp)
 
       when "Creatures"; @menu = Mnu_Creatures.new(@vp)
       when "Witchery"; @menu = Mnu_Witchery.new(@vp)
@@ -18507,7 +18738,7 @@ class EnviroSource < Seal::Source
 
   end
 
-end"V
+end"•
 class CacheManager
 
     def initialize
@@ -18537,6 +18768,7 @@ class CacheManager
     def menu_tab(filename) load("Menus/Tabs/", filename) end
     def menu_char(filename) load("Menus/Char/", filename) end
     def menu_page(filename) load("Menus/Page/", filename) end
+    def menu_book(filename) load("Menus/Book/", filename) end
 
     def cursor(filename) load("Cursors/", filename) end
     def icon(filename) load("Icons/", filename) end
