@@ -31,5 +31,8 @@
   },
   {
     "field": "loop"
+  },
+  {
+    "field": "offset"
   }
 ]
