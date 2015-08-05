@@ -124,6 +124,7 @@ class AnimData
 	attr_reader :opacity
 	attr_reader :sound
 	attr_reader :loop
+	attr_reader :offset
 end
 
 class NumberData

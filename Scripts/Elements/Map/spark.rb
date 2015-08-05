@@ -8,7 +8,8 @@ class Spark < Sprite
 		#self.zoom_y = 1.2
 
 		@reverse = false
-
+		@idx = -1
+		@next = 0
 
 		# fx is database id, also gfx name
 		# If not in database, use defaults
@@ -43,6 +44,8 @@ class Spark < Sprite
 					self.z = 5000
 			end
 
+			@idx = anim.offset.to_i if anim.offset != nil
+
 			#self.blend_type = anim.blend if anim.blend != nil
 
 			# Split sound input
@@ -57,9 +60,7 @@ class Spark < Sprite
 		end
 
 		self.center(x,y)
-
-		@idx = -1
-		@next = 0
+		
 		update
 
 	end
