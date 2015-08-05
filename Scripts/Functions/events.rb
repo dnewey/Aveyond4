@@ -52,6 +52,10 @@ def fade(ev)
 	gev(ev).do(go("opacity",-255,300))
 end
 
+def unfade(ev)
+	gev(ev).do(go("opacity",+255,300))
+end
+
 def gfx(ev,name)
 	gev(ev).character_name = name	
 end
