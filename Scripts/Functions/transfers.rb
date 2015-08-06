@@ -28,7 +28,7 @@ def transfer_same(dir=nil)
 	id = $scene.map.id
 	name = $map.events[me].name
 	room = $map.find_other(name,me)
-	$player.transfer_to(id,room)
+	$player.transfer_to(id,room,dir)
 end
 
 def transfer_world(dir=nil)

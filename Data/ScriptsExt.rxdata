@@ -3940,7 +3940,7 @@ end
 def noverlay(f=30)
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"	WORLD_MAP_ID = 25
+end" 	WORLD_MAP_ID = 25
 
 def transfer(map,room=nil,dir=nil)
 
@@ -3970,7 +3970,7 @@ def transfer_same(dir=nil)
 	id = $scene.map.id
 	name = $map.events[me].name
 	room = $map.find_other(name,me)
-	$player.transfer_to(id,room)
+	$player.transfer_to(id,room,dir)
 end
 
 def transfer_world(dir=nil)
@@ -13030,7 +13030,7 @@ class Game_Character
 
 
 end
-"Þ>#==============================================================================
+"*?#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13542,6 +13542,8 @@ class Game_Event < Game_Character
           @character_name = "Player/#{data[1]}"
         when "#animal"
           @character_name = "Animals/#{data[1]}"
+        when "#monster"
+          @character_name = "Monsters/#{data[1]}"
         when "#object"
           @character_name = "Objects/#{data[1]}"
         when "#door"

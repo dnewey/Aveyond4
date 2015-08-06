@@ -510,6 +510,8 @@ class Game_Event < Game_Character
           @character_name = "Player/#{data[1]}"
         when "#animal"
           @character_name = "Animals/#{data[1]}"
+        when "#monster"
+          @character_name = "Monsters/#{data[1]}"
         when "#object"
           @character_name = "Objects/#{data[1]}"
         when "#door"
