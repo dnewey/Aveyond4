@@ -341,7 +341,7 @@ class Panorama
 
    end
 
-end"ï
+end"ë
 
 class Pop < Sprite
 
@@ -355,8 +355,6 @@ class Pop < Sprite
 		@anim_delay = 800
 
 	end
-
-
 
 	def start
 
@@ -3628,7 +3626,7 @@ end
 
 
 
-"T
+"
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3650,6 +3648,11 @@ def pop_gold(number,type)
 
 	pop_get(type,b,ib)
 
+end
+
+def pop_ing_pickup(i)
+	ib = $cache.icon($data.items[i].icon)
+	pop_get('p',$data.items[i].name,ib)
 end
 
 def pop_get(type,b,ib)
@@ -3675,6 +3678,10 @@ def pop_get(type,b,ib)
 		when 'rat'
 			a = "Trevor found: "
 			ia = nil
+
+		when 'p'
+			a = "Ingrid picks up: "
+			ia = $cache.icon("faces/ing")		
 
 		when 'boy','ing','hib','mys','phy','rob','row'
 			a = $data.actors[type].name+" receives: "
@@ -3837,11 +3844,11 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"Þ
+"û
 # Misc
 
-def text()
-
+def text(t)
+	$scene.hud.message.start(t)
 end
 
 def text_wall(w='diamonds')
@@ -4076,7 +4083,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"ÿ
+ end"È	
 # Potion making
 
 def potion_learn(potion)
@@ -4088,10 +4095,6 @@ def potion_known?(potion)
 	return $party.potions.include?(potion)
 end
 
-def potion_prep
-	$party.potion_state = :prepped
-end
-
 def potion_equip(item)
 	$party.potion_item = item
 end
@@ -4100,54 +4103,29 @@ def potion_dequip
 	$party.potion_item = nil
 end
 
-
-def potion_can_hack?
-	return !potion_can_add?
+def potion_state(s)
+	$party.potion_state = s
 end
 
-def potion_done?
-	problems = $data.potions[$party.potion_id].problems.split("\n")
-	return $party.potion_level >= problems.count
+def potion_current
+	return $data.potions[$party.potion_id]
 end
 
-def potion_hack(type)
-
-	case $party.potion_state
-
-		when :hot
-
-			if type == 'cooler'
-				# Go to next
-				party_next_problem
-			end
-
-		when :claggy
-
-		when :rotten
-
-		when :acidic # Soda ash
-
-		when :slimy
-
-		when :cold # Heat - dragon
-
-		when :sour
-
-		when :volatile # Calm it somehow
-
-	end
-
+def potion_chose_secret?		
+	log_sys(potion_current.ingredient)
+	log_scr $menu.chosen
+	return potion_current.ingredient == $menu.chosen
 end
 
 def potion_next_problem
 
 	$party.potion_level += 1
 
-	problems = $data.potions[$party.potion_id].problems.split("\n")
-	if $party.potion.level >= problems.count
-
+	problems = potion_current.problems.split("\n")
+	if $party.potion_level > problems.count
+		$party.potion_state = 'done'
 	else
-		problem = problems[$party.potion_level]
+		problem = problems[$party.potion_level-1]
 		$party.potion_state = problem
 	end
 
@@ -4157,47 +4135,69 @@ def cauldron_graphic(ev)
 
 	case $party.potion_state
 
-		when :empty
+		when 'empty'
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when :prepped
+		when 'choose-recipe'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'start'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'start-ing'
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 
-		when :hot # Glacial Essence
+		when 'choose-item'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'kaboom'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'hot' # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 2
 
-		when :claggy # MIXXER OF SOME SORT
+		when 'claggy' # MIXXER OF SOME SORT
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
-		# when :rotten
-		# 	ev.character_name = 'Objects/cauldron-problem-a'
-		# 	ev.direction = 6
+		when 'rotten'
+			ev.character_name = 'Objects/cauldron-problem-a'
+			ev.direction = 6
 
-		when :acidic # Soda ash
+		when 'acidic' # Soda ash
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
-		when :slimy # Rock Powder
+		when 'slimy' # Rock Powder
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 2
 
-		when :cold # Baby Dragon
+		when 'cold' # Baby Dragon
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
-		# when :sour
-		# 	ev.character_name = 'Objects/cauldron-problem-b'
-		# 	ev.direction = 6
+		when 'sour'
+			ev.character_name = 'Objects/cauldron-problem-b'
+			ev.direction = 6
 
-		when :volatile # MUSIC
+		when 'volatile' # MUSIC
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 8
 
-		when :done
+		when 'done'
+
+			case $party.potion_id
+				when 'blabber'
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 2	
+			end
 
 			# Depends on the potion you were trying to make
 
@@ -10719,7 +10719,7 @@ class Right_Potion < SpriteGroup
 
     end
 
-end"þ#==============================================================================
+end"3#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -10772,10 +10772,12 @@ class Mnu_Chooser < Mnu_Base
 
 	def select(option)	
 		$menu.chosen = option
+		flag('have-chosen')
+		potion_state 'choose-item'
 		self.close_soon
 	end
 
-end"½#==============================================================================
+end"Í#==============================================================================
 # ** Mnu_Potions
 #==============================================================================
 
@@ -10822,7 +10824,7 @@ class Mnu_Potions < Mnu_Base
 
 	def select(option)	
 		$menu.chosen = option
-		flag('potion-choose')
+		$party.potion_state = 'choose-recipe'
 		self.close_soon
 	end
 
@@ -13030,7 +13032,7 @@ class Game_Character
 
 
 end
-"*?#==============================================================================
+"Š?#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13237,6 +13239,10 @@ class Game_Event < Game_Character
       # cond is [code,data1.....]
 
     case cond[0]
+
+      # Potion
+      when '?potion'
+        return false if $party.potion_state != cond[1]
 
       # Second
       when '?second'
@@ -15853,7 +15859,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"÷#==============================================================================
+end"#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15898,12 +15904,13 @@ class Game_Party
 
     # Other things you can have
     @potions = []
+    @creatures = []
 
     # Current state of potions
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
-    @potion_item = nil # What ingredient you are using
+    @potion_item = nil # What tool you are using
 
     # Hardcode Party Data
     init_party
@@ -20158,7 +20165,7 @@ end"øclass Bitmap
 	end
 
 end
-"õ	
+"ô	
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -20303,7 +20310,7 @@ class PotionData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :description
-	attr_reader :ingredients
+	attr_reader :ingredient
 	attr_reader :problems
 	attr_reader :result
 end"r#==============================================================================
