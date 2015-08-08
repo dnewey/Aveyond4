@@ -43,12 +43,13 @@ class Game_Party
 
     # Other things you can have
     @potions = []
+    @creatures = []
 
     # Current state of potions
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
-    @potion_item = nil # What ingredient you are using
+    @potion_item = nil # What tool you are using
 
     # Hardcode Party Data
     init_party

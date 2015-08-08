@@ -1,8 +1,8 @@
 
 # Misc
 
-def text()
-
+def text(t)
+	$scene.hud.message.start(t)
 end
 
 def text_wall(w='diamonds')

@@ -10,10 +10,6 @@ def potion_known?(potion)
 	return $party.potions.include?(potion)
 end
 
-def potion_prep
-	$party.potion_state = :prepped
-end
-
 def potion_equip(item)
 	$party.potion_item = item
 end
@@ -22,54 +18,29 @@ def potion_dequip
 	$party.potion_item = nil
 end
 
-
-def potion_can_hack?
-	return !potion_can_add?
+def potion_state(s)
+	$party.potion_state = s
 end
 
-def potion_done?
-	problems = $data.potions[$party.potion_id].problems.split("\n")
-	return $party.potion_level >= problems.count
+def potion_current
+	return $data.potions[$party.potion_id]
 end
 
-def potion_hack(type)
-
-	case $party.potion_state
-
-		when :hot
-
-			if type == 'cooler'
-				# Go to next
-				party_next_problem
-			end
-
-		when :claggy
-
-		when :rotten
-
-		when :acidic # Soda ash
-
-		when :slimy
-
-		when :cold # Heat - dragon
-
-		when :sour
-
-		when :volatile # Calm it somehow
-
-	end
-
+def potion_chose_secret?		
+	log_sys(potion_current.ingredient)
+	log_scr $menu.chosen
+	return potion_current.ingredient == $menu.chosen
 end
 
 def potion_next_problem
 
 	$party.potion_level += 1
 
-	problems = $data.potions[$party.potion_id].problems.split("\n")
-	if $party.potion.level >= problems.count
-
+	problems = potion_current.problems.split("\n")
+	if $party.potion_level > problems.count
+		$party.potion_state = 'done'
 	else
-		problem = problems[$party.potion_level]
+		problem = problems[$party.potion_level-1]
 		$party.potion_state = problem
 	end
 
@@ -79,47 +50,69 @@ def cauldron_graphic(ev)
 
 	case $party.potion_state
 
-		when :empty
+		when 'empty'
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when :prepped
+		when 'choose-recipe'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'start'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'start-ing'
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 
-		when :hot # Glacial Essence
+		when 'choose-item'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'kaboom'
+			ev.character_name = 'Objects/cauldron-base'
+			ev.direction = 2
+
+		when 'hot' # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 2
 
-		when :claggy # MIXXER OF SOME SORT
+		when 'claggy' # MIXXER OF SOME SORT
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
-		# when :rotten
-		# 	ev.character_name = 'Objects/cauldron-problem-a'
-		# 	ev.direction = 6
+		when 'rotten'
+			ev.character_name = 'Objects/cauldron-problem-a'
+			ev.direction = 6
 
-		when :acidic # Soda ash
+		when 'acidic' # Soda ash
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
-		when :slimy # Rock Powder
+		when 'slimy' # Rock Powder
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 2
 
-		when :cold # Baby Dragon
+		when 'cold' # Baby Dragon
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
-		# when :sour
-		# 	ev.character_name = 'Objects/cauldron-problem-b'
-		# 	ev.direction = 6
+		when 'sour'
+			ev.character_name = 'Objects/cauldron-problem-b'
+			ev.direction = 6
 
-		when :volatile # MUSIC
+		when 'volatile' # MUSIC
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 8
 
-		when :done
+		when 'done'
+
+			case $party.potion_id
+				when 'blabber'
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 2	
+			end
 
 			# Depends on the potion you were trying to make
 

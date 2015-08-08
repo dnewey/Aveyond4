@@ -22,6 +22,11 @@ def pop_gold(number,type)
 
 end
 
+def pop_ing_pickup(i)
+	ib = $cache.icon($data.items[i].icon)
+	pop_get('p',$data.items[i].name,ib)
+end
+
 def pop_get(type,b,ib)
 
 	case type
@@ -45,6 +50,10 @@ def pop_get(type,b,ib)
 		when 'rat'
 			a = "Trevor found: "
 			ia = nil
+
+		when 'p'
+			a = "Ingrid picks up: "
+			ia = $cache.icon("faces/ing")		
 
 		when 'boy','ing','hib','mys','phy','rob','row'
 			a = $data.actors[type].name+" receives: "

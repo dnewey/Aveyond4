@@ -45,7 +45,7 @@ class Mnu_Potions < Mnu_Base
 
 	def select(option)	
 		$menu.chosen = option
-		flag('potion-choose')
+		$party.potion_state = 'choose-recipe'
 		self.close_soon
 	end
 

@@ -206,6 +206,10 @@ class Game_Event < Game_Character
 
     case cond[0]
 
+      # Potion
+      when '?potion'
+        return false if $party.potion_state != cond[1]
+
       # Second
       when '?second'
         return false if !conditions_met?(idx-1)

@@ -1,1 +1,1 @@
-[{"id":"blabber","name":"Truth Potion","ingredients":"covey\ncheese\nhaunch","reqs":"","result":"a:2","modified":"1436453588013","problems":"cold","description":"Don't lie to me any more"}]
+[{"id":"blabber","name":"Truth Potion","ingredients":"covey\ncheese\nhaunch","reqs":"","result":"potion-blabber","modified":"1436453588013","problems":"cold","description":"Don't lie to me any more","ingredient":"covey"},{"id":"neon","name":"Neon Potion","description":"","ingredient":"","problems":"","result":"","modified":"1439022367672"}]

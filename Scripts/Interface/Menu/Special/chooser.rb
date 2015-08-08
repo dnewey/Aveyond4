@@ -51,6 +51,8 @@ class Mnu_Chooser < Mnu_Base
 
 	def select(option)	
 		$menu.chosen = option
+		flag('have-chosen')
+		potion_state 'choose-item'
 		self.close_soon
 	end
 

@@ -12,8 +12,6 @@ class Pop < Sprite
 
 	end
 
-
-
 	def start
 
 		anim_seq = seq()
