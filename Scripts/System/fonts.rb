@@ -3,6 +3,7 @@ class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
 	attr_reader :message, :message_shadow, :namebox
+	attr_reader :message_big, :message_big_shadow
 
 	attr_reader :list, :list_shadow
 
@@ -60,6 +61,17 @@ class FontManager
 	    @message_shadow.name = "Georgia"
 	    @message_shadow.size = 24
 	    @message_shadow.color = Color.new(0,0,0,90)
+
+	    @message_big = Font.new
+	    @message_big.name = "Georgia"
+	    @message_big.size = 30
+	    #@message.gradient = true
+	    @message_big.color = Color.new(245,223,200)
+
+	    @message_big_shadow = Font.new
+	    @message_big_shadow.name = "Georgia"
+	    @message_big_shadow.size = 30
+	    @message_big_shadow.color = Color.new(0,0,0,90)
 
 	    @namebox = Font.new
 	    @namebox.name = "Bitter"

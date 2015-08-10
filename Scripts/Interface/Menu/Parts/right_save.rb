@@ -1,5 +1,5 @@
 
-class Right_Potion < SpriteGroup
+class Right_Save < SpriteGroup
 
 	def initialize(vp)
 		super()
@@ -35,14 +35,9 @@ class Right_Potion < SpriteGroup
     	add(@txt_desc,340,198)
 
 
-    	# Text sprites
-
-        @ingredients = []
-
-
     	# cy += 30
 
-    	move(0,0)
+    	move(0,-22)
 
         #clear
 

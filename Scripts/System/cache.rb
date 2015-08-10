@@ -35,12 +35,17 @@ class CacheManager
     def numbers(filename) load("Numbers/", filename) end
 
     # Faces
-    def face(filename) load("Faces/Message/", filename) end
-    def face_vn(filename) load("Faces/Vn/", filename) end
-    def face_small(filename) load("Faces/Small/", filename) end
-    def face_large(filename) load("Faces/Large/", filename) end
-    def face_menu(filename) load("Faces/Menu/", filename) end
-    def face_battle(filename) load("Faces/Battle/", filename) end
+    def face(filename) face_file("Faces/Message/", filename) end
+    def face_vn(filename) face_file("Faces/Vn/", filename) end
+    def face_small(filename) face_file("Faces/Small/", filename) end
+    def face_large(filename) face_file("Faces/Large/", filename) end
+    def face_menu(filename) face_file("Faces/Menu/", filename) end
+    def face_battle(filename) face_file("Faces/Battle/", filename) end
+
+    def face_file(folder,filename)
+      filename += "."+$party.guild_id if filename.include?("ing")
+      load(folder,filename)
+    end
     
 
 

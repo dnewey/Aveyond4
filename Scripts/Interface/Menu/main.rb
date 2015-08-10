@@ -159,6 +159,10 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	end
 
 	def update
+
+		@glow.move(@selected_box.x+6,@selected_box.y+6)
+		return if !$tweens.done?(@chars[0])
+
 		#@menu.update
 		@chars.each{ |c| c.update }
 		@boxes.each{ |b| b.update }
