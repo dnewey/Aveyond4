@@ -17,6 +17,10 @@ def music(file,vol=1.0)
 	$audio.music(file,vol)
 end
 
+def atmosphere(file)
+	$audio.atmosphere(file)
+end
+
 def music_pause
 	$audio.pause
 end

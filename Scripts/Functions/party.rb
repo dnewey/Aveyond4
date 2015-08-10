@@ -9,7 +9,8 @@ def gold(amount,type='f')
 end
 
 def ungold(amount)
-	$party.lose_gold(amount)
+	sys('coins')
+	$party.add_gold(-amount)
 end
 
 def gold?(amount)
