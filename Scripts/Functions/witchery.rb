@@ -78,11 +78,11 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 2
 
-		when 'claggy' # MIXXER OF SOME SORT
+		when 'claggy' # dream leaf
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 4
 
-		when 'rotten'
+		when 'rotten' # Mineral man
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 6
 
@@ -98,7 +98,7 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 4
 
-		when 'sour'
+		when 'sour' # moon tear
 			ev.character_name = 'Objects/cauldron-problem-b'
 			ev.direction = 6
 
