@@ -48,6 +48,10 @@ def roll(range)
 	gev(me).random = rand(range) + 1
 end
 
+def voll(v)
+	gev(me).voll = $state.varval(v)
+end
+
 def fade(ev)
 	gev(ev).do(go("opacity",-255,300))
 end

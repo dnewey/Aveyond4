@@ -52,6 +52,11 @@ class State
 		return @vars[v] >= t
 	end
 
+	def varval(v)
+		return 0 if !@vars.has_key?(v)
+		return @vars[v]
+	end
+
 	def state(e,s)
 		@states[[$map.id,e,s]] = true
 		$map.need_refresh = true

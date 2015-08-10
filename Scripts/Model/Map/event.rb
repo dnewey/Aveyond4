@@ -12,7 +12,7 @@ class Game_Event < Game_Character
   attr_reader   :event
   attr_reader   :icon
 
-  attr_accessor :random
+  attr_accessor :random, :voll
 
   attr_reader :above
   attr_reader :below
@@ -37,8 +37,9 @@ class Game_Event < Game_Character
     @event = event
     @id = event.id
 
-    # Hold a random number to be used with @r1
+    # Hold a random number to be used with @r1, var for @v1
     @random = 0 
+    @voll = 0
     
     @erased = false
     @disabled = $state.disable?(@id)
@@ -352,6 +353,22 @@ class Game_Event < Game_Character
         return false if @random != 6
       when '@r7'
         return false if @random != 7
+
+      # Volls
+      when '@v1'
+        return false if @voll != 1
+      when '@v2'
+        return false if @voll != 2
+      when '@v3'
+        return false if @voll != 3
+      when '@v4'
+        return false if @voll != 4
+      when '@v5'
+        return false if @voll != 5
+      when '@v6'
+        return false if @voll != 6
+      when '@v7'
+        return false if @voll != 7
 
 
     end
