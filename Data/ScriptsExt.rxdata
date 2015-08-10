@@ -1,4 +1,4 @@
-[Ž"#==============================================================================
+[Œ"#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -3635,7 +3635,8 @@ end
 
 
 
-"
+"
+
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3664,6 +3665,34 @@ def pop_ing_pickup(i)
 	pop_get('p',$data.items[i].name,ib)
 end
 
+def pop_learn(s,w)
+
+	b = $data.skills[s].name
+	ib = $cache.icon($data.skills[s].icon)
+
+	a = $data.actors[w].name+" has learned: "
+	ia = $cache.icon("faces/#{w}")	
+
+	popper = $scene.hud.open_popper
+	popper.color = 'blue'
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_use_skill(s,w)
+
+	b = $data.skills[s].name
+	ib = $cache.icon($data.skills[s].icon)
+
+	a = $data.actors[w].name+" uses: "
+	ia = $cache.icon("faces/#{w}")	
+
+	popper = $scene.hud.open_popper
+	popper.color = 'blue'
+	popper.setup(a,ia,b,ib)
+
+end
+
 def pop_get(type,b,ib)
 
 	case type
@@ -3690,7 +3719,7 @@ def pop_get(type,b,ib)
 
 		when 'p'
 			a = "Ingrid picks up: "
-			ia = $cache.icon("faces/ing")		
+			ia = $cache.icon("faces/ing")	
 
 		when 'boy','ing','hib','mys','phy','rob','row'
 			a = $data.actors[type].name+" receives: "
@@ -3853,7 +3882,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"û
+";
 # Misc
 
 def text(t)
@@ -3922,6 +3951,10 @@ end
 
 def open_shop_sell
 	$menu.menu_page = "Shop"
+end
+
+def open_shop_creatures
+	$menu.menu_page = "Creatures"
 end
 
 
@@ -6202,7 +6235,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"eQ#==============================================================================
+end"9T#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6219,6 +6252,7 @@ class Ui_Message
 
   SPACING = 7
   LINE_HEIGHT = 27
+  LINE_HEIGHT_BIG = 33
   PADDING_X = 21
   PADDING_Y = 16
 
@@ -6246,12 +6280,14 @@ class Ui_Message
     @text = ""
 
     @scratch = Bitmap.new(400,50)
-    @scratch.font = $fonts.message
-
+    
     @lines = []
+    @line_height = LINE_HEIGHT
 
     # Settings
     @color = nil
+    @font = $fonts.message
+    @font_shadow = $fonts.message_shadow
 
     # Text display
     @text_delay = SPEED_4
@@ -6509,6 +6545,17 @@ class Ui_Message
       speaker = speaker.sub("x-",'')
     end
 
+    if speaker.include?("b-")
+      @font = $fonts.message_big
+      @font_shadow = $fonts.message_big_shadow
+      @line_height = LINE_HEIGHT_BIG
+      speaker = speaker.sub("b-",'')
+    else
+      @font = $fonts.message
+      @font_shadow = $fonts.message_shadow
+      @line_height = LINE_HEIGHT
+    end
+
     # Figure things out from speaker
     speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
@@ -6578,7 +6625,7 @@ class Ui_Message
     if (@namebox.width + 44) > @width
       @width = @namebox.width + 44 
     end
-    @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
+    @height = (@lines.count * @line_height) + PADDING_Y * 2
 
     # Position the face
     if @face.bitmap
@@ -6594,7 +6641,7 @@ class Ui_Message
 
     if @mode == :vn
       @width = VN_WIDTH
-      @height = (3 * LINE_HEIGHT) + PADDING_Y * 2
+      @height = (3 * @line_height) + PADDING_Y * 2
     end
 
     # Prepare the sprites  
@@ -6602,8 +6649,8 @@ class Ui_Message
     @textbox.bitmap = Bitmap.new(@width,@height)
     @text_bmp = Bitmap.new(@width,@height)
     
-    @text_bmp.font = $fonts.message
-    @textbox.bitmap.font = $fonts.message
+    @text_bmp.font = @font
+    @textbox.bitmap.font = @font
 
     # Point tale x at speaker and y under box
     # Would need to be put in update
@@ -6738,7 +6785,7 @@ class Ui_Message
 
     # SHADOW HERE FOR THE WORD IN PROGRESS
 
-    @textbox.bitmap.draw_gtext(@cx,@cy,300,LINE_HEIGHT,txt)
+    @textbox.bitmap.draw_gtext(@cx,@cy,300,@line_height,txt)
 
     # Half draw the final
     return if @char_idx >= @word.length
@@ -6749,16 +6796,16 @@ class Ui_Message
     r = 0
     op = 220 - @next_char * 50
 
-    @textbox.bitmap.font = $fonts.message_shadow
+    @textbox.bitmap.font = @font_shadow
     @textbox.bitmap.font.color.alpha = op
-    @textbox.bitmap.draw_text(@cx+r+size.width+2,@cy+r+2,100,LINE_HEIGHT,txt2)
+    @textbox.bitmap.draw_text(@cx+r+size.width+2,@cy+r+2,100,@line_height,txt2)
 
     @textbox.bitmap.font.color.alpha = 255
 
 
-    @textbox.bitmap.font = $fonts.message
+    @textbox.bitmap.font = @font
     @textbox.bitmap.font.color.alpha = op
-    @textbox.bitmap.draw_gtext(@cx+r+size.width,@cy+r,100,LINE_HEIGHT,txt2)
+    @textbox.bitmap.draw_gtext(@cx+r+size.width,@cy+r,100,@line_height,txt2)
 
     @textbox.bitmap.font.color.alpha = 255
 
@@ -6789,7 +6836,7 @@ class Ui_Message
       end
     else
       @word_idx = 0
-      @cy += LINE_HEIGHT
+      @cy += @line_height
       @cx = PADDING_X
     end
   end
@@ -6807,15 +6854,15 @@ class Ui_Message
 
       txt = @word.delete('*^')[0..@char_idx]
 
-      @text_bmp.font = $fonts.message_shadow
+      @text_bmp.font = @font_shadow
       @text_bmp.font.bold = @word.include?('*')
       @text_bmp.font.italic = @word.include?('^')
-      @text_bmp.draw_text(@cx+2,@cy+2,300,LINE_HEIGHT,txt)
+      @text_bmp.draw_text(@cx+2,@cy+2,300,@line_height,txt)
 
-      @text_bmp.font = $fonts.message
+      @text_bmp.font = @font
       @text_bmp.font.bold = @word.include?('*')
       @text_bmp.font.italic = @word.include?('^')
-      @text_bmp.draw_gtext(@cx,@cy,300,LINE_HEIGHT,txt)
+      @text_bmp.draw_gtext(@cx,@cy,300,@line_height,txt)
 
       # Step cursor
       @cx += word_width(@word)
@@ -6879,8 +6926,9 @@ class Ui_Message
           @show_next = false
           
         when "$end"
-          @state = :closing
+          @word = nil
           @show_next = false
+          return force_close
           
       end
         
@@ -6933,6 +6981,20 @@ class Ui_Message
     end
   end
 
+  def force_close
+
+    @state = :closing
+      @textbox.bitmap.clear
+      $tweens.clear(@sprites)
+      @sprites.opacity = 0
+      @box.skin = $cache.menu_common("skin")
+      $tweens.clear(@vn_port)
+      @vn_port.do(to("opacity",0,-11))
+      @tail.opacity = 0
+      @tail.hide
+
+    end
+
   #--------------------------------------------------------------------------
   # * Wait for input or choice
   #--------------------------------------------------------------------------
@@ -6963,6 +7025,7 @@ class Ui_Message
   def word_width(word)
       return TAB_WIDTH if word == "$t"
       return 0 if word.include?("$")
+      @scratch.font = @font
       @scratch.font.bold = word.include?('*')
       @scratch.font.italic = word.include?('^')
       return @scratch.text_size(word.delete('*^')).width + SPACING
@@ -7670,7 +7733,7 @@ class Mnu_Load < Mnu_Base
 		
 	end
 
-end"~#==============================================================================
+end"Ü#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -7831,6 +7894,10 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 	end
 
 	def update
+
+		@glow.move(@selected_box.x+6,@selected_box.y+6)
+		return if !$tweens.done?(@chars[0])
+
 		#@menu.update
 		@chars.each{ |c| c.update }
 		@boxes.each{ |b| b.update }
@@ -8409,7 +8476,7 @@ class Mnu_Save < Mnu_Base
 		@menu.list.type = :file
 		@menu.list.setup($files.save_file_list)
 
-		@page = Right_Page.new(vp)
+		@page = Right_Save.new(vp)
 		@right.push(@page)
 
 		@pic = Sprite.new(vp)
@@ -8523,498 +8590,6 @@ class Mnu_Shop < Mnu_Base
 			list.push(item) if $data.items[item].category == tab
 		}
 		@menu.list.setup(list)
-
-	end
-
-end"†#==============================================================================
-# ** Mnu_Creatures
-#==============================================================================
-
-class Mnu_Creatures < Mnu_Base
-
-	def initialize(vp)
-		super(vp)
-
-		@title.change('Equip')
-		@title.icon($menu.char)
-
-		@char = $party.get('boy')
-
-		@subtitle.text = "Master of deception"
-
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
-
-		@menu.opacity = 0
-		@menu.move(15,180)
-		#@menu.opacity = 0
-		
-		@menu.list.per_page = 7
-		@menu.window.height -= 34
-		@menu.list.active = false
-
-		#@info.hide
-		self.left.delete(@menu)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-		#@grid.add_slot('staff',char.equips['staff'])
-		self.left.push(@grid)
-
-
-		@port = Port_Full.new(vp)
-		self.right.push(@port)
-
-		@item_box = Item_Box.new(vp)
-		@item_box.center(472,290)
-		@item_box.hide
-		#self.right.push(@item_box)
-
-		@info.dispose
-		self.left.delete(@info)
-
-		# Selected slot
-		@slot = nil
-
-	end
-
-	def update
-		super
-
-		@menu.update if @menu.list.active
-		@grid.update if !@menu.list.active
-
-		# Get chosen grid option
-		if $input.action? || $input.click?
-			log_scr("GO")
-			choose(@grid.get_chosen)
-		end
-
-		# Cancel out of grid
-		if $input.cancel? || $input.rclick?
-			@left.each{ |a| $tweens.clear(a) }
-			@right.each{ |a| $tweens.clear(a) }
-			@other.each{ |a| $tweens.clear(a) }
-			close
-		end
-		
-	end
-
-	# Grid
-	def choose(option)
-
-		@slot = option
-
-		# Rebuild the grid
-		@grid.clear
-		@grid.move(15,115)
-		@grid.add_slot(@slot,@char.equips[@slot])
-
-		@grid.disable
-
-		# Populate the list
-
-		# Find gear for this slot
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
-		}
-		items.push(nil) if @char.equips[@slot] != nil
-		@menu.list.setup(items)
-
-		# Bring in the list
-		@menu.opacity = 255
-		@menu.move(15,180)
-
-		@menu.list.active = true
-
-		@item_box.show
-		#change(items[0])
-
-	end
-
-	# Equip List
-	def change(option)
-
-
-
-		# Change the item box to show this
-		if option != nil
-			@item_box.item(option)
-			@item_box.show
-		else
-			@item_box.hide
-		end
-		#@item_box.comparison(option,@char.equips[@slot])
-		
-	end
-
-	def select(option)	
-
-		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
-		back_to_slots
-		
-	end
-
-	 def cancel
-	 	if @grid.active
-	 		$scene.change_sub("Char")
-	 		super
-	 	else
-	 		back_to_slots
-	 	end
-	end
-
-	def back_to_slots
-		@menu.opacity = 0
-		@menu.move(15,180)
-
-		@menu.list.active = false
-
-		@grid.enable
-		@grid.clear
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-
-		 @grid.choose(@slot)
-
-		 @item_box.hide
-
-	end
-
-end"#==============================================================================
-# ** Mnu_Demons
-#==============================================================================
-
-class Mnu_Demons < Mnu_Base
-
-	def initialize(vp)
-		super(vp)
-
-		@title.change('Demons')
-		@title.icon($menu.char)
-
-		@char = $party.get('boy')
-
-		@subtitle.text = "Master of deception"
-
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
-
-		@menu.opacity = 0
-		@menu.move(15,180)
-		#@menu.opacity = 0
-		
-		@menu.list.per_page = 7
-		@menu.window.height -= 34
-		@menu.list.active = false
-
-		#@info.hide
-		self.left.delete(@menu)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-		#@grid.add_slot('staff',char.equips['staff'])
-		self.left.push(@grid)
-
-
-		@port = Port_Full.new(vp)
-		self.right.push(@port)
-
-		@item_box = Item_Box.new(vp)
-		@item_box.center(472,290)
-		@item_box.hide
-		#self.right.push(@item_box)
-
-		@info.dispose
-		self.left.delete(@info)
-
-		# Selected slot
-		@slot = nil
-
-	end
-
-	def update
-		super
-
-		@menu.update if @menu.list.active
-		@grid.update if !@menu.list.active
-
-		# Get chosen grid option
-		if $input.action? || $input.click?
-			log_scr("GO")
-			choose(@grid.get_chosen)
-		end
-
-		# Cancel out of grid
-		if $input.cancel? || $input.rclick?
-			@left.each{ |a| $tweens.clear(a) }
-			@right.each{ |a| $tweens.clear(a) }
-			@other.each{ |a| $tweens.clear(a) }
-			close
-		end
-		
-	end
-
-	# Grid
-	def choose(option)
-
-		@slot = option
-
-		# Rebuild the grid
-		@grid.clear
-		@grid.move(15,115)
-		@grid.add_slot(@slot,@char.equips[@slot])
-
-		@grid.disable
-
-		# Populate the list
-
-		# Find gear for this slot
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
-		}
-		items.push(nil) if @char.equips[@slot] != nil
-		@menu.list.setup(items)
-
-		# Bring in the list
-		@menu.opacity = 255
-		@menu.move(15,180)
-
-		@menu.list.active = true
-
-		@item_box.show
-		#change(items[0])
-
-	end
-
-	# Equip List
-	def change(option)
-
-
-
-		# Change the item box to show this
-		if option != nil
-			@item_box.item(option)
-			@item_box.show
-		else
-			@item_box.hide
-		end
-		#@item_box.comparison(option,@char.equips[@slot])
-		
-	end
-
-	def select(option)	
-
-		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
-		back_to_slots
-		
-	end
-
-	 def cancel
-	 	if @grid.active
-	 		$scene.change_sub("Char")
-	 		super
-	 	else
-	 		back_to_slots
-	 	end
-	end
-
-	def back_to_slots
-		@menu.opacity = 0
-		@menu.move(15,180)
-
-		@menu.list.active = false
-
-		@grid.enable
-		@grid.clear
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-
-		 @grid.choose(@slot)
-
-		 @item_box.hide
-
-	end
-
-end"‡#==============================================================================
-# ** Mnu_Dreaming
-#==============================================================================
-
-class Mnu_Dreaming < Mnu_Base
-
-	def initialize(vp)
-		super(vp)
-
-		@title.change('Dreaming')
-		@title.icon($menu.char)
-
-		@char = $party.get('boy')
-
-		@subtitle.text = "Master of deception"
-
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
-
-		@menu.opacity = 0
-		@menu.move(15,180)
-		#@menu.opacity = 0
-		
-		@menu.list.per_page = 7
-		@menu.window.height -= 34
-		@menu.list.active = false
-
-		#@info.hide
-		self.left.delete(@menu)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-		#@grid.add_slot('staff',char.equips['staff'])
-		self.left.push(@grid)
-
-
-		@port = Port_Full.new(vp)
-		self.right.push(@port)
-
-		@item_box = Item_Box.new(vp)
-		@item_box.center(472,290)
-		@item_box.hide
-		#self.right.push(@item_box)
-
-		@info.dispose
-		self.left.delete(@info)
-
-		# Selected slot
-		@slot = nil
-
-	end
-
-	def update
-		super
-
-		@menu.update if @menu.list.active
-		@grid.update if !@menu.list.active
-
-		# Get chosen grid option
-		if $input.action? || $input.click?
-			log_scr("GO")
-			choose(@grid.get_chosen)
-		end
-
-		# Cancel out of grid
-		if $input.cancel? || $input.rclick?
-			@left.each{ |a| $tweens.clear(a) }
-			@right.each{ |a| $tweens.clear(a) }
-			@other.each{ |a| $tweens.clear(a) }
-			close
-		end
-		
-	end
-
-	# Grid
-	def choose(option)
-
-		@slot = option
-
-		# Rebuild the grid
-		@grid.clear
-		@grid.move(15,115)
-		@grid.add_slot(@slot,@char.equips[@slot])
-
-		@grid.disable
-
-		# Populate the list
-
-		# Find gear for this slot
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
-		}
-		items.push(nil) if @char.equips[@slot] != nil
-		@menu.list.setup(items)
-
-		# Bring in the list
-		@menu.opacity = 255
-		@menu.move(15,180)
-
-		@menu.list.active = true
-
-		@item_box.show
-		#change(items[0])
-
-	end
-
-	# Equip List
-	def change(option)
-
-
-
-		# Change the item box to show this
-		if option != nil
-			@item_box.item(option)
-			@item_box.show
-		else
-			@item_box.hide
-		end
-		#@item_box.comparison(option,@char.equips[@slot])
-		
-	end
-
-	def select(option)	
-
-		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
-		back_to_slots
-		
-	end
-
-	 def cancel
-	 	if @grid.active
-	 		$scene.change_sub("Char")
-	 		super
-	 	else
-	 		back_to_slots
-	 	end
-	end
-
-	def back_to_slots
-		@menu.opacity = 0
-		@menu.move(15,180)
-
-		@menu.list.active = false
-
-		@grid.enable
-		@grid.clear
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-
-		 @grid.choose(@slot)
-
-		 @item_box.hide
 
 	end
 
@@ -10631,8 +10206,8 @@ class Right_Journal < SpriteGroup
     	@cy += @txt_zone.height
     end
 
-end"X
-class Right_Potion < SpriteGroup
+end""
+class Right_Save < SpriteGroup
 
 	def initialize(vp)
 		super()
@@ -10668,14 +10243,9 @@ class Right_Potion < SpriteGroup
     	add(@txt_desc,340,198)
 
 
-    	# Text sprites
-
-        @ingredients = []
-
-
     	# cy += 30
 
-    	move(0,0)
+    	move(0,-22)
 
         #clear
 
@@ -10784,6 +10354,79 @@ class Mnu_Chooser < Mnu_Base
 		flag('have-chosen')
 		potion_state 'choose-item'
 		self.close_soon
+	end
+
+end"Z#==============================================================================
+# ** Mnu_Creatures
+#==============================================================================
+
+class Mnu_Creatures < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('Smith')
+		@subtitle.text = "Creatures"
+
+		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
+
+		# Auto items by boyle's level, maybe show future ones not for sale yet by 1 or 2 levels
+		skills = []
+		skills.push('fireburn')
+
+		@menu.list.type = :shop
+		@menu.list.setup(skills)
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+		@item_box = Item_Box.new(vp)
+		@item_box.center(472,250)
+		self.right.push(@item_box)
+
+		change_tab("Items")
+
+	end
+
+	def update
+		super
+		
+	end
+
+	def change(option)
+		#@info.title.text = option
+		@item_box.item(option)
+		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		@users.clear
+		@users.move(@item_box.x,@item_box.y + @item_box.height)
+		@users.add_users(option)
+		data = $data.items[option]
+		# if data.is_a?(GearData)
+		# 	$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
+		# 		@users.add_compare(option,u)
+		# 	}
+		# end
+	end
+
+	def select(option)	
+		item = $data.items[option]
+		if $party.gold >= item.price
+			$party.add_item(option)
+			$party.add_gold(-item.price)
+			sys("coins")
+		end
+	end
+
+	def change_tab(tab)
+		return
+
+		# Change list to certain items only
+		list = []
+		$menu.shop.each{ |item|
+			list.push(item) if $data.items[item].category == tab
+		}
+		@menu.list.setup(list)
+
 	end
 
 end"Í#==============================================================================
@@ -15885,7 +15528,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"#==============================================================================
+end"g#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15902,8 +15545,14 @@ class Game_Party
 
   attr_reader :items, :potions
 
+  attr_accessor :luck
+
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
+
+  attr_accessor :night_rank, :night_xp
+
+  attr_accessor :guild_id
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -15928,15 +15577,25 @@ class Game_Party
     @items = {}
     @gold = 250
 
+    # Party stats
+    @luck = 0
+
     # Other things you can have
     @potions = []
-    @creatures = []
+    @creatures = [] # Maybe just a number for this to be converted to magic
 
     # Current state of potions
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
     @potion_item = nil # What tool you are using
+
+    # Nightwatch rank
+    @night_rank = 0
+    @night_xp = 0
+
+    # Guild info
+    @guild_id = "c" # will be one letter, b, c, or s, or "" for none
 
     # Hardcode Party Data
     init_party
@@ -17669,8 +17328,8 @@ class Scene_Menu
     @bg.z = -100
     #@bg.bitmap = Bitmap.new(640,480)
     #@bg.bitmap.fill(Color.new(0,0,0,180))
-    #@bg.bitmap = $cache.menu_background("sample")
-    @bg.bitmap = $cache.menu_background("witch")
+    @bg.bitmap = $cache.menu_background("sample")
+    #@bg.bitmap = $cache.menu_background("witch")
     @bg.opacity = 0
     @bg.do(go("opacity",255,300))
     #@bg.y = 30
@@ -18783,7 +18442,7 @@ class EnviroSource < Seal::Source
 
   end
 
-end"•
+end"B
 class CacheManager
 
     def initialize
@@ -18820,12 +18479,17 @@ class CacheManager
     def numbers(filename) load("Numbers/", filename) end
 
     # Faces
-    def face(filename) load("Faces/Message/", filename) end
-    def face_vn(filename) load("Faces/Vn/", filename) end
-    def face_small(filename) load("Faces/Small/", filename) end
-    def face_large(filename) load("Faces/Large/", filename) end
-    def face_menu(filename) load("Faces/Menu/", filename) end
-    def face_battle(filename) load("Faces/Battle/", filename) end
+    def face(filename) face_file("Faces/Message/", filename) end
+    def face_vn(filename) face_file("Faces/Vn/", filename) end
+    def face_small(filename) face_file("Faces/Small/", filename) end
+    def face_large(filename) face_file("Faces/Large/", filename) end
+    def face_menu(filename) face_file("Faces/Menu/", filename) end
+    def face_battle(filename) face_file("Faces/Battle/", filename) end
+
+    def face_file(folder,filename)
+      filename += "."+$party.guild_id if filename.include?("ing")
+      load(folder,filename)
+    end
     
 
 
@@ -19350,11 +19014,12 @@ class FileManager
   end
   
 end
-"ð
+"
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
 	attr_reader :message, :message_shadow, :namebox
+	attr_reader :message_big, :message_big_shadow
 
 	attr_reader :list, :list_shadow
 
@@ -19412,6 +19077,17 @@ class FontManager
 	    @message_shadow.name = "Georgia"
 	    @message_shadow.size = 24
 	    @message_shadow.color = Color.new(0,0,0,90)
+
+	    @message_big = Font.new
+	    @message_big.name = "Georgia"
+	    @message_big.size = 30
+	    #@message.gradient = true
+	    @message_big.color = Color.new(245,223,200)
+
+	    @message_big_shadow = Font.new
+	    @message_big_shadow.name = "Georgia"
+	    @message_big_shadow.size = 30
+	    @message_big_shadow.color = Color.new(0,0,0,90)
 
 	    @namebox = Font.new
 	    @namebox.name = "Bitter"

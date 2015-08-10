@@ -20,7 +20,7 @@ class Mnu_Save < Mnu_Base
 		@menu.list.type = :file
 		@menu.list.setup($files.save_file_list)
 
-		@page = Right_Page.new(vp)
+		@page = Right_Save.new(vp)
 		@right.push(@page)
 
 		@pic = Sprite.new(vp)

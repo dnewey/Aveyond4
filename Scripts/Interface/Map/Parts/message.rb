@@ -15,6 +15,7 @@ class Ui_Message
 
   SPACING = 7
   LINE_HEIGHT = 27
+  LINE_HEIGHT_BIG = 33
   PADDING_X = 21
   PADDING_Y = 16
 
@@ -42,12 +43,14 @@ class Ui_Message
     @text = ""
 
     @scratch = Bitmap.new(400,50)
-    @scratch.font = $fonts.message
-
+    
     @lines = []
+    @line_height = LINE_HEIGHT
 
     # Settings
     @color = nil
+    @font = $fonts.message
+    @font_shadow = $fonts.message_shadow
 
     # Text display
     @text_delay = SPEED_4
@@ -305,6 +308,17 @@ class Ui_Message
       speaker = speaker.sub("x-",'')
     end
 
+    if speaker.include?("b-")
+      @font = $fonts.message_big
+      @font_shadow = $fonts.message_big_shadow
+      @line_height = LINE_HEIGHT_BIG
+      speaker = speaker.sub("b-",'')
+    else
+      @font = $fonts.message
+      @font_shadow = $fonts.message_shadow
+      @line_height = LINE_HEIGHT
+    end
+
     # Figure things out from speaker
     speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
@@ -374,7 +388,7 @@ class Ui_Message
     if (@namebox.width + 44) > @width
       @width = @namebox.width + 44 
     end
-    @height = (@lines.count * LINE_HEIGHT) + PADDING_Y * 2
+    @height = (@lines.count * @line_height) + PADDING_Y * 2
 
     # Position the face
     if @face.bitmap
@@ -390,7 +404,7 @@ class Ui_Message
 
     if @mode == :vn
       @width = VN_WIDTH
-      @height = (3 * LINE_HEIGHT) + PADDING_Y * 2
+      @height = (3 * @line_height) + PADDING_Y * 2
     end
 
     # Prepare the sprites  
@@ -398,8 +412,8 @@ class Ui_Message
     @textbox.bitmap = Bitmap.new(@width,@height)
     @text_bmp = Bitmap.new(@width,@height)
     
-    @text_bmp.font = $fonts.message
-    @textbox.bitmap.font = $fonts.message
+    @text_bmp.font = @font
+    @textbox.bitmap.font = @font
 
     # Point tale x at speaker and y under box
     # Would need to be put in update
@@ -534,7 +548,7 @@ class Ui_Message
 
     # SHADOW HERE FOR THE WORD IN PROGRESS
 
-    @textbox.bitmap.draw_gtext(@cx,@cy,300,LINE_HEIGHT,txt)
+    @textbox.bitmap.draw_gtext(@cx,@cy,300,@line_height,txt)
 
     # Half draw the final
     return if @char_idx >= @word.length
@@ -545,16 +559,16 @@ class Ui_Message
     r = 0
     op = 220 - @next_char * 50
 
-    @textbox.bitmap.font = $fonts.message_shadow
+    @textbox.bitmap.font = @font_shadow
     @textbox.bitmap.font.color.alpha = op
-    @textbox.bitmap.draw_text(@cx+r+size.width+2,@cy+r+2,100,LINE_HEIGHT,txt2)
+    @textbox.bitmap.draw_text(@cx+r+size.width+2,@cy+r+2,100,@line_height,txt2)
 
     @textbox.bitmap.font.color.alpha = 255
 
 
-    @textbox.bitmap.font = $fonts.message
+    @textbox.bitmap.font = @font
     @textbox.bitmap.font.color.alpha = op
-    @textbox.bitmap.draw_gtext(@cx+r+size.width,@cy+r,100,LINE_HEIGHT,txt2)
+    @textbox.bitmap.draw_gtext(@cx+r+size.width,@cy+r,100,@line_height,txt2)
 
     @textbox.bitmap.font.color.alpha = 255
 
@@ -585,7 +599,7 @@ class Ui_Message
       end
     else
       @word_idx = 0
-      @cy += LINE_HEIGHT
+      @cy += @line_height
       @cx = PADDING_X
     end
   end
@@ -603,15 +617,15 @@ class Ui_Message
 
       txt = @word.delete('*^')[0..@char_idx]
 
-      @text_bmp.font = $fonts.message_shadow
+      @text_bmp.font = @font_shadow
       @text_bmp.font.bold = @word.include?('*')
       @text_bmp.font.italic = @word.include?('^')
-      @text_bmp.draw_text(@cx+2,@cy+2,300,LINE_HEIGHT,txt)
+      @text_bmp.draw_text(@cx+2,@cy+2,300,@line_height,txt)
 
-      @text_bmp.font = $fonts.message
+      @text_bmp.font = @font
       @text_bmp.font.bold = @word.include?('*')
       @text_bmp.font.italic = @word.include?('^')
-      @text_bmp.draw_gtext(@cx,@cy,300,LINE_HEIGHT,txt)
+      @text_bmp.draw_gtext(@cx,@cy,300,@line_height,txt)
 
       # Step cursor
       @cx += word_width(@word)
@@ -675,8 +689,9 @@ class Ui_Message
           @show_next = false
           
         when "$end"
-          @state = :closing
+          @word = nil
           @show_next = false
+          return force_close
           
       end
         
@@ -729,6 +744,20 @@ class Ui_Message
     end
   end
 
+  def force_close
+
+    @state = :closing
+      @textbox.bitmap.clear
+      $tweens.clear(@sprites)
+      @sprites.opacity = 0
+      @box.skin = $cache.menu_common("skin")
+      $tweens.clear(@vn_port)
+      @vn_port.do(to("opacity",0,-11))
+      @tail.opacity = 0
+      @tail.hide
+
+    end
+
   #--------------------------------------------------------------------------
   # * Wait for input or choice
   #--------------------------------------------------------------------------
@@ -759,6 +788,7 @@ class Ui_Message
   def word_width(word)
       return TAB_WIDTH if word == "$t"
       return 0 if word.include?("$")
+      @scratch.font = @font
       @scratch.font.bold = word.include?('*')
       @scratch.font.italic = word.include?('^')
       return @scratch.text_size(word.delete('*^')).width + SPACING

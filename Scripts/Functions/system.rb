@@ -69,6 +69,10 @@ def open_shop_sell
 	$menu.menu_page = "Shop"
 end
 
+def open_shop_creatures
+	$menu.menu_page = "Creatures"
+end
+
 
 def open_difficulty_options
 	grid = $scene.hud.open_grid

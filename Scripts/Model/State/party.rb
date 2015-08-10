@@ -15,8 +15,14 @@ class Game_Party
 
   attr_reader :items, :potions
 
+  attr_accessor :luck
+
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
+
+  attr_accessor :night_rank, :night_xp
+
+  attr_accessor :guild_id
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -41,15 +47,25 @@ class Game_Party
     @items = {}
     @gold = 250
 
+    # Party stats
+    @luck = 0
+
     # Other things you can have
     @potions = []
-    @creatures = []
+    @creatures = [] # Maybe just a number for this to be converted to magic
 
     # Current state of potions
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
     @potion_item = nil # What tool you are using
+
+    # Nightwatch rank
+    @night_rank = 0
+    @night_xp = 0
+
+    # Guild info
+    @guild_id = "c" # will be one letter, b, c, or s, or "" for none
 
     # Hardcode Party Data
     init_party

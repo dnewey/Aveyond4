@@ -27,6 +27,34 @@ def pop_ing_pickup(i)
 	pop_get('p',$data.items[i].name,ib)
 end
 
+def pop_learn(s,w)
+
+	b = $data.skills[s].name
+	ib = $cache.icon($data.skills[s].icon)
+
+	a = $data.actors[w].name+" has learned: "
+	ia = $cache.icon("faces/#{w}")	
+
+	popper = $scene.hud.open_popper
+	popper.color = 'blue'
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_use_skill(s,w)
+
+	b = $data.skills[s].name
+	ib = $cache.icon($data.skills[s].icon)
+
+	a = $data.actors[w].name+" uses: "
+	ia = $cache.icon("faces/#{w}")	
+
+	popper = $scene.hud.open_popper
+	popper.color = 'blue'
+	popper.setup(a,ia,b,ib)
+
+end
+
 def pop_get(type,b,ib)
 
 	case type
@@ -53,7 +81,7 @@ def pop_get(type,b,ib)
 
 		when 'p'
 			a = "Ingrid picks up: "
-			ia = $cache.icon("faces/ing")		
+			ia = $cache.icon("faces/ing")	
 
 		when 'boy','ing','hib','mys','phy','rob','row'
 			a = $data.actors[type].name+" receives: "
