@@ -3263,7 +3263,7 @@ end
 
 
 
-"Å#==============================================================================
+"û#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3311,6 +3311,10 @@ end
 
 def roll(range)
 	gev(me).random = rand(range) + 1
+end
+
+def voll(v)
+	gev(me).voll = $state.varval(v)
 end
 
 def fade(ev)
@@ -13037,7 +13041,7 @@ class Game_Character
 
 
 end
-"Š?#==============================================================================
+"8A#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13051,7 +13055,7 @@ class Game_Event < Game_Character
   attr_reader   :event
   attr_reader   :icon
 
-  attr_accessor :random
+  attr_accessor :random, :voll
 
   attr_reader :above
   attr_reader :below
@@ -13076,8 +13080,9 @@ class Game_Event < Game_Character
     @event = event
     @id = event.id
 
-    # Hold a random number to be used with @r1
+    # Hold a random number to be used with @r1, var for @v1
     @random = 0 
+    @voll = 0
     
     @erased = false
     @disabled = $state.disable?(@id)
@@ -13391,6 +13396,22 @@ class Game_Event < Game_Character
         return false if @random != 6
       when '@r7'
         return false if @random != 7
+
+      # Volls
+      when '@v1'
+        return false if @voll != 1
+      when '@v2'
+        return false if @voll != 2
+      when '@v3'
+        return false if @voll != 3
+      when '@v4'
+        return false if @voll != 4
+      when '@v5'
+        return false if @voll != 5
+      when '@v6'
+        return false if @voll != 6
+      when '@v7'
+        return false if @voll != 7
 
 
     end
@@ -15864,7 +15885,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"#==============================================================================
+end"#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16127,17 +16148,17 @@ class Game_Party
     @actors['boy'].equip('mid','boy-arm-s')
 
     # Ingrid
-    @actors['ing'].equip('wand','ing-wep-s')
-    @actors['ing'].equip('athame','ing-athame-s')
+    @actors['ing'].equip('wand','wand-start')
+    @actors['ing'].equip('athame','athame-start')
     @actors['ing'].equip('light','ing-arm-s')
 
     # Myst
-    @actors['mys'].equip('claw1','mys-wep-s')
-    @actors['mys'].equip('claw2','mys-wep-s')
+    @actors['mys'].equip('lclaw','claw-l-start')
+    @actors['mys'].equip('rclaw','claw-r-start')
     @actors['mys'].equip('light','mys-arm-s')
 
     # Robin
-    @actors['rob'].equip('sword','rob-wep-s')
+    @actors['rob'].equip('sword','hammer-start')
     @actors['rob'].equip('heavy','rob-arm-s')
 
     # Hiberu
@@ -16240,7 +16261,7 @@ end"^class Progress
 		return @progress < $data.progress[progress]
 	end
 
-end"class State
+end"Qclass State
 
 	def initialize
 
@@ -16292,6 +16313,11 @@ end"class State
 	def var?(v,t)
 		return false if !@vars.has_key?(v)
 		return @vars[v] >= t
+	end
+
+	def varval(v)
+		return 0 if !@vars.has_key?(v)
+		return @vars[v]
 	end
 
 	def state(e,s)
