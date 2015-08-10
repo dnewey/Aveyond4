@@ -261,17 +261,17 @@ class Game_Party
     @actors['boy'].equip('mid','boy-arm-s')
 
     # Ingrid
-    @actors['ing'].equip('wand','ing-wep-s')
-    @actors['ing'].equip('athame','ing-athame-s')
+    @actors['ing'].equip('wand','wand-start')
+    @actors['ing'].equip('athame','athame-start')
     @actors['ing'].equip('light','ing-arm-s')
 
     # Myst
-    @actors['mys'].equip('claw1','mys-wep-s')
-    @actors['mys'].equip('claw2','mys-wep-s')
+    @actors['mys'].equip('lclaw','claw-l-start')
+    @actors['mys'].equip('rclaw','claw-r-start')
     @actors['mys'].equip('light','mys-arm-s')
 
     # Robin
-    @actors['rob'].equip('sword','rob-wep-s')
+    @actors['rob'].equip('sword','hammer-start')
     @actors['rob'].equip('heavy','rob-arm-s')
 
     # Hiberu
