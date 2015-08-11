@@ -76,17 +76,17 @@ def cauldron_graphic(ev)
 
 		when 'hot' # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 2
-
-		when 'claggy' # dream leaf
-			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 4
+			ev.direction = 2		
 
 		when 'rotten' # Mineral man
 			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 6
+			ev.direction = 4
 
 		when 'acidic' # Soda ash
+			ev.character_name = 'Objects/cauldron-problem-a'
+			ev.direction = 6
+
+		when 'claggy' # dream leaf
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
@@ -108,16 +108,43 @@ def cauldron_graphic(ev)
 
 		when 'done'
 
+			# Potion graphic
 			case $party.potion_id
-				when 'blabber'
-					ev.character_name = 'Objects/cauldron-potions-a'
-					ev.direction = 2	
-			end
 
-			# Depends on the potion you were trying to make
+				when 'neon' # a - green
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 8
+
+				when 'blabber' # a - blue
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 6
+
+				when 'unslave' # a - brown
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 2
+
+				when 'shrink' # b - red
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 2
+
+				when 'mindbend' # b - yellow
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 4
+
+				when 'calming' # b - aqua
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 8
+
+				when 'guild' # b - gray
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 6
+
+				when 'love' # a - purple
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 4
+
+			end
 
 	end
 
 end
-
-# Guilds

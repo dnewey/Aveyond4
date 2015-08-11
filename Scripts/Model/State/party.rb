@@ -322,11 +322,14 @@ class Game_Party
     item('boy-arm-s','s')
     item('hib-arm-s','s')
 
+    potion_learn("neon")
     potion_learn("blabber")
-    potion_learn("blabber")
-    potion_learn("blabber")
-    potion_learn("blabber")
-    potion_learn("blabber")
+    potion_learn("unslave")
+    potion_learn("shrink")
+    potion_learn("mindbend")
+    potion_learn("calming")
+    # love
+    # guild
     
 
   end

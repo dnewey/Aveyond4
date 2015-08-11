@@ -95,6 +95,8 @@ class Sprite_Character < Sprite
 
     # Set visible situation
     self.visible = !@character.transparent
+    self.zoom_x = @character.zoom
+    self.zoom_y = @character.zoom
     
 
     if !@iconmode

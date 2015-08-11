@@ -20,11 +20,11 @@ class Ui_Book < SpriteGroup
 		@turner.opacity = 0
 		add(@turner,0,0)
 
-		move(48,10)
+		move(48,4)
 
 		@state = :idle
 
-		@page_idx = 0
+		@page_idx = $menu.potion_page
 		@turn_step = 20
 		@turn_dir = 1
 
@@ -36,6 +36,7 @@ class Ui_Book < SpriteGroup
 	end
 
 	def dispose
+		$menu.potion_page = @page_idx
 		@base.dispose
 		@page.dispose
 		@turner.dispose
@@ -48,7 +49,7 @@ class Ui_Book < SpriteGroup
 
 			when :fadeout
 
-				@page.opacity -= 20
+				@page.opacity -= 40
 				if @page.opacity <= 0
 					@state = :flip
 				end
@@ -57,7 +58,7 @@ class Ui_Book < SpriteGroup
 
 			when :flip
 
-				@turn_step += (6 * @turn_dir)
+				@turn_step += (12 * @turn_dir)
 				@turner.bitmap = $cache.menu_book("turn-#{@turn_step/20}")
 				@turner.opacity = 255
 				if (@turn_dir == 1 && @turn_step >= 119) || (@turn_dir == -1 && @turn_step <= 20)
@@ -69,7 +70,7 @@ class Ui_Book < SpriteGroup
 			when :fadein
 
 	
-				@page.opacity += 20
+				@page.opacity += 40
 				if @page.opacity >= 255
 					@turner.opacity = 0
 					@state = :idle
@@ -92,23 +93,26 @@ class Ui_Book < SpriteGroup
 			@turn_step = 119
 			@turn_dir = -1
 			@state = :fadeout
+			sfx('page')
 		end
 
-		if $input.right?
+		if @page_idx != 10 && $input.right?
 			@page_idx += 1
 			@turn_step = 20
 			@turn_dir = 1
 			@state = :fadeout
+			sfx('page')
 		end
 
 		if $input.click?
 
 			# If to the right
-			if $mouse.x > 420
+			if @page_idx != 10 && $mouse.x > 420
 				@page_idx += 1
 				@turn_step = 20
 				@turn_dir = 1
 				@state = :fadeout
+				sfx('page')
 			end
 
 			if @page_idx != 0 &&  $mouse.x < 220
@@ -116,6 +120,7 @@ class Ui_Book < SpriteGroup
 				@turn_step = 119
 				@turn_dir = -1
 				@state = :fadeout
+				sfx('page')
 			end
 
 		end

@@ -571,6 +571,19 @@ class Game_Event < Game_Character
         when '#avoid'
           self.move_type = 4
 
+        when '#T'
+          @icon = 'T'
+        when '#B'
+          @icon = 'B'
+        when '#U'
+          @icon = 'U'
+        when '#I'
+          @icon = 'I'
+        when '#S'
+          @icon = 'S'
+        when '#N'
+          @icon = ''
+
       end
     }
     

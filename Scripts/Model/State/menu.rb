@@ -13,6 +13,8 @@ class MenuState
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
 
+	attr_accessor :potion_page
+
 	attr_accessor :chosen
 
 	#attr_accessor :category
@@ -25,6 +27,8 @@ class MenuState
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
+
+		@potion_page = 0
 
 		@chosen = nil
 	end

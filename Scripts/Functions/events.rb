@@ -64,6 +64,13 @@ def gfx(ev,name)
 	gev(ev).character_name = name	
 end
 
+def blast(ev)
+	gev(ev).zoom = 1.0
+	a = go("zoom",0.2,100)
+	b = go("zoom",-0.2,120)
+	gev(ev).do(seq(a,b))
+end
+
 # Routes
 
 def wfc

@@ -44,11 +44,14 @@ class Game_Character
   
   # Custom
   attr_accessor :off_x, :off_y
+  attr_accessor :zoom
 
   attr_accessor :flash_dur
   attr_accessor :pulse_color
 
   attr_accessor :move_type
+
+
   
    
   
@@ -77,6 +80,7 @@ class Game_Character
 
     @off_x = 0
     @off_y = 0
+    @zoom = 1.0
 
     @cool_jumps = false
     @spin_jumps = false
