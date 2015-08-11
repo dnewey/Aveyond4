@@ -74,7 +74,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"f#==============================================================================
+end"¬#==============================================================================
 # ** Sprite_Character
 #------------------------------------------------------------------------------
 #  This sprite is used to display the character.It observes the Game_Character
@@ -171,6 +171,8 @@ class Sprite_Character < Sprite
 
     # Set visible situation
     self.visible = !@character.transparent
+    self.zoom_x = @character.zoom
+    self.zoom_y = @character.zoom
     
 
     if !@iconmode
@@ -3263,7 +3265,7 @@ end
 
 
 
-"û#==============================================================================
+"p#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3327,6 +3329,13 @@ end
 
 def gfx(ev,name)
 	gev(ev).character_name = name	
+end
+
+def blast(ev)
+	gev(ev).zoom = 1.0
+	a = go("zoom",0.2,100)
+	b = go("zoom",-0.2,120)
+	gev(ev).do(seq(a,b))
 end
 
 # Routes
@@ -4125,7 +4134,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"Ù	
+ end"Â
 # Potion making
 
 def potion_learn(potion)
@@ -4203,17 +4212,17 @@ def cauldron_graphic(ev)
 
 		when 'hot' # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 2
-
-		when 'claggy' # dream leaf
-			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 4
+			ev.direction = 2		
 
 		when 'rotten' # Mineral man
 			ev.character_name = 'Objects/cauldron-problem-a'
-			ev.direction = 6
+			ev.direction = 4
 
 		when 'acidic' # Soda ash
+			ev.character_name = 'Objects/cauldron-problem-a'
+			ev.direction = 6
+
+		when 'claggy' # dream leaf
 			ev.character_name = 'Objects/cauldron-problem-a'
 			ev.direction = 8
 
@@ -4235,19 +4244,46 @@ def cauldron_graphic(ev)
 
 		when 'done'
 
+			# Potion graphic
 			case $party.potion_id
-				when 'blabber'
-					ev.character_name = 'Objects/cauldron-potions-a'
-					ev.direction = 2	
-			end
 
-			# Depends on the potion you were trying to make
+				when 'neon' # a - green
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 8
+
+				when 'blabber' # a - blue
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 6
+
+				when 'unslave' # a - brown
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 2
+
+				when 'shrink' # b - red
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 2
+
+				when 'mindbend' # b - yellow
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 4
+
+				when 'calming' # b - aqua
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 8
+
+				when 'guild' # b - gray
+					ev.character_name = 'Objects/cauldron-potions-b'
+					ev.direction = 6
+
+				when 'love' # a - purple
+					ev.character_name = 'Objects/cauldron-potions-a'
+					ev.direction = 4
+
+			end
 
 	end
 
-end
-
-# Guilds"
+end"
 def word_length
 
 end"m
@@ -5435,7 +5471,7 @@ class Ui_Bar < SpriteGroup
 
 	end
 
-end"®#==============================================================================
+end"G	#==============================================================================
 # Ui_Book
 #==============================================================================
 
@@ -5457,11 +5493,11 @@ class Ui_Book < SpriteGroup
 		@turner.opacity = 0
 		add(@turner,0,0)
 
-		move(48,10)
+		move(48,4)
 
 		@state = :idle
 
-		@page_idx = 0
+		@page_idx = $menu.potion_page
 		@turn_step = 20
 		@turn_dir = 1
 
@@ -5473,6 +5509,7 @@ class Ui_Book < SpriteGroup
 	end
 
 	def dispose
+		$menu.potion_page = @page_idx
 		@base.dispose
 		@page.dispose
 		@turner.dispose
@@ -5485,7 +5522,7 @@ class Ui_Book < SpriteGroup
 
 			when :fadeout
 
-				@page.opacity -= 20
+				@page.opacity -= 40
 				if @page.opacity <= 0
 					@state = :flip
 				end
@@ -5494,7 +5531,7 @@ class Ui_Book < SpriteGroup
 
 			when :flip
 
-				@turn_step += (6 * @turn_dir)
+				@turn_step += (12 * @turn_dir)
 				@turner.bitmap = $cache.menu_book("turn-#{@turn_step/20}")
 				@turner.opacity = 255
 				if (@turn_dir == 1 && @turn_step >= 119) || (@turn_dir == -1 && @turn_step <= 20)
@@ -5506,7 +5543,7 @@ class Ui_Book < SpriteGroup
 			when :fadein
 
 	
-				@page.opacity += 20
+				@page.opacity += 40
 				if @page.opacity >= 255
 					@turner.opacity = 0
 					@state = :idle
@@ -5529,23 +5566,26 @@ class Ui_Book < SpriteGroup
 			@turn_step = 119
 			@turn_dir = -1
 			@state = :fadeout
+			sfx('page')
 		end
 
-		if $input.right?
+		if @page_idx != 10 && $input.right?
 			@page_idx += 1
 			@turn_step = 20
 			@turn_dir = 1
 			@state = :fadeout
+			sfx('page')
 		end
 
 		if $input.click?
 
 			# If to the right
-			if $mouse.x > 420
+			if @page_idx != 10 && $mouse.x > 420
 				@page_idx += 1
 				@turn_step = 20
 				@turn_dir = 1
 				@state = :fadeout
+				sfx('page')
 			end
 
 			if @page_idx != 0 &&  $mouse.x < 220
@@ -5553,6 +5593,7 @@ class Ui_Book < SpriteGroup
 				@turn_step = 119
 				@turn_dir = -1
 				@state = :fadeout
+				sfx('page')
 			end
 
 		end
@@ -11140,7 +11181,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"°#==============================================================================
+end"K°#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -11186,11 +11227,14 @@ class Game_Character
   
   # Custom
   attr_accessor :off_x, :off_y
+  attr_accessor :zoom
 
   attr_accessor :flash_dur
   attr_accessor :pulse_color
 
   attr_accessor :move_type
+
+
   
    
   
@@ -11219,6 +11263,7 @@ class Game_Character
 
     @off_x = 0
     @off_y = 0
+    @zoom = 1.0
 
     @cool_jumps = false
     @spin_jumps = false
@@ -12684,7 +12729,7 @@ class Game_Character
 
 
 end
-"8A#==============================================================================
+"5B#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13256,6 +13301,19 @@ class Game_Event < Game_Character
 
         when '#avoid'
           self.move_type = 4
+
+        when '#T'
+          @icon = 'T'
+        when '#B'
+          @icon = 'B'
+        when '#U'
+          @icon = 'U'
+        when '#I'
+          @icon = 'I'
+        when '#S'
+          @icon = 'S'
+        when '#N'
+          @icon = ''
 
       end
     }
@@ -15489,7 +15547,7 @@ class Game_Battle
   end
 
   
-end"S
+end"ˆ
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -15504,6 +15562,8 @@ class MenuState
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
 
+	attr_accessor :potion_page
+
 	attr_accessor :chosen
 
 	#attr_accessor :category
@@ -15517,6 +15577,8 @@ class MenuState
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
 
+		@potion_page = 0
+
 		@chosen = nil
 	end
 
@@ -15528,7 +15590,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"g#==============================================================================
+end"š#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15852,11 +15914,14 @@ class Game_Party
     item('boy-arm-s','s')
     item('hib-arm-s','s')
 
+    potion_learn("neon")
     potion_learn("blabber")
-    potion_learn("blabber")
-    potion_learn("blabber")
-    potion_learn("blabber")
-    potion_learn("blabber")
+    potion_learn("unslave")
+    potion_learn("shrink")
+    potion_learn("mindbend")
+    potion_learn("calming")
+    # love
+    # guild
     
 
   end
