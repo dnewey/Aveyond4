@@ -3265,7 +3265,7 @@ end
 
 
 
-"p#==============================================================================
+"±#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3297,6 +3297,47 @@ def unhide3(*args)
 	args.each{ |a|
 		unhide(a+'3')
 	}
+end
+
+def unhide6(e,o = 255)
+	gev('plr').opacity = 255 - o
+	gev('boy'+e).opacity = o
+	gev('mys'+e).opacity = o
+	gev('rob'+e).opacity = o
+	gev('hib'+e).opacity = o
+	gev('row'+e).opacity = o
+	gev('ing'+e).opacity = o
+end
+
+def unhide7(e,o = 255)
+	gev('plr').opacity = 255 - o
+	gev('boy'+e).opacity = o
+	gev('mys'+e).opacity = o
+	gev('rob'+e).opacity = o
+	gev('hib'+e).opacity = o
+	gev('row'+e).opacity = o
+	gev('ing'+e).opacity = o
+	gev('phy'+e).opacity = o
+end
+
+def uhx(n,e,o = 255)
+	party = ['boy','ing','mys','rob','hib','row','phy']
+	gev('plr').opacity = 255 - o
+	n.times do
+    	x = party.shift
+    	gev(x+e.to_s).opacity = o
+	end
+end
+
+def delete7(e)
+	unhide 'plr'
+	delete ('boy'+e)
+	delete ('mys'+e)
+	delete ('rob'+e)
+	delete ('hib'+e)
+	delete ('row'+e)
+	delete ('ing'+e)
+	delete ('phy'+e)
 end
 
 def occupied?(e)
