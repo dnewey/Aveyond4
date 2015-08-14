@@ -119,8 +119,8 @@ class List
 
   def setup(data,idx=0)
 
-    @back_sprite.bitmap.clear
-    @content_sprite.bitmap.clear
+    @back_sprite.bitmap.clear if @back_sprite.bitmap
+    @content_sprite.bitmap.clear if @content_sprite.bitmap
 
     #log_sys(data)
   	@data = data

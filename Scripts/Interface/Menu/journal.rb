@@ -60,4 +60,8 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
+	def select(option)
+
+	end
+
 end

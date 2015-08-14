@@ -24,18 +24,18 @@ class Mnu_Items < Mnu_Base
 		self.right.push(@item_box)
 
 		# Party grid hahahha
-		# @grid = Ui_Grid.new(vp)
-		# @grid.move(@item_box.x,@item_box.y + @item_box.height + 3)
-		# $party.active.each{ |m|
-		# 	@grid.add_active(m)
-		# }
-		# @grid.cx = @item_box.x
-		# $party.reserve.each{ |m|
-		# 	@grid.add_reserve(m)
-		# }
-		# @grid.disable
-		# #@grid.hide
-		# self.right.push(@grid)
+		@grid = Ui_Grid.new(vp)
+		@grid.move(@item_box.x,@item_box.y + @item_box.height + 3)
+		$party.active.each{ |m|
+			@grid.add_active(m)
+		}
+		@grid.cx = @item_box.x
+		$party.reserve.each{ |m|
+			@grid.add_reserve(m)
+		}
+		@grid.disable
+		#@grid.hide
+		self.right.push(@grid)
 
 		grant_items
 

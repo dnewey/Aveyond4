@@ -359,7 +359,7 @@ class Ui_Grid
 
 	end
 
-	def add_compare(gear,user)
+	def add_compare(gear,slot,user)
 
 		data = $data.items[gear]
 		#return if gear != nil && data.stats == ''
@@ -367,9 +367,9 @@ class Ui_Grid
 		btn = add_part_box('user',300,46)
 
 		# Find all users
-		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
+		users = $party.all_battlers.select{ |b| b.slots.include?(@slot) }
 
-		res = user.equip_result_full(data)
+		res = user.equip_result_full(data,@slot)
 
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")

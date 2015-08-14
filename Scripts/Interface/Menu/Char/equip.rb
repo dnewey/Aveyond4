@@ -145,12 +145,12 @@ class Mnu_Equip < Mnu_Base
 			@item_box.show
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(gear,@char)			
+			@users.add_compare(gear,@slot,@char)			
 		else
 			@item_box.hide
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(gear,@char)			
+			@users.add_compare(gear,@slot,@char)			
 			@users.clear
 		end
 		

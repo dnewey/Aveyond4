@@ -22,6 +22,7 @@ class MenuState
 	#attr_accessor :tab
 
 	def initialize
+
 		@char = 'boy'
 		@shop = []
 
@@ -34,6 +35,7 @@ class MenuState
 		@potion_page = 0
 
 		@chosen = nil
+		
 	end
 
 	def shop_init

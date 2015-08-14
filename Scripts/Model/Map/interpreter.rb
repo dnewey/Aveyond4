@@ -448,18 +448,18 @@ class Interpreter
   #   return true
   # end
 
-  # def command_117
-  #   # Get common event
-  #   common_event = $data.commons[@parameters[0]]
-  #   # If common event is valid
-  #   if common_event != nil
-  #     # Make child interpreter
-  #     @child_interpreter = Interpreter.new(@depth + 1)
-  #     @child_interpreter.setup(common_event.list, @event_id)
-  #   end
-  #   # Continue
-  #   return true
-  # end
+  def command_117
+    # Get common event
+    common_event = $data.commons[@parameters[0]]
+    # If common event is valid
+    if common_event != nil
+      # Make child interpreter
+      @child_interpreter = Interpreter.new(@depth + 1)
+      @child_interpreter.setup(common_event.list, @event_id)
+    end
+    # Continue
+    return true
+  end
 
   # #--------------------------------------------------------------------------
   # # * Set Move Route
