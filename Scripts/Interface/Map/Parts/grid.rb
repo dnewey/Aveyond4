@@ -362,7 +362,7 @@ class Ui_Grid
 	def add_compare(gear,user)
 
 		data = $data.items[gear]
-		return if gear != nil && data.stats == ''
+		#return if gear != nil && data.stats == ''
 
 		btn = add_part_box('user',300,46)
 

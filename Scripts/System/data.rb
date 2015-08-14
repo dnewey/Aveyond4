@@ -50,14 +50,13 @@ class DataManager
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
-    
+
     @skills = load_json("skills",SkillData)
     @states = load_json("states",StateData)
     
-    @progress = load_json("progress",ProgressData)
+    #@progress = load_json("progress",ProgressData)
     @quests = load_json("quests",QuestData)
     @zones = load_json("zones",ZoneData)
-
     @anims = load_json("anims",AnimData)
 
     @numbers = load_json("numbers",NumberData)
