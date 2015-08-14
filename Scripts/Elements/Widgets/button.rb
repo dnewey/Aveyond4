@@ -6,6 +6,7 @@ class Button < Sprite
   
   # accessors
   attr_accessor :select, :deselect, :press
+  attr_accessor :bmp_up, :bmp_over
     
   #--------------------------------------------------------------------------
   # * Init
@@ -13,6 +14,9 @@ class Button < Sprite
   def initialize(vp=nil)
        
     super(vp)
+
+    @bmp_up = nil
+    @bmp_over = nil
 
     # handle mouseovers and that and procs and that
     @select = nil#Proc.new{ self.do(pingpong("x",-50,500,:quad_in_out)) }
@@ -65,6 +69,7 @@ class Button < Sprite
     return if pos[0] > self.x + self.width
     return if pos[1] > self.y + self.height
     @state = :active
+    self.bitmap = @bmp_over if @bmp_over
     @select.call() if @select
   end
 
@@ -79,6 +84,7 @@ class Button < Sprite
     w = true if pos[1] > self.y + self.height
     return if w == false
     @state = :idle
+    self.bitmap = @bmp_up if @bmp_up
     @deselect.call() if @deselect
   end
 

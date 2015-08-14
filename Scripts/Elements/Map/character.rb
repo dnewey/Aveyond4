@@ -1,8 +1,5 @@
 #==============================================================================
 # ** Sprite_Character
-#------------------------------------------------------------------------------
-#  This sprite is used to display the character.It observes the Game_Character
-#  class and automatically changes sprite conditions.
 #==============================================================================
 
 class Sprite_Character < Sprite

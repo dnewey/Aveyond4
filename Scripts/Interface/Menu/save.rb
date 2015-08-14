@@ -20,12 +20,11 @@ class Mnu_Save < Mnu_Base
 		@menu.list.type = :file
 		@menu.list.setup($files.save_file_list)
 
-		@page = Right_Save.new(vp)
+		@page = Right_Page.new(vp)
 		@right.push(@page)
 
-		@pic = Sprite.new(vp)
-		@pic.bitmap = Bitmap.new("#{$appdata}//Av4-1.png")
-		@pic.move(340,280)
+		@pic = Sprite.new(vp)		
+		@pic.move(340,324)
 
 		open
 
@@ -40,24 +39,25 @@ class Mnu_Save < Mnu_Base
 	def change(option)
 
 		# Load up the header
-		file = $files.headers[option]
+		header = $files.headers[option]
 
-		if file == nil
+		if header == nil
 
-			@page.title = "NO FILE"
+			@page.title("- Empty -","misc/dots")
+			@pic.bitmap = nil
 
 		else
 
-			@page.title = file[:name]
+			@page.title("Save #{option} - #{header[:time]}","faces/#{header[:leader]}")
+			@pic.bitmap = Bitmap.new("#{$appdata}//Av4-#{option}.png")
 
 		end
-
 
 	end
 
 	def select(option)	
 
-		log_info(option)
+		#log_info(option)
 		$files.save_game(option)
 		
 	end

@@ -7,11 +7,8 @@ class Mnu_Quit < Mnu_Base
 		@title.change('quit')
 		@subtitle.text = "YE WIMP!"
 
-		@menu.dispose
-		self.left.delete(@menu)
-
-		@info.dispose
-		self.left.delete(@info)
+		remove_menu
+		remove_info
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(135,135)

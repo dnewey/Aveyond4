@@ -2,7 +2,7 @@
 # ** Mnu_Main
 #==============================================================================
 
-class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
+class Mnu_Main
 
 	def initialize(vp)
 
@@ -353,9 +353,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	end
 
-	def close_soon
+	def close_soon(delay=10)
 		@close_soon = true
-		@close_delay = 10
+		@close_delay = delay
 	end
 
 	def close

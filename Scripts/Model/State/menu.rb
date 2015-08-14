@@ -9,6 +9,7 @@ class MenuState
 	attr_accessor :grid_action # <- menu selection
 
 	attr_accessor :menu_page
+	attr_accessor :sub_only
 
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
@@ -22,8 +23,10 @@ class MenuState
 
 	def initialize
 		@char = 'boy'
-		@menu_page = nil
 		@shop = []
+
+		@menu_page = nil
+		@sub_only = false		
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'

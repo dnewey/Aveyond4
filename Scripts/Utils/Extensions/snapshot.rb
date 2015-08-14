@@ -1,4 +1,4 @@
-# Bitmap Export v5.4 for XP, VX and VXace by Zeus81
+ # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
 # Free for commercial use
 # Licence : http://creativecommons.org/licenses/by/4.0/
 # Contact : zeusex81@gmail.com

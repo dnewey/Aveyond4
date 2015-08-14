@@ -11,8 +11,9 @@ class Mnu_Items < Mnu_Base
 		#@subtitle.text = "Various items of collection"
 
 		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		@tabs.push("usable")
+		@tabs.push("keys")
+		@tabs.push("gear")
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -38,16 +39,36 @@ class Mnu_Items < Mnu_Base
 
 		grant_items
 
-		@menu.setup_items('all')
+		tab('all')
 
 		open
 
 	end
 
 	def update
-		super
-		# Keep checking if item box changed
-		
+		super		
+	end
+
+	def tab(option)
+
+		# Reload the quest list limited to this tab
+		data = $party.items.keys
+
+		if option == "usable"
+			data = data.select{ |q| $data.items[q].tab == 'usable' }
+		end
+
+		if option == "keys"
+			data = data.select{ |q| $data.items[q].tab == 'keys' }
+		end
+
+		if option == "gear"
+			data = data.select{ |q| $data.items[q].tab == 'gear' }
+		end
+
+		@menu.list.setup(data)
+		@menu.list.slide
+
 	end
 
 	def change(option)

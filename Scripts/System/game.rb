@@ -13,17 +13,7 @@ class GameManager
 
     $game = self
 
-    # Setup font
-    Font.default_size = 22
-    Font.default_name = "Consolas"
-
-    if ACE_MODE
-      Font.default_outline = false
-      Font.default_shadow = true
-    end
-
     Graphics.frame_rate = 60
-    #resize(853,480)
     resize(640,480)
 
     @scenes = []
@@ -63,9 +53,6 @@ class GameManager
   def resize(w,h)
     @width = w
     @height = h
-    if ACE_MODE
-      Graphics.resize_screen(w,h)
-    end
     #set_rez(w,h)
   end
 

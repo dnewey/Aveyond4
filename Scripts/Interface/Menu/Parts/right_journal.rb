@@ -4,12 +4,12 @@ class Right_Journal < SpriteGroup
 	def initialize(vp)
 		super()
 	
-		# Right side journal
-		@window = Box.new(vp,300,292)
-    	@window.skin = $cache.menu_common("skin-dry")
-    	@window.wallpaper = $cache.menu_wallpaper("journal_page_line")
-    	#@window.color = Color.new(47,45,41)
-    	add(@window,320,140)
+        # Right side journal
+        @window = Box.new(vp,300,357)
+        @window.skin = $cache.menu_common("skin-dry")
+        @window.wallpaper = $cache.menu_wallpaper("journal-full-page")
+        #@window.color = Color.new(47,45,41)
+        add(@window,320,138)
 
     	# Quest Name
     	@page_title = Label.new(vp)
@@ -52,7 +52,7 @@ class Right_Journal < SpriteGroup
 
     	# cy += 30
 
-    	move(0,0)
+    	move(0,-22)
 
         #clear
 
@@ -97,7 +97,7 @@ class Right_Journal < SpriteGroup
         @sub_req.move(340,@cy)
         @cy += 22
 
-        log_info(reqs)
+        #log_info(reqs)
 
         num = 1
 

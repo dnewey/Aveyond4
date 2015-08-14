@@ -308,11 +308,11 @@ class Ui_Message
       speaker = speaker.sub("x-",'')
     end
 
-    if speaker.include?("b-")
+    if speaker.include?("z-")
       @font = $fonts.message_big
       @font_shadow = $fonts.message_big_shadow
       @line_height = LINE_HEIGHT_BIG
-      speaker = speaker.sub("b-",'')
+      speaker = speaker.sub("z-",'')
     else
       @font = $fonts.message
       @font_shadow = $fonts.message_shadow

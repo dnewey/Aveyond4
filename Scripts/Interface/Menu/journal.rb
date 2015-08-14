@@ -1,5 +1,5 @@
 #==============================================================================
-# ** Mnu_Items
+# ** Mnu_Journal
 #==============================================================================
 
 class Mnu_Journal < Mnu_Base
@@ -13,36 +13,44 @@ class Mnu_Journal < Mnu_Base
 		@tabs.push("main")
 		@tabs.push("side")
 
-		log_scr("HUH")
-
 		@menu.list.type = :quest
-
-		data = $progress.quests
+		@menu.list.setup($progress.quests)
 
 		@page = Right_Journal.new(vp)
 		self.right.push(@page)
 
-		@menu.list.setup(data)
-
-		#change(data[0]) if !data.empty?
-
 		open
+
+		# Open first
+		change($progress.quests[0]) if !$progress.quests.empty?
 
 	end
 
 	def update
 		super
+	end
+
+	def tab(option)
+
+		# Reload the quest list limited to this tab
+		data = $progress.quests
+
+		if option == "main"
+			data = data.select{ |q| $data.quests[q].type == 'main' }
+		end
+
+		if option == "side"
+			data = data.select{ |q| $data.quests[q].type != 'main' }
+		end
+
+		@menu.list.setup(data)
+		@menu.list.slide
 
 	end
 
 	def change(option)
 
-		#return
-
 		@page.clear
-
-		# Change page to show this quest
-		#@info.title.text = option
 
 		@page.title = $data.quests[option].name
 		@page.description = $data.quests[option].description
@@ -50,10 +58,6 @@ class Mnu_Journal < Mnu_Base
 		@page.add_reqs($data.quests[option].req)
 		@page.add_zone($data.quests[option].location)
 
-	end
-
-	def select(option)	
-		
 	end
 
 end

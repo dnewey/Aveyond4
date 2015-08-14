@@ -26,6 +26,7 @@ class Game_Battler
 
 	def equip_result(new_equip)
 		# What is the stat
+		return 'none' if new_equip.stats == nil || new_equip.stats == ''
 		type = new_equip.stats.split("\n")[0].split("=>")[0]
 		slot = new_equip.slot
 		old = @equips[slot]

@@ -264,7 +264,7 @@ class Ui_Grid
 
 	def add_slot(slot,eq)
 
-		log_info(slot)
+		#log_info(slot)
 
 		item = $data.items[eq]
 
@@ -291,26 +291,28 @@ class Ui_Grid
      	stat = Label.new(@vp)
      	stat.font = $fonts.pop_type
 
-     	if item != nil
-	     	data = item.stats.split("/n")[0].split("=>")
-	     	stat.icon = $cache.icon("stats/#{data[0]}")
-	     	stat.text = "#{data[1]} Strength"
-	     end
-
+     	if item != nil && item.stats != ''
+	    	data = item.stats.split("/n")[0].split("=>")
+	    	stat.icon = $cache.icon("stats/#{data[0]}")
+	    	stat.text = "#{data[1]} Strength"
+	    end
 
      	@extra.push(stat)
 
+     	# Put in caps
+
      	cat = Label.new(@vp)
-    	cat.fixed_width = 250
+    	cat.fixed_width = 100
     	cat.font = $fonts.pop_type
-    	cat.align = 0
-    	cat.text = slot
+    	cat.align = 2
+    	cat.text = slot.upcase
+    	cat.opacity = 200
     	@extra.push(cat)
 
      	# Position
      	cont.move(@cx+10,@cy+7)
      	stat.move(@cx+25,@cy+32)
-     	cat.move(@cx+245,@cy+8)
+     	cat.move(@cx+188,@cy+8)
 
      	choose(@boxes[0].name) if @boxes.count == 1
 
@@ -360,17 +362,19 @@ class Ui_Grid
 	def add_compare(gear,user)
 
 		data = $data.items[gear]
+		return if gear != nil && data.stats == ''
 
 		btn = add_part_box('user',300,46)
 
 		# Find all users
 		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
 
-		res = user.equip_result(data)
+		res = user.equip_result_full(data)
 
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")
         stat.font = $fonts.pop_text
+        log_scr(res)
         stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
@@ -506,6 +510,8 @@ class Ui_Grid
 		return if !@active
 		return if @boxes.empty?
 
+		@glow.move(@selected_box.x+6,@selected_box.y+6)
+
 		@boxes.each{ |b| b.update }
 
 		if @boxes.count > 1 && $input.down?
@@ -593,9 +599,9 @@ class Ui_Grid
 
 	end
 
-	def choose(target)
+	def choose(target,mute=false)
 
-		sys('select')
+		sys('select') if !mute #if @selected != target
 
 		@selected = target
 		@selected_box = @boxes.find{ |b| b.name == target }

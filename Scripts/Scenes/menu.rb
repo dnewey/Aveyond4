@@ -112,7 +112,10 @@ class Scene_Menu
       @menu = nil
     end
 
-    log_scr("OPEN #{@next_menu}")
+    if @next_menu == "Main"
+      @next_menu = nil if $menu.sub_only
+    end
+    
 
     # The current menu
     case @next_menu
@@ -125,8 +128,11 @@ class Scene_Menu
       when "Journal"; @menu = Mnu_Journal.new(@vp)
       when "Items"; @menu = Mnu_Items.new(@vp)
       when "Party"; @menu = Mnu_Party.new(@vp)
+      when "Progress"; @menu = Mnu_Progress.new(@vp)
       when "Options"; @menu = Mnu_Options.new(@vp)
+      when "Help"; @menu = Mnu_Help.new(@vp)
       when "Sound"; @menu = Mnu_Sound.new(@vp)
+      when "Load"; @menu = Mnu_Load.new(@vp)
       when "Save"; @menu = Mnu_Save.new(@vp)
 
       when "Char"; @menu = Mnu_Char.new(@vp)

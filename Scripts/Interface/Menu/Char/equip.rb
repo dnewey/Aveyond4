@@ -14,10 +14,6 @@ class Mnu_Equip < Mnu_Base
 
 		@subtitle.text = "Master of deception"
 
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
-
 		@menu.opacity = 0
 		@menu.move(15,192)
 		#@menu.opacity = 0
@@ -72,8 +68,8 @@ class Mnu_Equip < Mnu_Base
 	end
 
 	def dispose
-		@grid.dispose
 		super
+		@menu.dispose
 	end
 
 	def update		
@@ -116,7 +112,7 @@ class Mnu_Equip < Mnu_Base
 		items = $party.items.keys.select{ |i|
 			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
 		}
-		items.push(nil) if @char.equips[@slot] != nil
+		items.push('remove') if @char.equips[@slot] != nil
 		@menu.list.setup(items)
 
 		# Bring in the list
@@ -140,15 +136,21 @@ class Mnu_Equip < Mnu_Base
 	# Equip List
 	def change(option)
 
+		gear = option
+		gear = nil if option == 'remove'
+
 		# Change the item box to show this
-		if option != nil
+		if option != 'remove'
 			@item_box.item(option)
 			@item_box.show
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(option,@char)			
+			@users.add_compare(gear,@char)			
 		else
 			@item_box.hide
+			@users.clear
+			@users.move(@item_box.x,@item_box.y + @item_box.height)
+			@users.add_compare(gear,@char)			
 			@users.clear
 		end
 		
@@ -156,10 +158,11 @@ class Mnu_Equip < Mnu_Base
 
 	def select(option)	
 
+		gear = option
+		gear = nil if option == 'remove'
+
 		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
+		@char.equip(@slot,gear)
 		back_to_slots
 		
 	end
@@ -168,7 +171,8 @@ class Mnu_Equip < Mnu_Base
 	 	if @grid.active
 	 		$scene.queue_menu("Char")
 	 		$tweens.clear(@menu)
-	 		close_now
+	 		#close_now
+	 		start_close
 	 	else
 	 		back_to_slots
 	 	end
@@ -188,25 +192,31 @@ class Mnu_Equip < Mnu_Base
 		@grid.clear
 		@grid.move(15,115)
 		 @char.slots.each{ |slot| 
+		 	log_scr slot
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
 
-		 @grid.choose(@slot)
+		 @grid.choose(@slot,true)
 
 		 @item_box.hide
+		 @users.clear
 
 	end
 
-	def close
-		super
+	def start_close
+		
 
 		dist = 30
 		@grid.hide_glow
 		@grid.all.each{ |b|
+			next if b.disposed?
      		b.do(go("x",-dist,200,:qio))
      		b.do(go("opacity",-255,200,:qio))
 		}
-		self.do(delay(201))
+		
+		close_soon(0)
+
+		#super
 
 	end
 
