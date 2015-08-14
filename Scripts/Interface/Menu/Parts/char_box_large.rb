@@ -115,7 +115,7 @@ class Char_Box_Large < SpriteGroup
 		@xp_value = Sprite.new(vp)
 		@xp_value.bitmap = build_value_bmp(@char.xp)
 		@xp_value.opacity = 200
-		add(@xp_value,186-@hp_value.bitmap.width,141)
+		add(@xp_value,186-@xp_value.bitmap.width,141)
 		@xp_value.z += 50
 
 	end

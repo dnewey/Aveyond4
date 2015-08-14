@@ -13,22 +13,48 @@ class Mnu_Status < Mnu_Base
 
 		@char = $party.get($menu.char)
 
-		@menu.dispose
-		self.left.delete(@menu)
+		remove_menu
+		remove_info
 
-		@box = Box.new(vp,300,302)
+		@box = Box.new(vp,300,350)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
 		self.left.push(@box)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,425)
-		@grid.add_wide('done',"Done","misc/unknown")
-		self.left.push(@grid)
 
 		cx = 28
-		cy = 125
+		cy = 124
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Overall"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Xp: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+		
+		cx = 28
+		cy += 28
 
 		lbl = Label.new(vp)
 		lbl.icon = $cache.icon("misc/primary")
@@ -76,7 +102,7 @@ class Mnu_Status < Mnu_Base
 	    self.left.push(lbl)
 
 	    cx = 28
-		cy += 32
+		cy += 28
 
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("misc/secondary")
@@ -117,14 +143,9 @@ class Mnu_Status < Mnu_Base
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
-		@info.dispose
-		self.left.delete(@info)
-
 	end
 
 	def update
-
-		@grid.update
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?

@@ -11,8 +11,9 @@ class Mnu_Items < Mnu_Base
 		#@subtitle.text = "Various items of collection"
 
 		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		@tabs.push("usable")
+		@tabs.push("keys")
+		@tabs.push("gear")
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -23,31 +24,51 @@ class Mnu_Items < Mnu_Base
 		self.right.push(@item_box)
 
 		# Party grid hahahha
-		# @grid = Ui_Grid.new(vp)
-		# @grid.move(@item_box.x,@item_box.y + @item_box.height + 3)
-		# $party.active.each{ |m|
-		# 	@grid.add_active(m)
-		# }
-		# @grid.cx = @item_box.x
-		# $party.reserve.each{ |m|
-		# 	@grid.add_reserve(m)
-		# }
-		# @grid.disable
-		# #@grid.hide
-		# self.right.push(@grid)
+		@grid = Ui_Grid.new(vp)
+		@grid.move(@item_box.x,@item_box.y + @item_box.height + 3)
+		$party.active.each{ |m|
+			@grid.add_active(m)
+		}
+		@grid.cx = @item_box.x
+		$party.reserve.each{ |m|
+			@grid.add_reserve(m)
+		}
+		@grid.disable
+		#@grid.hide
+		self.right.push(@grid)
 
 		grant_items
 
-		@menu.setup_items('all')
+		tab('all')
 
 		open
 
 	end
 
 	def update
-		super
-		# Keep checking if item box changed
-		
+		super		
+	end
+
+	def tab(option)
+
+		# Reload the quest list limited to this tab
+		data = $party.items.keys
+
+		if option == "usable"
+			data = data.select{ |q| $data.items[q].tab == 'usable' }
+		end
+
+		if option == "keys"
+			data = data.select{ |q| $data.items[q].tab == 'keys' }
+		end
+
+		if option == "gear"
+			data = data.select{ |q| $data.items[q].tab == 'gear' }
+		end
+
+		@menu.list.setup(data)
+		@menu.list.slide
+
 	end
 
 	def change(option)

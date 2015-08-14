@@ -13,8 +13,6 @@ class List
 
   attr_accessor :active
 
-
-
   attr_accessor :type
 
   attr_accessor :page_idx
@@ -64,26 +62,29 @@ class List
     @scroll_box = Sprite.new()
     @scroll_box.bitmap = $cache.menu_common('scroll-box')
     @scroll_box.x = 234
-    @scroll_box.y = 422
+    @scroll_box.y = 406
     @scroll_box.z = 5000
 
     @scroll_down = Button.new()
     @scroll_down.bitmap = $cache.menu_common('scroll-down')
+    @scroll_down.bmp_up = $cache.menu_common('scroll-down')
+    @scroll_down.bmp_over = $cache.menu_common('scroll-down-red')
     @scroll_down.x = 239
-    @scroll_down.y = 424
+    @scroll_down.y = 408
     @scroll_down.z = 5000
     @scroll_down.press = Proc.new{ self.scrollbar_down }
 
     @scroll_up = Button.new()
     @scroll_up.bitmap = $cache.menu_common('scroll-up')
+    @scroll_up.bmp_up = $cache.menu_common('scroll-up')
+    @scroll_up.bmp_over = $cache.menu_common('scroll-up-red')
     @scroll_up.x = 262
-    @scroll_up.y = 424
+    @scroll_up.y = 408
     @scroll_up.z = 5000
     @scroll_up.press = Proc.new{ self.scrollbar_up }
 
     # Setup
-    @select_sprite.bitmap = $cache.menu_common('list-bar-on')
-    
+    @select_sprite.bitmap = $cache.menu_common('list-bar-on')    
 
     @active = true
 
@@ -98,9 +99,9 @@ class List
     @back_sprite.opacity = o
     @content_sprite.opacity = o
     @select_sprite.opacity = o
-    @scroll_box.opacity = 0
-    @scroll_down.opacity = 0
-    @scroll_up.opacity = 0
+    @scroll_box.opacity = o
+    @scroll_down.opacity = o
+    @scroll_up.opacity = o
   end
 
   def opacity
@@ -117,6 +118,10 @@ class List
   end
 
   def setup(data,idx=0)
+
+    @back_sprite.bitmap.clear if @back_sprite.bitmap
+    @content_sprite.bitmap.clear if @content_sprite.bitmap
+
     #log_sys(data)
   	@data = data
     # Need an original per page in case less items are given
@@ -127,7 +132,15 @@ class List
     @page_idx = idx
     @select_sprite.y = idx * row_height
     @active = true
-  	refresh(false) if !data.empty?
+  	refresh(false) #if !data.empty?
+
+  end
+
+  def slide
+    @content_sprite.opacity = 0
+    @content_sprite.do(go("opacity",255,300,:qio))
+    @content_sprite.x = -20
+    @content_sprite.do(go("x",20,300,:qio))
   end
 
   def idx
@@ -155,6 +168,10 @@ class List
 
     @vp.rect = Rect.new(@x,@y,@item_width,row_height*@max_per_page)
 
+    @scroll_box.y = @y + (row_height*@max_per_page) + 2
+    @scroll_down.y = @scroll_box.y + 2
+    @scroll_up.y = @scroll_box.y + 2
+
     # Draw the background sprite and position it
     rows = [@max_per_page,@data.count].min
     rows += 2 if can_scroll?
@@ -168,6 +185,8 @@ class List
 
     @back_sprite.y = can_scroll? ? -row_height : 0
     @content_sprite.y = can_scroll? ? -row_height : 0
+
+    @select_sprite.show
 
     src = $cache.menu_common('list-bar')
 
@@ -187,24 +206,35 @@ class List
 
   # ADD THIS MOUSE CONTROL
   def scrollbar_down
+      #@page_idx += 1
+      sys('select')   
+      @select_sprite.y += row_height      
       @page_idx += 1
       scroll_up 
   end
 
   def scrollbar_up
+      return if @scroll_idx <= 0
+      #@page_idx -= 1
+      sys('select')   
+      @select_sprite.y -= row_height      
       @page_idx -= 1
       scroll_down
   end
 
   def current
     #return @current[0] if @type == :misc
-    return @data[idx+1] if can_scroll?
+    return @data[idx] if can_scroll?
     return @data[idx]
   end
 
   def draw(data,row)
 
     #return if data == nil # For above or below accessible
+    if data == nil
+      @select_sprite.hide
+      return draw_empty(row)
+    end
 
     # Drw the contents
     case @type
@@ -232,17 +262,32 @@ class List
 
   end
 
+  def draw_empty(row)
+
+    name = " - Empty - "
+    #ico = $cache.icon("misc/unknown")
+    #number = 0
+    
+    #@content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    #if number > 0
+    #  @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    #end
+
+  end
+
   def draw_item(data,row)
 
-    item = $data.items[data]
+    item = $data.items[data] if data != 'remove'
 
-    if item != nil
+    if data != 'remove'
       name = item.name
       ico = $cache.icon(item.icon)
       number = $party.item_number(data)
     else
       name = "Remove"
-      ico = $cache.icon("misc/unknown")
+      ico = $cache.icon("misc/cross")
       number = 0
     end
     
@@ -379,7 +424,6 @@ class List
     item = $data.quests[data]
 
     ico = $cache.icon('misc/unknown')
-
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
@@ -400,17 +444,21 @@ class List
 
   def draw_file(data,row)
 
-    item = $files.headers[data]
+    header = $files.headers[data] 
 
-    #ico = $cache.icon(item.icon)
-
-    if item == nil
-      name = "Save #{data}"
+    if header == nil
+      name = "- Empty -"
+      ico = $cache.icon('misc/dots') 
     else
-      name = "Save #{item[:progress]}"
+      if data == 0
+        name = "Autosave - #{header[:time]}"
+      else
+        name = "Save #{data} - #{header[:time]}"
+      end
+      ico = $cache.icon("faces/"+header[:leader])
     end
     
-    #@content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
 
@@ -511,18 +559,22 @@ class List
 
     # Selection
 
-
     # Cancel
     if !@cancel.nil? && ($input.cancel? || $input.rclick?)
       @cancel.call(current)
     end
 
-    pos = $mouse.position
+    pos = $mouse.position.dup
     pos[0] -= @x
     pos[1] -= @y
 
-    if !@select.nil? && ($input.action? || ($input.click?&&within?(pos)))
-      @select.call(current)
+    if !@select.nil? 
+      if $input.action?
+        @select.call(current)
+      end
+      if $input.click?
+        @select.call(current)
+      end
     end
 
     if within?(pos)
@@ -531,7 +583,7 @@ class List
       @select_sprite.y = row * row_height
       @page_idx = row
       @change.call(current) if !@change.nil?
-      #sys('select')
+      sys('select')
 
     end
 

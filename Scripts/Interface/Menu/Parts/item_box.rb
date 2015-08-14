@@ -223,7 +223,13 @@ class Item_Box < SpriteGroup
     # Battle display of skills, maybe different to menu display
 	def skill(id)
 
+
+
         data = get_data(id)       
+
+
+return if data == nil
+
         base(data)
 
         if data.hits > 1

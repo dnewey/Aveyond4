@@ -5,18 +5,13 @@ class Mnu_Options < Mnu_Base
 		super(vp)
 
 		@title.change('options')
-
-		@tabs.hide
 		@subtitle.text = "Left and Right to change"
 
 		@menu.list.type = :misc
-		build_list
-		
+		build_list		
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
-
-		#change(data[0]) if !data.empty?
 
 		open
 
@@ -61,6 +56,8 @@ class Mnu_Options < Mnu_Base
 
 		left = $input.left?
 		right = $input.right?
+
+		# Check mouse actions for this?
 
 		if left || right
 

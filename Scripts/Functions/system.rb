@@ -37,39 +37,48 @@ end
 # Menus Access
 
 def open_main_menu
+	$menu.sub_only = false
 	$menu.menu_page = "Main"
 end
 
 def open_sub_menu(which)
+	$menu.sub_only = true
 	$menu.menu_page = which
 end
 
 def open_char_menu(who)
+	$menu.sub_only = true
 	$menu.char = who
 	$menu.menu_page = "Char"
 end
 
 def open_potions_menu
+	$menu.sub_only = true
 	$menu.menu_page = "Potions"
 end
 
 def open_chooser_menu
+	$menu.sub_only = true
 	$menu.menu_page = "Chooser"
 end
 
 def open_potions_book
+	$menu.sub_only = true
 	$scene.hud.open_book
 end
 
 def open_shop_buy
+	$menu.sub_only = true
 	$menu.menu_page = "Shop"
 end
 
 def open_shop_sell
+	$menu.sub_only = true
 	$menu.menu_page = "Shop"
 end
 
 def open_shop_creatures
+	$menu.sub_only = true
 	$menu.menu_page = "Creatures"
 end
 

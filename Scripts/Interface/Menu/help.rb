@@ -17,15 +17,13 @@ class Mnu_Help < Mnu_Base
 		data = $progress.quests
 
 		@page = Right_Page.new(vp)
-		self.right.push(@page)
+		@right.push(@page)
 
-		@menu.list.setup(data)
-
-		
-
-		#change(data[0]) if !data.empty?
+		@menu.list.setup(data)		
 
 		open
+
+		#change(data[0]) if !data.empty?
 
 	end
 

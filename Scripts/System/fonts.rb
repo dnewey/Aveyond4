@@ -18,8 +18,12 @@ class FontManager
 
 	def initialize
 
-		@scratch = Bitmap.new(600,50)
+		# Default font
+    	Font.default_size = 22
+    	Font.default_name = "Consolas"
 
+    	# Scratch Bitmap
+		@scratch = Bitmap.new(600,50)
 
 		# Debug Fonts
 

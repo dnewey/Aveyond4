@@ -33,8 +33,4 @@ class Page_Title < SpriteGroup
 		@icon.bitmap = $cache.menu("Icons/"+page)
 	end
 
-	def update
-
-	end
-
 end

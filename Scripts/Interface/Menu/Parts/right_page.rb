@@ -1,5 +1,5 @@
 
-class Right_Save < SpriteGroup
+class Right_Page < SpriteGroup
 
 	def initialize(vp)
 		super()
@@ -7,11 +7,11 @@ class Right_Save < SpriteGroup
         @vp = vp
 
 		# Right side journal
-		@window = Box.new(vp,300,292)
+		@window = Box.new(vp,300,357)
     	@window.skin = $cache.menu_common("skin-dry")
-    	@window.wallpaper = $cache.menu_wallpaper("journal_page_line")
+    	@window.wallpaper = $cache.menu_wallpaper("journal-full-page")
     	#@window.color = Color.new(47,45,41)
-    	add(@window,320,140)
+    	add(@window,320,138)
 
     	# Quest Name
     	@page_title = Label.new(vp)
@@ -19,7 +19,7 @@ class Right_Save < SpriteGroup
         @page_title.icon = $cache.icon("potions/hypercurium")
         @page_title.icon_oy = -3
     	@page_title.font = $fonts.page_ttl
-    	@page_title.text = "Choco Dream"
+    	@page_title.text = "Title Text"
     	add(@page_title,340,154)
 
     	# # SUBTEXTS!!!!!!!!!!
@@ -48,46 +48,28 @@ class Right_Save < SpriteGroup
         @window.dispose
         @page_title.dispose
         @txt_desc.dispose
-        @ingredients.each{ |i| i.dispose }
     end
 
-    def setup(potion)
+    def setup(save)
+
+        # Get save header
 
         # Get the data
         data = $data.potions[potion]
         ings = data.ingredients.split("\n")
-
-        # Clear out the previous
-
-        # Show the title of the potion
-        @page_title.icon = $cache.icon("potions/hypercurium")
-        @page_title.text = data.name
+        
 
         # Perhaps show a description here
         @txt_desc.text = data.description
         @cy = @txt_desc.y + @txt_desc.height
 
-
-        # Add ingredients display
-        ings.each{ |ing|
-
-            item = $data.items[ing]
-
-            new_ing = Label.new(@vp)
-            new_ing.font = $fonts.page_text
-            new_ing.icon = $cache.icon(item.icon)
-            new_ing.text = item.name
-            add(new_ing,340,@cy)
-
-            # Now add the tick icon
-            @cy += 26
-
-            @ingredients.push(new_ing)
-
-        }
-
         move(0,0)
 
+    end
+
+    def title(text,icon)
+        @page_title.icon = $cache.icon(icon)
+        @page_title.text = text
     end
 
 end

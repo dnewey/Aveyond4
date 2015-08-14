@@ -30,7 +30,6 @@ def aveyond4
     $battle = Game_Battle.new
     $fonts = FontManager.new
     $game = GameManager.new  
-    # $steam = SteamManager.new
 
     $scratch = Bitmap.new(400,50)
 

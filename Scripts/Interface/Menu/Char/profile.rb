@@ -13,20 +13,15 @@ class Mnu_Profile < Mnu_Base
 
 		@char = $party.get($menu.char)
 
-		@menu.dispose
-		self.left.delete(@menu)
+		remove_menu
+		remove_info
 
-		@box = Box.new(vp,300,302)
+		@box = Box.new(vp,300,350)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
 		self.left.push(@box)
 		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,425)
-		@grid.add_wide('done',"Done","misc/unknown")
-		self.left.push(@grid)
-
 		data = []
 		data.push(["faces/boy","Name: Boyle"])
 		data.push(["faces/boy","Home: Wyrmwood"])
@@ -58,14 +53,9 @@ class Mnu_Profile < Mnu_Base
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
-		@info.dispose
-		self.left.delete(@info)
-
 	end
 
 	def update
-
-		@grid.update
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?

@@ -7,8 +7,8 @@ class Mnu_Party < Mnu_Base
 		@title.change('party')
 		@subtitle.text = "Change up your party members"
 
-		@menu.dispose
-		self.left.delete(@menu)
+		remove_menu
+		remove_info
 
 		@first = nil
 
@@ -26,8 +26,6 @@ class Mnu_Party < Mnu_Base
 		@other.push(@grid)
 		setup_grid
 
-		@info.dispose
-		self.left.delete(@info)
 
 		open
 

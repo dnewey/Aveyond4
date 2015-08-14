@@ -20,6 +20,7 @@ class Mnu_Base
 		@left.push(@title)
 
 		@tabs = Page_Tabs.new(vp)
+		@tabs.change = Proc.new{ |option| self.tab(option) }
 		@left.push(@tabs)
 
 		@subtitle = Label.new(vp)
@@ -40,6 +41,16 @@ class Mnu_Base
 
 		
 
+	end
+
+	def remove_menu
+		@menu.dispose
+		self.left.delete(@menu)
+	end
+
+	def remove_info
+		@info.dispose
+		self.left.delete(@info)
 	end
 
 	def dispose
@@ -98,9 +109,9 @@ class Mnu_Base
 		self.do(delay(dur))
 	end
 
-	def close_soon
+	def close_soon(d=10)
 		@close_soon = true
-		@close_delay = 10	
+		@close_delay = d
 	end
 
 	def close_now

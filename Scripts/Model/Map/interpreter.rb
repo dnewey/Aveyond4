@@ -309,61 +309,61 @@ class Interpreter
 
   end
 
-  #--------------------------------------------------------------------------
-  # * Command Skip
-  #--------------------------------------------------------------------------
-  def command_skip
-    # Get indent
-    indent = @list[@index].indent
-    # Loop
-    loop do
-      # If next event command is at the same level as indent
-      if @list[@index+1].indent == indent
-        # Continue
-        return true
-      end
-      # Advance index
-      @index += 1
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Get Character
-  #     parameter : parameter
-  #--------------------------------------------------------------------------
-  def get_character(parameter)
-    # Branch by parameter
-    case parameter
-    when -1  # player
-      return $player
-    when 0  # this event
-      events = $map.events
-      return events == nil ? nil : events[@event_id]
-    else  # specific event
-      events = $map.events
-      return events == nil ? nil : events[parameter]
-    end
-  end
+  # #--------------------------------------------------------------------------
+  # # * Command Skip
+  # #--------------------------------------------------------------------------
+  # def command_skip
+  #   # Get indent
+  #   indent = @list[@index].indent
+  #   # Loop
+  #   loop do
+  #     # If next event command is at the same level as indent
+  #     if @list[@index+1].indent == indent
+  #       # Continue
+  #       return true
+  #     end
+  #     # Advance index
+  #     @index += 1
+  #   end
+  # end
+  # #--------------------------------------------------------------------------
+  # # * Get Character
+  # #     parameter : parameter
+  # #--------------------------------------------------------------------------
+  # def get_character(parameter)
+  #   # Branch by parameter
+  #   case parameter
+  #   when -1  # player
+  #     return $player
+  #   when 0  # this event
+  #     events = $map.events
+  #     return events == nil ? nil : events[@event_id]
+  #   else  # specific event
+  #     events = $map.events
+  #     return events == nil ? nil : events[parameter]
+  #   end
+  # end
 
-  #--------------------------------------------------------------------------
-  # * Calculate Operated Value
-  #     operation    : operation
-  #     operand_type : operand type (0: invariable 1: variable)
-  #     operand      : operand (number or variable ID)
-  #--------------------------------------------------------------------------
-  def operate_value(operation, operand_type, operand)
-    # Get operand
-    if operand_type == 0
-      value = operand
-    else
-      value = $game_variables[operand]
-    end
-    # Reverse sign of integer if operation is [decrease]
-    if operation == 1
-      value = -value
-    end
-    # Return value
-    return value
-  end
+  # #--------------------------------------------------------------------------
+  # # * Calculate Operated Value
+  # #     operation    : operation
+  # #     operand_type : operand type (0: invariable 1: variable)
+  # #     operand      : operand (number or variable ID)
+  # #--------------------------------------------------------------------------
+  # def operate_value(operation, operand_type, operand)
+  #   # Get operand
+  #   if operand_type == 0
+  #     value = operand
+  #   else
+  #     value = $game_variables[operand]
+  #   end
+  #   # Reverse sign of integer if operation is [decrease]
+  #   if operation == 1
+  #     value = -value
+  #   end
+  #   # Return value
+  #   return value
+  # end
 
 
     def next_event_code
@@ -412,41 +412,41 @@ class Interpreter
     return true
   end
 
-  #--------------------------------------------------------------------------
-  # * Conditional Branch
-  #--------------------------------------------------------------------------
-  def command_111
+  # #--------------------------------------------------------------------------
+  # # * Conditional Branch
+  # #--------------------------------------------------------------------------
+  # def command_111
     
-    result = eval(@parameters[1])
-    return true if result
+  #   result = eval(@parameters[1])
+  #   return true if result
   
-    # Skip it
-    @branch[@list[@index].indent] = result
-    return command_skip
+  #   # Skip it
+  #   @branch[@list[@index].indent] = result
+  #   return command_skip
   
-  end
-  #--------------------------------------------------------------------------
-  # * Else
-  #--------------------------------------------------------------------------
-  def command_411
-    # If determinant results are false
-    if @branch[@list[@index].indent] == false
-      # Delete branch data
-      @branch.delete(@list[@index].indent)
-      # Continue
-      return true
-    end
-    # If it doesn't meet the conditions: command skip
-    return command_skip
-  end
+  # end
+  # #--------------------------------------------------------------------------
+  # # * Else
+  # #--------------------------------------------------------------------------
+  # def command_411
+  #   # If determinant results are false
+  #   if @branch[@list[@index].indent] == false
+  #     # Delete branch data
+  #     @branch.delete(@list[@index].indent)
+  #     # Continue
+  #     return true
+  #   end
+  #   # If it doesn't meet the conditions: command skip
+  #   return command_skip
+  # end
  
-  #--------------------------------------------------------------------------
-  # * Exit Event Processing
-  #--------------------------------------------------------------------------
-  def command_115
-    command_end
-    return true
-  end
+  # #--------------------------------------------------------------------------
+  # # * Exit Event Processing
+  # #--------------------------------------------------------------------------
+  # def command_115
+  #   command_end
+  #   return true
+  # end
 
   def command_117
     # Get common event
@@ -461,313 +461,29 @@ class Interpreter
     return true
   end
 
-  #--------------------------------------------------------------------------
-  # * Label
-  #--------------------------------------------------------------------------
-  def command_118
-    return true
-  end
+  # #--------------------------------------------------------------------------
+  # # * Set Move Route
+  # #--------------------------------------------------------------------------
+  # def command_209
+  #   # Get character
+  #   character = get_character(@parameters[0])
+  #   # If no character exists
+  #   return true if character == nil
 
-  #--------------------------------------------------------------------------
-  # * Jump to Label
-  #--------------------------------------------------------------------------
-  def command_119
-    # Get label name
-    label_name = @parameters[0]
-    # Initialize temporary variables
-    temp_index = 0
-    # Loop
-    loop do
-
-      # If a fitting label was not found
-      return true if temp_index >= @list.size-1
-
-      # If this event command is a designated label name
-      if @list[temp_index].code == 118 and
-         @list[temp_index].parameters[0] == label_name
-        # Update index
-        @index = temp_index
-        # Continue
-        return true
-      end
-      # Advance index
-      temp_index += 1
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * Transfer Player
-  #--------------------------------------------------------------------------
-  def command_201
-
-    # If transferring player, showing message, or processing transition
-    return false if $player.transferring || $scene.busy?
-    
-    # If appointment method is [direct appointment]
-    $player.queue_xfer(@parameters[1],@parameters[2],@parameters[3],@parameters[4])
-    
-    # Advance index
-    @index += 1
-
-    # If fade is set <---- CUT
-    # if @parameters[5] == 0
-    #   # Prepare for transition
-    #   Graphics.freeze
-    #   # Set transition processing flag
-    #   $game_temp.transition_processing = true
-    #   $game_temp.transition_name = ""
-    # end
-
-    # End
-    return false
-  end
-
-  #--------------------------------------------------------------------------
-  # * Set Event Location
-  #--------------------------------------------------------------------------
-  def command_202
-
-    # Get character
-    character = get_character(@parameters[0])
-    return true if character == nil
-
-    # If appointment method is [direct appointment]
-    if @parameters[1] == 0
-      # Set character position
-      character.moveto(@parameters[2], @parameters[3])
-    # If appointment method is [appoint with variables]
-    elsif @parameters[1] == 1
-      # Set character position
-      character.moveto($game_variables[@parameters[2]],
-        $game_variables[@parameters[3]])
-    # If appointment method is [exchange with another event]
-    else
-      old_x = character.x
-      old_y = character.y
-      character2 = get_character(@parameters[2])
-      if character2 != nil
-        character.moveto(character2.x, character2.y)
-        character2.moveto(old_x, old_y)
-      end
-    end
-    # Set character direction
-    case @parameters[4]
-      when 8  # up
-        character.turn_up
-      when 6  # right
-        character.turn_right
-      when 2  # down
-        character.turn_down
-      when 4  # left
-        character.turn_left
-    end
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Change Map Settings
-  #--------------------------------------------------------------------------
-  def command_204
-    case @parameters[0]
-    when 0  # panorama
-      $game_map.panorama_name = @parameters[1]
-      $game_map.panorama_hue = @parameters[2]
-    when 1  # fog
-      $game_map.fog_name = @parameters[1]
-      $game_map.fog_hue = @parameters[2]
-      $game_map.fog_opacity = @parameters[3]
-      $game_map.fog_blend_type = @parameters[4]
-      $game_map.fog_zoom = @parameters[5]
-      $game_map.fog_sx = @parameters[6]
-      $game_map.fog_sy = @parameters[7]
-    end
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Change Fog Opacity
-  #--------------------------------------------------------------------------
-  def command_206
-    # Start opacity level change
-    $game_map.start_fog_opacity_change(@parameters[0], @parameters[1] * 2)
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Show Animation
-  #--------------------------------------------------------------------------
-  def command_207
-    # Get character
-    character = get_character(@parameters[0])
-    return true if character == nil
-
-    # Set animation ID
-    character.animation_id = @parameters[1]
-    # Continue
-    return true
-
-  end
-  #--------------------------------------------------------------------------
-  # * Change Transparent Flag
-  #--------------------------------------------------------------------------
-  def command_208
-    $game_player.transparent = (@parameters[0] == 0)
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Set Move Route
-  #--------------------------------------------------------------------------
-  def command_209
-    # Get character
-    character = get_character(@parameters[0])
-    # If no character exists
-    return true if character == nil
-
-    # Force move route - pushes on top of auto movers
-    character.force_move_route(@parameters[1])
-    return true
-  end
+  #   # Force move route - pushes on top of auto movers
+  #   character.force_move_route(@parameters[1])
+  #   return true
+  # end
   
-  #--------------------------------------------------------------------------
-  # * Wait for Move's Completion
-  #--------------------------------------------------------------------------
-  def command_210
-    @move_route_waiting = true
-    return true
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Change Screen Color Tone
-  #--------------------------------------------------------------------------
-  def command_223
-    $game_screen.start_tone_change(@parameters[0], @parameters[1] * 2)
-    return true
-  end
+  # #--------------------------------------------------------------------------
+  # # * Wait for Move's Completion
+  # #--------------------------------------------------------------------------
+  # def command_210
+  #   @move_route_waiting = true
+  #   return true
+  # end
 
   #--------------------------------------------------------------------------
-  # * Set Weather Effects
-  #--------------------------------------------------------------------------
-  def command_236
-    # Set Weather Effects
-    $game_screen.weather(@parameters[0], @parameters[1], @parameters[2])
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Play BGM
-  #--------------------------------------------------------------------------
-  def command_241
-    # Play BGM
-    $game_system.bgm_play(@parameters[0])
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Fade Out BGM
-  #--------------------------------------------------------------------------
-  def command_242
-    # Fade out BGM
-    $game_system.bgm_fade(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Play BGS
-  #--------------------------------------------------------------------------
-  def command_245
-    # Play BGS
-    $game_system.bgs_play(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Fade Out BGS
-  #--------------------------------------------------------------------------
-  def command_246
-    # Fade out BGS
-    $game_system.bgs_fade(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Memorize BGM/BGS
-  #--------------------------------------------------------------------------
-  def command_247
-    # Memorize BGM/BGS
-    $game_system.bgm_memorize
-    $game_system.bgs_memorize
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Restore BGM/BGS
-  #--------------------------------------------------------------------------
-  def command_248
-    # Restore BGM/BGS
-    $game_system.bgm_restore
-    $game_system.bgs_restore
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Play ME
-  #--------------------------------------------------------------------------
-  def command_249
-    # Play ME
-    $game_system.me_play(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Play SE
-  #--------------------------------------------------------------------------
-  def command_250
-    $audio.play_se(@parameters[0])
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Stop SE
-  #--------------------------------------------------------------------------
-  def command_251
-    # Stop SE
-    Audio.se_stop
-    # Continue
-    return true
-  end
-
-
-  #--------------------------------------------------------------------------
-  # * Shop Processing
-  #--------------------------------------------------------------------------
-  def command_302
-
-    # Set shop calling flag
-    $game_temp.shop_calling = true
-    # Set goods list on new item
-    $game_temp.shop_goods = [@parameters]
-    # Loop
-    loop do
-      # Advance index
-      @index += 1
-      # If next event command has shop on second line or after
-      if @list[@index].code == 605
-        # Add goods list to new item
-        $game_temp.shop_goods.push(@list[@index].parameters)
-      # If event command does not have shop on second line or after
-      else
-        # End
-        return false
-      end
-    end
-  end
-
-
-    #--------------------------------------------------------------------------
   # * Script
   #--------------------------------------------------------------------------
   def command_355

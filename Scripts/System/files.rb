@@ -4,8 +4,10 @@
 
 SAVE_FILES = 99
 
+# For the list
 class SaveData
   attr_accessor :name
+  attr_accessor :leader
 end
 
 class FileManager
@@ -16,10 +18,12 @@ class FileManager
 
     @headers = []
 
+    # 0 is auto save, you can't save over it
+
     # Load save headers
     i = 0
     while i <= SAVE_FILES
-      if file_exists?(i)
+      if File.exist?(filename(i))
         @headers.push(load_header(i))
       else
         @headers.push(nil)
@@ -29,19 +33,8 @@ class FileManager
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Determine Existence of Save File
-  #--------------------------------------------------------------------------
   def any_save_files?
     !Dir.glob('Av4-*.save').empty?
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Determine Existence of Save File
-  #--------------------------------------------------------------------------
-  def file_exists?(i)
-    file = "\\Av4-#{i}.save"
-    File.exist?($appdata + file)
   end
 
   def save_file_list
@@ -54,19 +47,16 @@ class FileManager
     return list
   end
   
-  #--------------------------------------------------------------------------
-  # * Create Filename
-  #--------------------------------------------------------------------------
-  def make_filename(i)
-    file = "\\Av4-#{i}.save"
-    return $appdata + file
+  def filename(i)
+    return $appdata + "\\Av4-#{i}.save"
   end
 
-  #--------------------------------------------------------------------------
-  # * Execute Save (No Exception Processing)
-  #--------------------------------------------------------------------------
+  def autosave
+    save_game(0)
+  end
+
   def save_game(i)
-    File.open(make_filename(i), "wb") { |file|
+    File.open(filename(i), "wb") { |file|
       header = make_save_header  
       body = make_save_contents
       Marshal.dump(header, file)
@@ -76,7 +66,7 @@ class FileManager
 
     # Save pic for save file
     w = 256
-    h = 192
+    h = 128
     x = (640-w)/2
     y = (480-h)/2
     rect = Rect.new(x,y,w,h)
@@ -87,11 +77,9 @@ class FileManager
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Execute Load (No Exception Processing)
-  #--------------------------------------------------------------------------
+  # Could be in game? just the contents part here? Strange to give files such power
   def load_game(i)
-    File.open(make_filename(i), "rb") do |file|
+    File.open(filename(i), "rb") do |file|
       Marshal.load(file)
       extract_save_contents(Marshal.load(file))
       $game.reload
@@ -100,39 +88,22 @@ class FileManager
     return true
   end
   
-  #--------------------------------------------------------------------------
-  # * Load Save Header (No Exception Processing)
-  #--------------------------------------------------------------------------
   def load_header(i)
-    File.open(make_filename(i), "rb") do |file|
+    File.open(filename(i), "rb") do |file|
       return Marshal.load(file)
     end
     return nil
   end
   
-  #--------------------------------------------------------------------------
-  # * Delete Save File
-  #--------------------------------------------------------------------------
-  def delete_save_file()
-    File.delete(make_filename()) rescue nil
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Create Save Header
-  #--------------------------------------------------------------------------
   def make_save_header
     header = {}
-    header[:progress] = 140
-    header[:name] = "Save Name"
-    # Location, party, playtime, quest?, gold
-    #header[:characters] = $game_party.characters_for_savefile
-    #header[:playtime_s] = $game_system.playtime_s
-    header
+    header[:leader] = $party.leader
+    header[:time] = "1h 20m"
+    header[:members] = $party.active
+    header[:gold] = $party.gold
+    return header
   end
   
-  #--------------------------------------------------------------------------
-  # * Create Save Contents
-  #--------------------------------------------------------------------------
   def make_save_contents
     
     contents = {}
@@ -146,13 +117,10 @@ class FileManager
     contents[:map]          = $map
     contents[:player]       = $player
 
-    contents
+    return contents
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Extract Save Contents
-  #--------------------------------------------------------------------------
   def extract_save_contents(contents)
 
     $battle =    contents[:battle]
@@ -164,20 +132,6 @@ class FileManager
     $map =       contents[:map]     
     $player =    contents[:player]  
 
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Get Update Date of Save File
-  #--------------------------------------------------------------------------
-  def savefile_time_stamp()
-    File.mtime(make_filename()) rescue Time.at(0)
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Get File Index with Latest Update Date
-  #--------------------------------------------------------------------------
-  def latest_savefile_index
-    savefile_max.times.max_by {|i| savefile_time_stamp(i) }
   end
   
 end

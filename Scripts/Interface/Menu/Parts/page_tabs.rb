@@ -2,15 +2,11 @@
 # Tabs
 #==============================================================================
 
-# Horizontal list of sorts
-# Image based only
-# Drawn to single sprite
-
 class Page_Tabs < Sprite
 
-  SPACING = 5
+  SPACING = 0
 
-  attr_accessor :tab_proc
+  attr_accessor :change
 
   #--------------------------------------------------------------------------
   # * Init
@@ -28,6 +24,9 @@ class Page_Tabs < Sprite
   	@idx = 0
 
     @total_width = 0
+
+    # Proc
+    @change = nil
 
     move(116,75)
 
@@ -79,7 +78,7 @@ class Page_Tabs < Sprite
         @idx = @names.count - 1
         return
       end
-      @tab_proc.call(@names[@idx]) if @tab_proc
+      @change.call(@names[@idx]) if @change
       refresh      
   	end
 
@@ -89,11 +88,11 @@ class Page_Tabs < Sprite
         @idx = 0
         return
       end
-      @tab_proc.call(@names[@idx]) if @tab_proc
+      @change.call(@names[@idx]) if @change
       refresh  
   	end
 
-    pos = $mouse.position
+    pos = $mouse.position.dup
 
     #return if pos[0] > @total_width
     return if pos[0] < self.x
@@ -118,7 +117,7 @@ class Page_Tabs < Sprite
       if $input.click?
 
         @idx = i
-        @tab_proc.call(@names[@idx]) if @tab_proc
+        @change.call(@names[@idx]) if @change
         refresh  
 
       end

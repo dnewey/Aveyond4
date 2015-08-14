@@ -41,6 +41,10 @@ class Box
 	# 	return @wallpaper
 	# end
 
+	def disposed?
+		return @wallpaper.disposed? || @window.disposed?
+	end
+
 	def flash_light
 		@wallpaper.flash(Color.new(255,255,255,40),20)
 	end

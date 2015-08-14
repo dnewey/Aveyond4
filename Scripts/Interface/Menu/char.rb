@@ -8,31 +8,28 @@ class Mnu_Char < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
-
 		@subtitle.text = "Master of deception"
-
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
 
 		@menu.dispose
 		self.left.delete(@menu)
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(15,113)
-		@grid.add_wide("Equip","Change Equipment","misc/unknown")
-		@grid.add_wide("Skills","Use Skills","skills/spells")
+		
+		@grid.add_wide("Equip","Change Equipment","armors/boy-arm-f")
+		@grid.add_wide("Skills","Use Skills","skills/sparkle")
 		@grid.add_wide("Status","View Status","misc/primary")
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
-		@grid.add_wide("Creatures","Creature Hunting","misc/unknown") if $menu.char == 'boy'
-		@grid.add_wide("Potions","Potion Making","misc/unknown") if $menu.char == 'ing'
+		@grid.add_wide("Creatures","Creature Hunting","items/creature") if $menu.char == 'boy'
+		@grid.add_wide("Potions","Potion Making","items/potion-red") if $menu.char == 'ing'
 
 		@grid.choose($menu.char_cursor)
 
 		self.left.push(@grid)
 
+		# Fade and slide in
 		dist = 30
 		@grid.all.each{ |b|
 			b.x -= dist
@@ -117,11 +114,13 @@ class Mnu_Char < Mnu_Base
 
 		@grid.hide_glow
 
+		# Fade and hide grid
 		dist = 30
 		@grid.all.each{ |b|
      		b.do(go("x",-dist,200,:qio))
      		b.do(go("opacity",-255,200,:qio))
 		}
+		
 	end
 
 end
