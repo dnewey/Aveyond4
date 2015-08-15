@@ -359,7 +359,43 @@ class Ui_Grid
 
 	end
 
-	def add_compare(gear,slot,user)
+	def add_mana(item)
+
+		#data = $data.items[gear]
+
+		btn = add_part_box('users',300,46)
+
+		ocx = @cx
+
+		@cx += 4
+		@cy += 2
+
+		# Find all users
+		users = [$party.get('boy'),$party.get('ing'),$party.get('hib')]
+
+		# Draw all of the icons now
+		tick = Sprite.new(@vp)
+		tick.bitmap = $cache.icon("misc/tick")
+		tick.move(@cx+10,@cy+10)
+		@extra.push(tick)
+		@cx += 28
+
+		users.each{ |u|
+			icon = Label.new(@vp)
+			icon.icon = $cache.icon("faces/#{u.id}")
+			icon.font = $fonts.pop_text
+			icon.text = '+'
+			icon.move(@cx+10,@cy+7)
+			@extra.push(icon)
+			@cx += 80
+		}
+
+		@cy += 46
+		@cx = ocx
+
+	end
+
+	def add_compare2(gear,slot,user)
 
 		data = $data.items[gear]
 		#return if gear != nil && data.stats == ''
@@ -378,6 +414,60 @@ class Ui_Grid
         stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
+
+     	@cy += 46
+
+	end
+
+	def add_compare(stat,old,now,change)
+
+		log_scr(stat)
+
+		btn = add_part_box(stat,300,46)
+		if change < 0
+			btn.wallpaper = $cache.menu_wallpaper('red')
+		elsif change > 0
+			btn.wallpaper = $cache.menu_wallpaper('green')
+		end
+
+		row = Label.new(@vp)
+        row.icon = $cache.icon("stats/#{stat}")
+        row.font = $fonts.pop_text
+        #log_scr(res)
+       	row.text = "#{old} -> #{now} (#{change})"
+        @extra.push(row)
+     	row.move(@cx+10,@cy+9)
+
+     	@cy += 46
+
+	end
+
+	def add_nochange
+
+		btn = add_part_box('nochange',300,46)
+
+		row = Label.new(@vp)
+        row.icon = $cache.icon("stats/def")
+        row.font = $fonts.pop_text
+        #log_scr(res)
+	    row.text = 'No change'
+        @extra.push(row)
+     	row.move(@cx+10,@cy+9)
+
+     	@cy += 46
+
+	end
+
+	def add_stock(id)
+
+		btn = add_part_box('stock',300,46)
+
+		row = Label.new(@vp)
+        row.icon = $cache.icon("misc/items")
+        row.font = $fonts.pop_text
+	    row.text = "Stock: #{$party.item_number(id)}"
+        @extra.push(row)
+     	row.move(@cx+10,@cy+9)
 
      	@cy += 46
 
@@ -443,7 +533,7 @@ class Ui_Grid
 		name += " - Lvl #{char.level.to_s}" if char
 
 		# Create new things
-		btn = add_part_box(box,300,70)
+		btn = add_part_box(box,260,80)
 
 		cont = Label.new(@vp)
 	    cont.font = $fonts.list
@@ -461,22 +551,122 @@ class Ui_Grid
 
 	     	port = Sprite.new(@vp)
 			port.bitmap = $cache.face_small(id)
-			port.src_rect.height = port.height() - 14
+			port.src_rect.height = port.height() 
 			@extra.push(port)
-			port.move(@cx+btn.width-port.width-9,@cy+62-port.src_rect.height)
+			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
 			port.z += 50
 
-			hp_bar = Bar.new(@vp,170,8)
+
+
+
+			mp_bar = Bar.new(@vp,140,9)
+			@extra.push(mp_bar)
+			mp_bar.opacity = 200
+			mp_bar.for(:mp)
+			mp_bar.move(@cx+20,@cy+42)
+
+			mp_label = Sprite.new(@vp)
+			@extra.push(mp_label)
+			mp_label.bitmap = $cache.menu_char("label-mp")
+			mp_label.opacity = 200
+			mp_label.move(@cx+21,@cy + 35)
+			mp_label.z += 50
+
+
+			hp_bar = Bar.new(@vp,140,9)
 			@extra.push(hp_bar)
 			hp_bar.opacity = 200
-			hp_bar.move(@cx+20,@cy+42)
+			hp_bar.for(:hp)
+			hp_bar.move(@cx+20,@cy+59)
+
+			hp_label = Sprite.new(@vp)
+			@extra.push(hp_label)
+			hp_label.bitmap = $cache.menu_char("label-hp")
+			hp_label.opacity = 200
+			hp_label.move(@cx+21,@cy + 52)
+			hp_label.z += 50
+
 			
 	     	choose(@boxes[0].name) if @boxes.count == 1
 
 	     end
 
      	# Next
-		@cy += btn.height + @spacing + 3
+		@cy += btn.height + @spacing #3
+
+	end
+
+	def add_item_eater(id)
+
+		char = $party.get(id)
+
+		name = char.name
+
+		# Create new things
+		btn = add_part_box(id,145,83)
+
+		cont = Label.new(@vp)
+	    cont.font = $fonts.list
+	    cont.shadow = $fonts.list_shadow
+	    cont.gradient = true
+	    cont.text = name
+	    @contents.push(cont)
+	    cont.move(@cx+10,@cy+7)
+
+		if char == nil
+
+
+
+		else
+
+	     	port = Sprite.new(@vp)
+			port.bitmap = $cache.face_small(id)
+			port.src_rect.height = port.height() 
+			@extra.push(port)
+			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
+			port.z += 50
+
+
+
+
+			# mp_bar = Bar.new(@vp,120,9)
+			# @extra.push(mp_bar)
+			# mp_bar.opacity = 200
+			# mp_bar.for(:mp)
+			# mp_bar.move(@cx+15,@cy+44)
+
+			# mp_label = Sprite.new(@vp)
+			# @extra.push(mp_label)
+			# mp_label.bitmap = $cache.menu_char("label-mp")
+			# mp_label.opacity = 200
+			# mp_label.move(@cx+16,@cy + 37)
+			# mp_label.z += 50
+
+
+			hp_bar = Bar.new(@vp,120,9)
+			@extra.push(hp_bar)
+			hp_bar.opacity = 200
+			hp_bar.for(:hp)
+			hp_bar.move(@cx+15,@cy+61)
+
+			hp_label = Sprite.new(@vp)
+			@extra.push(hp_label)
+			hp_label.bitmap = $cache.menu_char("label-hp")
+			hp_label.opacity = 200
+			hp_label.move(@cx+16,@cy + 54)
+			hp_label.z += 50
+
+
+
+			#mp_bar.z += 50
+			hp_bar.z += 50
+			
+	     	choose(@boxes[0].name) if @boxes.count == 1
+
+	     end
+
+     	# Next
+		@cy += btn.height + @spacing + 5
 
 	end
 

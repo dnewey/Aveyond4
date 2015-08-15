@@ -24,9 +24,37 @@ class Game_Battler
 		return list
 	end
 
-	def equip_result(new_equip,slot)
+
+
+
+	# Compare all stat changes, prepare a list of actual changes
+	# Include slot in case this is a removal
+	def equip_result_mega(new_equip,slot)
+
+		# hp, mp, str, def, eva, luk, res
+		before = stat_list
+		old = @equips[slot]
+		@equips[slot] = new_equip
+		after = stat_list
+		@equips[slot] = old
+
+		change = after.dup
+		change.each_index{ |i| change[i] -= before[i] }
+
+		return [before,after,change]
+
+	end
+
+	# def equip_result_single(new_equip)
+
+	# 	slot = $data.items[new_equip]
+
+	# end
+
+
+	def equip_result(new_equip)
 		# What is the stat
-		return 'none' if new_equip.stats == nil || new_equip.stats == ''
+		return ' ' if new_equip.stats == nil || new_equip.stats == ''
 		type = new_equip.stats.split("\n")[0].split("=>")[0]
 		slot = new_equip.slot
 		old = @equips[slot]

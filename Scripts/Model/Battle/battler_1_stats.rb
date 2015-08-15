@@ -34,16 +34,23 @@ class Game_Battler
   #--------------------------------------------------------------------------
   # * Secondary Calculated Stats
   #--------------------------------------------------------------------------
+  
+  def luk
+    stat('luk')
+  end
+
   def eva
     stat('eva')
   end
 
-  def crit
-    stat('crit')
+  def res
+    stat('res')
   end
 
-  def miss
-    stat('miss')
+  def stat_list
+
+    return [maxhp,maxmp,str,self.def,luk,eva,res]
+
   end
 
   #--------------------------------------------------------------------------

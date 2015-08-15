@@ -24,6 +24,8 @@ class Mnu_Char < Mnu_Base
 		
 		@grid.add_wide("Creatures","Creature Hunting","items/creature") if $menu.char == 'boy'
 		@grid.add_wide("Potions","Potion Making","items/potion-red") if $menu.char == 'ing'
+		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
+		@grid.add_wide("Demons","Demon Chasing","items/potion-red") if $menu.char == 'phy'
 
 		@grid.choose($menu.char_cursor)
 

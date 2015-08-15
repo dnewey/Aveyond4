@@ -73,11 +73,32 @@ class Mnu_Items < Mnu_Base
 
 	def change(option)
 
-
 		#@item_box.show
 		
 		@item_box.item(option)
 		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
+
+		item = $data.items[option]
+
+		@grid.clear
+
+		@grid.move(@item_box.x,@item_box.y + @item_box.height)
+
+		# If gear, show the +-
+		if item.is_a?(GearData)
+			@grid.add_users(option)
+		end
+
+		if item.is_a?(UsableData)
+
+			# If healing, show results
+			if item.action.include?('mana')
+				@grid.add_mana(option)
+			end
+
+		end
+
+		@grid.disable
 
 		if @last_option != option
 			@last_option = option
@@ -90,6 +111,11 @@ class Mnu_Items < Mnu_Base
 
 	def select(option)	
 		
+		# If this is usalbe, use it
+		$menu.use_item = option
+		$scene.queue_menu("Healing")
+		close_soon
+
 	end
 
 end

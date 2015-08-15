@@ -53,6 +53,8 @@ class Mnu_Profile < Mnu_Base
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
+		open
+
 	end
 
 	def update

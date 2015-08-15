@@ -14,6 +14,10 @@ class MenuState
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
 
+	# Item chosen from item list
+	attr_accessor :use_item
+
+	# Page of the potions book to keep open
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
@@ -31,6 +35,8 @@ class MenuState
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
+
+		@use_item = nil
 
 		@potion_page = 0
 

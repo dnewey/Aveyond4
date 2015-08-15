@@ -129,7 +129,7 @@ class Mnu_Equip < Mnu_Base
 		@menu.list.active = true
 
 		@item_box.show
-		#change(items[0])
+		change(items[0])
 
 	end
 
@@ -143,16 +143,26 @@ class Mnu_Equip < Mnu_Base
 		if option != 'remove'
 			@item_box.item(option)
 			@item_box.show
-			@users.clear
-			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(gear,@slot,@char)			
 		else
-			@item_box.hide
-			@users.clear
-			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(gear,@slot,@char)			
-			@users.clear
+			@item_box.hide			
 		end
+
+		# Get comparison
+		result = @char.equip_result_mega(gear,@slot)
+		stats = ['hp','mp','str','def','luk','eva','res']
+
+		@users.clear
+		@users.move(@item_box.x,@item_box.y + @item_box.height)
+		(0..6).each{ |i|
+			if result[2][i] != 0
+				@users.add_compare(stats[i],result[0][i],result[1][i],result[2][i])			
+			end
+		}
+
+		if result[2] == [0,0,0,0,0,0,0]
+			@users.add_nochange
+		end
+		
 		
 	end
 

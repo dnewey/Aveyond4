@@ -13,13 +13,18 @@ class Mnu_Party < Mnu_Base
 		@first = nil
 
 		@active = Sprite.new(vp)
-		@active.bitmap = $cache.menu_tab('all')
-		@active.move(140,105)
+		@active.bitmap = $cache.menu_tab('active')
+		@active.move(130,110)
 		@left.push(@active)
 
 		@reserve = Sprite.new(vp)
-		@reserve.bitmap = $cache.menu_tab('all')
-		@reserve.move(450,105)
+		@reserve.bitmap = $cache.menu_tab('reserve')
+		@reserve.move(436,110)
+		@right.push(@reserve)
+
+		@reserve = Sprite.new(vp)
+		@reserve.bitmap = $cache.menu_common('switch')
+		@reserve.move(293,285)
 		@right.push(@reserve)
 		
 		@grid = Ui_Grid.new(vp)
@@ -40,7 +45,7 @@ class Mnu_Party < Mnu_Base
 
 
 		
-		@grid.move(15,128)
+		@grid.move(30,138)
 
 		@grid.add_party_mem('a.0',$party.active[0])
 		if $party.active.count > 1
@@ -59,8 +64,8 @@ class Mnu_Party < Mnu_Base
 			@grid.add_party_mem('a.3',nil)
 		end
 
-		@grid.cx = 324
-		@grid.cy = 128
+		@grid.cx = 344
+		@grid.cy = 138
 
 		@grid.add_party_mem('r.0',$party.reserve[0])
 		if $party.reserve.count > 1

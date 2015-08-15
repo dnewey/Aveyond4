@@ -166,6 +166,15 @@ class Item_Box < SpriteGroup
                 when "def"
                     stat("def","#{dta[1]} Defense")
 
+                when "luk"
+                    stat("luk","#{dta[1]} Luck")
+
+                when "eva"
+                    stat("eva","#{dta[1]} Evasion")
+
+                when "res"
+                    stat("res","#{dta[1]} Resist")
+
             end
             #return if data == nil
             #stat("targets","Hit ALL")

@@ -127,6 +127,7 @@ class Scene_Menu
       when "Quit"; @menu = Mnu_Quit.new(@vp)
       when "Journal"; @menu = Mnu_Journal.new(@vp)
       when "Items"; @menu = Mnu_Items.new(@vp)
+      when "Healing"; @menu = Mnu_Healing.new(@vp)
       when "Party"; @menu = Mnu_Party.new(@vp)
       when "Progress"; @menu = Mnu_Progress.new(@vp)
       when "Options"; @menu = Mnu_Options.new(@vp)
@@ -147,6 +148,7 @@ class Scene_Menu
 
       when "Creatures"; @menu = Mnu_Creatures.new(@vp)
       when "Witchery"; @menu = Mnu_Witchery.new(@vp)
+      when "Nightwatch"; @menu = Mnu_Nightwatch.new(@vp)
       when "Dreaming"; @menu = Mnu_Dreaming.new(@vp)
       when "Demons"; @menu = Mnu_Demons.new(@vp)
 

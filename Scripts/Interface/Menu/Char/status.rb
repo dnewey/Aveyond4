@@ -116,18 +116,18 @@ class Mnu_Status < Mnu_Base
 	    cy += 30
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
+		lbl.icon = $cache.icon("stats/luck")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
+	    lbl.text = "Luck: #{@char.def}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
 	    cy += 26
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
+		lbl.icon = $cache.icon("stats/eva")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
+	    lbl.text = "Evasion: #{@char.str}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -142,6 +142,8 @@ class Mnu_Status < Mnu_Base
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
+
+		open
 
 	end
 
