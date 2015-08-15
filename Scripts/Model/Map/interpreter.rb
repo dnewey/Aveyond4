@@ -464,24 +464,24 @@ class Interpreter
   # #--------------------------------------------------------------------------
   # # * Set Move Route
   # #--------------------------------------------------------------------------
-  # def command_209
-  #   # Get character
-  #   character = get_character(@parameters[0])
-  #   # If no character exists
-  #   return true if character == nil
+  def command_209
+    # Get character
+    character = get_character(@parameters[0])
+    # If no character exists
+    return true if character == nil
 
-  #   # Force move route - pushes on top of auto movers
-  #   character.force_move_route(@parameters[1])
-  #   return true
-  # end
+    # Force move route - pushes on top of auto movers
+    character.force_move_route(@parameters[1])
+    return true
+  end
   
   # #--------------------------------------------------------------------------
   # # * Wait for Move's Completion
   # #--------------------------------------------------------------------------
-  # def command_210
-  #   @move_route_waiting = true
-  #   return true
-  # end
+    def command_210
+      @move_route_waiting = true
+      return true
+    end
 
   #--------------------------------------------------------------------------
   # * Script

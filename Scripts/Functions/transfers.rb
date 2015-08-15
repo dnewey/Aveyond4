@@ -1,4 +1,4 @@
-WORLD_MAP_ID = 25
+WORLD_MAP_ID = 146
 
 def transfer(map,room=nil,dir=nil)
 

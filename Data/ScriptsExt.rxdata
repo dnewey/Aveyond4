@@ -1,4 +1,4 @@
-[Œ"#==============================================================================
+[†"ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -30,7 +30,6 @@ def aveyond4
     $battle = Game_Battle.new
     $fonts = FontManager.new
     $game = GameManager.new  
-    # $steam = SteamManager.new
 
     $scratch = Bitmap.new(400,50)
 
@@ -74,11 +73,8 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"¬#==============================================================================
+end"Ô#==============================================================================
 # ** Sprite_Character
-#------------------------------------------------------------------------------
-#  This sprite is used to display the character.It observes the Game_Character
-#  class and automatically changes sprite conditions.
 #==============================================================================
 
 class Sprite_Character < Sprite
@@ -492,311 +488,7 @@ class Pop < Sprite
 	end
 
 
-end"# #==============================================================================
-# # Sprite_Pop
-# #==============================================================================
-
-# class Sprite_Pop < Sprite_Elebase
-  
-#   attr_accessor :life,:vx,:vy,:fx,:fy,:dx,:dy
-#   attr_accessor :base_type
-#   attr_accessor :type
-    
-#   #--------------------------------------------------------------------------
-#   # * Init
-#   #--------------------------------------------------------------------------
-#   def initialize(vp)
-#     super(vp)
-    
-#     @state = :in
-        
-#     # Defaults
-#     @life = 45
-#     @fx = 0.0
-#     @fy = 0.4
-#     @dx = 0.0
-#     @dy = 0.0
-#     @vx = rand*2.0-1.0
-#     @vy = rand*-5.0-10.0
-#     @base_type = :normal
-#     @type = :fall
-    
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare icon popper
-#   #--------------------------------------------------------------------------
-#   def pop_icon(ic,double=false)
-#     prep_sprite(Cache.icon(ic,true)) 
-#   end
-  
-#   def pop_gfx(gfx)
-#     prep_sprite(Cache.menu(gfx))
-#   end
-  
-#   def pop_hit(gfx)
-#     prep_sprite(Cache.menu(gfx))
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare damage popper
-#   #--------------------------------------------------------------------------
-#   def pop_dmg(dmg,size,color)
-
-#     
-    
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare damage popper
-#   #--------------------------------------------------------------------------
-#   def pop_xp(dmg,size,color)
-
-#     # prepare number data
-#     anums = dmg.to_i.to_s.split(//)
-#     nums = []
-#     anums.each{ |n| nums.push(n.to_i) }
-
-#     # build the gfx of this number
-#     src = Cache.system('pop_'+size.to_s)
-#     cw = src.width/10
-#     ch = src.height/7
-
-#     # Colors
-#     colors = [:yellow,:orange,:blue,:green,:red,:gray,:white]
-#     ic = colors.find_index(color)
-    
-#     # prepare the final image
-#     width = 0
-#     nums.each{ |n| width+=cw }
-#     bmp = Bitmap.new(width+20,ch)
-#     c = 0
-
-#     nums.each{ |n|
-
-#       s = n * cw
-
-#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
-#       c += cw*0.65
-
-#     }
-    
-#     src = Cache.menu('xp')
-#     bmp.blt(c+2,9,src,src.rect)
-    
-#     prep_sprite(bmp)    
-    
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare sharp popper
-#   #--------------------------------------------------------------------------
-#   def pop_sharp(dmg,size,color)
-
-#     # prepare number data
-#     anums = dmg.to_i.to_s.split(//)
-#     nums = []
-#     anums.each{ |n| nums.push(n.to_i) }
-
-#     # build the gfx of this number
-#     src = Cache.system('pop_'+size.to_s)
-#     cw = src.width/10
-#     ch = src.height/7
-
-#     # Colors
-#     colors = [:yellow,:orange,:blue,:green,:red,:gray,:white]
-#     ic = colors.find_index(color)
-
-#     # prepare the final image
-#     width = 0
-#     nums.each{ |n| width+=cw }
-#     bmp = Bitmap.new(width+38,ch+3)
-#     c = 0
-    
-    
-
-#     nums.each{ |n|
-
-#       s = n * cw
-
-#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
-#       c += cw*0.65
-
-#     }
-
-    
-#     src = Cache.menu('dmg')
-#     bmp.blt(c+1,4,src,src.rect)
-    
-#     prep_sprite(bmp)    
-
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare sharp popper
-#   #--------------------------------------------------------------------------
-#   def pop_block(dmg,size,color)
-
-#     # prepare number data
-#     anums = dmg.to_i.to_s.split(//)
-#     nums = []
-#     anums.each{ |n| nums.push(n.to_i) }
-
-#     # build the gfx of this number
-#     src = Cache.system('pop_'+size.to_s)
-#     cw = src.width/10
-#     ch = src.height/7
-
-#     # Colors
-#     colors = [:yellow,:orange,:blue,:green,:red,:gray,:white]
-#     ic = colors.find_index(color)
-    
-#     # prepare the final image
-#     width = 0
-#     nums.each{ |n| width+=cw }
-#     bmp = Bitmap.new(width+40,ch)
-#     c = 0
-
-#     nums.each{ |n|
-
-#       s = n * cw
-
-#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
-#       c += cw*0.65
-
-#     }
-    
-#     src = Cache.menu('block')
-#     bmp.blt(c+1,5,src,src.rect)
-    
-#     prep_sprite(bmp)    
-    
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare damage popper
-#   #--------------------------------------------------------------------------
-#   def pop_hp(dmg,size,color)
-
-#     # prepare number data
-#     anums = dmg.to_i.to_s.split(//)
-#     nums = []
-#     anums.each{ |n| nums.push(n.to_i) }
-
-#     # build the gfx of this number
-#     src = Cache.system('pop_'+size.to_s)
-#     cw = src.width/10
-#     ch = src.height/7
-
-#     # Colors
-#     colors = [:yellow,:orange,:purple,:green,:red,:gray,:white]
-#     ic = colors.find_index(color)
-    
-#     # prepare the final image
-#     width = 0
-#     nums.each{ |n| width+=cw }
-#     bmp = Bitmap.new(width+20,ch+15)
-#     c = 0
-
-#     nums.each{ |n|
-
-#       s = n * cw
-
-#       bmp.blt(c,0,src,Rect.new(s,ic*ch,cw,ch))
-#       c += cw*0.65
-
-#     }
-    
-#     if color == :green
-#       src = Cache.menu('hp_heal')
-#     elsif color == :purple
-#       src = Cache.menu('hp_poison')
-#     else
-#       src = Cache.menu('hp')
-#     end
-#     bmp.blt(c+2,9,src,src.rect)
-    
-#     prep_sprite(bmp)    
-    
-#   end
-  
-#   #--------------------------------------------------------------------------
-#   # * Prepare sprite
-#   #--------------------------------------------------------------------------
-#   def prep_sprite(bmp)
-    
-#     # setup sprite
-#     self.opacity = 0
-#     self.bitmap = bmp
-#     self.auto_size
-#     @loc_y = y.to_f-bmp.height/2
-#     @loc_x = self.x
-#     @base_y = @base_type == :normal ? @loc_y - (bmp.height/2)+10 : 220
-    
-#   end  
-  
-#   #--------------------------------------------------------------------------
-#   # * Dispose
-#   #--------------------------------------------------------------------------
-#   def dispose
-
-#     self.bitmap.dispose if self.bitmap != nil
-#     super
-
-#   end
-
-#   #--------------------------------------------------------------------------
-#   # * Update
-#   #--------------------------------------------------------------------------
-#   def update
-#     super
-    
-#     @vy += @fy if @type == :fall
-#     @vx += @fx if @type == :fall
-    
-#     @vx *= (1-@dx)
-#     @vy *= (1-@dy)
-
-#     @loc_y += @vy
-#     @loc_x += @vx
-    
-#     if @type == :fall
-#       if @vy > 0 && @loc_y >= @base_y
-#         @vy > 2.0 ? @vy *= -0.5 : @vy = 0
-#         @loc_y = @base_y
-#       end
-#     elsif @type == :zoom
-      
-#     else
-#       @vy *= 0.9
-#       @vx *= 0.8
-#     end
-
-#     # Positioning
-#     self.y = @loc_y
-#     self.x = @loc_x
-
-#     if @state == :in
-#       self.opacity += 20
-#       @state = :up if self.opacity >= 255
-#     elsif @state == :up
-#       @life -= 1
-#       @state = :out if @life <= 0
-#     elsif @state == :out
-#       self.opacity -= 8
-#       @state = :done if self.opacity <= 0
-#     end
-    
-#     #p @state
-
-#   end
-
-#   #--------------------------------------------------------------------------
-#   # * Mischecks
-#   #--------------------------------------------------------------------------
-#   def dead?() return self.opacity <= 0 end
-
-# end"Á
+end"Á
 class Spark < Sprite
 
 	def initialize(fx,x,y,vp)
@@ -1323,7 +1015,7 @@ class Bar < Sprite
 
 	end
 
-end"M
+end"™
 class Box 
 
 	attr_accessor :name
@@ -1365,6 +1057,10 @@ class Box
 	# def wall_sprite
 	# 	return @wallpaper
 	# end
+
+	def disposed?
+		return @wallpaper.disposed? || @window.disposed?
+	end
 
 	def flash_light
 		@wallpaper.flash(Color.new(255,255,255,40),20)
@@ -1521,7 +1217,7 @@ class Box
 
 	end
 
-end"F	#==============================================================================
+end"ä	#==============================================================================
 # Button
 #==============================================================================
 
@@ -1529,6 +1225,7 @@ class Button < Sprite
   
   # accessors
   attr_accessor :select, :deselect, :press
+  attr_accessor :bmp_up, :bmp_over
     
   #--------------------------------------------------------------------------
   # * Init
@@ -1536,6 +1233,9 @@ class Button < Sprite
   def initialize(vp=nil)
        
     super(vp)
+
+    @bmp_up = nil
+    @bmp_over = nil
 
     # handle mouseovers and that and procs and that
     @select = nil#Proc.new{ self.do(pingpong("x",-50,500,:quad_in_out)) }
@@ -1588,6 +1288,7 @@ class Button < Sprite
     return if pos[0] > self.x + self.width
     return if pos[1] > self.y + self.height
     @state = :active
+    self.bitmap = @bmp_over if @bmp_over
     @select.call() if @select
   end
 
@@ -1602,6 +1303,7 @@ class Button < Sprite
     w = true if pos[1] > self.y + self.height
     return if w == false
     @state = :idle
+    self.bitmap = @bmp_up if @bmp_up
     @deselect.call() if @deselect
   end
 
@@ -1720,7 +1422,7 @@ class Label < Sprite
         
   end
   
-end"7#==============================================================================
+end"2>#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1734,8 +1436,6 @@ class List
   attr_accessor :select, :cancel, :change
 
   attr_accessor :active
-
-
 
   attr_accessor :type
 
@@ -1786,26 +1486,29 @@ class List
     @scroll_box = Sprite.new()
     @scroll_box.bitmap = $cache.menu_common('scroll-box')
     @scroll_box.x = 234
-    @scroll_box.y = 422
+    @scroll_box.y = 406
     @scroll_box.z = 5000
 
     @scroll_down = Button.new()
     @scroll_down.bitmap = $cache.menu_common('scroll-down')
+    @scroll_down.bmp_up = $cache.menu_common('scroll-down')
+    @scroll_down.bmp_over = $cache.menu_common('scroll-down-red')
     @scroll_down.x = 239
-    @scroll_down.y = 424
+    @scroll_down.y = 408
     @scroll_down.z = 5000
     @scroll_down.press = Proc.new{ self.scrollbar_down }
 
     @scroll_up = Button.new()
     @scroll_up.bitmap = $cache.menu_common('scroll-up')
+    @scroll_up.bmp_up = $cache.menu_common('scroll-up')
+    @scroll_up.bmp_over = $cache.menu_common('scroll-up-red')
     @scroll_up.x = 262
-    @scroll_up.y = 424
+    @scroll_up.y = 408
     @scroll_up.z = 5000
     @scroll_up.press = Proc.new{ self.scrollbar_up }
 
     # Setup
-    @select_sprite.bitmap = $cache.menu_common('list-bar-on')
-    
+    @select_sprite.bitmap = $cache.menu_common('list-bar-on')    
 
     @active = true
 
@@ -1820,9 +1523,9 @@ class List
     @back_sprite.opacity = o
     @content_sprite.opacity = o
     @select_sprite.opacity = o
-    @scroll_box.opacity = 0
-    @scroll_down.opacity = 0
-    @scroll_up.opacity = 0
+    @scroll_box.opacity = o
+    @scroll_down.opacity = o
+    @scroll_up.opacity = o
   end
 
   def opacity
@@ -1839,6 +1542,10 @@ class List
   end
 
   def setup(data,idx=0)
+
+    @back_sprite.bitmap.clear if @back_sprite.bitmap
+    @content_sprite.bitmap.clear if @content_sprite.bitmap
+
     #log_sys(data)
   	@data = data
     # Need an original per page in case less items are given
@@ -1849,7 +1556,15 @@ class List
     @page_idx = idx
     @select_sprite.y = idx * row_height
     @active = true
-  	refresh(false) if !data.empty?
+  	refresh(false) #if !data.empty?
+
+  end
+
+  def slide
+    @content_sprite.opacity = 0
+    @content_sprite.do(go("opacity",255,300,:qio))
+    @content_sprite.x = -20
+    @content_sprite.do(go("x",20,300,:qio))
   end
 
   def idx
@@ -1877,6 +1592,10 @@ class List
 
     @vp.rect = Rect.new(@x,@y,@item_width,row_height*@max_per_page)
 
+    @scroll_box.y = @y + (row_height*@max_per_page) + 2
+    @scroll_down.y = @scroll_box.y + 2
+    @scroll_up.y = @scroll_box.y + 2
+
     # Draw the background sprite and position it
     rows = [@max_per_page,@data.count].min
     rows += 2 if can_scroll?
@@ -1890,6 +1609,8 @@ class List
 
     @back_sprite.y = can_scroll? ? -row_height : 0
     @content_sprite.y = can_scroll? ? -row_height : 0
+
+    @select_sprite.show
 
     src = $cache.menu_common('list-bar')
 
@@ -1909,24 +1630,35 @@ class List
 
   # ADD THIS MOUSE CONTROL
   def scrollbar_down
+      #@page_idx += 1
+      sys('select')   
+      @select_sprite.y += row_height      
       @page_idx += 1
       scroll_up 
   end
 
   def scrollbar_up
+      return if @scroll_idx <= 0
+      #@page_idx -= 1
+      sys('select')   
+      @select_sprite.y -= row_height      
       @page_idx -= 1
       scroll_down
   end
 
   def current
     #return @current[0] if @type == :misc
-    return @data[idx+1] if can_scroll?
+    return @data[idx] if can_scroll?
     return @data[idx]
   end
 
   def draw(data,row)
 
     #return if data == nil # For above or below accessible
+    if data == nil
+      @select_sprite.hide
+      return draw_empty(row)
+    end
 
     # Drw the contents
     case @type
@@ -1954,17 +1686,32 @@ class List
 
   end
 
+  def draw_empty(row)
+
+    name = " - Empty - "
+    #ico = $cache.icon("misc/unknown")
+    #number = 0
+    
+    #@content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    #if number > 0
+    #  @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
+    #end
+
+  end
+
   def draw_item(data,row)
 
-    item = $data.items[data]
+    item = $data.items[data] if data != 'remove'
 
-    if item != nil
+    if data != 'remove'
       name = item.name
       ico = $cache.icon(item.icon)
       number = $party.item_number(data)
     else
       name = "Remove"
-      ico = $cache.icon("misc/unknown")
+      ico = $cache.icon("misc/cross")
       number = 0
     end
     
@@ -2101,7 +1848,6 @@ class List
     item = $data.quests[data]
 
     ico = $cache.icon('misc/unknown')
-
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
@@ -2122,17 +1868,21 @@ class List
 
   def draw_file(data,row)
 
-    item = $files.headers[data]
+    header = $files.headers[data] 
 
-    #ico = $cache.icon(item.icon)
-
-    if item == nil
-      name = "Save #{data}"
+    if header == nil
+      name = "- Empty -"
+      ico = $cache.icon('misc/dots') 
     else
-      name = "Save #{item[:progress]}"
+      if data == 0
+        name = "Autosave - #{header[:time]}"
+      else
+        name = "Save #{data} - #{header[:time]}"
+      end
+      ico = $cache.icon("faces/"+header[:leader])
     end
     
-    #@content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
 
@@ -2233,18 +1983,22 @@ class List
 
     # Selection
 
-
     # Cancel
     if !@cancel.nil? && ($input.cancel? || $input.rclick?)
       @cancel.call(current)
     end
 
-    pos = $mouse.position
+    pos = $mouse.position.dup
     pos[0] -= @x
     pos[1] -= @y
 
-    if !@select.nil? && ($input.action? || ($input.click?&&within?(pos)))
-      @select.call(current)
+    if !@select.nil? 
+      if $input.action?
+        @select.call(current)
+      end
+      if $input.click?
+        @select.call(current)
+      end
     end
 
     if within?(pos)
@@ -2253,7 +2007,7 @@ class List
       @select_sprite.y = row * row_height
       @page_idx = row
       @change.call(current) if !@change.nil?
-      #sys('select')
+      sys('select')
 
     end
 
@@ -2323,432 +2077,7 @@ class List
   end
 
  end
-"¨"#==============================================================================
-# The magical list
-#==============================================================================
-
-class OLDList
-      
-  attr_accessor :x, :y
-  attr_accessor :per_page
-  attr_accessor :item_width, :item_height
-  attr_accessor :item_ox, :item_space
-
-  attr_accessor :select, :cancel, :change
-
-  attr_accessor :active
-
-  attr_reader :page_idx
-
-  attr_accessor :type
-
-  #--------------------------------------------------------------------------
-  # * Init
-  #--------------------------------------------------------------------------
-  def initialize() 
-
-    # Make own viewport
-    @vp = Viewport.new(0,0,1000,1000)
-    @vp.z = 4500
-
-    @font = Font.new
-    @font.name = "Verdana"
-    @font.size = 20 #was 26
-    @font.color = Color.new(245,223,200)
-
-
-    @item_width = 0
-    @item_height = 0
-
-    @item_ox = 0
-    @item_space = 0
-
-    # Procs
-    @select = nil
-    @cancel = nil
-    @change = nil
-
-  	@x = 0
-  	@y = 0
-
-    @type = :item
-  	@data = []
-
-  	@scroll_idx = 0
-  	@page_idx = 0
-
-  	@per_page = 8
-
-  	# Sprites
-
-    @dynamo = Sprite.new(@vp)
-    
-  	@sprites = []
-  	@per_page.times{ |i|
-  		@sprites.push(Sprite.new(@vp))
-  	}
-
-  	
-
-    @active = true
-
-  end
-
-  def move(x,y)
-    @x = x
-    @y = y
-  end
-
-  def opacity=(o)
-    @sprites.each{ |s|
-      s.opacity = o
-    }
-    @dynamo.opacity = o
-  end
-
-  def dispose
-  	@sprites.each{ |s| s.dispose }
-  	@dynamo.dispose
-  end
-
-  def setup(data)
-    log_sys(data)
-  	@data = data
-    # Need an original per page in case less items are given
-    # And then aditional items are given
-    #@per_page = @data.count if @data.count < @per_page
-    @per_page = 1 if @per_page == 0
-  	refresh
-  end
-
-  def idx
-    return @scroll_idx + @page_idx
-  end
-
-  def refresh
-    return if @dynamo.disposed?
-
-    @vp.rect = Rect.new(@x,@y,@item_width,@item_space*@per_page)
-
-  	# Rebuild the items from data
-  	cy = 0#@y
-
-    if !@data.empty?
-    	(0..@per_page-1).each{ |i|
-        next if @sprites[i] == nil
-    		draw(@data[i+@scroll_idx],@sprites[i],i==@page_idx)
-        @current = @data[i+@scroll_idx] if i == @page_idx
-    		@sprites[i].y = cy
-    		@sprites[i].x = 0#@x
-        @sprites[i].opacity = 255
-    		cy += @item_space
-        #@sprites[i].bitmap.height
-    	}
-    end
-
-  	@cybt = cy
-
-
-    # If empty, draw dynamo as "Nothing here"
-    if @data.empty?
-      @dynamo.bitmap = Bitmap.new(@item_width,@item_height)
-      @dynamo.bitmap.font = @font
-      @dynamo.bitmap.draw_text(0,0,@item_width,@item_height,"Sorry, no items",1)
-      #@dynamo.bitmap.draw_text(0,0,100,40,"Nothing",2)
-      @dynamo.x = 0
-      @dynamo.y = 0
-      @dynamo.opacity = 150
-    end
-
-  end
-
-  def scrollbar_down
-      if !@dynamo.done?
-        refresh
-        @page_idx += @pagemod
-        @dynamo.opacity = 0
-        $tweens.clear_all
-      end
-      @page_idx += 1;self.refresh; self.scroll_up 
-  end
-
-  def scrollbar_up
-      if !@dynamo.done?
-        refresh
-        @page_idx += @pagemod
-        @dynamo.opacity = 0
-        $tweens.clear_all
-      end
-      @page_idx -= 1; self.refresh; self.scroll_down
-  end
-
-  def current
-    return @current[0] if @type == :misc
-    return @current
-  end
-
-  def draw(data,sprite,on)
-
-    return if sprite == nil
-    sprite.bitmap.clear if sprite.bitmap != nil
-
-  	# Draw the base
-    src = $cache.menu("Common/bartest3")
-    src = $cache.menu("Common/bartest4") if on
-  	sprite.bitmap = Bitmap.new(src.width,src.height)
-    sprite.bitmap.blt(0,0,src,src.rect)
-
-    #return if data == nil
-
-    # Drw the contents
-    case @type
-      when :item
-        draw_item(data,sprite,on)
-      when :equip
-        draw_equip(data,sprite,on)
-      when :skill
-        draw_skill(data,sprite,on)
-      when :quest
-        draw_quest(data,sprite,on)
-      when :misc
-        draw_misc(data,sprite,on)
-    end
-
-  end
-
-  def draw_item(data,sprite,on)
-
-    #return if $data.items.has_key?(data)
-
-    return if data == nil
-
-    item = $data.items[data]
-
-    ico = $cache.icon(item.icon)
-    
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
-
-  end
-
-  def draw_equip(data,sprite,on)
-
-    if data == nil
-      icon =  $cache.icon("misc/unknown")
-      name = "Nothing"
-      slot = "NONE"
-    else
-      item = $data.items[data]
-      name = item.name
-      icon =  $cache.icon(item.icon)
-      slot = item.slot
-    end
-    
-    sprite.bitmap.blt(8,5,icon,icon.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,name,0)
-
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(-10,-1,@item_width,@item_height,slot,2)
-
-  end
-
-  def draw_skill(data,sprite,on)
-
-    return if data == nil
-
-    #log_info(data)
-
-    item = $data.skills[data]
-
-    ico = $cache.icon(item.icon)
-    
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
-
-  end
-
-  def draw_quest(data,sprite,on)
-
-    item = $data.quests[data]
-
-    ico = $cache.icon('items/map')
-    
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,item.name,0)
-
-  end
-
-  def draw_misc(data,sprite,on)
-
-    ico = $cache.icon(data[1])
-    
-    sprite.bitmap.blt(8,5,ico,ico.rect)
-    sprite.bitmap.font = @font 
-    sprite.bitmap.draw_text(18+21,-1,@item_width,@item_height,data[0],0)
-
-  end
-
-  def update
-
-    @vp.rect.x = @x
-    @vp.rect.y = @y
-
-    return if !@active
-
-  	# Check inputs and that
-  	if $keyboard.press?(VK_DOWN) #&& @dynamo.done?
-
-      return if @page_idx + @scroll_idx >= @data.count - 1
-
-      sys('select')
-
-      if !@dynamo.done?
-        refresh
-        @page_idx += @pagemod
-        @dynamo.opacity = 0
-        $tweens.clear_all
-      end
-  		@page_idx += 1
-  		if @data.count > @per_page && @page_idx > 3
-        refresh
-  			scroll_up
-  		else
-  		  refresh
-      end
-      @change.call(current) if !@change.nil?
-  	end
-
-  	if $keyboard.press?(VK_UP) #&& @dynamo.done?
-
-      sys('select')
-      
-      if !@dynamo.done?
-        refresh
-        @page_idx += @pagemod
-        @dynamo.opacity = 0
-        $tweens.clear_all
-      end
-  		@page_idx -= 1 if @page_idx > 0
-  		if @page_idx < 3 && @scroll_idx > 0
-        refresh
-  			scroll_down
-  		else
-  		  refresh
-      end
-      @change.call(current) if !@change.nil?
-  	end
-
-    pos = $mouse.position
-    pos[0] -= @x
-    pos[1] -= @y
-
-    # Check mouseover
-    @sprites.each_index{ |i|
-      next if @page_idx == i
-      next if @sprites[i] == nil
-      next if @sprites[i].bitmap == nil
-      next if pos[0] < @sprites[i].x
-      next if pos[1] < @sprites[i].y
-      next if pos[0] > @sprites[i].x + @sprites[i].width
-      next if pos[1] > @sprites[i].y + @sprites[i].height
-      sys('select')
-      @page_idx = i
-      refresh
-      break
-    }
-
-
-    # Selection
-    if !@select.nil? && ($input.action? || $input.click?)
-      @select.call(current)
-    end
-
-    # Cancel
-    if !@cancel.nil? && ($input.cancel? || $input.rclick?)
-      sys('cancel')
-      @cancel.call(current)
-    end
-
-  end
-
-  def scroll_down
-
-    @dynamo.bitmap.clear
-
-    @scroll_idx -= 1    
-          @pagemod = 1
-
-    # Create the dynamo
-    @dynamo.y = 0 - @item_space
-    @dynamo.x = 0#@x
-    @dynamo.opacity = 205
-
-    dur = 200
-    ease = :quad_in_out
-
-    draw_item(@data[@scroll_idx],@dynamo,@page_idx == -1)
-
-    @dynamo.do(go("y",@item_space,dur,ease))
-    @dynamo.do(go("opacity",50,dur,ease))
-
-    @dynamo.do(proc(Proc.new{
-      @page_idx += 1
-
-      self.refresh
-      @dynamo.opacity = 205
-    },dur+30))
-
-    @sprites.each{ |s|
-      s.do(go("y",@item_space,dur,ease))
-    }
-
-    @sprites[-1].do(go("opacity",-50,dur,ease))
-
-  end
-
-  def scroll_up
-
-    @dynamo.bitmap.clear
-
-    @scroll_idx += 1    
-          @pagemod = -1
-
-  	# Create the dynamo
-  	@dynamo.y = @cybt
-  	@dynamo.x = 0#@x
-  	@dynamo.opacity = 205
-
-    dur = 200
-    ease = :quad_in_out
-
-  	draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)
-
-  	@dynamo.do(go("y",-@item_space,dur,ease))
-  	@dynamo.do(go("opacity",50,dur,ease))
-
-
-
-  	@dynamo.do(proc(Proc.new{
-
-      @page_idx -= 1
-      self.refresh
-      @dynamo.opacity = 205
-    },dur+30))
-
-  	@sprites.each{ |s|
-  		s.do(go("y",-@item_space,dur,ease))
-  	}
-
-  	@sprites[0].do(go("opacity",-50,dur,ease))
-
-  end
-
- end
-" "
+"
 class SpriteGroup
 
 	attr_reader :sprites
@@ -3932,7 +3261,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-";
+"
 # Misc
 
 def text(t)
@@ -3971,39 +3300,48 @@ end
 # Menus Access
 
 def open_main_menu
+	$menu.sub_only = false
 	$menu.menu_page = "Main"
 end
 
 def open_sub_menu(which)
+	$menu.sub_only = true
 	$menu.menu_page = which
 end
 
 def open_char_menu(who)
+	$menu.sub_only = true
 	$menu.char = who
 	$menu.menu_page = "Char"
 end
 
 def open_potions_menu
+	$menu.sub_only = true
 	$menu.menu_page = "Potions"
 end
 
 def open_chooser_menu
+	$menu.sub_only = true
 	$menu.menu_page = "Chooser"
 end
 
 def open_potions_book
+	$menu.sub_only = true
 	$scene.hud.open_book
 end
 
 def open_shop_buy
+	$menu.sub_only = true
 	$menu.menu_page = "Shop"
 end
 
 def open_shop_sell
+	$menu.sub_only = true
 	$menu.menu_page = "Shop"
 end
 
 def open_shop_creatures
+	$menu.sub_only = true
 	$menu.menu_page = "Creatures"
 end
 
@@ -4039,7 +3377,7 @@ end
 def noverlay(f=30)
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end" 	WORLD_MAP_ID = 25
+end"!	WORLD_MAP_ID = 146
 
 def transfer(map,room=nil,dir=nil)
 
@@ -5641,7 +4979,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"ù/#==============================================================================
+end"ï0#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -5907,7 +5245,7 @@ class Ui_Grid
 
 	def add_slot(slot,eq)
 
-		log_info(slot)
+		#log_info(slot)
 
 		item = $data.items[eq]
 
@@ -5934,26 +5272,28 @@ class Ui_Grid
      	stat = Label.new(@vp)
      	stat.font = $fonts.pop_type
 
-     	if item != nil
-	     	data = item.stats.split("/n")[0].split("=>")
-	     	stat.icon = $cache.icon("stats/#{data[0]}")
-	     	stat.text = "#{data[1]} Strength"
-	     end
-
+     	if item != nil && item.stats != ''
+	    	data = item.stats.split("/n")[0].split("=>")
+	    	stat.icon = $cache.icon("stats/#{data[0]}")
+	    	stat.text = "#{data[1]} Strength"
+	    end
 
      	@extra.push(stat)
 
+     	# Put in caps
+
      	cat = Label.new(@vp)
-    	cat.fixed_width = 250
+    	cat.fixed_width = 100
     	cat.font = $fonts.pop_type
-    	cat.align = 0
-    	cat.text = slot
+    	cat.align = 2
+    	cat.text = slot.upcase
+    	cat.opacity = 200
     	@extra.push(cat)
 
      	# Position
      	cont.move(@cx+10,@cy+7)
      	stat.move(@cx+25,@cy+32)
-     	cat.move(@cx+245,@cy+8)
+     	cat.move(@cx+188,@cy+8)
 
      	choose(@boxes[0].name) if @boxes.count == 1
 
@@ -6000,20 +5340,22 @@ class Ui_Grid
 
 	end
 
-	def add_compare(gear,user)
+	def add_compare(gear,slot,user)
 
 		data = $data.items[gear]
+		#return if gear != nil && data.stats == ''
 
 		btn = add_part_box('user',300,46)
 
 		# Find all users
-		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
+		users = $party.all_battlers.select{ |b| b.slots.include?(@slot) }
 
-		res = user.equip_result(data)
+		res = user.equip_result_full(data,@slot)
 
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")
         stat.font = $fonts.pop_text
+        log_scr(res)
         stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
@@ -6149,6 +5491,8 @@ class Ui_Grid
 		return if !@active
 		return if @boxes.empty?
 
+		@glow.move(@selected_box.x+6,@selected_box.y+6)
+
 		@boxes.each{ |b| b.update }
 
 		if @boxes.count > 1 && $input.down?
@@ -6236,9 +5580,9 @@ class Ui_Grid
 
 	end
 
-	def choose(target)
+	def choose(target,mute=false)
 
-		sys('select')
+		sys('select') if !mute #if @selected != target
 
 		@selected = target
 		@selected_box = @boxes.find{ |b| b.name == target }
@@ -6627,11 +5971,11 @@ class Ui_Message
       speaker = speaker.sub("x-",'')
     end
 
-    if speaker.include?("b-")
+    if speaker.include?("z-")
       @font = $fonts.message_big
       @font_shadow = $fonts.message_big_shadow
       @line_height = LINE_HEIGHT_BIG
-      speaker = speaker.sub("b-",'')
+      speaker = speaker.sub("z-",'')
     else
       @font = $fonts.message
       @font_shadow = $fonts.message_shadow
@@ -7335,7 +6679,8 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end"›	#==============================================================================
+end"c
+#==============================================================================
 # ** Mnu_Base
 #==============================================================================
 
@@ -7357,6 +6702,7 @@ class Mnu_Base
 		@left.push(@title)
 
 		@tabs = Page_Tabs.new(vp)
+		@tabs.change = Proc.new{ |option| self.tab(option) }
 		@left.push(@tabs)
 
 		@subtitle = Label.new(vp)
@@ -7377,6 +6723,16 @@ class Mnu_Base
 
 		
 
+	end
+
+	def remove_menu
+		@menu.dispose
+		self.left.delete(@menu)
+	end
+
+	def remove_info
+		@info.dispose
+		self.left.delete(@info)
 	end
 
 	def dispose
@@ -7435,9 +6791,9 @@ class Mnu_Base
 		self.do(delay(dur))
 	end
 
-	def close_soon
+	def close_soon(d=10)
 		@close_soon = true
-		@close_delay = 10	
+		@close_delay = d
 	end
 
 	def close_now
@@ -7449,7 +6805,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"«	#==============================================================================
+end"¢	#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -7459,31 +6815,28 @@ class Mnu_Char < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
-
 		@subtitle.text = "Master of deception"
-
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
 
 		@menu.dispose
 		self.left.delete(@menu)
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(15,113)
-		@grid.add_wide("Equip","Change Equipment","misc/unknown")
-		@grid.add_wide("Skills","Use Skills","skills/spells")
+		
+		@grid.add_wide("Equip","Change Equipment","armors/boy-arm-f")
+		@grid.add_wide("Skills","Use Skills","skills/sparkle")
 		@grid.add_wide("Status","View Status","misc/primary")
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
-		@grid.add_wide("Creatures","Creature Hunting","misc/unknown") if $menu.char == 'boy'
-		@grid.add_wide("Potions","Potion Making","misc/unknown") if $menu.char == 'ing'
+		@grid.add_wide("Creatures","Creature Hunting","items/creature") if $menu.char == 'boy'
+		@grid.add_wide("Potions","Potion Making","items/potion-red") if $menu.char == 'ing'
 
 		@grid.choose($menu.char_cursor)
 
 		self.left.push(@grid)
 
+		# Fade and slide in
 		dist = 30
 		@grid.all.each{ |b|
 			b.x -= dist
@@ -7568,14 +6921,16 @@ class Mnu_Char < Mnu_Base
 
 		@grid.hide_glow
 
+		# Fade and hide grid
 		dist = 30
 		@grid.all.each{ |b|
      		b.do(go("x",-dist,200,:qio))
      		b.do(go("opacity",-255,200,:qio))
 		}
+		
 	end
 
-end"Ü#==============================================================================
+end"Ô#==============================================================================
 # ** Mnu_Help
 #==============================================================================
 
@@ -7594,15 +6949,13 @@ class Mnu_Help < Mnu_Base
 		data = $progress.quests
 
 		@page = Right_Page.new(vp)
-		self.right.push(@page)
+		@right.push(@page)
 
-		@menu.list.setup(data)
-
-		
-
-		#change(data[0]) if !data.empty?
+		@menu.list.setup(data)		
 
 		open
+
+		#change(data[0]) if !data.empty?
 
 	end
 
@@ -7637,7 +6990,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"f#==============================================================================
+end"Ý#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -7650,8 +7003,9 @@ class Mnu_Items < Mnu_Base
 		#@subtitle.text = "Various items of collection"
 
 		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
+		@tabs.push("usable")
+		@tabs.push("keys")
+		@tabs.push("gear")
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -7662,31 +7016,51 @@ class Mnu_Items < Mnu_Base
 		self.right.push(@item_box)
 
 		# Party grid hahahha
-		# @grid = Ui_Grid.new(vp)
-		# @grid.move(@item_box.x,@item_box.y + @item_box.height + 3)
-		# $party.active.each{ |m|
-		# 	@grid.add_active(m)
-		# }
-		# @grid.cx = @item_box.x
-		# $party.reserve.each{ |m|
-		# 	@grid.add_reserve(m)
-		# }
-		# @grid.disable
-		# #@grid.hide
-		# self.right.push(@grid)
+		@grid = Ui_Grid.new(vp)
+		@grid.move(@item_box.x,@item_box.y + @item_box.height + 3)
+		$party.active.each{ |m|
+			@grid.add_active(m)
+		}
+		@grid.cx = @item_box.x
+		$party.reserve.each{ |m|
+			@grid.add_reserve(m)
+		}
+		@grid.disable
+		#@grid.hide
+		self.right.push(@grid)
 
 		grant_items
 
-		@menu.setup_items('all')
+		tab('all')
 
 		open
 
 	end
 
 	def update
-		super
-		# Keep checking if item box changed
-		
+		super		
+	end
+
+	def tab(option)
+
+		# Reload the quest list limited to this tab
+		data = $party.items.keys
+
+		if option == "usable"
+			data = data.select{ |q| $data.items[q].tab == 'usable' }
+		end
+
+		if option == "keys"
+			data = data.select{ |q| $data.items[q].tab == 'keys' }
+		end
+
+		if option == "gear"
+			data = data.select{ |q| $data.items[q].tab == 'gear' }
+		end
+
+		@menu.list.setup(data)
+		@menu.list.slide
+
 	end
 
 	def change(option)
@@ -7710,8 +7084,8 @@ class Mnu_Items < Mnu_Base
 		
 	end
 
-end"Ã#==============================================================================
-# ** Mnu_Items
+end"Á#==============================================================================
+# ** Mnu_Journal
 #==============================================================================
 
 class Mnu_Journal < Mnu_Base
@@ -7725,36 +7099,44 @@ class Mnu_Journal < Mnu_Base
 		@tabs.push("main")
 		@tabs.push("side")
 
-		log_scr("HUH")
-
 		@menu.list.type = :quest
-
-		data = $progress.quests
+		@menu.list.setup($progress.quests)
 
 		@page = Right_Journal.new(vp)
 		self.right.push(@page)
 
-		@menu.list.setup(data)
-
-		#change(data[0]) if !data.empty?
-
 		open
+
+		# Open first
+		change($progress.quests[0]) if !$progress.quests.empty?
 
 	end
 
 	def update
 		super
+	end
+
+	def tab(option)
+
+		# Reload the quest list limited to this tab
+		data = $progress.quests
+
+		if option == "main"
+			data = data.select{ |q| $data.quests[q].type == 'main' }
+		end
+
+		if option == "side"
+			data = data.select{ |q| $data.quests[q].type != 'main' }
+		end
+
+		@menu.list.setup(data)
+		@menu.list.slide
 
 	end
 
 	def change(option)
 
-		#return
-
 		@page.clear
-
-		# Change page to show this quest
-		#@info.title.text = option
 
 		@page.title = $data.quests[option].name
 		@page.description = $data.quests[option].description
@@ -7764,8 +7146,8 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-	def select(option)	
-		
+	def select(option)
+
 	end
 
 end"¹#==============================================================================
@@ -7815,11 +7197,11 @@ class Mnu_Load < Mnu_Base
 		
 	end
 
-end"Ü#==============================================================================
+end"¾#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
-class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
+class Mnu_Main
 
 	def initialize(vp)
 
@@ -8170,9 +7552,9 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 
 	end
 
-	def close_soon
+	def close_soon(delay=10)
 		@close_soon = true
-		@close_delay = 10
+		@close_delay = delay
 	end
 
 	def close
@@ -8207,25 +7589,20 @@ class Mnu_Main # MAYBE SPRITEGROUP FOR EASY MOVING OF ALL
 		return @closing && $tweens.done?(self)
 	end
 
-end"ò
+end"ß
 class Mnu_Options < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
 
 		@title.change('options')
-
-		@tabs.hide
 		@subtitle.text = "Left and Right to change"
 
 		@menu.list.type = :misc
-		build_list
-		
+		build_list		
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
-
-		#change(data[0]) if !data.empty?
 
 		open
 
@@ -8270,6 +7647,8 @@ class Mnu_Options < Mnu_Base
 
 		left = $input.left?
 		right = $input.right?
+
+		# Check mouse actions for this?
 
 		if left || right
 
@@ -8351,7 +7730,7 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end"û
+end"Á
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -8360,8 +7739,8 @@ class Mnu_Party < Mnu_Base
 		@title.change('party')
 		@subtitle.text = "Change up your party members"
 
-		@menu.dispose
-		self.left.delete(@menu)
+		remove_menu
+		remove_info
 
 		@first = nil
 
@@ -8379,8 +7758,6 @@ class Mnu_Party < Mnu_Base
 		@other.push(@grid)
 		setup_grid
 
-		@info.dispose
-		self.left.delete(@info)
 
 		open
 
@@ -8486,7 +7863,47 @@ class Mnu_Party < Mnu_Base
 
 	end
 
-end"3
+end"D#==============================================================================
+# ** Mnu_Progress
+#==============================================================================
+
+class Mnu_Progress < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('progress')
+		@subtitle.text = "Good so far"
+
+		remove_menu
+		remove_info
+
+
+		# A bunch of images with mouseover text
+
+		# Grid selection system, without the box and wallpaper
+
+		open
+
+	end
+
+	def update
+		super
+
+
+	end
+
+	def change(option)
+
+
+	end
+
+	def select(option)	
+		
+	end
+
+
+end"÷
 class Mnu_Quit < Mnu_Base
 
 	def initialize(vp)
@@ -8495,11 +7912,8 @@ class Mnu_Quit < Mnu_Base
 		@title.change('quit')
 		@subtitle.text = "YE WIMP!"
 
-		@menu.dispose
-		self.left.delete(@menu)
-
-		@info.dispose
-		self.left.delete(@info)
+		remove_menu
+		remove_info
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(135,135)
@@ -8536,7 +7950,7 @@ class Mnu_Quit < Mnu_Base
 		
 	end
 
-end"9#==============================================================================
+end"œ#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -8558,12 +7972,11 @@ class Mnu_Save < Mnu_Base
 		@menu.list.type = :file
 		@menu.list.setup($files.save_file_list)
 
-		@page = Right_Save.new(vp)
+		@page = Right_Page.new(vp)
 		@right.push(@page)
 
-		@pic = Sprite.new(vp)
-		@pic.bitmap = Bitmap.new("#{$appdata}//Av4-1.png")
-		@pic.move(340,280)
+		@pic = Sprite.new(vp)		
+		@pic.move(340,324)
 
 		open
 
@@ -8578,24 +7991,25 @@ class Mnu_Save < Mnu_Base
 	def change(option)
 
 		# Load up the header
-		file = $files.headers[option]
+		header = $files.headers[option]
 
-		if file == nil
+		if header == nil
 
-			@page.title = "NO FILE"
+			@page.title("- Empty -","misc/dots")
+			@pic.bitmap = nil
 
 		else
 
-			@page.title = file[:name]
+			@page.title("Save #{option} - #{header[:time]}","faces/#{header[:leader]}")
+			@pic.bitmap = Bitmap.new("#{$appdata}//Av4-#{option}.png")
 
 		end
-
 
 	end
 
 	def select(option)	
 
-		log_info(option)
+		#log_info(option)
 		$files.save_game(option)
 		
 	end
@@ -8675,7 +8089,7 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end"€#==============================================================================
+end" " "b#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -8690,10 +8104,6 @@ class Mnu_Equip < Mnu_Base
 		@char = $party.get($menu.char)
 
 		@subtitle.text = "Master of deception"
-
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
 
 		@menu.opacity = 0
 		@menu.move(15,192)
@@ -8749,8 +8159,8 @@ class Mnu_Equip < Mnu_Base
 	end
 
 	def dispose
-		@grid.dispose
 		super
+		@menu.dispose
 	end
 
 	def update		
@@ -8793,7 +8203,7 @@ class Mnu_Equip < Mnu_Base
 		items = $party.items.keys.select{ |i|
 			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
 		}
-		items.push(nil) if @char.equips[@slot] != nil
+		items.push('remove') if @char.equips[@slot] != nil
 		@menu.list.setup(items)
 
 		# Bring in the list
@@ -8817,15 +8227,21 @@ class Mnu_Equip < Mnu_Base
 	# Equip List
 	def change(option)
 
+		gear = option
+		gear = nil if option == 'remove'
+
 		# Change the item box to show this
-		if option != nil
+		if option != 'remove'
 			@item_box.item(option)
 			@item_box.show
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(option,@char)			
+			@users.add_compare(gear,@slot,@char)			
 		else
 			@item_box.hide
+			@users.clear
+			@users.move(@item_box.x,@item_box.y + @item_box.height)
+			@users.add_compare(gear,@slot,@char)			
 			@users.clear
 		end
 		
@@ -8833,10 +8249,11 @@ class Mnu_Equip < Mnu_Base
 
 	def select(option)	
 
+		gear = option
+		gear = nil if option == 'remove'
+
 		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
+		@char.equip(@slot,gear)
 		back_to_slots
 		
 	end
@@ -8845,7 +8262,8 @@ class Mnu_Equip < Mnu_Base
 	 	if @grid.active
 	 		$scene.queue_menu("Char")
 	 		$tweens.clear(@menu)
-	 		close_now
+	 		#close_now
+	 		start_close
 	 	else
 	 		back_to_slots
 	 	end
@@ -8865,29 +8283,35 @@ class Mnu_Equip < Mnu_Base
 		@grid.clear
 		@grid.move(15,115)
 		 @char.slots.each{ |slot| 
+		 	log_scr slot
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
 
-		 @grid.choose(@slot)
+		 @grid.choose(@slot,true)
 
 		 @item_box.hide
+		 @users.clear
 
 	end
 
-	def close
-		super
+	def start_close
+		
 
 		dist = 30
 		@grid.hide_glow
 		@grid.all.each{ |b|
+			next if b.disposed?
      		b.do(go("x",-dist,200,:qio))
      		b.do(go("opacity",-255,200,:qio))
 		}
-		self.do(delay(201))
+		
+		close_soon(0)
+
+		#super
 
 	end
 
-end"ì#==============================================================================
+end" ""#==============================================================================
 # ** Mnu_Profile
 #==============================================================================
 
@@ -8902,20 +8326,15 @@ class Mnu_Profile < Mnu_Base
 
 		@char = $party.get($menu.char)
 
-		@menu.dispose
-		self.left.delete(@menu)
+		remove_menu
+		remove_info
 
-		@box = Box.new(vp,300,302)
+		@box = Box.new(vp,300,350)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
 		self.left.push(@box)
 		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,425)
-		@grid.add_wide('done',"Done","misc/unknown")
-		self.left.push(@grid)
-
 		data = []
 		data.push(["faces/boy","Name: Boyle"])
 		data.push(["faces/boy","Home: Wyrmwood"])
@@ -8947,14 +8366,9 @@ class Mnu_Profile < Mnu_Base
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
-		@info.dispose
-		self.left.delete(@info)
-
 	end
 
 	def update
-
-		@grid.update
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -8969,7 +8383,7 @@ class Mnu_Profile < Mnu_Base
 		
 	end
 
-end"T#==============================================================================
+end"ó#==============================================================================
 # ** Mnu_Skills
 #==============================================================================
 
@@ -8988,6 +8402,14 @@ class Mnu_Skills < Mnu_Base
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
+
+		@item_box = Item_Box.new(vp)
+		@item_box.center(472,260)
+		@item_box.type = :skill
+		@item_box.hide
+		self.right.push(@item_box)
+
+		@last_option = nil
 
 		open
 
@@ -9010,14 +8432,24 @@ class Mnu_Skills < Mnu_Base
 	end
 
 	def change(option)
+
+		@item_box.skill(option)
+		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
 		
+		if @last_option != option
+			@last_option = option
+			$tweens.clear(@item_box)
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+		end
+
 	end
 
 	def select(option)	
 		
 	end
 
-end"#==============================================================================
+end"õ#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -9032,22 +8464,48 @@ class Mnu_Status < Mnu_Base
 
 		@char = $party.get($menu.char)
 
-		@menu.dispose
-		self.left.delete(@menu)
+		remove_menu
+		remove_info
 
-		@box = Box.new(vp,300,302)
+		@box = Box.new(vp,300,350)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
 		self.left.push(@box)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,425)
-		@grid.add_wide('done',"Done","misc/unknown")
-		self.left.push(@grid)
 
 		cx = 28
-		cy = 125
+		cy = 124
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Overall"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Xp: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+		
+		cx = 28
+		cy += 28
 
 		lbl = Label.new(vp)
 		lbl.icon = $cache.icon("misc/primary")
@@ -9095,7 +8553,7 @@ class Mnu_Status < Mnu_Base
 	    self.left.push(lbl)
 
 	    cx = 28
-		cy += 32
+		cy += 28
 
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("misc/secondary")
@@ -9136,14 +8594,9 @@ class Mnu_Status < Mnu_Base
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
-		@info.dispose
-		self.left.delete(@info)
-
 	end
 
 	def update
-
-		@grid.update
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -9439,7 +8892,7 @@ class Char_Box_Large < SpriteGroup
 		@xp_value = Sprite.new(vp)
 		@xp_value.bitmap = build_value_bmp(@char.xp)
 		@xp_value.opacity = 200
-		add(@xp_value,186-@hp_value.bitmap.width,141)
+		add(@xp_value,186-@xp_value.bitmap.width,141)
 		@xp_value.z += 50
 
 	end
@@ -9552,7 +9005,8 @@ class Char_Box_Small < SpriteGroup
 		@port.do(to("oy",0,-1))
 	end
 
-end"þ
+end"
+
 class Info_Box < SpriteGroup
 
 	attr_accessor :title
@@ -9560,22 +9014,22 @@ class Info_Box < SpriteGroup
 	def initialize(vp)
 		super()		
 
-		@window = Box.new(vp,300,60)
+		@window = Box.new(vp,150,60)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.wallpaper = $cache.menu_wallpaper("diamonds")
     	add(@window)
 
     	@gold = Label.new(vp)
-    	@gold.font = $fonts.pop_type
+    	@gold.font = $fonts.pop_text
     	@gold.icon = $cache.icon("misc/coins")
     	@gold.text = "250G"
-    	add(@gold,12,8)
+    	add(@gold,12,15)
 
-    	@zone = Label.new(vp)
-    	@zone.font = $fonts.pop_type
-    	@zone.icon = $cache.icon("misc/coins")
-    	@zone.text = "Whisper Woods"
-    	add(@zone,100,8)
+    	# @zone = Label.new(vp)
+    	# @zone.font = $fonts.pop_text
+    	# @zone.icon = $cache.icon("items/map")
+    	# @zone.text = "Whisper Woods"
+    	# add(@zone,100,15)
     	
     	move(15,413)
 
@@ -9584,7 +9038,7 @@ class Info_Box < SpriteGroup
 	def dispose
 		@window.dispose
 		@gold.dispose
-		@zone.dispose
+		#@zone.dispose
 	end
 
 	def update
@@ -9597,7 +9051,7 @@ class Info_Box < SpriteGroup
 	end
 
 end
-"\
+"}
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -9822,7 +9276,13 @@ class Item_Box < SpriteGroup
     # Battle display of skills, maybe different to menu display
 	def skill(id)
 
+
+
         data = get_data(id)       
+
+
+return if data == nil
+
         base(data)
 
         if data.hits > 1
@@ -9905,81 +9365,15 @@ class List_Common < SpriteGroup
 
 	end
 
-end"‚
-class List_Main < SpriteGroup
-
-	attr_accessor :list
-
-	def initialize(vp)
-		super()
-
-		# Left side window
-		@window = Box.new(vp)
-    	@window.skin = $cache.menu_common("skin-plain")
-    	@window.color = Color.new(47,45,41)
-    	@window.resize(178,362)
-    	add(@window)
-
-		# Left side list
-		@list = List.new()
-		@list.type = :misc
-
-		# @list.item_width = 156
-		# @list.item_height = 42
-		#@list.item_space = 43
-
-		@list.item_width = 166
-		@list.item_height = 34
-		@list.item_space = 35
-		
-
-		add(@list,6,6)
-
-		data = []
-		data.push(['Items',"items/map"])
-		data.push(['Journal','items/map'])
-		data.push(['Party','items/map'])
-		data.push(['Equip','items/map'])
-		data.push(['Skills','items/map'])
-		data.push(['Profiles','items/map'])
-		data.push(['Options','items/map'])
-		data.push(['Quit','items/map'])
-		data.push(['Load','items/map'])
-		data.push(['Save','items/map'])
-
-		@list.setup(data)
-
-		move(10,490)
-		@list.refresh
-
-	end
-
-	def dispose
-		@window.dispose
-		@list.dispose
-	end
-
-	def update
-		@list.update
-	end
-
-end
-
-def _db(*args)
-	DataBox.new(args[0],args[1],args[2],args[3])
-end"`	#==============================================================================
+end"+	#==============================================================================
 # Tabs
 #==============================================================================
 
-# Horizontal list of sorts
-# Image based only
-# Drawn to single sprite
-
 class Page_Tabs < Sprite
 
-  SPACING = 5
+  SPACING = 0
 
-  attr_accessor :tab_proc
+  attr_accessor :change
 
   #--------------------------------------------------------------------------
   # * Init
@@ -9997,6 +9391,9 @@ class Page_Tabs < Sprite
   	@idx = 0
 
     @total_width = 0
+
+    # Proc
+    @change = nil
 
     move(116,75)
 
@@ -10048,7 +9445,7 @@ class Page_Tabs < Sprite
         @idx = @names.count - 1
         return
       end
-      @tab_proc.call(@names[@idx]) if @tab_proc
+      @change.call(@names[@idx]) if @change
       refresh      
   	end
 
@@ -10058,11 +9455,11 @@ class Page_Tabs < Sprite
         @idx = 0
         return
       end
-      @tab_proc.call(@names[@idx]) if @tab_proc
+      @change.call(@names[@idx]) if @change
       refresh  
   	end
 
-    pos = $mouse.position
+    pos = $mouse.position.dup
 
     #return if pos[0] > @total_width
     return if pos[0] < self.x
@@ -10087,7 +9484,7 @@ class Page_Tabs < Sprite
       if $input.click?
 
         @idx = i
-        @tab_proc.call(@names[@idx]) if @tab_proc
+        @change.call(@names[@idx]) if @change
         refresh  
 
       end
@@ -10096,7 +9493,7 @@ class Page_Tabs < Sprite
 
   end
 
- end"
+ end"x
 class Page_Title < SpriteGroup
 
 	def initialize(vp)
@@ -10131,38 +9528,40 @@ class Page_Title < SpriteGroup
 		@icon.bitmap = $cache.menu("Icons/"+page)
 	end
 
-	def update
-
-	end
-
-end"™#==============================================================================
-# ** Part_Char
+end"!#==============================================================================
+# ** Part_Full
 #==============================================================================
 
-# Could auto choose the right char, but maybe just put as sprite
 class Port_Full < Sprite
 
 	def initialize(vp)
 		super(vp)
 
-		self.bitmap = $cache.face_menu("#{$menu.char}-w")
+		self.bitmap = $cache.face_menu("#{$menu.char}")
 		self.x = 330
-		#self.x -= 20
 
 	end
 
-end"`
+	def normal() self.bitmap = $cache.face_menu("#{$menu.char}") end
+	def shock() self.bitmap = $cache.face_menu("#{$menu.char}-w") end
+	def sad() self.bitmap = $cache.face_menu("#{$menu.char}-s") end
+	def happy() self.bitmap = $cache.face_menu("#{$menu.char}-h") end
+	def angry() self.bitmap = $cache.face_menu("#{$menu.char}-a") end
+	def confused() self.bitmap = $cache.face_menu("#{$menu.char}-c") end
+	def xtra() self.bitmap = $cache.face_menu("#{$menu.char}-x") end
+
+end"{
 class Right_Journal < SpriteGroup
 
 	def initialize(vp)
 		super()
 	
-		# Right side journal
-		@window = Box.new(vp,300,292)
-    	@window.skin = $cache.menu_common("skin-dry")
-    	@window.wallpaper = $cache.menu_wallpaper("journal_page_line")
-    	#@window.color = Color.new(47,45,41)
-    	add(@window,320,140)
+        # Right side journal
+        @window = Box.new(vp,300,357)
+        @window.skin = $cache.menu_common("skin-dry")
+        @window.wallpaper = $cache.menu_wallpaper("journal-full-page")
+        #@window.color = Color.new(47,45,41)
+        add(@window,320,138)
 
     	# Quest Name
     	@page_title = Label.new(vp)
@@ -10205,7 +9604,7 @@ class Right_Journal < SpriteGroup
 
     	# cy += 30
 
-    	move(0,0)
+    	move(0,-22)
 
         #clear
 
@@ -10250,7 +9649,7 @@ class Right_Journal < SpriteGroup
         @sub_req.move(340,@cy)
         @cy += 22
 
-        log_info(reqs)
+        #log_info(reqs)
 
         num = 1
 
@@ -10288,8 +9687,8 @@ class Right_Journal < SpriteGroup
     	@cy += @txt_zone.height
     end
 
-end""
-class Right_Save < SpriteGroup
+end".
+class Right_Page < SpriteGroup
 
 	def initialize(vp)
 		super()
@@ -10297,11 +9696,11 @@ class Right_Save < SpriteGroup
         @vp = vp
 
 		# Right side journal
-		@window = Box.new(vp,300,292)
+		@window = Box.new(vp,300,357)
     	@window.skin = $cache.menu_common("skin-dry")
-    	@window.wallpaper = $cache.menu_wallpaper("journal_page_line")
+    	@window.wallpaper = $cache.menu_wallpaper("journal-full-page")
     	#@window.color = Color.new(47,45,41)
-    	add(@window,320,140)
+    	add(@window,320,138)
 
     	# Quest Name
     	@page_title = Label.new(vp)
@@ -10309,7 +9708,7 @@ class Right_Save < SpriteGroup
         @page_title.icon = $cache.icon("potions/hypercurium")
         @page_title.icon_oy = -3
     	@page_title.font = $fonts.page_ttl
-    	@page_title.text = "Choco Dream"
+    	@page_title.text = "Title Text"
     	add(@page_title,340,154)
 
     	# # SUBTEXTS!!!!!!!!!!
@@ -10338,46 +9737,28 @@ class Right_Save < SpriteGroup
         @window.dispose
         @page_title.dispose
         @txt_desc.dispose
-        @ingredients.each{ |i| i.dispose }
     end
 
-    def setup(potion)
+    def setup(save)
+
+        # Get save header
 
         # Get the data
         data = $data.potions[potion]
         ings = data.ingredients.split("\n")
-
-        # Clear out the previous
-
-        # Show the title of the potion
-        @page_title.icon = $cache.icon("potions/hypercurium")
-        @page_title.text = data.name
+        
 
         # Perhaps show a description here
         @txt_desc.text = data.description
         @cy = @txt_desc.y + @txt_desc.height
 
-
-        # Add ingredients display
-        ings.each{ |ing|
-
-            item = $data.items[ing]
-
-            new_ing = Label.new(@vp)
-            new_ing.font = $fonts.page_text
-            new_ing.icon = $cache.icon(item.icon)
-            new_ing.text = item.name
-            add(new_ing,340,@cy)
-
-            # Now add the tick icon
-            @cy += 26
-
-            @ingredients.push(new_ing)
-
-        }
-
         move(0,0)
 
+    end
+
+    def title(text,icon)
+        @page_title.icon = $cache.icon(icon)
+        @page_title.text = text
     end
 
 end"3#==============================================================================
@@ -11068,7 +10449,7 @@ class Game_Battler
     return true
   end
 
-end"|
+end"Ò
 class Game_Battler
 
 	def equip(slot,new_equip)
@@ -11094,8 +10475,9 @@ class Game_Battler
 		return list
 	end
 
-	def equip_result(new_equip)
+	def equip_result(new_equip,slot)
 		# What is the stat
+		return 'none' if new_equip.stats == nil || new_equip.stats == ''
 		type = new_equip.stats.split("\n")[0].split("=>")[0]
 		slot = new_equip.slot
 		old = @equips[slot]
@@ -11110,10 +10492,12 @@ class Game_Battler
 		return res
 	end
 
-	def equip_result_full(new_equip)
+	def equip_result_full(new_equip,slot)
+		
 		# What is the stat
+		# Check old and new
 		type = new_equip.stats.split("\n")[0].split("=>")[0]
-		slot = new_equip.slot
+
 		old = @equips[slot]
 		before = stat(type)
 		@equips[slot] = new_equip.id
@@ -11125,6 +10509,7 @@ class Game_Battler
 			res = "+#{res}"
 		end
 		return [before,after,res]
+		
 	end
 
 end"w
@@ -13451,7 +12836,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"”[#==============================================================================
+end"C9#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -13762,61 +13147,61 @@ class Interpreter
 
   end
 
-  #--------------------------------------------------------------------------
-  # * Command Skip
-  #--------------------------------------------------------------------------
-  def command_skip
-    # Get indent
-    indent = @list[@index].indent
-    # Loop
-    loop do
-      # If next event command is at the same level as indent
-      if @list[@index+1].indent == indent
-        # Continue
-        return true
-      end
-      # Advance index
-      @index += 1
-    end
-  end
-  #--------------------------------------------------------------------------
-  # * Get Character
-  #     parameter : parameter
-  #--------------------------------------------------------------------------
-  def get_character(parameter)
-    # Branch by parameter
-    case parameter
-    when -1  # player
-      return $player
-    when 0  # this event
-      events = $map.events
-      return events == nil ? nil : events[@event_id]
-    else  # specific event
-      events = $map.events
-      return events == nil ? nil : events[parameter]
-    end
-  end
+  # #--------------------------------------------------------------------------
+  # # * Command Skip
+  # #--------------------------------------------------------------------------
+  # def command_skip
+  #   # Get indent
+  #   indent = @list[@index].indent
+  #   # Loop
+  #   loop do
+  #     # If next event command is at the same level as indent
+  #     if @list[@index+1].indent == indent
+  #       # Continue
+  #       return true
+  #     end
+  #     # Advance index
+  #     @index += 1
+  #   end
+  # end
+  # #--------------------------------------------------------------------------
+  # # * Get Character
+  # #     parameter : parameter
+  # #--------------------------------------------------------------------------
+  # def get_character(parameter)
+  #   # Branch by parameter
+  #   case parameter
+  #   when -1  # player
+  #     return $player
+  #   when 0  # this event
+  #     events = $map.events
+  #     return events == nil ? nil : events[@event_id]
+  #   else  # specific event
+  #     events = $map.events
+  #     return events == nil ? nil : events[parameter]
+  #   end
+  # end
 
-  #--------------------------------------------------------------------------
-  # * Calculate Operated Value
-  #     operation    : operation
-  #     operand_type : operand type (0: invariable 1: variable)
-  #     operand      : operand (number or variable ID)
-  #--------------------------------------------------------------------------
-  def operate_value(operation, operand_type, operand)
-    # Get operand
-    if operand_type == 0
-      value = operand
-    else
-      value = $game_variables[operand]
-    end
-    # Reverse sign of integer if operation is [decrease]
-    if operation == 1
-      value = -value
-    end
-    # Return value
-    return value
-  end
+  # #--------------------------------------------------------------------------
+  # # * Calculate Operated Value
+  # #     operation    : operation
+  # #     operand_type : operand type (0: invariable 1: variable)
+  # #     operand      : operand (number or variable ID)
+  # #--------------------------------------------------------------------------
+  # def operate_value(operation, operand_type, operand)
+  #   # Get operand
+  #   if operand_type == 0
+  #     value = operand
+  #   else
+  #     value = $game_variables[operand]
+  #   end
+  #   # Reverse sign of integer if operation is [decrease]
+  #   if operation == 1
+  #     value = -value
+  #   end
+  #   # Return value
+  #   return value
+  # end
 
 
     def next_event_code
@@ -13865,41 +13250,41 @@ class Interpreter
     return true
   end
 
-  #--------------------------------------------------------------------------
-  # * Conditional Branch
-  #--------------------------------------------------------------------------
-  def command_111
+  # #--------------------------------------------------------------------------
+  # # * Conditional Branch
+  # #--------------------------------------------------------------------------
+  # def command_111
     
-    result = eval(@parameters[1])
-    return true if result
+  #   result = eval(@parameters[1])
+  #   return true if result
   
-    # Skip it
-    @branch[@list[@index].indent] = result
-    return command_skip
+  #   # Skip it
+  #   @branch[@list[@index].indent] = result
+  #   return command_skip
   
-  end
-  #--------------------------------------------------------------------------
-  # * Else
-  #--------------------------------------------------------------------------
-  def command_411
-    # If determinant results are false
-    if @branch[@list[@index].indent] == false
-      # Delete branch data
-      @branch.delete(@list[@index].indent)
-      # Continue
-      return true
-    end
-    # If it doesn't meet the conditions: command skip
-    return command_skip
-  end
+  # end
+  # #--------------------------------------------------------------------------
+  # # * Else
+  # #--------------------------------------------------------------------------
+  # def command_411
+  #   # If determinant results are false
+  #   if @branch[@list[@index].indent] == false
+  #     # Delete branch data
+  #     @branch.delete(@list[@index].indent)
+  #     # Continue
+  #     return true
+  #   end
+  #   # If it doesn't meet the conditions: command skip
+  #   return command_skip
+  # end
  
-  #--------------------------------------------------------------------------
-  # * Exit Event Processing
-  #--------------------------------------------------------------------------
-  def command_115
-    command_end
-    return true
-  end
+  # #--------------------------------------------------------------------------
+  # # * Exit Event Processing
+  # #--------------------------------------------------------------------------
+  # def command_115
+  #   command_end
+  #   return true
+  # end
 
   def command_117
     # Get common event
@@ -13914,165 +13299,9 @@ class Interpreter
     return true
   end
 
-  #--------------------------------------------------------------------------
-  # * Label
-  #--------------------------------------------------------------------------
-  def command_118
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Jump to Label
-  #--------------------------------------------------------------------------
-  def command_119
-    # Get label name
-    label_name = @parameters[0]
-    # Initialize temporary variables
-    temp_index = 0
-    # Loop
-    loop do
-
-      # If a fitting label was not found
-      return true if temp_index >= @list.size-1
-
-      # If this event command is a designated label name
-      if @list[temp_index].code == 118 and
-         @list[temp_index].parameters[0] == label_name
-        # Update index
-        @index = temp_index
-        # Continue
-        return true
-      end
-      # Advance index
-      temp_index += 1
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * Transfer Player
-  #--------------------------------------------------------------------------
-  def command_201
-
-    # If transferring player, showing message, or processing transition
-    return false if $player.transferring || $scene.busy?
-    
-    # If appointment method is [direct appointment]
-    $player.queue_xfer(@parameters[1],@parameters[2],@parameters[3],@parameters[4])
-    
-    # Advance index
-    @index += 1
-
-    # If fade is set <---- CUT
-    # if @parameters[5] == 0
-    #   # Prepare for transition
-    #   Graphics.freeze
-    #   # Set transition processing flag
-    #   $game_temp.transition_processing = true
-    #   $game_temp.transition_name = ""
-    # end
-
-    # End
-    return false
-  end
-
-  #--------------------------------------------------------------------------
-  # * Set Event Location
-  #--------------------------------------------------------------------------
-  def command_202
-
-    # Get character
-    character = get_character(@parameters[0])
-    return true if character == nil
-
-    # If appointment method is [direct appointment]
-    if @parameters[1] == 0
-      # Set character position
-      character.moveto(@parameters[2], @parameters[3])
-    # If appointment method is [appoint with variables]
-    elsif @parameters[1] == 1
-      # Set character position
-      character.moveto($game_variables[@parameters[2]],
-        $game_variables[@parameters[3]])
-    # If appointment method is [exchange with another event]
-    else
-      old_x = character.x
-      old_y = character.y
-      character2 = get_character(@parameters[2])
-      if character2 != nil
-        character.moveto(character2.x, character2.y)
-        character2.moveto(old_x, old_y)
-      end
-    end
-    # Set character direction
-    case @parameters[4]
-      when 8  # up
-        character.turn_up
-      when 6  # right
-        character.turn_right
-      when 2  # down
-        character.turn_down
-      when 4  # left
-        character.turn_left
-    end
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Change Map Settings
-  #--------------------------------------------------------------------------
-  def command_204
-    case @parameters[0]
-    when 0  # panorama
-      $game_map.panorama_name = @parameters[1]
-      $game_map.panorama_hue = @parameters[2]
-    when 1  # fog
-      $game_map.fog_name = @parameters[1]
-      $game_map.fog_hue = @parameters[2]
-      $game_map.fog_opacity = @parameters[3]
-      $game_map.fog_blend_type = @parameters[4]
-      $game_map.fog_zoom = @parameters[5]
-      $game_map.fog_sx = @parameters[6]
-      $game_map.fog_sy = @parameters[7]
-    end
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Change Fog Opacity
-  #--------------------------------------------------------------------------
-  def command_206
-    # Start opacity level change
-    $game_map.start_fog_opacity_change(@parameters[0], @parameters[1] * 2)
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Show Animation
-  #--------------------------------------------------------------------------
-  def command_207
-    # Get character
-    character = get_character(@parameters[0])
-    return true if character == nil
-
-    # Set animation ID
-    character.animation_id = @parameters[1]
-    # Continue
-    return true
-
-  end
-  #--------------------------------------------------------------------------
-  # * Change Transparent Flag
-  #--------------------------------------------------------------------------
-  def command_208
-    $game_player.transparent = (@parameters[0] == 0)
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Set Move Route
-  #--------------------------------------------------------------------------
+  # #--------------------------------------------------------------------------
+  # # * Set Move Route
+  # #--------------------------------------------------------------------------
   def command_209
     # Get character
     character = get_character(@parameters[0])
@@ -14084,143 +13313,15 @@ class Interpreter
     return true
   end
   
-  #--------------------------------------------------------------------------
-  # * Wait for Move's Completion
-  #--------------------------------------------------------------------------
-  def command_210
-    @move_route_waiting = true
-    return true
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Change Screen Color Tone
-  #--------------------------------------------------------------------------
-  def command_223
-    $game_screen.start_tone_change(@parameters[0], @parameters[1] * 2)
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Set Weather Effects
-  #--------------------------------------------------------------------------
-  def command_236
-    # Set Weather Effects
-    $game_screen.weather(@parameters[0], @parameters[1], @parameters[2])
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Play BGM
-  #--------------------------------------------------------------------------
-  def command_241
-    # Play BGM
-    $game_system.bgm_play(@parameters[0])
-    # Continue
-    return true
-  end
-
-  #--------------------------------------------------------------------------
-  # * Fade Out BGM
-  #--------------------------------------------------------------------------
-  def command_242
-    # Fade out BGM
-    $game_system.bgm_fade(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Play BGS
-  #--------------------------------------------------------------------------
-  def command_245
-    # Play BGS
-    $game_system.bgs_play(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Fade Out BGS
-  #--------------------------------------------------------------------------
-  def command_246
-    # Fade out BGS
-    $game_system.bgs_fade(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Memorize BGM/BGS
-  #--------------------------------------------------------------------------
-  def command_247
-    # Memorize BGM/BGS
-    $game_system.bgm_memorize
-    $game_system.bgs_memorize
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Restore BGM/BGS
-  #--------------------------------------------------------------------------
-  def command_248
-    # Restore BGM/BGS
-    $game_system.bgm_restore
-    $game_system.bgs_restore
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Play ME
-  #--------------------------------------------------------------------------
-  def command_249
-    # Play ME
-    $game_system.me_play(@parameters[0])
-    # Continue
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Play SE
-  #--------------------------------------------------------------------------
-  def command_250
-    $audio.play_se(@parameters[0])
-    return true
-  end
-  #--------------------------------------------------------------------------
-  # * Stop SE
-  #--------------------------------------------------------------------------
-  def command_251
-    # Stop SE
-    Audio.se_stop
-    # Continue
-    return true
-  end
-
-
-  #--------------------------------------------------------------------------
-  # * Shop Processing
-  #--------------------------------------------------------------------------
-  def command_302
-
-    # Set shop calling flag
-    $game_temp.shop_calling = true
-    # Set goods list on new item
-    $game_temp.shop_goods = [@parameters]
-    # Loop
-    loop do
-      # Advance index
-      @index += 1
-      # If next event command has shop on second line or after
-      if @list[@index].code == 605
-        # Add goods list to new item
-        $game_temp.shop_goods.push(@list[@index].parameters)
-      # If event command does not have shop on second line or after
-      else
-        # End
-        return false
-      end
+  # #--------------------------------------------------------------------------
+  # # * Wait for Move's Completion
+  # #--------------------------------------------------------------------------
+    def command_210
+      @move_route_waiting = true
+      return true
     end
-  end
 
-
-    #--------------------------------------------------------------------------
+  #--------------------------------------------------------------------------
   # * Script
   #--------------------------------------------------------------------------
   def command_355
@@ -15588,7 +14689,7 @@ class Game_Battle
   end
 
   
-end"ˆ
+end"Á
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -15599,6 +14700,7 @@ class MenuState
 	attr_accessor :grid_action # <- menu selection
 
 	attr_accessor :menu_page
+	attr_accessor :sub_only
 
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
@@ -15611,9 +14713,12 @@ class MenuState
 	#attr_accessor :tab
 
 	def initialize
+
 		@char = 'boy'
-		@menu_page = nil
 		@shop = []
+
+		@menu_page = nil
+		@sub_only = false		
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
@@ -15621,6 +14726,7 @@ class MenuState
 		@potion_page = 0
 
 		@chosen = nil
+		
 	end
 
 	def shop_init
@@ -15631,7 +14737,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"š#==============================================================================
+end"ž#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15895,8 +15001,8 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
+    # set_active("ing")
+    # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
@@ -17404,7 +16510,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"O#==============================================================================
+"#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -17518,7 +16624,10 @@ class Scene_Menu
       @menu = nil
     end
 
-    log_scr("OPEN #{@next_menu}")
+    if @next_menu == "Main"
+      @next_menu = nil if $menu.sub_only
+    end
+    
 
     # The current menu
     case @next_menu
@@ -17531,8 +16640,11 @@ class Scene_Menu
       when "Journal"; @menu = Mnu_Journal.new(@vp)
       when "Items"; @menu = Mnu_Items.new(@vp)
       when "Party"; @menu = Mnu_Party.new(@vp)
+      when "Progress"; @menu = Mnu_Progress.new(@vp)
       when "Options"; @menu = Mnu_Options.new(@vp)
+      when "Help"; @menu = Mnu_Help.new(@vp)
       when "Sound"; @menu = Mnu_Sound.new(@vp)
+      when "Load"; @menu = Mnu_Load.new(@vp)
       when "Save"; @menu = Mnu_Save.new(@vp)
 
       when "Char"; @menu = Mnu_Char.new(@vp)
@@ -18644,7 +17756,7 @@ class CacheManager
       GC.start
     end
 
-  end"ê#==============================================================================
+  end"å#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -18696,14 +17808,13 @@ class DataManager
 
     @actors = load_json("actors",ActorData)
     @enemies = load_json("enemies",EnemyData)
-    
+
     @skills = load_json("skills",SkillData)
     @states = load_json("states",StateData)
     
-    @progress = load_json("progress",ProgressData)
+    #@progress = load_json("progress",ProgressData)
     @quests = load_json("quests",QuestData)
     @zones = load_json("zones",ZoneData)
-
     @anims = load_json("anims",AnimData)
 
     @numbers = load_json("numbers",NumberData)
@@ -18937,14 +18048,17 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"#==============================================================================
+end"ü
+#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
 SAVE_FILES = 99
 
+# For the list
 class SaveData
   attr_accessor :name
+  attr_accessor :leader
 end
 
 class FileManager
@@ -18955,10 +18069,12 @@ class FileManager
 
     @headers = []
 
+    # 0 is auto save, you can't save over it
+
     # Load save headers
     i = 0
     while i <= SAVE_FILES
-      if file_exists?(i)
+      if File.exist?(filename(i))
         @headers.push(load_header(i))
       else
         @headers.push(nil)
@@ -18968,19 +18084,8 @@ class FileManager
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Determine Existence of Save File
-  #--------------------------------------------------------------------------
   def any_save_files?
     !Dir.glob('Av4-*.save').empty?
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Determine Existence of Save File
-  #--------------------------------------------------------------------------
-  def file_exists?(i)
-    file = "\\Av4-#{i}.save"
-    File.exist?($appdata + file)
   end
 
   def save_file_list
@@ -18993,19 +18098,16 @@ class FileManager
     return list
   end
   
-  #--------------------------------------------------------------------------
-  # * Create Filename
-  #--------------------------------------------------------------------------
-  def make_filename(i)
-    file = "\\Av4-#{i}.save"
-    return $appdata + file
+  def filename(i)
+    return $appdata + "\\Av4-#{i}.save"
   end
 
-  #--------------------------------------------------------------------------
-  # * Execute Save (No Exception Processing)
-  #--------------------------------------------------------------------------
+  def autosave
+    save_game(0)
+  end
+
   def save_game(i)
-    File.open(make_filename(i), "wb") { |file|
+    File.open(filename(i), "wb") { |file|
       header = make_save_header  
       body = make_save_contents
       Marshal.dump(header, file)
@@ -19015,7 +18117,7 @@ class FileManager
 
     # Save pic for save file
     w = 256
-    h = 192
+    h = 128
     x = (640-w)/2
     y = (480-h)/2
     rect = Rect.new(x,y,w,h)
@@ -19026,11 +18128,9 @@ class FileManager
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Execute Load (No Exception Processing)
-  #--------------------------------------------------------------------------
+  # Could be in game? just the contents part here? Strange to give files such power
   def load_game(i)
-    File.open(make_filename(i), "rb") do |file|
+    File.open(filename(i), "rb") do |file|
       Marshal.load(file)
       extract_save_contents(Marshal.load(file))
       $game.reload
@@ -19039,39 +18139,22 @@ class FileManager
     return true
   end
   
-  #--------------------------------------------------------------------------
-  # * Load Save Header (No Exception Processing)
-  #--------------------------------------------------------------------------
   def load_header(i)
-    File.open(make_filename(i), "rb") do |file|
+    File.open(filename(i), "rb") do |file|
       return Marshal.load(file)
     end
     return nil
   end
   
-  #--------------------------------------------------------------------------
-  # * Delete Save File
-  #--------------------------------------------------------------------------
-  def delete_save_file()
-    File.delete(make_filename()) rescue nil
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Create Save Header
-  #--------------------------------------------------------------------------
   def make_save_header
     header = {}
-    header[:progress] = 140
-    header[:name] = "Save Name"
-    # Location, party, playtime, quest?, gold
-    #header[:characters] = $game_party.characters_for_savefile
-    #header[:playtime_s] = $game_system.playtime_s
-    header
+    header[:leader] = $party.leader
+    header[:time] = "1h 20m"
+    header[:members] = $party.active
+    header[:gold] = $party.gold
+    return header
   end
   
-  #--------------------------------------------------------------------------
-  # * Create Save Contents
-  #--------------------------------------------------------------------------
   def make_save_contents
     
     contents = {}
@@ -19085,13 +18168,10 @@ class FileManager
     contents[:map]          = $map
     contents[:player]       = $player
 
-    contents
+    return contents
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Extract Save Contents
-  #--------------------------------------------------------------------------
   def extract_save_contents(contents)
 
     $battle =    contents[:battle]
@@ -19105,22 +18185,8 @@ class FileManager
 
   end
   
-  #--------------------------------------------------------------------------
-  # * Get Update Date of Save File
-  #--------------------------------------------------------------------------
-  def savefile_time_stamp()
-    File.mtime(make_filename()) rescue Time.at(0)
-  end
-  
-  #--------------------------------------------------------------------------
-  # * Get File Index with Latest Update Date
-  #--------------------------------------------------------------------------
-  def latest_savefile_index
-    savefile_max.times.max_by {|i| savefile_time_stamp(i) }
-  end
-  
 end
-"
+"ê
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
@@ -19140,8 +18206,12 @@ class FontManager
 
 	def initialize
 
-		@scratch = Bitmap.new(600,50)
+		# Default font
+    	Font.default_size = 22
+    	Font.default_name = "Consolas"
 
+    	# Scratch Bitmap
+		@scratch = Bitmap.new(600,50)
 
 		# Debug Fonts
 
@@ -19274,7 +18344,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"™#==============================================================================
+end"#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -19289,17 +18359,7 @@ class GameManager
 
     $game = self
 
-    # Setup font
-    Font.default_size = 22
-    Font.default_name = "Consolas"
-
-    if ACE_MODE
-      Font.default_outline = false
-      Font.default_shadow = true
-    end
-
     Graphics.frame_rate = 60
-    #resize(853,480)
     resize(640,480)
 
     @scenes = []
@@ -19339,9 +18399,6 @@ class GameManager
   def resize(w,h)
     @width = w
     @height = h
-    if ACE_MODE
-      Graphics.resize_screen(w,h)
-    end
     #set_rez(w,h)
   end
 
@@ -19446,10 +18503,9 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"¬#==============================================================================
+end"ª#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
-
 
 VK_LBUTTON = 1
 VK_RBUTTON = 2
@@ -19559,8 +18615,8 @@ class KeyboardManager
 
   end
 
-end"W#============================================================================== 
-# ** Modules.Mouse Input (7.0)              By Near Fantastica & SephirothSpawn
+end"/#============================================================================== 
+# ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
 class MouseManager
@@ -19619,76 +18675,7 @@ class MouseManager
     @sprite.bitmap = $cache.cursor(c)
   end
 
-end
-
-#==============================================================================
-# ** Sprite_Mouse
-#==============================================================================
-
-class Sprite_Mouse < Sprite
-
-  #--------------------------------------------------------------------------
-  # ** Frame Update : Update Event Cursors
-  #--------------------------------------------------------------------------
-  def update_event_cursors
-    
-    # If Nil Grid Position
-    if Mouse.grid.nil? 
-      # Set Default Cursor
-      set_bitmap(MouseCursor::Default_Cursor)
-      return
-    end
-    
-    # Gets Mouse Position
-    x, y = *Mouse.grid
-    
-    # Gets Mouse Position
-    mx, my = *Mouse.position    
-    
-    # Gets Mouse Event
-    event = $game_map.lowest_event_at(x, y)
-    
-    # If Non-Nil Event or not over map HUD
-    unless event.nil? || my >= 448
-      # If Not Erased or Nil List
-      if event.list != nil && event.erased == false && event.list[0].code == 108
-        # Get the cursor to show
-        icon = nil
-        event.list[0].parameters.to_s.downcase.gsub!(/icon (.*)/) do
-          icon = $1.to_s
-        end
-        
-        if !((icon == "talk") || 
-           (icon == "touch") || 
-           (icon == "fight") || 
-           (icon == "examine") || 
-           (icon == "point") ||
-           (icon == "exit"))
-           icon = MouseCursor::Default_Cursor
-        end        
-        xNPCname = nil 
-        if event.list.size > 1 && event.list[1].code == 108
-          text = event.list[1].parameters.to_s
-          text.gsub!(/[Nn][Aa][Mm][Ee] (.*)/) do
-            xNPCname = $1.to_s
-          end
-        end
-        set_bitmap(icon, xNPCname)  
-        #self.x = self.x - self.bitmap.width + 24 if self.x + self.bitmap.width > 640
-        if event.name != "BOTTOM" # and ["Arrow2", "Arrow4"].include?(icon)
-          self.y -= 8
-        end
-        return
-      end
-      return
-    end
-    
-    # Set Default Cursor
-    set_bitmap(MouseCursor::Default_Cursor)
-    
-  end
-end
-"#	#==============================================================================
+end"#	#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -19770,38 +18757,6 @@ class SettingsManager
     @window = Win32API.new('Utils', "IsFullScreen", ["V"], "I").call
     save
   end
-
-end"Ù
-class SteamManager
-
-	def initialize
-		# Sync with steam
-
-		#dll, func, send, rec
-
-		# Steam test
-		log_info "STARTING STEAM"
-    	log_info Win32API.new('System/steamstub', "OpenSteam", "I", "I").call(364270)
-		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
-    	
-    	log_info Win32API.new('System/steamstub', "GetSteamAchievement", "P", "I").call("START_GAME")
-		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
-    	log_info Win32API.new('System/steamstub', "SetSteamAchievement", "P", "I").call("START_GAME")
-		log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
-    	log_info Win32API.new('System/steamstub', "GetSteamAchievement", "P", "I").call("START_GAME")
-    	log_info Win32API.new('System/steamstub', "ReadSteam", "[]", "I").call
-    	#stats =  Win32API.new('System/steam_api', "SteamUserStats", ["V"], "P").call     	
-
-	end
-
-
-	def unlock(ach)
-
-	end
-
-	def card(crd)
-
-	end
 
 end"Ž#==============================================================================
 # ** Nano Manager
@@ -20278,206 +19233,7 @@ end
 
 def grp(*args)
 	return Group.new(args)
-end"~# if !ACE_MODE
-#   class Font
-#     attr_accessor :outline, :shadow
-#   end
-# end
-
-
-# module RPG
-#   class Tileset
-#     def initialize
-#       @id = 0
-#       @name = ""
-#       @tileset_name = ""
-#       @autotile_names = [""]*7
-#       @panorama_name = ""
-#       @panorama_hue = 0
-#       @fog_name = ""
-#       @fog_hue = 0
-#       @fog_opacity = 64
-#       @fog_blend_type = 0
-#       @fog_zoom = 200
-#       @fog_sx = 0
-#       @fog_sy = 0
-#       @battleback_name = ""
-#       @passages = Table.new(384)
-#       @priorities = Table.new(384)
-#       @priorities[0] = 5
-#       @terrain_tags = Table.new(384)
-#     end
-#     attr_accessor :id
-#     attr_accessor :name
-#     attr_accessor :tileset_name
-#     attr_accessor :autotile_names
-#     attr_accessor :panorama_name
-#     attr_accessor :panorama_hue
-#     attr_accessor :fog_name
-#     attr_accessor :fog_hue
-#     attr_accessor :fog_opacity
-#     attr_accessor :fog_blend_type
-#     attr_accessor :fog_zoom
-#     attr_accessor :fog_sx
-#     attr_accessor :fog_sy
-#     attr_accessor :battleback_name
-#     attr_accessor :passages
-#     attr_accessor :priorities
-#     attr_accessor :terrain_tags
-#   end
-# end
-
-# module RPG
-#   class System
-#     def initialize
-#       @magic_number = 0
-#       @party_members = [1]
-#       @elements = [nil, ""]
-#       @switches = [nil, ""]
-#       @variables = [nil, ""]
-#       @windowskin_name = ""
-#       @title_name = ""
-#       @gameover_name = ""
-#       @battle_transition = ""
-#       @title_bgm = RPG::AudioFile.new
-#       @battle_bgm = RPG::AudioFile.new
-#       @battle_end_me = RPG::AudioFile.new
-#       @gameover_me = RPG::AudioFile.new
-#       @cursor_se = RPG::AudioFile.new("", 80)
-#       @decision_se = RPG::AudioFile.new("", 80)
-#       @cancel_se = RPG::AudioFile.new("", 80)
-#       @buzzer_se = RPG::AudioFile.new("", 80)
-#       @equip_se = RPG::AudioFile.new("", 80)
-#       @shop_se = RPG::AudioFile.new("", 80)
-#       @save_se = RPG::AudioFile.new("", 80)
-#       @load_se = RPG::AudioFile.new("", 80)
-#       @battle_start_se = RPG::AudioFile.new("", 80)
-#       @escape_se = RPG::AudioFile.new("", 80)
-#       @actor_collapse_se = RPG::AudioFile.new("", 80)
-#       @enemy_collapse_se = RPG::AudioFile.new("", 80)
-#       @words = RPG::System::Words.new
-#       @test_battlers = []
-#       @test_troop_id = 1
-#       @start_map_id = 1
-#       @start_x = 0
-#       @start_y = 0
-#       @battleback_name = ""
-#       @battler_name = ""
-#       @battler_hue = 0
-#       @edit_map_id = 1
-#     end
-#     attr_accessor :magic_number
-#     attr_accessor :party_members
-#     attr_accessor :elements
-#     attr_accessor :switches
-#     attr_accessor :variables
-#     attr_accessor :windowskin_name
-#     attr_accessor :title_name
-#     attr_accessor :gameover_name
-#     attr_accessor :battle_transition
-#     attr_accessor :title_bgm
-#     attr_accessor :battle_bgm
-#     attr_accessor :battle_end_me
-#     attr_accessor :gameover_me
-#     attr_accessor :cursor_se
-#     attr_accessor :decision_se
-#     attr_accessor :cancel_se
-#     attr_accessor :buzzer_se
-#     attr_accessor :equip_se
-#     attr_accessor :shop_se
-#     attr_accessor :save_se
-#     attr_accessor :load_se
-#     attr_accessor :battle_start_se
-#     attr_accessor :escape_se
-#     attr_accessor :actor_collapse_se
-#     attr_accessor :enemy_collapse_se
-#     attr_accessor :words
-#     attr_accessor :test_battlers
-#     attr_accessor :test_troop_id
-#     attr_accessor :start_map_id
-#     attr_accessor :start_x
-#     attr_accessor :start_y
-#     attr_accessor :battleback_name
-#     attr_accessor :battler_name
-#     attr_accessor :battler_hue
-#     attr_accessor :edit_map_id
-#   end
-# end
-
-# module RPG
-#   class System
-#     class Words
-#       def initialize
-#         @gold = ""
-#         @hp = ""
-#         @sp = ""
-#         @str = ""
-#         @dex = ""
-#         @agi = ""
-#         @int = ""
-#         @atk = ""
-#         @pdef = ""
-#         @mdef = ""
-#         @weapon = ""
-#         @armor1 = ""
-#         @armor2 = ""
-#         @armor3 = ""
-#         @armor4 = ""
-#         @attack = ""
-#         @skill = ""
-#         @guard = ""
-#         @item = ""
-#         @equip = ""
-#       end
-#       attr_accessor :gold
-#       attr_accessor :hp
-#       attr_accessor :sp
-#       attr_accessor :str
-#       attr_accessor :dex
-#       attr_accessor :agi
-#       attr_accessor :int
-#       attr_accessor :atk
-#       attr_accessor :pdef
-#       attr_accessor :mdef
-#       attr_accessor :weapon
-#       attr_accessor :armor1
-#       attr_accessor :armor2
-#       attr_accessor :armor3
-#       attr_accessor :armor4
-#       attr_accessor :attack
-#       attr_accessor :skill
-#       attr_accessor :guard
-#       attr_accessor :item
-#       attr_accessor :equip
-#     end
-#   end
-# end
-
-# module RPG
-#   class System
-#     class TestBattler
-#       def initialize
-#         @actor_id = 1
-#         @level = 1
-#         @weapon_id = 0
-#         @armor1_id = 0
-#         @armor2_id = 0
-#         @armor3_id = 0
-#         @armor4_id = 0
-#       end
-#       attr_accessor :actor_id
-#       attr_accessor :level
-#       attr_accessor :weapon_id
-#       attr_accessor :armor1_id
-#       attr_accessor :armor2_id
-#       attr_accessor :armor3_id
-#       attr_accessor :armor4_id
-#     end
-#   end
-# end
-
-
-" class Array
+end" class Array
  	def count
  		return length
  	end
@@ -21094,453 +19850,195 @@ def execute_spellcheck
     end  
 
     
-  end"O# Fullscreen++ v2.2 for VX and VXace by Zeus81
-# Free for non commercial and commercial use
-# Licence : http://creativecommons.org/licenses/by-sa/3.0/
-# Contact : zeusex81@gmail.com
-# (fr) Manuel d'utilisation : http://pastebin.com/raw.php?i=1TQfMnVJ
-# (en) User Guide           : http://pastebin.com/raw.php?i=EgnWt9ur
+  end"¨# # Fullscreen++ v2.2 for VX and VXace by Zeus81
+# # Free for non commercial and commercial use
+# # Licence : http://creativecommons.org/licenses/by-sa/3.0/
+# # Contact : zeusex81@gmail.com
+# # (fr) Manuel d'utilisation : http://pastebin.com/raw.php?i=1TQfMnVJ
+# # (en) User Guide           : http://pastebin.com/raw.php?i=EgnWt9ur
  
- if ACE_MODE
-
-
-class << Graphics
-  Disable_VX_Fullscreen = false
+# class << Graphics
+#   Disable_VX_Fullscreen = false
  
-  CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
-  GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
-  GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
-  GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
-  GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
-  FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
-  FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
-  ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
-  SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
-  SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
-  SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
-  ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
-  SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
-  UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
-  GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
-  WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
-  CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
-  DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
+#   CreateWindowEx            = Win32API.new('user32'  , 'CreateWindowEx'           , 'ippiiiiiiiii', 'i')
+#   GetClientRect             = Win32API.new('user32'  , 'GetClientRect'            , 'ip'          , 'i')
+#   GetDC                     = Win32API.new('user32'  , 'GetDC'                    , 'i'           , 'i')
+#   GetSystemMetrics          = Win32API.new('user32'  , 'GetSystemMetrics'         , 'i'           , 'i')
+#   GetWindowRect             = Win32API.new('user32'  , 'GetWindowRect'            , 'ip'          , 'i')
+#   FillRect                  = Win32API.new('user32'  , 'FillRect'                 , 'ipi'         , 'i')
+#   FindWindow                = Win32API.new('user32'  , 'FindWindow'               , 'pp'          , 'i')
+#   ReleaseDC                 = Win32API.new('user32'  , 'ReleaseDC'                , 'ii'          , 'i')
+#   SendInput                 = Win32API.new('user32'  , 'SendInput'                , 'ipi'         , 'i')
+#   SetWindowLong             = Win32API.new('user32'  , 'SetWindowLong'            , 'iii'         , 'i')
+#   SetWindowPos              = Win32API.new('user32'  , 'SetWindowPos'             , 'iiiiiii'     , 'i')
+#   ShowWindow                = Win32API.new('user32'  , 'ShowWindow'               , 'ii'          , 'i')
+#   SystemParametersInfo      = Win32API.new('user32'  , 'SystemParametersInfo'     , 'iipi'        , 'i')
+#   UpdateWindow              = Win32API.new('user32'  , 'UpdateWindow'             , 'i'           , 'i')
+#   GetPrivateProfileString   = Win32API.new('kernel32', 'GetPrivateProfileString'  , 'ppppip'      , 'i')
+#   WritePrivateProfileString = Win32API.new('kernel32', 'WritePrivateProfileString', 'pppp'        , 'i')
+#   CreateSolidBrush          = Win32API.new('gdi32'   , 'CreateSolidBrush'         , 'i'           , 'i')
+#   DeleteObject              = Win32API.new('gdi32'   , 'DeleteObject'             , 'i'           , 'i')
  
-  unless method_defined?(:zeus_fullscreen_update)
-    HWND     = FindWindow.call('RGSS Player', 0)
-    BackHWND = CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0)
-    alias zeus_fullscreen_resize_screen resize_screen
-    alias zeus_fullscreen_update        update
-  end
-private
-  def initialize_fullscreen_rects
-    @borders_size    ||= borders_size
-    @fullscreen_rect ||= screen_rect
-    @workarea_rect   ||= workarea_rect
-  end
-  def borders_size
-    GetWindowRect.call(HWND, wrect = [0, 0, 0, 0].pack('l4'))
-    GetClientRect.call(HWND, crect = [0, 0, 0, 0].pack('l4'))
-    wrect, crect = wrect.unpack('l4'), crect.unpack('l4')
-    Rect.new(0, 0, wrect[2]-wrect[0]-crect[2], wrect[3]-wrect[1]-crect[3])
-  end
-  def screen_rect
-    Rect.new(0, 0, GetSystemMetrics.call(0), GetSystemMetrics.call(1))
-  end
-  def workarea_rect
-    SystemParametersInfo.call(0x30, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
-    rect = rect.unpack('l4')
-    Rect.new(rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1])
-  end
-  def hide_borders() SetWindowLong.call(HWND, -16, 0x14000000) end
-  def show_borders() SetWindowLong.call(HWND, -16, 0x14CA0000) end
-  def hide_back()    ShowWindow.call(BackHWND, 0)              end
-  def show_back
-    ShowWindow.call(BackHWND, 3)
-    UpdateWindow.call(BackHWND)
-    dc    = GetDC.call(BackHWND)
-    rect  = [0, 0, @fullscreen_rect.width, @fullscreen_rect.height].pack('l4')
-    brush = CreateSolidBrush.call(0)
-    FillRect.call(dc, rect, brush)
-    ReleaseDC.call(BackHWND, dc)
-    DeleteObject.call(brush)
-  end
-  def resize_window(w, h)
-    if @fullscreen
-      x, y, z = (@fullscreen_rect.width-w)/2, (@fullscreen_rect.height-h)/2, -1
-    else
-      w += @borders_size.width
-      h += @borders_size.height
-      x = @workarea_rect.x + (@workarea_rect.width  - w) / 2
-      y = @workarea_rect.y + (@workarea_rect.height - h) / 2
-      z = -2
-    end
-    SetWindowPos.call(HWND, z, x, y, w, h, 0)
-  end
-  def release_alt
-    inputs = [1,18,2, 1,164,2, 1,165,2].pack('LSx2Lx16'*3)
-    SendInput.call(3, inputs, 28)
-  end
-public
-  def load_fullscreen_settings
-    buffer = [].pack('x256')
-    section = 'Fullscreen++'
-    filename = './Game.ini'
-    get_option = Proc.new do |key, default_value|
-      l = GetPrivateProfileString.call(section, key, default_value, buffer, buffer.size, filename)
-      buffer[0, l]
-    end
-    @fullscreen       = get_option.call('Fullscreen'     , '0') == '1'
-    @fullscreen_ratio = get_option.call('FullscreenRatio', '0').to_i
-    @windowed_ratio   = get_option.call('WindowedRatio'  , '1').to_i
-    toggle_vx_fullscreen if Disable_VX_Fullscreen and vx_fullscreen?
-    fullscreen? ? fullscreen_mode : windowed_mode
-  end
-  def save_fullscreen_settings
-    section = 'Fullscreen++'
-    filename = './Game.ini'
-    set_option = Proc.new do |key, value|
-      WritePrivateProfileString.call(section, key, value.to_s, filename)
-    end
-    set_option.call('Fullscreen'     , @fullscreen ? '1' : '0')
-    set_option.call('FullscreenRatio', @fullscreen_ratio)
-    set_option.call('WindowedRatio'  , @windowed_ratio)
-  end
-  def fullscreen?
-    @fullscreen or vx_fullscreen?
-  end
-  def vx_fullscreen?
-    rect = screen_rect
-    rect.width == 640 and rect.height == 480
-  end
-  def toggle_fullscreen
-    fullscreen? ? windowed_mode : fullscreen_mode
-  end
-  def toggle_vx_fullscreen
-    windowed_mode if @fullscreen and !vx_fullscreen?
-    inputs = [1,18,0, 1,13,0, 1,13,2, 1,18,2].pack('LSx2Lx16'*4)
-    SendInput.call(4, inputs, 28)
-    zeus_fullscreen_update
-    self.ratio += 0 # refresh window size
-  end
-  def vx_fullscreen_mode
-    return if vx_fullscreen?
-    toggle_vx_fullscreen
-  end
-  def fullscreen_mode
-    return if vx_fullscreen?
-    initialize_fullscreen_rects
-    show_back
-    hide_borders
-    @fullscreen = true
-    self.ratio += 0 # refresh window size
-  end
-  def windowed_mode
-    toggle_vx_fullscreen if vx_fullscreen?
-    initialize_fullscreen_rects
-    hide_back
-    show_borders
-    @fullscreen = false
-    self.ratio += 0 # refresh window size
-  end
-  def toggle_ratio
-    return if vx_fullscreen?
-    self.ratio += 1
-  end
-  def ratio
-    return 1 if vx_fullscreen?
-    @fullscreen ? @fullscreen_ratio : @windowed_ratio
-  end
-  def ratio=(r)
-    return if vx_fullscreen?
-    initialize_fullscreen_rects
-    r = 0 if r < 0
-    if @fullscreen
-      @fullscreen_ratio = r
-      w_max, h_max = @fullscreen_rect.width, @fullscreen_rect.height
-    else
-      @windowed_ratio = r
-      w_max = @workarea_rect.width  - @borders_size.width
-      h_max = @workarea_rect.height - @borders_size.height
-    end
-    if r == 0
-      w, h = w_max, w_max * height / width
-      h, w = h_max, h_max * width / height if h > h_max
-    else
-      w, h = width * r, height * r
-      return self.ratio = 0 if w > w_max or h > h_max
-    end
-    resize_window(w, h)
-    save_fullscreen_settings
-  end
-  def update
-    release_alt if Disable_VX_Fullscreen and Input.trigger?(Input::ALT)
-    zeus_fullscreen_update
-    toggle_fullscreen if Input.trigger?(Input::F5)
-    toggle_ratio      if Input.trigger?(Input::F6)
-  end
-  def resize_screen(width, height)
-    zeus_fullscreen_resize_screen(width, height)
-    self.ratio += 0 # refresh window size
-  end
-end
-Graphics.load_fullscreen_settings
-
-
-end"l# =begin
-# #===============================================================================
-#  Title: Map Screenshot
-#  Author: Hime
-#  Date: Dec 7, 2014
-# --------------------------------------------------------------------------------
-#  ** Change log
-#  Dec 7, 2014
-#    - added option to draw certain events
-#  Apr 15, 2013
-#    - updated script to use GDI+ interface
-#    - added support for region map overlay and passage map overlay
-#  Apr 6, 2013
-#    - fixed bug where drawing events crashed the game
-#  Apr 2, 2013
-#    - map data is now setup by an instance of Game_Map, to account for custom
-#      map scripts adding to the map
-#  Jul 27
-#    - Export dirNames are now optional
-#  May 28
-#    - updated overlay mapping compatibility to draw the overlays 
-#      based on the player's current position
-#    - fixed issue where import hash was commented out
-#    - Added support for Yami's overlay mapping
-#  May 24, 2012
-#    - fixed large characters
-#    - some optimizations for calculating bounds and dimensions
-#  May 5, 2012
-#    - fixed waterfall autotile
-#    - added screenshot feature
-#  May 4, 2012
-#    - fixed tiles with alpha channel
-#    - fixed shadows
-#    - fixed wall autotiles
-#  May 1, 2012
-#    - fixed wall autotile, although there is still an issue with some tiles
-#  Apr 29, 2012
-#    - fixed shadow map drawing
-#    - added region highlighting
-#    - added damage tile highlighting
-#  Apr 28, 2012
-#    - Initial Release
-# ------------------------------------------------------------------------------
-#  ** Description
- 
-#  This script allows you to take a full image of any of your game's maps
-#  and export. An image of the map is referred to as a "mapshot" (as opposed to
-#  screenshot).
- 
-#  The script provides various configuration options to control what kinds of
-#  things you want to see on your map, such as events, vehicles, region ID's, or
-#  specific tile properties.
- 
-# ------------------------------------------------------------------------------
-#  ** Usage
- 
-#  The default key for taking a mapshot is F7. This can be changed in the
-#  configuration section.
- 
-#  To take a mapshot, first start the game, and then hit F7.
-#  A message will appear informing you that a mapshot was successfully taken.
- 
-#  Alternatively, you can use script calls to take mapshots.
-
-#     Map_Saver.new(map_id).export
-    
-#  Aside from exporting images, you are able to use the image that the
-#  map saver captures.
- 
-#    ms = Map_Saver.new(map_id)
-#    bmp = ms.map_image
-   
-#  This gives you a reference to a Bitmap object that contains an image of
-#  your map.
-# --------------------------------------------------------------------------------
-#   ** Credits
- 
-#   Cremno
-#     -GDI+ interface code
-
-# ================================================================================
-# =end
-
-# # â˜… GDI+ interface
-# # â˜…â˜…â˜…â˜…â˜…â˜…â˜…â˜…â˜…â˜…â˜…â˜…
-# #
-# # Author : Cremno
-# #
- 
-# module Gdiplus
-
-#   DLL = 'gdiplus.dll'
- 
-#     GdiplusStartup = Win32API.new(DLL,'GdiplusStartup', 'PPP','L')
-
-#     GdiplusShutdown = Win32API.new(DLL,'GdiplusShutdown', 'P', 'V')
-
-#     GdipDisposeImage = Win32API.new(DLL,'GdipDisposeImage', 'P','L')
-#     GdipSaveImageToFile = Win32API.new(DLL,'GdipSaveImageToFile', 'PPPP','L')
-#     GdipCreateBitmapFromGdiDib = Win32API.new(DLL,'GdipCreateBitmapFromGdiDib', 'LLP','L')
-#     GdipCreateBitmapFromHBITMAP = Win32API.new(DLL,'GdipCreateBitmapFromHBITMAP', 'LLP','L')
-#     GdipCreateBitmapFromScan0 = Win32API.new(DLL,'GdipCreateBitmapFromScan0', 'LLLLPP','L')
-
- 
-#   @@token = [0].pack('I')
-#   def self.token
-#     @@token
+#   unless method_defined?(:zeus_fullscreen_update)
+#     HWND     = FindWindow.call('RGSS Player', 0)
+#     BackHWND = CreateWindowEx.call(0x08000008, 'Static', '', 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0)
+#     alias zeus_fullscreen_resize_screen resize_screen
+#     alias zeus_fullscreen_update        update
 #   end
- 
-#   @@clsids = {}
-#   def self.clsids
-#     @@clsids
-#   end
- 
-#   def self.gen_clsids
-#     return unless @@clsids.empty?
-#     func = Win32API.new('rpcrt4.dll', 'UuidFromString', 'PP', 'L')
-#     {
-#       :bmp =>  '557cf400-1a04-11d3-9a73-0000f81ef32e',
-#       :jpeg => '557cf401-1a04-11d3-9a73-0000f81ef32e',
-#       :gif =>  '557cf402-1a04-11d3-9a73-0000f81ef32e',
-#       :tiff => '557cf405-1a04-11d3-9a73-0000f81ef32e',
-#       :png =>  '557cf406-1a04-11d3-9a73-0000f81ef32e'
-#     }.each_pair do |k, v|
-#       clsid = [0].pack('I')
-#       func.call(v, clsid)
-#       @@clsids[k] = clsid
-#     end
-#     @@clsids[:jpg] = @@clsids[:jpeg]
-#     @@clsids[:tif] = @@clsids[:tiff]
-#   end
- 
-#   # TODO: prepend prefix (Gdip or Gdiplus) automatically
-#   # def self.call(*args)
-#   #   name = args.shift
-#   #   func = FUNCTIONS[name]
-#   #   v = func.call(*args)
-#   #   if v && v != 0
-#   #     msgbox "GDI+ error: #{v}\n\nFunction: #{name}\nArguments: #{args.inspect}"
-#   #     false
-#   #   else
-#   #     true
-#   #   end
-#   # end
- 
-#   def self.startup
-#     GdiplusStartup.call( @@token, [1, 0, 0, 0].pack('L4'), 0)
-#   end
- 
-#   def self.shutdown
-#     GdiplusShutdown.call(@@token)
-#   end
- 
-#   class Image
- 
-#     attr_reader :instance
-#     def initialize
-#       @instance = 0
-#       true
-#     end
- 
-#     def save(destination, *args)
-#       case destination
-#       when :file
-#         filename = args.shift << "\0"
-#         filename.encode!('UTF-16LE')
-#         argv = [:GdipSaveImageToFile, filename, Gdiplus.clsids[args.shift], 0]
-#       else
-#         raise ArgumentError, "unknown GDI+ image destination: #{source}"
-#       end
-#       argv.insert(1, @instance)
-#       Gdiplus.call(*argv)
-#     end
- 
-#     def dispose
-#       Gdiplus.call :GdipDisposeImage, @instance
-#     end
-#   end
- 
-#   class Bitmap < Image
- 
-#     def initialize source, *args
-#       case source
-#         when :gdidib
-#           argv = [:GdipCreateBitmapFromGdiDib, args.shift, args.shift]
-#         when :hbitmap
-#           argv = [:GdipCreateBitmapFromHBITMAP, args.shift, 0]
-#         when :scan0
-#           w = args.shift
-#           h = args.shift
-#           argv = [:GdipCreateBitmapFromScan0, w, h, w * -4, 0x26200a, args.shift]
-#         else
-#           raise ArgumentError, "unknown GDI+ bitmap source: #{source}"
-#       end
-#       argv.push([0].pack('I'))
-#       retval = Gdiplus.call(*argv)
-#       @instance = retval ? argv.last.unpack('I').first : 0
-#       retval
-#     end
-#   end
-
-# end
-
-
-# class Bitmap
- 
-#   def save(filename, options = {})
-#     options.merge!(:format => File.extname(filename)[1..-1].to_sym)
-#     retval = false
-#     #bitmap = Gdiplus::Bitmap.new(:hbitmap, hbitmap)
-#     #bitmap = Gdiplus::Bitmap.new(:gdidib, *gdidib)
-#     # this seems to be the fastest one (RGSS 3.0.1, Windows 8 64-bit)
-#     bitmap = Gdiplus::Bitmap.new(:scan0, width, height, scan0)
-#     if bitmap
-#       retval = bitmap.save(:file, filename, options[:format])
-#       bitmap.dispose
-#     end
-#     retval
-#   end
- 
 # private
- 
-#   def _data_struct(offset = 0)
-#     @_data_struct ||= (DL::CPtr.new((object_id << 1) + 16).ptr + 8).ptr
-#     (@_data_struct + offset).ptr.to_i
+#   def initialize_fullscreen_rects
+#     @borders_size    ||= borders_size
+#     @fullscreen_rect ||= screen_rect
+#     @workarea_rect   ||= workarea_rect
 #   end
- 
-#   def gdidib
-#      [_data_struct(8), _data_struct(16)]
+#   def borders_size
+#     GetWindowRect.call(HWND, wrect = [0, 0, 0, 0].pack('l4'))
+#     GetClientRect.call(HWND, crect = [0, 0, 0, 0].pack('l4'))
+#     wrect, crect = wrect.unpack('l4'), crect.unpack('l4')
+#     Rect.new(0, 0, wrect[2]-wrect[0]-crect[2], wrect[3]-wrect[1]-crect[3])
 #   end
- 
-#   def hbitmap
-#     _data_struct(44)
+#   def screen_rect
+#     Rect.new(0, 0, GetSystemMetrics.call(0), GetSystemMetrics.call(1))
 #   end
- 
-#   def scan0
-#     _data_struct(12)
+#   def workarea_rect
+#     SystemParametersInfo.call(0x30, 0, rect = [0, 0, 0, 0].pack('l4'), 0)
+#     rect = rect.unpack('l4')
+#     Rect.new(rect[0], rect[1], rect[2]-rect[0], rect[3]-rect[1])
 #   end
- 
+#   def hide_borders() SetWindowLong.call(HWND, -16, 0x14000000) end
+#   def show_borders() SetWindowLong.call(HWND, -16, 0x14CA0000) end
+#   def hide_back()    ShowWindow.call(BackHWND, 0)              end
+#   def show_back
+#     ShowWindow.call(BackHWND, 3)
+#     UpdateWindow.call(BackHWND)
+#     dc    = GetDC.call(BackHWND)
+#     rect  = [0, 0, @fullscreen_rect.width, @fullscreen_rect.height].pack('l4')
+#     brush = CreateSolidBrush.call(0)
+#     FillRect.call(dc, rect, brush)
+#     ReleaseDC.call(BackHWND, dc)
+#     DeleteObject.call(brush)
+#   end
+#   def resize_window(w, h)
+#     if @fullscreen
+#       x, y, z = (@fullscreen_rect.width-w)/2, (@fullscreen_rect.height-h)/2, -1
+#     else
+#       w += @borders_size.width
+#       h += @borders_size.height
+#       x = @workarea_rect.x + (@workarea_rect.width  - w) / 2
+#       y = @workarea_rect.y + (@workarea_rect.height - h) / 2
+#       z = -2
+#     end
+#     SetWindowPos.call(HWND, z, x, y, w, h, 0)
+#   end
+#   def release_alt
+#     inputs = [1,18,2, 1,164,2, 1,165,2].pack('LSx2Lx16'*3)
+#     SendInput.call(3, inputs, 28)
+#   end
+# public
+#   def load_fullscreen_settings
+#     buffer = [].pack('x256')
+#     section = 'Fullscreen++'
+#     filename = './Game.ini'
+#     get_option = Proc.new do |key, default_value|
+#       l = GetPrivateProfileString.call(section, key, default_value, buffer, buffer.size, filename)
+#       buffer[0, l]
+#     end
+#     @fullscreen       = get_option.call('Fullscreen'     , '0') == '1'
+#     @fullscreen_ratio = get_option.call('FullscreenRatio', '0').to_i
+#     @windowed_ratio   = get_option.call('WindowedRatio'  , '1').to_i
+#     toggle_vx_fullscreen if Disable_VX_Fullscreen and vx_fullscreen?
+#     fullscreen? ? fullscreen_mode : windowed_mode
+#   end
+#   def save_fullscreen_settings
+#     section = 'Fullscreen++'
+#     filename = './Game.ini'
+#     set_option = Proc.new do |key, value|
+#       WritePrivateProfileString.call(section, key, value.to_s, filename)
+#     end
+#     set_option.call('Fullscreen'     , @fullscreen ? '1' : '0')
+#     set_option.call('FullscreenRatio', @fullscreen_ratio)
+#     set_option.call('WindowedRatio'  , @windowed_ratio)
+#   end
+#   def fullscreen?
+#     @fullscreen or vx_fullscreen?
+#   end
+#   def vx_fullscreen?
+#     rect = screen_rect
+#     rect.width == 640 and rect.height == 480
+#   end
+#   def toggle_fullscreen
+#     fullscreen? ? windowed_mode : fullscreen_mode
+#   end
+#   def toggle_vx_fullscreen
+#     windowed_mode if @fullscreen and !vx_fullscreen?
+#     inputs = [1,18,0, 1,13,0, 1,13,2, 1,18,2].pack('LSx2Lx16'*4)
+#     SendInput.call(4, inputs, 28)
+#     zeus_fullscreen_update
+#     self.ratio += 0 # refresh window size
+#   end
+#   def vx_fullscreen_mode
+#     return if vx_fullscreen?
+#     toggle_vx_fullscreen
+#   end
+#   def fullscreen_mode
+#     return if vx_fullscreen?
+#     initialize_fullscreen_rects
+#     show_back
+#     hide_borders
+#     @fullscreen = true
+#     self.ratio += 0 # refresh window size
+#   end
+#   def windowed_mode
+#     toggle_vx_fullscreen if vx_fullscreen?
+#     initialize_fullscreen_rects
+#     hide_back
+#     show_borders
+#     @fullscreen = false
+#     self.ratio += 0 # refresh window size
+#   end
+#   def toggle_ratio
+#     return if vx_fullscreen?
+#     self.ratio += 1
+#   end
+#   def ratio
+#     return 1 if vx_fullscreen?
+#     @fullscreen ? @fullscreen_ratio : @windowed_ratio
+#   end
+#   def ratio=(r)
+#     return if vx_fullscreen?
+#     initialize_fullscreen_rects
+#     r = 0 if r < 0
+#     if @fullscreen
+#       @fullscreen_ratio = r
+#       w_max, h_max = @fullscreen_rect.width, @fullscreen_rect.height
+#     else
+#       @windowed_ratio = r
+#       w_max = @workarea_rect.width  - @borders_size.width
+#       h_max = @workarea_rect.height - @borders_size.height
+#     end
+#     if r == 0
+#       w, h = w_max, w_max * height / width
+#       h, w = h_max, h_max * width / height if h > h_max
+#     else
+#       w, h = width * r, height * r
+#       return self.ratio = 0 if w > w_max or h > h_max
+#     end
+#     resize_window(w, h)
+#     save_fullscreen_settings
+#   end
+#   def update
+#     release_alt if Disable_VX_Fullscreen and Input.trigger?(Input::ALT)
+#     zeus_fullscreen_update
+#     toggle_fullscreen if Input.trigger?(Input::F5)
+#     toggle_ratio      if Input.trigger?(Input::F6)
+#   end
+#   def resize_screen(width, height)
+#     zeus_fullscreen_resize_screen(width, height)
+#     self.ratio += 0 # refresh window size
+#   end
 # end
 
-# Gdiplus.startup
-# Gdiplus.gen_clsids
- 
-# # if Gdiplus.startup
-# #   Gdiplus.gen_clsids
-# #   class << SceneManager
-# #     alias_method :run_wo_gdip_shutdown, :run
-# #     def run
-# #       run_wo_gdip_shutdown
-# #       Gdiplus.shutdown
-# #     end
-# #   end
-# # end"`# Bitmap Export v5.4 for XP, VX and VXace by Zeus81
+# Graphics.load_fullscreen_settings"a # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
 # Free for commercial use
 # Licence : http://creativecommons.org/licenses/by/4.0/
 # Contact : zeusex81@gmail.com
@@ -21715,76 +20213,7 @@ module Graphics
     alias save     export
     alias snapshot export
   end
-end"ê# if ACE_MODE
-  
-#   def set_rez(width,height)
-
-#     eval "
-
-#     # Do not edit
-#     wt, ht = width.divmod(32), height.divmod(32)
-#     #wt.last + ht.last == 0 || fail('Incorrect width or height')
-#     wh = -> w, h, off = 0 { [w + off, h + off].pack('l2').scan /.{4}/ }
-#     w, h = wh.(width, height)
-#     ww, hh = wh.(width, height, 32)
-#     www, hhh = wh.(wt.first.succ, ht.first.succ)
-#     base = 0x10000000  # fixed?
-#     mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }
-#     mod.(0x195F, \"\x90\" * 5)  # ???   
-#     mod.(0x19A4, h)
-#     mod.(0x19A9, w)
-#     mod.(0x1A56, h)
-#     mod.(0x1A5B, w)
-#     mod.(0x20F6, w)
-#     mod.(0x20FF, w)
-#     mod.(0x2106, h)
-#     mod.(0x210F, h)
-#     # speed up y?
-#     #mod.(0x1C5E3, h)
-#     #mod.(0x1C5E8, w)
-#     zero = [0].pack ?l
-#     mod.(0x1C5E3, zero)
-#     mod.(0x1C5E8, zero)
-#     mod.(0x1F477, h)
-#     mod.(0x1F47C, w)
-#     mod.(0x211FF, hh)
-#     mod.(0x21204, ww)
-#     mod.(0x21D7D, hhh[0])
-#     mod.(0x21E01, www[0])
-#     mod.(0x10DEA8, h)
-#     mod.(0x10DEAD, w)
-#     mod.(0x10DEDF, h)
-#     mod.(0x10DEF0, w)
-#     mod.(0x10DF14, h)
-#     mod.(0x10DF18, w)
-#     mod.(0x10DF48, h)
-#     mod.(0x10DF4C, w)
-#     mod.(0x10E6A7, w)
-#     mod.(0x10E6C3, h)
-#     mod.(0x10EEA9, w)
-#     mod.(0x10EEB9, h)
-#     Graphics.resize_screen width, height
-#     GC.start"
-
-#   end
-
-# else
-
-#   def set_rez(x,y)
-#     log_err "Can't resize in XP mode"
-#   end
-
-# end"Ê#=============================================================================
-# * Snapshot script from screenshot.dll, Modified from GAMEGUY's SCRIPT
-#=============================================================================
-module Snapshot
-  def self.snap
-    snp = Win32API.new('screenshot.dll', 'Screenshot', %w(l l l l p l l), '')    
-    file_name = "#{$appdata}//temp.png"
-    snp.call(0, 0, 640, 480, file_name, $mouse.hwnd, 2)
-  end
-end"A
-# Moved to System/_seal for now to run before AudioManager"ˆ1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
+end"ˆ1# # Zeus Video Player v2.3 for XP, VX and VXace by Zeus81
 # # Free for commercial use
 # # Licence : http://creativecommons.org/licenses/by/4.0/
 # # Contact : zeusex81@gmail.com
