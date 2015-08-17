@@ -26,7 +26,7 @@ class Mnu_Status < Mnu_Base
 		cy = 124
 
 		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
+		lbl.icon = $cache.icon("misc/level")
 	    lbl.font = $fonts.list
 	    lbl.shadow = $fonts.list_shadow
 	    lbl.text = "Overall"
@@ -37,7 +37,7 @@ class Mnu_Status < Mnu_Base
 	    cy += 30
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
+		lbl.icon = $cache.icon("stats/level")
 	    lbl.font = $fonts.pop_text
 	    lbl.text = "Level: #{@char.level}"
 	    lbl.move(cx,cy)
@@ -47,9 +47,9 @@ class Mnu_Status < Mnu_Base
 	    cy += 26
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
+		lbl.icon = $cache.icon("stats/xp")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
+	    lbl.text = "Xp: #{@char.xp}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 		

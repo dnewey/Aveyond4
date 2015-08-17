@@ -274,37 +274,36 @@ class Game_Party
 
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
-    @actors['boy'].equip('mid','boy-arm-s')
+    @actors['boy'].equip('mid','boy-arm-start')
 
     # Ingrid
-    @actors['ing'].equip('wand','wand-start')
-    @actors['ing'].equip('athame','athame-start')
-    @actors['ing'].equip('light','ing-arm-s')
+    @actors['ing'].equip('wand','ing-wand-start')
+    @actors['ing'].equip('athame','ing-athame-start')
+    @actors['ing'].equip('light','ing-arm-start')
 
     # Myst
-    @actors['mys'].equip('lclaw','claw-l-start')
-    @actors['mys'].equip('rclaw','claw-r-start')
-    @actors['mys'].equip('light','mys-arm-s')
+    @actors['mys'].equip('lclaw','mys-claw-start')
+    @actors['mys'].equip('rclaw','mys-claw-start')
+    @actors['mys'].equip('light','mys-arm-start')
 
     # Robin
-    @actors['rob'].equip('sword','hammer-start')
-    @actors['rob'].equip('heavy','rob-arm-s')
+    @actors['rob'].equip('sword','rob-hammer-start')
+    @actors['rob'].equip('heavy','rob-arm-start')
 
     # Hiberu
-    @actors['hib'].equip('book','hib-wep-s')
-    @actors['hib'].equip('mid','hib-arm-s')
+    @actors['hib'].equip('book','hib-wep-start')
+    @actors['hib'].equip('mid','hib-arm-start')
     # Give accessory
 
     # Rowen
-    @actors['row'].equip('dagger','row-wep-s')
-    @actors['row'].equip('light','row-arm-s')
+    @actors['row'].equip('dagger','row-dagger-start')
+    @actors['row'].equip('mid','mid-arm-tor')
     # Give extra gadget
 
     # Phye
     @actors['phy'].equip('staff','phy-sword')
-    @actors['phy'].equip('heavy','phy-arm-s')
-    # Give him helm
-
+    @actors['phy'].equip('heavy','phy-arm-start')
+    @actors['phy'].equip('heavy','phy-helm-start')
 
     # Initial skills per actor
     @actors["boy"].learn('fireburn')
