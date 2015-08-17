@@ -498,7 +498,9 @@ class Game_Character
       end
       @move_angle += 0.2
       # Convert map coordinates from map move speed into move distance
-      distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
+      if $party.leader != 'mys'
+        distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
+      end
 
       #sfx("step") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
       #sfx("step") if (4.8 - @move_angle).abs < 0.21

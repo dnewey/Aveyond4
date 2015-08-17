@@ -23,6 +23,7 @@ def item(id,number=1,type='f')
 		type = number
 		number = 1
 	end
+	sfx 'fireworks-explode'
 	$party.add_item(id,number)
 	return if !$scene.is_a?(Scene_Map)
 	pop_item(id,number,type) if type != 's'

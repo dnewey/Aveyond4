@@ -2931,7 +2931,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"T#==============================================================================
+"n#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -2956,6 +2956,7 @@ def item(id,number=1,type='f')
 		type = number
 		number = 1
 	end
+	sfx 'fireworks-explode'
 	$party.add_item(id,number)
 	return if !$scene.is_a?(Scene_Map)
 	pop_item(id,number,type) if type != 's'
@@ -4979,7 +4980,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"ï0#==============================================================================
+end"‰?#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -5340,7 +5341,43 @@ class Ui_Grid
 
 	end
 
-	def add_compare(gear,slot,user)
+	def add_mana(item)
+
+		#data = $data.items[gear]
+
+		btn = add_part_box('users',300,46)
+
+		ocx = @cx
+
+		@cx += 4
+		@cy += 2
+
+		# Find all users
+		users = [$party.get('boy'),$party.get('ing'),$party.get('hib')]
+
+		# Draw all of the icons now
+		tick = Sprite.new(@vp)
+		tick.bitmap = $cache.icon("misc/tick")
+		tick.move(@cx+10,@cy+10)
+		@extra.push(tick)
+		@cx += 28
+
+		users.each{ |u|
+			icon = Label.new(@vp)
+			icon.icon = $cache.icon("faces/#{u.id}")
+			icon.font = $fonts.pop_text
+			icon.text = '+'
+			icon.move(@cx+10,@cy+7)
+			@extra.push(icon)
+			@cx += 80
+		}
+
+		@cy += 46
+		@cx = ocx
+
+	end
+
+	def add_compare2(gear,slot,user)
 
 		data = $data.items[gear]
 		#return if gear != nil && data.stats == ''
@@ -5359,6 +5396,60 @@ class Ui_Grid
         stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
+
+     	@cy += 46
+
+	end
+
+	def add_compare(stat,old,now,change)
+
+		log_scr(stat)
+
+		btn = add_part_box(stat,300,46)
+		if change < 0
+			btn.wallpaper = $cache.menu_wallpaper('red')
+		elsif change > 0
+			btn.wallpaper = $cache.menu_wallpaper('green')
+		end
+
+		row = Label.new(@vp)
+        row.icon = $cache.icon("stats/#{stat}")
+        row.font = $fonts.pop_text
+        #log_scr(res)
+       	row.text = "#{old} -> #{now} (#{change})"
+        @extra.push(row)
+     	row.move(@cx+10,@cy+9)
+
+     	@cy += 46
+
+	end
+
+	def add_nochange
+
+		btn = add_part_box('nochange',300,46)
+
+		row = Label.new(@vp)
+        row.icon = $cache.icon("stats/def")
+        row.font = $fonts.pop_text
+        #log_scr(res)
+	    row.text = 'No change'
+        @extra.push(row)
+     	row.move(@cx+10,@cy+9)
+
+     	@cy += 46
+
+	end
+
+	def add_stock(id)
+
+		btn = add_part_box('stock',300,46)
+
+		row = Label.new(@vp)
+        row.icon = $cache.icon("misc/items")
+        row.font = $fonts.pop_text
+	    row.text = "Stock: #{$party.item_number(id)}"
+        @extra.push(row)
+     	row.move(@cx+10,@cy+9)
 
      	@cy += 46
 
@@ -5424,7 +5515,7 @@ class Ui_Grid
 		name += " - Lvl #{char.level.to_s}" if char
 
 		# Create new things
-		btn = add_part_box(box,300,70)
+		btn = add_part_box(box,260,80)
 
 		cont = Label.new(@vp)
 	    cont.font = $fonts.list
@@ -5442,22 +5533,122 @@ class Ui_Grid
 
 	     	port = Sprite.new(@vp)
 			port.bitmap = $cache.face_small(id)
-			port.src_rect.height = port.height() - 14
+			port.src_rect.height = port.height() 
 			@extra.push(port)
-			port.move(@cx+btn.width-port.width-9,@cy+62-port.src_rect.height)
+			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
 			port.z += 50
 
-			hp_bar = Bar.new(@vp,170,8)
+
+
+
+			mp_bar = Bar.new(@vp,140,9)
+			@extra.push(mp_bar)
+			mp_bar.opacity = 200
+			mp_bar.for(:mp)
+			mp_bar.move(@cx+20,@cy+42)
+
+			mp_label = Sprite.new(@vp)
+			@extra.push(mp_label)
+			mp_label.bitmap = $cache.menu_char("label-mp")
+			mp_label.opacity = 200
+			mp_label.move(@cx+21,@cy + 35)
+			mp_label.z += 50
+
+
+			hp_bar = Bar.new(@vp,140,9)
 			@extra.push(hp_bar)
 			hp_bar.opacity = 200
-			hp_bar.move(@cx+20,@cy+42)
+			hp_bar.for(:hp)
+			hp_bar.move(@cx+20,@cy+59)
+
+			hp_label = Sprite.new(@vp)
+			@extra.push(hp_label)
+			hp_label.bitmap = $cache.menu_char("label-hp")
+			hp_label.opacity = 200
+			hp_label.move(@cx+21,@cy + 52)
+			hp_label.z += 50
+
 			
 	     	choose(@boxes[0].name) if @boxes.count == 1
 
 	     end
 
      	# Next
-		@cy += btn.height + @spacing + 3
+		@cy += btn.height + @spacing #3
+
+	end
+
+	def add_item_eater(id)
+
+		char = $party.get(id)
+
+		name = char.name
+
+		# Create new things
+		btn = add_part_box(id,145,83)
+
+		cont = Label.new(@vp)
+	    cont.font = $fonts.list
+	    cont.shadow = $fonts.list_shadow
+	    cont.gradient = true
+	    cont.text = name
+	    @contents.push(cont)
+	    cont.move(@cx+10,@cy+7)
+
+		if char == nil
+
+
+
+		else
+
+	     	port = Sprite.new(@vp)
+			port.bitmap = $cache.face_small(id)
+			port.src_rect.height = port.height() 
+			@extra.push(port)
+			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
+			port.z += 50
+
+
+
+
+			# mp_bar = Bar.new(@vp,120,9)
+			# @extra.push(mp_bar)
+			# mp_bar.opacity = 200
+			# mp_bar.for(:mp)
+			# mp_bar.move(@cx+15,@cy+44)
+
+			# mp_label = Sprite.new(@vp)
+			# @extra.push(mp_label)
+			# mp_label.bitmap = $cache.menu_char("label-mp")
+			# mp_label.opacity = 200
+			# mp_label.move(@cx+16,@cy + 37)
+			# mp_label.z += 50
+
+
+			hp_bar = Bar.new(@vp,120,9)
+			@extra.push(hp_bar)
+			hp_bar.opacity = 200
+			hp_bar.for(:hp)
+			hp_bar.move(@cx+15,@cy+61)
+
+			hp_label = Sprite.new(@vp)
+			@extra.push(hp_label)
+			hp_label.bitmap = $cache.menu_char("label-hp")
+			hp_label.opacity = 200
+			hp_label.move(@cx+16,@cy + 54)
+			hp_label.z += 50
+
+
+
+			#mp_bar.z += 50
+			hp_bar.z += 50
+			
+	     	choose(@boxes[0].name) if @boxes.count == 1
+
+	     end
+
+     	# Next
+		@cy += btn.height + @spacing + 5
 
 	end
 
@@ -6805,7 +6996,8 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"¢	#==============================================================================
+end"g
+#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -6831,6 +7023,8 @@ class Mnu_Char < Mnu_Base
 		
 		@grid.add_wide("Creatures","Creature Hunting","items/creature") if $menu.char == 'boy'
 		@grid.add_wide("Potions","Potion Making","items/potion-red") if $menu.char == 'ing'
+		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
+		@grid.add_wide("Demons","Demon Chasing","items/potion-red") if $menu.char == 'phy'
 
 		@grid.choose($menu.char_cursor)
 
@@ -6930,6 +7124,124 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
+end"ž#==============================================================================
+# ** Mnu_Healing
+#==============================================================================
+
+class Mnu_Healing < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('items')
+		@subtitle.text = "Choose target of item"
+
+		remove_menu
+		remove_info
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+		@grid = Ui_Grid.new(vp)
+		self.left.push(@grid)
+		setup_grid
+
+		@item_box = Item_Box.new(vp)
+		@item_box.center(472,260)
+		@item_box.item($menu.use_item)
+		self.right.push(@item_box)
+
+		@item_grid = Ui_Grid.new(vp)
+		@item_grid.move(@item_box.x,@item_box.y + @item_box.height)
+		@item_grid.add_stock($menu.use_item)
+		@item_grid.disable
+		self.right.push(@item_grid)
+
+		open
+
+	end
+
+	def setup_grid
+
+		@grid.clear
+
+		cx = 12
+		cy = 120
+
+		sx = 151
+		sy = 90
+
+		@grid.move(cx,cy)
+
+		@grid.add_item_eater($party.active[0])
+
+		cx += sx
+		@grid.move(cx,cy)
+
+		if $party.active.count > 1
+			@grid.add_item_eater($party.active[1])
+		end
+
+		cx = 12
+		cy += sy
+		@grid.move(cx,cy)
+
+		if $party.active.count > 2
+			@grid.add_item_eater($party.active[2])
+		end
+
+		cx += sx
+		@grid.move(cx,cy)
+
+		if $party.active.count > 3
+			@grid.add_item_eater($party.active[3])
+		end
+
+		cx = 12
+		cy += sy
+		@grid.move(cx,cy)
+
+		if $party.reserve.count > 0
+			@grid.add_item_eater($party.reserve[0])
+		end
+
+		cx += sx
+		@grid.move(cx,cy)
+
+		if $party.reserve.count > 1
+			@grid.add_item_eater($party.reserve[1])
+		end
+
+		cx = 89
+		cy += sy
+		@grid.move(cx,cy)
+
+		if $party.reserve.count > 2
+			@grid.add_item_eater($party.reserve[2])
+		end
+
+	end
+
+	def update
+
+		# If anim in done, change state
+		if $input.cancel? || $input.rclick?
+			close_now
+			$scene.queue_menu("Items")
+		end
+
+		super		
+	end
+
+	def change(option)
+
+		
+	end
+
+	def select(option)	
+		
+	end
+
 end"Ô#==============================================================================
 # ** Mnu_Help
 #==============================================================================
@@ -6990,7 +7302,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"Ý#==============================================================================
+end"°#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -7065,11 +7377,32 @@ class Mnu_Items < Mnu_Base
 
 	def change(option)
 
-
 		#@item_box.show
 		
 		@item_box.item(option)
 		@item_box.center(472,260)#+@menu.list.page_idx*@menu.list.row_height)
+
+		item = $data.items[option]
+
+		@grid.clear
+
+		@grid.move(@item_box.x,@item_box.y + @item_box.height)
+
+		# If gear, show the +-
+		if item.is_a?(GearData)
+			@grid.add_users(option)
+		end
+
+		if item.is_a?(UsableData)
+
+			# If healing, show results
+			if item.action.include?('mana')
+				@grid.add_mana(option)
+			end
+
+		end
+
+		@grid.disable
 
 		if @last_option != option
 			@last_option = option
@@ -7082,6 +7415,11 @@ class Mnu_Items < Mnu_Base
 
 	def select(option)	
 		
+		# If this is usalbe, use it
+		$menu.use_item = option
+		$scene.queue_menu("Healing")
+		close_soon
+
 	end
 
 end"Á#==============================================================================
@@ -7730,7 +8068,7 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end"Á
+end"L	
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -7745,13 +8083,18 @@ class Mnu_Party < Mnu_Base
 		@first = nil
 
 		@active = Sprite.new(vp)
-		@active.bitmap = $cache.menu_tab('all')
-		@active.move(140,105)
+		@active.bitmap = $cache.menu_tab('active')
+		@active.move(130,110)
 		@left.push(@active)
 
 		@reserve = Sprite.new(vp)
-		@reserve.bitmap = $cache.menu_tab('all')
-		@reserve.move(450,105)
+		@reserve.bitmap = $cache.menu_tab('reserve')
+		@reserve.move(436,110)
+		@right.push(@reserve)
+
+		@reserve = Sprite.new(vp)
+		@reserve.bitmap = $cache.menu_common('switch')
+		@reserve.move(293,285)
 		@right.push(@reserve)
 		
 		@grid = Ui_Grid.new(vp)
@@ -7772,7 +8115,7 @@ class Mnu_Party < Mnu_Base
 
 
 		
-		@grid.move(15,128)
+		@grid.move(30,138)
 
 		@grid.add_party_mem('a.0',$party.active[0])
 		if $party.active.count > 1
@@ -7791,8 +8134,8 @@ class Mnu_Party < Mnu_Base
 			@grid.add_party_mem('a.3',nil)
 		end
 
-		@grid.cx = 324
-		@grid.cy = 128
+		@grid.cx = 344
+		@grid.cy = 138
 
 		@grid.add_party_mem('r.0',$party.reserve[0])
 		if $party.reserve.count > 1
@@ -8089,7 +8432,335 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end" " "b#==============================================================================
+end"#==============================================================================
+# ** Mnu_Creatures
+#==============================================================================
+
+class Mnu_Creatures < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('Status')
+		@title.icon($menu.char)
+		@subtitle.text = "Master of deception"
+
+		@char = $party.get($menu.char)
+
+		remove_menu
+		remove_info
+
+		@box = Box.new(vp,300,350)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("diamonds")
+		@box.move(15,115)
+		self.left.push(@box)
+
+		cx = 28
+		cy = 124
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Overall"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Xp: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+		
+		cx = 28
+		cy += 28
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Primary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Health: #{@char.maxhp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	   	lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/mana")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Mana: #{@char.maxmp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/str")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Strength: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/def")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Defense: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 28
+		cy += 28
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/secondary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Secondary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/luck")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Luck: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/eva")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Evasion: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/res")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Resist: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+		open
+
+	end
+
+	def update
+		
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Char")
+			close_now
+		end
+		
+		super
+		
+	end
+
+end"ÿ#==============================================================================
+# ** Mnu_Demons
+#==============================================================================
+
+class Mnu_Demons < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('Status')
+		@title.icon($menu.char)
+		@subtitle.text = "Master of deception"
+
+		@char = $party.get($menu.char)
+
+		remove_menu
+		remove_info
+
+		@box = Box.new(vp,300,350)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("diamonds")
+		@box.move(15,115)
+		self.left.push(@box)
+
+		cx = 28
+		cy = 124
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Overall"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Xp: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+		
+		cx = 28
+		cy += 28
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Primary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Health: #{@char.maxhp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	   	lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/mana")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Mana: #{@char.maxmp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/str")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Strength: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/def")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Defense: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 28
+		cy += 28
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/secondary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Secondary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/luck")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Luck: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/eva")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Evasion: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/res")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Resist: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+		open
+
+	end
+
+	def update
+		
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Char")
+			close_now
+		end
+		
+		super
+		
+	end
+
+end"÷#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -8220,7 +8891,7 @@ class Mnu_Equip < Mnu_Base
 		@menu.list.active = true
 
 		@item_box.show
-		#change(items[0])
+		change(items[0])
 
 	end
 
@@ -8234,16 +8905,26 @@ class Mnu_Equip < Mnu_Base
 		if option != 'remove'
 			@item_box.item(option)
 			@item_box.show
-			@users.clear
-			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(gear,@slot,@char)			
 		else
-			@item_box.hide
-			@users.clear
-			@users.move(@item_box.x,@item_box.y + @item_box.height)
-			@users.add_compare(gear,@slot,@char)			
-			@users.clear
+			@item_box.hide			
 		end
+
+		# Get comparison
+		result = @char.equip_result_mega(gear,@slot)
+		stats = ['hp','mp','str','def','luk','eva','res']
+
+		@users.clear
+		@users.move(@item_box.x,@item_box.y + @item_box.height)
+		(0..6).each{ |i|
+			if result[2][i] != 0
+				@users.add_compare(stats[i],result[0][i],result[1][i],result[2][i])			
+			end
+		}
+
+		if result[2] == [0,0,0,0,0,0,0]
+			@users.add_nochange
+		end
+		
 		
 	end
 
@@ -8311,7 +8992,171 @@ class Mnu_Equip < Mnu_Base
 
 	end
 
-end" ""#==============================================================================
+end"#==============================================================================
+# ** Mnu_Nightwatch
+#==============================================================================
+
+class Mnu_Nightwatch < Mnu_Base
+
+	def initialize(vp)
+		super(vp)
+
+		@title.change('Status')
+		@title.icon($menu.char)
+		@subtitle.text = "Master of deception"
+
+		@char = $party.get($menu.char)
+
+		remove_menu
+		remove_info
+
+		@box = Box.new(vp,300,350)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("diamonds")
+		@box.move(15,115)
+		self.left.push(@box)
+
+		cx = 28
+		cy = 124
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Overall"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Xp: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+		
+		cx = 28
+		cy += 28
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Primary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Health: #{@char.maxhp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	   	lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/mana")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max Mana: #{@char.maxmp}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/str")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Strength: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/def")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Defense: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 28
+		cy += 28
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/secondary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Secondary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/luck")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Luck: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/eva")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Evasion: #{@char.str}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/res")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Resist: #{@char.def}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
+
+		open
+
+	end
+
+	def update
+		
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Char")
+			close_now
+		end
+		
+		super
+		
+	end
+
+end",#==============================================================================
 # ** Mnu_Profile
 #==============================================================================
 
@@ -8365,6 +9210,8 @@ class Mnu_Profile < Mnu_Base
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
+
+		open
 
 	end
 
@@ -8449,7 +9296,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"õ#==============================================================================
+end"ÿ#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -8567,18 +9414,18 @@ class Mnu_Status < Mnu_Base
 	    cy += 30
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
+		lbl.icon = $cache.icon("stats/luck")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
+	    lbl.text = "Luck: #{@char.def}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
 	    cy += 26
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
+		lbl.icon = $cache.icon("stats/eva")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
+	    lbl.text = "Evasion: #{@char.str}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -8593,6 +9440,8 @@ class Mnu_Status < Mnu_Base
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
+
+		open
 
 	end
 
@@ -9051,7 +9900,7 @@ class Info_Box < SpriteGroup
 	end
 
 end
-"}
+"r
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -9218,6 +10067,15 @@ class Item_Box < SpriteGroup
 
                 when "def"
                     stat("def","#{dta[1]} Defense")
+
+                when "luk"
+                    stat("luk","#{dta[1]} Luck")
+
+                when "eva"
+                    stat("eva","#{dta[1]} Evasion")
+
+                when "res"
+                    stat("res","#{dta[1]} Resist")
 
             end
             #return if data == nil
@@ -9819,79 +10677,6 @@ class Mnu_Chooser < Mnu_Base
 		self.close_soon
 	end
 
-end"Z#==============================================================================
-# ** Mnu_Creatures
-#==============================================================================
-
-class Mnu_Creatures < Mnu_Base
-
-	def initialize(vp)
-		super(vp)
-
-		@title.change('Smith')
-		@subtitle.text = "Creatures"
-
-		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
-
-		# Auto items by boyle's level, maybe show future ones not for sale yet by 1 or 2 levels
-		skills = []
-		skills.push('fireburn')
-
-		@menu.list.type = :shop
-		@menu.list.setup(skills)
-
-		@port = Port_Full.new(vp)
-		self.right.push(@port)
-
-		@item_box = Item_Box.new(vp)
-		@item_box.center(472,250)
-		self.right.push(@item_box)
-
-		change_tab("Items")
-
-	end
-
-	def update
-		super
-		
-	end
-
-	def change(option)
-		#@info.title.text = option
-		@item_box.item(option)
-		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
-		@users.clear
-		@users.move(@item_box.x,@item_box.y + @item_box.height)
-		@users.add_users(option)
-		data = $data.items[option]
-		# if data.is_a?(GearData)
-		# 	$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
-		# 		@users.add_compare(option,u)
-		# 	}
-		# end
-	end
-
-	def select(option)	
-		item = $data.items[option]
-		if $party.gold >= item.price
-			$party.add_item(option)
-			$party.add_gold(-item.price)
-			sys("coins")
-		end
-	end
-
-	def change_tab(tab)
-		return
-
-		# Change list to certain items only
-		list = []
-		$menu.shop.each{ |item|
-			list.push(item) if $data.items[item].category == tab
-		}
-		@menu.list.setup(list)
-
-	end
-
 end"Í#==============================================================================
 # ** Mnu_Potions
 #==============================================================================
@@ -10175,7 +10960,7 @@ class Game_Battler
 
 
 end
-"ÿ
+"P	
 class Game_Battler
 
   # For displays
@@ -10211,16 +10996,23 @@ class Game_Battler
   #--------------------------------------------------------------------------
   # * Secondary Calculated Stats
   #--------------------------------------------------------------------------
+  
+  def luk
+    stat('luk')
+  end
+
   def eva
     stat('eva')
   end
 
-  def crit
-    stat('crit')
+  def res
+    stat('res')
   end
 
-  def miss
-    stat('miss')
+  def stat_list
+
+    return [maxhp,maxmp,str,self.def,luk,eva,res]
+
   end
 
   #--------------------------------------------------------------------------
@@ -10449,7 +11241,7 @@ class Game_Battler
     return true
   end
 
-end"Ò
+end"Ð
 class Game_Battler
 
 	def equip(slot,new_equip)
@@ -10475,9 +11267,37 @@ class Game_Battler
 		return list
 	end
 
-	def equip_result(new_equip,slot)
+
+
+
+	# Compare all stat changes, prepare a list of actual changes
+	# Include slot in case this is a removal
+	def equip_result_mega(new_equip,slot)
+
+		# hp, mp, str, def, eva, luk, res
+		before = stat_list
+		old = @equips[slot]
+		@equips[slot] = new_equip
+		after = stat_list
+		@equips[slot] = old
+
+		change = after.dup
+		change.each_index{ |i| change[i] -= before[i] }
+
+		return [before,after,change]
+
+	end
+
+	# def equip_result_single(new_equip)
+
+	# 	slot = $data.items[new_equip]
+
+	# end
+
+
+	def equip_result(new_equip)
 		# What is the stat
-		return 'none' if new_equip.stats == nil || new_equip.stats == ''
+		return ' ' if new_equip.stats == nil || new_equip.stats == ''
 		type = new_equip.stats.split("\n")[0].split("=>")[0]
 		slot = new_equip.slot
 		old = @equips[slot]
@@ -10607,7 +11427,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"K°#==============================================================================
+end"y°#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -11107,7 +11927,9 @@ class Game_Character
       end
       @move_angle += 0.2
       # Convert map coordinates from map move speed into move distance
-      distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
+      if $party.leader != 'mys'
+        distance = 1.8 ** @move_speed * (Math.sin(@move_angle)).abs
+      end
 
       #sfx("step") if (2.4-@move_angle).abs < 0.2 && (@prev_terrain == 4 || @prev_terrain == 3)
       #sfx("step") if (4.8 - @move_angle).abs < 0.21
@@ -14689,7 +15511,7 @@ class Game_Battle
   end
 
   
-end"Á
+end";
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -14705,6 +15527,10 @@ class MenuState
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
 
+	# Item chosen from item list
+	attr_accessor :use_item
+
+	# Page of the potions book to keep open
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
@@ -14723,6 +15549,8 @@ class MenuState
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
 
+		@use_item = nil
+
 		@potion_page = 0
 
 		@chosen = nil
@@ -14737,7 +15565,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ž#==============================================================================
+end"’#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15001,12 +15829,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    # set_active("ing")
-    # set_active("mys")
-    # set_active("rob")
-    # set_reserve("hib")
-    # set_reserve("row")
-    # set_reserve("phy")   
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
+    set_reserve("hib")
+    set_reserve("row")
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -16510,7 +17338,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"#==============================================================================
+"‚#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -16639,6 +17467,7 @@ class Scene_Menu
       when "Quit"; @menu = Mnu_Quit.new(@vp)
       when "Journal"; @menu = Mnu_Journal.new(@vp)
       when "Items"; @menu = Mnu_Items.new(@vp)
+      when "Healing"; @menu = Mnu_Healing.new(@vp)
       when "Party"; @menu = Mnu_Party.new(@vp)
       when "Progress"; @menu = Mnu_Progress.new(@vp)
       when "Options"; @menu = Mnu_Options.new(@vp)
@@ -16659,6 +17488,7 @@ class Scene_Menu
 
       when "Creatures"; @menu = Mnu_Creatures.new(@vp)
       when "Witchery"; @menu = Mnu_Witchery.new(@vp)
+      when "Nightwatch"; @menu = Mnu_Nightwatch.new(@vp)
       when "Dreaming"; @menu = Mnu_Dreaming.new(@vp)
       when "Demons"; @menu = Mnu_Demons.new(@vp)
 
