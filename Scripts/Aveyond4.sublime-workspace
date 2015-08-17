@@ -61,6 +61,8 @@
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/Scripts/Elements/Map/spark.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
 		"/C/Aveyond4/Scripts/Model/State/menu.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/items.rb",
@@ -94,6 +96,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"sparks"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -168,6 +171,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"spark",
+				"Elements\\Map\\spark.rb"
+			],
+			[
+				"mess",
+				"Interface\\Map\\Parts\\message.rb"
+			],
 			[
 				"party",
 				"Model\\State\\party.rb"

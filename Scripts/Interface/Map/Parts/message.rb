@@ -281,6 +281,10 @@ class Ui_Message
 
     $tweens.clear(@sprites)
 
+    # Clear previous sparks
+    @sparks.each { |s| s.dispose }
+    @sparks = []
+
     @mode = :message
 
     # Reset
@@ -741,6 +745,10 @@ class Ui_Message
       @tail.opacity = 0
       @tail.hide
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
+
+      @sparks.each { |s| s.dispose }
+      @sparks = []
+
     end
   end
 
@@ -755,6 +763,9 @@ class Ui_Message
       @vn_port.do(to("opacity",0,-11))
       @tail.opacity = 0
       @tail.hide
+
+      @sparks.each { |s| s.dispose }
+      @sparks = []
 
     end
 
