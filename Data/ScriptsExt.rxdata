@@ -5852,7 +5852,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"9T#==============================================================================
+end"U#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6134,6 +6134,10 @@ class Ui_Message
   def start(text, choices = nil)
 
     $tweens.clear(@sprites)
+
+    # Clear previous sparks
+    @sparks.each { |s| s.dispose }
+    @sparks = []
 
     @mode = :message
 
@@ -6595,6 +6599,10 @@ class Ui_Message
       @tail.opacity = 0
       @tail.hide
       #@sprites.do(go("opacity",-255,100,:quad_in_out))
+
+      @sparks.each { |s| s.dispose }
+      @sparks = []
+
     end
   end
 
@@ -6609,6 +6617,9 @@ class Ui_Message
       @vn_port.do(to("opacity",0,-11))
       @tail.opacity = 0
       @tail.hide
+
+      @sparks.each { |s| s.dispose }
+      @sparks = []
 
     end
 
