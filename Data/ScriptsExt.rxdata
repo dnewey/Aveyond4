@@ -3015,7 +3015,7 @@ end
 
 
 
-"
+"[
 
 def pop_item(item,number,type)
 
@@ -3091,6 +3091,10 @@ def pop_get(type,b,ib)
 
 		when 'fang'
 			a = "Fang receives: "
+			ia = nil
+
+		when 'sister'
+			a = "Hildhilda receives: "
 			ia = nil
 
 		when 'rat'
@@ -9307,7 +9311,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"ÿ#==============================================================================
+end"ù#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -9335,7 +9339,7 @@ class Mnu_Status < Mnu_Base
 		cy = 124
 
 		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
+		lbl.icon = $cache.icon("misc/level")
 	    lbl.font = $fonts.list
 	    lbl.shadow = $fonts.list_shadow
 	    lbl.text = "Overall"
@@ -9346,7 +9350,7 @@ class Mnu_Status < Mnu_Base
 	    cy += 30
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
+		lbl.icon = $cache.icon("stats/level")
 	    lbl.font = $fonts.pop_text
 	    lbl.text = "Level: #{@char.level}"
 	    lbl.move(cx,cy)
@@ -9356,9 +9360,9 @@ class Mnu_Status < Mnu_Base
 	    cy += 26
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
+		lbl.icon = $cache.icon("stats/xp")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
+	    lbl.text = "Xp: #{@char.xp}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 		
@@ -12988,7 +12992,7 @@ class Game_Character
 
 
 end
-"5B#==============================================================================
+"C#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13298,6 +13302,12 @@ class Game_Event < Game_Character
       when '@second'
         return false if !state?(me,"second_#{this.page_idx}")
 
+      when '@gold'
+        return false if $party.gold < label.split(":")[1].to_i
+
+      when '@ngold'
+        return false if $party.gold >= label.split(":")[1].to_i
+
       # Direction
       when '@up'
         return false if $player.direction != 8
@@ -13359,6 +13369,8 @@ class Game_Event < Game_Character
         return false if @voll != 6
       when '@v7'
         return false if @voll != 7
+      when '@v8'
+        return false if @voll != 8
 
 
     end
@@ -15576,7 +15588,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"’#==============================================================================
+end"â#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15852,37 +15864,36 @@ class Game_Party
 
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
-    @actors['boy'].equip('mid','boy-arm-s')
+    @actors['boy'].equip('mid','boy-arm-start')
 
     # Ingrid
-    @actors['ing'].equip('wand','wand-start')
-    @actors['ing'].equip('athame','athame-start')
-    @actors['ing'].equip('light','ing-arm-s')
+    @actors['ing'].equip('wand','ing-wand-start')
+    @actors['ing'].equip('athame','ing-athame-start')
+    @actors['ing'].equip('light','ing-arm-start')
 
     # Myst
-    @actors['mys'].equip('lclaw','claw-l-start')
-    @actors['mys'].equip('rclaw','claw-r-start')
-    @actors['mys'].equip('light','mys-arm-s')
+    @actors['mys'].equip('lclaw','mys-claw-start')
+    @actors['mys'].equip('rclaw','mys-claw-start')
+    @actors['mys'].equip('light','mys-arm-start')
 
     # Robin
-    @actors['rob'].equip('sword','hammer-start')
-    @actors['rob'].equip('heavy','rob-arm-s')
+    @actors['rob'].equip('sword','rob-hammer-start')
+    @actors['rob'].equip('heavy','rob-arm-start')
 
     # Hiberu
-    @actors['hib'].equip('book','hib-wep-s')
-    @actors['hib'].equip('mid','hib-arm-s')
+    @actors['hib'].equip('book','hib-wep-start')
+    @actors['hib'].equip('mid','hib-arm-start')
     # Give accessory
 
     # Rowen
-    @actors['row'].equip('dagger','row-wep-s')
-    @actors['row'].equip('light','row-arm-s')
+    @actors['row'].equip('dagger','row-dagger-start')
+    @actors['row'].equip('mid','mid-arm-tor')
     # Give extra gadget
 
     # Phye
     @actors['phy'].equip('staff','phy-sword')
-    @actors['phy'].equip('heavy','phy-arm-s')
-    # Give him helm
-
+    @actors['phy'].equip('heavy','phy-arm-start')
+    @actors['phy'].equip('heavy','phy-helm-start')
 
     # Initial skills per actor
     @actors["boy"].learn('fireburn')

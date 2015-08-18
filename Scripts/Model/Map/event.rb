@@ -308,6 +308,12 @@ class Game_Event < Game_Character
       when '@second'
         return false if !state?(me,"second_#{this.page_idx}")
 
+      when '@gold'
+        return false if $party.gold < label.split(":")[1].to_i
+
+      when '@ngold'
+        return false if $party.gold >= label.split(":")[1].to_i
+
       # Direction
       when '@up'
         return false if $player.direction != 8
@@ -369,6 +375,8 @@ class Game_Event < Game_Character
         return false if @voll != 6
       when '@v7'
         return false if @voll != 7
+      when '@v8'
+        return false if @voll != 8
 
 
     end

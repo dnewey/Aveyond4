@@ -75,6 +75,10 @@ def pop_get(type,b,ib)
 			a = "Fang receives: "
 			ia = nil
 
+		when 'sister'
+			a = "Hildhilda receives: "
+			ia = nil
+
 		when 'rat'
 			a = "Trevor found: "
 			ia = nil
