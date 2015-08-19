@@ -24,6 +24,10 @@ class Game_Battler
 		return list
 	end
 
+	def slot(s)
+		return @equips[s]
+	end
+
 
 
 

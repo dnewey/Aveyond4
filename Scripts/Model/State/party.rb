@@ -21,6 +21,7 @@ class Game_Party
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
   attr_accessor :night_rank, :night_xp
+  attr_accessor :attract_boy, :attract_hib, :attract_phy
 
   attr_accessor :guild_id
 
@@ -32,12 +33,17 @@ class Game_Party
     $party = self
 
     # Create all actors    
+    # Will also create minions
     @actors = {}
     $data.actors.each{ |k,v| 
       battler = Game_Battler.new
-      battler.init_actor(k)
+      if k.include?('minion')
+        battler.init_minion(k)
+      else
+        battler.init_actor(k)
+      end
       @actors[k] = battler 
-    }    
+    }
 
     # Create actor array
     @active = []
@@ -63,6 +69,11 @@ class Game_Party
     # Nightwatch rank
     @night_rank = 0
     @night_xp = 0
+
+    # Attraction
+    @attract_boy = 0
+    @attract_hib = 0
+    @attract_phy = 0
 
     # Guild info
     @guild_id = "c" # will be one letter, b, c, or s, or "" for none
@@ -265,9 +276,9 @@ class Game_Party
     set_active("ing")
     set_active("mys")
     set_active("rob")
-    set_reserve("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    # set_reserve("hib")
+    # set_reserve("row")
+    # set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -275,6 +286,7 @@ class Game_Party
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
     @actors['boy'].equip('mid','boy-arm-start')
+    @actors['boy'].equip('minion','boy-minion-critters')
 
     # Ingrid
     @actors['ing'].equip('wand','ing-wand-start')
@@ -310,6 +322,11 @@ class Game_Party
     @actors["boy"].learn('fireburn')
 
     @actors["ing"].learn('xform-snake')
+    @actors["ing"].learn('xform-cat')
+    @actors["ing"].learn('xform-frog')
+    @actors["ing"].learn('xform-bear')
+    @actors["ing"].learn('xform-goat')
+    @actors["ing"].learn('xform-squirrel')
 
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")

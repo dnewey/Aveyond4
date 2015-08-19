@@ -30,9 +30,15 @@ class Game_Battler
   end
 
   def choose_action
-  	@action = 'attack'
-    @skill_id = 'attack'
-    @target = $party.attackable_battlers.sample
+    if is_enemy?
+  	  @action = 'attack'
+      @skill_id = 'attack'
+      @target = $party.attackable_battlers.sample
+    elsif is_minion?
+      @action = 'attack'
+      @skill_id = 'attack'
+      @target = $battle.attackable_enemies.sample
+    end
   end  
 
   def set_action(skill)

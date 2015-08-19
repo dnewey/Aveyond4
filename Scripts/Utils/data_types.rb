@@ -52,6 +52,7 @@ class SkillData
 	attr_reader :icon
 	attr_reader :cost
 	attr_reader :hits
+	attr_reader :priority
 	attr_reader :scope
 	attr_reader :text
 	attr_reader :anim

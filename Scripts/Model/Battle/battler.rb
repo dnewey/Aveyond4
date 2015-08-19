@@ -2,8 +2,6 @@
 # ** Game_Battler (part 1)
 #==============================================================================
 
-# STATS
-
 class Game_Battler
  
   attr_reader :id, :name, :level
@@ -24,7 +22,8 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def initialize
 
-    @is_actor = true
+    @type = :actor
+
     @transform = nil
 
     # Current values
@@ -65,13 +64,9 @@ class Game_Battler
 
   end
 
-  def is_actor?
-    return @is_actor
-  end
-
   def init_actor(id)
 
-    @is_actor = true
+    @type = :actor
 
     data = $data.actors[id]
     @id = id
@@ -97,7 +92,6 @@ class Game_Battler
       data.mods.split("\n").each{ |m|
         md = m.split("=>")
         @stat_mods[md[0]] = md[1].to_i
-        log_info @stat_mods
       }
     end
 
@@ -107,7 +101,7 @@ class Game_Battler
 
   def init_enemy(id)
 
-    @is_actor = false
+    @type = :enemy
 
     data = $data.enemies[id]
     @id = id
@@ -125,9 +119,44 @@ class Game_Battler
     recover_all
 
   end
+
+  def init_minion(id)
+
+    @type = :minion
+
+    data = $data.actors[id]
+    @id = id
+
+    @name = data.name
+    
+    @actions = data.actions.split(" | ")
+
+    # Prepare stat mods per character
+    if data.mods != ""
+      data.mods.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_mods[md[0]] = md[1].to_i
+      }
+    end
+
+    recover_all
+
+  end
+
+  def is_good?
+    return !is_enemy?
+  end
   
   def is_actor?
-    return @is_actor
+    return @type == :actor
+  end
+
+  def is_minion?
+    return @type == :minion
+  end
+
+  def is_enemy?
+    return @type == :enemy
   end
 
   def actions

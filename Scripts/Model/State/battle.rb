@@ -4,9 +4,12 @@ class Game_Battle
   attr_accessor :map, :weather
 
   attr_reader :enemies
-  attr_reader :enemy_types
-  attr_reader :enemy_list
-  attr_reader :queue2
+  attr_reader :minion
+
+  attr_reader :enemy_types # Enemies for the current zone
+  attr_reader :enemy_list # 
+
+  attr_reader :queue2 # Skill queue
 
   attr_accessor :next_map
 
@@ -14,13 +17,14 @@ class Game_Battle
 
     @enemy_types = []
 
-    @enemy_list = []    
+    @enemy_list = []
 		@enemies = []
 
     @props = []
 
     @actor_index = 0
 
+    # This is a skill queue of sorts, fix this at some point
     @queue2 = nil
 
     @default_map = 65
@@ -153,6 +157,15 @@ class Game_Battle
 
   def start
 
+    # Prep the minion
+    min = $party.get('boy').slot('minion')
+    log_scr(min)
+    if min == nil
+      @minion = nil
+    else
+      @minion = $party.get(min.sub("boy-",""))
+    end
+
     # Set the map for this battle, whether custom or from zone data
     if @next_map
       @map = @next_map
@@ -176,17 +189,20 @@ class Game_Battle
   end
 
   def victory?
+    log_scr(@enemies)
     return @enemies.select{ |e| !e.down? }.empty?
   end
 
 
   def build_attack_queue
 
-    return ($party.active_battlers + @enemies).shuffle
+    return ([$party.get('minion-rat')]+$party.active_battlers + @enemies).shuffle
 
   end
 
   def build_attack_plan(attacker)
+
+    log_sys(attacker)
 
     plan = Attack_Plan.new
 
@@ -317,7 +333,7 @@ class Game_Battle
 
       when 'rand' # Single random target
 
-        if attacker.is_actor?
+        if attacker.is_good?
           return [@enemies.select{ |b| b.attackable? }.sample]
         else
           return [$party.active_battlers.select{ |b| b.attackable? }.sample]
@@ -326,7 +342,7 @@ class Game_Battle
       when 'two'
 
         # Random 2
-        if attacker.is_actor?
+        if attacker.is_good?
           return @enemies.select{ |b| b.attackable? }.sample(2)
         else
           return $party.active_battlers.select{ |b| b.attackable? }.sample(2)
@@ -335,7 +351,7 @@ class Game_Battle
       when 'three'
 
         # Random 3
-        if attacker.is_actor?
+        if attacker.is_good?
           return @enemies.select{ |b| b.attackable? }.sample(3)
         else
           return $party.active_battlers.select{ |b| b.attackable? }.sample(3)
@@ -344,7 +360,7 @@ class Game_Battle
       when 'all'
 
         # All enemy
-        if attacker.is_actor?
+        if attacker.is_good?
           return @enemies.select{ |b| b.attackable? }
         else
           return $party.active_battlers.select{ |b| b.attackable? }
@@ -353,7 +369,7 @@ class Game_Battle
       when 'party'
 
         # All allies
-        if attacker.is_actor?
+        if attacker.is_good?
           return $party.active_battlers.select{ |b| b.attackable? }
         else          
           return @enemies.select{ |b| b.attackable? }
@@ -397,6 +413,10 @@ class Game_Battle
 
     end
 
+  end
+
+  def attackable_enemies
+    return @enemies.select{ |a| a.attackable? }
   end
 
   

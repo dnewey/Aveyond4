@@ -26,6 +26,10 @@
     "default": "1"
   },
   {
+    "field": "priority",
+    "default": "3"
+  },
+  {
     "field": "scope",
     "edit": "select",
     "color": "true"

@@ -8,8 +8,13 @@ class Scene_Battle
     	e.choose_action
     }
 
+    # Choose minion action
+    $battle.minion.choose_action
+
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue
+
+    log_err(@battle_queue)
     
     # certain attacks always go first, robin's team move with phye for example
 
@@ -20,6 +25,8 @@ class Scene_Battle
 
   # Prepare attack of next guy to attack, next_actor called before this
   def phase_main_prep
+
+    log_info("GO #{@active_battler.id}")
 
   	# Calculate results now, then play out the anims
   	@attack_plan = $battle.build_attack_plan(@active_battler)

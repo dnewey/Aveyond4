@@ -468,6 +468,11 @@ class Ui_Message
 
   def build_wallpaper(name)
 
+    if $scene.is_a?(Scene_Battle)
+      #$scene.hud.message.wallpaper = 'diamonds'
+      return
+    end
+
     case name
 
       when 'Chester'

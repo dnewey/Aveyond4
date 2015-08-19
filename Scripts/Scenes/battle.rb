@@ -9,12 +9,6 @@ class Scene_Battle < Scene_Base
   def initialize
     super
 
-    #Graphics.freeze
-
-    #noverlay(30)
-    #@overlay.opacity = 100
-    #@overlay.do(to("opacity",0,-20))
-
     @phase = :intro_init
     @wait_frames = 0
     @active_battler = nil
@@ -43,11 +37,8 @@ class Scene_Battle < Scene_Base
     @skill_cmd = SkillCmd.new(@vp_ui)
     @item_cmd = ItemCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
-
     @message = Ui_Message.new(@vp_ui)
 
-    #$map = @map
-    #$player = @player
 
     # Find battler events
     [0,1,2,3].each{ |i| 
@@ -87,17 +78,12 @@ class Scene_Battle < Scene_Base
     #$battle.add_prop('money')
 
     # And the minion
-    #@minion = @map.event_by_evname("MINION")
-    #@minion.character_name = 'Player/minion-rat'
+    @minion = $battle.minion
+    @minion.ev = @map.event_by_evname("MINION")
+    @minion.ev.character_name = "Player/#{@minion.id}"
     #hide(@minion)
 
-
     reload_map
-
-    #sys('battlestart')
-    #music("battle",0.6)
-        
-    #Graphics.transition(20,'Graphics/Transitions/trans') 
             
   end
   
