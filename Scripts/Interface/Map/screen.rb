@@ -45,7 +45,7 @@ class Ui_Screen
 
 		@message.update
 		@bar.update
-		#@info.update
+		@info.update
 		if @popper
 			@popper.update 
 			if $input.action? || $input.click?
@@ -157,6 +157,10 @@ class Ui_Screen
 
 	def open_book()
 		@book = Ui_Book.new(@vp)
+	end
+
+	def quest_sparkle(icon)
+		@bar.add_quest(icon)
 	end
 
     def busy?() 

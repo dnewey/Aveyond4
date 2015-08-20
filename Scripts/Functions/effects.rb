@@ -80,6 +80,28 @@ def shake_tiny
 
 end
 
+def shake_mid
+
+	amount = 10
+	dur = 140
+	rep = 3
+	e = :qio
+
+	$scene.map.do(
+		repeat(
+			seq(
+				go(
+					"cam_ox",amount,dur,e
+					),
+				go(
+					"cam_ox",-amount,dur,e
+					)
+			),rep
+		)
+	)
+
+end
+
 
 def pop_huh(ev)
 

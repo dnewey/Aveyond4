@@ -45,14 +45,9 @@ class Scene_Battle < Scene_Base
       ev = @map.event_by_evname("A.#{i}")
       next if ev == nil
       act = $party.actor_by_index(i).id
-      #ev.character_name = "Player/#{act}-idle"
       ev.character_name = "Player/#{act}"
-      #ev.x -= 1
-      #ev.move_left
       ev.off_x = 32
       ev.do(go("off_x",-32,800))
-      #ev.pattern = rand(4)
-      #ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev

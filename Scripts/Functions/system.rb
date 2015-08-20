@@ -106,12 +106,18 @@ def fadein(f=30)
 end
 
 def overlay(bmp,f=30)
+	if f == 0
+		$scene.overlay.opacity = 255
+	end
 	$scene.overlay.bitmap = $cache.overlay(bmp)
 	$scene.overlay.do(to("opacity",255,255/f))
 	w f
 end
 
 def noverlay(f=30)
+	if f == 0
+		$scene.overlay.opacity = 0
+	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
 end

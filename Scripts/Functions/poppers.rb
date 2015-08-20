@@ -18,7 +18,8 @@ def pop_gold(number,type)
 	ib = $cache.icon('misc/coins')
 	b = "#{number} Gold"	
 
-	pop_get(type,b,ib)
+
+	pop_get(type,b,ib,'green')
 
 end
 
@@ -55,7 +56,7 @@ def pop_use_skill(s,w)
 
 end
 
-def pop_get(type,b,ib)
+def pop_get(type,b,ib,color=nil)
 
 	case type
 
@@ -97,7 +98,8 @@ def pop_get(type,b,ib)
 	end
 
 	popper = $scene.hud.open_popper
-	popper.color = 'blue'
+	color = 'diamonds' if color == nil
+	popper.color = color
 	popper.setup(a,ia,b,ib)
 
 end

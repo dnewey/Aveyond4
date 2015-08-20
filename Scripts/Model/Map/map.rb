@@ -50,6 +50,10 @@ class Game_Map
     return @map_name
   end
 
+  def nice_name
+    return @map_name.split("#")[0].split("@")[0]
+  end
+
   def resetup
     @zone = nil
     setup(@id)
@@ -61,7 +65,7 @@ class Game_Map
   #     map_id : map ID
   #--------------------------------------------------------------------------
   def setup(id)
-    
+ 
     # Put map ID in @map_id memory
     @id = id
     @namecache = {} # reset each map

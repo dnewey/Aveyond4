@@ -350,7 +350,7 @@ class Pop < Sprite
 
 		@anim_in = ein
 		@anim_out = eout
-		@anim_delay = 800
+		@anim_delay = 200
 
 	end
 
@@ -378,7 +378,7 @@ class Pop < Sprite
 				self.zoom_x = 1
 				self.zoom_y = 0
 				#anim_seq.push(para(go("zoom_x",1,500,:bounce_io),go("zoom_y",1,500,:bounce_io)))
-				anim_seq.push(go("zoom_y",1,700,:bounce_o))
+				anim_seq.push(go("zoom_y",1,350,:bounce_o))
 
 			when :lower
 				self.opacity = 200
@@ -391,7 +391,7 @@ class Pop < Sprite
 		case @anim_out
 
 			when :fade
-				anim_seq.push(go("opacity",-255,500,:qio))
+				anim_seq.push(go("opacity",-255,350,:qio))
 
 			when :fade_quick
 				anim_seq.push(go("opacity",-255,350,:qio))
@@ -2314,7 +2314,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"Ì
+end"«
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2379,6 +2379,28 @@ def shake_tiny
 	amount = 5
 	dur = 150
 	rep = 2
+	e = :qio
+
+	$scene.map.do(
+		repeat(
+			seq(
+				go(
+					"cam_ox",amount,dur,e
+					),
+				go(
+					"cam_ox",-amount,dur,e
+					)
+			),rep
+		)
+	)
+
+end
+
+def shake_mid
+
+	amount = 10
+	dur = 140
+	rep = 3
 	e = :qio
 
 	$scene.map.do(
@@ -2931,7 +2953,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"n#==============================================================================
+"o#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -2956,7 +2978,7 @@ def item(id,number=1,type='f')
 		type = number
 		number = 1
 	end
-	sfx 'fireworks-explode'
+	#sfx 'fireworks-explode'
 	$party.add_item(id,number)
 	return if !$scene.is_a?(Scene_Map)
 	pop_item(id,number,type) if type != 's'
@@ -3015,7 +3037,7 @@ end
 
 
 
-"[
+"“
 
 def pop_item(item,number,type)
 
@@ -3036,7 +3058,8 @@ def pop_gold(number,type)
 	ib = $cache.icon('misc/coins')
 	b = "#{number} Gold"	
 
-	pop_get(type,b,ib)
+
+	pop_get(type,b,ib,'green')
 
 end
 
@@ -3073,7 +3096,7 @@ def pop_use_skill(s,w)
 
 end
 
-def pop_get(type,b,ib)
+def pop_get(type,b,ib,color=nil)
 
 	case type
 
@@ -3115,7 +3138,8 @@ def pop_get(type,b,ib)
 	end
 
 	popper = $scene.hud.open_popper
-	popper.color = 'blue'
+	color = 'diamonds' if color == nil
+	popper.color = color
 	popper.setup(a,ia,b,ib)
 
 end
@@ -3178,7 +3202,7 @@ def pop_unquest(q)
 	popper = $scene.hud.open_popper
 	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
 
-end"Û#==============================================================================
+end"#==============================================================================
 # ** Progress Functions
 #==============================================================================
 
@@ -3186,6 +3210,7 @@ end"Û#========================================================================
 def quest(id) 
 	$progress.add_quest(id) 
 	pop_quest(id)
+	$scene.hud.quest_sparkle("misc/profile")
 end
 
 def unquest(id)
@@ -3266,7 +3291,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"
+"v
 # Misc
 
 def text(t)
@@ -3374,12 +3399,18 @@ def fadein(f=30)
 end
 
 def overlay(bmp,f=30)
+	if f == 0
+		$scene.overlay.opacity = 255
+	end
 	$scene.overlay.bitmap = $cache.overlay(bmp)
 	$scene.overlay.do(to("opacity",255,255/f))
 	w f
 end
 
 def noverlay(f=30)
+	if f == 0
+		$scene.overlay.opacity = 0
+	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
 end"!	WORLD_MAP_ID = 146
@@ -4524,7 +4555,7 @@ class TargetCmd
 	end
 
 end
-"Ö#==============================================================================
+"#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -4571,7 +4602,7 @@ class Ui_Screen
 
 		@message.update
 		@bar.update
-		#@info.update
+		@info.update
 		if @popper
 			@popper.update 
 			if $input.action? || $input.click?
@@ -4685,11 +4716,15 @@ class Ui_Screen
 		@book = Ui_Book.new(@vp)
 	end
 
+	def quest_sparkle(icon)
+		@bar.add_quest(icon)
+	end
+
     def busy?() 
     	return @message.busy? || @item || @popper || @grid || @book
     end
 
-end"g#==============================================================================
+end"\#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -4773,6 +4808,8 @@ class Ui_Bar < SpriteGroup
 		@hp_bars = []
 		@mp_bars = []
 
+		@journal_pop = Sprite.new(vp)
+
 		refresh
 
 		move(0,480-32)
@@ -4781,6 +4818,15 @@ class Ui_Bar < SpriteGroup
 
 	def dispose
 		# Dispose all in spritegroup
+	end
+
+	def add_quest(icon)
+
+		@journal_pop.x = @journal.x
+		@journal_pop.y = @journal.y - 48
+		@journal_pop.bitmap = $cache.icon(icon)
+		@journal_pop.do(seq(go("y",48,1000),go("opacity",-255,500)))
+		
 	end
 
 	def update
@@ -5809,7 +5855,7 @@ class Ui_Grid
 		return @selected
 	end
 
-end"z#==============================================================================
+end"	#==============================================================================
 # Ui_Info
 #==============================================================================
 
@@ -5822,18 +5868,25 @@ class Ui_Info < SpriteGroup
 		@map = Label.new(vp)
 		@map.font = $fonts.pop_type
 		@map.icon = $cache.icon("items/map")
-		@map.text = $map.name
+		@map.text = $map.nice_name
 		add(@map,0,0)
+
+		@icon = Sprite.new(vp)
+		@icon.bitmap = $cache.icon("misc/coins")
+		add(@icon,610,0)
 
 		@gold = Label.new(vp)
 		@gold.font = $fonts.pop_type
-		@gold.icon = $cache.icon("misc/coins")
+		@gold.align = 2
 		@gold.text = $party.gold.to_s
-		add(@gold,560,0)
+		add(@gold,578,0)
 
 		move(0,415)
 
-		#refresh
+		@visible_gold = $party.gold
+		@visible_map = $map.nice_name
+
+		refresh
 
 	end
 
@@ -5844,27 +5897,28 @@ class Ui_Info < SpriteGroup
 
 	def update
 		super
-		#refresh if @visible_gold != $party.gold || @visible_map != $map.name
+		refresh if @visible_gold != $party.gold || @visible_map != $map.name
 	end
 
 	def refresh
 		@visible_gold = $party.gold
-		@visible_map = $map.name
+		@visible_map = $map.nice_name
 
-		@map.text = $visible_map
-		@gold.text = $visible_gold.to_s
+		@map.text = @visible_map
+		@gold.text = @visible_gold.to_s
 
 	end
 
-end"vU#==============================================================================
+end"¿W#==============================================================================
 # Ui_Message
 #==============================================================================
 
 class Ui_Message
 
   # Consts
-  MIN_WIDTH = 200
-  MAX_WIDTH = 350
+  MIN_WIDTH = 240
+  MAX_WIDTH = 400
+  MAX_WIDTH_VN = 500
   TAB_WIDTH = 35
 
   VN_WIDTH = 520
@@ -6060,6 +6114,8 @@ class Ui_Message
 
     end
 
+    @tail.opacity = @sprites.opacity
+
     @box.update
     @sparks.delete_if { |s| s.done? }
     @sparks.each{ |s| s.update }
@@ -6154,6 +6210,7 @@ class Ui_Message
     @word_idx = -1
     @cx = PADDING_X
     @cy = PADDING_Y
+    @text_delay = @normal_speed
 
     @tail.show
 
@@ -6162,7 +6219,7 @@ class Ui_Message
 
     # Read data to get name and text
     speaker = text_data[0]
-    @lines = split_text(text_data[1]) 
+
 
     if speaker.include?("x-")
       @tail.hide
@@ -6175,6 +6232,10 @@ class Ui_Message
       @font_shadow = $fonts.message_big_shadow
       @line_height = LINE_HEIGHT_BIG
       speaker = speaker.sub("z-",'')
+    elsif speaker.include?("t-")
+      @font = $fonts.message_tiny
+      @font_shadow = $fonts.message_tiny_shadow
+      speaker = speaker.sub("t-",'')
     else
       @font = $fonts.message
       @font_shadow = $fonts.message_shadow
@@ -6244,6 +6305,9 @@ class Ui_Message
 
     # Chance wallpaper as needed
     build_wallpaper(name.split("-")[0])   
+
+    # Force split the lines
+    @lines = split_text(text_data[1]) 
 
     # Textbox size
     @width = max_width + PADDING_X * 2
@@ -6696,32 +6760,45 @@ class Ui_Message
       return [text.split(" ")]
     end
 
+
+    # figure max widths for the mode
+    if @mode == :vn
+      max_limit = MAX_WIDTH_VN
+    else
+      max_limit = MAX_WIDTH
+    end
+    
     # If width is less than max * 2, we are splitting at the first word after half point
-    if total_width < MAX_WIDTH * 2 && false
-      limit = total_width / 2
+    if total_width < (max_limit * 1.8) - 40
+      limit = (total_width / 2) + 40
       cursor = 0
       lines = [[]]
       text.split(" ").each{ |word|
-        lines[-1].push(word)
-        cursor += word_width(word)
-        if cursor >= limit
+        if cursor + word_width(word) >= limit 
           lines.push([])
           cursor = 0
         end
+        cursor += word_width(word)
+        lines[-1].push(word)
       }
       return lines
     end
 
+
     # Else we are autosizing max width
     lines = [[]]
-    limit = MAX_WIDTH
+    limit = max_limit
     cursor = 0
     text.split(" ").each{ |word|
-      cursor += word_width(word)
-      if cursor > limit
+      if cursor + word_width(word) > limit
+        # Don't go beyond first line
+        if lines.count == 1
+          limit = cursor
+        end
         cursor = 0
         lines.push([])
       end
+      cursor += word_width(word)
       lines[-1].push(word)
     }
     return lines
@@ -13036,7 +13113,7 @@ class Game_Character
 
 
 end
-"C#==============================================================================
+"—C#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13547,8 +13624,13 @@ class Game_Event < Game_Character
 
         when '#above'
           @above = true
+          @below = false
         when '#below'
           @below = true
+          @above = false
+        when '#same'
+          @below = false
+          @above = false
         when '#below2'
           @below2 = true
 
@@ -14257,7 +14339,7 @@ class Interpreter
   end
 
 end
-"e0#==============================================================================
+"®0#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -14309,6 +14391,10 @@ class Game_Map
     return @map_name
   end
 
+  def nice_name
+    return @map_name.split("#")[0].split("@")[0]
+  end
+
   def resetup
     @zone = nil
     setup(@id)
@@ -14320,7 +14406,7 @@ class Game_Map
   #     map_id : map ID
   #--------------------------------------------------------------------------
   def setup(id)
-    
+ 
     # Put map ID in @map_id memory
     @id = id
     @namecache = {} # reset each map
@@ -14770,12 +14856,8 @@ class Moblin
 
 	end
 
-end"Î*#==============================================================================
+end"Ñ)#==============================================================================
 # ** Game_Player
-#------------------------------------------------------------------------------
-#  This class handles the player. Its functions include event starting
-#  determinants and map scrolling. Refer to "$game_player" for the one
-#  instance of this class.
 #==============================================================================
 
 class Game_Player < Game_Character
@@ -16180,7 +16262,7 @@ end"Qclass State
 	end
 
 end
-"[#==============================================================================
+"“#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -16327,6 +16409,10 @@ class Scene_Base
   end
 
   def reload_map
+
+    # Clear sparks
+    @sparks.each{ |s| s.dispose }
+    @sparks.clear
     
     @tilemap.refresh(@map)
 
@@ -16449,8 +16535,6 @@ class Scene_Base
 
   def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
 
-    log_info(fx)
-
     sprk = Spark.new(fx,x,y,@vp_main)
     @sparks.push(sprk)
     return sprk
@@ -16499,7 +16583,7 @@ class Scene_Base
   # end
 
 end
-"#==============================================================================
+"…#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -16546,14 +16630,9 @@ class Scene_Battle < Scene_Base
       ev = @map.event_by_evname("A.#{i}")
       next if ev == nil
       act = $party.actor_by_index(i).id
-      #ev.character_name = "Player/#{act}-idle"
       ev.character_name = "Player/#{act}"
-      #ev.x -= 1
-      #ev.move_left
       ev.off_x = 32
       ev.do(go("off_x",-32,800))
-      #ev.pattern = rand(4)
-      #ev.direction = 2
       ev.step_anime = true
       if $party.active.count > i
         $party.actor_by_index(i).ev = ev
@@ -19123,12 +19202,13 @@ class FileManager
   end
   
 end
-"ê
+"™
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
 	attr_reader :message, :message_shadow, :namebox
 	attr_reader :message_big, :message_big_shadow
+	attr_reader :message_tiny, :message_tiny_shadow
 
 	attr_reader :list, :list_shadow
 
@@ -19190,6 +19270,17 @@ class FontManager
 	    @message_shadow.name = "Georgia"
 	    @message_shadow.size = 24
 	    @message_shadow.color = Color.new(0,0,0,90)
+
+	    @message_tiny = Font.new
+	    @message_tiny.name = "Georgia"
+	    @message_tiny.size = 20 #30 good for big text
+	    #@message.gradient = true
+	    @message_tiny.color = Color.new(245,223,200)
+
+	    @message_tiny_shadow = Font.new
+	    @message_tiny_shadow.name = "Georgia"
+	    @message_tiny_shadow.size = 20
+	    @message_tiny_shadow.color = Color.new(0,0,0,90)
 
 	    @message_big = Font.new
 	    @message_big.name = "Georgia"

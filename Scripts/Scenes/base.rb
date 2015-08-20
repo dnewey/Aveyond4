@@ -145,6 +145,10 @@ class Scene_Base
   end
 
   def reload_map
+
+    # Clear sparks
+    @sparks.each{ |s| s.dispose }
+    @sparks.clear
     
     @tilemap.refresh(@map)
 
@@ -266,8 +270,6 @@ class Scene_Base
   end
 
   def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
-
-    log_info(fx)
 
     sprk = Spark.new(fx,x,y,@vp_main)
     @sparks.push(sprk)

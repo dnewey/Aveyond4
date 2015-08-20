@@ -6,6 +6,7 @@
 def quest(id) 
 	$progress.add_quest(id) 
 	pop_quest(id)
+	$scene.hud.quest_sparkle("misc/profile")
 end
 
 def unquest(id)

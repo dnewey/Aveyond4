@@ -82,6 +82,8 @@ class Ui_Bar < SpriteGroup
 		@hp_bars = []
 		@mp_bars = []
 
+		@journal_pop = Sprite.new(vp)
+
 		refresh
 
 		move(0,480-32)
@@ -90,6 +92,15 @@ class Ui_Bar < SpriteGroup
 
 	def dispose
 		# Dispose all in spritegroup
+	end
+
+	def add_quest(icon)
+
+		@journal_pop.x = @journal.x
+		@journal_pop.y = @journal.y - 48
+		@journal_pop.bitmap = $cache.icon(icon)
+		@journal_pop.do(seq(go("y",48,1000),go("opacity",-255,500)))
+		
 	end
 
 	def update

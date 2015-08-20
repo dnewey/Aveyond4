@@ -509,8 +509,13 @@ class Game_Event < Game_Character
 
         when '#above'
           @above = true
+          @below = false
         when '#below'
           @below = true
+          @above = false
+        when '#same'
+          @below = false
+          @above = false
         when '#below2'
           @below2 = true
 

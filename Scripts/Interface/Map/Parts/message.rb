@@ -5,8 +5,9 @@
 class Ui_Message
 
   # Consts
-  MIN_WIDTH = 200
-  MAX_WIDTH = 350
+  MIN_WIDTH = 240
+  MAX_WIDTH = 400
+  MAX_WIDTH_VN = 500
   TAB_WIDTH = 35
 
   VN_WIDTH = 520
@@ -202,6 +203,8 @@ class Ui_Message
 
     end
 
+    @tail.opacity = @sprites.opacity
+
     @box.update
     @sparks.delete_if { |s| s.done? }
     @sparks.each{ |s| s.update }
@@ -296,6 +299,7 @@ class Ui_Message
     @word_idx = -1
     @cx = PADDING_X
     @cy = PADDING_Y
+    @text_delay = @normal_speed
 
     @tail.show
 
@@ -304,7 +308,7 @@ class Ui_Message
 
     # Read data to get name and text
     speaker = text_data[0]
-    @lines = split_text(text_data[1]) 
+
 
     if speaker.include?("x-")
       @tail.hide
@@ -317,6 +321,10 @@ class Ui_Message
       @font_shadow = $fonts.message_big_shadow
       @line_height = LINE_HEIGHT_BIG
       speaker = speaker.sub("z-",'')
+    elsif speaker.include?("t-")
+      @font = $fonts.message_tiny
+      @font_shadow = $fonts.message_tiny_shadow
+      speaker = speaker.sub("t-",'')
     else
       @font = $fonts.message
       @font_shadow = $fonts.message_shadow
@@ -386,6 +394,9 @@ class Ui_Message
 
     # Chance wallpaper as needed
     build_wallpaper(name.split("-")[0])   
+
+    # Force split the lines
+    @lines = split_text(text_data[1]) 
 
     # Textbox size
     @width = max_width + PADDING_X * 2
@@ -838,32 +849,45 @@ class Ui_Message
       return [text.split(" ")]
     end
 
+
+    # figure max widths for the mode
+    if @mode == :vn
+      max_limit = MAX_WIDTH_VN
+    else
+      max_limit = MAX_WIDTH
+    end
+    
     # If width is less than max * 2, we are splitting at the first word after half point
-    if total_width < MAX_WIDTH * 2 && false
-      limit = total_width / 2
+    if total_width < (max_limit * 1.8) - 40
+      limit = (total_width / 2) + 40
       cursor = 0
       lines = [[]]
       text.split(" ").each{ |word|
-        lines[-1].push(word)
-        cursor += word_width(word)
-        if cursor >= limit
+        if cursor + word_width(word) >= limit 
           lines.push([])
           cursor = 0
         end
+        cursor += word_width(word)
+        lines[-1].push(word)
       }
       return lines
     end
 
+
     # Else we are autosizing max width
     lines = [[]]
-    limit = MAX_WIDTH
+    limit = max_limit
     cursor = 0
     text.split(" ").each{ |word|
-      cursor += word_width(word)
-      if cursor > limit
+      if cursor + word_width(word) > limit
+        # Don't go beyond first line
+        if lines.count == 1
+          limit = cursor
+        end
         cursor = 0
         lines.push([])
       end
+      cursor += word_width(word)
       lines[-1].push(word)
     }
     return lines
