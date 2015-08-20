@@ -5856,7 +5856,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"U#==============================================================================
+end"vU#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6325,6 +6325,11 @@ class Ui_Message
   end
 
   def build_wallpaper(name)
+
+    if $scene.is_a?(Scene_Battle)
+      #$scene.hud.message.wallpaper = 'diamonds'
+      return
+    end
 
     case name
 
@@ -7011,7 +7016,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"g
+end"e
 #==============================================================================
 # ** Mnu_Char
 #==============================================================================
@@ -7036,7 +7041,7 @@ class Mnu_Char < Mnu_Base
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
-		@grid.add_wide("Creatures","Creature Hunting","items/creature") if $menu.char == 'boy'
+		@grid.add_wide("Creatures","Cheeki Chasing","items/creature") if $menu.char == 'boy'
 		@grid.add_wide("Potions","Potion Making","items/potion-red") if $menu.char == 'ing'
 		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
 		@grid.add_wide("Demons","Demon Chasing","items/potion-red") if $menu.char == 'phy'
@@ -10743,11 +10748,9 @@ class Mnu_Potions < Mnu_Base
 		self.close_soon
 	end
 
-end"³#==============================================================================
+end"z#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
-
-# STATS
 
 class Game_Battler
  
@@ -10769,7 +10772,8 @@ class Game_Battler
   #--------------------------------------------------------------------------
   def initialize
 
-    @is_actor = true
+    @type = :actor
+
     @transform = nil
 
     # Current values
@@ -10810,13 +10814,9 @@ class Game_Battler
 
   end
 
-  def is_actor?
-    return @is_actor
-  end
-
   def init_actor(id)
 
-    @is_actor = true
+    @type = :actor
 
     data = $data.actors[id]
     @id = id
@@ -10842,7 +10842,6 @@ class Game_Battler
       data.mods.split("\n").each{ |m|
         md = m.split("=>")
         @stat_mods[md[0]] = md[1].to_i
-        log_info @stat_mods
       }
     end
 
@@ -10852,7 +10851,7 @@ class Game_Battler
 
   def init_enemy(id)
 
-    @is_actor = false
+    @type = :enemy
 
     data = $data.enemies[id]
     @id = id
@@ -10870,9 +10869,44 @@ class Game_Battler
     recover_all
 
   end
+
+  def init_minion(id)
+
+    @type = :minion
+
+    data = $data.actors[id]
+    @id = id
+
+    @name = data.name
+    
+    @actions = data.actions.split(" | ")
+
+    # Prepare stat mods per character
+    if data.mods != ""
+      data.mods.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_mods[md[0]] = md[1].to_i
+      }
+    end
+
+    recover_all
+
+  end
+
+  def is_good?
+    return !is_enemy?
+  end
   
   def is_actor?
-    return @is_actor
+    return @type == :actor
+  end
+
+  def is_minion?
+    return @type == :minion
+  end
+
+  def is_enemy?
+    return @type == :enemy
   end
 
   def actions
@@ -10975,7 +11009,7 @@ class Game_Battler
 
 
 end
-"P	
+"O	
 class Game_Battler
 
   # For displays
@@ -11049,7 +11083,7 @@ class Game_Battler
 
   def stat_base(stat)
     #return 1
-    return 0 if !is_actor?
+    return 0 if !is_good?
     $data.numbers["#{stat}-base"].value + ($data.numbers["#{stat}-per"].value * (@level-1))
   end
 
@@ -11196,7 +11230,7 @@ class Game_Battler
     end
   end
 
- end"Mclass Game_Battler
+ end"íclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -11228,9 +11262,15 @@ class Game_Battler
   end
 
   def choose_action
-  	@action = 'attack'
-    @skill_id = 'attack'
-    @target = $party.attackable_battlers.sample
+    if is_enemy?
+  	  @action = 'attack'
+      @skill_id = 'attack'
+      @target = $party.attackable_battlers.sample
+    elsif is_minion?
+      @action = 'attack'
+      @skill_id = 'attack'
+      @target = $battle.attackable_enemies.sample
+    end
   end  
 
   def set_action(skill)
@@ -11256,7 +11296,7 @@ class Game_Battler
     return true
   end
 
-end"Ð
+end"û
 class Game_Battler
 
 	def equip(slot,new_equip)
@@ -11280,6 +11320,10 @@ class Game_Battler
 		}
 		log_info(list)
 		return list
+	end
+
+	def slot(s)
+		return @equips[s]
 	end
 
 
@@ -15132,15 +15176,18 @@ class Game_Player < Game_Character
   end
 
 end
-"‹ 
+"Í"
 class Game_Battle
 
   attr_accessor :map, :weather
 
   attr_reader :enemies
-  attr_reader :enemy_types
-  attr_reader :enemy_list
-  attr_reader :queue2
+  attr_reader :minion
+
+  attr_reader :enemy_types # Enemies for the current zone
+  attr_reader :enemy_list # 
+
+  attr_reader :queue2 # Skill queue
 
   attr_accessor :next_map
 
@@ -15148,13 +15195,14 @@ class Game_Battle
 
     @enemy_types = []
 
-    @enemy_list = []    
+    @enemy_list = []
 		@enemies = []
 
     @props = []
 
     @actor_index = 0
 
+    # This is a skill queue of sorts, fix this at some point
     @queue2 = nil
 
     @default_map = 65
@@ -15287,6 +15335,15 @@ class Game_Battle
 
   def start
 
+    # Prep the minion
+    min = $party.get('boy').slot('minion')
+    log_scr(min)
+    if min == nil
+      @minion = nil
+    else
+      @minion = $party.get(min.sub("boy-",""))
+    end
+
     # Set the map for this battle, whether custom or from zone data
     if @next_map
       @map = @next_map
@@ -15310,17 +15367,25 @@ class Game_Battle
   end
 
   def victory?
+    log_scr(@enemies)
     return @enemies.select{ |e| !e.down? }.empty?
   end
 
 
   def build_attack_queue
 
-    return ($party.active_battlers + @enemies).shuffle
+    if @minion
+      return ([$party.get('minion-rat')]+$party.active_battlers + @enemies).shuffle
+    else
+      return ($party.active_battlers + @enemies).shuffle
+    end
+
 
   end
 
   def build_attack_plan(attacker)
+
+    log_sys(attacker)
 
     plan = Attack_Plan.new
 
@@ -15451,7 +15516,7 @@ class Game_Battle
 
       when 'rand' # Single random target
 
-        if attacker.is_actor?
+        if attacker.is_good?
           return [@enemies.select{ |b| b.attackable? }.sample]
         else
           return [$party.active_battlers.select{ |b| b.attackable? }.sample]
@@ -15460,7 +15525,7 @@ class Game_Battle
       when 'two'
 
         # Random 2
-        if attacker.is_actor?
+        if attacker.is_good?
           return @enemies.select{ |b| b.attackable? }.sample(2)
         else
           return $party.active_battlers.select{ |b| b.attackable? }.sample(2)
@@ -15469,7 +15534,7 @@ class Game_Battle
       when 'three'
 
         # Random 3
-        if attacker.is_actor?
+        if attacker.is_good?
           return @enemies.select{ |b| b.attackable? }.sample(3)
         else
           return $party.active_battlers.select{ |b| b.attackable? }.sample(3)
@@ -15478,7 +15543,7 @@ class Game_Battle
       when 'all'
 
         # All enemy
-        if attacker.is_actor?
+        if attacker.is_good?
           return @enemies.select{ |b| b.attackable? }
         else
           return $party.active_battlers.select{ |b| b.attackable? }
@@ -15487,7 +15552,7 @@ class Game_Battle
       when 'party'
 
         # All allies
-        if attacker.is_actor?
+        if attacker.is_good?
           return $party.active_battlers.select{ |b| b.attackable? }
         else          
           return @enemies.select{ |b| b.attackable? }
@@ -15531,6 +15596,10 @@ class Game_Battle
 
     end
 
+  end
+
+  def attackable_enemies
+    return @enemies.select{ |a| a.attackable? }
   end
 
   
@@ -15588,7 +15657,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"â#==============================================================================
+end"õ!#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15611,6 +15680,7 @@ class Game_Party
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
   attr_accessor :night_rank, :night_xp
+  attr_accessor :attract_boy, :attract_hib, :attract_phy
 
   attr_accessor :guild_id
 
@@ -15622,12 +15692,17 @@ class Game_Party
     $party = self
 
     # Create all actors    
+    # Will also create minions
     @actors = {}
     $data.actors.each{ |k,v| 
       battler = Game_Battler.new
-      battler.init_actor(k)
+      if k.include?('minion')
+        battler.init_minion(k)
+      else
+        battler.init_actor(k)
+      end
       @actors[k] = battler 
-    }    
+    }
 
     # Create actor array
     @active = []
@@ -15653,6 +15728,11 @@ class Game_Party
     # Nightwatch rank
     @night_rank = 0
     @night_xp = 0
+
+    # Attraction
+    @attract_boy = 0
+    @attract_hib = 0
+    @attract_phy = 0
 
     # Guild info
     @guild_id = "c" # will be one letter, b, c, or s, or "" for none
@@ -15852,12 +15932,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
-    set_active("rob")
-    set_reserve("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    # set_active("ing")
+    # set_active("mys")
+    # set_active("rob")
+    # set_reserve("hib")
+    # set_reserve("row")
+    # set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -15865,6 +15945,7 @@ class Game_Party
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
     @actors['boy'].equip('mid','boy-arm-start')
+    # @actors['boy'].equip('minion','boy-minion-fang')
 
     # Ingrid
     @actors['ing'].equip('wand','ing-wand-start')
@@ -15900,6 +15981,11 @@ class Game_Party
     @actors["boy"].learn('fireburn')
 
     @actors["ing"].learn('xform-snake')
+    @actors["ing"].learn('xform-cat')
+    @actors["ing"].learn('xform-frog')
+    @actors["ing"].learn('xform-bear')
+    @actors["ing"].learn('xform-goat')
+    @actors["ing"].learn('xform-squirrel')
 
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")
@@ -16413,7 +16499,7 @@ class Scene_Base
   # end
 
 end
-"»#==============================================================================
+"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -16423,12 +16509,6 @@ class Scene_Battle < Scene_Base
 
   def initialize
     super
-
-    #Graphics.freeze
-
-    #noverlay(30)
-    #@overlay.opacity = 100
-    #@overlay.do(to("opacity",0,-20))
 
     @phase = :intro_init
     @wait_frames = 0
@@ -16458,11 +16538,8 @@ class Scene_Battle < Scene_Base
     @skill_cmd = SkillCmd.new(@vp_ui)
     @item_cmd = ItemCmd.new(@vp_ui)
     @target_cmd = TargetCmd.new(@vp_ui)
-
     @message = Ui_Message.new(@vp_ui)
 
-    #$map = @map
-    #$player = @player
 
     # Find battler events
     [0,1,2,3].each{ |i| 
@@ -16502,17 +16579,16 @@ class Scene_Battle < Scene_Base
     #$battle.add_prop('money')
 
     # And the minion
-    #@minion = @map.event_by_evname("MINION")
-    #@minion.character_name = 'Player/minion-rat'
+    if $battle.minion != nil
+      @minion = $battle.minion
+      @minion.ev = @map.event_by_evname("MINION")
+      @minion.ev.character_name = "Player/#{@minion.id}"
+    else
+      hide("MINION")
+    end
     #hide(@minion)
 
-
     reload_map
-
-    #sys('battlestart')
-    #music("battle",0.6)
-        
-    #Graphics.transition(20,'Graphics/Transitions/trans') 
             
   end
   
@@ -16929,7 +17005,7 @@ class Scene_Battle
     
   end
 
-end"
+end"µ
 class Scene_Battle
 
   def phase_main_init
@@ -16939,8 +17015,15 @@ class Scene_Battle
     	e.choose_action
     }
 
+    # Choose minion action
+    if $battle.minion != nil
+      $battle.minion.choose_action
+    end
+
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue
+
+    log_err(@battle_queue)
     
     # certain attacks always go first, robin's team move with phye for example
 
@@ -16951,6 +17034,8 @@ class Scene_Battle
 
   # Prepare attack of next guy to attack, next_actor called before this
   def phase_main_prep
+
+    log_info("GO #{@active_battler.id}")
 
   	# Calculate results now, then play out the anims
   	@attack_plan = $battle.build_attack_plan(@active_battler)
@@ -19785,7 +19870,8 @@ end"øclass Bitmap
 	end
 
 end
-"ô	
+"
+
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -19839,6 +19925,7 @@ class SkillData
 	attr_reader :icon
 	attr_reader :cost
 	attr_reader :hits
+	attr_reader :priority
 	attr_reader :scope
 	attr_reader :text
 	attr_reader :anim

@@ -9,7 +9,9 @@ class Scene_Battle
     }
 
     # Choose minion action
-    $battle.minion.choose_action
+    if $battle.minion != nil
+      $battle.minion.choose_action
+    end
 
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue

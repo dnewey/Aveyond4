@@ -273,9 +273,9 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
-    set_active("rob")
+    # set_active("ing")
+    # set_active("mys")
+    # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
     # set_reserve("phy")   
@@ -286,7 +286,7 @@ class Game_Party
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
     @actors['boy'].equip('mid','boy-arm-start')
-    @actors['boy'].equip('minion','boy-minion-critters')
+    # @actors['boy'].equip('minion','boy-minion-fang')
 
     # Ingrid
     @actors['ing'].equip('wand','ing-wand-start')

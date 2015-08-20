@@ -78,9 +78,13 @@ class Scene_Battle < Scene_Base
     #$battle.add_prop('money')
 
     # And the minion
-    @minion = $battle.minion
-    @minion.ev = @map.event_by_evname("MINION")
-    @minion.ev.character_name = "Player/#{@minion.id}"
+    if $battle.minion != nil
+      @minion = $battle.minion
+      @minion.ev = @map.event_by_evname("MINION")
+      @minion.ev.character_name = "Player/#{@minion.id}"
+    else
+      hide("MINION")
+    end
     #hide(@minion)
 
     reload_map
