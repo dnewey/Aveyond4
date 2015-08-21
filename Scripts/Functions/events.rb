@@ -114,6 +114,13 @@ end
 
 # Routes
 
+def face2face
+	x = gev(me).x
+	y = gev(me).y
+	path 'plr',x,y+1,'u'
+	wfc
+end
+
 def wfc
 	$map.interpreter.command_210
 end
