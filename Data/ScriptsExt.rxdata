@@ -14856,7 +14856,7 @@ class Moblin
 
 	end
 
-end"Ñ)#==============================================================================
+end"Ç*#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -15225,6 +15225,9 @@ class Game_Player < Game_Character
           Graphics.transition(16)
 
         when :cave
+          $scene.overlay.bitmap = $cache.overlay("black")
+          $scene.overlay.x = 0
+          $scene.overlay.y = 0
           $scene.overlay.opacity = 255
           Graphics.transition(45,'Graphics/Transitions/cave') 
           Graphics.freeze
@@ -15232,6 +15235,9 @@ class Game_Player < Game_Character
           Graphics.transition(45,'Graphics/Transitions/cave_inv')   
 
         when :fade
+          $scene.overlay.bitmap = $cache.overlay("black")
+          $scene.overlay.x = 0
+          $scene.overlay.y = 0
           $scene.overlay.opacity = 255
           Graphics.transition(45) 
           Graphics.freeze
@@ -15739,7 +15745,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"õ!#==============================================================================
+end"ò!#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16014,8 +16020,8 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    # set_active("ing")
-    # set_active("mys")
+    #set_active("ing")
+    set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
@@ -16150,7 +16156,7 @@ end"^class Progress
 		return @progress < $data.progress[progress]
 	end
 
-end"Qclass State
+end"Ñclass State
 
 	def initialize
 
@@ -16179,6 +16185,15 @@ end"Qclass State
 
 	def flag?(f)
 		return @flags.include?(f)
+	end
+
+	def incvar(v,a)
+		if @vars.has_key?(v)
+			@vars[v] += a
+		else
+			@vars[v] = a
+		end
+		$map.need_refresh = true
 	end
 
 	def var(v,a)
@@ -18389,7 +18404,7 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"#==============================================================================
+end"&#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -18471,6 +18486,7 @@ class AudioManager
     @music.looping = true
     @music.stream = Seal::Stream.open("Audio/Music/#{file}.ogg")
     @music.play
+    
   end
 
   def atmosphere(file)
@@ -18487,6 +18503,7 @@ class AudioManager
     @atmosphere.looping = true
     @atmosphere.stream = Seal::Stream.open("Audio/Atmosphere/#{file}.ogg")
     @atmosphere.play
+
   end
 
   def sys(file,vol=1.0)
