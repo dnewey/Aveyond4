@@ -81,7 +81,7 @@ def pop_get(type,b,ib,color=nil)
 			ia = nil
 
 		when 'rat'
-			a = "Trevor found: "
+			a = "Colby found: "
 			ia = nil
 
 		when 'p'
