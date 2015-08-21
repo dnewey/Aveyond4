@@ -30,7 +30,7 @@ end
 
 def pop_learn(s,w)
 
-	b = $data.skills[s].name
+	b = $data.skills[s].name.sub("=>",":")
 	ib = $cache.icon($data.skills[s].icon)
 
 	a = $data.actors[w].name+" has learned: "

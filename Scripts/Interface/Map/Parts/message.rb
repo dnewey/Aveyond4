@@ -861,7 +861,7 @@ class Ui_Message
     end
     
     # If width is less than max * 2, we are splitting at the first word after half point
-    if total_width < (max_limit * 1.8) - 40
+    if @mode != :vn && total_width < (max_limit * 1.8) - 40
       limit = (total_width / 2) + 40
       cursor = 0
       lines = [[]]
