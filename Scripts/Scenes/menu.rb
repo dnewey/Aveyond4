@@ -133,7 +133,10 @@ class Scene_Menu
       when "Options"; @menu = Mnu_Options.new(@vp)
       when "Help"; @menu = Mnu_Help.new(@vp)
       when "Sound"; @menu = Mnu_Sound.new(@vp)
-      when "Load"; @menu = Mnu_Load.new(@vp)
+
+      when "Load"; 
+        @menu = Mnu_Save.new(@vp)
+        @menu.loadmode
       when "Save"; @menu = Mnu_Save.new(@vp)
 
       when "Char"; @menu = Mnu_Char.new(@vp)

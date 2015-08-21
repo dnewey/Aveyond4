@@ -190,7 +190,7 @@ class Game_Character
     
   end
 
-    def at?(x,y)
+  def at?(x,y)
     return self.x == x && self.y == y
   end
 
@@ -211,9 +211,17 @@ class Game_Character
     return false unless $map.valid?(new_x, new_y)
     return true if @through
     
-    # To new tile and from new tile
-    return false unless $map.passable?(x, y, d, self)
-    return false  unless $map.passable?(new_x, new_y, 10 - d,self)
+    # IS there a reason to check from tile?
+    #return false unless $map.passable?(x, y, d, self)
+    
+
+    # If enemy, check if I shall pass
+    if self.is_a?(Game_Event) && self.monster != nil
+      return false  unless $map.passable?(new_x, new_y, 10 - d,self,true)
+    else
+      return false  unless $map.passable?(new_x, new_y, 10 - d,self)
+    end
+
 
     # end
     return true

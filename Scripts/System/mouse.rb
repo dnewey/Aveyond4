@@ -58,4 +58,8 @@ class MouseManager
     @sprite.bitmap = $cache.cursor(c)
   end
 
+  # For snapshotting
+  def hide_cursor() @sprite.opacity = 0 end
+  def show_cursor() @sprite.opacity = 255 end
+
 end

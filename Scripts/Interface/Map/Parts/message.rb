@@ -29,6 +29,8 @@ class Ui_Message
   attr_reader :last_choice
   attr_accessor :force_name
   attr_accessor :force_vn
+
+  attr_reader :mode
   
   #--------------------------------------------------------------------------
   # Prepare
@@ -334,6 +336,7 @@ class Ui_Message
     # Figure things out from speaker
     speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
+    speaker = this.name if speaker == 'me'
     speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 

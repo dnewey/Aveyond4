@@ -28,6 +28,9 @@ class Game_Map
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
+
+    @id = nil
+
     @interpreter = Interpreter.new(0,true)
 
     @cam_x = 0
@@ -65,6 +68,14 @@ class Game_Map
   #     map_id : map ID
   #--------------------------------------------------------------------------
   def setup(id)
+
+    # If there was an old map, save the locs
+    if @id != nil
+      @events.values.each{ |e|
+        next if !e.saveloc
+        $state.loc(e)
+      }
+    end
  
     # Put map ID in @map_id memory
     @id = id
@@ -137,6 +148,15 @@ class Game_Map
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
+
+      # Restore loc
+      if $state.loc?(i)
+        loc = $state.getloc(i)
+        @events[i].moveto(loc[0],loc[1])
+        @events[i].direction = loc[2]
+        @events[i].off_x = loc[3]
+        @events[i].off_y = loc[4]
+      end
     }
 
   end
@@ -388,17 +408,18 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Determine if Passable
   #--------------------------------------------------------------------------
-  def passable?(x, y, d, self_event = nil)
+  def passable?(x, y, d, self_event = nil, monster=false)
 
     return false unless valid?(x, y)
 
     # Change direction (0,2,4,6,8,10) to obstacle bit (0,1,2,4,8,0)
     bit = (1 << (d / 2 - 1)) & 0x0f
 
-    # Loop in all events
+    # Loop all events
     events.values.each{ |e| 
       if e != self_event and e.at?(x,y)
          return false if !(e.through || e.above || e.below)
+         return false if monster && e.name == "YSNP"
       end
     }
 

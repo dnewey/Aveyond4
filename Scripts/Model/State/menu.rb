@@ -22,6 +22,11 @@ class MenuState
 
 	attr_accessor :chosen
 
+
+	# Player position for saving
+	attr_accessor :player_x
+	attr_accessor :player_y
+
 	#attr_accessor :category
 	#attr_accessor :tab
 

@@ -82,10 +82,11 @@ class State
 	end
 
 	def loc(e)
-		@locs[[$map.id,e]] = [e.x,e.y]
+		ev = gev(e)
+		@locs[[$map.id,e]] = [ev.x,ev.y,ev.direction,ev.off_x,ev.off_y]
 	end
 	def nloc(e)
-
+		@locs.delete([$map.id,e])
 	end
 
 	def loc?(e)

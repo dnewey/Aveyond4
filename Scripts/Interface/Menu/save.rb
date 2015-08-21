@@ -1,11 +1,13 @@
 #==============================================================================
-# ** Mnu_Items
+# ** Mnu_Save
 #==============================================================================
 
 class Mnu_Save < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
+
+		@load = false
 
 		@title.change('save')
 		@subtitle.text = "Choose a file to save!"
@@ -25,9 +27,17 @@ class Mnu_Save < Mnu_Base
 
 		@pic = Sprite.new(vp)		
 		@pic.move(340,324)
+		@right.push(@pic)
 
 		open
 
+		change(0)
+
+	end
+
+	def loadmode
+		@title.change('load')
+		@load = true
 	end
 
 	def update
@@ -58,7 +68,17 @@ class Mnu_Save < Mnu_Base
 	def select(option)	
 
 		#log_info(option)
-		$files.save_game(option)
+		if @load
+			$files.load_game(option)
+		else
+			if option == 0
+				log_err("CAN'T OVERSAVE AUTOSAVE")
+				return
+			end
+			$files.save_game(option)
+			$scene.queue_menu(nil)
+			close_soon
+		end
 		
 	end
 end

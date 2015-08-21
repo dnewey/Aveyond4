@@ -398,6 +398,8 @@ class Game_Player < Game_Character
     # AUTO SAVING
 
     # autosave your game (but not on the ending map)
+    $game.snapshot = Graphics.snap_to_bitmap
+    $files.autosave
    # if !ENDING_MAPS.include?($game_map.map_id)
    #   save = Scene_Save.new(1)
    #   save.autosave      

@@ -24,6 +24,8 @@ class Game_Event < Game_Character
 
   attr_reader :monster
 
+  attr_reader :save
+
   attr_reader :width, :height
       
 
@@ -40,6 +42,9 @@ class Game_Event < Game_Character
     # Hold a random number to be used with @r1, var for @v1
     @random = 0 
     @voll = 0
+
+    # Auto saveloc
+    @save = false
     
     @erased = false
     @disabled = $state.disable?(@id)
@@ -124,6 +129,15 @@ class Game_Event < Game_Character
   end
 
   def collide?(x,y)
+    return false if x < @x
+    return false if y < @y
+    return false if x > @x + @width - 1
+    return false if y > @y + @height - 1
+    return true
+  end
+
+  def at?(x,y)
+    # Include width and height
     return false if x < @x
     return false if y < @y
     return false if x > @x + @width - 1
@@ -472,6 +486,8 @@ class Game_Event < Game_Character
     @list = @page.list
     @interpreter = nil
 
+    @save = false
+
     # Do things based on the name
     if @character_name == "!!!"
       @through = true
@@ -518,6 +534,9 @@ class Game_Event < Game_Character
           @above = false
         when '#below2'
           @below2 = true
+
+        when '#save'
+          @save = true
 
         when '#opacity'
           self.opacity = data[1].to_i
@@ -659,7 +678,7 @@ class Game_Event < Game_Character
   # * Save Position
   #--------------------------------------------------------------------------
   def saveloc
-    $state.loc!(@event.id)
+    $state.loc(@event.id)
   end
 
   #--------------------------------------------------------------------------

@@ -67,12 +67,19 @@ class FileManager
     # Save pic for save file
     w = 256
     h = 128
-    x = (640-w)/2
-    y = (480-h)/2
+    x = $menu.player_x - 128#(640-w)/2
+    y = $menu.player_y - 96#(480-h)/2
+    x = 0 if x < 0
+    y = 0 if y < 0
     rect = Rect.new(x,y,w,h)
     mini = Bitmap.new(w,h)
     mini.blt(0,0,$game.snapshot,rect)
     mini.export("#{$appdata}//Av4-#{i}.png")
+
+
+
+    @headers[i] = load_header(i)
+
     return true
 
   end

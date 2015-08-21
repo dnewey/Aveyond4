@@ -4,8 +4,10 @@
 
 class Ui_Info < SpriteGroup
 
-	def initialize(vp)
+	def initialize(vp,message)
 		super()
+
+		@message = message
 
 		# Map
 		@map = Label.new(vp)
@@ -40,6 +42,17 @@ class Ui_Info < SpriteGroup
 
 	def update
 		super
+
+		if @message.busy? && @message.mode == :vn
+			@gold.opacity -= 5
+			@icon.opacity -= 5
+			@map.opacity -= 5
+		else
+			@gold.opacity += 5
+			@icon.opacity += 5
+			@map.opacity += 5
+		end
+
 		refresh if @visible_gold != $party.gold || @visible_map != $map.name
 	end
 

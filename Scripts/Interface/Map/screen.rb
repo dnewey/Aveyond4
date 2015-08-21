@@ -15,7 +15,7 @@ class Ui_Screen
 		@bar = Ui_Bar.new(vp)
 		#@bar.hide
 		
-		@info = Ui_Info.new(vp)
+		@info = Ui_Info.new(vp,@message)
 
 		@popper = nil
 		@grid = nil
@@ -29,7 +29,6 @@ class Ui_Screen
 		@message.dispose
 		@bar.dispose
 		@info.dispose
-		@book.dispose
 	end
 
 	def hide
@@ -93,7 +92,12 @@ class Ui_Screen
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || $input.rclick?
+      	$menu.player_x = $player.screen_x
+      	$menu.player_y = $player.screen_y
+      	$mouse.hide_cursor
+      	Graphics.update
       	$game.snapshot = Graphics.snap_to_bitmap
+      	$mouse.show_cursor
       	open_main_menu
       end
 
