@@ -398,6 +398,8 @@ class Game_Player < Game_Character
     # AUTO SAVING
 
     # autosave your game (but not on the ending map)
+    $menu.player_x = screen_x
+    $menu.player_y = screen_y
     $game.snapshot = Graphics.snap_to_bitmap
     $files.autosave
    # if !ENDING_MAPS.include?($game_map.map_id)

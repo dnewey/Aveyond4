@@ -10,7 +10,7 @@ class Mnu_Shop < Mnu_Base
 		@title.change('Smith')
 		@subtitle.text = "Armors and Weapons"
 
-		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
+		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -30,6 +30,7 @@ class Mnu_Shop < Mnu_Base
 		self.right.push(@users)
 
 		change_tab("Items")
+		change($menu.shop[0])
 
 	end
 
