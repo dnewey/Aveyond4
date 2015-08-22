@@ -8,8 +8,6 @@ class Sprite_Character < Sprite
 
   #--------------------------------------------------------------------------
   # * Object Initialization
-  #     viewport  : viewport
-  #     character : character (Game_Character)
   #--------------------------------------------------------------------------
   def initialize(viewport, character = nil)
     super(viewport)
@@ -26,6 +24,7 @@ class Sprite_Character < Sprite
   def update
     super
 
+    # Windmill hack
     if @character.character_name.include?('mill')
 
       if @character.pattern < 4
@@ -79,9 +78,11 @@ class Sprite_Character < Sprite
     end
 
     # Clear the helper graphics
-    # if @character_name == "!!!"
-    #   self.bitmap.clear
-    # end
+    if !$settings.debug_draw_helpers
+      if @character_name == "!!!" || @character_name == 'Block'
+        self.bitmap.clear
+      end
+    end
 
     # if @character == $player
     #   self.bitmap = $cache.character("Player/boy")

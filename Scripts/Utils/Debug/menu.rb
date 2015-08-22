@@ -39,7 +39,6 @@ class DebugMenu
 		case newpage
 			when :main
 
-				add(">> General Settings",Proc.new{ page(:settings) })
 				add(">> Debug Settings",Proc.new{ page(:debug) })
 				
 				add("-- Progress: #{$progress.get_progress}",nil) if !$progress.nil?
@@ -60,7 +59,7 @@ class DebugMenu
 
 				add(":: Toggle skip title - "+$settings.debug_skip_title.to_s.upcase,Proc.new{ $settings.debug_skip_title ^= true })
 				add(":: Toggle draw fps - "+$settings.debug_draw_fps.to_s.upcase,Proc.new{ $settings.debug_draw_fps ^= true })
-				add(":: Toggle draw names - "+$settings.debug_draw_names.to_s.upcase,Proc.new{ $settings.debug_draw_names ^= true })
+				add(":: Toggle draw helpers - "+$settings.debug_draw_helpers.to_s.upcase,Proc.new{ $settings.debug_draw_helpers ^= true })
 
 				@esc = Proc.new{ page(:main) }
 

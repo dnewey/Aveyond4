@@ -13,8 +13,7 @@ class SettingsManager
 
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
-  attr_accessor :debug_draw_names
-  attr_accessor :debug_draw_sprites # Draw rect under sprites
+  attr_accessor :debug_draw_helpers
   
 
   # In settings
@@ -36,8 +35,7 @@ class SettingsManager
     # Debug options
     @debug_skip_title = true
     @debug_draw_fps = true
-    @debug_draw_names = false
-    @debug_draw_sprites = false
+    @debug_draw_helpers = false
 
     # Create the settings file if needed
     if !FileTest.exist?($appdata+'\settings.txt')

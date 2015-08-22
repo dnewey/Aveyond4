@@ -7,7 +7,7 @@ class Ui_Message
   # Consts
   MIN_WIDTH = 240
   MAX_WIDTH = 400
-  MAX_WIDTH_VN = 500
+  MAX_WIDTH_VN = 480
   TAB_WIDTH = 35
 
   VN_WIDTH = 520
@@ -310,8 +310,7 @@ class Ui_Message
 
     # Read data to get name and text
     speaker = text_data[0]
-
-
+    
     if speaker.include?("x-")
       @tail.hide
       @mode = :x
@@ -848,7 +847,7 @@ class Ui_Message
     end
 
     # If less than split width, just one line
-    if total_width < MIN_WIDTH
+    if total_width < MIN_WIDTH #&& total_width < @namebox.width + 44
       return [text.split(" ")]
     end
 
@@ -863,6 +862,8 @@ class Ui_Message
     # If width is less than max * 2, we are splitting at the first word after half point
     if @mode != :vn && total_width < (max_limit * 1.8) - 40
       limit = (total_width / 2) + 40
+      # If long namebox, allow the text to go wider
+      limit = @namebox.width + 44 if @namebox.width + 44 > limit
       cursor = 0
       lines = [[]]
       text.split(" ").each{ |word|
@@ -880,6 +881,8 @@ class Ui_Message
     # Else we are autosizing max width
     lines = [[]]
     limit = max_limit
+    # If long namebox, allow the text to go wider
+    limit = @namebox.width + 44 if @namebox.width + 44 > limit
     cursor = 0
     text.split(" ").each{ |word|
       if cursor + word_width(word) > limit

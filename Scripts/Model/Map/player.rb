@@ -309,6 +309,8 @@ class Game_Player < Game_Character
     @transferring = false
     $player.clear_path
 
+    old_zone = $map.zone.id
+
     # Map to teleport to 
     if $map.id != @xfer_data[0]
       $map.setup(@xfer_data[0])      
@@ -357,9 +359,9 @@ class Game_Player < Game_Character
       $game.update
 
       # If next zone is different, start fading?
-      $audio.fadeout
-
-      
+      if $map.zone.id != old_zone
+        $audio.fadeout      
+      end
 
       case @trans_type
 

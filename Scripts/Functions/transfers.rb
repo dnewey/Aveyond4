@@ -55,7 +55,12 @@ def transfer_map(dir=nil)
 end
 
 def transfer_house_in(dir=nil)
-	transfer_in(dir)
+	transfer_in("Indoor",dir)
+	$player.trans_type = :fade
+end
+
+def transfer_house_in2(dir=nil)
+	transfer_in("Indoor2",dir)
 	$player.trans_type = :fade
 end
 
@@ -65,7 +70,12 @@ def transfer_house_out(dir=nil)
 end
 
 def transfer_cave_in(dir=nil)
-	transfer_in(dir)
+	transfer_in("Cave",dir)
+	$player.trans_type = :cave
+end
+
+def transfer_cave_in2(dir=nil)
+	transfer_in("Cave2",dir)
 	$player.trans_type = :cave
 end
 
@@ -74,7 +84,7 @@ def transfer_cave_out(dir=nil)
 	$player.trans_type = :cave
 end
 
-def transfer_in(dir=nil)
+def transfer_in(name,dir=nil)
 
 	$player.trans_type = :cross
 
@@ -84,9 +94,10 @@ def transfer_in(dir=nil)
 	# Find child map of name
 	map = find_child_id($map.id,room)
 
-	# If couldn't find, use default
+	# If couldn't find, use the given name of the type of transfer understand?
+	# Name will be Indoor or cave etc
 	if map == 0
-		map = find_child_id($map.id,".Indoor")
+		map = find_child_id($map.id,name)
 	end
 
 	# Do the transfer
@@ -127,6 +138,9 @@ def find_child_id(parent_id,name)
  end
 
  def find_map_id(name)
+
+ 	# Remove zone
+ 	name = name.split("@")[0].rstrip
 
 	$data.mapinfos.each{ |k,map|
 		return k if map.name == name

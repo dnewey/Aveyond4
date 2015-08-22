@@ -19,9 +19,9 @@ class Game_Map
   attr_reader :interpreter
   attr_reader :id
 
-  # Try to cut this
   attr_reader :events
   attr_reader :map
+  attr_reader :zone
   attr_accessor :cam_x, :cam_y
 
   #--------------------------------------------------------------------------
@@ -111,16 +111,7 @@ class Game_Map
       log_info "Changing Zone: #{newzone}"
 
 
-      if @zone.id == "@clear"
-        $audio.bgm_stop
-        $audio.bgs_stop
-        autoplay = true
-      elsif @zone.id == "@nil" || @zone == nil
-        # Don't change anything
-        # Load the map music if you like
-        autoplay = true
-      else
-
+      if @zone != nil
         
         $audio.change_mode(@zone.reverb)
 
@@ -137,14 +128,8 @@ class Game_Map
       end
 
     end
-    
-    # If a null or clear zone
-    if autoplay
-      $audio.bgm_play(@map.bgm) if @map.autoplay_bgm
-      $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
-    end
 
-        # Set map event data
+    # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])

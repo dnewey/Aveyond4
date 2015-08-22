@@ -17,6 +17,9 @@ class AudioManager
     @music = Seal::Source.new
     @atmosphere = Seal::Source.new
 
+    @music_file = nil
+    @atmosphere_file = nil
+
     # Fade targets
     @music_gain = 1.0
     @music_target = 1.0
@@ -73,6 +76,9 @@ class AudioManager
       return
     end
 
+    return if @music_file == file
+    @music_file = file
+
     @music_gain = 1.0
     @music_target = 1.0
 
@@ -89,6 +95,9 @@ class AudioManager
       @atmosphere.stop
       return
     end
+
+    return if @atmosphere_file == file
+    @atmosphere_file = file
 
     @atmosphere_gain = 1.0
     @atmosphere_target = 1.0
