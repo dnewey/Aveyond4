@@ -20,6 +20,8 @@ class Ui_Message
   PADDING_X = 21
   PADDING_Y = 16
 
+  CHOICE_DELAY = 30
+
   SPEED_1 = 9
   SPEED_2 = 7
   SPEED_3 = 5
@@ -60,6 +62,8 @@ class Ui_Message
     @normal_speed = SPEED_4
     @wait_frames = 0
     @next_char = 0
+
+    @choice_delay = CHOICE_DELAY # Make choice wait before allowing click
 
     @cx = 0
     @cy = 0
@@ -262,6 +266,7 @@ class Ui_Message
       #when :pausing
       #  check_input_next
       when :choice
+        @choice_delay -= 1
         check_input_choice
       when :done
         check_input_done
@@ -277,6 +282,7 @@ class Ui_Message
 
   def add_choice(choice)
     @choices.push(choice)
+    @choice_delay = CHOICE_DELAY
   end
 
   #--------------------------------------------------------------------------
@@ -488,8 +494,11 @@ class Ui_Message
 
     case name
 
+      when '???'
+        $scene.hud.message.wallpaper = 'fangder'
+
       when 'Chester'
-        $scene.hud.message.wallpaper = 'Wizard'
+        $scene.hud.message.wallpaper = 'wizard'
 
       else
         $scene.hud.message.wallpaper = 'diamonds'
@@ -791,7 +800,8 @@ class Ui_Message
   # * Wait for input or choice
   #--------------------------------------------------------------------------
   def check_input_choice
-    if $input.action?
+    return if @choice_delay > 0
+    if $input.action? || $input.click?
       #sound(:text_next)
       #self.slide_zy(0.0)
 

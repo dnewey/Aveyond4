@@ -29,15 +29,6 @@ class State
 		return @flags.include?(f)
 	end
 
-	def incvar(v,a)
-		if @vars.has_key?(v)
-			@vars[v] += a
-		else
-			@vars[v] = a
-		end
-		$map.need_refresh = true
-	end
-
 	def var(v,a)
 		if @vars.has_key?(v)
 			@vars[v] += a

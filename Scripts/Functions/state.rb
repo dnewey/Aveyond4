@@ -8,6 +8,7 @@ def unflag(id) $state.unflag(id) end
 def flag?(id) return $state.flag?(id) end
 
 # Var shorthands
+def incvar(id,a=1) $state.var(id,a) end
 def var(id,a=1) $state.var(id,a) end
 #def unvar(id,a=1) $state.var(id,a) end
 def var?(id,a) return $state.var?(id,a) end

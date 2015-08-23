@@ -7,7 +7,8 @@ class Mnu_Chooser < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('items')
+		@title.change('choose')
+		@title.change_icon("items")
 		#@subtitle.text = "Various items of collection"
 
 		@port = Port_Full.new(vp)

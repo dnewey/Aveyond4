@@ -26,7 +26,7 @@ class Spark < Sprite
 		self.blend_type = 0
 
 		@sound = nil
-		@sound_delay = 0
+		@sound_delay = 1
 
 		if $data.anims.has_key?(fx)
 
