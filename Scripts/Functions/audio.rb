@@ -40,3 +40,7 @@ end
 def audio_fadeout
 	$audio.music_target = 0.0
 end
+
+def atmosphere_fadeout
+	$audio.atmosphere_target = 0.0
+end

@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"‘#==============================================================================
+end"Ë#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -83,8 +83,6 @@ class Sprite_Character < Sprite
 
   #--------------------------------------------------------------------------
   # * Object Initialization
-  #     viewport  : viewport
-  #     character : character (Game_Character)
   #--------------------------------------------------------------------------
   def initialize(viewport, character = nil)
     super(viewport)
@@ -101,6 +99,7 @@ class Sprite_Character < Sprite
   def update
     super
 
+    # Windmill hack
     if @character.character_name.include?('mill')
 
       if @character.pattern < 4
@@ -154,9 +153,11 @@ class Sprite_Character < Sprite
     end
 
     # Clear the helper graphics
-    # if @character_name == "!!!"
-    #   self.bitmap.clear
-    # end
+    if !$settings.debug_draw_helpers
+      if @character_name == "!!!" || @character_name == 'Block'
+        self.bitmap.clear
+      end
+    end
 
     # if @character == $player
     #   self.bitmap = $cache.character("Player/boy")
@@ -2155,7 +2156,7 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"
+end"[
 # Audio
 
 def sfx(file,vol=1.0,delay=0)
@@ -2196,6 +2197,10 @@ end
 
 def audio_fadeout
 	$audio.music_target = 0.0
+end
+
+def atmosphere_fadeout
+	$audio.atmosphere_target = 0.0
 end"	#==============================================================================
 # ** Common Functions
 #==============================================================================
@@ -3421,7 +3426,8 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"!	WORLD_MAP_ID = 146
+end"x
+WORLD_MAP_ID = 146
 
 def transfer(map,room=nil,dir=nil)
 
@@ -3478,7 +3484,12 @@ def transfer_map(dir=nil)
 end
 
 def transfer_house_in(dir=nil)
-	transfer_in(dir)
+	transfer_in("Indoor",dir)
+	$player.trans_type = :fade
+end
+
+def transfer_house_in2(dir=nil)
+	transfer_in("Indoor2",dir)
 	$player.trans_type = :fade
 end
 
@@ -3488,7 +3499,12 @@ def transfer_house_out(dir=nil)
 end
 
 def transfer_cave_in(dir=nil)
-	transfer_in(dir)
+	transfer_in("Cave",dir)
+	$player.trans_type = :cave
+end
+
+def transfer_cave_in2(dir=nil)
+	transfer_in("Cave2",dir)
 	$player.trans_type = :cave
 end
 
@@ -3497,7 +3513,7 @@ def transfer_cave_out(dir=nil)
 	$player.trans_type = :cave
 end
 
-def transfer_in(dir=nil)
+def transfer_in(name,dir=nil)
 
 	$player.trans_type = :cross
 
@@ -3507,9 +3523,10 @@ def transfer_in(dir=nil)
 	# Find child map of name
 	map = find_child_id($map.id,room)
 
-	# If couldn't find, use default
+	# If couldn't find, use the given name of the type of transfer understand?
+	# Name will be Indoor or cave etc
 	if map == 0
-		map = find_child_id($map.id,".Indoor")
+		map = find_child_id($map.id,name)
 	end
 
 	# Do the transfer
@@ -3550,6 +3567,9 @@ def find_child_id(parent_id,name)
  end
 
  def find_map_id(name)
+
+ 	# Remove zone
+ 	name = name.split("@")[0].rstrip
 
 	$data.mapinfos.each{ |k,map|
 		return k if map.name == name
@@ -5934,7 +5954,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"X#==============================================================================
+end"$Y#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -5943,7 +5963,7 @@ class Ui_Message
   # Consts
   MIN_WIDTH = 240
   MAX_WIDTH = 400
-  MAX_WIDTH_VN = 500
+  MAX_WIDTH_VN = 480
   TAB_WIDTH = 35
 
   VN_WIDTH = 520
@@ -6246,8 +6266,7 @@ class Ui_Message
 
     # Read data to get name and text
     speaker = text_data[0]
-
-
+    
     if speaker.include?("x-")
       @tail.hide
       @mode = :x
@@ -6784,7 +6803,7 @@ class Ui_Message
     end
 
     # If less than split width, just one line
-    if total_width < MIN_WIDTH
+    if total_width < MIN_WIDTH #&& total_width < @namebox.width + 44
       return [text.split(" ")]
     end
 
@@ -6799,6 +6818,8 @@ class Ui_Message
     # If width is less than max * 2, we are splitting at the first word after half point
     if @mode != :vn && total_width < (max_limit * 1.8) - 40
       limit = (total_width / 2) + 40
+      # If long namebox, allow the text to go wider
+      limit = @namebox.width + 44 if @namebox.width + 44 > limit
       cursor = 0
       lines = [[]]
       text.split(" ").each{ |word|
@@ -6816,6 +6837,8 @@ class Ui_Message
     # Else we are autosizing max width
     lines = [[]]
     limit = max_limit
+    # If long namebox, allow the text to go wider
+    limit = @namebox.width + 44 if @namebox.width + 44 > limit
     cursor = 0
     text.split(" ").each{ |word|
       if cursor + word_width(word) > limit
@@ -14368,7 +14391,7 @@ class Interpreter
   end
 
 end
-"ù2#==============================================================================
+"˘0#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -14389,9 +14412,9 @@ class Game_Map
   attr_reader :interpreter
   attr_reader :id
 
-  # Try to cut this
   attr_reader :events
   attr_reader :map
+  attr_reader :zone
   attr_accessor :cam_x, :cam_y
 
   #--------------------------------------------------------------------------
@@ -14481,16 +14504,7 @@ class Game_Map
       log_info "Changing Zone: #{newzone}"
 
 
-      if @zone.id == "@clear"
-        $audio.bgm_stop
-        $audio.bgs_stop
-        autoplay = true
-      elsif @zone.id == "@nil" || @zone == nil
-        # Don't change anything
-        # Load the map music if you like
-        autoplay = true
-      else
-
+      if @zone != nil
         
         $audio.change_mode(@zone.reverb)
 
@@ -14507,14 +14521,8 @@ class Game_Map
       end
 
     end
-    
-    # If a null or clear zone
-    if autoplay
-      $audio.bgm_play(@map.bgm) if @map.autoplay_bgm
-      $audio.bgs_play(@map.bgs) if @map.autoplay_bgs
-    end
 
-        # Set map event data
+    # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
@@ -14906,7 +14914,7 @@ class Moblin
 
 	end
 
-end"H+#==============================================================================
+end"ì+#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -15217,6 +15225,8 @@ class Game_Player < Game_Character
     @transferring = false
     $player.clear_path
 
+    old_zone = $map.zone.id
+
     # Map to teleport to 
     if $map.id != @xfer_data[0]
       $map.setup(@xfer_data[0])      
@@ -15265,9 +15275,9 @@ class Game_Player < Game_Character
       $game.update
 
       # If next zone is different, start fading?
-      $audio.fadeout
-
-      
+      if $map.zone.id != old_zone
+        $audio.fadeout      
+      end
 
       case @trans_type
 
@@ -18467,7 +18477,7 @@ end" " "¬Cmodule Seal
 
     alias auto? auto
   end
-end"&#==============================================================================
+end"ﬂ#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -18485,6 +18495,9 @@ class AudioManager
 
     @music = Seal::Source.new
     @atmosphere = Seal::Source.new
+
+    @music_file = nil
+    @atmosphere_file = nil
 
     # Fade targets
     @music_gain = 1.0
@@ -18542,6 +18555,9 @@ class AudioManager
       return
     end
 
+    return if @music_file == file
+    @music_file = file
+
     @music_gain = 1.0
     @music_target = 1.0
 
@@ -18558,6 +18574,9 @@ class AudioManager
       @atmosphere.stop
       return
     end
+
+    return if @atmosphere_file == file
+    @atmosphere_file = file
 
     @atmosphere_gain = 1.0
     @atmosphere_target = 1.0
@@ -19801,7 +19820,7 @@ class MouseManager
   def hide_cursor() @sprite.opacity = 0 end
   def show_cursor() @sprite.opacity = 255 end
 
-end"#	#==============================================================================
+end"«#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -19816,8 +19835,7 @@ class SettingsManager
 
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
-  attr_accessor :debug_draw_names
-  attr_accessor :debug_draw_sprites # Draw rect under sprites
+  attr_accessor :debug_draw_helpers
   
 
   # In settings
@@ -19839,8 +19857,7 @@ class SettingsManager
     # Debug options
     @debug_skip_title = true
     @debug_draw_fps = true
-    @debug_draw_names = false
-    @debug_draw_sprites = false
+    @debug_draw_helpers = false
 
     # Create the settings file if needed
     if !FileTest.exist?($appdata+'\settings.txt')
@@ -20667,7 +20684,7 @@ end"Cmodule Graphics
     end
     
   end
-end"7#==============================================================================
+end"#==============================================================================
 # ** Actions
 #==============================================================================
 
@@ -20708,7 +20725,6 @@ class DebugMenu
 		case newpage
 			when :main
 
-				add(">> General Settings",Proc.new{ page(:settings) })
 				add(">> Debug Settings",Proc.new{ page(:debug) })
 				
 				add("-- Progress: #{$progress.get_progress}",nil) if !$progress.nil?
@@ -20729,7 +20745,7 @@ class DebugMenu
 
 				add(":: Toggle skip title - "+$settings.debug_skip_title.to_s.upcase,Proc.new{ $settings.debug_skip_title ^= true })
 				add(":: Toggle draw fps - "+$settings.debug_draw_fps.to_s.upcase,Proc.new{ $settings.debug_draw_fps ^= true })
-				add(":: Toggle draw names - "+$settings.debug_draw_names.to_s.upcase,Proc.new{ $settings.debug_draw_names ^= true })
+				add(":: Toggle draw helpers - "+$settings.debug_draw_helpers.to_s.upcase,Proc.new{ $settings.debug_draw_helpers ^= true })
 
 				@esc = Proc.new{ page(:main) }
 
