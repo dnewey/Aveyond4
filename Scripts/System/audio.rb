@@ -4,7 +4,7 @@
 
 class AudioManager
 
-  attr_accessor :music_target
+  attr_accessor :music_target, :atmosphere_target
 
   def initialize
 

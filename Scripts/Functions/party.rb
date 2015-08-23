@@ -72,6 +72,16 @@ def unjoin_s(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
 end
 
+def party_of_ing
+	$party.backup_party
+	$party.leader = 'ing'
+	join_s('ing')
+end
+
+def party_of_all
+	$party.restore_party
+end
+
 def make_reserve(who)
 	$party.set_reserve(who)
 end

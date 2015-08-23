@@ -10,6 +10,8 @@ def log_ev(msg) $debug.log(msg,'EVENT') end
 
 class DebugManager
 
+	attr_accessor :disable_flags
+
 	OSD_OPACITY = 230
 
 	INFO_COLOR = Color.new(220,171,1,OSD_OPACITY)
@@ -24,6 +26,9 @@ class DebugManager
 		return if !DEBUG
 
 		$DEBUG = true
+
+		# Temp debug options
+		@disable_flags = false
 
 		# Prepare log file
 		@path = $appdata + "\\log.txt"

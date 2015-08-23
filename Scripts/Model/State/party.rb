@@ -48,6 +48,7 @@ class Game_Party
     # Create actor array
     @active = []
     @reserve = []
+    @backup = nil # When the party is disolved, this will rebuild
 
     # Inventory
     @items = {}
@@ -165,6 +166,18 @@ class Game_Party
   def back_to_pavillion(actor)
     @active.delete(actor)
     @reserve.delete(actor)
+  end
+
+  def backup_party
+    @backup = [@active.dup,@reserve.dup]
+    @active = []
+    @reserve = []
+  end
+
+  def restore_party
+    @active = @backup[0]
+    @reserve = @backup[1]
+    @backup = nil
   end
 
 

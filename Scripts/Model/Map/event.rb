@@ -233,6 +233,7 @@ class Game_Event < Game_Character
 
       # Flag
       when '?flag'
+          return true if $debug.disable_flags
           return false if !flag?(cond[1])
       when '?nflag'
           return false if flag?(cond[1])
@@ -642,9 +643,17 @@ class Game_Event < Game_Character
 
 
     # If trigger is [auto run]
-    if @trigger == 3 || @event.name == 'AUTORUN'
-      start
+
+    if @trigger == 3
+
+      if DEBUG && $keyboard.state?(VK_CTRL)
+        erase
+        return
+      else
+        start
+      end
     end
+
   end
 
 

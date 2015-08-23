@@ -7,12 +7,12 @@ def execute_spellcheck
     data = {} # map name, dialogues?
     
     # Each map
-    $data_maps.each{ |k,v| 
+    $data.mapinfos.each{ |k,v| 
     
       map_id = k
       map_name = v.name
       
-      event_list = load_data(sprintf("Data/Map%03d.rvdata2",map_id)).events
+      event_list = load_data(sprintf("Data/Map%03d.rxdata",map_id)).events
       next if event_list.empty?
       
       events = {}
@@ -36,25 +36,13 @@ def execute_spellcheck
             
               when 101; # Short text
                 
-                text = ""
+                text = page.list[@cmd_idx].parameters[0]
                 while page.list[@cmd_idx+1].code == 401       # Text data
                   @cmd_idx += 1
                   text += page.list[@cmd_idx].parameters[0]
                   text += ' '      
                 end
                 dialogues.push(text)
-                
-              when 105; # Long text
-            
-                while page.list[@cmd_idx+1].code == 405
-                  @cmd_idx += 1
-                  line = page.list[@cmd_idx].parameters[0]
-                  if line[0] == "@"
-                    dialogues[dialogues.size-1] += " " + line
-                  else
-                    dialogues.push(line)
-                  end
-                end
             
             end
               
@@ -91,7 +79,7 @@ def execute_spellcheck
     File.open('spellcheck.txt', 'w') do |file|  
 
       # Write some stats
-      file.puts("Total Maps: "+$data_maps.size.to_s)
+      file.puts("Total Maps: "+$data.mapinfos.size.to_s)
       file.puts("Maps with dialogue: "+data.size.to_s)
 
       # Word counts

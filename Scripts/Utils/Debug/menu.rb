@@ -41,7 +41,9 @@ class DebugMenu
 
 				add(">> Debug Settings",Proc.new{ page(:debug) })
 				
-				add("-- Progress: #{$progress.get_progress}",nil) if !$progress.nil?
+				add("-- Disable Flags",Proc.new{ $debug.disable_flags = true })
+				add("-- Export Text",Proc.new{ execute_spellcheck })
+
 
 				@esc = Proc.new{ hide }
 
