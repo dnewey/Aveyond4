@@ -115,6 +115,7 @@ end
 # Routes
 
 def face2face
+	td me
 	x = gev(me).x
 	y = gev(me).y
 	path 'plr',x,y+1,'u'

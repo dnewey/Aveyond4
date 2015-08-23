@@ -1,4 +1,4 @@
-[†"ú#==============================================================================
+[…"ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -2616,7 +2616,7 @@ end
 
 
 
-"±#==============================================================================
+"#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -2731,6 +2731,14 @@ def blast(ev)
 end
 
 # Routes
+
+def face2face
+	td me
+	x = gev(me).x
+	y = gev(me).y
+	path 'plr',x,y+1,'u'
+	wfc
+end
 
 def wfc
 	$map.interpreter.command_210
@@ -3037,7 +3045,7 @@ end
 
 
 
-"“
+" 
 
 def pop_item(item,number,type)
 
@@ -3070,7 +3078,7 @@ end
 
 def pop_learn(s,w)
 
-	b = $data.skills[s].name
+	b = $data.skills[s].name.sub("=>",":")
 	ib = $cache.icon($data.skills[s].icon)
 
 	a = $data.actors[w].name+" has learned: "
@@ -3121,7 +3129,7 @@ def pop_get(type,b,ib,color=nil)
 			ia = nil
 
 		when 'rat'
-			a = "Trevor found: "
+			a = "Colby found: "
 			ia = nil
 
 		when 'p'
@@ -4555,7 +4563,7 @@ class TargetCmd
 	end
 
 end
-"#==============================================================================
+"©#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -4572,7 +4580,7 @@ class Ui_Screen
 		@bar = Ui_Bar.new(vp)
 		#@bar.hide
 		
-		@info = Ui_Info.new(vp)
+		@info = Ui_Info.new(vp,@message)
 
 		@popper = nil
 		@grid = nil
@@ -4586,7 +4594,6 @@ class Ui_Screen
 		@message.dispose
 		@bar.dispose
 		@info.dispose
-		@book.dispose
 	end
 
 	def hide
@@ -4650,7 +4657,12 @@ class Ui_Screen
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
       if $input.cancel? || $input.rclick?
+      	$menu.player_x = $player.screen_x
+      	$menu.player_y = $player.screen_y
+      	$mouse.hide_cursor
+      	Graphics.update
       	$game.snapshot = Graphics.snap_to_bitmap
+      	$mouse.show_cursor
       	open_main_menu
       end
 
@@ -5855,14 +5867,16 @@ class Ui_Grid
 		return @selected
 	end
 
-end"	#==============================================================================
+end"ñ#==============================================================================
 # Ui_Info
 #==============================================================================
 
 class Ui_Info < SpriteGroup
 
-	def initialize(vp)
+	def initialize(vp,message)
 		super()
+
+		@message = message
 
 		# Map
 		@map = Label.new(vp)
@@ -5897,6 +5911,17 @@ class Ui_Info < SpriteGroup
 
 	def update
 		super
+
+		if @message.busy? && @message.mode == :vn
+			@gold.opacity -= 5
+			@icon.opacity -= 5
+			@map.opacity -= 5
+		else
+			@gold.opacity += 5
+			@icon.opacity += 5
+			@map.opacity += 5
+		end
+
 		refresh if @visible_gold != $party.gold || @visible_map != $map.name
 	end
 
@@ -5909,7 +5934,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"¿W#==============================================================================
+end"X#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -5940,6 +5965,8 @@ class Ui_Message
   attr_reader :last_choice
   attr_accessor :force_name
   attr_accessor :force_vn
+
+  attr_reader :mode
   
   #--------------------------------------------------------------------------
   # Prepare
@@ -6245,6 +6272,7 @@ class Ui_Message
     # Figure things out from speaker
     speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
+    speaker = this.name if speaker == 'me'
     speaker = this.name if speaker == 'This'
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 
@@ -6769,7 +6797,7 @@ class Ui_Message
     end
     
     # If width is less than max * 2, we are splitting at the first word after half point
-    if total_width < (max_limit * 1.8) - 40
+    if @mode != :vn && total_width < (max_limit * 1.8) - 40
       limit = (total_width / 2) + 40
       cursor = 0
       lines = [[]]
@@ -7585,53 +7613,6 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-end"¹#==============================================================================
-# ** Mnu_Items
-#==============================================================================
-
-class Mnu_Load < Mnu_Base
-
-	def initialize(vp)
-		super(vp)
-
-		@title.change('load')
-
-		@tabs.push("all")
-		@tabs.push("main")
-		@tabs.push("side")
-
-		@menu.list.type = :quest
-
-		data = $progress.quests
-
-		@menu.list.setup(data)
-
-		@page = Right_Page.new(vp)
-		@right.push(@page)
-
-		change(data[0]) if !data.empty?
-
-		open
-
-	end
-
-	def update
-		super
-
-		# Inputs maybe?
-
-		# Probably for using healing items?
-
-	end
-
-	def change(option)
-
-	end
-
-	def select(option)	
-		
-	end
-
 end"¾#==============================================================================
 # ** Mnu_Main
 #==============================================================================
@@ -8390,14 +8371,16 @@ class Mnu_Quit < Mnu_Base
 		
 	end
 
-end"œ#==============================================================================
-# ** Mnu_Items
+end"Ä#==============================================================================
+# ** Mnu_Save
 #==============================================================================
 
 class Mnu_Save < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
+
+		@load = false
 
 		@title.change('save')
 		@subtitle.text = "Choose a file to save!"
@@ -8417,9 +8400,17 @@ class Mnu_Save < Mnu_Base
 
 		@pic = Sprite.new(vp)		
 		@pic.move(340,324)
+		@right.push(@pic)
 
 		open
 
+		change(0)
+
+	end
+
+	def loadmode
+		@title.change('load')
+		@load = true
 	end
 
 	def update
@@ -8450,10 +8441,20 @@ class Mnu_Save < Mnu_Base
 	def select(option)	
 
 		#log_info(option)
-		$files.save_game(option)
+		if @load
+			$files.load_game(option)
+		else
+			if option == 0
+				log_err("CAN'T OVERSAVE AUTOSAVE")
+				return
+			end
+			$files.save_game(option)
+			$scene.queue_menu(nil)
+			close_soon
+		end
 		
 	end
-end"†#==============================================================================
+end"#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -8465,7 +8466,7 @@ class Mnu_Shop < Mnu_Base
 		@title.change('Smith')
 		@subtitle.text = "Armors and Weapons"
 
-		@tabs.tab_proc = Proc.new{ |tab| self.change_tab(tab) }
+		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -8485,6 +8486,7 @@ class Mnu_Shop < Mnu_Base
 		self.right.push(@users)
 
 		change_tab("Items")
+		change($menu.shop[0])
 
 	end
 
@@ -11563,7 +11565,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"y°#==============================================================================
+end"G±#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -11755,7 +11757,7 @@ class Game_Character
     
   end
 
-    def at?(x,y)
+  def at?(x,y)
     return self.x == x && self.y == y
   end
 
@@ -11776,9 +11778,17 @@ class Game_Character
     return false unless $map.valid?(new_x, new_y)
     return true if @through
     
-    # To new tile and from new tile
-    return false unless $map.passable?(x, y, d, self)
-    return false  unless $map.passable?(new_x, new_y, 10 - d,self)
+    # IS there a reason to check from tile?
+    #return false unless $map.passable?(x, y, d, self)
+    
+
+    # If enemy, check if I shall pass
+    if self.is_a?(Game_Event) && self.monster != nil
+      return false  unless $map.passable?(new_x, new_y, 10 - d,self,true)
+    else
+      return false  unless $map.passable?(new_x, new_y, 10 - d,self)
+    end
+
 
     # end
     return true
@@ -13113,7 +13123,7 @@ class Game_Character
 
 
 end
-"—C#==============================================================================
+"ðD#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13139,6 +13149,8 @@ class Game_Event < Game_Character
 
   attr_reader :monster
 
+  attr_reader :save
+
   attr_reader :width, :height
       
 
@@ -13155,6 +13167,9 @@ class Game_Event < Game_Character
     # Hold a random number to be used with @r1, var for @v1
     @random = 0 
     @voll = 0
+
+    # Auto saveloc
+    @save = false
     
     @erased = false
     @disabled = $state.disable?(@id)
@@ -13239,6 +13254,15 @@ class Game_Event < Game_Character
   end
 
   def collide?(x,y)
+    return false if x < @x
+    return false if y < @y
+    return false if x > @x + @width - 1
+    return false if y > @y + @height - 1
+    return true
+  end
+
+  def at?(x,y)
+    # Include width and height
     return false if x < @x
     return false if y < @y
     return false if x > @x + @width - 1
@@ -13587,6 +13611,8 @@ class Game_Event < Game_Character
     @list = @page.list
     @interpreter = nil
 
+    @save = false
+
     # Do things based on the name
     if @character_name == "!!!"
       @through = true
@@ -13633,6 +13659,9 @@ class Game_Event < Game_Character
           @above = false
         when '#below2'
           @below2 = true
+
+        when '#save'
+          @save = true
 
         when '#opacity'
           self.opacity = data[1].to_i
@@ -13774,7 +13803,7 @@ class Game_Event < Game_Character
   # * Save Position
   #--------------------------------------------------------------------------
   def saveloc
-    $state.loc!(@event.id)
+    $state.loc(@event.id)
   end
 
   #--------------------------------------------------------------------------
@@ -14339,7 +14368,7 @@ class Interpreter
   end
 
 end
-"®0#==============================================================================
+"2#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -14369,6 +14398,9 @@ class Game_Map
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
+
+    @id = nil
+
     @interpreter = Interpreter.new(0,true)
 
     @cam_x = 0
@@ -14406,6 +14438,14 @@ class Game_Map
   #     map_id : map ID
   #--------------------------------------------------------------------------
   def setup(id)
+
+    # If there was an old map, save the locs
+    if @id != nil
+      @events.values.each{ |e|
+        next if !e.saveloc
+        $state.loc(e)
+      }
+    end
  
     # Put map ID in @map_id memory
     @id = id
@@ -14478,6 +14518,15 @@ class Game_Map
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
+
+      # Restore loc
+      if $state.loc?(i)
+        loc = $state.getloc(i)
+        @events[i].moveto(loc[0],loc[1])
+        @events[i].direction = loc[2]
+        @events[i].off_x = loc[3]
+        @events[i].off_y = loc[4]
+      end
     }
 
   end
@@ -14729,17 +14778,18 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Determine if Passable
   #--------------------------------------------------------------------------
-  def passable?(x, y, d, self_event = nil)
+  def passable?(x, y, d, self_event = nil, monster=false)
 
     return false unless valid?(x, y)
 
     # Change direction (0,2,4,6,8,10) to obstacle bit (0,1,2,4,8,0)
     bit = (1 << (d / 2 - 1)) & 0x0f
 
-    # Loop in all events
+    # Loop all events
     events.values.each{ |e| 
       if e != self_event and e.at?(x,y)
          return false if !(e.through || e.above || e.below)
+         return false if monster && e.name == "YSNP"
       end
     }
 
@@ -14856,7 +14906,7 @@ class Moblin
 
 	end
 
-end"Ç*#==============================================================================
+end"H+#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -15256,6 +15306,10 @@ class Game_Player < Game_Character
     # AUTO SAVING
 
     # autosave your game (but not on the ending map)
+    $menu.player_x = screen_x
+    $menu.player_y = screen_y
+    $game.snapshot = Graphics.snap_to_bitmap
+    $files.autosave
    # if !ENDING_MAPS.include?($game_map.map_id)
    #   save = Scene_Save.new(1)
    #   save.autosave      
@@ -15691,7 +15745,7 @@ class Game_Battle
   end
 
   
-end";
+end"’
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -15714,6 +15768,11 @@ class MenuState
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
+
+
+	# Player position for saving
+	attr_accessor :player_x
+	attr_accessor :player_y
 
 	#attr_accessor :category
 	#attr_accessor :tab
@@ -16156,7 +16215,7 @@ end"^class Progress
 		return @progress < $data.progress[progress]
 	end
 
-end"Ñclass State
+end"class State
 
 	def initialize
 
@@ -16240,10 +16299,11 @@ end"Ñclass State
 	end
 
 	def loc(e)
-		@locs[[$map.id,e]] = [e.x,e.y]
+		ev = gev(e)
+		@locs[[$map.id,e]] = [ev.x,ev.y,ev.direction,ev.off_x,ev.off_y]
 	end
 	def nloc(e)
-
+		@locs.delete([$map.id,e])
 	end
 
 	def loc?(e)
@@ -17539,7 +17599,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"‚#==============================================================================
+"¦#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -17674,7 +17734,10 @@ class Scene_Menu
       when "Options"; @menu = Mnu_Options.new(@vp)
       when "Help"; @menu = Mnu_Help.new(@vp)
       when "Sound"; @menu = Mnu_Sound.new(@vp)
-      when "Load"; @menu = Mnu_Load.new(@vp)
+
+      when "Load"; 
+        @menu = Mnu_Save.new(@vp)
+        @menu.loadmode
       when "Save"; @menu = Mnu_Save.new(@vp)
 
       when "Char"; @menu = Mnu_Char.new(@vp)
@@ -19089,8 +19152,7 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"ü
-#==============================================================================
+end"w#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
@@ -19159,12 +19221,19 @@ class FileManager
     # Save pic for save file
     w = 256
     h = 128
-    x = (640-w)/2
-    y = (480-h)/2
+    x = $menu.player_x - 128#(640-w)/2
+    y = $menu.player_y - 96#(480-h)/2
+    x = 0 if x < 0
+    y = 0 if y < 0
     rect = Rect.new(x,y,w,h)
     mini = Bitmap.new(w,h)
     mini.blt(0,0,$game.snapshot,rect)
     mini.export("#{$appdata}//Av4-#{i}.png")
+
+
+
+    @headers[i] = load_header(i)
+
     return true
 
   end
@@ -19668,7 +19737,7 @@ class KeyboardManager
 
   end
 
-end"/#============================================================================== 
+end"£#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -19727,6 +19796,10 @@ class MouseManager
   def change_cursor(c)
     @sprite.bitmap = $cache.cursor(c)
   end
+
+  # For snapshotting
+  def hide_cursor() @sprite.opacity = 0 end
+  def show_cursor() @sprite.opacity = 255 end
 
 end"#	#==============================================================================
 # ** Game_Settings
