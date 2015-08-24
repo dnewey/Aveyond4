@@ -110,11 +110,22 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def select(option)	
+
+		scope = $data.items[option].scope
 		
-		# If this is usalbe, use it
-		$menu.use_item = option
-		$scene.queue_menu("Healing")
-		close_soon
+		# If item needs a target, do it
+		case scope
+
+			when 'ally'
+				$menu.use_item = option
+				$scene.queue_menu("Healing")
+				close_soon
+
+			when 'common'
+				$menu.common_event = $data.items[option].action.split("=>")[1].to_i
+				close_soon
+
+		end
 
 	end
 

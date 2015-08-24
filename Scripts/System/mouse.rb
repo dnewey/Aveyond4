@@ -4,7 +4,7 @@
 
 class MouseManager
 
-  attr_reader :hwnd
+  attr_reader :hwnd, :wheel
 
   #--------------------------------------------------------------------------
   # * API Declaration
@@ -39,6 +39,10 @@ class MouseManager
   # * Update Mouse Position
   #--------------------------------------------------------------------------
   def update
+
+    # Update wheel
+    #@wheel = Wheel.scroll if rand(100)
+    @wheel = nil
     
     # Update Position
     pos = [0,0].pack('ll')
@@ -52,6 +56,16 @@ class MouseManager
 
     ShowCursor.call(0)#on_screen?.to_i) # on_screen && mouse_mode
     
+  end
+
+  def wheel_down?
+    return false if @wheel == nil
+    return @wheel[2] < 0
+  end
+
+  def wheel_up?
+    return false if @wheel == nil
+    return @wheel[2] > 0
   end
 
   def change_cursor(c)

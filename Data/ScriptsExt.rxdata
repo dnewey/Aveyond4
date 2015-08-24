@@ -1,4 +1,4 @@
-[…"ú#==============================================================================
+[†"ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -3437,8 +3437,7 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"x
-WORLD_MAP_ID = 146
+end"WWORLD_MAP_ID = 146
 
 def transfer(map,room=nil,dir=nil)
 
@@ -3492,6 +3491,11 @@ def transfer_map(dir=nil)
 	# Do the transfer
 	$player.transfer_to(map,room,dir)
 
+end
+
+def transfer_chester_in(dir=nil)
+	transfer_in("Chester Chove",dir)
+	$player.trans_type = :fade
 end
 
 def transfer_house_in(dir=nil)
@@ -3563,6 +3567,11 @@ end
 
 def find_parent_id(map_id)
 	return $data.mapinfos[map_id].parent_id
+end
+
+def find_parent_name(map_id)
+	parent = $data.mapinfos[map_id].parent_id
+	return $data.mapinfos[parent].name
 end
 
 def find_child_id(parent_id,name)
@@ -4767,7 +4776,7 @@ class Ui_Screen
     	return @message.busy? || @item || @popper || @grid || @book
     end
 
-end"\#==============================================================================
+end"h#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -4874,6 +4883,8 @@ class Ui_Bar < SpriteGroup
 
 	def update
 		super()
+
+		return
 
 		# Update the bars
 		$party.active.each_index{ |i|
@@ -7471,7 +7482,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"°#==============================================================================
+end"w	#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -7583,11 +7594,22 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def select(option)	
+
+		scope = $data.items[option].scope
 		
-		# If this is usalbe, use it
-		$menu.use_item = option
-		$scene.queue_menu("Healing")
-		close_soon
+		# If item needs a target, do it
+		case scope
+
+			when 'ally'
+				$menu.use_item = option
+				$scene.queue_menu("Healing")
+				close_soon
+
+			when 'common'
+				$menu.common_event = $data.items[option].action.split("=>")[1].to_i
+				close_soon
+
+		end
 
 	end
 
@@ -13166,7 +13188,7 @@ class Game_Character
 
 
 end
-"F#==============================================================================
+"ÆF#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13476,6 +13498,8 @@ class Game_Event < Game_Character
         cond[2] = 1 if cond.count < 3
         return false if ($party.item_number(cond[1]) >= cond[2].to_i)
 
+      when '?partyloc'
+        return false if !$party.party_loc_saved?
 
 
     end
@@ -13750,8 +13774,11 @@ class Game_Event < Game_Character
           cauldron_graphic(self)
 
         when "#spark"
-          #spark(@id,data[1])
-          $scene.add_spark(data[1],self.real_x/4+16,self.real_y/4+16-10)
+          ox = 0
+          oy = 0
+          ox = data[2].to_i if data.count > 2
+          oy = data[3].to_i if data.count > 3
+          $scene.add_spark(data[1],self.real_x/4+16+ox,self.real_y/4+16-10+oy)
 
         when '#rand-pattern'
           @force_pattern = rand(3)
@@ -14425,7 +14452,7 @@ class Interpreter
   end
 
 end
-"2#==============================================================================
+"Ä3#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -14481,7 +14508,12 @@ class Game_Map
   end
 
   def nice_name
-    return @map_name.split("#")[0].split("@")[0]
+    name = @map_name
+    if ['Indoor','Indoor2','Cave','Cave2'].include?(@map_name)
+      # Parent name
+      name = find_parent_name(@id)
+    end
+    return name.split("#")[0].split("@")[0]
   end
 
   def resetup
@@ -14502,6 +14534,7 @@ class Game_Map
         next if !e.saveloc
         $state.loc(e)
       }
+      $scene.clear_sparks
     end
  
     # Put map ID in @map_id memory
@@ -14545,7 +14578,7 @@ class Game_Map
         # Init tints and that
         $scene.change_weather(@zone.weather)
         $scene.change_fogs(@zone.fog)
-        $scene.change_tint(@zone.tint)
+        $scene.change_overlay(@zone.overlay)
         $scene.change_panoramas(@zone.panoramas)
 
         # Prep enemies for this zone
@@ -14641,12 +14674,22 @@ class Game_Map
       @need_refresh = false
     end
 
+  def start_common(id)
+    @interpreter.common_event_id = id
+  end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
 
     update_camera
+
+    # If common event is queued, start it
+    if $menu.common_event != nil
+      @interpreter.common_event_id = $menu.common_event
+      $menu.common_event = nil
+    end
 
     @interpreter.update
     return if $scene.is_a?(Scene_Menu)
@@ -14952,7 +14995,7 @@ class Moblin
 
 	end
 
-end"“+#==============================================================================
+end"à,#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -14961,6 +15004,8 @@ class Game_Player < Game_Character
   attr_accessor :transferring      # player place movement flag
   attr_accessor :trans_type 
 
+  attr_accessor :next_common
+
   def initialize
     super
     looklike("boy")
@@ -14968,6 +15013,7 @@ class Game_Player < Game_Character
     @xfer_data = nil
     @trans_type = :cross
     @static = false
+    @next_common = nil
   end
 
   def transfer(map,x,y,dir)
@@ -15270,6 +15316,8 @@ class Game_Player < Game_Character
       $map.setup(@xfer_data[0])      
     end
 
+    if @xfer_data.count == 3
+
       ev = gev(@xfer_data[1])
       
       if @xfer_data[2] != nil
@@ -15291,7 +15339,6 @@ class Game_Player < Game_Character
       dy = 1 if @direction == 2
       dy = -1 if @direction == 8
 
-
       tx = ev.x + dx
       ty = ev.y + dy
 
@@ -15302,6 +15349,14 @@ class Game_Player < Game_Character
       if ev.height > 1
         ty += ev.height/2
       end
+
+    else
+
+      tx = @xfer_data[1]
+      ty = @xfer_data[2]
+      @direction = @xfer_data[3]
+
+    end
 
       $player.moveto(tx,ty)
 
@@ -15348,6 +15403,13 @@ class Game_Player < Game_Character
 
       # Now do the zone etc
       $map.setup_audio
+
+      # Start common event if there is a queue
+      if @next_common != nil
+
+        $map.start_common(@next_common)
+
+      end
 
     #end
 
@@ -15793,7 +15855,7 @@ class Game_Battle
   end
 
   
-end"’
+end"Ç
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -15811,6 +15873,7 @@ class MenuState
 
 	# Item chosen from item list
 	attr_accessor :use_item
+	attr_accessor :common_event
 
 	# Page of the potions book to keep open
 	attr_accessor :potion_page
@@ -15837,6 +15900,7 @@ class MenuState
 		@char_cursor = 'Equip'
 
 		@use_item = nil
+		@common_event = nil
 
 		@potion_page = 0
 
@@ -15852,7 +15916,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"##==============================================================================
+end"ú$#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15929,6 +15993,9 @@ class Game_Party
     @attract_boy = 0
     @attract_hib = 0
     @attract_phy = 0
+
+    # Location when ingrid leaves
+    @party_loc = nil
 
     # Guild info
     @guild_id = "c" # will be one letter, b, c, or s, or "" for none
@@ -16128,6 +16195,23 @@ class Game_Party
   end
 
   #--------------------------------------------------------------------------
+  # â— Party Location to return to
+  #--------------------------------------------------------------------------
+  def save_party_loc
+    @party_loc = [$map.id,$player.x,$player.y,$player.direction]
+  end
+
+  def restore_party_loc
+    $player.transfer(@party_loc[0],@party_loc[1],@party_loc[2],@party_loc[3])    
+    @party_loc = nil
+  end
+
+  def party_loc_saved?
+    return @party_loc != nil
+  end
+
+
+  #--------------------------------------------------------------------------
   # â— Initialize Party Data
   #--------------------------------------------------------------------------
 
@@ -16201,9 +16285,6 @@ class Game_Party
     @actors["rob"].learn("team-row")
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
-
-    item('boy-arm-s','s')
-    item('hib-arm-s','s')
 
     potion_learn("neon")
     potion_learn("blabber")
@@ -16389,7 +16470,7 @@ end"œclass State
 	end
 
 end
-"“#==============================================================================
+"t#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -16535,11 +16616,15 @@ class Scene_Base
     
   end
 
-  def reload_map
+  def clear_sparks
 
-    # Clear sparks
-    @sparks.each{ |s| s.dispose }
-    @sparks.clear
+      # Clear sparks
+      @sparks.each{ |s| s.dispose }
+      @sparks.clear
+
+  end
+
+  def reload_map
     
     @tilemap.refresh(@map)
 
@@ -16555,8 +16640,13 @@ class Scene_Base
 
   end
 
-  def change_tint(tint)
-
+  def change_overlay(overlay)
+    if overlay == '' || overlay == nil
+      $scene.overlay.opacity = 0
+    else
+      $scene.overlay.bitmap = $cache.overlay(overlay)
+      $scene.overlay.opacity = 255
+    end
   end
 
   def change_weather(weather)
@@ -19636,7 +19726,7 @@ class GameManager
     showm.call(18,0,2,0)
   end
 
-end"Á#============================================================================== 
+end"×#============================================================================== 
 # ** Input
 #==============================================================================
 
@@ -19680,7 +19770,7 @@ class InputManager
 	end
 
 	def down?
-		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S)
+		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S) || $mouse.wheel_down?
 	end
 
 	def shortcut?(s)
@@ -19804,13 +19894,13 @@ class KeyboardManager
 
   end
 
-end"£#============================================================================== 
+end"¬#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
 class MouseManager
 
-  attr_reader :hwnd
+  attr_reader :hwnd, :wheel
 
   #--------------------------------------------------------------------------
   # * API Declaration
@@ -19845,6 +19935,10 @@ class MouseManager
   # * Update Mouse Position
   #--------------------------------------------------------------------------
   def update
+
+    # Update wheel
+    #@wheel = Wheel.scroll if rand(100)
+    @wheel = nil
     
     # Update Position
     pos = [0,0].pack('ll')
@@ -19858,6 +19952,16 @@ class MouseManager
 
     ShowCursor.call(0)#on_screen?.to_i) # on_screen && mouse_mode
     
+  end
+
+  def wheel_down?
+    return false if @wheel == nil
+    return @wheel[2] < 0
+  end
+
+  def wheel_up?
+    return false if @wheel == nil
+    return @wheel[2] > 0
   end
 
   def change_cursor(c)
@@ -20124,7 +20228,7 @@ end"øclass Bitmap
 	end
 
 end
-"
+"
 
 class UsableData
 	attr_reader :id
@@ -20218,7 +20322,7 @@ class ZoneData
 	attr_reader :music
 	attr_reader :atmosphere
 	attr_reader :reverb
-	attr_reader :tint
+	attr_reader :overlay
 	attr_reader :weather
 	attr_reader :fog
 	attr_reader :panoramas
@@ -21220,7 +21324,55 @@ def execute_spellcheck
 #   end
 # end
 
-# Graphics.load_fullscreen_settings"a # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
+# Graphics.load_fullscreen_settings"ð
+module Wheel
+
+  extend self
+
+  Get_Message=Win32API.new('User32','GetMessage','plll','l') # reception d'un message 
+
+  Point=Struct.new(:x,:y) # crÃƒÆ’Ã‚Â©ation d'une structure de symboles: coord molette 
+  Message=Struct.new(:message,:wparam,:lparam,:pt) # struct de symboles: message renvoyÃƒÆ’Ã‚Â© par la molette 
+  Param=Struct.new(:x,:y,:scroll) # parametres de la molette 
+  Scroll=0x0000020A # pointeur de la molette 
+
+  def unpack_dword(buffer,offset=0) # dÃƒÆ’Ã‚Â©compactage d'integer 32bits 
+    ret=buffer[offset+0]&0x000000ff 
+    ret|=(buffer[offset+1] << (8*1))&0x0000ff00 
+    ret|=(buffer[offset+2] << (8*2))&0x00ff0000 
+    ret|=(buffer[offset+3] << (8*3))&0xff000000 
+    return ret 
+  end 
+  def unpack_msg(buffer) # dÃƒÆ’Ã‚Â©compactage du message de la molette 
+    msg=Message.new;msg.pt=Point.new 
+    msg.message=unpack_dword(buffer,4*1) 
+    msg.wparam=unpack_dword(buffer,4*2) 
+    msg.lparam=unpack_dword(buffer,4*3) 
+    msg.pt.x=unpack_dword(buffer,4*5) 
+    msg.pt.y=unpack_dword(buffer,4*6) 
+    return msg 
+  end 
+  def wmcallback(msg) 
+    return unless msg.message==Scroll 
+    param=Param.new 
+    param.x=word2signed_short(loword(msg.lparam)) 
+    param.y=word2signed_short(hiword(msg.lparam)) 
+    param.scroll=word2signed_short(hiword(msg.wparam)) 
+    return [param.x,param.y,param.scroll] 
+  end 
+  def hiword(dword);return ((dword&0xffff0000)>>16)&0x0000ffff;end # 
+  def loword(dword);return dword&0x0000ffff;end 
+  def word2signed_short(value) 
+    return value if (value&0x8000)==0 
+    return -1*((~value&0x7fff)+1) 
+  end 
+
+  def scroll # retourne l'etat de la molette 
+    msg="\0"*32;Get_Message.call(msg,0,0,0);r=wmcallback(unpack_msg(msg)) 
+    return r if !r.nil? 
+  end 
+
+end "a # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
 # Free for commercial use
 # Licence : http://creativecommons.org/licenses/by/4.0/
 # Contact : zeusex81@gmail.com

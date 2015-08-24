@@ -54,7 +54,12 @@ class Game_Map
   end
 
   def nice_name
-    return @map_name.split("#")[0].split("@")[0]
+    name = @map_name
+    if ['Indoor','Indoor2','Cave','Cave2'].include?(@map_name)
+      # Parent name
+      name = find_parent_name(@id)
+    end
+    return name.split("#")[0].split("@")[0]
   end
 
   def resetup
@@ -75,6 +80,7 @@ class Game_Map
         next if !e.saveloc
         $state.loc(e)
       }
+      $scene.clear_sparks
     end
  
     # Put map ID in @map_id memory
@@ -118,7 +124,7 @@ class Game_Map
         # Init tints and that
         $scene.change_weather(@zone.weather)
         $scene.change_fogs(@zone.fog)
-        $scene.change_tint(@zone.tint)
+        $scene.change_overlay(@zone.overlay)
         $scene.change_panoramas(@zone.panoramas)
 
         # Prep enemies for this zone
@@ -214,12 +220,22 @@ class Game_Map
       @need_refresh = false
     end
 
+  def start_common(id)
+    @interpreter.common_event_id = id
+  end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
 
     update_camera
+
+    # If common event is queued, start it
+    if $menu.common_event != nil
+      @interpreter.common_event_id = $menu.common_event
+      $menu.common_event = nil
+    end
 
     @interpreter.update
     return if $scene.is_a?(Scene_Menu)

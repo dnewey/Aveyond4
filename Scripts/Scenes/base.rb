@@ -144,11 +144,15 @@ class Scene_Base
     
   end
 
-  def reload_map
+  def clear_sparks
 
-    # Clear sparks
-    @sparks.each{ |s| s.dispose }
-    @sparks.clear
+      # Clear sparks
+      @sparks.each{ |s| s.dispose }
+      @sparks.clear
+
+  end
+
+  def reload_map
     
     @tilemap.refresh(@map)
 
@@ -164,8 +168,13 @@ class Scene_Base
 
   end
 
-  def change_tint(tint)
-
+  def change_overlay(overlay)
+    if overlay == '' || overlay == nil
+      $scene.overlay.opacity = 0
+    else
+      $scene.overlay.bitmap = $cache.overlay(overlay)
+      $scene.overlay.opacity = 255
+    end
   end
 
   def change_weather(weather)

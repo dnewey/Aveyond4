@@ -76,6 +76,9 @@ class Game_Party
     @attract_hib = 0
     @attract_phy = 0
 
+    # Location when ingrid leaves
+    @party_loc = nil
+
     # Guild info
     @guild_id = "c" # will be one letter, b, c, or s, or "" for none
 
@@ -274,6 +277,23 @@ class Game_Party
   end
 
   #--------------------------------------------------------------------------
+  # ● Party Location to return to
+  #--------------------------------------------------------------------------
+  def save_party_loc
+    @party_loc = [$map.id,$player.x,$player.y,$player.direction]
+  end
+
+  def restore_party_loc
+    $player.transfer(@party_loc[0],@party_loc[1],@party_loc[2],@party_loc[3])    
+    @party_loc = nil
+  end
+
+  def party_loc_saved?
+    return @party_loc != nil
+  end
+
+
+  #--------------------------------------------------------------------------
   # ● Initialize Party Data
   #--------------------------------------------------------------------------
 
@@ -347,9 +367,6 @@ class Game_Party
     @actors["rob"].learn("team-row")
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
-
-    item('boy-arm-s','s')
-    item('hib-arm-s','s')
 
     potion_learn("neon")
     potion_learn("blabber")

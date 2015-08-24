@@ -7,6 +7,8 @@ class Game_Player < Game_Character
   attr_accessor :transferring      # player place movement flag
   attr_accessor :trans_type 
 
+  attr_accessor :next_common
+
   def initialize
     super
     looklike("boy")
@@ -14,6 +16,7 @@ class Game_Player < Game_Character
     @xfer_data = nil
     @trans_type = :cross
     @static = false
+    @next_common = nil
   end
 
   def transfer(map,x,y,dir)
@@ -316,6 +319,8 @@ class Game_Player < Game_Character
       $map.setup(@xfer_data[0])      
     end
 
+    if @xfer_data.count == 3
+
       ev = gev(@xfer_data[1])
       
       if @xfer_data[2] != nil
@@ -337,7 +342,6 @@ class Game_Player < Game_Character
       dy = 1 if @direction == 2
       dy = -1 if @direction == 8
 
-
       tx = ev.x + dx
       ty = ev.y + dy
 
@@ -348,6 +352,14 @@ class Game_Player < Game_Character
       if ev.height > 1
         ty += ev.height/2
       end
+
+    else
+
+      tx = @xfer_data[1]
+      ty = @xfer_data[2]
+      @direction = @xfer_data[3]
+
+    end
 
       $player.moveto(tx,ty)
 
@@ -394,6 +406,13 @@ class Game_Player < Game_Character
 
       # Now do the zone etc
       $map.setup_audio
+
+      # Start common event if there is a queue
+      if @next_common != nil
+
+        $map.start_common(@next_common)
+
+      end
 
     #end
 

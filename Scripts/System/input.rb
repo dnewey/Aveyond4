@@ -42,7 +42,7 @@ class InputManager
 	end
 
 	def down?
-		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S)
+		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S) || $mouse.wheel_down?
 	end
 
 	def shortcut?(s)

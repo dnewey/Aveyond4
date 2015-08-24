@@ -91,7 +91,7 @@ class ZoneData
 	attr_reader :music
 	attr_reader :atmosphere
 	attr_reader :reverb
-	attr_reader :tint
+	attr_reader :overlay
 	attr_reader :weather
 	attr_reader :fog
 	attr_reader :panoramas

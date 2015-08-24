@@ -308,6 +308,8 @@ class Game_Event < Game_Character
         cond[2] = 1 if cond.count < 3
         return false if ($party.item_number(cond[1]) >= cond[2].to_i)
 
+      when '?partyloc'
+        return false if !$party.party_loc_saved?
 
 
     end
@@ -582,8 +584,11 @@ class Game_Event < Game_Character
           cauldron_graphic(self)
 
         when "#spark"
-          #spark(@id,data[1])
-          $scene.add_spark(data[1],self.real_x/4+16,self.real_y/4+16-10)
+          ox = 0
+          oy = 0
+          ox = data[2].to_i if data.count > 2
+          oy = data[3].to_i if data.count > 3
+          $scene.add_spark(data[1],self.real_x/4+16+ox,self.real_y/4+16-10+oy)
 
         when '#rand-pattern'
           @force_pattern = rand(3)

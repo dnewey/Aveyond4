@@ -16,6 +16,7 @@ class MenuState
 
 	# Item chosen from item list
 	attr_accessor :use_item
+	attr_accessor :common_event
 
 	# Page of the potions book to keep open
 	attr_accessor :potion_page
@@ -42,6 +43,7 @@ class MenuState
 		@char_cursor = 'Equip'
 
 		@use_item = nil
+		@common_event = nil
 
 		@potion_page = 0
 

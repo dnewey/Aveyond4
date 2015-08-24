@@ -312,6 +312,7 @@ build_select = function(type)
             + '{value: "party", text: "party"},'
             + '{value: "down", text: "down"},'
             + '{value: "self", text: "self"},'
+            + '{value: "common", text: "common"},'
             + ']'
     }
 
@@ -461,7 +462,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-06-02
+// Sort by last modified 2015-08-25
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()

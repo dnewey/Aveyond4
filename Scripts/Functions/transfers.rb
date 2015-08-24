@@ -54,6 +54,11 @@ def transfer_map(dir=nil)
 
 end
 
+def transfer_chester_in(dir=nil)
+	transfer_in("Chester Chove",dir)
+	$player.trans_type = :fade
+end
+
 def transfer_house_in(dir=nil)
 	transfer_in("Indoor",dir)
 	$player.trans_type = :fade
@@ -123,6 +128,11 @@ end
 
 def find_parent_id(map_id)
 	return $data.mapinfos[map_id].parent_id
+end
+
+def find_parent_name(map_id)
+	parent = $data.mapinfos[map_id].parent_id
+	return $data.mapinfos[parent].name
 end
 
 def find_child_id(parent_id,name)
