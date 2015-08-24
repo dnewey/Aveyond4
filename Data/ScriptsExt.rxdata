@@ -517,7 +517,7 @@ class Spark < Sprite
 		self.blend_type = 0
 
 		@sound = nil
-		@sound_delay = 0
+		@sound_delay = 1
 
 		if $data.anims.has_key?(fx)
 
@@ -2966,7 +2966,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"o#==============================================================================
+"ö#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3038,6 +3038,16 @@ end
 def unjoin_s(who)
 	$party.back_to_pavillion(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
+end
+
+def party_of_ing
+	$party.backup_party
+	$party.leader = 'ing'
+	join_s('ing')
+end
+
+def party_of_all
+	$party.restore_party
 end
 
 def make_reserve(who)
@@ -3270,7 +3280,7 @@ def shop_choice
 	end
 
 
-end"H#==============================================================================
+end"q#==============================================================================
 # ** State Functions
 #==============================================================================
 
@@ -3280,6 +3290,7 @@ def unflag(id) $state.unflag(id) end
 def flag?(id) return $state.flag?(id) end
 
 # Var shorthands
+def incvar(id,a=1) $state.var(id,a) end
 def var(id,a=1) $state.var(id,a) end
 #def unvar(id,a=1) $state.var(id,a) end
 def var?(id,a) return $state.var?(id,a) end
@@ -5954,7 +5965,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"$Y#==============================================================================
+end">Z#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -5975,6 +5986,8 @@ class Ui_Message
   LINE_HEIGHT_BIG = 33
   PADDING_X = 21
   PADDING_Y = 16
+
+  CHOICE_DELAY = 30
 
   SPEED_1 = 9
   SPEED_2 = 7
@@ -6016,6 +6029,8 @@ class Ui_Message
     @normal_speed = SPEED_4
     @wait_frames = 0
     @next_char = 0
+
+    @choice_delay = CHOICE_DELAY # Make choice wait before allowing click
 
     @cx = 0
     @cy = 0
@@ -6218,6 +6233,7 @@ class Ui_Message
       #when :pausing
       #  check_input_next
       when :choice
+        @choice_delay -= 1
         check_input_choice
       when :done
         check_input_done
@@ -6233,6 +6249,7 @@ class Ui_Message
 
   def add_choice(choice)
     @choices.push(choice)
+    @choice_delay = CHOICE_DELAY
   end
 
   #--------------------------------------------------------------------------
@@ -6444,8 +6461,11 @@ class Ui_Message
 
     case name
 
+      when '???'
+        $scene.hud.message.wallpaper = 'fangder'
+
       when 'Chester'
-        $scene.hud.message.wallpaper = 'Wizard'
+        $scene.hud.message.wallpaper = 'wizard'
 
       else
         $scene.hud.message.wallpaper = 'diamonds'
@@ -6747,7 +6767,8 @@ class Ui_Message
   # * Wait for input or choice
   #--------------------------------------------------------------------------
   def check_input_choice
-    if $input.action?
+    return if @choice_delay > 0
+    if $input.action? || $input.click?
       #sound(:text_next)
       #self.slide_zy(0.0)
 
@@ -10741,7 +10762,7 @@ class Right_Page < SpriteGroup
         @page_title.text = text
     end
 
-end"3#==============================================================================
+end"S#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -10750,7 +10771,8 @@ class Mnu_Chooser < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('items')
+		@title.change('choose')
+		@title.change_icon("items")
 		#@subtitle.text = "Various items of collection"
 
 		@port = Port_Full.new(vp)
@@ -13146,7 +13168,7 @@ class Game_Character
 
 
 end
-"ðD#==============================================================================
+"nE#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13381,6 +13403,7 @@ class Game_Event < Game_Character
 
       # Flag
       when '?flag'
+          return true if $debug.disable_flags
           return false if !flag?(cond[1])
       when '?nflag'
           return false if flag?(cond[1])
@@ -13790,9 +13813,17 @@ class Game_Event < Game_Character
 
 
     # If trigger is [auto run]
-    if @trigger == 3 || @event.name == 'AUTORUN'
-      start
+
+    if @trigger == 3
+
+      if DEBUG && $keyboard.state?(VK_CTRL)
+        erase
+        return
+      else
+        start
+      end
     end
+
   end
 
 
@@ -15814,7 +15845,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ò!#==============================================================================
+end"##==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -15864,6 +15895,7 @@ class Game_Party
     # Create actor array
     @active = []
     @reserve = []
+    @backup = nil # When the party is disolved, this will rebuild
 
     # Inventory
     @items = {}
@@ -15981,6 +16013,18 @@ class Game_Party
   def back_to_pavillion(actor)
     @active.delete(actor)
     @reserve.delete(actor)
+  end
+
+  def backup_party
+    @backup = [@active.dup,@reserve.dup]
+    @active = []
+    @reserve = []
+  end
+
+  def restore_party
+    @active = @backup[0]
+    @reserve = @backup[1]
+    @backup = nil
   end
 
 
@@ -16225,7 +16269,7 @@ end"^class Progress
 		return @progress < $data.progress[progress]
 	end
 
-end"class State
+end"œclass State
 
 	def initialize
 
@@ -16254,15 +16298,6 @@ end"class State
 
 	def flag?(f)
 		return @flags.include?(f)
-	end
-
-	def incvar(v,a)
-		if @vars.has_key?(v)
-			@vars[v] += a
-		else
-			@vars[v] = a
-		end
-		$map.need_refresh = true
 	end
 
 	def var(v,a)
@@ -18477,13 +18512,13 @@ end" " "ÂCmodule Seal
 
     alias auto? auto
   end
-end"ß#==============================================================================
+end"ó#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
 class AudioManager
 
-  attr_accessor :music_target
+  attr_accessor :music_target, :atmosphere_target
 
   def initialize
 
@@ -19069,7 +19104,7 @@ class DataManager
 
   end
 
- end"Ç#==============================================================================
+ end"	#==============================================================================
 # ** Debug
 #==============================================================================
 
@@ -19080,6 +19115,8 @@ def log_sys(msg) $debug.log(msg,'SYSTEM') end
 def log_ev(msg) $debug.log(msg,'EVENT') end
 
 class DebugManager
+
+	attr_accessor :disable_flags
 
 	OSD_OPACITY = 230
 
@@ -19095,6 +19132,9 @@ class DebugManager
 		return if !DEBUG
 
 		$DEBUG = true
+
+		# Temp debug options
+		@disable_flags = false
 
 		# Prepare log file
 		@path = $appdata + "\\log.txt"
@@ -19644,7 +19684,7 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"ª#==============================================================================
+end"¸#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
 
@@ -19658,6 +19698,7 @@ VK_ENTER = 13
 VK_SHIFT = 16
 VK_ESC = 27
 VK_NUM0 = 96
+VK_CTRL = 17
 
 VK_SPACE = 32
 VK_TILDE = 192
@@ -20684,7 +20725,7 @@ end"Cmodule Graphics
     end
     
   end
-end"#==============================================================================
+end"8#==============================================================================
 # ** Actions
 #==============================================================================
 
@@ -20727,7 +20768,9 @@ class DebugMenu
 
 				add(">> Debug Settings",Proc.new{ page(:debug) })
 				
-				add("-- Progress: #{$progress.get_progress}",nil) if !$progress.nil?
+				add("-- Disable Flags",Proc.new{ $debug.disable_flags = true })
+				add("-- Export Text",Proc.new{ execute_spellcheck })
+
 
 				@esc = Proc.new{ hide }
 
@@ -20856,7 +20899,7 @@ class DebugMenu
 end
 
 
-"Ú#==============================================================================
+"S#==============================================================================
 # ** SpellCheck
 #==============================================================================
 
@@ -20865,12 +20908,12 @@ def execute_spellcheck
     data = {} # map name, dialogues?
     
     # Each map
-    $data_maps.each{ |k,v| 
+    $data.mapinfos.each{ |k,v| 
     
       map_id = k
       map_name = v.name
       
-      event_list = load_data(sprintf("Data/Map%03d.rvdata2",map_id)).events
+      event_list = load_data(sprintf("Data/Map%03d.rxdata",map_id)).events
       next if event_list.empty?
       
       events = {}
@@ -20894,25 +20937,13 @@ def execute_spellcheck
             
               when 101; # Short text
                 
-                text = ""
+                text = page.list[@cmd_idx].parameters[0]
                 while page.list[@cmd_idx+1].code == 401       # Text data
                   @cmd_idx += 1
                   text += page.list[@cmd_idx].parameters[0]
                   text += ' '      
                 end
                 dialogues.push(text)
-                
-              when 105; # Long text
-            
-                while page.list[@cmd_idx+1].code == 405
-                  @cmd_idx += 1
-                  line = page.list[@cmd_idx].parameters[0]
-                  if line[0] == "@"
-                    dialogues[dialogues.size-1] += " " + line
-                  else
-                    dialogues.push(line)
-                  end
-                end
             
             end
               
@@ -20949,7 +20980,7 @@ def execute_spellcheck
     File.open('spellcheck.txt', 'w') do |file|  
 
       # Write some stats
-      file.puts("Total Maps: "+$data_maps.size.to_s)
+      file.puts("Total Maps: "+$data.mapinfos.size.to_s)
       file.puts("Maps with dialogue: "+data.size.to_s)
 
       # Word counts
