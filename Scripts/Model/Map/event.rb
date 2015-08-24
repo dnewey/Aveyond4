@@ -16,7 +16,8 @@ class Game_Event < Game_Character
 
   attr_reader :above
   attr_reader :below
-  attr_reader :below2
+  attr_reader :below2 # For things that are below below, aka very below
+  attr_reader :bridge
 
   attr_reader :page_idx
 
@@ -55,6 +56,7 @@ class Game_Event < Game_Character
     @above = false
     @below = false
     @below2 = false
+    @bridge = false
 
     @width = 1
     @height = 1
@@ -488,6 +490,7 @@ class Game_Event < Game_Character
     @interpreter = nil
 
     @save = false
+    @bridge = false
 
     # Do things based on the name
     if @character_name == "!!!"
@@ -535,6 +538,8 @@ class Game_Event < Game_Character
           @above = false
         when '#below2'
           @below2 = true
+        when '#bridge'
+          @bridge = true
 
         when '#save'
           @save = true

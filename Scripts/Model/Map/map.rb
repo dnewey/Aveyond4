@@ -403,6 +403,10 @@ class Game_Map
     # Loop all events
     events.values.each{ |e| 
       if e != self_event and e.at?(x,y)
+         return true if e.bridge && [4,6].include?(d) && e.width > 1
+         return true if e.bridge && [2,8].include?(d) && e.height > 1
+         return false if e.bridge && [2,8].include?(d) && e.height == 1
+         return false if e.bridge && [4,6].include?(d) && e.width == 1
          return false if !(e.through || e.above || e.below)
          return false if monster && e.name == "YSNP"
       end

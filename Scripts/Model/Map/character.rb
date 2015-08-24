@@ -211,15 +211,13 @@ class Game_Character
     return false unless $map.valid?(new_x, new_y)
     return true if @through
     
-    # IS there a reason to check from tile?
-    #return false unless $map.passable?(x, y, d, self)
-    
-
     # If enemy, check if I shall pass
     if self.is_a?(Game_Event) && self.monster != nil
-      return false  unless $map.passable?(new_x, new_y, 10 - d,self,true)
+      return false unless $map.passable?(x, y, d, self) # From
+      return false  unless $map.passable?(new_x, new_y, 10 - d,self,true) # To
     else
-      return false  unless $map.passable?(new_x, new_y, 10 - d,self)
+      return false unless $map.passable?(x, y, d, self) # From
+      return false  unless $map.passable?(new_x, new_y, 10 - d,self) # To
     end
 
 
