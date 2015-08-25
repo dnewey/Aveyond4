@@ -25,6 +25,10 @@ def camera_xy(x,y,dur=nil)
 	w 1
 end
 
+def camera_snap
+	$map.camera_snap
+end
+
 def cam_oy(amount)
 	$map.do(go("cam_oy",amount,amount.abs*6,:qio))
 end

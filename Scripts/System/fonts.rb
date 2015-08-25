@@ -24,7 +24,7 @@ class FontManager
     	Font.default_name = "Consolas"
 
     	# Scratch Bitmap
-		@scratch = Bitmap.new(600,50)
+		@scratch = Bitmap.new(800,50)
 
 		# Debug Fonts
 
