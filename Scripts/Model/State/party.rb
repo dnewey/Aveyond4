@@ -368,12 +368,12 @@ class Game_Party
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
 
-    potion_learn("neon")
-    potion_learn("blabber")
-    potion_learn("unslave")
-    potion_learn("shrink")
-    potion_learn("mindbend")
-    potion_learn("calming")
+    # potion_learn("neon")
+    # potion_learn("blabber")
+    # potion_learn("unslave")
+    # potion_learn("shrink")
+    # potion_learn("mindbend")
+    # potion_learn("calming")
     # love
     # guild
     

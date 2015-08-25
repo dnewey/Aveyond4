@@ -57,6 +57,7 @@ class Game_Event < Game_Character
     @below = false
     @below2 = false
     @bridge = false
+    @stairs = false
 
     @width = 1
     @height = 1
@@ -493,6 +494,10 @@ class Game_Event < Game_Character
 
     @save = false
     @bridge = false
+    if @stairs
+      $scene.map.remove_forced_terrain(self,2)
+      @stairs = nil
+    end
 
     # Do things based on the name
     if @character_name == "!!!"
@@ -542,6 +547,10 @@ class Game_Event < Game_Character
           @below2 = true
         when '#bridge'
           @bridge = true
+
+        when '#stairs'
+          @stairs = true
+          $scene.map.add_forced_terrain(self,2)
 
         when '#save'
           @save = true

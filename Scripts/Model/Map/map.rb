@@ -24,6 +24,7 @@ class Game_Map
   attr_reader :zone
   attr_accessor :cam_x, :cam_y
 
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -43,10 +44,13 @@ class Game_Map
     @cam_oy = 0#-16
     @cam_dur = nil
 
+    @force_terrains = {}
+
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
 
     @namecache = {}
+
   end
 
   def name
@@ -135,10 +139,17 @@ class Game_Map
 
     end
 
+    # Clear forced terrains
+    @force_terrains.clear
+
     # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
       @events[i] = Game_Event.new(@map.events[i])
+
+      # if @events[i].name == "STAIRS"
+      #   @force_terrains[[@events[i].x,@events[i].y]] = 2
+      # end
 
       # Restore loc
       if $state.loc?(i)
@@ -150,6 +161,32 @@ class Game_Map
       end
     }
 
+  end
+
+  def add_forced_terrain(e,v)
+    x = e.x
+    y = e.y
+    while x < e.x + e.width
+      while y < e.y + e.height
+        @force_terrains[[x,y]] = v
+        y += 1
+      end
+      x += 1
+      y = e.y
+    end
+  end
+
+  def remove_forced_terrain(e)
+     x = e.x
+    y = e.y
+    while x < e.x + e.width
+      while y < e.y + e.height
+        @force_terrains.delete([x,y])
+        y += 1
+      end
+      x += 1
+      y = e.y
+    end
   end
 
   def setup_audio
@@ -456,6 +493,11 @@ class Game_Map
    ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x40 == 0x40 }.empty? end
   def counter?(x, y) ![0,1,2].select{ |i| @passages[data[x,y,i]] & 0x80 == 0x80 }.empty? end
   def terrain_tag(x, y)
+
+    # Check in forced terrains
+    if @force_terrains.has_key?([x,y])
+      return @force_terrains[[x,y]]
+    end
 
     if @map_id != 0
       for i in [2, 1, 0]
