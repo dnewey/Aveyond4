@@ -5,7 +5,7 @@
 class Ui_Message
 
   # Consts
-  MIN_WIDTH = 240
+  MIN_WIDTH = 200
   MAX_WIDTH = 400
   MAX_WIDTH_VN = 480
   TAB_WIDTH = 35
