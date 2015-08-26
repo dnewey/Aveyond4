@@ -121,8 +121,8 @@ def pop_wha(ev)
 
 end
 
-def pop_sweat(ev)
-	pop_icon_sweat(ev,"misc/sweat","creak")
+def pop_sweat(ev,o=false)
+	pop_icon_sweat(ev,"misc/sweat","creak",o)
 end
 
 def pop_dots(ev)
@@ -133,11 +133,15 @@ def pop_bulb(ev)
 	pop_icon(ev,"misc/bulb","bulb")
 end
 
-def pop_icon_sweat(ev,icon,sfx)
+def pop_icon_sweat(ev,icon,sfx,o=false)
 
 	gev(ev).do(seq(go("off_y",-8,90,:qio),go("off_y",8,90,:qio)))
 
+	if o == true
+	x = gev(ev).screen_x - 10
+	else
 	x = gev(ev).screen_x + 10
+	end
 	y = gev(ev).screen_y - 45
 
 	$scene.add_icon(icon,x,y,:lower,:fade,1)
