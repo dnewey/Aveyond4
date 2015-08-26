@@ -19,8 +19,7 @@ class Scene_Splash
 				Graphics.play_movie('Movies/logo.mp4')
 				@round = :start
 			when :start
-				$menu.menu_page = :main
-				$game.push_scene Scene_Menu.new()
+				$game.push_scene Scene_Title.new()
 				@round = :enough
 		end
 	end
