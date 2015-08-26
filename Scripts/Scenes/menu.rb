@@ -114,8 +114,7 @@ class Scene_Menu
 
     if @next_menu == "Main"
       @next_menu = nil if $menu.sub_only
-    end
-    
+    end    
 
     # The current menu
     case @next_menu
