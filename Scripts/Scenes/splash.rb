@@ -6,7 +6,11 @@ class Scene_Splash
 
 	def initialize
 	
-		@round = :logo
+		@round = :start
+	end
+
+	def terminate
+
 	end
 
 	def update
@@ -19,6 +23,7 @@ class Scene_Splash
 				Graphics.play_movie('Movies/logo.mp4')
 				@round = :start
 			when :start
+				$game.pop_scene
 				$game.push_scene Scene_Title.new()
 				@round = :enough
 		end

@@ -16,6 +16,7 @@ class Scene_Map < Scene_Base
     else
       @map = map
     end
+    
     if !player
       @player.moveto($data.system.start_x, $data.system.start_y)
       @map.camera_to(@player)

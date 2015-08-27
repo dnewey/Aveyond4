@@ -28,7 +28,7 @@ class Scene_Title
     @bg.z = -100
     #@bg.bitmap = Bitmap.new(640,480)
     #@bg.bitmap.fill(Color.new(0,0,0,180))
-    @bg.bitmap = $cache.menu_background("sample")
+    @bg.bitmap = $cache.menu_background("boyle")
     #@bg.bitmap = $cache.menu_background("witch")
     @bg.opacity = 0
     @bg.do(go("opacity",255,300))
@@ -37,8 +37,7 @@ class Scene_Title
 
     #self.do(delay(300))
 
-    @next_menu = $menu.menu_page
-    $menu.menu_page = nil
+    @next_menu = "Title"
 
     @menu = nil
 
@@ -65,10 +64,10 @@ class Scene_Title
     if @closing && $tweens.done?(self)
       $tweens.clear_all
       $game.pop_scene
+      $game.push_scene(Scene_Map.new)
     end
 
     return if @closing
-
 
     if @menu == nil
 
@@ -112,47 +111,26 @@ class Scene_Title
       @menu = nil
     end
 
-    if @next_menu == "Main"
-      @next_menu = nil if $menu.sub_only
-    end    
-
     # The current menu
     case @next_menu
 
-      when "Main"; @menu = Mnu_Main.new(@vp)
-      when "Shop"; @menu = Mnu_Shop.new(@vp)
-      when "Wizard"; @menu = Mnu_Shop.new(@vp) # Wizard shop
+      when "Title"; 
+        @menu = Mnu_Title.new(@vp)
 
-      when "Quit"; @menu = Mnu_Quit.new(@vp)
-      when "Journal"; @menu = Mnu_Journal.new(@vp)
-      when "Items"; @menu = Mnu_Items.new(@vp)
-      when "Healing"; @menu = Mnu_Healing.new(@vp)
-      when "Party"; @menu = Mnu_Party.new(@vp)
-      when "Progress"; @menu = Mnu_Progress.new(@vp)
-      when "Options"; @menu = Mnu_Options.new(@vp)
-      when "Help"; @menu = Mnu_Help.new(@vp)
-      when "Sound"; @menu = Mnu_Sound.new(@vp)
+      when "New"
 
-      when "Load"; 
-        @menu = Mnu_Save.new(@vp)
-        @menu.loadmode
-      when "Save"; @menu = Mnu_Save.new(@vp)
+      when "Load"
+        @menu = Mnu_TitleLoad.new(@vp)
 
-      when "Char"; @menu = Mnu_Char.new(@vp)
+      when "Options"
+        @menu = Mnu_TitleOptions.new(@vp)
 
-      when "Equip"; @menu = Mnu_Equip.new(@vp)
-      when "Skills"; @menu = Mnu_Skills.new(@vp)
-      when "Status"; @menu = Mnu_Status.new(@vp)
-      when "Profile"; @menu = Mnu_Profile.new(@vp)
+      when "Quit"
+        $game.pop_scene
 
-      when "Potions"; @menu = Mnu_Potions.new(@vp)
-      when "Chooser"; @menu = Mnu_Chooser.new(@vp)
 
-      when "Creatures"; @menu = Mnu_Creatures.new(@vp)
-      when "Witchery"; @menu = Mnu_Witchery.new(@vp)
-      when "Nightwatch"; @menu = Mnu_Nightwatch.new(@vp)
-      when "Dreaming"; @menu = Mnu_Dreaming.new(@vp)
-      when "Demons"; @menu = Mnu_Demons.new(@vp)
+      #when "Title"; @menu = Mnu_Title.new(@vp)
+      
 
     end
 
