@@ -201,10 +201,10 @@ class AudioManager
 
     if @atmosphere_target != @atmosphere_gain
       if @atmosphere_target > @atmosphere.gain
-        @atmosphere_gain += 0.05
+        @atmosphere_gain += 0.02
         @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
       else
-        @atmosphere_gain -= 0.05
+        @atmosphere_gain -= 0.02
         @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
       end      
     end
@@ -212,10 +212,10 @@ class AudioManager
 
     if @music_target != @music_gain
       if @music_target > @music.gain
-        @music_gain += 0.05
+        @music_gain += 0.02
         @music_gain = 1.0 if @music_gain > 1.0
       else
-        @music_gain -= 0.05
+        @music_gain -= 0.02
         @music_gain = 0.0 if @music_gain < 0.0
       end      
     end

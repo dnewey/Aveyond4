@@ -76,7 +76,7 @@ class Scene_Base
     @characters.each{ |s| s.dispose }
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
-    @weather.dispose if @eather
+    @weather.dispose if @weather
     @fogs.each{ |s| s.dispose }
     @overlay.dispose
     @black.dispose

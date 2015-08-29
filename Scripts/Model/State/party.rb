@@ -307,11 +307,11 @@ class Game_Party
 
     set_active("boy")
     #set_active("ing")
-    set_active("mys")
-    # set_active("rob")
-    # set_reserve("hib")
-    # set_reserve("row")
-    # set_reserve("phy")   
+    #set_active("mys")
+    #set_active("rob")
+    #set_reserve("hib")
+    #set_reserve("row")
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -319,7 +319,7 @@ class Game_Party
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
     @actors['boy'].equip('mid','boy-arm-start')
-    # @actors['boy'].equip('minion','boy-minion-fang')
+    @actors['boy'].equip('minion','boy-minion-fang')
 
     # Ingrid
     @actors['ing'].equip('wand','ing-wand-start')
@@ -351,8 +351,7 @@ class Game_Party
     @actors['phy'].equip('heavy','phy-helm-start')
 
     # Initial skills per actor
-    @actors["boy"].learn('fireburn')
-    @actors["boy"].learn('fireburn')
+    @actors["boy"].learn('contempt')
 
     @actors["ing"].learn('xform-snake')
     @actors["ing"].learn('xform-cat')

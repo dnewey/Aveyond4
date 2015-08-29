@@ -197,7 +197,7 @@ class Game_Battle
   def build_attack_queue
 
     if @minion
-      return ([$party.get('minion-rat')]+$party.active_battlers + @enemies).shuffle
+      return ([$party.get('minion-fang')]+$party.active_battlers + @enemies).shuffle
     else
       return ($party.active_battlers + @enemies).shuffle
     end
