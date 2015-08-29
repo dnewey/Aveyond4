@@ -126,7 +126,7 @@ def pop_sweat(ev,o=false)
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots","jump")
+	pop_icon(ev,"misc/dots",nil)
 end
 
 def pop_bulb(ev)
