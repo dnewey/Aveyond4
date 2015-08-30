@@ -13,5 +13,12 @@
   {
     "field": "mods",
     "edit": "area"
+  },
+  {
+    "field": "remove",
+    "edit": "area"
+  },
+  {
+    "field": "color"
   }
 ]

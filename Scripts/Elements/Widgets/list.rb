@@ -13,6 +13,7 @@ class List
 
   attr_accessor :active
 
+  attr_accessor :user
   attr_accessor :type
 
   attr_accessor :page_idx
@@ -32,6 +33,11 @@ class List
     @font.size = 20 #was 26
     @font.color = Color.new(245,223,200)
 
+    @font_inactive = Font.new
+    @font_inactive.name = "Verdana"
+    @font_inactive.size = 20 #was 26
+    @font_inactive.color = Color.new(245,223,200,130)
+
     @item_width = 0
     @item_height = 0
 
@@ -46,6 +52,7 @@ class List
   	@x = 0
   	@y = 0
 
+    @user = nil
     @type = :item
   	@data = []
 
@@ -248,10 +255,6 @@ class List
         draw_equip(data,row)
       when :skill
         draw_skill(data,row)
-      when :skill_boy
-        draw_skill_boy(data,row)
-      when :skill_phy
-        draw_skill_phy(data,row)
       when :quest
         draw_quest(data,row)
       when :misc
@@ -281,6 +284,8 @@ class List
 
     item = $data.items[data] if data != 'remove'
 
+    active = true # $party.get(@user).can_use_item?(item) # Check if in battle perhaps?
+
     if data != 'remove'
       name = item.name
       ico = $cache.icon(item.icon)
@@ -293,6 +298,7 @@ class List
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.font = @font_inactive if !active
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if number > 0
       @content_sprite.bitmap.draw_text(222+21,row*row_height,@item_width,@item_height,"x"+number.to_s,0)
@@ -368,54 +374,39 @@ class List
 
   def draw_skill(data,row)
 
-    log_sys(data)
-
     item = $data.skills[data]
-
     ico = $cache.icon(item.icon)
+
+    active = $party.get(@user).can_use_skill?(item.id)
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.font = @font_inactive if !active
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
 
-    # Mana
-    ico = $cache.icon("misc/mana")
-    @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
-    @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
+    # If cooldown, show that instead of mana
+    if $party.get(@user).get_cooldown(data) > 0
 
-  end
+      cooldown = $party.get(@user).get_cooldown(data)
 
-  def draw_skill_boy(data,row)
+      ico = $cache.icon("misc/cooldown")
+      @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,cooldown.to_s,0)
 
-    item = $data.skills[data]
+    else
 
-    ico = $cache.icon(item.icon)
-    
-    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
-    @content_sprite.bitmap.font = @font 
-    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
+      # Mana
+      if @user == 'boy'
+        ico = $cache.icon("misc/darkness")
+      elsif @user == 'phy'
+        ico = $cache.icon("misc/rage")
+      else
+        ico = $cache.icon("misc/mana")
+      end
+      @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
 
-    # Mana
-    ico = $cache.icon("misc/darkness")
-    @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
-    @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
-
-  end
-
-  def draw_skill_phy(data,row)
-
-    item = $data.skills[data]
-
-    ico = $cache.icon(item.icon)
-    
-    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
-    @content_sprite.bitmap.font = @font 
-    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,item.name,0)
-
-    # Mana
-    ico = $cache.icon("misc/rage")
-    @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
-    @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,item.cost.to_s,0)
+    end
 
   end
 

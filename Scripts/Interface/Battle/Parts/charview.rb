@@ -125,7 +125,7 @@ class CharView < SpriteGroup
 
 			else
 
-				@state_icon.bitmap = $cache.icon("state-hud/#{@state}")
+				@state_icon.bitmap = $cache.icon("states/#{@state}")
 				@box.wallpaper = $cache.menu_wallpaper(@state)
 				@box.scroll(0,0.2)
 

@@ -148,11 +148,12 @@ class Scene_Menu
       when "Potions"; @menu = Mnu_Potions.new(@vp)
       when "Chooser"; @menu = Mnu_Chooser.new(@vp)
 
-      when "Creatures"; @menu = Mnu_Creatures.new(@vp)
-      when "Witchery"; @menu = Mnu_Witchery.new(@vp)
+      when "Boyle"; @menu = Mnu_Boyle.new(@vp)
+      when "Ingrid"; @menu = Mnu_Ingrid.new(@vp)
       when "Nightwatch"; @menu = Mnu_Nightwatch.new(@vp)
-      when "Dreaming"; @menu = Mnu_Dreaming.new(@vp)
-      when "Demons"; @menu = Mnu_Demons.new(@vp)
+      when "Hiberu"; @menu = Mnu_Hiberu.new(@vp)
+      when "Rowen"; @menu = Mnu_Rowen.new(@vp)
+      when "Phye"; @menu = Mnu_Phye.new(@vp)
 
     end
 

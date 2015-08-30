@@ -10,12 +10,7 @@ class SkillCmd < ItemCmd
 		log_info(skill_list)
 		@box.type = :skill
 		@list.type = :skill
-		if @battler.id == 'boy'
-			@list.type = :skill_boy
-		end
-		if @battler.id == 'phy'
-			@list.type = :skill_phy
-		end
+		@list.user = @battler.id
 		@list.setup(skill_list)
 		change(skill_list[0]) if !skill_list.empty?
 

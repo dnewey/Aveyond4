@@ -71,6 +71,18 @@ class Game_Battler
   end
 
   def stat_base(stat)
+    val = 0
+    val += stat_base(stat) # Player base stat from level
+    val *= stat_base_mod(stat) # Modify per actor
+    val += stat_plus(stat) # Enemy stat or player bonus stat
+    return val.to_i
+  end
+
+  def stat_gear(stat)
+    return stat(stat) - stat_base(stat)
+  end
+
+  def stat_base(stat)
     #return 1
     return 0 if !is_good?
     $data.numbers["#{stat}-base"].value + ($data.numbers["#{stat}-per"].value * (@level-1))

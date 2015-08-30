@@ -1,8 +1,8 @@
 #==============================================================================
-# ** Mnu_Witchery
+# ** Mnu_Ingrid
 #==============================================================================
 
-class Mnu_Witchery < Mnu_Base
+class Mnu_Ingrid < Mnu_Base
 
 	def initialize(vp)
 		super(vp)

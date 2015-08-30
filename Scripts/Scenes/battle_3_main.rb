@@ -30,6 +30,11 @@ class Scene_Battle
 
     log_info("GO #{@active_battler.id}")
 
+    # Apply the cooldown for this skill
+    if @active_battler.action == :skill
+      @active_battler.apply_cooldown(@active_battler.skill_id)
+    end
+
   	# Calculate results now, then play out the anims
   	@attack_plan = $battle.build_attack_plan(@active_battler)
     @attack_round = @attack_plan.next_attack
@@ -114,10 +119,12 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if @attack_round.anim
-        # Show the hit animation
-        x = result.target.ev.screen_x
-        y = result.target.ev.screen_y - 32
-        add_spark(@attack_round.anim,x,y)
+        if @attack_round.anim.include?("spark")
+          # Show the hit animation
+          x = result.target.ev.screen_x
+          y = result.target.ev.screen_y - 32
+          add_spark(@attack_round.anim.split("=>")[1],x,y)
+        end
       end
 
     }
@@ -198,7 +205,16 @@ class Scene_Battle
     @attack_results.each{ |result|
         next if result.gain_mana == nil
         @active_battler.gain_mana(result.gain_mana)
-        pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
+        #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
+
+        # Flash blue
+
+
+        # Spark effect
+        x = @active_battler.ev.screen_x
+        y = @active_battler.ev.screen_y - 15
+        add_spark('mana-blue',x,y)
+        wait(30)
     }
 
     @phase = :main_state
@@ -212,17 +228,37 @@ class Scene_Battle
 
       if result.state_add
         result.target.add_state(result.state_add)
-        pop_state(result.target.ev,result.state_add)
-        case result.state_add 
-          when "poison"
-            result.target.ev.pulse_color = Color.new(46,174,43,150)
-        end
+        #pop_state(result.target.ev,result.state_add)
+
+        # Show icon?
+        result.target.ev.icons.push(result.state_add)
+        #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
+        result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
+        result.target.ev.pulse_colors.push(Color.new(240,0,0,130))
+
+        # case result.state_add 
+        #   when "poison"
+        #     result.target.ev.pulse_color = Color.new(46,174,43,150)
+        # end
       end
 
     }
 
-    @phase = :main_fall
+    @phase = :main_tick
     wait(30) # Might wait if a state was aded
+
+  end
+
+  def phase_main_tick
+
+    # Take damage from poison states
+
+
+    # Remove used up states
+    # Remove the pulse and icons also
+
+    @phase = :main_fall
+    wait(1)
 
   end
 

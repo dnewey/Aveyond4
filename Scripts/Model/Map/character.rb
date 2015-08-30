@@ -46,8 +46,10 @@ class Game_Character
   attr_accessor :off_x, :off_y
   attr_accessor :zoom
 
-  attr_accessor :flash_dur
-  attr_accessor :pulse_color
+  attr_accessor :flash_dur # flash always white?
+
+  attr_accessor :pulse_colors
+  attr_accessor :icons
 
   attr_accessor :move_type
 
@@ -122,7 +124,9 @@ class Game_Character
     @opacity = 255
 
     @flash_dur = nil
-    @pulse_color = nil
+    @pulse_colors = []
+    
+    @icons = []
 
   end
 

@@ -192,6 +192,8 @@ class Scene_Battle < Scene_Base
         phase_main_gain
       when :main_state
         phase_main_state
+      when :main_tick
+        phase_main_tick
       when :main_fall
         phase_main_fall
       when :main_next

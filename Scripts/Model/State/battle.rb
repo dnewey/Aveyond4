@@ -13,6 +13,8 @@ class Game_Battle
 
   attr_accessor :next_map
 
+  attr_accessor :victory_text
+
 	def initialize
 
     @enemy_types = []
@@ -30,6 +32,8 @@ class Game_Battle
     @default_map = 65
     @zone_maps = []
     @next_map = nil
+
+    @victory_text = "nil"
 
 	end
 

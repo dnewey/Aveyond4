@@ -84,10 +84,14 @@ class Scene_Battle
     end
 
     if $input.action? || $input.click?
-      @skill_cmd.close
-      @active_battler.item_id = nil
-      @active_battler.skill_id = @skill_cmd.get_skill
-      @phase = :actor_strategize
+      if @active_battler.can_use_skill?(@skill_cmd.get_skill)
+        @skill_cmd.close
+        @active_battler.item_id = nil
+        @active_battler.skill_id = @skill_cmd.get_skill
+        @phase = :actor_strategize
+      else
+        sys("buzz")
+      end
     end
 
   end
