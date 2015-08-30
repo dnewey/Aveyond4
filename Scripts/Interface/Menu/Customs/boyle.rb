@@ -1,8 +1,8 @@
 #==============================================================================
-# ** Mnu_Creatures
+# ** Mnu_Boyle
 #==============================================================================
 
-class Mnu_Creatures < Mnu_Base
+class Mnu_Boyle < Mnu_Base
 
 	def initialize(vp)
 		super(vp)

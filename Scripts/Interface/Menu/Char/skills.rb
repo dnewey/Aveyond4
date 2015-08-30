@@ -13,7 +13,8 @@ class Mnu_Skills < Mnu_Base
 		@subtitle.text = "Master of deception"
 
 		@menu.list.type = :skill
-		@menu.list.setup($party.get('boy').all_skill_list)
+		@menu.list.user = $menu.char
+		@menu.list.setup($party.get($menu.char).all_skill_list)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)

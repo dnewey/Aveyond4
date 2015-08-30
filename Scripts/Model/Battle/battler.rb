@@ -45,7 +45,7 @@ class Game_Battler
     @state_counter = 0
 
     @skills = []
-    @skill_cooldown = {}
+    @cooldowns = {}
 
     # Skill selection
     @action = nil

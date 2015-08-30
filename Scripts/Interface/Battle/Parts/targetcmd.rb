@@ -41,7 +41,7 @@ class TargetCmd
 	end
 
 	def point_at(char)
-		@arrow.center(char.ev.screen_x,char.ev.screen_y-$cache.get(char.ev.character_name).height-12)
+		@arrow.center(char.ev.screen_x,char.ev.screen_y-$cache.get(char.ev.character_name).height-10)
 		@active.ev.flash_dur = 15
 	end
 

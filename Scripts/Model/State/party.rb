@@ -15,15 +15,10 @@ class Game_Party
 
   attr_reader :items, :potions
 
-  attr_accessor :luck
+  attr_accessor :luck # For boyle? Could just be his stat
 
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
-
-  attr_accessor :night_rank, :night_xp
-  attr_accessor :attract_boy, :attract_hib, :attract_phy
-
-  attr_accessor :guild_id
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -55,34 +50,21 @@ class Game_Party
     @gold = 250
 
     # Party stats
-    @luck = 0
+    @luck = 0 # Cut probably
 
     # Other things you can have
-    @potions = []
-    @creatures = [] # Maybe just a number for this to be converted to magic
-
+    @potions = [] # Like inventory? Do you even need to learn these? You just have the items?
+    
     # Current state of potions
     @potion_state = :empty # Current potion in progress
     @potion_id = nil # Potion being made once in hack state
     @potion_level = 0 # How many hacks have been completed
     @potion_item = nil # What tool you are using
 
-    # Nightwatch rank
-    @night_rank = 0
-    @night_xp = 0
-
-    # Attraction
-    @attract_boy = 0
-    @attract_hib = 0
-    @attract_phy = 0
-
     # Location when ingrid leaves
     @party_loc = nil
 
-    # Guild info
-    @guild_id = "c" # will be one letter, b, c, or s, or "" for none
-
-    # Hardcode Party Data
+    # Hardcode Party Init
     init_party
 
   end
@@ -261,17 +243,10 @@ class Game_Party
     return @items.select{ |i| true }
   end
 
-
-  #--------------------------------------------------------------------------
-  # * Determine Everyone is Down
-  #--------------------------------------------------------------------------
   def defeated?
     return @active.select{ |a| !@actors[a].down? }.empty?
   end
-  
-  #--------------------------------------------------------------------------
-  # ● check if actor is in party
-  #--------------------------------------------------------------------------  
+   
   def has_member?(guy)
     return (@active + @reserve).include?(guy)
   end
@@ -352,6 +327,7 @@ class Game_Party
 
     # Initial skills per actor
     @actors["boy"].learn('contempt')
+    @actors["boy"].learn('flames')
 
     @actors["ing"].learn('xform-snake')
     @actors["ing"].learn('xform-cat')
@@ -366,16 +342,6 @@ class Game_Party
     @actors["rob"].learn("team-row")
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
-
-    # potion_learn("neon")
-    # potion_learn("blabber")
-    # potion_learn("unslave")
-    # potion_learn("shrink")
-    # potion_learn("mindbend")
-    # potion_learn("calming")
-    # love
-    # guild
-    
 
   end
         

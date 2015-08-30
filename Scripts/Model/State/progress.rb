@@ -2,12 +2,37 @@ class Progress
 
 	attr_accessor :quests, :complete
 
+	attr_accessor :night_rank, :night_xp
+  	attr_accessor :attract_boy, :attract_hib, :attract_phy
+
+  attr_accessor :guild_id
+
 	def initialize
+
 		@quests = []
 		@complete = []
-		@progress = 0
 
 		add_quest('ch0-domination')
+
+
+		# Boyle - creatures
+		@creatures = {} # Sorted by zone
+
+
+
+
+		# Nightwatch rank
+	    @night_rank = 0
+	    @night_xp = 0
+
+	    # Attraction
+	    @attract_boy = 0
+	    @attract_hib = 0
+	    @attract_phy = 0
+
+	    # Guild info
+	    @guild_id = "c" # will be one letter, b, c, or s, or "" for none
+
 	end
 
 
@@ -30,31 +55,6 @@ class Progress
 
 	def quest_complete?(q)
 		return @complete.include?(q)
-	end
-
-	def progress(pro)
-		@progress= $data.progress[pro]
-		$map.need_refresh = true
-		log_info("Progress Set: #{pro}")
-	end
-
-	def get_progress
-		return @progress
-	end
-
-	def progress?(progress)
-	    return false if !$data.progress.include?(progress)
-		return @progress >= $data.progress[progress]
-	end
-
-	def beyond?(progress)
-		return false if !$data.progress.include?(progress)
-		return @progress > $data.progress[progress]
-	end
-
-	def before?(progress)
-		return false if !$data.progress.include?(progress)
-		return @progress < $data.progress[progress]
 	end
 
 end

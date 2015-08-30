@@ -7,23 +7,28 @@ def build_value_bmp(num)
     nums = []
     data.each{ |n| nums.push(n.to_i) }
 
+    # Char width is now custom, same as cx
+	offsets = [0,14,27,39,52,65,78,91,104,117]
+	widths = [11,10,10,10,11,10,11,11,11,11]
+
     # build the gfx of this number
     src = $cache.menu_common("stat-nums")
     cw = src.width/10
     ch = src.height#/7
 
     # prepare the final image
-    width = 0
-    nums.each{ |n| width+=cw*0.75 }
+    width = 2
+    nums.each{ |n| width+= (widths[n]-2) }
     bmp = Bitmap.new(width,ch)
     c = 0
 
     nums.each{ |n|
 
-      s = n * cw
+   		s = offsets[n]
+	    cw = widths[n]
 
-      bmp.blt(c,0,src,Rect.new(s,0,cw,ch))
-      c += cw*0.65
+	    bmp.blt(c,0,src,Rect.new(s,0,cw,ch))
+	    c += cw - 2
 
     }
 

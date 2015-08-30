@@ -241,7 +241,7 @@ return if data == nil
 
         base(data)
 
-        if data.hits > 1
+        if data.hits != 1
             stat("targets","Hits #{data.hits} Times")
         end
 

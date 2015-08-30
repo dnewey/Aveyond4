@@ -46,22 +46,43 @@ class Game_Battler
     @skill_id = skill
   end
 
-  #--------------------------------------------------------------------------
-  # * Determine Usable Skills
-  #     skill_id : skill ID
-  #--------------------------------------------------------------------------
-  def skill_can_use?(skill_id)
-    # If there's not enough SP, the skill cannot be used.
-    if $data.skills[skill_id].sp_cost > self.sp
-      return false
-    end
-    
-    # If silent, only physical skills can be used
-    if $data_skills[skill_id].atk_f == 0 and self.has_restriction?(1)
+  def reduce_cooldowns
+    @cooldowns.each_key{ |k| 
+      @cooldowns[k] -= 1
+    }
+    @cooldowns.delete_if{ |k,v| v <= 0 }
+  end
+
+  def get_cooldown(skill_id)
+    return 0 if !@cooldowns.has_key?(skill_id)
+    return @cooldowns[skill_id]
+  end
+
+  def clear_cooldowns
+    @cooldowns = {}
+  end
+
+  def apply_cooldown(skill_id)
+    return if $data.skills[skill_id].cooldown == nil
+    @cooldowns[skill_id] = $data.skills[skill_id].cooldown
+  end
+
+  def can_use_skill?(skill_id)
+
+    # Not enough mana
+    if $data.skills[skill_id].cost > @mp
       return false
     end
 
+    # Currently on cooldown
+    if @cooldowns.has_key?(skill_id)
+      return false
+    end
+    
+    # Other requirements, such as under X% hp
+
     return true
+
   end
 
 end

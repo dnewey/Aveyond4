@@ -65,6 +65,8 @@ class StateData
 	attr_reader :name
 	attr_reader :stats
 	attr_reader :mods
+	attr_reader :remove
+	attr_reader :color
 end
 
 class ActorData

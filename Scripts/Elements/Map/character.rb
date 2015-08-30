@@ -11,10 +11,13 @@ class Sprite_Character < Sprite
   #--------------------------------------------------------------------------
   def initialize(viewport, character = nil)
     super(viewport)
+    @vp = viewport
     @character = character
     @iconmode = false
     @pulse_delay = 0
+    @pulse_idx = 0
     @fx_delay = 0
+    @icons = [] # Sprites
     update
   end
 
@@ -84,13 +87,6 @@ class Sprite_Character < Sprite
       end
     end
 
-    # if @character == $player
-    #   self.bitmap = $cache.character("Player/boy")
-    #   self.bitmap = $cache.character("Player/boy_corn") if @character.bush_depth > 0
-    # end
-
-
-
     # Set visible situation
     self.visible = !@character.transparent
     self.zoom_x = @character.zoom
@@ -135,6 +131,19 @@ class Sprite_Character < Sprite
       @character.flash_dur = nil
     end
 
+    # Pulse effect
+    if !@character.pulse_colors.empty?
+      @pulse_delay -= 1
+      if @pulse_delay <= 0
+        @pulse_delay = 75
+        self.flash(@character.pulse_colors[@pulse_idx],75)
+        @pulse_idx += 1
+        if @pulse_idx >= @character.pulse_colors.count
+          @pulse_idx = 0
+        end
+      end
+    end
+
     # Spark trail
     if @character.fxtrail != nil && @character.moving?
       @fx_delay -= 1
@@ -144,14 +153,32 @@ class Sprite_Character < Sprite
       end
     end
 
-    # Pulse effect
-    if @character.pulse_color
-      @pulse_delay -= 1
-      if @pulse_delay <= 0
-        @pulse_delay = 75
-        self.flash(@character.pulse_color,75)
-      end
+    # Icons
+    if @icons.count != @character.icons.count
+      
+      # If higher, pop the last one
+      #num_new = @character.icons.count - @icons.count        
+
+      # Rebuild icons
+      @icons.each{ |i| i.dispose }
+      @icons.clear
+
+      @character.icons.each{ |i|
+
+        spr = Sprite.new(@vp)
+        spr.bitmap = $cache.icon("states/#{i}")
+        spr.ox = 12
+        spr.oy = 12
+        spr.x = self.x
+        spr.y = self.y - 48
+        @icons.push(spr)
+
+      }
+
+
     end
 
   end
+
+
 end

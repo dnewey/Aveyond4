@@ -6,14 +6,29 @@ class Scene_Battle
   	# Everybody grin
   	@hud.all_win
 
-  	$scene.message.start("sys:Battle Victory")
+    # Choose a dialogue
+    if $battle.victory_text != nil
 
-    @map.do(
-        go("cam_oy",70,500,:quad_out)
-    )   
-    $game.sub_scene.black.do(to("opacity",255,255/30))
-    wait(31)
-    music_fadeout
+  	   text = $battle.victory_text
+
+    else
+
+      # Get dialogue for a party member currently active
+      speaker = $party.alive_members.sample
+
+    end
+
+    $scene.message.force_name = 'Boyle'
+    $scene.message.start('A.0:'+text)
+
+
+
+    # @map.do(
+    #     go("cam_oy",70,500,:quad_out)
+    # )   
+    # $game.sub_scene.black.do(to("opacity",255,255/30))
+    # wait(31)
+    # music_fadeout
   	@phase = :victory_xp  	
 
   end
@@ -24,6 +39,9 @@ class Scene_Battle
     $party.alive_members.each{ |b| b.gain_xp(xp) }
   	$scene.message.start("sys:#{xp} XP GAINED!")
 
+    $party.alive_battlers.each{ |b|
+      @hud.chars.each{ |c| c.box.wallpaper = $cache.menu_wallpaper("green")}
+    }
 
   	@phase = :victory_level
 
@@ -31,9 +49,7 @@ class Scene_Battle
 
   def phase_victory_level
 
-    $party.alive_battlers.each{ |b|
-      @hud.chars.each{ |c| c.box.wallpaper = $cache.menu_wallpaper("green")}
-    }
+    
 
     # Only show level ups in active party?
     $party.alive_battlers.each{ |b|
