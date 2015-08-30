@@ -2156,7 +2156,7 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"[
+end"£
 # Audio
 
 def sfx(file,vol=1.0,delay=0)
@@ -2193,6 +2193,11 @@ end
 
 def music_fadein
 	$audio.music_target = 1.0
+end
+
+def music_restore
+	# Restore the zone music
+	$map.setup_audio
 end
 
 def audio_fadeout
@@ -2319,7 +2324,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"ò
+end"F
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2436,6 +2441,12 @@ def pop_huh_r(ev)
 
 end
 
+def pop_love(ev)
+
+	pop_icon_r(ev,"misc/exclaim-r","jump")
+
+end
+
 def pop_wha(ev)
 
 	pop_icon(ev,"misc/unknown","jump")
@@ -2479,7 +2490,7 @@ def pop_icon(ev,icon,sfx)
 	y = gev(ev).screen_y - 70
 	$scene.add_icon(icon,x,y,:blast,:fade)
 
-	sfx(sfx)
+	sfx(sfx) if sfx != nil
 
 end
 
@@ -2625,7 +2636,7 @@ end
 
 
 
-"#==============================================================================
+"6#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -2781,6 +2792,12 @@ def approach(ev,target)
 			path(ev,other.x,other.y-1,'d')
 		end
 	end
+
+end
+
+def stop
+
+	$player.clear_path
 
 end
 
@@ -3445,9 +3462,9 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"WWORLD_MAP_ID = 146
+end"WORLD_MAP_ID = 146
 
-def transfer(map,room=nil,dir=nil)
+def start_transfer(map,room=nil,dir=nil)
 
 	id = map
 	id = find_map_id(map) if map.is_a?(String)
@@ -3456,19 +3473,68 @@ def transfer(map,room=nil,dir=nil)
 
 end
 
+# instant jump to another map
+def transfer_scene(map,room=nil,dir=nil)
+
+	id = map
+	id = find_map_id(map) if map.is_a?(String)
+	room = map if room == nil
+	$map.setup id
+
+
+      ev = gev(room)
+      
+	    case dir
+	      when 'd'
+	        $player.direction = 2
+	      when 'l'
+	        $player.direction = 4
+	      when 'r'
+	        $player.direction = 6
+	      when 'u'
+	        $player.direction = 8
+	    end
+
+      dx = 0
+      dy = 0
+      dx = 1 if $player.direction == 6
+      dx = -1 if $player.direction == 4
+      dy = 1 if $player.direction == 2
+      dy = -1 if $player.direction == 8
+
+      tx = ev.x + dx
+      ty = ev.y + dy
+
+      if ev.width > 1
+        tx += ev.width/2
+      end
+
+      if ev.height > 1
+        ty += ev.height/2
+      end
+
+      $player.moveto(tx,ty)
+
+end
+
+def transfer(map,room=nil,dir=nil)
+	$player.trans_type = :cross
+	start_transfer(map,room,dir)
+end
+
 def transfer_cross(map,room=nil,dir=nil)
 	$player.trans_type = :cross
-	transfer(map,room,dir)
+	start_transfer(map,room,dir)
 end
 
 def transfer_fade(map,room=nil,dir=nil)
 	$player.trans_type = :fade
-	transfer(map,room,dir)
+	start_transfer(map,room,dir)
 end
 
 def transfer_cave(map,room=nil,dir=nil)
 	$player.trans_type = :cave
-	transfer(map,room,dir)
+	start_transfer(map,room,dir)
 end
 
 def transfer_same(dir=nil)
@@ -15642,7 +15708,7 @@ class Moblin
 
 	end
 
-end"à,#==============================================================================
+end"Š,#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -15817,9 +15883,12 @@ class Game_Player < Game_Character
 
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
-    return super(true) if $map.interpreter.running? # Still finish turn anim
 
     transfer_player if @transferring 
+
+    return super(true) if $map.interpreter.running? # Still finish turn anim
+
+    
 
     # Try menu here
     if !moving? && $menu.menu_page != nil
@@ -16019,6 +16088,8 @@ class Game_Player < Game_Character
         $audio.fadeout      
       end
 
+      log_info(@trans_type)
+
       case @trans_type
 
         when :cross
@@ -16035,13 +16106,10 @@ class Game_Player < Game_Character
           Graphics.transition(45,'Graphics/Transitions/cave_inv')   
 
         when :fade
-          $scene.overlay.bitmap = $cache.overlay("black")
-          $scene.overlay.x = 0
-          $scene.overlay.y = 0
-          $scene.overlay.opacity = 255
+          $scene.black.opacity = 255
           Graphics.transition(45) 
           Graphics.freeze
-          $scene.overlay.opacity = 0
+          $scene.black.opacity = 0
           Graphics.transition(45)    
 
       end
@@ -16075,7 +16143,7 @@ class Game_Player < Game_Character
   end
 
 end
-"Í"
+"Î"
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16274,7 +16342,7 @@ class Game_Battle
   def build_attack_queue
 
     if @minion
-      return ([$party.get('minion-rat')]+$party.active_battlers + @enemies).shuffle
+      return ([$party.get('minion-fang')]+$party.active_battlers + @enemies).shuffle
     else
       return ($party.active_battlers + @enemies).shuffle
     end
@@ -16563,7 +16631,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"%#==============================================================================
+end"Û$#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16872,11 +16940,11 @@ class Game_Party
 
     set_active("boy")
     #set_active("ing")
-    set_active("mys")
-    # set_active("rob")
-    # set_reserve("hib")
-    # set_reserve("row")
-    # set_reserve("phy")   
+    #set_active("mys")
+    #set_active("rob")
+    #set_reserve("hib")
+    #set_reserve("row")
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -16884,7 +16952,7 @@ class Game_Party
     # Boyle
     @actors['boy'].equip('staff','boy-staff')
     @actors['boy'].equip('mid','boy-arm-start')
-    # @actors['boy'].equip('minion','boy-minion-fang')
+    @actors['boy'].equip('minion','boy-minion-fang')
 
     # Ingrid
     @actors['ing'].equip('wand','ing-wand-start')
@@ -16916,8 +16984,7 @@ class Game_Party
     @actors['phy'].equip('heavy','phy-helm-start')
 
     # Initial skills per actor
-    @actors["boy"].learn('fireburn')
-    @actors["boy"].learn('fireburn')
+    @actors["boy"].learn('contempt')
 
     @actors["ing"].learn('xform-snake')
     @actors["ing"].learn('xform-cat')
@@ -17117,7 +17184,7 @@ end"œclass State
 	end
 
 end
-"t#==============================================================================
+"u#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -17195,7 +17262,7 @@ class Scene_Base
     @characters.each{ |s| s.dispose }
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
-    @weather.dispose if @eather
+    @weather.dispose if @weather
     @fogs.each{ |s| s.dispose }
     @overlay.dispose
     @black.dispose
@@ -17447,7 +17514,7 @@ class Scene_Base
   # end
 
 end
-"…#==============================================================================
+"Ç#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -17479,6 +17546,8 @@ class Scene_Battle < Scene_Base
         go("cam_oy",-80,700,:quad_out)
       )
     )    
+    #@overlay.opacity = 0
+    $game.sub_scene.black.opacity = 0
 
     # Create Hud Elements
     @hud = BattleHud.new(@vp_ui)
@@ -18246,18 +18315,22 @@ class Scene_Battle
 
   end
 
-end"Z
+end"ì
 class Scene_Battle
 
   def phase_victory_init
-
-  	
 
   	# Everybody grin
   	@hud.all_win
 
   	$scene.message.start("sys:Battle Victory")
 
+    @map.do(
+        go("cam_oy",70,500,:quad_out)
+    )   
+    $game.sub_scene.black.do(to("opacity",255,255/30))
+    wait(31)
+    music_fadeout
   	@phase = :victory_xp  	
 
   end
@@ -18267,6 +18340,7 @@ class Scene_Battle
     xp = $battle.xp_total
     $party.alive_members.each{ |b| b.gain_xp(xp) }
   	$scene.message.start("sys:#{xp} XP GAINED!")
+
 
   	@phase = :victory_level
 
@@ -18286,12 +18360,13 @@ class Scene_Battle
       end
 
     }
-  	
+
 	  @phase = :victory_end
 
   end
 
   def phase_victory_end
+
     $battle.clear
   	$game.pop_scene
   end
@@ -19661,10 +19736,10 @@ class AudioManager
 
     if @atmosphere_target != @atmosphere_gain
       if @atmosphere_target > @atmosphere.gain
-        @atmosphere_gain += 0.05
+        @atmosphere_gain += 0.02
         @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
       else
-        @atmosphere_gain -= 0.05
+        @atmosphere_gain -= 0.02
         @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
       end      
     end
@@ -19672,10 +19747,10 @@ class AudioManager
 
     if @music_target != @music_gain
       if @music_target > @music.gain
-        @music_gain += 0.05
+        @music_gain += 0.02
         @music_gain = 1.0 if @music_gain > 1.0
       else
-        @music_gain -= 0.05
+        @music_gain -= 0.02
         @music_gain = 0.0 if @music_gain < 0.0
       end      
     end
@@ -20471,7 +20546,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"#==============================================================================
+end"Á#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -20539,6 +20614,10 @@ class GameManager
     $tweens.clear_all
     @scenes.shift.terminate
     $scene = @scenes[0]
+  end
+
+  def sub_scene
+    return @scenes[0]
   end
 
   def quit?

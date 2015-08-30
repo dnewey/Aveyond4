@@ -1,6 +1,6 @@
 WORLD_MAP_ID = 146
 
-def transfer(map,room=nil,dir=nil)
+def start_transfer(map,room=nil,dir=nil)
 
 	id = map
 	id = find_map_id(map) if map.is_a?(String)
@@ -9,19 +9,68 @@ def transfer(map,room=nil,dir=nil)
 
 end
 
+# instant jump to another map
+def transfer_scene(map,room=nil,dir=nil)
+
+	id = map
+	id = find_map_id(map) if map.is_a?(String)
+	room = map if room == nil
+	$map.setup id
+
+
+      ev = gev(room)
+      
+	    case dir
+	      when 'd'
+	        $player.direction = 2
+	      when 'l'
+	        $player.direction = 4
+	      when 'r'
+	        $player.direction = 6
+	      when 'u'
+	        $player.direction = 8
+	    end
+
+      dx = 0
+      dy = 0
+      dx = 1 if $player.direction == 6
+      dx = -1 if $player.direction == 4
+      dy = 1 if $player.direction == 2
+      dy = -1 if $player.direction == 8
+
+      tx = ev.x + dx
+      ty = ev.y + dy
+
+      if ev.width > 1
+        tx += ev.width/2
+      end
+
+      if ev.height > 1
+        ty += ev.height/2
+      end
+
+      $player.moveto(tx,ty)
+
+end
+
+def transfer(map,room=nil,dir=nil)
+	$player.trans_type = :cross
+	start_transfer(map,room,dir)
+end
+
 def transfer_cross(map,room=nil,dir=nil)
 	$player.trans_type = :cross
-	transfer(map,room,dir)
+	start_transfer(map,room,dir)
 end
 
 def transfer_fade(map,room=nil,dir=nil)
 	$player.trans_type = :fade
-	transfer(map,room,dir)
+	start_transfer(map,room,dir)
 end
 
 def transfer_cave(map,room=nil,dir=nil)
 	$player.trans_type = :cave
-	transfer(map,room,dir)
+	start_transfer(map,room,dir)
 end
 
 def transfer_same(dir=nil)

@@ -173,9 +173,12 @@ class Game_Player < Game_Character
 
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
-    return super(true) if $map.interpreter.running? # Still finish turn anim
 
     transfer_player if @transferring 
+
+    return super(true) if $map.interpreter.running? # Still finish turn anim
+
+    
 
     # Try menu here
     if !moving? && $menu.menu_page != nil
@@ -375,6 +378,8 @@ class Game_Player < Game_Character
         $audio.fadeout      
       end
 
+      log_info(@trans_type)
+
       case @trans_type
 
         when :cross
@@ -391,13 +396,10 @@ class Game_Player < Game_Character
           Graphics.transition(45,'Graphics/Transitions/cave_inv')   
 
         when :fade
-          $scene.overlay.bitmap = $cache.overlay("black")
-          $scene.overlay.x = 0
-          $scene.overlay.y = 0
-          $scene.overlay.opacity = 255
+          $scene.black.opacity = 255
           Graphics.transition(45) 
           Graphics.freeze
-          $scene.overlay.opacity = 0
+          $scene.black.opacity = 0
           Graphics.transition(45)    
 
       end

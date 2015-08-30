@@ -115,6 +115,12 @@ def pop_huh_r(ev)
 
 end
 
+def pop_love(ev)
+
+	pop_icon_r(ev,"misc/exclaim-r","jump")
+
+end
+
 def pop_wha(ev)
 
 	pop_icon(ev,"misc/unknown","jump")
@@ -158,7 +164,7 @@ def pop_icon(ev,icon,sfx)
 	y = gev(ev).screen_y - 70
 	$scene.add_icon(icon,x,y,:blast,:fade)
 
-	sfx(sfx)
+	sfx(sfx) if sfx != nil
 
 end
 

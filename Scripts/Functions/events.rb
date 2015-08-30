@@ -157,6 +157,12 @@ def approach(ev,target)
 
 end
 
+def stop
+
+	$player.clear_path
+
+end
+
 def path(ev,tx,ty,after=nil)
 
 	char = gev(ev)
