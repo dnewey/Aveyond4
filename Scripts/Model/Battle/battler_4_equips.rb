@@ -28,6 +28,13 @@ class Game_Battler
 		return @equips[s]
 	end
 
+	def weapon_icon
+		if @equips[@slots[0]] == nil
+			return 'misc/unknown'
+		else
+			return $data.items[@equips[@slots[0]]].icon
+		end
+	end
 
 
 

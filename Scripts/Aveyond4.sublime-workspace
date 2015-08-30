@@ -39,14 +39,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "Model/State/progress.rb",
-			"settings":
-			{
-				"buffer_size": 913,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -103,10 +95,23 @@
 		"/C/Aveyond4/Scripts/Utils/Extensions",
 		"/C/Aveyond4/Scripts/Utils/Tweens",
 		"/C/Aveyond4/Editor",
-		"/C/Aveyond4/Editor/meta"
+		"/C/Aveyond4/Editor/json"
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/Scripts/Model/State/progress.rb",
+		"/C/Aveyond4/Scripts/System/cache.rb",
+		"/C/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
+		"/C/Aveyond4/Scripts/Model/State/party.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
+		"/C/Aveyond4/Scripts/Model/Battle/battler_1_stats.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Customs/phye.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Customs/nightwatch.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/char.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Customs/boyle.rb",
+		"/C/Aveyond4/Scripts/Functions/audio.rb",
+		"/C/Aveyond4/Editor/json/anims.json",
 		"/C/Aveyond4/Scripts/Scenes/battle.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_4_victory.rb",
 		"/C/Aveyond4/Scripts/Utils/sprite.rb",
@@ -115,21 +120,15 @@
 		"/C/Aveyond4/Editor/meta/states.json",
 		"/C/Aveyond4/Scripts/Scenes/battle_3_main.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_3_skills.rb",
-		"/C/Aveyond4/Scripts/Model/State/progress.rb",
-		"/C/Aveyond4/Scripts/Model/State/party.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler.rb",
 		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/skills.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Customs/ingrid.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Customs/boyle.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Customs/phye.rb",
 		"/C/Aveyond4/Scripts/Scenes/menu.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_1_stats.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/status.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/skillcmd.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_2_actor.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/char.rb",
 		"/C/Aveyond4/Editor/meta/victories.json",
 		"/C/Aveyond4/Editor/edit.html",
 		"/C/Aveyond4/Scripts/Utils/data_types.rb",
@@ -139,7 +138,6 @@
 		"/C/Aveyond4/Scripts/System/data.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/rowen.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/hiberu.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/pop.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/wave.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/spark.rb",
@@ -153,7 +151,6 @@
 		"/C/Aveyond4/Scripts/Scenes/title.rb",
 		"/C/Aveyond4/Scripts/Scenes/splash.rb",
 		"/C/Aveyond4/Scripts/Functions/system.rb",
-		"/C/Aveyond4/Scripts/Functions/audio.rb",
 		"/C/Aveyond4/Scripts/System/mouse.rb",
 		"/C/Aveyond4/Scripts/Utils/Extensions/video.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Title/load_title.rb",
@@ -206,8 +203,6 @@
 		"/C/Aveyond4/Scripts/Functions/events.rb",
 		"/C/Aveyond4/Scripts/Utils/Tweens/tweens.rb",
 		"/C/Aveyond4/Scripts/Functions/effects.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/healing.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/profile.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/demons.rb",
@@ -232,6 +227,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"guild_id",
+			"def maxhp",
 			"can_use_item",
 			"state-hud",
 			"state_add",
@@ -374,98 +371,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "Model/State/progress.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 913,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								313,
-								313
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -522,12 +429,24 @@
 		"selected_items":
 		[
 			[
-				"progress",
-				"Scripts\\Model\\State\\progress.rb"
+				"bar",
+				"Scripts\\Elements\\Widgets\\bar.rb"
+			],
+			[
+				"char_box",
+				"Scripts\\Interface\\Menu\\Parts\\char_box_large.rb"
 			],
 			[
 				"party",
 				"Scripts\\Model\\State\\party.rb"
+			],
+			[
+				"audio",
+				"Scripts\\Functions\\audio.rb"
+			],
+			[
+				"progress",
+				"Scripts\\Model\\State\\progress.rb"
 			],
 			[
 				"battle",
@@ -562,10 +481,6 @@
 				"Scripts\\System\\game.rb"
 			],
 			[
-				"audio",
-				"Scripts\\System\\audio.rb"
-			],
-			[
 				"map",
 				"Scripts\\Model\\Map\\map.rb"
 			],
@@ -592,10 +507,6 @@
 			[
 				"player",
 				"Scripts\\Model\\Map\\player.rb"
-			],
-			[
-				"bar",
-				"Scripts\\Interface\\Map\\Parts\\bar.rb"
 			],
 			[
 				"par",

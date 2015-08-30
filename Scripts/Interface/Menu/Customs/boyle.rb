@@ -9,7 +9,7 @@ class Mnu_Boyle < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Gotta catch em"
 
 		@char = $party.get($menu.char)
 
@@ -22,123 +22,43 @@ class Mnu_Boyle < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
+		src = ["wyrmwood",'windshire','wasteland','royal','elvaria','shadow','other']
+		names = ["Wyrmwood","Windshire","Wasteland","Royal","Elvaria","Shadow Isles","Ocean and Islands"]
+		totals = [30,30,30,30,30,30,30]
+
 		cx = 28
-		cy = 124
+		cy = 123
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Overall"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		[0,1,2,3,4,5,6].each { |i|
 
-	    cx = 34
-	    cy += 30
+			next if !$progress.creatures.has_key?(src[i])
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/zone-#{src[i]}")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = names[i]
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    cx = 34
-	    cy += 26
+		    cx = 44
+		    cy += 25
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-		
-		cx = 28
-		cy += 28
+		    found = $progress.creatures[src[i]]
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Primary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/creature")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "#{found} of #{totals[i]} Caught"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    cx = 34
-	    cy += 30
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Health: #{@char.maxhp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	   	lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/mana")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Mana: #{@char.maxmp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
 
 	    cx = 28
-		cy += 28
+		cy += 22
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+			}
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)

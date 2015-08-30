@@ -5,7 +5,11 @@ class Progress
 	attr_accessor :night_rank, :night_xp
   	attr_accessor :attract_boy, :attract_hib, :attract_phy
 
-  attr_accessor :guild_id
+  	attr_accessor :guild_id
+
+  	attr_reader :creatures
+
+  	attr_reader :demons
 
 	def initialize
 
@@ -17,12 +21,13 @@ class Progress
 
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
+		@creatures['wyrmwood'] = 12
 
-
-
+		# Phy
+		@demons = ['baal'] # Demons defeated
 
 		# Nightwatch rank
-	    @night_rank = 0
+	    @night_rank = 3
 	    @night_xp = 0
 
 	    # Attraction
@@ -31,7 +36,7 @@ class Progress
 	    @attract_phy = 0
 
 	    # Guild info
-	    @guild_id = "c" # will be one letter, b, c, or s, or "" for none
+	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	end
 
@@ -55,6 +60,18 @@ class Progress
 
 	def quest_complete?(q)
 		return @complete.include?(q)
+	end
+
+	def catch_creature(zone)
+		if !@creatures.has_key?(zone)
+			@creatures[zone] = 1
+		else
+			@creatures[zone] += 1
+		end
+	end
+
+	def defeat_demon(demon)
+		@demons.push(demon)
 	end
 
 end

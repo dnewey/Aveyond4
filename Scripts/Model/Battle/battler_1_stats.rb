@@ -16,6 +16,7 @@ class Game_Battler
 
   def maxhp
     val = stat('hp')
+    #return 1 if val < 1
     return val
   end
 

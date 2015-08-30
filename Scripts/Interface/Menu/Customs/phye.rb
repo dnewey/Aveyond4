@@ -22,123 +22,49 @@ class Mnu_Phye < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
+		src = ['baal','purple','serp','cerb','dragon']
+		titles = ['Baal the Brute','tower','ice','other','more']
+
 		cx = 28
-		cy = 124
+		cy = 126
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Overall"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		(0..4).each{ |i|
 
-	    cx = 34
-	    cy += 30
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/phy-#{src[i]}")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = titles[i]
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 44
+			cy += 28
 
-	    cx = 34
-	    cy += 26
+		    lbl = Label.new(vp)
+			lbl.font = $fonts.pop_text
+		    if !$progress.demons.include?(src[i])
+		    	lbl.icon = $cache.icon("stats/phy-not")
+		    	lbl.text = "Status: At Large"
+		    else
+		    	lbl.icon = $cache.icon("stats/phy-done")
+				lbl.text = "Status: Decimated"
+		    end
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-		
-		cx = 28
-		cy += 28
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Primary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 28
+			cy += 26
 
-	    cx = 34
-	    cy += 30
+		}
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Health: #{@char.maxhp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		# The swords!
+		swords = Sprite.new(vp)
+		swords.bitmap = $cache.menu_common("phy-sword-#{$progress.demons.count}")
+		swords.move(45,415)
+		self.left.push(swords)
 
-	   	cy += 26
-
-	   	lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/mana")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Mana: #{@char.maxmp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 28
-		cy += 28
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)

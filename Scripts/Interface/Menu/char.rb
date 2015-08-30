@@ -15,19 +15,21 @@ class Mnu_Char < Mnu_Base
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(15,113)
+
+		char = $party.get($menu.char)
 		
-		@grid.add_wide("Equip","Change Equipment","armors/boy-arm-f")
+		@grid.add_wide("Equip","Change Equipment",char.weapon_icon)
 		@grid.add_wide("Skills","Use Skills","skills/sparkle")
 		@grid.add_wide("Status","View Status","misc/primary")
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
-		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy'
+		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' #&& !$progress.creatures.empty?
 		@grid.add_wide("Ingrid","Potion Making","items/potion-red") if $menu.char == 'ing'
 		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
 		@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
 		@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
-		@grid.add_wide("Phye","Demon Chasing","items/potion-red") if $menu.char == 'phy'
+		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'
 
 		@grid.choose($menu.char_cursor)
 
@@ -76,35 +78,10 @@ class Mnu_Char < Mnu_Base
 
 	def choose(option)
 
-		case option
-
-			when 'Equip'
-				$scene.queue_menu("Equip")
-
-			when 'Skills'
-				$scene.queue_menu("Skills")
-
-			when 'Status'
-				$scene.queue_menu("Status")
-
-			when 'Profile'
-				$scene.queue_menu("Profile")
-
-			when 'Leader'
-				$party.leader = $menu.char
-
-			when 'Creatures'
-				$scene.queue_menu("Creatures")
-
-			when 'Witchery'
-				$scene.queue_menu("Witchery")
-
-			when 'Dreaming'
-				$scene.queue_menu("Dreaming")
-
-			when 'Demons'
-				$scene.queue_menu("Demons")
-
+		if option == "Leader"
+			$party.leader = $menu.char
+		else
+			$scene.queue_menu(option)
 		end
 
 		$menu.char_cursor = option
