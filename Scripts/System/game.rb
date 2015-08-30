@@ -68,6 +68,10 @@ class GameManager
     $scene = @scenes[0]
   end
 
+  def sub_scene
+    return @scenes[0]
+  end
+
   def quit?
     return false
   end

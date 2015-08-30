@@ -37,6 +37,11 @@ def music_fadein
 	$audio.music_target = 1.0
 end
 
+def music_restore
+	# Restore the zone music
+	$map.setup_audio
+end
+
 def audio_fadeout
 	$audio.music_target = 0.0
 end

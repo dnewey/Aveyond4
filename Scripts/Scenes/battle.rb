@@ -30,6 +30,8 @@ class Scene_Battle < Scene_Base
         go("cam_oy",-80,700,:quad_out)
       )
     )    
+    #@overlay.opacity = 0
+    $game.sub_scene.black.opacity = 0
 
     # Create Hud Elements
     @hud = BattleHud.new(@vp_ui)

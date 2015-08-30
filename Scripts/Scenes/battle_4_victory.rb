@@ -3,13 +3,17 @@ class Scene_Battle
 
   def phase_victory_init
 
-  	
-
   	# Everybody grin
   	@hud.all_win
 
   	$scene.message.start("sys:Battle Victory")
 
+    @map.do(
+        go("cam_oy",70,500,:quad_out)
+    )   
+    $game.sub_scene.black.do(to("opacity",255,255/30))
+    wait(31)
+    music_fadeout
   	@phase = :victory_xp  	
 
   end
@@ -19,6 +23,7 @@ class Scene_Battle
     xp = $battle.xp_total
     $party.alive_members.each{ |b| b.gain_xp(xp) }
   	$scene.message.start("sys:#{xp} XP GAINED!")
+
 
   	@phase = :victory_level
 
@@ -38,12 +43,13 @@ class Scene_Battle
       end
 
     }
-  	
+
 	  @phase = :victory_end
 
   end
 
   def phase_victory_end
+
     $battle.clear
   	$game.pop_scene
   end
