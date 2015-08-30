@@ -2319,7 +2319,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"õ
+end"ò
 def spark(ev,fx,ox=0,oy=0)
 
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
@@ -2447,7 +2447,7 @@ def pop_sweat(ev,o=false)
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots","jump")
+	pop_icon(ev,"misc/dots",nil)
 end
 
 def pop_bulb(ev)
