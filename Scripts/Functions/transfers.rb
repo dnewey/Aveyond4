@@ -105,7 +105,7 @@ end
 
 def transfer_chester_in(dir=nil)
 	transfer_in("Chester Chove",dir)
-	$player.trans_type = :fade
+	$player.trans_type = :cave
 end
 
 def transfer_house_in(dir=nil)

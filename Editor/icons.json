@@ -183,6 +183,7 @@
 "misc/journal",
 "misc/keys",
 "misc/level",
+"misc/magics",
 "misc/mana",
 "misc/mouse",
 "misc/music",

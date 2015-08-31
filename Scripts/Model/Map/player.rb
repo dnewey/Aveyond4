@@ -386,13 +386,10 @@ class Game_Player < Game_Character
           Graphics.transition(16)
 
         when :cave
-          $scene.overlay.bitmap = $cache.overlay("black")
-          $scene.overlay.x = 0
-          $scene.overlay.y = 0
-          $scene.overlay.opacity = 255
+          $scene.black.opacity = 255
           Graphics.transition(45,'Graphics/Transitions/cave') 
           Graphics.freeze
-          $scene.overlay.opacity = 0
+          $scene.black.opacity = 0
           Graphics.transition(45,'Graphics/Transitions/cave_inv')   
 
         when :fade

@@ -8,6 +8,7 @@ class Game_Party
   attr_accessor :reserve                  # reserve party
 
   attr_reader   :gold                     # amount of gold
+  attr_reader   :magics                     # amount of magics
 
   attr_accessor :all_actors
 
@@ -48,6 +49,7 @@ class Game_Party
     # Inventory
     @items = {}
     @gold = 250
+    @magics = 111
 
     # Party stats
     @luck = 0 # Cut probably
