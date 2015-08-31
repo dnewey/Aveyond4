@@ -7,7 +7,7 @@ class Progress
 
   	attr_accessor :guild_id
 
-  	attr_reader :creatures
+  	attr_reader :creatures, :creature_shop_level
 
   	attr_reader :demons
 
@@ -18,10 +18,12 @@ class Progress
 
 		add_quest('ch0-domination')
 
-
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
 		@creatures['wyrmwood'] = 12
+
+		# Boyle skills
+		@creature_shop_level = 0
 
 		# Phy
 		@demons = ['baal'] # Demons defeated
@@ -68,6 +70,10 @@ class Progress
 		else
 			@creatures[zone] += 1
 		end
+	end
+
+	def inc_creature_shop_level(lvl)
+		@creature_shop_level = lvl if lvl > @creature_shop_level
 	end
 
 	def defeat_demon(demon)

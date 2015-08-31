@@ -163,15 +163,27 @@ class Sprite_Character < Sprite
       @icons.each{ |i| i.dispose }
       @icons.clear
 
+      total = (@icons.count-1) * (24+2)
+      total -= 2
+      cx = total/2
+
       @character.icons.each{ |i|
 
         spr = Sprite.new(@vp)
         spr.bitmap = $cache.icon("states/#{i}")
         spr.ox = 12
         spr.oy = 12
-        spr.x = self.x
-        spr.y = self.y - 48
+        spr.x = self.x - cx
+        spr.y = self.y - @ch
         @icons.push(spr)
+
+        cx += 26
+
+        # Pop
+        spr.zoom_x = 0.8
+        spr.zoom_y = 0.8
+        spr.do(seq(go("zoom_x",0.5,200,:qio),go("zoom_x",-0.3,100,:qio)))
+        spr.do(seq(go("zoom_y",0.5,200,:qio),go("zoom_y",-0.3,100,:qio)))
 
       }
 

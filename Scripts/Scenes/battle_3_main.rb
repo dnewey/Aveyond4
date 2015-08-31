@@ -227,6 +227,13 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if result.state_add
+
+        # Only if a new state, else refresh
+        if result.target.has_state?(result.state_add)
+          # refresh it
+          next
+        end
+
         result.target.add_state(result.state_add)
         #pop_state(result.target.ev,result.state_add)
 
