@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"#==============================================================================
+end"G#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -238,15 +238,27 @@ class Sprite_Character < Sprite
       @icons.each{ |i| i.dispose }
       @icons.clear
 
+      total = (@icons.count-1) * (24+2)
+      total -= 2
+      cx = total/2
+
       @character.icons.each{ |i|
 
         spr = Sprite.new(@vp)
         spr.bitmap = $cache.icon("states/#{i}")
         spr.ox = 12
         spr.oy = 12
-        spr.x = self.x
-        spr.y = self.y - 48
+        spr.x = self.x - cx
+        spr.y = self.y - @ch
         @icons.push(spr)
+
+        cx += 26
+
+        # Pop
+        spr.zoom_x = 0.8
+        spr.zoom_y = 0.8
+        spr.do(seq(go("zoom_x",0.5,200,:qio),go("zoom_x",-0.3,100,:qio)))
+        spr.do(seq(go("zoom_y",0.5,200,:qio),go("zoom_y",-0.3,100,:qio)))
 
       }
 
@@ -3036,7 +3048,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"ö#==============================================================================
+"M#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3108,6 +3120,12 @@ end
 def unjoin_s(who)
 	$party.back_to_pavillion(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
+end
+
+def party_of_boy
+	$party.backup_party
+	$party.leader = 'boy'
+	join_s('boy')
 end
 
 def party_of_ing
@@ -4593,7 +4611,7 @@ class SkillCmd < ItemCmd
 
 	end
 
-end"
+end"$
 class TargetCmd
 
 	attr_reader :active
@@ -4636,7 +4654,7 @@ class TargetCmd
 	end
 
 	def point_at(char)
-		@arrow.center(char.ev.screen_x,char.ev.screen_y-$cache.get(char.ev.character_name).height-10)
+		@arrow.center(char.ev.screen_x,char.ev.screen_y-($cache.get("Characters/"+char.ev.character_name).height/4)-6)
 		@active.ev.flash_dur = 15
 	end
 
@@ -7294,7 +7312,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"	#==============================================================================
+end"ª	#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -7311,19 +7329,21 @@ class Mnu_Char < Mnu_Base
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(15,113)
+
+		char = $party.get($menu.char)
 		
-		@grid.add_wide("Equip","Change Equipment","armors/boy-arm-f")
+		@grid.add_wide("Equip","Change Equipment",char.weapon_icon)
 		@grid.add_wide("Skills","Use Skills","skills/sparkle")
 		@grid.add_wide("Status","View Status","misc/primary")
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
-		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy'
+		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' #&& !$progress.creatures.empty?
 		@grid.add_wide("Ingrid","Potion Making","items/potion-red") if $menu.char == 'ing'
 		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
 		@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
 		@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
-		@grid.add_wide("Phye","Demon Chasing","items/potion-red") if $menu.char == 'phy'
+		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'
 
 		@grid.choose($menu.char_cursor)
 
@@ -7372,35 +7392,10 @@ class Mnu_Char < Mnu_Base
 
 	def choose(option)
 
-		case option
-
-			when 'Equip'
-				$scene.queue_menu("Equip")
-
-			when 'Skills'
-				$scene.queue_menu("Skills")
-
-			when 'Status'
-				$scene.queue_menu("Status")
-
-			when 'Profile'
-				$scene.queue_menu("Profile")
-
-			when 'Leader'
-				$party.leader = $menu.char
-
-			when 'Creatures'
-				$scene.queue_menu("Creatures")
-
-			when 'Witchery'
-				$scene.queue_menu("Witchery")
-
-			when 'Dreaming'
-				$scene.queue_menu("Dreaming")
-
-			when 'Demons'
-				$scene.queue_menu("Demons")
-
+		if option == "Leader"
+			$party.leader = $menu.char
+		else
+			$scene.queue_menu(option)
 		end
 
 		$menu.char_cursor = option
@@ -9267,7 +9262,7 @@ class Mnu_Status < Mnu_Base
 		
 	end
 
-end"ı#==============================================================================
+end"#==============================================================================
 # ** Mnu_Boyle
 #==============================================================================
 
@@ -9278,7 +9273,7 @@ class Mnu_Boyle < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Gotta catch em"
 
 		@char = $party.get($menu.char)
 
@@ -9291,123 +9286,43 @@ class Mnu_Boyle < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
+		src = ["wyrmwood",'windshire','wasteland','royal','elvaria','shadow','other']
+		names = ["Wyrmwood","Windshire","Wasteland","Royal","Elvaria","Shadow Isles","Ocean and Islands"]
+		totals = [30,30,30,30,30,30,30]
+
 		cx = 28
-		cy = 124
+		cy = 123
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Overall"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		[0,1,2,3,4,5,6].each { |i|
 
-	    cx = 34
-	    cy += 30
+			next if !$progress.creatures.has_key?(src[i])
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/zone-#{src[i]}")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = names[i]
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    cx = 34
-	    cy += 26
+		    cx = 44
+		    cy += 25
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-		
-		cx = 28
-		cy += 28
+		    found = $progress.creatures[src[i]]
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Primary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/creature")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "#{found} of #{totals[i]} Caught"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    cx = 34
-	    cy += 30
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Health: #{@char.maxhp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	   	lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/mana")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Mana: #{@char.maxmp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
 
 	    cx = 28
-		cy += 28
+		cy += 22
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+			}
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -9595,7 +9510,7 @@ class Mnu_Ingrid < Mnu_Base
 
 	end
 
-end"#==============================================================================
+end"#==============================================================================
 # ** Mnu_Nightwatch
 #==============================================================================
 
@@ -9619,123 +9534,36 @@ class Mnu_Nightwatch < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
+		src = ['mouse','cat','rabbit','racoon','squirrel']
+		titles = ['Midnight Mouse','Creeping Cat','Racing Rabbit','Rascal Racoon','Militant Squirrel']
+
 		cx = 28
-		cy = 124
+		cy = 126
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Overall"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		(0..$progress.night_rank-1).each{ |i|
 
-	    cx = 34
-	    cy += 30
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/nw-#{src[i]}")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = titles[i]
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 44
+			cy += 28
 
-	    cx = 34
-	    cy += 26
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/xp")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Progress: #{$progress.night_xp}%"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-		
-		cx = 28
-		cy += 28
+		    cx = 28
+			cy += 24
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Primary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Health: #{@char.maxhp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	   	lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/mana")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Mana: #{@char.maxmp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 28
-		cy += 28
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		}
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -9759,7 +9587,7 @@ class Mnu_Nightwatch < Mnu_Base
 		
 	end
 
-end"û#==============================================================================
+end"u#==============================================================================
 # ** Mnu_Phye
 #==============================================================================
 
@@ -9783,123 +9611,49 @@ class Mnu_Phye < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
+		src = ['baal','purple','serp','cerb','dragon']
+		titles = ['Baal the Brute','tower','ice','other','more']
+
 		cx = 28
-		cy = 124
+		cy = 126
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Overall"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		(0..4).each{ |i|
 
-	    cx = 34
-	    cy += 30
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/phy-#{src[i]}")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = titles[i]
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 44
+			cy += 28
 
-	    cx = 34
-	    cy += 26
+		    lbl = Label.new(vp)
+			lbl.font = $fonts.pop_text
+		    if !$progress.demons.include?(src[i])
+		    	lbl.icon = $cache.icon("stats/phy-not")
+		    	lbl.text = "Status: At Large"
+		    else
+		    	lbl.icon = $cache.icon("stats/phy-done")
+				lbl.text = "Status: Decimated"
+		    end
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Xp: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-		
-		cx = 28
-		cy += 28
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/primary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Primary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 28
+			cy += 26
 
-	    cx = 34
-	    cy += 30
+		}
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/heal")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Health: #{@char.maxhp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		# The swords!
+		swords = Sprite.new(vp)
+		swords.bitmap = $cache.menu_common("phy-sword-#{$progress.demons.count}")
+		swords.move(45,415)
+		self.left.push(swords)
 
-	   	cy += 26
-
-	   	lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/mana")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max Mana: #{@char.maxmp}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 28
-		cy += 28
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.str}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.def}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -11879,7 +11633,7 @@ class Game_Battler
 
 
 end
-"…
+"Ÿ
 
 class Game_Battler
 
@@ -11898,6 +11652,7 @@ class Game_Battler
 
   def maxhp
     val = stat('hp')
+    #return 1 if val < 1
     return val
   end
 
@@ -12200,7 +11955,7 @@ class Game_Battler
 
   end
 
-end"û
+end"Œ
 class Game_Battler
 
 	def equip(slot,new_equip)
@@ -12230,6 +11985,13 @@ class Game_Battler
 		return @equips[s]
 	end
 
+	def weapon_icon
+		if @equips[@slots[0]] == nil
+			return 'misc/unknown'
+		else
+			return $data.items[@equips[@slots[0]]].icon
+		end
+	end
 
 
 
@@ -16733,7 +16495,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"™!#==============================================================================
+end"!#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16754,8 +16516,6 @@ class Game_Party
 
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
-
-  attr_accessor :guild_id
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -16785,8 +16545,6 @@ class Game_Party
     # Inventory
     @items = {}
     @gold = 250
-
-    @guild_id = ''
 
     # Party stats
     @luck = 0 # Cut probably
@@ -17025,6 +16783,7 @@ class Game_Party
     #set_active("rob")
     #set_reserve("hib")
     #set_reserve("row")
+    #set_active("phy")   
     #set_reserve("phy")   
   
     # ----------------------------------
@@ -17084,14 +16843,18 @@ class Game_Party
 
   end
         
-end"Ìclass Progress
+end"ºclass Progress
 
 	attr_accessor :quests, :complete
 
 	attr_accessor :night_rank, :night_xp
   	attr_accessor :attract_boy, :attract_hib, :attract_phy
 
-  attr_accessor :guild_id
+  	attr_accessor :guild_id
+
+  	attr_reader :creatures, :creature_shop_level
+
+  	attr_reader :demons
 
 	def initialize
 
@@ -17100,15 +16863,18 @@ end"Ìclass Progress
 
 		add_quest('ch0-domination')
 
-
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
+		@creatures['wyrmwood'] = 12
 
+		# Boyle skills
+		@creature_shop_level = 0
 
-
+		# Phy
+		@demons = ['baal'] # Demons defeated
 
 		# Nightwatch rank
-	    @night_rank = 0
+	    @night_rank = 3
 	    @night_xp = 0
 
 	    # Attraction
@@ -17117,7 +16883,7 @@ end"Ìclass Progress
 	    @attract_phy = 0
 
 	    # Guild info
-	    @guild_id = "c" # will be one letter, b, c, or s, or "" for none
+	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	end
 
@@ -17141,6 +16907,22 @@ end"Ìclass Progress
 
 	def quest_complete?(q)
 		return @complete.include?(q)
+	end
+
+	def catch_creature(zone)
+		if !@creatures.has_key?(zone)
+			@creatures[zone] = 1
+		else
+			@creatures[zone] += 1
+		end
+	end
+
+	def inc_creature_shop_level(lvl)
+		@creature_shop_level = lvl if lvl > @creature_shop_level
+	end
+
+	def defeat_demon(demon)
+		@demons.push(demon)
 	end
 
 end"œclass State
@@ -18095,7 +17877,7 @@ class Scene_Battle
     
   end
 
-end"X
+end"õ
 class Scene_Battle
 
   def phase_main_init
@@ -18324,6 +18106,13 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if result.state_add
+
+        # Only if a new state, else refresh
+        if result.target.has_state?(result.state_add)
+          # refresh it
+          next
+        end
+
         result.target.add_state(result.state_add)
         #pop_state(result.target.ev,result.state_add)
 
@@ -19970,7 +19759,7 @@ class EnviroSource < Seal::Source
 
   end
 
-end"B
+end"a
 class CacheManager
 
     def initialize
@@ -20015,7 +19804,7 @@ class CacheManager
     def face_battle(filename) face_file("Faces/Battle/", filename) end
 
     def face_file(folder,filename)
-      filename += "."+$party.guild_id if filename.include?("ing")
+      filename += "."+$progress.guild_id if filename.include?("ing")&& $progress.guild_id != nil
       load(folder,filename)
     end
     
