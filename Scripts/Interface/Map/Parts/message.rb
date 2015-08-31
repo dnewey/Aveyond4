@@ -401,6 +401,7 @@ class Ui_Message
     # If forcing to speak from a number, switch to name now
     if speaker.numeric?
       name = gev(speaker.to_i).name
+      name = name.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
     end
 
     build_namebox(name.split("-")[0])
