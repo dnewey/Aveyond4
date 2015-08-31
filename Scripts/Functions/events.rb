@@ -94,10 +94,12 @@ def voll(v)
 end
 
 def fade(ev)
+	gev(ev).opacity = 255
 	gev(ev).do(go("opacity",-255,300))
 end
 
 def unfade(ev)
+	gev(ev).opacity = 0
 	gev(ev).do(go("opacity",+255,300))
 end
 
