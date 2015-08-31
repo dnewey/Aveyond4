@@ -3403,7 +3403,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"¡
+"µ
 # Misc
 
 def text(t)
@@ -3517,6 +3517,7 @@ end
 def overlay(bmp,f=30)
 	if f == 0
 		$scene.overlay.opacity = 255
+		return
 	end
 	$scene.overlay.bitmap = $cache.overlay(bmp)
 	$scene.overlay.do(to("opacity",255,255/f))
@@ -3526,6 +3527,7 @@ end
 def noverlay(f=30)
 	if f == 0
 		$scene.overlay.opacity = 0
+		return
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
@@ -6112,7 +6114,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end">Z#==============================================================================
+end"[#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6453,7 +6455,7 @@ class Ui_Message
     end
 
     # Figure things out from speaker
-    speaker = gev(speaker.to_i).name if speaker.numeric?
+    #speaker = gev(speaker.to_i).name if speaker.numeric?
     speaker = this.name if speaker == 'this'
     speaker = this.name if speaker == 'me'
     speaker = this.name if speaker == 'This'
@@ -6510,6 +6512,10 @@ class Ui_Message
     if $data.actors.has_key?(name.split('-')[0])
       @face.bitmap = $cache.face(name) if @mode == :message || @mode == :x
       name = $data.actors[name.split('-')[0]].name
+    end
+
+    if speaker.numeric?
+      name = gev(speaker.to_i).name
     end
 
     build_namebox(name.split("-")[0])
@@ -6754,6 +6760,8 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def next_word
 
+
+
     # blit last word onto the main bmp
     if @word != nil
 
@@ -6788,6 +6796,12 @@ class Ui_Message
     @word = @lines[@line_idx][@word_idx]
 
     return if @word == nil
+
+    #Check for vars
+    if @word.include?("@")
+      @word.sub!("@","")
+      @word = $state.varval(@word).to_s
+    end 
 
     # CHECK FOR COMMANDS
     if @word.include?('$')
@@ -13713,7 +13727,7 @@ class Game_Character
 
 
 end
-"žG#==============================================================================
+"5H#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14037,6 +14051,9 @@ class Game_Event < Game_Character
   def label_applies?(label)
 
     case label.split(":")[0]
+
+      when '@else'
+        return true
       
       when '@first'
         return false if state?(me,"second_#{this.page_idx}")
@@ -14048,6 +14065,9 @@ class Game_Event < Game_Character
 
       when '@ngold'
         return false if $party.gold >= label.split(":")[1].to_i
+
+      when '@var'
+        return false if $state.varval(label.split(":")[2]) < label.split(":")[3].to_i
 
       # Direction
       when '@up'

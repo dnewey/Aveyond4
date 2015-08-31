@@ -322,6 +322,9 @@ class Game_Event < Game_Character
   def label_applies?(label)
 
     case label.split(":")[0]
+
+      when '@else'
+        return true
       
       when '@first'
         return false if state?(me,"second_#{this.page_idx}")
@@ -333,6 +336,9 @@ class Game_Event < Game_Character
 
       when '@ngold'
         return false if $party.gold >= label.split(":")[1].to_i
+
+      when '@var'
+        return false if $state.varval(label.split(":")[2]) < label.split(":")[3].to_i
 
       # Direction
       when '@up'

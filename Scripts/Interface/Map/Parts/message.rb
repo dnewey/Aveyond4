@@ -339,7 +339,7 @@ class Ui_Message
     end
 
     # Figure things out from speaker
-    speaker = gev(speaker.to_i).name if speaker.numeric?
+    #speaker = gev(speaker.to_i).name if speaker.numeric? # This is cut so you can just do 25: Text, instead of npc2, npc3
     speaker = this.name if speaker == 'this'
     speaker = this.name if speaker == 'me'
     speaker = this.name if speaker == 'This'
@@ -396,6 +396,11 @@ class Ui_Message
     if $data.actors.has_key?(name.split('-')[0])
       @face.bitmap = $cache.face(name) if @mode == :message || @mode == :x
       name = $data.actors[name.split('-')[0]].name
+    end
+
+    # If forcing to speak from a number, switch to name now
+    if speaker.numeric?
+      name = gev(speaker.to_i).name
     end
 
     build_namebox(name.split("-")[0])
@@ -640,6 +645,8 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def next_word
 
+
+
     # blit last word onto the main bmp
     if @word != nil
 
@@ -674,6 +681,12 @@ class Ui_Message
     @word = @lines[@line_idx][@word_idx]
 
     return if @word == nil
+
+    #Check for vars
+    if @word.include?("@")
+      @word.sub!("@","")
+      @word = $state.varval(@word).to_s
+    end 
 
     # CHECK FOR COMMANDS
     if @word.include?('$')
