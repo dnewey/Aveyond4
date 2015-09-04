@@ -129,7 +129,7 @@ class Weather_Rain
 	end
 
 	def dispose
-
+		@stars.each{ |s| s.dispose }
 	end
 
 end
@@ -189,8 +189,8 @@ class Weather_DarkDots
 
 	end
 
-	def dispose
-
+def dispose
+		@stars.each{ |s| s.dispose }
 	end
 
 end

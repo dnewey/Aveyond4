@@ -179,6 +179,7 @@ class Scene_Base
 
   def change_weather(weather)
     @weather.dispose if @weather
+    @weather = nil
     case weather
       when 'dark-dots'
         @weather = Weather_DarkDots.new(@vp_weather)

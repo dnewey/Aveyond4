@@ -683,7 +683,7 @@ class Wave # Or just projectiles all spawned
 
 	end
 
-end"ü
+end"7
 # Spawn and manage weather particles
 
 class Particle < Sprite
@@ -814,7 +814,7 @@ class Weather_Rain
 	end
 
 	def dispose
-
+		@stars.each{ |s| s.dispose }
 	end
 
 end
@@ -874,8 +874,8 @@ class Weather_DarkDots
 
 	end
 
-	def dispose
-
+def dispose
+		@stars.each{ |s| s.dispose }
 	end
 
 end"K#==============================================================================
@@ -8669,7 +8669,7 @@ class Mnu_Save < Mnu_Base
 			lbl.text = 23
 
 			lbl.x = cx
-			lbl.y = 300
+			lbl.y = 297
 
 			@levels.push(lbl)
 			@right.push(lbl)
@@ -13885,7 +13885,7 @@ class Game_Character
 
 
 end
-"7H#==============================================================================
+"5H#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14185,9 +14185,9 @@ class Game_Event < Game_Character
 
       # Inventory
       when '?gold'
-        return false #if !$party.has_gold?(cond[1].to_i)
+        return false if !$party.has_gold?(cond[1].to_i)
       when '?ngold'
-        return false #if $party.has_gold?(cond[1].to_i)
+        return false if $party.has_gold?(cond[1].to_i)
 
       when '?item'
         cond[2] = 1 if cond.count < 3
@@ -16677,7 +16677,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"Ó"#==============================================================================
+end"##==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16910,6 +16910,10 @@ class Game_Party
     @gold += n
     @gold = 0 if @gold < 0
     $map.need_refresh = true
+  end
+
+  def has_gold?(n)
+    return @gold >= n
   end
 
   def item_list
@@ -17243,7 +17247,7 @@ end"œclass State
 	end
 
 end
-"u#==============================================================================
+"‰#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -17424,6 +17428,7 @@ class Scene_Base
 
   def change_weather(weather)
     @weather.dispose if @weather
+    @weather = nil
     case weather
       when 'dark-dots'
         @weather = Weather_DarkDots.new(@vp_weather)
