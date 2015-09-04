@@ -1,4 +1,4 @@
-[é"˙#==============================================================================
+[ç"˙#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -1493,7 +1493,7 @@ class Label < Sprite
         
   end
   
-end"t=#==============================================================================
+end"ì@#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1586,7 +1586,7 @@ class List
     @scroll_up.press = Proc.new{ self.scrollbar_up }
 
     # Setup
-    @select_sprite.bitmap = $cache.menu_common('list-bar-on')    
+    @select_sprite.bitmap = $cache.menu_common('list-bar-purple')    
 
     @active = true
 
@@ -1634,6 +1634,18 @@ class List
     @page_idx = idx
     @select_sprite.y = idx * row_height
     @active = true
+
+    # Remove the scroll arrows if mouse is off OR not enough to need
+    if @data.count <= @per_page
+      @scroll_box.hide
+      @scroll_down.hide
+      @scroll_up.hide
+    else
+      @scroll_box.show
+      @scroll_down.show
+      @scroll_up.show
+    end
+
   	refresh(false) #if !data.empty?
 
   end
@@ -1708,6 +1720,7 @@ class List
 
   # ADD THIS MOUSE CONTROL
   def scrollbar_down
+    return if !can_scroll? || @scroll_idx >= (@data.count - @max_per_page)
       #@page_idx += 1
       sys('select')   
       @select_sprite.y += row_height      
@@ -1716,6 +1729,7 @@ class List
   end
 
   def scrollbar_up
+      return if !can_scroll?
       return if @scroll_idx <= 0
       #@page_idx -= 1
       sys('select')   
@@ -1920,10 +1934,17 @@ class List
   def draw_misc(data,row)
 
     ico = $cache.icon(data[2])
-    
+
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,data[1],0)
+
+    if data[0] == 'music' || data[0] == 'sound'
+      ia = $cache.icon("misc/sound-down")
+      ib = $cache.icon("misc/sound-up")
+      @content_sprite.bitmap.blt(215,(row*row_height)+5,ia,ia.rect)
+      @content_sprite.bitmap.blt(250,(row*row_height)+5,ib,ib.rect)
+    end
 
   end
 
@@ -1939,7 +1960,12 @@ class List
       if data == 0
         name = "Autosave - #{header[:time]}"
       else
-        name = "Save #{data} - #{header[:time]}"
+        if header[:time].is_a?(String)
+          time = header[:time]
+        else
+          time = build_time_string(header[:time])
+        end
+        name = "Save #{data} - #{time}"
       end
       ico = $cache.icon("faces/"+header[:leader])
     end
@@ -4743,7 +4769,7 @@ class TargetCmd
 	end
 
 end
-"©#==============================================================================
+".#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -4786,6 +4812,14 @@ class Ui_Screen
 	end
 
 	def update
+
+		if !$settings.bottombar
+			@info.move(0,447)
+			@bar.move(0,480)
+		else
+			@info.move(0,415)
+			@bar.move(0,480-32)
+		end
 
 		@message.update
 		@bar.update
@@ -4916,7 +4950,7 @@ class Ui_Screen
     	return @message.busy? || @item || @popper || @grid || @book
     end
 
-end"h#==============================================================================
+end"å#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -4971,21 +5005,21 @@ class Ui_Bar < SpriteGroup
 
 		cx += 32
 
+		@progress = Button.new(vp)
+		@progress.bitmap = $cache.icon("misc/progress")
+		@progress.press = Proc.new{ open_sub_menu("Progress") }
+		@progress.select = Proc.new{ $tweens.clear(@progress); @progress.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
+		@progress.deselect = Proc.new{ $tweens.clear(@progress); @progress.oy = 0 }
+		add(@progress,cx,4)
+
+		cx += 32
+
 		@settings = Button.new(vp)
 		@settings.bitmap = $cache.icon("misc/settings")
 		@settings.press = Proc.new{ open_sub_menu("Options") }
 		@settings.select = Proc.new{ $tweens.clear(@settings); @settings.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
 		@settings.deselect = Proc.new{ $tweens.clear(@settings); @settings.oy = 0 }
 		add(@settings,cx,4)
-
-		cx += 32
-
-		@sound = Button.new(vp)
-		@sound.bitmap = $cache.icon("misc/sound")
-		@quit.press = Proc.new{ log_err("TOGGLE SOUND") }
-		@sound.select = Proc.new{ $tweens.clear(@sound); @sound.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
-		@sound.deselect = Proc.new{ $tweens.clear(@sound); @sound.oy = 0 }
-		add(@sound,cx,4)
 
 		cx += 32
 
@@ -7204,7 +7238,7 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end"c
+end"á
 #==============================================================================
 # ** Mnu_Base
 #==============================================================================
@@ -7231,7 +7265,8 @@ class Mnu_Base
 		@left.push(@tabs)
 
 		@subtitle = Label.new(vp)
-		@subtitle.move(116,74)
+		@subtitle.font = $fonts.subtitle
+		@subtitle.move(116,72)
 		@left.push(@subtitle)
 
 
@@ -7614,7 +7649,8 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"w	#==============================================================================
+end"
+#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -7629,7 +7665,7 @@ class Mnu_Items < Mnu_Base
 		@tabs.push("all")
 		@tabs.push("usable")
 		@tabs.push("keys")
-		@tabs.push("gear")
+		@tabs.push("shop")
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -7653,8 +7689,6 @@ class Mnu_Items < Mnu_Base
 		#@grid.hide
 		self.right.push(@grid)
 
-		grant_items
-
 		tab('all')
 
 		open
@@ -7670,6 +7704,10 @@ class Mnu_Items < Mnu_Base
 		# Reload the quest list limited to this tab
 		data = $party.items.keys
 
+		if option == 'all'
+			data = data.select{ |q| $data.items[q].tab != 'gear' }
+		end
+
 		if option == "usable"
 			data = data.select{ |q| $data.items[q].tab == 'usable' }
 		end
@@ -7678,12 +7716,14 @@ class Mnu_Items < Mnu_Base
 			data = data.select{ |q| $data.items[q].tab == 'keys' }
 		end
 
-		if option == "gear"
-			data = data.select{ |q| $data.items[q].tab == 'gear' }
+		if option == "shop"
+			data = data.select{ |q| $data.items[q].tab == 'shop' }
 		end
 
 		@menu.list.setup(data)
 		@menu.list.slide
+
+		change(data[0])
 
 	end
 
@@ -7727,6 +7767,8 @@ class Mnu_Items < Mnu_Base
 
 	def select(option)	
 
+		return if !$data.items[option].is_a?(UsableData)
+
 		scope = $data.items[option].scope
 		
 		# If item needs a target, do it
@@ -7745,7 +7787,7 @@ class Mnu_Items < Mnu_Base
 
 	end
 
-end"¡#==============================================================================
+end"—#==============================================================================
 # ** Mnu_Journal
 #==============================================================================
 
@@ -7761,7 +7803,7 @@ class Mnu_Journal < Mnu_Base
 		@tabs.push("side")
 
 		@menu.list.type = :quest
-		@menu.list.setup($progress.quests)
+		@menu.list.setup($progress.quests.reverse)
 
 		@page = Right_Journal.new(vp)
 		self.right.push(@page)
@@ -7780,7 +7822,7 @@ class Mnu_Journal < Mnu_Base
 	def tab(option)
 
 		# Reload the quest list limited to this tab
-		data = $progress.quests
+		data = $progress.quests.reverse
 
 		if option == "main"
 			data = data.select{ |q| $data.quests[q].type == 'main' }
@@ -8203,7 +8245,7 @@ class Mnu_Main
 		return @closing && $tweens.done?(self)
 	end
 
-end"ﬂ
+end")
 class Mnu_Options < Mnu_Base
 
 	def initialize(vp)
@@ -8232,8 +8274,8 @@ class Mnu_Options < Mnu_Base
 		else
 			data.push(["fullscreen","Fullscreen: Off","misc/window"])
 		end
-		data.push(["music","Music Volume: #{($settings.music_vol*100).to_i.to_s}%","misc/music"])
-		data.push(["sound","Sound Volume: #{($settings.sound_vol*100).to_i.to_s}%","misc/sound"])
+		data.push(["music","Music Vol: #{($settings.music_vol*100).to_i.to_s}%","misc/music"])
+		data.push(["sound","Sound Vol: #{($settings.sound_vol*100).to_i.to_s}%","misc/sound"])
 		if $settings.effects
 			data.push(["effects","Graphic Effects: On","misc/effects"])
 		else
@@ -8245,11 +8287,15 @@ class Mnu_Options < Mnu_Base
 			data.push(["mouse","Mouse Control: Off","misc/mouse"])
 		end
 		if $settings.tutorial
-			data.push(["tuto","Tutorial: On","misc/tuto"])
+			data.push(["tutorial","Tutorial: On","misc/tuto"])
 		else
-			data.push(["tuto","Tutorial: Off","misc/tuto"])
+			data.push(["tutorial","Tutorial: Off","misc/tuto"])
 		end
-		data.push(["goodies","Goodies Menu >","misc/goodies"])
+		if $settings.bottombar
+			data.push(["bottombar","Bottom Bar: On","misc/bottombar"])
+		else
+			data.push(["bottombar","Bottom Bar: Off","misc/bottombar"])
+		end
 		data.push(["credits","View Credits >","misc/credits"])	
 
 		@menu.list.setup(data,idx)
@@ -8298,8 +8344,8 @@ class Mnu_Options < Mnu_Base
 					$settings.mouse = !$settings.mouse
 				when "tutorial"
 					$settings.tutorial = !$settings.tutorial
-				when "goodies"
-					# Nothing
+				when "bottombar"
+					$settings.bottombar = !$settings.bottombar
 				when "credits"
 					# Nothing
 
@@ -8316,17 +8362,30 @@ class Mnu_Options < Mnu_Base
 
 	def select(option)	
 
+		pos = $mouse.position.dup
+		pos[0] -= 20
+
 		sys("select")
 
 		case option[0]
 			when "fullscreen"
 				$game.flip_window
 			when "music"
-				$settings.music_vol += 0.1
+				if pos[0].between?(205,245)
+					$settings.music_vol -= 0.1
+				elsif pos[0].between?(250,285)
+					$settings.music_vol += 0.1
+				end
 				$settings.music_vol = 1.0 if $settings.music_vol > 1.0
+				$settings.music_vol = 0.0 if $settings.music_vol < 0.0
 			when "sound"
-				$settings.sound_vol += 0.1
+				if pos[0].between?(205,245)
+					$settings.sound_vol -= 0.1
+				elsif pos[0].between?(250,285)
+					$settings.sound_vol += 0.1
+				end
 				$settings.sound_vol = 1.0 if $settings.sound_vol > 1.0
+				$settings.sound_vol = 0.0 if $settings.sound_vol < 0.0
 				$audio.refresh_sound_volume
 			when "effects"
 				$settings.effects = !$settings.effects
@@ -8334,8 +8393,8 @@ class Mnu_Options < Mnu_Base
 				$settings.mouse = !$settings.mouse
 			when "tutorial"
 				$settings.tutorial = !$settings.tutorial
-			when "goodies"
-
+			when "bottombar"
+				$settings.bottombar = !$settings.bottombar
 			when "credits"
 
 		end
@@ -8344,7 +8403,7 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end"L	
+end"F
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -8388,26 +8447,18 @@ class Mnu_Party < Mnu_Base
 	end
 
 	def setup_grid
-
-
 		
 		@grid.move(30,138)
 
 		@grid.add_party_mem('a.0',$party.active[0])
 		if $party.active.count > 1
 			@grid.add_party_mem('a.1',$party.active[1])
-		else
-			@grid.add_party_mem('a.1',nil)
 		end
 		if $party.active.count > 2
 			@grid.add_party_mem('a.2',$party.active[2])
-		else
-			@grid.add_party_mem('a.2',nil)
 		end
 		if $party.active.count > 3
 			@grid.add_party_mem('a.3',$party.active[3])
-		else
-			@grid.add_party_mem('a.3',nil)
 		end
 
 		@grid.cx = 344
@@ -8416,18 +8467,12 @@ class Mnu_Party < Mnu_Base
 		@grid.add_party_mem('r.0',$party.reserve[0])
 		if $party.reserve.count > 1
 			@grid.add_party_mem('r.1',$party.reserve[1])
-		else
-			@grid.add_party_mem('r.1',nil)
 		end
 		if $party.reserve.count > 2
 			@grid.add_party_mem('r.2',$party.reserve[2])
-		else
-			@grid.add_party_mem('r.2',nil)
 		end
 		if $party.reserve.count > 3
 			@grid.add_party_mem('r.3',$party.reserve[3])
-		else
-			@grid.add_party_mem('r.3',nil)
 		end
 
 	end
@@ -8569,7 +8614,7 @@ class Mnu_Quit < Mnu_Base
 		
 	end
 
-end"ƒ#==============================================================================
+end"w	#==============================================================================
 # ** Mnu_Save
 #==============================================================================
 
@@ -8595,6 +8640,40 @@ class Mnu_Save < Mnu_Base
 
 		@page = Right_Page.new(vp)
 		@right.push(@page)
+
+		ids = ['boy','ing','mys','rob','hib','row','phy']
+
+		@chars = []
+		cx = 350
+		ids.each{ |c|
+			spr = Sprite.new(vp)
+
+			spr.bitmap = $cache.character('Player/'+c)
+			spr.src_rect = Rect.new(0,0,32,48)
+			spr.x = cx
+			spr.y = 260
+			cx += 33
+
+			@chars.push(spr)
+			@right.push(spr)
+		}
+
+		@levels = []
+		cx = 350
+		ids.each_index{ |c|
+
+			lbl = Label.new(vp)
+			lbl.fixed_width = 30
+			lbl.font = $fonts.message_tiny
+			lbl.align = 1
+			lbl.text = 23
+
+			lbl.x = cx
+			lbl.y = 300
+
+			@levels.push(lbl)
+			@right.push(lbl)
+		}
 
 		@pic = Sprite.new(vp)		
 		@pic.move(340,324)
@@ -8629,7 +8708,25 @@ class Mnu_Save < Mnu_Base
 
 		else
 
-			@page.title("Save #{option} - #{header[:time]}","faces/#{header[:leader]}")
+			if header[:time].is_a?(String)
+				time = header[:time]
+			else
+				time = build_time_string(header[:time])
+			end
+
+			@page.title("Save #{option} - #{time}","faces/#{header[:leader]}")
+
+
+			# Hide party members that don't exist
+			chars = ['boy','ing','mys','rob','hib','row','phy']
+			chars.each_index{ |c|
+				if header.has_key?(:chars) && header[:chars].include?(chars[c])
+					@chars[c].show
+				else
+					@chars[c].hide
+				end
+			}
+
 			@pic.bitmap = Bitmap.new("#{$appdata}//Av4-#{option}.png")
 
 		end
@@ -10482,7 +10579,7 @@ class Port_Full < Sprite
 	def confused() self.bitmap = $cache.face_menu("#{$menu.char}-c") end
 	def xtra() self.bitmap = $cache.face_menu("#{$menu.char}-x") end
 
-end"{
+end"£
 class Right_Journal < SpriteGroup
 
 	def initialize(vp)
@@ -10516,29 +10613,44 @@ class Right_Journal < SpriteGroup
 
     	# Subtitles ready for later
     	@sub_req = Sprite.new(vp)
-    	@sub_req.bitmap = $cache.menu_page("tasks")
+    	@sub_req.bitmap = $cache.menu_page("reqs")
+        add(@sub_req)
+
     	@sub_zone = Sprite.new(vp)
     	@sub_zone.bitmap = $cache.menu_page("location")
+        add(@sub_zone)
 
     	# Text sprites
 
         @txt_req1 = Label.new(vp)
         @txt_req1.font = $fonts.page_text
+        add(@txt_req1)
 
         @txt_req2 = Label.new(vp)
         @txt_req2.font = $fonts.page_text
+        add(@txt_req2)
 
         @txt_req3 = Label.new(vp)
         @txt_req3.font = $fonts.page_text
+        add(@txt_req3)
+
+        @txt_req4 = Label.new(vp)
+        @txt_req4.font = $fonts.page_text
+        add(@txt_req4)
+
+        @txt_req5 = Label.new(vp)
+        @txt_req5.font = $fonts.page_text
+        add(@txt_req5)
 
     	@txt_zone = Label.new(vp)
     	@txt_zone.font = $fonts.page_text
+        add(@txt_zone)
 
     	# cy += 30
 
     	move(0,-22)
 
-        #clear
+        clear
 
     end
 
@@ -10551,6 +10663,8 @@ class Right_Journal < SpriteGroup
         @txt_req1.dispose
         @txt_req2.dispose
         @txt_req3.dispose
+        @txt_req4.dispose
+        @txt_req5.dispose
         @sub_zone.dispose
         @txt_zone.dispose
     end
@@ -10571,12 +10685,16 @@ class Right_Journal < SpriteGroup
     	@txt_req1.hide
         @txt_req2.hide
         @txt_req3.hide
+        @txt_req4.hide
+        @txt_req5.hide
+
     	@sub_zone.hide
     	@txt_zone.hide
 
     end
 
     def add_reqs(reqs)
+        return if reqs == ''
         @sub_req.show
         @sub_req.move(340,@cy)
         @cy += 22
@@ -10585,35 +10703,71 @@ class Right_Journal < SpriteGroup
 
         num = 1
 
+        log_scr(reqs)
+
         # Per req
-        reqs.split(" | ").each{ |req|
+        reqs.split("\n").each{ |req|
 
             txt_req = @txt_req1 if num == 1
             txt_req = @txt_req2 if num == 2
             txt_req = @txt_req3 if num == 3
+            txt_req = @txt_req4 if num == 4
+            txt_req = @txt_req5 if num == 5
 
             dta = req.split("=>")
-            if dta[0] == 'item'
-                item = $data.items[dta[1]]
-                txt_req.icon = $cache.icon(item.icon)
-                name = item.name
-                name += " x #{dta[2]}" if dta[2].to_i > 1
-                txt_req.text = name
-                txt_req.show
-                txt_req.move(340,@cy)
-                @cy += txt_req.height
+            case dta[0] 
+                when 'item'
+                    item = $data.items[dta[1]]
+                    icon = item.icon
+                    name = item.name
+                    num = $party.item_number(dta[1])
+
+                    name += " #{num}/#{dta[2]}" if dta[2].to_i > 1    
+
+                    if num >= dta[2].to_i
+                        txt_req.font = $fonts.page_text_color
+                    else
+                        txt_req.font = $fonts.page_text
+                    end
+
+                when 'var'
+                    icon = 'misc/profile'
+                    num = $state.varval(dta[1])
+                    name = "#{dta[3]} #{num}/#{dta[2]}"
+
+                    if num >= dta[2].to_i
+                        txt_req.font = $fonts.page_text_color
+                    else
+                        txt_req.font = $fonts.page_text
+                    end
+
+                when 'flag'
+                    icon = 'misc/profile'
+                    name = "#{dta[1]}"
+                when 'gold'
+                    icon = 'misc/coins'
+                    name = "#{dta[1]} gold"
             end
+
+
+            txt_req.text = name
+            txt_req.icon = $cache.icon(icon)
+            txt_req.show
+            txt_req.move(340,@cy)
+            @cy += txt_req.height
 
             num += 1
         }
+
     end
 
     def add_zone(zone)
+        return if zone == ''
     	@sub_zone.show
     	@sub_zone.move(340,@cy)
     	@cy += 22
     	@txt_zone.icon = $cache.icon("items/map")
-    	@txt_zone.text = "Whisper Woods"
+    	@txt_zone.text = zone
     	@txt_zone.show
     	@txt_zone.move(340,@cy)
     	@cy += @txt_zone.height
@@ -15010,7 +15164,7 @@ class Interpreter
   end
 
 end
-"Ú6#==============================================================================
+"s7#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15449,7 +15603,11 @@ class Game_Map
     @cam_y = 0 if @cam_y < 0
 
     w = ($map.width * 128) - ($game.width * 4)
-    h = (($map.height+1) * 128) - (($game.height) * 4) # Add 32 for bottom bar
+    if $settings.bottombar
+      h = (($map.height+1) * 128) - (($game.height) * 4) # Add 32 for bottom bar
+    else
+      h = (($map.height) * 128) - (($game.height) * 4) # Add 32 for bottom bar
+    end
 
     @cam_x = w if @cam_x > w
     @cam_y = h if @cam_y > h
@@ -15595,7 +15753,7 @@ class Moblin
 
 	end
 
-end",#==============================================================================
+end"-,#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -15786,7 +15944,7 @@ class Game_Player < Game_Character
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
 
-    if $mouse.y < 448 && $input.click?
+    if ($settings.bottombar == false || $mouse.y < 448) && $input.click?
 
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
@@ -16519,7 +16677,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"‘!#==============================================================================
+end"”"#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16867,9 +17025,22 @@ class Game_Party
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
 
+
+    # Sample items
+    add_item('covey')
+    add_item('haunch')
+    add_item('cheese')
+    add_item('vamp-teeth')
+    add_item('doll')
+    add_item('quarter-map')
+    add_item('ticket')
+    add_item('wh-weight')
+    add_item('doll-ghost')
+
+
   end
         
-end"∫class Progress
+end"âclass Progress
 
 	attr_accessor :quests, :complete
 
@@ -16888,6 +17059,14 @@ end"∫class Progress
 		@complete = []
 
 		add_quest('ch0-domination')
+
+		# Samplers
+		add_quest('sq-windmill-ghosts')
+		add_quest('ch5-prison')
+		add_quest('sq-save-turtle-eggs')
+		add_quest('ch3-scarecrows')
+		add_quest('sq-bad-luck')
+		add_quest('ch5-to-potion-3')		
 
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
@@ -20236,11 +20415,31 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"w#==============================================================================
+end"k#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
 SAVE_FILES = 99
+
+def build_time_string(frames)
+
+    h = frames/60/60/60
+    hf = h * 60*60*60
+    m = (frames-hf)/60/60
+    mf = m*60*60
+    s = (frames-hf-mf)/60
+
+    if h > 0
+      time = "#{h}h #{m}m"
+    elsif m > 0
+      time = "#{m}m #{s}s"
+    else
+      time = "#{s}s"
+    end
+
+    return time
+
+end
 
 # For the list
 class SaveData
@@ -20343,9 +20542,11 @@ class FileManager
   def make_save_header
     header = {}
     header[:leader] = $party.leader
-    header[:time] = "1h 20m"
+    header[:time] = Graphics.frame_count
     header[:members] = $party.active
     header[:gold] = $party.gold
+    header[:chars] = $party.all
+    header[:levels] = [1,2,3,4,5,6,7]
     return header
   end
   
@@ -20362,6 +20563,8 @@ class FileManager
     contents[:map]          = $map
     contents[:player]       = $player
 
+    contents[:frame_count]  = Graphics.frame_count
+
     return contents
 
   end
@@ -20375,15 +20578,20 @@ class FileManager
     $state =     contents[:state]   
 
     $map =       contents[:map]     
-    $player =    contents[:player]  
+    $player =    contents[:player]
+
+    Graphics.frame_count = contents[:frame_count]
 
   end
   
 end
-"ô
+"
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
+
+	attr_reader :subtitle
+
 	attr_reader :message, :message_shadow, :namebox
 	attr_reader :message_big, :message_big_shadow
 	attr_reader :message_tiny, :message_tiny_shadow
@@ -20392,7 +20600,7 @@ class FontManager
 
 	attr_reader :pop_ttl, :pop_text, :pop_type
 
-	attr_reader :page_ttl, :page_sub, :page_text
+	attr_reader :page_ttl, :page_sub, :page_text, :page_text_color
 
 	attr_reader :hud_hp, :hud_hp_b
 
@@ -20421,6 +20629,15 @@ class FontManager
 	    @debug_ttl = Font.new
 	    @debug_ttl.name = "Consolas"
 	    @debug_ttl.size = 28
+
+
+
+	    @subtitle = Font.new
+    	@subtitle.name = "Verdana"
+    	@subtitle.italic = true
+    	@subtitle.size = 22 #was 26
+    	@subtitle.color = Color.new(245,223,200)
+
 
 
 	    # List
@@ -20516,6 +20733,11 @@ class FontManager
 	    @page_text.size = 20
 	    @page_text.color = Color.new(44,44,44)
 
+	   	@page_text_color = Font.new
+		@page_text_color.name = "Georgia"
+	    @page_text_color.size = 20
+	    @page_text_color.color = Color.new(44,240,44)
+
 
 		# Misc
 
@@ -20550,7 +20772,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"¡#==============================================================================
+end"##==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -20572,6 +20794,7 @@ class GameManager
     @queue = nil
 
     @need_reload = false
+    @flip_delay = 0
 
     # Game State Objects
     $progress = Progress.new
@@ -20630,6 +20853,8 @@ class GameManager
 
   def update
 
+    @flip_delay -= 1
+
     $audio.update
     $keyboard.update
     $mouse.update
@@ -20650,6 +20875,8 @@ class GameManager
   end
 
   def flip_window
+    return if @flip_delay > 0
+    @flip_delay = 30
     $settings.fullscreen = !$settings.fullscreen
     showm = Win32API.new('user32', 'keybd_event', %w(l l l l), '')
     showm.call(18,0,0,0)
@@ -20658,7 +20885,7 @@ class GameManager
     showm.call(18,0,2,0)
   end
 
-end"◊#============================================================================== 
+end"	#============================================================================== 
 # ** Input
 #==============================================================================
 
@@ -20678,6 +20905,7 @@ class InputManager
 	end
 
 	def click?
+		return false if !$settings.mouse
 		return $keyboard.press?(VK_LBUTTON)
 	end
 
@@ -20686,6 +20914,7 @@ class InputManager
 	end
 
 	def rclick?
+		return false if !$settings.mouse
 		return $keyboard.press?(VK_RBUTTON)
 	end
 
@@ -20702,7 +20931,7 @@ class InputManager
 	end
 
 	def down?
-		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S) || $mouse.wheel_down?
+		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S)
 	end
 
 	def shortcut?(s)
@@ -20826,7 +21055,7 @@ class KeyboardManager
 
   end
 
-end"¨#============================================================================== 
+end"ü#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -20838,7 +21067,7 @@ class MouseManager
   # * API Declaration
   #--------------------------------------------------------------------------
   Cursor_Pos = Win32API.new('user32', 'GetCursorPos', 'p', 'i')
-  ShowCursor = Win32API.new('user32', 'ShowCursor', 'i', 'l')
+  $ShowCursor = Win32API.new('user32', 'ShowCursor', 'i', 'l')
   Scr2cli = Win32API.new('user32', 'ScreenToClient', %w(l p), 'i')
   Findwindow = Win32API.new('user32', 'FindWindowA',%w(p p),'l')
 
@@ -20855,7 +21084,9 @@ class MouseManager
   def x() @pos[0] end
   def y() @pos[1] end
   
-  def position() @pos; end
+  def position() 
+    $settings.mouse ? @pos : [-777,-777]
+  end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
     y = (@pos[1] + 14 + $map.display_y / 4) / 32
@@ -20867,6 +21098,14 @@ class MouseManager
   # * Update Mouse Position
   #--------------------------------------------------------------------------
   def update
+
+    if !$settings.mouse
+      @sprite.hide
+      $ShowCursor.call(1)
+    else
+      @sprite.show
+      $ShowCursor.call(0)
+    end
 
     # Update wheel
     #@wheel = Wheel.scroll if rand(100)
@@ -20882,18 +21121,8 @@ class MouseManager
     @sprite.x = @pos[0]
     @sprite.y = @pos[1]
 
-    ShowCursor.call(0)#on_screen?.to_i) # on_screen && mouse_mode
+    #on_screen?.to_i) # on_screen && mouse_mode
     
-  end
-
-  def wheel_down?
-    return false if @wheel == nil
-    return @wheel[2] < 0
-  end
-
-  def wheel_up?
-    return false if @wheel == nil
-    return @wheel[2] > 0
   end
 
   def change_cursor(c)
@@ -20904,7 +21133,7 @@ class MouseManager
   def hide_cursor() @sprite.opacity = 0 end
   def show_cursor() @sprite.opacity = 255 end
 
-end"«#==============================================================================
+end"˙#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -20916,6 +21145,7 @@ class SettingsManager
   attr_accessor :effects
   attr_accessor :mouse
   attr_accessor :tutorial
+  attr_accessor :bottombar
 
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
@@ -20937,6 +21167,7 @@ class SettingsManager
     @effects = false
     @mouse = false
     @tutorial = false
+    @bottombar = true
 
     # Debug options
     @debug_skip_title = true
@@ -22258,55 +22489,7 @@ def execute_spellcheck
 #   end
 # end
 
-# Graphics.load_fullscreen_settings"
-module Wheel
-
-  extend self
-
-  Get_Message=Win32API.new('User32','GetMessage','plll','l') # reception d'un message 
-
-  Point=Struct.new(:x,:y) # cr√É∆í√Ç¬©ation d'une structure de symboles: coord molette 
-  Message=Struct.new(:message,:wparam,:lparam,:pt) # struct de symboles: message renvoy√É∆í√Ç¬© par la molette 
-  Param=Struct.new(:x,:y,:scroll) # parametres de la molette 
-  Scroll=0x0000020A # pointeur de la molette 
-
-  def unpack_dword(buffer,offset=0) # d√É∆í√Ç¬©compactage d'integer 32bits 
-    ret=buffer[offset+0]&0x000000ff 
-    ret|=(buffer[offset+1] << (8*1))&0x0000ff00 
-    ret|=(buffer[offset+2] << (8*2))&0x00ff0000 
-    ret|=(buffer[offset+3] << (8*3))&0xff000000 
-    return ret 
-  end 
-  def unpack_msg(buffer) # d√É∆í√Ç¬©compactage du message de la molette 
-    msg=Message.new;msg.pt=Point.new 
-    msg.message=unpack_dword(buffer,4*1) 
-    msg.wparam=unpack_dword(buffer,4*2) 
-    msg.lparam=unpack_dword(buffer,4*3) 
-    msg.pt.x=unpack_dword(buffer,4*5) 
-    msg.pt.y=unpack_dword(buffer,4*6) 
-    return msg 
-  end 
-  def wmcallback(msg) 
-    return unless msg.message==Scroll 
-    param=Param.new 
-    param.x=word2signed_short(loword(msg.lparam)) 
-    param.y=word2signed_short(hiword(msg.lparam)) 
-    param.scroll=word2signed_short(hiword(msg.wparam)) 
-    return [param.x,param.y,param.scroll] 
-  end 
-  def hiword(dword);return ((dword&0xffff0000)>>16)&0x0000ffff;end # 
-  def loword(dword);return dword&0x0000ffff;end 
-  def word2signed_short(value) 
-    return value if (value&0x8000)==0 
-    return -1*((~value&0x7fff)+1) 
-  end 
-
-  def scroll # retourne l'etat de la molette 
-    msg="\0"*32;Get_Message.call(msg,0,0,0);r=wmcallback(unpack_msg(msg)) 
-    return r if !r.nil? 
-  end 
-
-end "a # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
+# Graphics.load_fullscreen_settings"a # Bitmap Export v5.4 for XP, VX and VXace by Zeus81
 # Free for commercial use
 # Licence : http://creativecommons.org/licenses/by/4.0/
 # Contact : zeusex81@gmail.com

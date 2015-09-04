@@ -91,7 +91,7 @@ class List
     @scroll_up.press = Proc.new{ self.scrollbar_up }
 
     # Setup
-    @select_sprite.bitmap = $cache.menu_common('list-bar-on')    
+    @select_sprite.bitmap = $cache.menu_common('list-bar-purple')    
 
     @active = true
 
@@ -139,6 +139,18 @@ class List
     @page_idx = idx
     @select_sprite.y = idx * row_height
     @active = true
+
+    # Remove the scroll arrows if mouse is off OR not enough to need
+    if @data.count <= @per_page
+      @scroll_box.hide
+      @scroll_down.hide
+      @scroll_up.hide
+    else
+      @scroll_box.show
+      @scroll_down.show
+      @scroll_up.show
+    end
+
   	refresh(false) #if !data.empty?
 
   end
@@ -213,6 +225,7 @@ class List
 
   # ADD THIS MOUSE CONTROL
   def scrollbar_down
+    return if !can_scroll? || @scroll_idx >= (@data.count - @max_per_page)
       #@page_idx += 1
       sys('select')   
       @select_sprite.y += row_height      
@@ -221,6 +234,7 @@ class List
   end
 
   def scrollbar_up
+      return if !can_scroll?
       return if @scroll_idx <= 0
       #@page_idx -= 1
       sys('select')   
@@ -425,10 +439,17 @@ class List
   def draw_misc(data,row)
 
     ico = $cache.icon(data[2])
-    
+
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,data[1],0)
+
+    if data[0] == 'music' || data[0] == 'sound'
+      ia = $cache.icon("misc/sound-down")
+      ib = $cache.icon("misc/sound-up")
+      @content_sprite.bitmap.blt(215,(row*row_height)+5,ia,ia.rect)
+      @content_sprite.bitmap.blt(250,(row*row_height)+5,ib,ib.rect)
+    end
 
   end
 
@@ -444,7 +465,12 @@ class List
       if data == 0
         name = "Autosave - #{header[:time]}"
       else
-        name = "Save #{data} - #{header[:time]}"
+        if header[:time].is_a?(String)
+          time = header[:time]
+        else
+          time = build_time_string(header[:time])
+        end
+        name = "Save #{data} - #{time}"
       end
       ico = $cache.icon("faces/"+header[:leader])
     end

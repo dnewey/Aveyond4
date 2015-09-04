@@ -18,6 +18,7 @@
   },
   {
     "field": "req",
+    "edit": "area",
     "help": "Format - type:id:count Item, Var or Flag"
   },
   {

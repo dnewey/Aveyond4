@@ -2,6 +2,9 @@
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
+
+	attr_reader :subtitle
+
 	attr_reader :message, :message_shadow, :namebox
 	attr_reader :message_big, :message_big_shadow
 	attr_reader :message_tiny, :message_tiny_shadow
@@ -10,7 +13,7 @@ class FontManager
 
 	attr_reader :pop_ttl, :pop_text, :pop_type
 
-	attr_reader :page_ttl, :page_sub, :page_text
+	attr_reader :page_ttl, :page_sub, :page_text, :page_text_color
 
 	attr_reader :hud_hp, :hud_hp_b
 
@@ -39,6 +42,15 @@ class FontManager
 	    @debug_ttl = Font.new
 	    @debug_ttl.name = "Consolas"
 	    @debug_ttl.size = 28
+
+
+
+	    @subtitle = Font.new
+    	@subtitle.name = "Verdana"
+    	@subtitle.italic = true
+    	@subtitle.size = 22 #was 26
+    	@subtitle.color = Color.new(245,223,200)
+
 
 
 	    # List
@@ -133,6 +145,11 @@ class FontManager
 		@page_text.name = "Georgia"
 	    @page_text.size = 20
 	    @page_text.color = Color.new(44,44,44)
+
+	   	@page_text_color = Font.new
+		@page_text_color.name = "Georgia"
+	    @page_text_color.size = 20
+	    @page_text_color.color = Color.new(44,240,44)
 
 
 		# Misc

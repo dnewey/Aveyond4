@@ -53,21 +53,21 @@ class Ui_Bar < SpriteGroup
 
 		cx += 32
 
+		@progress = Button.new(vp)
+		@progress.bitmap = $cache.icon("misc/progress")
+		@progress.press = Proc.new{ open_sub_menu("Progress") }
+		@progress.select = Proc.new{ $tweens.clear(@progress); @progress.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
+		@progress.deselect = Proc.new{ $tweens.clear(@progress); @progress.oy = 0 }
+		add(@progress,cx,4)
+
+		cx += 32
+
 		@settings = Button.new(vp)
 		@settings.bitmap = $cache.icon("misc/settings")
 		@settings.press = Proc.new{ open_sub_menu("Options") }
 		@settings.select = Proc.new{ $tweens.clear(@settings); @settings.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
 		@settings.deselect = Proc.new{ $tweens.clear(@settings); @settings.oy = 0 }
 		add(@settings,cx,4)
-
-		cx += 32
-
-		@sound = Button.new(vp)
-		@sound.bitmap = $cache.icon("misc/sound")
-		@quit.press = Proc.new{ log_err("TOGGLE SOUND") }
-		@sound.select = Proc.new{ $tweens.clear(@sound); @sound.do(seq(go("oy",-4,100,:qio),go("oy",4,100,:qio))) }
-		@sound.deselect = Proc.new{ $tweens.clear(@sound); @sound.oy = 0 }
-		add(@sound,cx,4)
 
 		cx += 32
 

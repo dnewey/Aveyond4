@@ -24,7 +24,8 @@ class Mnu_Base
 		@left.push(@tabs)
 
 		@subtitle = Label.new(vp)
-		@subtitle.move(116,74)
+		@subtitle.font = $fonts.subtitle
+		@subtitle.move(116,72)
 		@left.push(@subtitle)
 
 

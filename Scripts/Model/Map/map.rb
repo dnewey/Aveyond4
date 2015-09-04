@@ -437,7 +437,11 @@ class Game_Map
     @cam_y = 0 if @cam_y < 0
 
     w = ($map.width * 128) - ($game.width * 4)
-    h = (($map.height+1) * 128) - (($game.height) * 4) # Add 32 for bottom bar
+    if $settings.bottombar
+      h = (($map.height+1) * 128) - (($game.height) * 4) # Add 32 for bottom bar
+    else
+      h = (($map.height) * 128) - (($game.height) * 4) # Add 32 for bottom bar
+    end
 
     @cam_x = w if @cam_x > w
     @cam_y = h if @cam_y > h

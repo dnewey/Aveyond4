@@ -13,7 +13,7 @@ class Mnu_Items < Mnu_Base
 		@tabs.push("all")
 		@tabs.push("usable")
 		@tabs.push("keys")
-		@tabs.push("gear")
+		@tabs.push("shop")
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -37,8 +37,6 @@ class Mnu_Items < Mnu_Base
 		#@grid.hide
 		self.right.push(@grid)
 
-		grant_items
-
 		tab('all')
 
 		open
@@ -54,6 +52,10 @@ class Mnu_Items < Mnu_Base
 		# Reload the quest list limited to this tab
 		data = $party.items.keys
 
+		if option == 'all'
+			data = data.select{ |q| $data.items[q].tab != 'gear' }
+		end
+
 		if option == "usable"
 			data = data.select{ |q| $data.items[q].tab == 'usable' }
 		end
@@ -62,12 +64,14 @@ class Mnu_Items < Mnu_Base
 			data = data.select{ |q| $data.items[q].tab == 'keys' }
 		end
 
-		if option == "gear"
-			data = data.select{ |q| $data.items[q].tab == 'gear' }
+		if option == "shop"
+			data = data.select{ |q| $data.items[q].tab == 'shop' }
 		end
 
 		@menu.list.setup(data)
 		@menu.list.slide
+
+		change(data[0])
 
 	end
 
@@ -110,6 +114,8 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def select(option)	
+
+		return if !$data.items[option].is_a?(UsableData)
 
 		scope = $data.items[option].scope
 		

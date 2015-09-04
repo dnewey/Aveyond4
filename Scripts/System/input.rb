@@ -18,6 +18,7 @@ class InputManager
 	end
 
 	def click?
+		return false if !$settings.mouse
 		return $keyboard.press?(VK_LBUTTON)
 	end
 
@@ -26,6 +27,7 @@ class InputManager
 	end
 
 	def rclick?
+		return false if !$settings.mouse
 		return $keyboard.press?(VK_RBUTTON)
 	end
 
@@ -42,7 +44,7 @@ class InputManager
 	end
 
 	def down?
-		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S) || $mouse.wheel_down?
+		return $keyboard.press?(VK_DOWN) || $keyboard.press?(VK_S)
 	end
 
 	def shortcut?(s)

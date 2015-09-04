@@ -10,6 +10,7 @@ class SettingsManager
   attr_accessor :effects
   attr_accessor :mouse
   attr_accessor :tutorial
+  attr_accessor :bottombar
 
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
@@ -31,6 +32,7 @@ class SettingsManager
     @effects = false
     @mouse = false
     @tutorial = false
+    @bottombar = true
 
     # Debug options
     @debug_skip_title = true

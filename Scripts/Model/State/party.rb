@@ -233,6 +233,10 @@ class Game_Party
     $map.need_refresh = true
   end
 
+  def has_gold?(n)
+    return @gold >= n
+  end
+
   def item_list
     items = []
     @items.each{ |k,v|
@@ -345,6 +349,19 @@ class Game_Party
     @actors["rob"].learn("team-row")
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
+
+
+    # Sample items
+    add_item('covey')
+    add_item('haunch')
+    add_item('cheese')
+    add_item('vamp-teeth')
+    add_item('doll')
+    add_item('quarter-map')
+    add_item('ticket')
+    add_item('wh-weight')
+    add_item('doll-ghost')
+
 
   end
         

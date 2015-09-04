@@ -4,6 +4,26 @@
 
 SAVE_FILES = 99
 
+def build_time_string(frames)
+
+    h = frames/60/60/60
+    hf = h * 60*60*60
+    m = (frames-hf)/60/60
+    mf = m*60*60
+    s = (frames-hf-mf)/60
+
+    if h > 0
+      time = "#{h}h #{m}m"
+    elsif m > 0
+      time = "#{m}m #{s}s"
+    else
+      time = "#{s}s"
+    end
+
+    return time
+
+end
+
 # For the list
 class SaveData
   attr_accessor :name
@@ -105,9 +125,11 @@ class FileManager
   def make_save_header
     header = {}
     header[:leader] = $party.leader
-    header[:time] = "1h 20m"
+    header[:time] = Graphics.frame_count
     header[:members] = $party.active
     header[:gold] = $party.gold
+    header[:chars] = $party.all
+    header[:levels] = [1,2,3,4,5,6,7]
     return header
   end
   
@@ -124,6 +146,8 @@ class FileManager
     contents[:map]          = $map
     contents[:player]       = $player
 
+    contents[:frame_count]  = Graphics.frame_count
+
     return contents
 
   end
@@ -137,7 +161,9 @@ class FileManager
     $state =     contents[:state]   
 
     $map =       contents[:map]     
-    $player =    contents[:player]  
+    $player =    contents[:player]
+
+    Graphics.frame_count = contents[:frame_count]
 
   end
   

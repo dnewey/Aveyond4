@@ -42,6 +42,14 @@ class Ui_Screen
 
 	def update
 
+		if !$settings.bottombar
+			@info.move(0,447)
+			@bar.move(0,480)
+		else
+			@info.move(0,415)
+			@bar.move(0,480-32)
+		end
+
 		@message.update
 		@bar.update
 		@info.update

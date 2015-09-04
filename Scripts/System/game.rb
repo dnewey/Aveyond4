@@ -20,6 +20,7 @@ class GameManager
     @queue = nil
 
     @need_reload = false
+    @flip_delay = 0
 
     # Game State Objects
     $progress = Progress.new
@@ -78,6 +79,8 @@ class GameManager
 
   def update
 
+    @flip_delay -= 1
+
     $audio.update
     $keyboard.update
     $mouse.update
@@ -98,6 +101,8 @@ class GameManager
   end
 
   def flip_window
+    return if @flip_delay > 0
+    @flip_delay = 30
     $settings.fullscreen = !$settings.fullscreen
     showm = Win32API.new('user32', 'keybd_event', %w(l l l l), '')
     showm.call(18,0,0,0)

@@ -14,7 +14,7 @@ class Mnu_Journal < Mnu_Base
 		@tabs.push("side")
 
 		@menu.list.type = :quest
-		@menu.list.setup($progress.quests)
+		@menu.list.setup($progress.quests.reverse)
 
 		@page = Right_Journal.new(vp)
 		self.right.push(@page)
@@ -33,7 +33,7 @@ class Mnu_Journal < Mnu_Base
 	def tab(option)
 
 		# Reload the quest list limited to this tab
-		data = $progress.quests
+		data = $progress.quests.reverse
 
 		if option == "main"
 			data = data.select{ |q| $data.quests[q].type == 'main' }

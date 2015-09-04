@@ -42,26 +42,18 @@ class Mnu_Party < Mnu_Base
 	end
 
 	def setup_grid
-
-
 		
 		@grid.move(30,138)
 
 		@grid.add_party_mem('a.0',$party.active[0])
 		if $party.active.count > 1
 			@grid.add_party_mem('a.1',$party.active[1])
-		else
-			@grid.add_party_mem('a.1',nil)
 		end
 		if $party.active.count > 2
 			@grid.add_party_mem('a.2',$party.active[2])
-		else
-			@grid.add_party_mem('a.2',nil)
 		end
 		if $party.active.count > 3
 			@grid.add_party_mem('a.3',$party.active[3])
-		else
-			@grid.add_party_mem('a.3',nil)
 		end
 
 		@grid.cx = 344
@@ -70,18 +62,12 @@ class Mnu_Party < Mnu_Base
 		@grid.add_party_mem('r.0',$party.reserve[0])
 		if $party.reserve.count > 1
 			@grid.add_party_mem('r.1',$party.reserve[1])
-		else
-			@grid.add_party_mem('r.1',nil)
 		end
 		if $party.reserve.count > 2
 			@grid.add_party_mem('r.2',$party.reserve[2])
-		else
-			@grid.add_party_mem('r.2',nil)
 		end
 		if $party.reserve.count > 3
 			@grid.add_party_mem('r.3',$party.reserve[3])
-		else
-			@grid.add_party_mem('r.3',nil)
 		end
 
 	end

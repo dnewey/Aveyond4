@@ -32,29 +32,44 @@ class Right_Journal < SpriteGroup
 
     	# Subtitles ready for later
     	@sub_req = Sprite.new(vp)
-    	@sub_req.bitmap = $cache.menu_page("tasks")
+    	@sub_req.bitmap = $cache.menu_page("reqs")
+        add(@sub_req)
+
     	@sub_zone = Sprite.new(vp)
     	@sub_zone.bitmap = $cache.menu_page("location")
+        add(@sub_zone)
 
     	# Text sprites
 
         @txt_req1 = Label.new(vp)
         @txt_req1.font = $fonts.page_text
+        add(@txt_req1)
 
         @txt_req2 = Label.new(vp)
         @txt_req2.font = $fonts.page_text
+        add(@txt_req2)
 
         @txt_req3 = Label.new(vp)
         @txt_req3.font = $fonts.page_text
+        add(@txt_req3)
+
+        @txt_req4 = Label.new(vp)
+        @txt_req4.font = $fonts.page_text
+        add(@txt_req4)
+
+        @txt_req5 = Label.new(vp)
+        @txt_req5.font = $fonts.page_text
+        add(@txt_req5)
 
     	@txt_zone = Label.new(vp)
     	@txt_zone.font = $fonts.page_text
+        add(@txt_zone)
 
     	# cy += 30
 
     	move(0,-22)
 
-        #clear
+        clear
 
     end
 
@@ -67,6 +82,8 @@ class Right_Journal < SpriteGroup
         @txt_req1.dispose
         @txt_req2.dispose
         @txt_req3.dispose
+        @txt_req4.dispose
+        @txt_req5.dispose
         @sub_zone.dispose
         @txt_zone.dispose
     end
@@ -87,12 +104,16 @@ class Right_Journal < SpriteGroup
     	@txt_req1.hide
         @txt_req2.hide
         @txt_req3.hide
+        @txt_req4.hide
+        @txt_req5.hide
+
     	@sub_zone.hide
     	@txt_zone.hide
 
     end
 
     def add_reqs(reqs)
+        return if reqs == ''
         @sub_req.show
         @sub_req.move(340,@cy)
         @cy += 22
@@ -101,35 +122,71 @@ class Right_Journal < SpriteGroup
 
         num = 1
 
+        log_scr(reqs)
+
         # Per req
-        reqs.split(" | ").each{ |req|
+        reqs.split("\n").each{ |req|
 
             txt_req = @txt_req1 if num == 1
             txt_req = @txt_req2 if num == 2
             txt_req = @txt_req3 if num == 3
+            txt_req = @txt_req4 if num == 4
+            txt_req = @txt_req5 if num == 5
 
             dta = req.split("=>")
-            if dta[0] == 'item'
-                item = $data.items[dta[1]]
-                txt_req.icon = $cache.icon(item.icon)
-                name = item.name
-                name += " x #{dta[2]}" if dta[2].to_i > 1
-                txt_req.text = name
-                txt_req.show
-                txt_req.move(340,@cy)
-                @cy += txt_req.height
+            case dta[0] 
+                when 'item'
+                    item = $data.items[dta[1]]
+                    icon = item.icon
+                    name = item.name
+                    num = $party.item_number(dta[1])
+
+                    name += " #{num}/#{dta[2]}" if dta[2].to_i > 1    
+
+                    if num >= dta[2].to_i
+                        txt_req.font = $fonts.page_text_color
+                    else
+                        txt_req.font = $fonts.page_text
+                    end
+
+                when 'var'
+                    icon = 'misc/profile'
+                    num = $state.varval(dta[1])
+                    name = "#{dta[3]} #{num}/#{dta[2]}"
+
+                    if num >= dta[2].to_i
+                        txt_req.font = $fonts.page_text_color
+                    else
+                        txt_req.font = $fonts.page_text
+                    end
+
+                when 'flag'
+                    icon = 'misc/profile'
+                    name = "#{dta[1]}"
+                when 'gold'
+                    icon = 'misc/coins'
+                    name = "#{dta[1]} gold"
             end
+
+
+            txt_req.text = name
+            txt_req.icon = $cache.icon(icon)
+            txt_req.show
+            txt_req.move(340,@cy)
+            @cy += txt_req.height
 
             num += 1
         }
+
     end
 
     def add_zone(zone)
+        return if zone == ''
     	@sub_zone.show
     	@sub_zone.move(340,@cy)
     	@cy += 22
     	@txt_zone.icon = $cache.icon("items/map")
-    	@txt_zone.text = "Whisper Woods"
+    	@txt_zone.text = zone
     	@txt_zone.show
     	@txt_zone.move(340,@cy)
     	@cy += @txt_zone.height

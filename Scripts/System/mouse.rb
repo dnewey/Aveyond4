@@ -10,7 +10,7 @@ class MouseManager
   # * API Declaration
   #--------------------------------------------------------------------------
   Cursor_Pos = Win32API.new('user32', 'GetCursorPos', 'p', 'i')
-  ShowCursor = Win32API.new('user32', 'ShowCursor', 'i', 'l')
+  $ShowCursor = Win32API.new('user32', 'ShowCursor', 'i', 'l')
   Scr2cli = Win32API.new('user32', 'ScreenToClient', %w(l p), 'i')
   Findwindow = Win32API.new('user32', 'FindWindowA',%w(p p),'l')
 
@@ -27,7 +27,9 @@ class MouseManager
   def x() @pos[0] end
   def y() @pos[1] end
   
-  def position() @pos; end
+  def position() 
+    $settings.mouse ? @pos : [-777,-777]
+  end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
     y = (@pos[1] + 14 + $map.display_y / 4) / 32
@@ -39,6 +41,14 @@ class MouseManager
   # * Update Mouse Position
   #--------------------------------------------------------------------------
   def update
+
+    if !$settings.mouse
+      @sprite.hide
+      $ShowCursor.call(1)
+    else
+      @sprite.show
+      $ShowCursor.call(0)
+    end
 
     # Update wheel
     #@wheel = Wheel.scroll if rand(100)
@@ -54,18 +64,8 @@ class MouseManager
     @sprite.x = @pos[0]
     @sprite.y = @pos[1]
 
-    ShowCursor.call(0)#on_screen?.to_i) # on_screen && mouse_mode
+    #on_screen?.to_i) # on_screen && mouse_mode
     
-  end
-
-  def wheel_down?
-    return false if @wheel == nil
-    return @wheel[2] < 0
-  end
-
-  def wheel_up?
-    return false if @wheel == nil
-    return @wheel[2] > 0
   end
 
   def change_cursor(c)

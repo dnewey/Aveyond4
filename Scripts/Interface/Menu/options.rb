@@ -27,8 +27,8 @@ class Mnu_Options < Mnu_Base
 		else
 			data.push(["fullscreen","Fullscreen: Off","misc/window"])
 		end
-		data.push(["music","Music Volume: #{($settings.music_vol*100).to_i.to_s}%","misc/music"])
-		data.push(["sound","Sound Volume: #{($settings.sound_vol*100).to_i.to_s}%","misc/sound"])
+		data.push(["music","Music Vol: #{($settings.music_vol*100).to_i.to_s}%","misc/music"])
+		data.push(["sound","Sound Vol: #{($settings.sound_vol*100).to_i.to_s}%","misc/sound"])
 		if $settings.effects
 			data.push(["effects","Graphic Effects: On","misc/effects"])
 		else
@@ -40,11 +40,15 @@ class Mnu_Options < Mnu_Base
 			data.push(["mouse","Mouse Control: Off","misc/mouse"])
 		end
 		if $settings.tutorial
-			data.push(["tuto","Tutorial: On","misc/tuto"])
+			data.push(["tutorial","Tutorial: On","misc/tuto"])
 		else
-			data.push(["tuto","Tutorial: Off","misc/tuto"])
+			data.push(["tutorial","Tutorial: Off","misc/tuto"])
 		end
-		data.push(["goodies","Goodies Menu >","misc/goodies"])
+		if $settings.bottombar
+			data.push(["bottombar","Bottom Bar: On","misc/bottombar"])
+		else
+			data.push(["bottombar","Bottom Bar: Off","misc/bottombar"])
+		end
 		data.push(["credits","View Credits >","misc/credits"])	
 
 		@menu.list.setup(data,idx)
@@ -93,8 +97,8 @@ class Mnu_Options < Mnu_Base
 					$settings.mouse = !$settings.mouse
 				when "tutorial"
 					$settings.tutorial = !$settings.tutorial
-				when "goodies"
-					# Nothing
+				when "bottombar"
+					$settings.bottombar = !$settings.bottombar
 				when "credits"
 					# Nothing
 
@@ -111,17 +115,30 @@ class Mnu_Options < Mnu_Base
 
 	def select(option)	
 
+		pos = $mouse.position.dup
+		pos[0] -= 20
+
 		sys("select")
 
 		case option[0]
 			when "fullscreen"
 				$game.flip_window
 			when "music"
-				$settings.music_vol += 0.1
+				if pos[0].between?(205,245)
+					$settings.music_vol -= 0.1
+				elsif pos[0].between?(250,285)
+					$settings.music_vol += 0.1
+				end
 				$settings.music_vol = 1.0 if $settings.music_vol > 1.0
+				$settings.music_vol = 0.0 if $settings.music_vol < 0.0
 			when "sound"
-				$settings.sound_vol += 0.1
+				if pos[0].between?(205,245)
+					$settings.sound_vol -= 0.1
+				elsif pos[0].between?(250,285)
+					$settings.sound_vol += 0.1
+				end
 				$settings.sound_vol = 1.0 if $settings.sound_vol > 1.0
+				$settings.sound_vol = 0.0 if $settings.sound_vol < 0.0
 				$audio.refresh_sound_volume
 			when "effects"
 				$settings.effects = !$settings.effects
@@ -129,8 +146,8 @@ class Mnu_Options < Mnu_Base
 				$settings.mouse = !$settings.mouse
 			when "tutorial"
 				$settings.tutorial = !$settings.tutorial
-			when "goodies"
-
+			when "bottombar"
+				$settings.bottombar = !$settings.bottombar
 			when "credits"
 
 		end
