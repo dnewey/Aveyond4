@@ -13885,7 +13885,7 @@ class Game_Character
 
 
 end
-"5H#==============================================================================
+"7H#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14185,9 +14185,9 @@ class Game_Event < Game_Character
 
       # Inventory
       when '?gold'
-        return false if !$party.has_gold?(cond[1].to_i)
+        return false #if !$party.has_gold?(cond[1].to_i)
       when '?ngold'
-        return false if $party.has_gold?(cond[1].to_i)
+        return false #if $party.has_gold?(cond[1].to_i)
 
       when '?item'
         cond[2] = 1 if cond.count < 3
