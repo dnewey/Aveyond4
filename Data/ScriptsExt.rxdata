@@ -962,7 +962,7 @@ class Area < Sprite
     
   end
   
-end"ì	
+end"®	
 
 def build_value_bmp(num)
 
@@ -1002,7 +1002,7 @@ end
 
 class Bar < Sprite
 
-	attr_accessor :value, :max
+	attr_accessor :value, :max, :target
 
 	def initialize(vp,w,h)
 
@@ -1012,14 +1012,14 @@ class Bar < Sprite
 		@value = 100
 		@drawn = @value
 
-		@target = @value
+		@target = 0
 		@max = 100
 
 		@width = w
 		@height = h
 
-		@base_color = Color.new(46,46,46,200)
-		@ghost_color = Color.new(0,255,0,50)
+		@base_color = Color.new(40,40,40,200)
+		@ghost_color = Color.new(255,255,255,180)
 		@bar_color = Color.new(0,255,0,255)
 
 		@border = Color.new(255,255,255,255)
@@ -1034,33 +1034,33 @@ class Bar < Sprite
 	def for(which)
 		case which
 			when :hp
-				@ghost_color = Color.new(255,87,38,50)
+				#@ghost_color = Color.new(255,87,38,110)
 				@bar_color = Color.new(255,87,38,255)
 			when :xp
-				@ghost_color = Color.new(44,178,34,50)
+				#@ghost_color = Color.new(44,178,34,110)
 				@bar_color = Color.new(44,178,34,255)
 			when 'boy'
-				@ghost_color = Color.new(102,31,232,50)
+				#@ghost_color = Color.new(102,31,232,110)
 				@bar_color = Color.new(102,31,232,255)
 			when 'ing','hib',:mp
-				@ghost_color = Color.new(52,75,252,50)
+				#@ghost_color = Color.new(52,75,252,110)
 				@bar_color = Color.new(52,75,252,255)
 			when 'phy'
-				@ghost_color = Color.new(232,31,50,50)
+				#@ghost_color = Color.new(232,31,50,110)
 				@bar_color = Color.new(232,31,50,255)
 		end
 		redraw
 	end
 
 	def update
-		if @drawn != @value.to_i
+		if @drawn #!= @value.to_i
 			redraw
 		end
 	end
 
 	def redraw
 
-		@drawn = @value.to_i
+		@drawn = @value#.to_i
 
 		# Draw the 3 layers
 		self.bitmap.clear
@@ -2541,7 +2541,7 @@ def pop_wha(ev)
 end
 
 def pop_sweat(ev,o=false)
-	pop_icon_sweat(ev,"misc/sweat","creak",o)
+	pop_icon_sweat(ev,"misc/sweat","sweat",o)
 end
 
 def pop_dots(ev)
@@ -5258,7 +5258,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"â?#==============================================================================
+end"≈@#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -5271,6 +5271,8 @@ class Ui_Grid
 	attr_reader :active
 
 	attr_reader :selected_box
+
+	attr_reader :bars
 
 	def initialize(vp)
 
@@ -5290,6 +5292,7 @@ class Ui_Grid
 		@boxes = []
 		@contents = []
 		@extra = []
+		@bars = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -5348,7 +5351,7 @@ class Ui_Grid
 	end
 
 	def all
-		return @contents + @extra + @boxes
+		return @contents + @extra + @boxes + @bars
 	end
 
 	def dispose
@@ -5357,6 +5360,7 @@ class Ui_Grid
 		@glow.dispose
 		@contents.each{ |i| i.dispose }
 		@extra.each{ |i| i.dispose }
+		@bars.each{ |i| i.dispose }
 		@boxes.each{ |i| i.dispose }
 
 	end
@@ -5364,10 +5368,12 @@ class Ui_Grid
 	def clear
 		@contents.each{ |i| i.dispose }
 		@extra.each{ |i| i.dispose }
+		@bars.each{ |i| i.dispose }
 		@boxes.each{ |i| i.dispose }
 		@contents = []
 		@boxes = []
 		@extras = []
+		@bars = []
 
 		@cx = 0
 		@cy = 0
@@ -5670,7 +5676,6 @@ class Ui_Grid
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")
         stat.font = $fonts.pop_text
-        log_scr(res)
         stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
@@ -5681,7 +5686,7 @@ class Ui_Grid
 
 	def add_compare(stat,old,now,change)
 
-		log_scr(stat)
+		#log_scr(stat)
 
 		btn = add_part_box(stat,300,46)
 		if change < 0
@@ -5856,7 +5861,7 @@ class Ui_Grid
 
 	end
 
-	def add_item_eater(id)
+	def add_item_eater(id,item)
 
 		char = $party.get(id)
 
@@ -5903,17 +5908,21 @@ class Ui_Grid
 			# mp_label.z += 50
 
 
-			hp_bar = Bar.new(@vp,120,9)
-			@extra.push(hp_bar)
+			hp_bar = Bar.new(@vp,121,9)
+			@bars.push(hp_bar)
 			hp_bar.opacity = 200
 			hp_bar.for(:hp)
-			hp_bar.move(@cx+15,@cy+61)
+			hp_bar.max = char.maxhp
+			hp_bar.value = char.hp
+			hp_bar.target = char.hp + char.hp_from_item(item)
+			hp_bar.move(@cx+12,@cy+61)
+			hp_bar.update
 
 			hp_label = Sprite.new(@vp)
 			@extra.push(hp_label)
 			hp_label.bitmap = $cache.menu_char("label-hp")
 			hp_label.opacity = 200
-			hp_label.move(@cx+16,@cy + 54)
+			hp_label.move(@cx+13,@cy + 54)
 			hp_label.z += 50
 
 
@@ -5963,6 +5972,7 @@ class Ui_Grid
 		@glow.move(@selected_box.x+6,@selected_box.y+6)
 
 		@boxes.each{ |b| b.update }
+		@bars.each{ |e| e.update }
 
 		if @boxes.count > 1 && $input.down?
 			sx = @selected_box.x + @selected_box.width/2		
@@ -6036,6 +6046,7 @@ class Ui_Grid
 		@glow.show
 		@contents.each{ |i| i.show }
 		@extra.each{ |i| i.show }
+		@bars.each{ |i| i.show }
 		@boxes.each{ |i| i.show }
 
 	end
@@ -6045,6 +6056,7 @@ class Ui_Grid
 		@glow.hide
 		@contents.each{ |i| i.hide }
 		@extra.each{ |i| i.hide }
+		@bars.each{ |i| i.hide }
 		@boxes.each{ |i| i.hide }
 
 	end
@@ -6150,7 +6162,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"–[#==============================================================================
+end"$\#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6327,7 +6339,7 @@ class Ui_Message
 
       # Put over speaker
       x = @speaker.screen_x - @width/2 - 10
-      y = @speaker.screen_y - @height - 70
+      y = @speaker.screen_y - @height - @speaker.gfx_height - 22 + @speaker.faceoff
 
       # Hiding the tail?
       h = false
@@ -6355,7 +6367,7 @@ class Ui_Message
       @sprites.move(x,y)
 
       x = @speaker.screen_x - 12# - @width/2
-      y = @speaker.screen_y - 70# - @height
+      y = @speaker.screen_y - @speaker.gfx_height - 22  + @speaker.faceoff # - @height
 
       @tail.move(x,y)      
 
@@ -7471,7 +7483,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"û#==============================================================================
+end"ù#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -7506,6 +7518,21 @@ class Mnu_Healing < Mnu_Base
 
 		open
 
+		# Fade and slide in
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+		@item_grid.all.each{ |b|
+			b.x += dist
+			b.opacity = 0
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+
 	end
 
 	def setup_grid
@@ -7520,13 +7547,13 @@ class Mnu_Healing < Mnu_Base
 
 		@grid.move(cx,cy)
 
-		@grid.add_item_eater($party.active[0])
+		@grid.add_item_eater($party.active[0],$menu.use_item)
 
 		cx += sx
 		@grid.move(cx,cy)
 
 		if $party.active.count > 1
-			@grid.add_item_eater($party.active[1])
+			@grid.add_item_eater($party.active[1],$menu.use_item)
 		end
 
 		cx = 12
@@ -7534,14 +7561,14 @@ class Mnu_Healing < Mnu_Base
 		@grid.move(cx,cy)
 
 		if $party.active.count > 2
-			@grid.add_item_eater($party.active[2])
+			@grid.add_item_eater($party.active[2],$menu.use_item)
 		end
 
 		cx += sx
 		@grid.move(cx,cy)
 
 		if $party.active.count > 3
-			@grid.add_item_eater($party.active[3])
+			@grid.add_item_eater($party.active[3],$menu.use_item)
 		end
 
 		cx = 12
@@ -7549,14 +7576,14 @@ class Mnu_Healing < Mnu_Base
 		@grid.move(cx,cy)
 
 		if $party.reserve.count > 0
-			@grid.add_item_eater($party.reserve[0])
+			@grid.add_item_eater($party.reserve[0],$menu.use_item)
 		end
 
 		cx += sx
 		@grid.move(cx,cy)
 
 		if $party.reserve.count > 1
-			@grid.add_item_eater($party.reserve[1])
+			@grid.add_item_eater($party.reserve[1],$menu.use_item)
 		end
 
 		cx = 89
@@ -7564,28 +7591,76 @@ class Mnu_Healing < Mnu_Base
 		@grid.move(cx,cy)
 
 		if $party.reserve.count > 2
-			@grid.add_item_eater($party.reserve[2])
+			@grid.add_item_eater($party.reserve[2],$menu.use_item)
 		end
 
 	end
 
 	def update
 
-		# If anim in done, change state
-		if $input.cancel? || $input.rclick?
-			close_now
+		ex = true
+		@grid.bars.each{ |b|
+			ex = false if !$tweens.done?(b)
+		}
+
+		if ex && $party.item_number($menu.use_item) == 0
 			$scene.queue_menu("Items")
+			close_now
+		end
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Items")
+			close_now
+		end
+
+		# Get chosen grid option
+		if $input.action? || $input.click?
+			choose(@grid.get_chosen)
 		end
 
 		super		
+
 	end
 
-	def change(option)
+	def choose(option)	
 
+		sys('quest')
+
+		$party.lose_item($menu.use_item)
+		@item_grid.clear
+		@item_grid.move(@item_box.x,@item_box.y + @item_box.height)
+		@item_grid.add_stock($menu.use_item)
+
+		idx = $party.all.index(option)
+		change = $party.get(option).hp_from_item($menu.use_item)
+		@grid.bars[idx].do(go("value",change,750,:qio))				
+		
+		$party.get(option).use_item($menu.use_item)	
 		
 	end
 
-	def select(option)	
+
+	def close
+		super
+
+		@grid.hide_glow
+
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		@item_grid.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
 		
 	end
 
@@ -7649,8 +7724,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"
-#==============================================================================
+end"è#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -7696,6 +7770,8 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def update
+
+		return if !$tweens.done?(@port)
 		super		
 	end
 
@@ -7736,6 +7812,7 @@ class Mnu_Items < Mnu_Base
 
 		item = $data.items[option]
 
+		@grid.all.each{ |i| $tweens.clear(i) }
 		@grid.clear
 
 		@grid.move(@item_box.x,@item_box.y + @item_box.height)
@@ -7758,9 +7835,17 @@ class Mnu_Items < Mnu_Base
 
 		if @last_option != option
 			@last_option = option
+
 			$tweens.clear(@item_box)
+
 			@item_box.y -= 7
 			@item_box.do(go("y",7,150,:qio))
+
+			@grid.all.each{ |i|
+				next if i.disposed?
+				i.y -= 7
+				i.do(go("y",7,150,:qio))
+			}
 		end
 		
 	end
@@ -7785,6 +7870,20 @@ class Mnu_Items < Mnu_Base
 
 		end
 
+	end
+
+	def close
+
+		super
+
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		
 	end
 
 end"—#==============================================================================
@@ -8403,7 +8502,7 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end"F
+end"L	
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -8439,7 +8538,15 @@ class Mnu_Party < Mnu_Base
 
 		open
 
+		dist = 30
 		@grid.all.each{ |a|
+			if a.x > 320
+				a.x += dist
+				a.do(go('x',-dist,200,:qio))
+			else
+				a.x -= dist
+				a.do(go('x',dist,200,:qio))
+			end
 			a.opacity = 0
 			a.do(go("opacity",255,200,:qio))
 		}
@@ -8521,7 +8628,13 @@ class Mnu_Party < Mnu_Base
 		super
 
 		@grid.hide_glow
+		dist = 30
 		@grid.all.each{ |a|
+			if a.x > 320
+				a.do(go('x',dist,200,:qio))
+			else
+				a.do(go('x',-dist,200,:qio))
+			end
 			a.do(go("opacity",-255,200,:qio))
 		}
 
@@ -8581,9 +8694,9 @@ class Mnu_Quit < Mnu_Base
 		
 		@grid = Ui_Grid.new(vp)
 		@grid.move(135,135)
+		@grid.add_wide("continue","Continue Playing","misc/unknown")
 		@grid.add_wide("save","Save and Quit","misc/unknown")
 		@grid.add_wide("quit","Quit Without Saving","misc/unknown")
-		@grid.add_wide("continue","Continue Playing","misc/unknown")
 		self.left.push(@grid)
 
 		open
@@ -11547,7 +11660,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"u#==============================================================================
+end"y#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -11748,7 +11861,7 @@ class Game_Battler
   # * Recover All
   #--------------------------------------------------------------------------
   def recover_all
-    @hp = maxhp
+    @hp = maxhp / 2
     if ['ing','hib'].include?(@id)
       @mp = maxmp
     end
@@ -11808,8 +11921,7 @@ class Game_Battler
 
 
 end
-"ü
-
+"r
 class Game_Battler
 
   # For displays
@@ -11866,6 +11978,39 @@ class Game_Battler
   end
 
   #--------------------------------------------------------------------------
+  # * Item Usage
+  #-------------------------------------------------------------------------- 
+
+  def hp_from_item(item)
+
+    # Do it
+    plus = 0
+    $data.items[item].action.split("\n").each{ |actn|
+
+      dta = actn.split('=>')
+      log_scr(dta)
+      case dta[0]
+        when 'heal'
+          plus += dta[1].to_i
+        when 'heal-p'
+          plus += dta[1].to_f * maxhp
+      end
+    }
+    plus = (maxhp - hp) if plus > (maxhp - hp)
+    return plus
+
+  end
+
+  def mp_from_item(item)
+    0
+  end
+
+  def use_item(item)
+    @hp += hp_from_item(item)
+    @mp += mp_from_item(item)
+  end
+
+  #--------------------------------------------------------------------------
   # * Stat values
   #--------------------------------------------------------------------------
  
@@ -11911,6 +12056,7 @@ class Game_Battler
   def stat_from_equip(stat)
     total = 0
     @equips.values.each{ |e|
+      #log_info(e)
       next if e == nil
       $data.items[e].stats.split("/n").each{ |s|
         dta = s.split("=>")
@@ -12327,7 +12473,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"2≤#==============================================================================
+end"%≥#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -12665,11 +12811,19 @@ class Game_Character
   end
 
   def gfx_width
-    $cache.get(@character_name).width
+    if @character_name.include?('Prop')
+      $cache.character(@character_name).width
+    else  
+      $cache.character(@character_name).width / 4
+    end
   end
 
   def gfx_height
-    $cache.get(@character_name).height
+    if @character_name.include?('Prop')
+      $cache.character(@character_name).height
+    else  
+      $cache.character(@character_name).height / 4
+    end
   end
 
   #--------------------------------------------------------------------------
@@ -13885,7 +14039,7 @@ class Game_Character
 
 
 end
-"5H#==============================================================================
+"ÒH#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -13904,7 +14058,8 @@ class Game_Event < Game_Character
   attr_reader :above
   attr_reader :below
   attr_reader :below2 # For things that are below below, aka very below
-  attr_reader :bridge
+  attr_reader :bridge # Behave like a bridge for passability
+  attr_reader :faceoff # How far offset is the face for message box
 
   attr_reader :page_idx
 
@@ -13945,6 +14100,7 @@ class Game_Event < Game_Character
     @below2 = false
     @bridge = false
     @stairs = false
+    @faceoff = 0
 
     @width = 1
     @height = 1
@@ -14444,6 +14600,9 @@ class Game_Event < Game_Character
         when '#stairs'
           @stairs = true
           $scene.map.add_forced_terrain(self,2)
+
+        when '#faceoff'
+          @faceoff = data[1].to_i
 
         when '#save'
           @save = true
@@ -15753,7 +15912,7 @@ class Moblin
 
 	end
 
-end"-,#==============================================================================
+end"ì,#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -15764,6 +15923,8 @@ class Game_Player < Game_Character
 
   attr_accessor :next_common
 
+  attr_reader :faceoff
+
   def initialize
     super
     looklike("boy")
@@ -15772,6 +15933,8 @@ class Game_Player < Game_Character
     @trans_type = :cross
     @static = false
     @next_common = nil
+
+    @faceoff = 0 # Here to match event, possibly could have both in char
   end
 
   def transfer(map,x,y,dir)
@@ -16677,7 +16840,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"##==============================================================================
+end"J##==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -16966,13 +17129,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
-    #set_active("mys")
-    #set_active("rob")
-    #set_reserve("hib")
-    #set_reserve("row")
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
+    set_reserve("hib")
+    set_reserve("row")
     #set_active("phy")   
-    #set_reserve("phy")   
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -17007,7 +17170,7 @@ class Game_Party
     # Give extra gadget
 
     # Phye
-    @actors['phy'].equip('staff','phy-sword')
+    @actors['phy'].equip('staff','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('heavy','phy-helm-start')
 
@@ -17030,9 +17193,13 @@ class Game_Party
     @actors["rob"].learn("team-phy")
 
 
+    # Start items
+    add_item('flip-deck')
+
     # Sample items
     add_item('covey')
     add_item('haunch')
+    add_item('bread')
     add_item('cheese')
     add_item('vamp-teeth')
     add_item('doll')

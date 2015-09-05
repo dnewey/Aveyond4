@@ -351,6 +351,9 @@ class Game_Party
     @actors["rob"].learn("team-phy")
 
 
+    # Start items
+    add_item('flip-deck')
+
     # Sample items
     add_item('covey')
     add_item('haunch')

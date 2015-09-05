@@ -128,7 +128,7 @@ def pop_wha(ev)
 end
 
 def pop_sweat(ev,o=false)
-	pop_icon_sweat(ev,"misc/sweat","creak",o)
+	pop_icon_sweat(ev,"misc/sweat","sweat",o)
 end
 
 def pop_dots(ev)
