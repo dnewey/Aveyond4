@@ -175,7 +175,7 @@ class Ui_Message
 
       # Put over speaker
       x = @speaker.screen_x - @width/2 - 10
-      y = @speaker.screen_y - @height - 70
+      y = @speaker.screen_y - @height - @speaker.gfx_height - 22 + @speaker.faceoff
 
       # Hiding the tail?
       h = false
@@ -203,7 +203,7 @@ class Ui_Message
       @sprites.move(x,y)
 
       x = @speaker.screen_x - 12# - @width/2
-      y = @speaker.screen_y - 70# - @height
+      y = @speaker.screen_y - @speaker.gfx_height - 22  + @speaker.faceoff # - @height
 
       @tail.move(x,y)      
 

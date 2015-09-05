@@ -33,6 +33,21 @@ class Mnu_Healing < Mnu_Base
 
 		open
 
+		# Fade and slide in
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+		@item_grid.all.each{ |b|
+			b.x += dist
+			b.opacity = 0
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+
 	end
 
 	def setup_grid
@@ -47,13 +62,13 @@ class Mnu_Healing < Mnu_Base
 
 		@grid.move(cx,cy)
 
-		@grid.add_item_eater($party.active[0])
+		@grid.add_item_eater($party.active[0],$menu.use_item)
 
 		cx += sx
 		@grid.move(cx,cy)
 
 		if $party.active.count > 1
-			@grid.add_item_eater($party.active[1])
+			@grid.add_item_eater($party.active[1],$menu.use_item)
 		end
 
 		cx = 12
@@ -61,14 +76,14 @@ class Mnu_Healing < Mnu_Base
 		@grid.move(cx,cy)
 
 		if $party.active.count > 2
-			@grid.add_item_eater($party.active[2])
+			@grid.add_item_eater($party.active[2],$menu.use_item)
 		end
 
 		cx += sx
 		@grid.move(cx,cy)
 
 		if $party.active.count > 3
-			@grid.add_item_eater($party.active[3])
+			@grid.add_item_eater($party.active[3],$menu.use_item)
 		end
 
 		cx = 12
@@ -76,14 +91,14 @@ class Mnu_Healing < Mnu_Base
 		@grid.move(cx,cy)
 
 		if $party.reserve.count > 0
-			@grid.add_item_eater($party.reserve[0])
+			@grid.add_item_eater($party.reserve[0],$menu.use_item)
 		end
 
 		cx += sx
 		@grid.move(cx,cy)
 
 		if $party.reserve.count > 1
-			@grid.add_item_eater($party.reserve[1])
+			@grid.add_item_eater($party.reserve[1],$menu.use_item)
 		end
 
 		cx = 89
@@ -91,28 +106,76 @@ class Mnu_Healing < Mnu_Base
 		@grid.move(cx,cy)
 
 		if $party.reserve.count > 2
-			@grid.add_item_eater($party.reserve[2])
+			@grid.add_item_eater($party.reserve[2],$menu.use_item)
 		end
 
 	end
 
 	def update
 
-		# If anim in done, change state
-		if $input.cancel? || $input.rclick?
-			close_now
+		ex = true
+		@grid.bars.each{ |b|
+			ex = false if !$tweens.done?(b)
+		}
+
+		if ex && $party.item_number($menu.use_item) == 0
 			$scene.queue_menu("Items")
+			close_now
+		end
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			$scene.queue_menu("Items")
+			close_now
+		end
+
+		# Get chosen grid option
+		if $input.action? || $input.click?
+			choose(@grid.get_chosen)
 		end
 
 		super		
+
 	end
 
-	def change(option)
+	def choose(option)	
 
+		sys('quest')
+
+		$party.lose_item($menu.use_item)
+		@item_grid.clear
+		@item_grid.move(@item_box.x,@item_box.y + @item_box.height)
+		@item_grid.add_stock($menu.use_item)
+
+		idx = $party.all.index(option)
+		change = $party.get(option).hp_from_item($menu.use_item)
+		@grid.bars[idx].do(go("value",change,750,:qio))				
+		
+		$party.get(option).use_item($menu.use_item)	
 		
 	end
 
-	def select(option)	
+
+	def close
+		super
+
+		@grid.hide_glow
+
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		@item_grid.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
 		
 	end
 

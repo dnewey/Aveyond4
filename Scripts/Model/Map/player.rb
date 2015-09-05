@@ -9,6 +9,8 @@ class Game_Player < Game_Character
 
   attr_accessor :next_common
 
+  attr_reader :faceoff
+
   def initialize
     super
     looklike("boy")
@@ -17,6 +19,8 @@ class Game_Player < Game_Character
     @trans_type = :cross
     @static = false
     @next_common = nil
+
+    @faceoff = 0 # Here to match event, possibly could have both in char
   end
 
   def transfer(map,x,y,dir)

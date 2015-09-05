@@ -34,7 +34,15 @@ class Mnu_Party < Mnu_Base
 
 		open
 
+		dist = 30
 		@grid.all.each{ |a|
+			if a.x > 320
+				a.x += dist
+				a.do(go('x',-dist,200,:qio))
+			else
+				a.x -= dist
+				a.do(go('x',dist,200,:qio))
+			end
 			a.opacity = 0
 			a.do(go("opacity",255,200,:qio))
 		}
@@ -116,7 +124,13 @@ class Mnu_Party < Mnu_Base
 		super
 
 		@grid.hide_glow
+		dist = 30
 		@grid.all.each{ |a|
+			if a.x > 320
+				a.do(go('x',dist,200,:qio))
+			else
+				a.do(go('x',-dist,200,:qio))
+			end
 			a.do(go("opacity",-255,200,:qio))
 		}
 

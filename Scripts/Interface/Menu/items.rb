@@ -44,6 +44,8 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def update
+
+		return if !$tweens.done?(@port)
 		super		
 	end
 
@@ -84,6 +86,7 @@ class Mnu_Items < Mnu_Base
 
 		item = $data.items[option]
 
+		@grid.all.each{ |i| $tweens.clear(i) }
 		@grid.clear
 
 		@grid.move(@item_box.x,@item_box.y + @item_box.height)
@@ -106,9 +109,17 @@ class Mnu_Items < Mnu_Base
 
 		if @last_option != option
 			@last_option = option
+
 			$tweens.clear(@item_box)
+
 			@item_box.y -= 7
 			@item_box.do(go("y",7,150,:qio))
+
+			@grid.all.each{ |i|
+				next if i.disposed?
+				i.y -= 7
+				i.do(go("y",7,150,:qio))
+			}
 		end
 		
 	end
@@ -133,6 +144,20 @@ class Mnu_Items < Mnu_Base
 
 		end
 
+	end
+
+	def close
+
+		super
+
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		
 	end
 
 end

@@ -12,6 +12,8 @@ class Ui_Grid
 
 	attr_reader :selected_box
 
+	attr_reader :bars
+
 	def initialize(vp)
 
 		@vp = vp
@@ -30,6 +32,7 @@ class Ui_Grid
 		@boxes = []
 		@contents = []
 		@extra = []
+		@bars = []
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
@@ -88,7 +91,7 @@ class Ui_Grid
 	end
 
 	def all
-		return @contents + @extra + @boxes
+		return @contents + @extra + @boxes + @bars
 	end
 
 	def dispose
@@ -97,6 +100,7 @@ class Ui_Grid
 		@glow.dispose
 		@contents.each{ |i| i.dispose }
 		@extra.each{ |i| i.dispose }
+		@bars.each{ |i| i.dispose }
 		@boxes.each{ |i| i.dispose }
 
 	end
@@ -104,10 +108,12 @@ class Ui_Grid
 	def clear
 		@contents.each{ |i| i.dispose }
 		@extra.each{ |i| i.dispose }
+		@bars.each{ |i| i.dispose }
 		@boxes.each{ |i| i.dispose }
 		@contents = []
 		@boxes = []
 		@extras = []
+		@bars = []
 
 		@cx = 0
 		@cy = 0
@@ -410,7 +416,6 @@ class Ui_Grid
      	stat = Label.new(@vp)
         stat.icon = $cache.icon("faces/#{user.id}")
         stat.font = $fonts.pop_text
-        log_scr(res)
         stat.text = "#{res[0]} -> #{res[1]} (#{res[2]})"
         @extra.push(stat)
      	stat.move(@cx+10,@cy+7)
@@ -421,7 +426,7 @@ class Ui_Grid
 
 	def add_compare(stat,old,now,change)
 
-		log_scr(stat)
+		#log_scr(stat)
 
 		btn = add_part_box(stat,300,46)
 		if change < 0
@@ -596,7 +601,7 @@ class Ui_Grid
 
 	end
 
-	def add_item_eater(id)
+	def add_item_eater(id,item)
 
 		char = $party.get(id)
 
@@ -643,17 +648,21 @@ class Ui_Grid
 			# mp_label.z += 50
 
 
-			hp_bar = Bar.new(@vp,120,9)
-			@extra.push(hp_bar)
+			hp_bar = Bar.new(@vp,121,9)
+			@bars.push(hp_bar)
 			hp_bar.opacity = 200
 			hp_bar.for(:hp)
-			hp_bar.move(@cx+15,@cy+61)
+			hp_bar.max = char.maxhp
+			hp_bar.value = char.hp
+			hp_bar.target = char.hp + char.hp_from_item(item)
+			hp_bar.move(@cx+12,@cy+61)
+			hp_bar.update
 
 			hp_label = Sprite.new(@vp)
 			@extra.push(hp_label)
 			hp_label.bitmap = $cache.menu_char("label-hp")
 			hp_label.opacity = 200
-			hp_label.move(@cx+16,@cy + 54)
+			hp_label.move(@cx+13,@cy + 54)
 			hp_label.z += 50
 
 
@@ -703,6 +712,7 @@ class Ui_Grid
 		@glow.move(@selected_box.x+6,@selected_box.y+6)
 
 		@boxes.each{ |b| b.update }
+		@bars.each{ |e| e.update }
 
 		if @boxes.count > 1 && $input.down?
 			sx = @selected_box.x + @selected_box.width/2		
@@ -776,6 +786,7 @@ class Ui_Grid
 		@glow.show
 		@contents.each{ |i| i.show }
 		@extra.each{ |i| i.show }
+		@bars.each{ |i| i.show }
 		@boxes.each{ |i| i.show }
 
 	end
@@ -785,6 +796,7 @@ class Ui_Grid
 		@glow.hide
 		@contents.each{ |i| i.hide }
 		@extra.each{ |i| i.hide }
+		@bars.each{ |i| i.hide }
 		@boxes.each{ |i| i.hide }
 
 	end

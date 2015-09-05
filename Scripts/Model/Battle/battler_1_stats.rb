@@ -55,6 +55,39 @@ class Game_Battler
   end
 
   #--------------------------------------------------------------------------
+  # * Item Usage
+  #-------------------------------------------------------------------------- 
+
+  def hp_from_item(item)
+
+    # Do it
+    plus = 0
+    $data.items[item].action.split("\n").each{ |actn|
+
+      dta = actn.split('=>')
+      log_scr(dta)
+      case dta[0]
+        when 'heal'
+          plus += dta[1].to_i
+        when 'heal-p'
+          plus += dta[1].to_f * maxhp
+      end
+    }
+    plus = (maxhp - hp) if plus > (maxhp - hp)
+    return plus
+
+  end
+
+  def mp_from_item(item)
+    0
+  end
+
+  def use_item(item)
+    @hp += hp_from_item(item)
+    @mp += mp_from_item(item)
+  end
+
+  #--------------------------------------------------------------------------
   # * Stat values
   #--------------------------------------------------------------------------
  
@@ -100,6 +133,7 @@ class Game_Battler
   def stat_from_equip(stat)
     total = 0
     @equips.values.each{ |e|
+      #log_info(e)
       next if e == nil
       $data.items[e].stats.split("/n").each{ |s|
         dta = s.split("=>")

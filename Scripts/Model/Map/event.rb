@@ -17,7 +17,8 @@ class Game_Event < Game_Character
   attr_reader :above
   attr_reader :below
   attr_reader :below2 # For things that are below below, aka very below
-  attr_reader :bridge
+  attr_reader :bridge # Behave like a bridge for passability
+  attr_reader :faceoff # How far offset is the face for message box
 
   attr_reader :page_idx
 
@@ -58,6 +59,7 @@ class Game_Event < Game_Character
     @below2 = false
     @bridge = false
     @stairs = false
+    @faceoff = 0
 
     @width = 1
     @height = 1
@@ -557,6 +559,9 @@ class Game_Event < Game_Character
         when '#stairs'
           @stairs = true
           $scene.map.add_forced_terrain(self,2)
+
+        when '#faceoff'
+          @faceoff = data[1].to_i
 
         when '#save'
           @save = true

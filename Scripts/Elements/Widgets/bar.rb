@@ -38,7 +38,7 @@ end
 
 class Bar < Sprite
 
-	attr_accessor :value, :max
+	attr_accessor :value, :max, :target
 
 	def initialize(vp,w,h)
 
@@ -48,14 +48,14 @@ class Bar < Sprite
 		@value = 100
 		@drawn = @value
 
-		@target = @value
+		@target = 0
 		@max = 100
 
 		@width = w
 		@height = h
 
-		@base_color = Color.new(46,46,46,200)
-		@ghost_color = Color.new(0,255,0,50)
+		@base_color = Color.new(40,40,40,200)
+		@ghost_color = Color.new(255,255,255,180)
 		@bar_color = Color.new(0,255,0,255)
 
 		@border = Color.new(255,255,255,255)
@@ -70,33 +70,33 @@ class Bar < Sprite
 	def for(which)
 		case which
 			when :hp
-				@ghost_color = Color.new(255,87,38,50)
+				#@ghost_color = Color.new(255,87,38,110)
 				@bar_color = Color.new(255,87,38,255)
 			when :xp
-				@ghost_color = Color.new(44,178,34,50)
+				#@ghost_color = Color.new(44,178,34,110)
 				@bar_color = Color.new(44,178,34,255)
 			when 'boy'
-				@ghost_color = Color.new(102,31,232,50)
+				#@ghost_color = Color.new(102,31,232,110)
 				@bar_color = Color.new(102,31,232,255)
 			when 'ing','hib',:mp
-				@ghost_color = Color.new(52,75,252,50)
+				#@ghost_color = Color.new(52,75,252,110)
 				@bar_color = Color.new(52,75,252,255)
 			when 'phy'
-				@ghost_color = Color.new(232,31,50,50)
+				#@ghost_color = Color.new(232,31,50,110)
 				@bar_color = Color.new(232,31,50,255)
 		end
 		redraw
 	end
 
 	def update
-		if @drawn != @value.to_i
+		if @drawn #!= @value.to_i
 			redraw
 		end
 	end
 
 	def redraw
 
-		@drawn = @value.to_i
+		@drawn = @value#.to_i
 
 		# Draw the 3 layers
 		self.bitmap.clear

@@ -287,13 +287,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
-    #set_active("mys")
-    #set_active("rob")
-    #set_reserve("hib")
-    #set_reserve("row")
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
+    set_reserve("hib")
+    set_reserve("row")
     #set_active("phy")   
-    #set_reserve("phy")   
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -328,7 +328,7 @@ class Game_Party
     # Give extra gadget
 
     # Phye
-    @actors['phy'].equip('staff','phy-sword')
+    @actors['phy'].equip('staff','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('heavy','phy-helm-start')
 
@@ -354,6 +354,7 @@ class Game_Party
     # Sample items
     add_item('covey')
     add_item('haunch')
+    add_item('bread')
     add_item('cheese')
     add_item('vamp-teeth')
     add_item('doll')

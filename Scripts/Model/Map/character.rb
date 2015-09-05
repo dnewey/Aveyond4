@@ -336,11 +336,19 @@ class Game_Character
   end
 
   def gfx_width
-    $cache.get(@character_name).width
+    if @character_name.include?('Prop')
+      $cache.character(@character_name).width
+    else  
+      $cache.character(@character_name).width / 4
+    end
   end
 
   def gfx_height
-    $cache.get(@character_name).height
+    if @character_name.include?('Prop')
+      $cache.character(@character_name).height
+    else  
+      $cache.character(@character_name).height / 4
+    end
   end
 
   #--------------------------------------------------------------------------
