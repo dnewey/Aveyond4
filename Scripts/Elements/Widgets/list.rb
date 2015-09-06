@@ -296,6 +296,8 @@ class List
 
   def draw_item(data,row)
 
+    log_sys(data)
+
     item = $data.items[data] if data != 'remove'
 
     active = true # $party.get(@user).can_use_item?(item) # Check if in battle perhaps?

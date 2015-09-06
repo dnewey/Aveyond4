@@ -1493,7 +1493,7 @@ class Label < Sprite
         
   end
   
-end"“@#==============================================================================
+end"¨@#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1790,6 +1790,8 @@ class List
   end
 
   def draw_item(data,row)
+
+    log_sys(data)
 
     item = $data.items[data] if data != 'remove'
 
@@ -10184,7 +10186,7 @@ class Info_Box < SpriteGroup
 	end
 
 end
-"s
+"B
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -10339,9 +10341,13 @@ class Item_Box < SpriteGroup
 
                 when "heal"
                     stat("heal","Heal #{dta[1]} HP")
+                when "heal-p"
+                    stat("heal","Heal #{(dta[1].to_f*100).to_i}% HP")
 
                 when "mana"
                     stat("mana","Restore #{dta[1]} MP")
+                when "mana-p"
+                    stat("mana","Restore #{(dta[1].to_f*100).to_i}% MP")
 
                 when "revive"
                     stat("revive","Revive party member")
@@ -11660,7 +11666,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"y#==============================================================================
+end"«#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -11703,8 +11709,8 @@ class Game_Battler
 
     @equips = {}
 
-    @state = nil
-    @state_counter = 0
+    @states = []
+    @state_counter = []
 
     @skills = []
     @cooldowns = {}
@@ -11876,7 +11882,8 @@ class Game_Battler
   end
 
   def heal(amount)
-
+    @hp += amount
+    @hp = maxhp if @hp > maxhp
   end
 
   def gain_mana(amount)
@@ -12089,7 +12096,7 @@ class Game_Battler
     return 1.0
   end
 
-end"i
+end"Q
 class Game_Battler
 
 
@@ -12106,8 +12113,7 @@ class Game_Battler
   end
 
   def add_state(state_id)
-    @state = state_id
-    #@states.push(state_id)
+    @states.push(state_id)
   end
 
   def remove_state(id)
@@ -12421,13 +12427,15 @@ class Game_Battler
 
   end
 
-end"v
+end"
 class Attack_Result
 
 	attr_accessor :target
 	
 	attr_accessor :damage
 	attr_accessor :critical
+
+	attr_accessor :heal
 
 	attr_accessor :gain_mana
 
@@ -15912,7 +15920,7 @@ class Moblin
 
 	end
 
-end"“,#==============================================================================
+end",#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -16085,9 +16093,7 @@ class Game_Player < Game_Character
 
     return if @static
 
-    if @character_name != "Player/#{$party.leader}"
-      self.character_name = "Player/#{$party.leader}"
-    end
+
 
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
@@ -16096,7 +16102,9 @@ class Game_Player < Game_Character
 
     return super(true) if $map.interpreter.running? # Still finish turn anim
 
-    
+    if @character_name != "Player/#{$party.leader}"
+      self.character_name = "Player/#{$party.leader}"
+    end
 
     # Try menu here
     if !moving? && $menu.menu_page != nil
@@ -16348,7 +16356,7 @@ class Game_Player < Game_Character
   end
 
 end
-"#
+"q%
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16614,7 +16622,13 @@ class Game_Battle
       # Check damage effects
 
       dmg_base = 0
-      dmg_mod = 0
+      dmg_mod = 0.0 # 1.0 is use str number as damage
+
+      heal_base = 0
+      heal_p = 0.0
+
+      is_dmg = false
+      is_heal = false
 
       # Items have actions, skills have effects, they are the same
       effects = nil
@@ -16627,16 +16641,34 @@ class Game_Battle
       effects.split("\n").each{ |effect|
         data = effect.split("=>")      
         case data[0]
+          
+          # Damage
           when 'dmg-base'
             dmg_base = data[1].to_i
+            is_dmg = true
           when 'dmg-mod'
             dmg_mod = data[1].to_f
+            is_dmg = true
+
+          # Heals
+          when 'heal'
+            heal_base = data[1].to_i
+            is_heal = true
+          when 'heal-p'
+            heal_p = data[1].to_f
+            is_heal = true
+
+          # Mana
           when 'gain-mana'
             result.gain_mana = data[1].to_i
+
+          # States
           when 'state-add'
             result.state_add = data[1]
           when 'state-remove'
             result.state_remove = data[1]
+
+          # Misc
           when 'transform'
             result.transform = data[1]
         end
@@ -16646,10 +16678,16 @@ class Game_Battle
       result.damage = dmg_base + (attacker.str * dmg_mod)
       result.damage -= (t.def) # Remove damage of the defense
 
+      result.heal = heal_base
+      result.heal += t.maxhp * heal_p
+
       # If there was no attack, don't have a damage amount
-      if result.damage == 0
-        result.damage = nil
+      if result.damage <= 0
+        result.damage = is_dmg ? 1 : 0
       end
+
+      log_sys result.damage
+      log_sys result.heal
 
       results.push(result)
 
@@ -16840,7 +16878,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"J##==============================================================================
+end"v##==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17088,7 +17126,7 @@ class Game_Party
   end
 
   def battle_item_list
-    return @items.select{ |i| true }
+    return @items.keys.select{ |i| $data.items[i].is_a?(UsableData) }
   end
 
   def defeated?
@@ -17129,13 +17167,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
-    set_active("rob")
-    set_reserve("hib")
-    set_reserve("row")
+    # set_active("ing")
+    # set_active("mys")
+    # set_active("rob")
+    # set_reserve("hib")
+    # set_reserve("row")
     #set_active("phy")   
-    set_reserve("phy")   
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -18254,7 +18292,7 @@ class Scene_Battle
     
   end
 
-end"õ
+end"Ö
 class Scene_Battle
 
   def phase_main_init
@@ -18423,15 +18461,31 @@ class Scene_Battle
 
   def phase_main_hit
 
-    # Show the damage of @attack-result on each guy hit
-    # There might not even be damage but
-    # Better figure damage pops    
+    # Do damage or healing
     @attack_results.each{ |result|
-        next if result.damage == nil
-        result.target.damage(result.damage)
-        pop_dmg(result.target.ev,result.damage)
-        if result.target.view != nil
-          result.target.view.damage
+        
+        # Damage
+        if result.damage > 0
+          result.target.damage(result.damage)
+          pop_dmg(result.target.ev,result.damage)
+          
+          if result.target.view != nil
+            result.target.view.damage
+          end
+        end
+
+        # Heal
+        if result.heal > 0
+
+          log_sys result.heal
+
+          result.target.heal(result.heal)
+          pop_dmg(result.target.ev,result.heal)
+
+          if result.target.view != nil
+            result.target.view.grin
+          end
+
         end
     }
 
@@ -18485,7 +18539,7 @@ class Scene_Battle
       if result.state_add
 
         # Only if a new state, else refresh
-        if result.target.has_state?(result.state_add)
+        if result.target.state?(result.state_add)
           # refresh it
           next
         end

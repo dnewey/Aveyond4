@@ -167,15 +167,31 @@ class Scene_Battle
 
   def phase_main_hit
 
-    # Show the damage of @attack-result on each guy hit
-    # There might not even be damage but
-    # Better figure damage pops    
+    # Do damage or healing
     @attack_results.each{ |result|
-        next if result.damage == nil
-        result.target.damage(result.damage)
-        pop_dmg(result.target.ev,result.damage)
-        if result.target.view != nil
-          result.target.view.damage
+        
+        # Damage
+        if result.damage > 0
+          result.target.damage(result.damage)
+          pop_dmg(result.target.ev,result.damage)
+          
+          if result.target.view != nil
+            result.target.view.damage
+          end
+        end
+
+        # Heal
+        if result.heal > 0
+
+          log_sys result.heal
+
+          result.target.heal(result.heal)
+          pop_dmg(result.target.ev,result.heal)
+
+          if result.target.view != nil
+            result.target.view.grin
+          end
+
         end
     }
 
@@ -229,7 +245,7 @@ class Scene_Battle
       if result.state_add
 
         # Only if a new state, else refresh
-        if result.target.has_state?(result.state_add)
+        if result.target.state?(result.state_add)
           # refresh it
           next
         end

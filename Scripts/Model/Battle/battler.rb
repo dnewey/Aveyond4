@@ -41,8 +41,8 @@ class Game_Battler
 
     @equips = {}
 
-    @state = nil
-    @state_counter = 0
+    @states = []
+    @state_counter = []
 
     @skills = []
     @cooldowns = {}
@@ -214,7 +214,8 @@ class Game_Battler
   end
 
   def heal(amount)
-
+    @hp += amount
+    @hp = maxhp if @hp > maxhp
   end
 
   def gain_mana(amount)

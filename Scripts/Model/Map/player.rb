@@ -171,9 +171,7 @@ class Game_Player < Game_Character
 
     return if @static
 
-    if @character_name != "Player/#{$party.leader}"
-      self.character_name = "Player/#{$party.leader}"
-    end
+
 
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
@@ -182,7 +180,9 @@ class Game_Player < Game_Character
 
     return super(true) if $map.interpreter.running? # Still finish turn anim
 
-    
+    if @character_name != "Player/#{$party.leader}"
+      self.character_name = "Player/#{$party.leader}"
+    end
 
     # Try menu here
     if !moving? && $menu.menu_page != nil

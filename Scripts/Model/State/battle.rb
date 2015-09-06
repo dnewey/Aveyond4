@@ -264,7 +264,13 @@ class Game_Battle
       # Check damage effects
 
       dmg_base = 0
-      dmg_mod = 0
+      dmg_mod = 0.0 # 1.0 is use str number as damage
+
+      heal_base = 0
+      heal_p = 0.0
+
+      is_dmg = false
+      is_heal = false
 
       # Items have actions, skills have effects, they are the same
       effects = nil
@@ -277,16 +283,34 @@ class Game_Battle
       effects.split("\n").each{ |effect|
         data = effect.split("=>")      
         case data[0]
+          
+          # Damage
           when 'dmg-base'
             dmg_base = data[1].to_i
+            is_dmg = true
           when 'dmg-mod'
             dmg_mod = data[1].to_f
+            is_dmg = true
+
+          # Heals
+          when 'heal'
+            heal_base = data[1].to_i
+            is_heal = true
+          when 'heal-p'
+            heal_p = data[1].to_f
+            is_heal = true
+
+          # Mana
           when 'gain-mana'
             result.gain_mana = data[1].to_i
+
+          # States
           when 'state-add'
             result.state_add = data[1]
           when 'state-remove'
             result.state_remove = data[1]
+
+          # Misc
           when 'transform'
             result.transform = data[1]
         end
@@ -296,10 +320,16 @@ class Game_Battle
       result.damage = dmg_base + (attacker.str * dmg_mod)
       result.damage -= (t.def) # Remove damage of the defense
 
+      result.heal = heal_base
+      result.heal += t.maxhp * heal_p
+
       # If there was no attack, don't have a damage amount
-      if result.damage == 0
-        result.damage = nil
+      if result.damage <= 0
+        result.damage = is_dmg ? 1 : 0
       end
+
+      log_sys result.damage
+      log_sys result.heal
 
       results.push(result)
 

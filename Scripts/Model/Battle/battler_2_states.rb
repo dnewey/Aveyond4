@@ -15,8 +15,7 @@ class Game_Battler
   end
 
   def add_state(state_id)
-    @state = state_id
-    #@states.push(state_id)
+    @states.push(state_id)
   end
 
   def remove_state(id)

@@ -153,9 +153,13 @@ class Item_Box < SpriteGroup
 
                 when "heal"
                     stat("heal","Heal #{dta[1]} HP")
+                when "heal-p"
+                    stat("heal","Heal #{(dta[1].to_f*100).to_i}% HP")
 
                 when "mana"
                     stat("mana","Restore #{dta[1]} MP")
+                when "mana-p"
+                    stat("mana","Restore #{(dta[1].to_f*100).to_i}% MP")
 
                 when "revive"
                     stat("revive","Revive party member")

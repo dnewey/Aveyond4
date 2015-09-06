@@ -22,6 +22,11 @@ class Scene_Battle
       return
     end
 
+    # Clear previous
+    @active_battler.action = nil
+    @active_battler.skill_id = nil
+    @active_battler.item_id = nil
+
     @actor_cmd.update
 
     if $input.cancel? || $input.rclick?
@@ -114,6 +119,7 @@ class Scene_Battle
       @item_cmd.close
       @active_battler.skill_id = nil
       @active_battler.item_id = @item_cmd.get_item
+      $party.lose_item(@active_battler.item_id)
       @phase = :actor_strategize
     end
 
@@ -189,6 +195,7 @@ class Scene_Battle
 
     if $input.cancel? || $input.rclick?
       @target_cmd.close
+      $party.add_item(@active_battler.item_id) if @active_battler.item_id != nil
       @actor_idx -= 1
       @phase = :actor_next
     end
