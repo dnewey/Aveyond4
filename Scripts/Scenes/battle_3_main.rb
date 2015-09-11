@@ -138,8 +138,7 @@ class Scene_Battle
 
     # Use up mana or items or add cooldown
     if @active_battler.action == "items"
-      # Use up the item now
-      $party.lose_item(@active_battler.item_id)
+      # Item is taken immediately when selected
     else
       @active_battler.lose_mana(@attack_round.skill.cost)
     end
