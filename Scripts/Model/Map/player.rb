@@ -211,7 +211,7 @@ class Game_Player < Game_Character
         if @event_at_path == nil
 
           # If walk to empty pos, show fx
-          $scene.add_spark('click',$mouse.x+($map.display_x/4)+3,$mouse.y+($map.display_y/4)+5)
+          $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
 
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil

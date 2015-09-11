@@ -19,8 +19,9 @@ class MouseManager
     @hwnd = Findwindow.call(nil, "Aveyond")
     @sprite = Sprite.new()
     @sprite.z = 6000
-    @sprite.ox = 4
-    @sprite.oy = 4
+    @sprite.ox = 32
+    @sprite.oy = 32
+    @cursor = "Default"
     change_cursor("Default")
   end
 
@@ -32,7 +33,7 @@ class MouseManager
   end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
-    y = (@pos[1] + 14 + $map.display_y / 4) / 32
+    y = (@pos[1] + $map.display_y / 4) / 32
     return [x.to_i,y.to_i]
   end
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
@@ -42,14 +43,14 @@ class MouseManager
   #--------------------------------------------------------------------------
   def update
 
-    if !$settings.mouse
-      @sprite.hide
-      $ShowCursor.call(1)
-    else
-      @sprite.show
-      $ShowCursor.call(0)
-    end
-
+    # if !$settings.mouse
+    #   @sprite.hide
+    #   $ShowCursor.call(1)
+    # else
+    #   @sprite.show
+    #   $ShowCursor.call(0)
+    # end
+#$ShowCursor.call(1)
     # Update wheel
     #@wheel = Wheel.scroll if rand(100)
     @wheel = nil
@@ -69,6 +70,8 @@ class MouseManager
   end
 
   def change_cursor(c)
+    return if c == @cursor
+    @cursor = c
     @sprite.bitmap = $cache.cursor(c)
   end
 

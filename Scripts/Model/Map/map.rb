@@ -304,10 +304,22 @@ class Game_Map
     # Mouse position
     mx, my = *$mouse.grid
 
-    # What event is there
-    if event_at(mx,my) != nil
+    # Check 3 x 3 area, use offsets
+    ev = event_at(mx,my)
+    ev = event_at(mx,my+1) if ev == nil
+    ev = event_at(mx,my-1) if ev == nil
+    ev = event_at(mx+1,my) if ev == nil
+    ev = event_at(mx-1,my) if ev == nil
+    ev = event_at(mx-1,my-1) if ev == nil
+    ev = event_at(mx-1,my+1) if ev == nil
+    ev = event_at(mx+1,my-1) if ev == nil
+    ev = event_at(mx+1,my+1) if ev == nil
 
-      ev = event_at(mx,my)
+    # What event is there
+    if ev != nil && ev.mousein
+
+      # Check actual mouse xy to see if inside
+
       case ev.icon
 
         when 'S'
@@ -326,18 +338,18 @@ class Game_Map
       end
 
     else
+
       if $map.passable?(mx,my,$player.direction)
         $mouse.change_cursor('Default')
       else
-        $mouse.change_cursor('Battle')
+        $mouse.change_cursor('Block')
       end
+
     end
 
   end
 
   def update_camera
-
-
 
     # if @target_x != @display_x
     #   @display_x += [(@target_x-@display_x) * 0.15,cam_speed].min

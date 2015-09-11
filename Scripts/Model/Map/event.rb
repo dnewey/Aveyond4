@@ -150,6 +150,16 @@ class Game_Event < Game_Character
     return true
   end
 
+  def mousein
+    x,y = *$mouse.position
+    #y += 8
+    return false if x < screen_x - 16 #+ self.off_x
+    return false if x > screen_x + 16 #+ self.off_x
+    return false if y > screen_y #+ self.off_y
+    return false if y < screen_y - 32 #+ self.off_y
+    return true
+  end
+
   #--------------------------------------------------------------------------
   # * Determine if Over Trigger
   #    is this event under player
