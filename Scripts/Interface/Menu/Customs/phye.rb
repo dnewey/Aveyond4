@@ -26,7 +26,7 @@ class Mnu_Phye < Mnu_Base
 		titles = ['Baal the Brute','tower','ice','other','more']
 
 		cx = 28
-		cy = 126
+		cy = 128
 
 		(0..4).each{ |i|
 

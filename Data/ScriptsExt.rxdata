@@ -7379,7 +7379,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"ª	#==============================================================================
+end"¥	#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -7406,7 +7406,7 @@ class Mnu_Char < Mnu_Base
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
 		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' #&& !$progress.creatures.empty?
-		@grid.add_wide("Ingrid","Potion Making","items/potion-red") if $menu.char == 'ing'
+		@grid.add_wide("Ingrid","Witchery","items/potion-red") if $menu.char == 'ing'
 		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
 		@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
 		@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
@@ -9492,7 +9492,7 @@ class Mnu_Status < Mnu_Base
 		
 	end
 
-end"*#==============================================================================
+end"#==============================================================================
 # ** Mnu_Boyle
 #==============================================================================
 
@@ -9504,8 +9504,6 @@ class Mnu_Boyle < Mnu_Base
 		@title.change('Status')
 		@title.icon($menu.char)
 		@subtitle.text = "Gotta catch em"
-
-		@info.show_magics
 
 		@char = $party.get($menu.char)
 
@@ -9578,7 +9576,8 @@ class Mnu_Boyle < Mnu_Base
 		
 	end
 
-end" "€#==============================================================================
+end" "
+#==============================================================================
 # ** Mnu_Ingrid
 #==============================================================================
 
@@ -9587,159 +9586,152 @@ class Mnu_Ingrid < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('Equip')
+		@title.change('Status')
 		@title.icon($menu.char)
+		@subtitle.text = "The Witching Hour"
 
-		@char = $party.get('boy')
+		@char = $party.get($menu.char)
 
-		@subtitle.text = "Master of deception"
+		remove_menu
+		remove_info
 
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
+		@box = Box.new(vp,300,350)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("diamonds")
+		@box.move(15,115)
+		self.left.push(@box)
 
-		@menu.opacity = 0
-		@menu.move(15,180)
-		#@menu.opacity = 0
-		
-		@menu.list.per_page = 7
-		@menu.window.height -= 34
-		@menu.list.active = false
+		spacing = 28
 
-		#@info.hide
-		self.left.delete(@menu)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-		#@grid.add_slot('staff',char.equips['staff'])
-		self.left.push(@grid)
+		# Potion making
 
+		cx = 28
+		cy = 126
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/potions")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Potion Brewing"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Recipes Known: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("items/potion-blue")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Potions Made: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    # Guild
+
+	    cx = 28
+		cy += 32
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("items/witch-hat")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Witch Coven"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Coven In: Potioneers"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Guild Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    # Attraction
+
+	    cx = 28
+		cy += 32
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/attract-get")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Attraction"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("faces/boy")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Boyle: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("faces/hib")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Hi'beru: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("faces/phy")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Phye: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
-		@item_box = Item_Box.new(vp)
-		@item_box.center(472,290)
-		@item_box.hide
-		#self.right.push(@item_box)
-
-		@info.dispose
-		self.left.delete(@info)
-
-		# Selected slot
-		@slot = nil
+		open
 
 	end
 
 	def update
-		super
-
-		@menu.update if @menu.list.active
-		@grid.update if !@menu.list.active
-
-		# Get chosen grid option
-		if $input.action? || $input.click?
-			log_scr("GO")
-			choose(@grid.get_chosen)
-		end
-
+		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
-			close
+			$scene.queue_menu("Char")
+			close_now
 		end
 		
-	end
-
-	# Grid
-	def choose(option)
-
-		@slot = option
-
-		# Rebuild the grid
-		@grid.clear
-		@grid.move(15,115)
-		@grid.add_slot(@slot,@char.equips[@slot])
-
-		@grid.disable
-
-		# Populate the list
-
-		# Find gear for this slot
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
-		}
-		items.push(nil) if @char.equips[@slot] != nil
-		@menu.list.setup(items)
-
-		# Bring in the list
-		@menu.opacity = 255
-		@menu.move(15,180)
-
-		@menu.list.active = true
-
-		@item_box.show
-		#change(items[0])
-
-	end
-
-	# Equip List
-	def change(option)
-
-
-
-		# Change the item box to show this
-		if option != nil
-			@item_box.item(option)
-			@item_box.show
-		else
-			@item_box.hide
-		end
-		#@item_box.comparison(option,@char.equips[@slot])
+		super
 		
-	end
-
-	def select(option)	
-
-		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
-		back_to_slots
-		
-	end
-
-	 def cancel
-	 	if @grid.active
-	 		$scene.change_sub("Char")
-	 		super
-	 	else
-	 		back_to_slots
-	 	end
-	end
-
-	def back_to_slots
-		@menu.opacity = 0
-		@menu.move(15,180)
-
-		@menu.list.active = false
-
-		@grid.enable
-		@grid.clear
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-
-		 @grid.choose(@slot)
-
-		 @item_box.hide
-
 	end
 
 end"#==============================================================================
@@ -9847,7 +9839,7 @@ class Mnu_Phye < Mnu_Base
 		titles = ['Baal the Brute','tower','ice','other','more']
 
 		cx = 28
-		cy = 126
+		cy = 128
 
 		(0..4).each{ |i|
 
@@ -14047,7 +14039,7 @@ class Game_Character
 
 
 end
-"ñH#==============================================================================
+"J#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14196,6 +14188,16 @@ class Game_Event < Game_Character
     return false if y < @y
     return false if x > @x + @width - 1
     return false if y > @y + @height - 1
+    return true
+  end
+
+  def mousein
+    x,y = *$mouse.position
+    #y += 8
+    return false if x < screen_x - 16 #+ self.off_x
+    return false if x > screen_x + 16 #+ self.off_x
+    return false if y > screen_y #+ self.off_y
+    return false if y < screen_y - 32 #+ self.off_y
     return true
   end
 
@@ -15331,7 +15333,7 @@ class Interpreter
   end
 
 end
-"s7#==============================================================================
+"9#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15637,10 +15639,22 @@ class Game_Map
     # Mouse position
     mx, my = *$mouse.grid
 
-    # What event is there
-    if event_at(mx,my) != nil
+    # Check 3 x 3 area, use offsets
+    ev = event_at(mx,my)
+    ev = event_at(mx,my+1) if ev == nil
+    ev = event_at(mx,my-1) if ev == nil
+    ev = event_at(mx+1,my) if ev == nil
+    ev = event_at(mx-1,my) if ev == nil
+    ev = event_at(mx-1,my-1) if ev == nil
+    ev = event_at(mx-1,my+1) if ev == nil
+    ev = event_at(mx+1,my-1) if ev == nil
+    ev = event_at(mx+1,my+1) if ev == nil
 
-      ev = event_at(mx,my)
+    # What event is there
+    if ev != nil && ev.mousein
+
+      # Check actual mouse xy to see if inside
+
       case ev.icon
 
         when 'S'
@@ -15659,18 +15673,18 @@ class Game_Map
       end
 
     else
+
       if $map.passable?(mx,my,$player.direction)
         $mouse.change_cursor('Default')
       else
-        $mouse.change_cursor('Battle')
+        $mouse.change_cursor('Block')
       end
+
     end
 
   end
 
   def update_camera
-
-
 
     # if @target_x != @display_x
     #   @display_x += [(@target_x-@display_x) * 0.15,cam_speed].min
@@ -15920,7 +15934,7 @@ class Moblin
 
 	end
 
-end",#==============================================================================
+end"‹,#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -16133,7 +16147,7 @@ class Game_Player < Game_Character
         if @event_at_path == nil
 
           # If walk to empty pos, show fx
-          $scene.add_spark('click',$mouse.x+($map.display_x/4)+3,$mouse.y+($map.display_y/4)+5)
+          $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
 
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil
@@ -16878,7 +16892,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"v##==============================================================================
+end"s##==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17167,13 +17181,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    # set_active("ing")
+    set_active("ing")
     # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
     #set_active("phy")   
-    #set_reserve("phy")   
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -21287,7 +21301,7 @@ class KeyboardManager
 
   end
 
-end"Ÿ#============================================================================== 
+end"	#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -21308,8 +21322,9 @@ class MouseManager
     @hwnd = Findwindow.call(nil, "Aveyond")
     @sprite = Sprite.new()
     @sprite.z = 6000
-    @sprite.ox = 4
-    @sprite.oy = 4
+    @sprite.ox = 32
+    @sprite.oy = 32
+    @cursor = "Default"
     change_cursor("Default")
   end
 
@@ -21321,7 +21336,7 @@ class MouseManager
   end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
-    y = (@pos[1] + 14 + $map.display_y / 4) / 32
+    y = (@pos[1] + $map.display_y / 4) / 32
     return [x.to_i,y.to_i]
   end
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
@@ -21331,14 +21346,14 @@ class MouseManager
   #--------------------------------------------------------------------------
   def update
 
-    if !$settings.mouse
-      @sprite.hide
-      $ShowCursor.call(1)
-    else
-      @sprite.show
-      $ShowCursor.call(0)
-    end
-
+    # if !$settings.mouse
+    #   @sprite.hide
+    #   $ShowCursor.call(1)
+    # else
+    #   @sprite.show
+    #   $ShowCursor.call(0)
+    # end
+#$ShowCursor.call(1)
     # Update wheel
     #@wheel = Wheel.scroll if rand(100)
     @wheel = nil
@@ -21358,6 +21373,8 @@ class MouseManager
   end
 
   def change_cursor(c)
+    return if c == @cursor
+    @cursor = c
     @sprite.bitmap = $cache.cursor(c)
   end
 

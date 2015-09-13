@@ -287,13 +287,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    # set_active("ing")
+    set_active("ing")
     # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
     #set_active("phy")   
-    #set_reserve("phy")   
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear

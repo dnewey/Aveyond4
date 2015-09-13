@@ -43,17 +43,13 @@ class MouseManager
   #--------------------------------------------------------------------------
   def update
 
-    # if !$settings.mouse
-    #   @sprite.hide
-    #   $ShowCursor.call(1)
-    # else
-    #   @sprite.show
-    #   $ShowCursor.call(0)
-    # end
-#$ShowCursor.call(1)
-    # Update wheel
-    #@wheel = Wheel.scroll if rand(100)
-    @wheel = nil
+    if !$settings.mouse
+      @sprite.hide
+      $ShowCursor.call(1)
+    else
+      @sprite.show
+      $ShowCursor.call(0)
+    end
     
     # Update Position
     pos = [0,0].pack('ll')

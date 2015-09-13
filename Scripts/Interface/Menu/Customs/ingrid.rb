@@ -7,159 +7,152 @@ class Mnu_Ingrid < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('Equip')
+		@title.change('Status')
 		@title.icon($menu.char)
+		@subtitle.text = "The Witching Hour"
 
-		@char = $party.get('boy')
+		@char = $party.get($menu.char)
 
-		@subtitle.text = "Master of deception"
+		remove_menu
+		remove_info
 
-		#@tabs.push("all")
-		#@tabs.push("potions")
-		#@tabs.push("keys")
+		@box = Box.new(vp,300,350)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("diamonds")
+		@box.move(15,115)
+		self.left.push(@box)
 
-		@menu.opacity = 0
-		@menu.move(15,180)
-		#@menu.opacity = 0
-		
-		@menu.list.per_page = 7
-		@menu.window.height -= 34
-		@menu.list.active = false
+		spacing = 28
 
-		#@info.hide
-		self.left.delete(@menu)
-		
-		@grid = Ui_Grid.new(vp)
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-		#@grid.add_slot('staff',char.equips['staff'])
-		self.left.push(@grid)
+		# Potion making
 
+		cx = 28
+		cy = 126
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/potions")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Potion Brewing"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Recipes Known: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("items/potion-blue")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Potions Made: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    # Guild
+
+	    cx = 28
+		cy += 32
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("items/witch-hat")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Witch Coven"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Coven In: Potioneers"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Guild Level: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    # Attraction
+
+	    cx = 28
+		cy += 32
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/attract-get")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Attraction"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("faces/boy")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Boyle: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("faces/hib")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Hi'beru: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += spacing
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("faces/phy")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Phye: #{@char.level}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
-		@item_box = Item_Box.new(vp)
-		@item_box.center(472,290)
-		@item_box.hide
-		#self.right.push(@item_box)
-
-		@info.dispose
-		self.left.delete(@info)
-
-		# Selected slot
-		@slot = nil
+		open
 
 	end
 
 	def update
-		super
-
-		@menu.update if @menu.list.active
-		@grid.update if !@menu.list.active
-
-		# Get chosen grid option
-		if $input.action? || $input.click?
-			log_scr("GO")
-			choose(@grid.get_chosen)
-		end
-
+		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
-			close
+			$scene.queue_menu("Char")
+			close_now
 		end
 		
-	end
-
-	# Grid
-	def choose(option)
-
-		@slot = option
-
-		# Rebuild the grid
-		@grid.clear
-		@grid.move(15,115)
-		@grid.add_slot(@slot,@char.equips[@slot])
-
-		@grid.disable
-
-		# Populate the list
-
-		# Find gear for this slot
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
-		}
-		items.push(nil) if @char.equips[@slot] != nil
-		@menu.list.setup(items)
-
-		# Bring in the list
-		@menu.opacity = 255
-		@menu.move(15,180)
-
-		@menu.list.active = true
-
-		@item_box.show
-		#change(items[0])
-
-	end
-
-	# Equip List
-	def change(option)
-
-
-
-		# Change the item box to show this
-		if option != nil
-			@item_box.item(option)
-			@item_box.show
-		else
-			@item_box.hide
-		end
-		#@item_box.comparison(option,@char.equips[@slot])
+		super
 		
-	end
-
-	def select(option)	
-
-		# Replace the gear in the slot hahahhahah
-		log_scr(@slot)
-		log_scr(option)
-		@char.equip(@slot,option)
-		back_to_slots
-		
-	end
-
-	 def cancel
-	 	if @grid.active
-	 		$scene.change_sub("Char")
-	 		super
-	 	else
-	 		back_to_slots
-	 	end
-	end
-
-	def back_to_slots
-		@menu.opacity = 0
-		@menu.move(15,180)
-
-		@menu.list.active = false
-
-		@grid.enable
-		@grid.clear
-		@grid.move(15,115)
-		 @char.slots.each{ |slot| 
-		 	@grid.add_slot(slot,@char.equips[slot])
-		 }
-
-		 @grid.choose(@slot)
-
-		 @item_box.hide
-
 	end
 
 end

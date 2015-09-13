@@ -11,8 +11,6 @@ class Mnu_Boyle < Mnu_Base
 		@title.icon($menu.char)
 		@subtitle.text = "Gotta catch em"
 
-		@info.show_magics
-
 		@char = $party.get($menu.char)
 
 		remove_menu
