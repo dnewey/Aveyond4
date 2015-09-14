@@ -717,9 +717,9 @@ class Game_Event < Game_Character
     check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
-    if @interpreter != nil
-      @interpreter.update
-    end
+    # if @interpreter != nil
+    #   @interpreter.update
+    # end
 
   end
     

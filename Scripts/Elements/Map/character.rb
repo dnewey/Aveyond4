@@ -12,12 +12,26 @@ class Sprite_Character < Sprite
   def initialize(viewport, character = nil)
     super(viewport)
     @vp = viewport
+
     @character = character
     @iconmode = false
     @pulse_delay = 0
     @pulse_idx = 0
     @fx_delay = 0
     @icons = [] # Sprites
+
+
+    @windmill = @character.character_name.include?('mill')
+
+    # Clear the helper graphics
+    # Maybe move to cache? Or just clear the gfx
+    # if !$settings.debug_draw_helpers
+    #   if @character_name == "!!!" || @character_name == 'Block'
+    #     self.bitmap.clear
+    #   end
+    # end
+
+
     update
   end
 
@@ -27,28 +41,25 @@ class Sprite_Character < Sprite
   def update
     super
 
-    # Windmill hack
-    if @character.character_name.include?('mill')
-
-      if @character.pattern < 4
-        @character.pattern += 1
-      else
-
-        @character.pattern = 0
-
-        # Get num, next pic thanks
-        num = @character.character_name.split("-")[1].to_i
-        num+=1
-        num = 1 if num > 6
-        @character.character_name = 'Props/mill-'+num.to_s
-
-      end
-
-    end
+    #update_windmill if @windmill
 
     # If tile ID, file name, or hue are different from current ones
-    if @character_name != @character.character_name
-     
+    update_bitmap if graphic_changed?
+    update_src_rect if src_rect_changed?   
+
+    # Set visible situation
+    update_position
+    update_misc
+    update_colors
+    update_spark_trail
+    update_icons
+
+  end
+
+  # Updates
+
+  def update_bitmap
+
       @character_name = @character.character_name
 
       if @character_name.include?("Icons")
@@ -78,21 +89,16 @@ class Sprite_Character < Sprite
         @iconmode = true
       end
 
-    end
+      update_src_rect
 
-    # Clear the helper graphics
-    if !$settings.debug_draw_helpers
-      if @character_name == "!!!" || @character_name == 'Block'
-        self.bitmap.clear
-      end
-    end
+  end
 
-    # Set visible situation
-    self.visible = !@character.transparent
-    self.zoom_x = @character.zoom
-    self.zoom_y = @character.zoom
-    
+  def update_src_rect
 
+    @old_pattern = @character.pattern
+    @old_dir     = @character.direction
+
+        # Src rect
     if !@iconmode
       if @character.force_pattern
         sx = @character.force_pattern * @cw
@@ -103,27 +109,16 @@ class Sprite_Character < Sprite
       self.src_rect.set(sx, sy, @cw, @ch)
     end
 
+  end
+
+  def update_position
     # Set sprite coordinates
     self.x = @character.screen_x
     self.y = @character.screen_y - 8
     self.z = @character.screen_z(@ch)
+  end
 
-    # TODO auto name the helper icons
-
-    
-    # Set opacity level, blend method, and bush depth
-    self.opacity = @character.opacity
-    #log_info(@character.opacity) if @character.opacity < 255
-
-    #if @character.bush_depth > 0
-      self.bush_depth = @character.bush_depth 
-
-     # bmp = self.bitmap
-      #self.bitmap = Bitmap.new(bmp.width,bmp.height)
-
-      #self.bitmap.blt(0,0,bmp,Rect.new(0,0,bmp.width,16))
-
-    #end
+  def update_colors
 
     # Flash effect
     if @character.flash_dur != nil
@@ -144,7 +139,10 @@ class Sprite_Character < Sprite
       end
     end
 
-    # Spark trail
+  end
+
+  def update_spark_trail
+
     if @character.fxtrail != nil && @character.moving?
       @fx_delay -= 1
       if @fx_delay <= 0
@@ -152,6 +150,12 @@ class Sprite_Character < Sprite
         spark(@character.id,@character.fxtrail,0,5)
       end
     end
+
+  end
+
+  def update_icons
+
+    return
 
     # Icons
     if @icons.count != @character.icons.count
@@ -187,10 +191,51 @@ class Sprite_Character < Sprite
 
       }
 
-
     end
 
   end
 
+  def update_misc
+
+    self.visible = !@character.transparent
+    self.zoom_x = @character.zoom
+    self.zoom_y = @character.zoom
+
+    self.opacity = @character.opacity
+    self.bush_depth = @character.bush_depth 
+
+  end
+
+  def update_windmill
+    # Windmill hack
+    if @character.character_name.include?('mill')
+
+      if @character.pattern < 4
+        @character.pattern += 1
+      else
+
+        @character.pattern = 0
+
+        # Get num, next pic thanks
+        num = @character.character_name.split("-")[1].to_i
+        num+=1
+        num = 1 if num > 6
+        @character.character_name = 'Props/mill-'+num.to_s
+
+      end
+
+    end
+  end
+
+
+  # Misc
+  def graphic_changed?
+    @character_name != @character.character_name
+  end
+
+  def src_rect_changed?
+    @character.pattern != @old_pattern ||
+      @character.direction != @old_dir
+  end
 
 end

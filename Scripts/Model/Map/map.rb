@@ -253,6 +253,7 @@ class Game_Map
   end
 
   def refresh
+    log_scr("REFRSHING")
     @events.values.each{ |e| e.refresh }
       @need_refresh = false
     end
@@ -277,8 +278,7 @@ class Game_Map
     @interpreter.update
     return if $scene.is_a?(Scene_Menu)
 
-    # Anti lag here
-    @events.values.each{ |e| e.update }
+    update_events
 
     # Refresh map if necessary
     if @need_refresh
@@ -291,6 +291,25 @@ class Game_Map
     update_mouse
 
     
+
+  end
+
+  def update_events
+
+    #@events.values.each{ |e| e.update }
+
+    x1 = (display_x/128) - 2
+    y1 = (display_y/128) -2
+    x2 = x1 + 20 + 4
+    y2 = y1 + 15 + 4
+
+    @events.values.each{ |e|
+      next if e.x < x1
+      next if e.y < y1
+      next if e.x > x2
+      next if e.y > y2
+      e.update 
+    }
 
   end
 
