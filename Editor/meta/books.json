@@ -1,0 +1,11 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "title"
+  },
+  {
+    "field": "notes"
+  }
+]
