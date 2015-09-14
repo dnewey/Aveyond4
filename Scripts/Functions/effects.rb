@@ -82,9 +82,9 @@ end
 
 def shake_mid
 
-	amount = 10
+	amount = 20
 	dur = 140
-	rep = 3
+	rep = 7
 	e = :qio
 
 	$scene.map.do(

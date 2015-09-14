@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"G#==============================================================================
+end"L#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -87,12 +87,26 @@ class Sprite_Character < Sprite
   def initialize(viewport, character = nil)
     super(viewport)
     @vp = viewport
+
     @character = character
     @iconmode = false
     @pulse_delay = 0
     @pulse_idx = 0
     @fx_delay = 0
     @icons = [] # Sprites
+
+
+    @windmill = @character.character_name.include?('mill')
+
+    # Clear the helper graphics
+    # Maybe move to cache? Or just clear the gfx
+    # if !$settings.debug_draw_helpers
+    #   if @character_name == "!!!" || @character_name == 'Block'
+    #     self.bitmap.clear
+    #   end
+    # end
+
+
     update
   end
 
@@ -102,28 +116,25 @@ class Sprite_Character < Sprite
   def update
     super
 
-    # Windmill hack
-    if @character.character_name.include?('mill')
-
-      if @character.pattern < 4
-        @character.pattern += 1
-      else
-
-        @character.pattern = 0
-
-        # Get num, next pic thanks
-        num = @character.character_name.split("-")[1].to_i
-        num+=1
-        num = 1 if num > 6
-        @character.character_name = 'Props/mill-'+num.to_s
-
-      end
-
-    end
+    #update_windmill if @windmill
 
     # If tile ID, file name, or hue are different from current ones
-    if @character_name != @character.character_name
-     
+    update_bitmap if graphic_changed?
+    update_src_rect if src_rect_changed?   
+
+    # Set visible situation
+    update_position
+    update_misc
+    update_colors
+    update_spark_trail
+    update_icons
+
+  end
+
+  # Updates
+
+  def update_bitmap
+
       @character_name = @character.character_name
 
       if @character_name.include?("Icons")
@@ -153,21 +164,16 @@ class Sprite_Character < Sprite
         @iconmode = true
       end
 
-    end
+      update_src_rect
 
-    # Clear the helper graphics
-    if !$settings.debug_draw_helpers
-      if @character_name == "!!!" || @character_name == 'Block'
-        self.bitmap.clear
-      end
-    end
+  end
 
-    # Set visible situation
-    self.visible = !@character.transparent
-    self.zoom_x = @character.zoom
-    self.zoom_y = @character.zoom
-    
+  def update_src_rect
 
+    @old_pattern = @character.pattern
+    @old_dir     = @character.direction
+
+        # Src rect
     if !@iconmode
       if @character.force_pattern
         sx = @character.force_pattern * @cw
@@ -178,27 +184,16 @@ class Sprite_Character < Sprite
       self.src_rect.set(sx, sy, @cw, @ch)
     end
 
+  end
+
+  def update_position
     # Set sprite coordinates
     self.x = @character.screen_x
     self.y = @character.screen_y - 8
     self.z = @character.screen_z(@ch)
+  end
 
-    # TODO auto name the helper icons
-
-    
-    # Set opacity level, blend method, and bush depth
-    self.opacity = @character.opacity
-    #log_info(@character.opacity) if @character.opacity < 255
-
-    #if @character.bush_depth > 0
-      self.bush_depth = @character.bush_depth 
-
-     # bmp = self.bitmap
-      #self.bitmap = Bitmap.new(bmp.width,bmp.height)
-
-      #self.bitmap.blt(0,0,bmp,Rect.new(0,0,bmp.width,16))
-
-    #end
+  def update_colors
 
     # Flash effect
     if @character.flash_dur != nil
@@ -219,7 +214,10 @@ class Sprite_Character < Sprite
       end
     end
 
-    # Spark trail
+  end
+
+  def update_spark_trail
+
     if @character.fxtrail != nil && @character.moving?
       @fx_delay -= 1
       if @fx_delay <= 0
@@ -227,6 +225,12 @@ class Sprite_Character < Sprite
         spark(@character.id,@character.fxtrail,0,5)
       end
     end
+
+  end
+
+  def update_icons
+
+    return
 
     # Icons
     if @icons.count != @character.icons.count
@@ -262,11 +266,52 @@ class Sprite_Character < Sprite
 
       }
 
-
     end
 
   end
 
+  def update_misc
+
+    self.visible = !@character.transparent
+    self.zoom_x = @character.zoom
+    self.zoom_y = @character.zoom
+
+    self.opacity = @character.opacity
+    self.bush_depth = @character.bush_depth 
+
+  end
+
+  def update_windmill
+    # Windmill hack
+    if @character.character_name.include?('mill')
+
+      if @character.pattern < 4
+        @character.pattern += 1
+      else
+
+        @character.pattern = 0
+
+        # Get num, next pic thanks
+        num = @character.character_name.split("-")[1].to_i
+        num+=1
+        num = 1 if num > 6
+        @character.character_name = 'Props/mill-'+num.to_s
+
+      end
+
+    end
+  end
+
+
+  # Misc
+  def graphic_changed?
+    @character_name != @character.character_name
+  end
+
+  def src_rect_changed?
+    @character.pattern != @old_pattern ||
+      @character.direction != @old_dir
+  end
 
 end
 "©
@@ -2497,9 +2542,9 @@ end
 
 def shake_mid
 
-	amount = 10
+	amount = 20
 	dur = 140
-	rep = 3
+	rep = 7
 	e = :qio
 
 	$scene.map.do(
@@ -6164,7 +6209,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"$\#==============================================================================
+end"6\#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6565,7 +6610,7 @@ class Ui_Message
     end
 
     # If forcing to speak from a number, switch to name now
-    if speaker.numeric?
+    if speaker != nil && speaker.numeric?
       name = gev(speaker.to_i).name
       name = name.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
     end
@@ -14039,7 +14084,7 @@ class Game_Character
 
 
 end
-"J#==============================================================================
+"J#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14758,9 +14803,9 @@ class Game_Event < Game_Character
     check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
-    if @interpreter != nil
-      @interpreter.update
-    end
+    # if @interpreter != nil
+    #   @interpreter.update
+    # end
 
   end
     
@@ -15333,7 +15378,7 @@ class Interpreter
   end
 
 end
-"9#==============================================================================
+"V:#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15588,6 +15633,7 @@ class Game_Map
   end
 
   def refresh
+    log_scr("REFRSHING")
     @events.values.each{ |e| e.refresh }
       @need_refresh = false
     end
@@ -15612,8 +15658,7 @@ class Game_Map
     @interpreter.update
     return if $scene.is_a?(Scene_Menu)
 
-    # Anti lag here
-    @events.values.each{ |e| e.update }
+    update_events
 
     # Refresh map if necessary
     if @need_refresh
@@ -15626,6 +15671,25 @@ class Game_Map
     update_mouse
 
     
+
+  end
+
+  def update_events
+
+    #@events.values.each{ |e| e.update }
+
+    x1 = (display_x/128) - 2
+    y1 = (display_y/128) -2
+    x2 = x1 + 20 + 4
+    y2 = y1 + 15 + 4
+
+    @events.values.each{ |e|
+      next if e.x < x1
+      next if e.y < y1
+      next if e.x > x2
+      next if e.y > y2
+      e.update 
+    }
 
   end
 
@@ -21301,7 +21365,7 @@ class KeyboardManager
 
   end
 
-end"	#============================================================================== 
+end"‘#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -21346,17 +21410,13 @@ class MouseManager
   #--------------------------------------------------------------------------
   def update
 
-    # if !$settings.mouse
-    #   @sprite.hide
-    #   $ShowCursor.call(1)
-    # else
-    #   @sprite.show
-    #   $ShowCursor.call(0)
-    # end
-#$ShowCursor.call(1)
-    # Update wheel
-    #@wheel = Wheel.scroll if rand(100)
-    @wheel = nil
+    if !$settings.mouse
+      @sprite.hide
+      $ShowCursor.call(1)
+    else
+      @sprite.show
+      $ShowCursor.call(0)
+    end
     
     # Update Position
     pos = [0,0].pack('ll')
