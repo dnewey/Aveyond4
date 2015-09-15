@@ -24,6 +24,8 @@ class Game_Map
   attr_reader :zone
   attr_accessor :cam_x, :cam_y
 
+  attr_accessor :skip_music_change
+
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -190,6 +192,12 @@ class Game_Map
   end
 
   def setup_audio
+
+    # Ignore if skip next
+    if @skip_music_change
+      @skip_music_change = false
+      return
+    end
 
     # Fadeout previous
     

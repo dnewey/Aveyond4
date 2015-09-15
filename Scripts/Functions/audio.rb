@@ -21,6 +21,10 @@ def atmosphere(file)
 	$audio.atmosphere(file)
 end
 
+def music_skip
+	$map.skip_music_change = true
+end
+
 def music_pause
 	$audio.pause
 end

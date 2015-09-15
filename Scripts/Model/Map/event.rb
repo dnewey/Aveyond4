@@ -349,6 +349,12 @@ class Game_Event < Game_Character
       when '@ngold'
         return false if $party.gold >= label.split(":")[1].to_i
 
+      when '@flag'
+        return false if !flag?(label.split(":")[1])
+      when '@nflag'
+        return false if flag?(label.split(":")[1])
+
+
       when '@var'
         return false if $state.varval(label.split(":")[2]) < label.split(":")[3].to_i
 

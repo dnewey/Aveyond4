@@ -169,6 +169,10 @@ class Scene_Base
   end
 
   def change_overlay(overlay)
+    
+    # Nightwatch hack
+    overlay = 'night' if flag?('night-time')
+
     if overlay == '' || overlay == nil
       $scene.overlay.opacity = 0
     else
