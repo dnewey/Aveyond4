@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"L#==============================================================================
+end"¦#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -172,6 +172,7 @@ class Sprite_Character < Sprite
 
     @old_pattern = @character.pattern
     @old_dir     = @character.direction
+    @old_showdir     = @character.showdir
 
         # Src rect
     if !@iconmode
@@ -310,7 +311,8 @@ class Sprite_Character < Sprite
 
   def src_rect_changed?
     @character.pattern != @old_pattern ||
-      @character.direction != @old_dir
+      @character.direction != @old_dir ||
+        @character.showdir != @old_showdir
   end
 
 end
@@ -338,7 +340,7 @@ class MapWrap < Tilemap
 
 	end
 
-end"N
+end"¯
 class Panorama
 
   attr_accessor :spd_x, :spd_y # Speed
@@ -378,8 +380,14 @@ class Panorama
     @sprite.dispose
     @bitmap.dispose
   end
+
+  def disposed?
+    @bitmap.disposed? || @sprite.disposed?
+  end
  
   def update
+
+    return if disposed?
     
     @off_x += @spd_x
     @off_y += @spd_y
@@ -1538,7 +1546,7 @@ class Label < Sprite
         
   end
   
-end"¨@#==============================================================================
+end"A#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1603,8 +1611,11 @@ class List
 
   	# Sprites
     @back_sprite = Sprite.new(@vp)
+    @back_sprite.z = 0
     @select_sprite = Sprite.new(@vp)    
+    @select_sprite.z = 20
     @content_sprite = Sprite.new(@vp)
+    @content_sprite.z = 30
 
     @scroll_box = Sprite.new()
     @scroll_box.bitmap = $cache.menu_common('scroll-box')
@@ -1745,6 +1756,7 @@ class List
     @back_sprite.y = can_scroll? ? -row_height : 0
     @content_sprite.y = can_scroll? ? -row_height : 0
 
+    @select_sprite.y = @page_idx * row_height
     @select_sprite.show
 
     src = $cache.menu_common('list-bar')
@@ -1793,9 +1805,9 @@ class List
 
     #return if data == nil # For above or below accessible
     if data == nil
-      @select_sprite.hide
       return draw_empty(row)
     end
+
 
     # Drw the contents
     case @type
@@ -12522,7 +12534,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"%³#==============================================================================
+end"ù³#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -12798,7 +12810,18 @@ class Game_Character
       # If prelock direction is saved
       if @prelock_direction != 0
         # Restore prelock direction
-        @direction = @prelock_direction
+        case @prelock_direction
+          when 2
+            turn_down
+          when 4
+            turn_left
+          when 6
+            turn_right
+          when 8
+            turn_up
+        end
+        #@direction = @prelock_direction
+
       end
     end
   end
@@ -15388,7 +15411,7 @@ class Interpreter
   end
 
 end
-";#==============================================================================
+"è:#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15651,7 +15674,6 @@ class Game_Map
   end
 
   def refresh
-    log_scr("REFRSHING")
     @events.values.each{ |e| e.refresh }
       @need_refresh = false
     end
@@ -16974,7 +16996,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"s##==============================================================================
+end"¿##==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17263,13 +17285,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
+    #set_active("ing")
     # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
     #set_active("phy")   
-    set_reserve("phy")   
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -17329,6 +17351,10 @@ class Game_Party
 
     # Start items
     add_item('flip-deck')
+    add_item('cheese')
+    add_item('cheese')
+    add_item('haunch')
+
 
     # Sample items
     add_item('covey')
@@ -20063,15 +20089,15 @@ class AudioManager
 
   def music(file,vol=1.0)
 
+    return if @music_file == file
 
-      @music.stop if @music
+    @music.stop if @music
 
     if file == nil || file == ''
     
       return
     end
-
-    return if @music_file == file
+    
     @music_file = file
 
     @music_gain = 1.0
@@ -20089,14 +20115,14 @@ class AudioManager
     # Nightwatch hack
     file = 'woods-night' if flag?('night-time')
 
+    return if @atmosphere_file == file
+
     @atmosphere.stop if @music
 
     if file == nil  || file == ''
-      
       return
     end
-
-    return if @atmosphere_file == file
+    
     @atmosphere_file = file
 
     @atmosphere_gain = 1.0
@@ -20755,7 +20781,7 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"k#==============================================================================
+end"ª#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
@@ -20833,6 +20859,12 @@ class FileManager
   end
 
   def save_game(i)
+
+    # Save sfx
+    if i != 0
+      sys('save')
+    end
+
     File.open(filename(i), "wb") { |file|
       header = make_save_header  
       body = make_save_contents
