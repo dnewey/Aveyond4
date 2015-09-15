@@ -63,8 +63,11 @@ class List
 
   	# Sprites
     @back_sprite = Sprite.new(@vp)
+    @back_sprite.z = 0
     @select_sprite = Sprite.new(@vp)    
+    @select_sprite.z = 20
     @content_sprite = Sprite.new(@vp)
+    @content_sprite.z = 30
 
     @scroll_box = Sprite.new()
     @scroll_box.bitmap = $cache.menu_common('scroll-box')
@@ -205,6 +208,7 @@ class List
     @back_sprite.y = can_scroll? ? -row_height : 0
     @content_sprite.y = can_scroll? ? -row_height : 0
 
+    @select_sprite.y = @page_idx * row_height
     @select_sprite.show
 
     src = $cache.menu_common('list-bar')
@@ -253,9 +257,9 @@ class List
 
     #return if data == nil # For above or below accessible
     if data == nil
-      @select_sprite.hide
       return draw_empty(row)
     end
+
 
     # Drw the contents
     case @type

@@ -38,8 +38,14 @@ class Panorama
     @sprite.dispose
     @bitmap.dispose
   end
+
+  def disposed?
+    @bitmap.disposed? || @sprite.disposed?
+  end
  
   def update
+
+    return if disposed?
     
     @off_x += @spd_x
     @off_y += @spd_y

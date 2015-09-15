@@ -274,7 +274,18 @@ class Game_Character
       # If prelock direction is saved
       if @prelock_direction != 0
         # Restore prelock direction
-        @direction = @prelock_direction
+        case @prelock_direction
+          when 2
+            turn_down
+          when 4
+            turn_left
+          when 6
+            turn_right
+          when 8
+            turn_up
+        end
+        #@direction = @prelock_direction
+
       end
     end
   end

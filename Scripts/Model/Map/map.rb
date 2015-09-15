@@ -261,7 +261,6 @@ class Game_Map
   end
 
   def refresh
-    log_scr("REFRSHING")
     @events.values.each{ |e| e.refresh }
       @need_refresh = false
     end

@@ -97,6 +97,7 @@ class Sprite_Character < Sprite
 
     @old_pattern = @character.pattern
     @old_dir     = @character.direction
+    @old_showdir     = @character.showdir
 
         # Src rect
     if !@iconmode
@@ -235,7 +236,8 @@ class Sprite_Character < Sprite
 
   def src_rect_changed?
     @character.pattern != @old_pattern ||
-      @character.direction != @old_dir
+      @character.direction != @old_dir ||
+        @character.showdir != @old_showdir
   end
 
 end

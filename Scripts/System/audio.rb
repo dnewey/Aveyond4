@@ -71,15 +71,15 @@ class AudioManager
 
   def music(file,vol=1.0)
 
+    return if @music_file == file
 
-      @music.stop if @music
+    @music.stop if @music
 
     if file == nil || file == ''
     
       return
     end
-
-    return if @music_file == file
+    
     @music_file = file
 
     @music_gain = 1.0
@@ -97,14 +97,14 @@ class AudioManager
     # Nightwatch hack
     file = 'woods-night' if flag?('night-time')
 
+    return if @atmosphere_file == file
+
     @atmosphere.stop if @music
 
     if file == nil  || file == ''
-      
       return
     end
-
-    return if @atmosphere_file == file
+    
     @atmosphere_file = file
 
     @atmosphere_gain = 1.0

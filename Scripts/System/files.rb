@@ -76,6 +76,12 @@ class FileManager
   end
 
   def save_game(i)
+
+    # Save sfx
+    if i != 0
+      sys('save')
+    end
+
     File.open(filename(i), "wb") { |file|
       header = make_save_header  
       body = make_save_contents
