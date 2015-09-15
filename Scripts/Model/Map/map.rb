@@ -304,20 +304,20 @@ class Game_Map
 
   def update_events
 
-    #@events.values.each{ |e| e.update }
+    @events.values.each{ |e| e.update }
 
-    x1 = (display_x/128) - 2
-    y1 = (display_y/128) -2
-    x2 = x1 + 20 + 4
-    y2 = y1 + 15 + 4
+    # x1 = (display_x/128) - 2
+    # y1 = (display_y/128) -2
+    # x2 = x1 + 20 + 4
+    # y2 = y1 + 15 + 4
 
-    @events.values.each{ |e|
-      next if e.x < x1
-      next if e.y < y1
-      next if e.x > x2
-      next if e.y > y2
-      e.update 
-    }
+    # @events.values.each{ |e|
+    #   next if e.x < x1
+    #   next if e.y < y1
+    #   next if e.x > x2
+    #   next if e.y > y2
+    #   e.update 
+    # }
 
   end
 

@@ -2290,7 +2290,7 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"£
+end"Ú
 # Audio
 
 def sfx(file,vol=1.0,delay=0)
@@ -2311,6 +2311,10 @@ end
 
 def atmosphere(file)
 	$audio.atmosphere(file)
+end
+
+def music_skip
+	$map.skip_music_change = true
 end
 
 def music_pause
@@ -14084,7 +14088,7 @@ class Game_Character
 
 
 end
-"J#==============================================================================
+"®J#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14434,6 +14438,12 @@ class Game_Event < Game_Character
 
       when '@ngold'
         return false if $party.gold >= label.split(":")[1].to_i
+
+      when '@flag'
+        return false if !flag?(label.split(":")[1])
+      when '@nflag'
+        return false if flag?(label.split(":")[1])
+
 
       when '@var'
         return false if $state.varval(label.split(":")[2]) < label.split(":")[3].to_i
@@ -15378,7 +15388,7 @@ class Interpreter
   end
 
 end
-"V:#==============================================================================
+";#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15403,6 +15413,8 @@ class Game_Map
   attr_reader :map
   attr_reader :zone
   attr_accessor :cam_x, :cam_y
+
+  attr_accessor :skip_music_change
 
 
   #--------------------------------------------------------------------------
@@ -15571,6 +15583,12 @@ class Game_Map
 
   def setup_audio
 
+    # Ignore if skip next
+    if @skip_music_change
+      @skip_music_change = false
+      return
+    end
+
     # Fadeout previous
     
 
@@ -15676,20 +15694,20 @@ class Game_Map
 
   def update_events
 
-    #@events.values.each{ |e| e.update }
+    @events.values.each{ |e| e.update }
 
-    x1 = (display_x/128) - 2
-    y1 = (display_y/128) -2
-    x2 = x1 + 20 + 4
-    y2 = y1 + 15 + 4
+    # x1 = (display_x/128) - 2
+    # y1 = (display_y/128) -2
+    # x2 = x1 + 20 + 4
+    # y2 = y1 + 15 + 4
 
-    @events.values.each{ |e|
-      next if e.x < x1
-      next if e.y < y1
-      next if e.x > x2
-      next if e.y > y2
-      e.update 
-    }
+    # @events.values.each{ |e|
+    #   next if e.x < x1
+    #   next if e.y < y1
+    #   next if e.x > x2
+    #   next if e.y > y2
+    #   e.update 
+    # }
 
   end
 
@@ -17530,7 +17548,7 @@ end"œclass State
 	end
 
 end
-"‰#==============================================================================
+"Ö#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -17701,6 +17719,10 @@ class Scene_Base
   end
 
   def change_overlay(overlay)
+    
+    # Nightwatch hack
+    overlay = 'night' if flag?('night-time')
+
     if overlay == '' || overlay == nil
       $scene.overlay.opacity = 0
     else
@@ -19968,7 +19990,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"ó#==============================================================================
+end"c#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -20041,8 +20063,11 @@ class AudioManager
 
   def music(file,vol=1.0)
 
+
+      @music.stop if @music
+
     if file == nil || file == ''
-      @music.stop
+    
       return
     end
 
@@ -20061,8 +20086,13 @@ class AudioManager
 
   def atmosphere(file)
 
+    # Nightwatch hack
+    file = 'woods-night' if flag?('night-time')
+
+    @atmosphere.stop if @music
+
     if file == nil  || file == ''
-      @atmosphere.stop
+      
       return
     end
 
