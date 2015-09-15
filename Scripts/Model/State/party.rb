@@ -287,13 +287,13 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
+    #set_active("ing")
     # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
     #set_active("phy")   
-    set_reserve("phy")   
+    #set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -353,18 +353,22 @@ class Game_Party
 
     # Start items
     add_item('flip-deck')
+    add_item('cheese')
+    add_item('cheese')
+    add_item('haunch')
+
 
     # Sample items
-    add_item('covey')
-    add_item('haunch')
-    add_item('bread')
-    add_item('cheese')
-    add_item('vamp-teeth')
-    add_item('doll')
-    add_item('quarter-map')
-    add_item('ticket')
-    add_item('wh-weight')
-    add_item('doll-ghost')
+    # add_item('covey')
+    # add_item('haunch')
+    # add_item('bread')
+    # add_item('cheese')
+    # add_item('vamp-teeth')
+    # add_item('doll')
+    # add_item('quarter-map')
+    # add_item('ticket')
+    # add_item('wh-weight')
+    # add_item('doll-ghost')
 
 
   end
