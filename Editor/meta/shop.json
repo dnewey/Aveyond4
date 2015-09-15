@@ -16,5 +16,17 @@
   },
   {
     "field": "value"
+  },
+  {
+    "field": "request",
+    "edit": "area"
+  },
+  {
+    "field": "accept",
+    "edit": "area"
+  },
+  {
+    "field": "deny",
+    "edit": "area"
   }
 ]
