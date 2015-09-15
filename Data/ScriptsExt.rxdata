@@ -301,13 +301,8 @@ class Sprite_Character < Sprite
 
     end
   end
-<<<<<<< HEAD
 
 
-=======
-
-
->>>>>>> origin/master
   # Misc
   def graphic_changed?
     @character_name != @character.character_name
