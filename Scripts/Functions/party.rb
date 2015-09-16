@@ -17,6 +17,28 @@ def gold?(amount)
 	return $party.has_gold?(amount)
 end
 
+def magics(amount)
+	sys('coins')
+	$party.add_magics(amount)
+end
+
+def unmagics(amount)
+	sys('coins')
+	$party.add_magics(-amount)
+end
+
+def magics?(amount)
+	return $party.has_magics?(amount)
+end
+
+def magics_exchange
+	adding = $party.item_number('cheeki')
+	mult = $data.numbers['cheeki-magic'].value
+	amount = adding*mult
+	amount = 7
+	magics(amount)
+	pop_magics(amount)
+end
 
 def item(id,number=1,type='f')
 	if !number.is_a?(Integer)

@@ -120,8 +120,6 @@ class Scene_Menu
     case @next_menu
 
       when "Main"; @menu = Mnu_Main.new(@vp)
-      when "Shop"; @menu = Mnu_Shop.new(@vp)
-      when "Wizard"; @menu = Mnu_Shop.new(@vp) # Wizard shop
 
       when "Quit"; @menu = Mnu_Quit.new(@vp)
       when "Journal"; @menu = Mnu_Journal.new(@vp)
@@ -147,6 +145,23 @@ class Scene_Menu
 
       when "Potions"; @menu = Mnu_Potions.new(@vp)
       when "Chooser"; @menu = Mnu_Chooser.new(@vp)
+
+      # Shops
+
+      # Item Shop
+      # Smith
+      # Magic
+
+      # Cheekis
+
+      when "Shop","Smith","Magic","Chester"
+        @menu = Mnu_Shop.new(@vp)
+        @menu.setup(@next_menu)
+
+      when "Sell"
+        @menu = Mnu_Shop.new(@vp)
+        @menu.setup(@next_menu)
+        @menu.sellmode
 
       when "Boyle"; @menu = Mnu_Boyle.new(@vp)
       when "Ingrid"; @menu = Mnu_Ingrid.new(@vp)
