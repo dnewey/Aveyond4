@@ -29,6 +29,8 @@ class Game_Event < Game_Character
   attr_reader :save
 
   attr_reader :width, :height
+
+  attr_reader :turn
       
 
   #--------------------------------------------------------------------------
@@ -115,6 +117,7 @@ class Game_Event < Game_Character
   end
 
   def force_clone(src)
+      log_scr(src)
       unlock
       clone_ev = $data.clones[src]
       @pages = clone_ev.pages
@@ -663,6 +666,9 @@ class Game_Event < Game_Character
         when '#N'
           @icon = ''
 
+        when '#turn'
+          @turn = data[1].to_i
+
       end
     }
     
@@ -683,8 +689,9 @@ class Game_Event < Game_Character
 
     # If trigger is [parallel process]
     if @trigger == 4
-      @interpreter = Interpreter.new
+      @interpreter = Interpreter.new()
       @interpreter.setup(@list, @event.id)
+      @interpreter.special = true
     end
 
 
@@ -708,7 +715,7 @@ class Game_Event < Game_Character
     return false if $map.interpreter.running?
       
     if $player.at?(x,y) and [1,2].include?(@trigger)
-      start_battle
+      start
     end
 
   end
@@ -723,9 +730,9 @@ class Game_Event < Game_Character
     check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
-    # if @interpreter != nil
-    #   @interpreter.update
-    # end
+    if @interpreter != nil
+      @interpreter.update
+    end
 
   end
     

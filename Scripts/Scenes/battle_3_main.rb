@@ -187,6 +187,11 @@ class Scene_Battle
           if result.target.view != nil
             result.target.view.damage
           end
+
+          if result.target.is_enemy?
+            result.target.ev.color = Color.new(0,0,0,200)
+          end
+
         end
 
         # Heal
@@ -300,10 +305,14 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if result.target.down?
-        #sys('fall')
-        result.target.fall
-        result.target.view.down if result.target.view
-        #fade(result.target.ev)
+        if result.target.is_actor?
+          #sys('fall')
+          result.target.fall
+          result.target.view.down if result.target.view
+          #fade(result.target.ev)
+        else
+          fade(result.target.ev)
+        end
         wait(60)
       end
 

@@ -45,6 +45,9 @@ class Scene_Battle
 
   def phase_start_turn
 
+    # Start all autoruns for this turn
+    start_events
+
     # Any text or skills will use up a turn of the battle? But states won't remove?
 
     @texts = []

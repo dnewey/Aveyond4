@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"ò#==============================================================================
+end"	#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -195,6 +195,12 @@ class Sprite_Character < Sprite
   end
 
   def update_colors
+
+    # Color
+    if @character.color.is_a?(Color)
+      self.color = @character.color
+      return
+    end
 
     # Flash effect
     if @character.flash_dur != nil
@@ -1544,7 +1550,7 @@ class Label < Sprite
         
   end
   
-end"A#==============================================================================
+end"[A#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1907,6 +1913,7 @@ class List
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       ico = $cache.icon("misc/coins")
@@ -2482,9 +2489,10 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"F
+end"a
 def spark(ev,fx,ox=0,oy=0)
 
+	return if gev(ev) == nil
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
 
 end
@@ -2794,7 +2802,7 @@ end
 
 
 
-"d#==============================================================================
+"Å#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -2921,7 +2929,7 @@ def face2face
 end
 
 def wfc
-	$map.interpreter.command_210
+	$scene.map.interpreter.command_210
 end
 
 def td(e) gev(e).turn_down end
@@ -3033,6 +3041,8 @@ def path(ev,tx,ty,after=nil)
 end
 
 def route(ev,move)
+
+	log_err("ROUTING")
 
 	char = gev(ev)
 
@@ -3147,7 +3157,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"M#==============================================================================
+"’#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3166,6 +3176,28 @@ def gold?(amount)
 	return $party.has_gold?(amount)
 end
 
+def magics(amount)
+	sys('coins')
+	$party.add_magics(amount)
+end
+
+def unmagics(amount)
+	sys('coins')
+	$party.add_magics(-amount)
+end
+
+def magics?(amount)
+	return $party.has_magics?(amount)
+end
+
+def magics_exchange
+	adding = $party.item_number('cheeki')
+	mult = $data.numbers['cheeki-magic'].value
+	amount = adding*mult
+	amount = 7
+	magics(amount)
+	pop_magics(amount)
+end
 
 def item(id,number=1,type='f')
 	if !number.is_a?(Integer)
@@ -3247,8 +3279,7 @@ end
 
 
 
-"ü
-
+"
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3270,6 +3301,15 @@ def pop_gold(number,type)
 
 
 	pop_get(type,b,ib,'green')
+
+end
+
+def pop_magics(number)
+
+	ib = $cache.icon('misc/magics')
+	b = "#{number} Magic"	
+
+	pop_get('r',b,ib,'wizard')
 
 end
 
@@ -3502,7 +3542,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"µ
+"Q
 # Misc
 
 def text(t)
@@ -3582,12 +3622,22 @@ end
 
 def open_shop_sell
 	$menu.sub_only = true
-	$menu.menu_page = "Shop"
+	$menu.menu_page = "Sell"
 end
 
-def open_shop_creatures
+def open_shop_smith
 	$menu.sub_only = true
-	$menu.menu_page = "Creatures"
+	$menu.menu_page = "Smith"
+end
+
+def open_shop_magic
+	$menu.sub_only = true
+	$menu.menu_page = "Magic"
+end
+
+def open_shop_chester
+	$menu.sub_only = true
+	$menu.menu_page = "Chester"
 end
 
 
@@ -3991,7 +4041,7 @@ def cauldron_graphic(ev)
 end"
 def word_length
 
-end"m
+end"o
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -4033,8 +4083,8 @@ class BattleHud
 		@help_text.move(166,9)
 
 		# Try hiding the info box
-		@help_box.hide
-		@help_text.hide
+		#@help_box.hide
+		#@help_text.hide
 
 	end
 
@@ -8933,7 +8983,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"ù#==============================================================================
+end"Ω#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -8945,7 +8995,7 @@ class Mnu_Shop < Mnu_Base
 		@title.change('Smith')
 		@subtitle.text = "Armors and Weapons"
 
-		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
+		#@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -8969,12 +9019,37 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
+	def setup(type)
+		@title.change(type)
+		case type
+			when "Shop"
+				@subtitle.text = "General Goods"
+			when "Smith"
+				@subtitle.text = "Armors and Weapons"
+			when "Magic"
+				@subtitle.text = "Enchantments"
+			when "Chester"
+				@subtitle.text = "Learn Skills and Abilities"
+		end
+	end
+
+	def sellmode
+		@sellmode = true
+
+		# Show tabs
+		@subtitle.hide
+
+		# Put all sellable items?
+		#@menu.list.setup($menu.shop)
+	end
+
 	def update
 		super
 		
 	end
 
 	def change(option)
+
 		#@info.title.text = option
 		@item_box.item(option)
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
@@ -8995,6 +9070,10 @@ class Mnu_Shop < Mnu_Base
 			$party.add_item(option)
 			$party.add_gold(-item.price)
 			sys("coins")
+			@info.refresh
+			@menu.list.refresh
+			# Rebuild list to show unavailable for price
+
 		end
 	end
 
@@ -10200,7 +10279,7 @@ class Char_Box_Small < SpriteGroup
 		@port.do(to("oy",0,-1))
 	end
 
-end"∆
+end"5
 class Info_Box < SpriteGroup
 
 	attr_accessor :title
@@ -10245,6 +10324,11 @@ class Info_Box < SpriteGroup
 	def update
 		@window.update
 	end
+
+    def refresh
+        @gold.text = "#{$party.gold}G"
+        @magics.text = "#{$party.magics}"
+    end
 
 end
 "B
@@ -12544,7 +12628,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"¥#==============================================================================
+end"-¥#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -12594,8 +12678,8 @@ class Game_Character
   attr_accessor :off_x, :off_y
   attr_accessor :zoom
 
+  attr_accessor :color
   attr_accessor :flash_dur # flash always white?
-
   attr_accessor :pulse_colors
   attr_accessor :icons
 
@@ -12944,7 +13028,6 @@ class Game_Character
     @pattern = 0 if mini
 
     return if mini && !jumping? # Force jumps to finish
-
 
     # Mouse pathfinding
     run_path if @runpath == true    
@@ -14123,7 +14206,7 @@ class Game_Character
 
 
 end
-"ÆJ#==============================================================================
+")K#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14154,6 +14237,8 @@ class Game_Event < Game_Character
   attr_reader :save
 
   attr_reader :width, :height
+
+  attr_reader :turn
       
 
   #--------------------------------------------------------------------------
@@ -14240,6 +14325,7 @@ class Game_Event < Game_Character
   end
 
   def force_clone(src)
+      log_scr(src)
       unlock
       clone_ev = $data.clones[src]
       @pages = clone_ev.pages
@@ -14788,6 +14874,9 @@ class Game_Event < Game_Character
         when '#N'
           @icon = ''
 
+        when '#turn'
+          @turn = data[1].to_i
+
       end
     }
     
@@ -14808,8 +14897,9 @@ class Game_Event < Game_Character
 
     # If trigger is [parallel process]
     if @trigger == 4
-      @interpreter = Interpreter.new
+      @interpreter = Interpreter.new()
       @interpreter.setup(@list, @event.id)
+      @interpreter.special = true
     end
 
 
@@ -14833,7 +14923,7 @@ class Game_Event < Game_Character
     return false if $map.interpreter.running?
       
     if $player.at?(x,y) and [1,2].include?(@trigger)
-      start_battle
+      start
     end
 
   end
@@ -14848,9 +14938,9 @@ class Game_Event < Game_Character
     check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
-    # if @interpreter != nil
-    #   @interpreter.update
-    # end
+    if @interpreter != nil
+      @interpreter.update
+    end
 
   end
     
@@ -14891,7 +14981,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"C9#==============================================================================
+end"£9#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -14903,6 +14993,8 @@ class Interpreter
 
   attr_accessor :event_id
   
+  attr_accessor :battlemap
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     depth : nest depth
@@ -14977,7 +15069,7 @@ class Interpreter
   # * Current event (as event, not id)
   #--------------------------------------------------------------------------
   def event
-    return $map.events[@event_id]
+    return $scene.map.events[@event_id]
   end
   
   #--------------------------------------------------------------------------
@@ -14993,8 +15085,8 @@ class Interpreter
   def setup_starting_event
     
     # Refresh map if necessary
-    if $map.need_refresh
-      $map.refresh
+    if $scene.map.need_refresh
+      $scene.map.refresh
     end
     
     # If common event call is reserved
@@ -15011,7 +15103,7 @@ class Interpreter
     end
     
     # Loop (map events)
-    $map.starting_events.each{ |e| 
+    $scene.map.starting_events.each{ |e| 
 
         # If not auto run
         #if e.trigger < 3
@@ -15054,7 +15146,7 @@ class Interpreter
       end
       
       # If map is different than event startup time
-      if $map.id != @map_id
+      if $scene.map.id != @map_id
         # Change event ID to 0
         @event_id = 0
       end
@@ -15071,10 +15163,11 @@ class Interpreter
 
       # Misc hud busy
       return if $scene.is_a?(Scene_Menu)
-      return if $scene.is_a?(Scene_Battle)
+      return if $scene.is_a?(Scene_Battle) && !battlemap
       return if $scene.busy?
-      
-      return if $scene.map.camera_moving?
+
+
+      #return if $scene.map.camera_moving?
 
       # If waiting for move to end
       if @move_route_waiting
@@ -15085,7 +15178,7 @@ class Interpreter
         end
         
         # Loop (map events)
-        for event in $map.events.values
+        for event in $scene.map.events.values
           
           # If this event is forcing move route
           if event.move_route_forcing
@@ -15098,6 +15191,7 @@ class Interpreter
         @move_route_waiting = false
         
       end
+
       
       # If waiting
       if @wait_count > 0
@@ -15106,9 +15200,12 @@ class Interpreter
         return
       end
 
+
+
       # If list of event commands is empty
       if @list == nil
-        
+
+ 
         # If main map event
         if @main
           # Set up starting event
@@ -15184,7 +15281,7 @@ class Interpreter
 
     # Fix for going into battle mid event
     # Cut this or something, change all maps here to $scene.map?
-    if $map.events[@event_id] == nil
+    if $scene.map.events[@event_id] == nil
       @list = nil
       return
     end
@@ -15194,11 +15291,11 @@ class Interpreter
     # If main map event and event ID are valid
     if @main and @event_id > 0
       # Unlock event
-      $map.events[@event_id].unlock
+      $scene.map.events[@event_id].unlock
     end
 
     # Tell the even that it is stopping so it can mark second
-    $map.events[@event_id].stop 
+    $scene.map.events[@event_id].stop 
 
   end
 
@@ -15423,7 +15520,7 @@ class Interpreter
   end
 
 end
-"Ë:#==============================================================================
+"%;#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15455,7 +15552,7 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
-  def initialize
+  def initialize()
 
     @id = nil
 
@@ -15783,6 +15880,8 @@ class Game_Map
           $mouse.change_cursor('Battle')
         when 'T'
           $mouse.change_cursor('Transfer')
+        when 'C'
+          $mouse.change_cursor('Coins')
         else
           $mouse.change_cursor('Default')
 
@@ -17018,7 +17117,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ø##==============================================================================
+end"L$#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17257,6 +17356,18 @@ class Game_Party
     return @gold >= n
   end
 
+
+  def add_magics(n)
+    @magics += n
+    @magics = 0 if @magics < 0
+  end
+
+  def has_magics?(n)
+    return @magics >= n
+  end
+
+
+
   def item_list
     items = []
     @items.each{ |k,v|
@@ -17307,7 +17418,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
+    set_active("ing")
     # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
@@ -17931,7 +18042,7 @@ class Scene_Base
   # end
 
 end
-"ß#==============================================================================
+"Ç#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -17942,6 +18053,8 @@ class Scene_Battle < Scene_Base
   def initialize
     super
 
+    $scene = self
+
     @phase = :intro_init
     @turn = 0
     @wait_frames = 0
@@ -17951,6 +18064,7 @@ class Scene_Battle < Scene_Base
     @skill = false # Auto skill happening
 
     @map.setup($battle.map)
+    @map.interpreter.battlemap = true # Allow to run during battle
     @tilemap.refresh(@map)
 
     # Init player and camera 
@@ -18049,6 +18163,8 @@ class Scene_Battle < Scene_Base
     #hide(@minion)
 
     reload_map
+
+    start_events
             
   end
   
@@ -18081,6 +18197,12 @@ class Scene_Battle < Scene_Base
 
     update_phase
 
+  end
+
+  def start_events
+    $scene.map.events.values.each{ |e|
+      e.start if e.turn == @turn
+    }
   end
 
   def update_phase
@@ -18189,7 +18311,7 @@ class Scene_Battle < Scene_Base
 
   end
 
-end"2
+end"n
 class Scene_Battle
 
   def phase_intro_init
@@ -18235,6 +18357,9 @@ class Scene_Battle
   end
 
   def phase_start_turn
+
+    # Start all autoruns for this turn
+    start_events
 
     # Any text or skills will use up a turn of the battle? But states won't remove?
 
@@ -18512,7 +18637,7 @@ class Scene_Battle
     
   end
 
-end"™
+end"á
 class Scene_Battle
 
   def phase_main_init
@@ -18701,6 +18826,11 @@ class Scene_Battle
           if result.target.view != nil
             result.target.view.damage
           end
+
+          if result.target.is_enemy?
+            result.target.ev.color = Color.new(0,0,0,200)
+          end
+
         end
 
         # Heal
@@ -18814,10 +18944,14 @@ class Scene_Battle
     @attack_results.each{ |result|
 
       if result.target.down?
-        #sys('fall')
-        result.target.fall
-        result.target.view.down if result.target.view
-        #fade(result.target.ev)
+        if result.target.is_actor?
+          #sys('fall')
+          result.target.fall
+          result.target.view.down if result.target.view
+          #fade(result.target.ev)
+        else
+          fade(result.target.ev)
+        end
         wait(60)
       end
 
@@ -19114,7 +19248,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"¿#==============================================================================
+"è#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -19236,8 +19370,6 @@ class Scene_Menu
     case @next_menu
 
       when "Main"; @menu = Mnu_Main.new(@vp)
-      when "Shop"; @menu = Mnu_Shop.new(@vp)
-      when "Wizard"; @menu = Mnu_Shop.new(@vp) # Wizard shop
 
       when "Quit"; @menu = Mnu_Quit.new(@vp)
       when "Journal"; @menu = Mnu_Journal.new(@vp)
@@ -19263,6 +19395,23 @@ class Scene_Menu
 
       when "Potions"; @menu = Mnu_Potions.new(@vp)
       when "Chooser"; @menu = Mnu_Chooser.new(@vp)
+
+      # Shops
+
+      # Item Shop
+      # Smith
+      # Magic
+
+      # Cheekis
+
+      when "Shop","Smith","Magic","Chester"
+        @menu = Mnu_Shop.new(@vp)
+        @menu.setup(@next_menu)
+
+      when "Sell"
+        @menu = Mnu_Shop.new(@vp)
+        @menu.setup(@next_menu)
+        @menu.sellmode
 
       when "Boyle"; @menu = Mnu_Boyle.new(@vp)
       when "Ingrid"; @menu = Mnu_Ingrid.new(@vp)

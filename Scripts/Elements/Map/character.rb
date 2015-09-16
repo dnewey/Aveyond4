@@ -121,6 +121,12 @@ class Sprite_Character < Sprite
 
   def update_colors
 
+    # Color
+    if @character.color.is_a?(Color)
+      self.color = @character.color
+      return
+    end
+
     # Flash effect
     if @character.flash_dur != nil
       self.flash(Color.new(255,255,255,160),@character.flash_dur)

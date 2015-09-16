@@ -10,6 +10,8 @@ class Interpreter
 
   attr_accessor :event_id
   
+  attr_accessor :battlemap
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     depth : nest depth
@@ -84,7 +86,7 @@ class Interpreter
   # * Current event (as event, not id)
   #--------------------------------------------------------------------------
   def event
-    return $map.events[@event_id]
+    return $scene.map.events[@event_id]
   end
   
   #--------------------------------------------------------------------------
@@ -100,8 +102,8 @@ class Interpreter
   def setup_starting_event
     
     # Refresh map if necessary
-    if $map.need_refresh
-      $map.refresh
+    if $scene.map.need_refresh
+      $scene.map.refresh
     end
     
     # If common event call is reserved
@@ -118,7 +120,7 @@ class Interpreter
     end
     
     # Loop (map events)
-    $map.starting_events.each{ |e| 
+    $scene.map.starting_events.each{ |e| 
 
         # If not auto run
         #if e.trigger < 3
@@ -161,7 +163,7 @@ class Interpreter
       end
       
       # If map is different than event startup time
-      if $map.id != @map_id
+      if $scene.map.id != @map_id
         # Change event ID to 0
         @event_id = 0
       end
@@ -178,10 +180,11 @@ class Interpreter
 
       # Misc hud busy
       return if $scene.is_a?(Scene_Menu)
-      return if $scene.is_a?(Scene_Battle)
+      return if $scene.is_a?(Scene_Battle) && !battlemap
       return if $scene.busy?
-      
-      return if $scene.map.camera_moving?
+
+
+      #return if $scene.map.camera_moving?
 
       # If waiting for move to end
       if @move_route_waiting
@@ -192,7 +195,7 @@ class Interpreter
         end
         
         # Loop (map events)
-        for event in $map.events.values
+        for event in $scene.map.events.values
           
           # If this event is forcing move route
           if event.move_route_forcing
@@ -205,6 +208,7 @@ class Interpreter
         @move_route_waiting = false
         
       end
+
       
       # If waiting
       if @wait_count > 0
@@ -213,9 +217,12 @@ class Interpreter
         return
       end
 
+
+
       # If list of event commands is empty
       if @list == nil
-        
+
+ 
         # If main map event
         if @main
           # Set up starting event
@@ -291,7 +298,7 @@ class Interpreter
 
     # Fix for going into battle mid event
     # Cut this or something, change all maps here to $scene.map?
-    if $map.events[@event_id] == nil
+    if $scene.map.events[@event_id] == nil
       @list = nil
       return
     end
@@ -301,11 +308,11 @@ class Interpreter
     # If main map event and event ID are valid
     if @main and @event_id > 0
       # Unlock event
-      $map.events[@event_id].unlock
+      $scene.map.events[@event_id].unlock
     end
 
     # Tell the even that it is stopping so it can mark second
-    $map.events[@event_id].stop 
+    $scene.map.events[@event_id].stop 
 
   end
 
