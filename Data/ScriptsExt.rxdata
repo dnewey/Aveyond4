@@ -20743,7 +20743,7 @@ class CacheManager
       GC.start
     end
 
-  end"ý#==============================================================================
+  end"z#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -20768,6 +20768,8 @@ class DataManager
   attr_reader :profiles
 
   attr_reader :victories
+  attr_reader :books
+  attr_reader :shop
 
   # Clone events
   attr_reader :clones
@@ -20810,7 +20812,9 @@ class DataManager
     @potions = load_json("potions",PotionData)
     @profiles = load_json("profiles",ProfileData)
 
-    #@victories = load_json("victories",ProfileData)
+    #@victories = load_json("victories",VictoryData)
+    @books = load_json("books",BookData)
+    @shop = load_json("shop",ShopData)
 
     @clones = load_clones
 
@@ -22079,7 +22083,7 @@ end"øclass Bitmap
 	end
 
 end
-":
+"»
 
 class UsableData
 	attr_reader :id
@@ -22231,6 +22235,16 @@ class PotionData
 	attr_reader :ingredient
 	attr_reader :problems
 	attr_reader :result
+end
+
+class VictoryData
+	attr_reader :id
+	attr_reader :speaker
+end
+
+class BookData
+	attr_reader :id
+	attr_reader :title
 end"r#==============================================================================
 # ** Gradient Font Color
 #------------------------------------------------------------------------------
