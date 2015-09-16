@@ -9,7 +9,7 @@ class Game_Battle
   attr_reader :enemy_types # Enemies for the current zone
   attr_reader :enemy_list # 
 
-  attr_reader :queue2 # Skill queue
+  attr_reader :queue # Battle actions, texts and skills
 
   attr_accessor :next_map
 
@@ -26,8 +26,7 @@ class Game_Battle
 
     @actor_index = 0
 
-    # This is a skill queue of sorts, fix this at some point
-    @queue2 = nil
+    @queue = {} # Should it have turn #?
 
     @default_map = 65
     @zone_maps = []
@@ -46,7 +45,7 @@ class Game_Battle
     @enemy_list = []
     @enemies = []
     @props = []
-    @queue2 = nil
+    @queue = {}
   end
 
   def change_maps(maps)
@@ -61,9 +60,20 @@ class Game_Battle
   end
 
   # Queue up skills to use before battle starts
-  # Use this to do scenes perhaps
-  def queue(enemy_id,skill)
-    @queue2 = [enemy_id,skill]
+  def skill(enemy_id,skill_id,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:skill,enemy_id,skill_id])
+  end
+
+  # Queue up text for scene before battle
+  def text(txt,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:text,txt])
+  end
+
+  def escape(turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:escape])
   end
 
   def setup(src_event)

@@ -10,8 +10,12 @@ class Scene_Battle < Scene_Base
     super
 
     @phase = :intro_init
+    @turn = 0
     @wait_frames = 0
     @active_battler = nil
+
+    @texts = []
+    @skill = false # Auto skill happening
 
     @map.setup($battle.map)
     @tilemap.refresh(@map)
@@ -44,19 +48,46 @@ class Scene_Battle < Scene_Base
 
     # Find battler events
     [0,1,2,3].each{ |i| 
+      
       ev = @map.event_by_evname("A.#{i}")
-      next if ev == nil
-      act = $party.actor_by_index(i).id
-      ev.character_name = "Player/#{act}"
-      ev.off_x = 32
-      ev.do(go("off_x",-32,800))
-      ev.step_anime = true
+      
+      if ev == nil # Shouldn't happen
+        log_err("No event for actor A.#{i}")
+        next
+      end
+
+      act = $party.actor_by_index(i).id      
+
       if $party.active.count > i
+
         $party.actor_by_index(i).ev = ev
         if $party.get(act).down?
           $party.get(act).fall
           $party.get(act).view.down if $party.get(act).view
+        else
+
+          ev.character_name = "Player/#{act}"
+          ev.step_anime = true
+
+          # Animate in if not dirfix
+          if !ev.direction_fix
+            case ev.direction
+              when 2
+                ev.off_y = -32
+                ev.do(go("off_y",32,800))
+              when 4
+                ev.off_x = 32
+                ev.do(go("off_x",-32,800))
+              when 6
+                ev.off_x = -32
+                ev.do(go("off_x",32,800))
+              when 8
+                ev.off_y = 32
+                ev.do(go("off_y",-32,800))            
+            end
+          end
         end
+
       end
 
     }
@@ -129,13 +160,11 @@ class Scene_Battle < Scene_Base
       return
     end
 
-    if @message.busy?
-      return
-    end
+    # Currently showing text
+    return if @message.busy?
 
-    if @map.interpreter.running?
-      return
-    end
+    # Currently interpreting
+    return if @map.interpreter.running?
 
     case @phase
 
@@ -146,8 +175,11 @@ class Scene_Battle < Scene_Base
         phase_intro_prep
       when :intro_action
         phase_intro_action
-      when :intro_minion
-        phase_intro_minion
+      when :intro_end
+        phase_intro_end
+
+      when :start_turn
+        phase_start_turn
 
       # Actor Phase
       when :actor_init
@@ -210,6 +242,15 @@ class Scene_Battle < Scene_Base
         phase_victory_level
       when :victory_end
         phase_victory_end
+
+      # Misc Phase
+      when :misc_text
+        phase_misc_text
+      when :misc_check
+        phase_misc_check
+
+      when :misc_escape
+        phase_misc_escape
 
     end
 

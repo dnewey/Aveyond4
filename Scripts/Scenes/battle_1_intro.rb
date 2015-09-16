@@ -33,34 +33,58 @@ class Scene_Battle
 
     }
 
-    #wait(30)
-    @phase = :intro_action
+    @phase = :intro_end
 
   end
 
-  def phase_intro_action
+  def phase_intro_end
 
+    @phase = :start_turn
 
-    # If there is a queue skill, start with that
-    # Change this to be better than this
-    if $battle.queue2 != nil
+  end
 
-      $battle.enemies[$battle.queue2[0]].set_action($battle.queue2[1])
+  def phase_start_turn
 
-        @battle_queue = []
-      @active_battler = $battle.enemies[$battle.queue2[0]]
-      @phase = :main_prep
+    # Any text or skills will use up a turn of the battle? But states won't remove?
+
+    @texts = []
+    @skill = false
+
+    @turn += 1
+
+    if !$battle.queue.has_key?(@turn)
+      @phase = :actor_init
       return
+    end
 
-   end
+    $battle.queue[@turn].each{ |action|
 
-    @phase = :intro_minion
+      case action[0]
 
-  end
+        when :text
+          log_scr action[1]
+          @texts.push(action[1])
+          @phase = :misc_text
 
-  def phase_intro_minion
+          # If text and skill, do skill first, it will queue up after text is done
 
-    @phase = :actor_init
+        when :skill
+
+          @skill = true
+
+          $battle.enemies[action[1]].set_action(action[2])
+
+          @battle_queue = []
+          @active_battler = $battle.enemies[action[1]]
+          @phase = :main_prep
+
+        when :escape      
+
+          @phase = :misc_escape
+
+      end
+
+    }
 
   end
 

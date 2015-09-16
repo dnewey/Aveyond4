@@ -47,7 +47,7 @@ def pop_use_skill(s,w)
 	b = $data.skills[s].name
 	ib = $cache.icon($data.skills[s].icon)
 
-	a = $data.actors[w].name+" uses: "
+	a = $data.actors[w].name+" uses:"
 	ia = $cache.icon("faces/#{w}")	
 
 	popper = $scene.hud.open_popper

@@ -28,6 +28,8 @@ class Game_Character
   attr_accessor :direction                # direction
   attr_accessor :showdir
 
+  attr_reader :direction_fix
+
   attr_accessor :force_pattern # For random pattern feature
 
   attr_accessor   :pattern                  # pattern

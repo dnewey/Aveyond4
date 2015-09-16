@@ -156,8 +156,6 @@ class Sprite_Character < Sprite
 
   def update_icons
 
-    return
-
     # Icons
     if @icons.count != @character.icons.count
       

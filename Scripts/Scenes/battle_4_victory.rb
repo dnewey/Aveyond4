@@ -5,6 +5,7 @@ class Scene_Battle
 
   	# Everybody grin
   	@hud.all_win
+    music_fadeout
 
     # Choose a dialogue
     if $battle.victory_text != nil
@@ -21,14 +22,13 @@ class Scene_Battle
     $scene.message.force_name = 'Boyle'
     $scene.message.start('A.0:'+text)
 
-
-
     # @map.do(
     #     go("cam_oy",70,500,:quad_out)
     # )   
     # $game.sub_scene.black.do(to("opacity",255,255/30))
     # wait(31)
     # music_fadeout
+    
   	@phase = :victory_xp  	
 
   end

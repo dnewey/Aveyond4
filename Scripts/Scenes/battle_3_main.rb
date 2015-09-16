@@ -93,6 +93,8 @@ class Scene_Battle
 
     @active_battler.ev.flash_dur = 15
 
+
+
     # Show text if there is
     @phase = :main_text
     wait(30)
@@ -116,7 +118,15 @@ class Scene_Battle
   # Show anim on defender
   def phase_main_anim
 
+    # Face at target of attack
+    if @active_battler.target != nil
+      @active_battler.ev.turn_toward_event(@active_battler.target.ev.id)
+    end
+
     @attack_results.each{ |result|
+
+      # Target face attacker
+      result.target.ev.turn_toward_event(@active_battler.ev)
 
       if @attack_round.anim
         if @attack_round.anim.include?("spark")
@@ -349,8 +359,9 @@ class Scene_Battle
     
     # Remove states and that before next turn starts
 
-    # Go to next turn, actor select
-    @phase = :actor_init
+
+    # Go to next turn
+    @phase = :start_turn
 
   end
 

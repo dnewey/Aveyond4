@@ -106,6 +106,8 @@ class Game_Battler
     data = $data.enemies[id]
     @id = id
 
+    @name = data.name
+
     @xp = data.xp
 
     # Get stat plus per enemy
