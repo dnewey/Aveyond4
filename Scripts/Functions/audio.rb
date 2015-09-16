@@ -14,6 +14,7 @@ def sys(file,vol=1.0)
 end
 
 def music(file,vol=1.0)
+	# $audio.music_target = 1
 	$audio.music(file,vol)
 end
 
@@ -52,4 +53,13 @@ end
 
 def atmosphere_fadeout
 	$audio.atmosphere_target = 0.0
+end
+
+def atmosphere_fadein
+	$audio.atmosphere_target = 1.0
+end
+
+def atmosphere_restore
+	# Restore the zone music
+	$map.setup_audio
 end

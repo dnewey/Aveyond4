@@ -1,4 +1,4 @@
-["ú#==============================================================================
+[Ž"ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"¦#==============================================================================
+end"˜#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -230,8 +230,6 @@ class Sprite_Character < Sprite
   end
 
   def update_icons
-
-    return
 
     # Icons
     if @icons.count != @character.icons.count
@@ -2302,7 +2300,7 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"Ú
+end"‚
 # Audio
 
 def sfx(file,vol=1.0,delay=0)
@@ -2318,6 +2316,7 @@ def sys(file,vol=1.0)
 end
 
 def music(file,vol=1.0)
+	# $audio.music_target = 1
 	$audio.music(file,vol)
 end
 
@@ -2356,6 +2355,15 @@ end
 
 def atmosphere_fadeout
 	$audio.atmosphere_target = 0.0
+end
+
+def atmosphere_fadein
+	$audio.atmosphere_target = 1.0
+end
+
+def atmosphere_restore
+	# Restore the zone music
+	$map.setup_audio
 end"	#==============================================================================
 # ** Common Functions
 #==============================================================================
@@ -3239,7 +3247,7 @@ end
 
 
 
-" 
+"Ÿ
 
 def pop_item(item,number,type)
 
@@ -3289,7 +3297,7 @@ def pop_use_skill(s,w)
 	b = $data.skills[s].name
 	ib = $cache.icon($data.skills[s].icon)
 
-	a = $data.actors[w].name+" uses: "
+	a = $data.actors[w].name+" uses:"
 	ia = $cache.icon("faces/#{w}")	
 
 	popper = $scene.hud.open_popper
@@ -11719,7 +11727,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"«#==============================================================================
+end"Ä#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -11826,6 +11834,8 @@ class Game_Battler
 
     data = $data.enemies[id]
     @id = id
+
+    @name = data.name
 
     @xp = data.xp
 
@@ -12534,7 +12544,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"ù³#==============================================================================
+end"´#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -12563,6 +12573,8 @@ class Game_Character
   
   attr_accessor :direction                # direction
   attr_accessor :showdir
+
+  attr_reader :direction_fix
 
   attr_accessor :force_pattern # For random pattern feature
 
@@ -16474,7 +16486,7 @@ class Game_Player < Game_Character
   end
 
 end
-"q%
+"š&
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16485,7 +16497,7 @@ class Game_Battle
   attr_reader :enemy_types # Enemies for the current zone
   attr_reader :enemy_list # 
 
-  attr_reader :queue2 # Skill queue
+  attr_reader :queue # Battle actions, texts and skills
 
   attr_accessor :next_map
 
@@ -16502,8 +16514,7 @@ class Game_Battle
 
     @actor_index = 0
 
-    # This is a skill queue of sorts, fix this at some point
-    @queue2 = nil
+    @queue = {} # Should it have turn #?
 
     @default_map = 65
     @zone_maps = []
@@ -16522,7 +16533,7 @@ class Game_Battle
     @enemy_list = []
     @enemies = []
     @props = []
-    @queue2 = nil
+    @queue = {}
   end
 
   def change_maps(maps)
@@ -16537,9 +16548,20 @@ class Game_Battle
   end
 
   # Queue up skills to use before battle starts
-  # Use this to do scenes perhaps
-  def queue(enemy_id,skill)
-    @queue2 = [enemy_id,skill]
+  def skill(enemy_id,skill_id,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:skill,enemy_id,skill_id])
+  end
+
+  # Queue up text for scene before battle
+  def text(txt,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:text,txt])
+  end
+
+  def escape(turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:escape])
   end
 
   def setup(src_event)
@@ -17909,7 +17931,7 @@ class Scene_Base
   # end
 
 end
-"÷#==============================================================================
+"§#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -17921,8 +17943,12 @@ class Scene_Battle < Scene_Base
     super
 
     @phase = :intro_init
+    @turn = 0
     @wait_frames = 0
     @active_battler = nil
+
+    @texts = []
+    @skill = false # Auto skill happening
 
     @map.setup($battle.map)
     @tilemap.refresh(@map)
@@ -17955,19 +17981,46 @@ class Scene_Battle < Scene_Base
 
     # Find battler events
     [0,1,2,3].each{ |i| 
+      
       ev = @map.event_by_evname("A.#{i}")
-      next if ev == nil
-      act = $party.actor_by_index(i).id
-      ev.character_name = "Player/#{act}"
-      ev.off_x = 32
-      ev.do(go("off_x",-32,800))
-      ev.step_anime = true
+      
+      if ev == nil # Shouldn't happen
+        log_err("No event for actor A.#{i}")
+        next
+      end
+
+      act = $party.actor_by_index(i).id      
+
       if $party.active.count > i
+
         $party.actor_by_index(i).ev = ev
         if $party.get(act).down?
           $party.get(act).fall
           $party.get(act).view.down if $party.get(act).view
+        else
+
+          ev.character_name = "Player/#{act}"
+          ev.step_anime = true
+
+          # Animate in if not dirfix
+          if !ev.direction_fix
+            case ev.direction
+              when 2
+                ev.off_y = -32
+                ev.do(go("off_y",32,800))
+              when 4
+                ev.off_x = 32
+                ev.do(go("off_x",-32,800))
+              when 6
+                ev.off_x = -32
+                ev.do(go("off_x",32,800))
+              when 8
+                ev.off_y = 32
+                ev.do(go("off_y",-32,800))            
+            end
+          end
         end
+
       end
 
     }
@@ -18040,13 +18093,11 @@ class Scene_Battle < Scene_Base
       return
     end
 
-    if @message.busy?
-      return
-    end
+    # Currently showing text
+    return if @message.busy?
 
-    if @map.interpreter.running?
-      return
-    end
+    # Currently interpreting
+    return if @map.interpreter.running?
 
     case @phase
 
@@ -18057,8 +18108,11 @@ class Scene_Battle < Scene_Base
         phase_intro_prep
       when :intro_action
         phase_intro_action
-      when :intro_minion
-        phase_intro_minion
+      when :intro_end
+        phase_intro_end
+
+      when :start_turn
+        phase_start_turn
 
       # Actor Phase
       when :actor_init
@@ -18122,11 +18176,20 @@ class Scene_Battle < Scene_Base
       when :victory_end
         phase_victory_end
 
+      # Misc Phase
+      when :misc_text
+        phase_misc_text
+      when :misc_check
+        phase_misc_check
+
+      when :misc_escape
+        phase_misc_escape
+
     end
 
   end
 
-end"…
+end"2
 class Scene_Battle
 
   def phase_intro_init
@@ -18161,34 +18224,58 @@ class Scene_Battle
 
     }
 
-    #wait(30)
-    @phase = :intro_action
+    @phase = :intro_end
 
   end
 
-  def phase_intro_action
+  def phase_intro_end
 
+    @phase = :start_turn
 
-    # If there is a queue skill, start with that
-    # Change this to be better than this
-    if $battle.queue2 != nil
+  end
 
-      $battle.enemies[$battle.queue2[0]].set_action($battle.queue2[1])
+  def phase_start_turn
 
-        @battle_queue = []
-      @active_battler = $battle.enemies[$battle.queue2[0]]
-      @phase = :main_prep
+    # Any text or skills will use up a turn of the battle? But states won't remove?
+
+    @texts = []
+    @skill = false
+
+    @turn += 1
+
+    if !$battle.queue.has_key?(@turn)
+      @phase = :actor_init
       return
+    end
 
-   end
+    $battle.queue[@turn].each{ |action|
 
-    @phase = :intro_minion
+      case action[0]
 
-  end
+        when :text
+          log_scr action[1]
+          @texts.push(action[1])
+          @phase = :misc_text
 
-  def phase_intro_minion
+          # If text and skill, do skill first, it will queue up after text is done
 
-    @phase = :actor_init
+        when :skill
+
+          @skill = true
+
+          $battle.enemies[action[1]].set_action(action[2])
+
+          @battle_queue = []
+          @active_battler = $battle.enemies[action[1]]
+          @phase = :main_prep
+
+        when :escape      
+
+          @phase = :misc_escape
+
+      end
+
+    }
 
   end
 
@@ -18425,7 +18512,7 @@ class Scene_Battle
     
   end
 
-end"¹
+end"ª
 class Scene_Battle
 
   def phase_main_init
@@ -18520,6 +18607,8 @@ class Scene_Battle
 
     @active_battler.ev.flash_dur = 15
 
+
+
     # Show text if there is
     @phase = :main_text
     wait(30)
@@ -18543,7 +18632,15 @@ class Scene_Battle
   # Show anim on defender
   def phase_main_anim
 
+    # Face at target of attack
+    if @active_battler.target != nil
+      @active_battler.ev.turn_toward_event(@active_battler.target.ev.id)
+    end
+
     @attack_results.each{ |result|
+
+      # Target face attacker
+      result.target.ev.turn_toward_event(@active_battler.ev)
 
       if @attack_round.anim
         if @attack_round.anim.include?("spark")
@@ -18776,18 +18873,20 @@ class Scene_Battle
     
     # Remove states and that before next turn starts
 
-    # Go to next turn, actor select
-    @phase = :actor_init
+
+    # Go to next turn
+    @phase = :start_turn
 
   end
 
-end"
+end"
 class Scene_Battle
 
   def phase_victory_init
 
   	# Everybody grin
   	@hud.all_win
+    music_fadeout
 
     # Choose a dialogue
     if $battle.victory_text != nil
@@ -18804,14 +18903,13 @@ class Scene_Battle
     $scene.message.force_name = 'Boyle'
     $scene.message.start('A.0:'+text)
 
-
-
     # @map.do(
     #     go("cam_oy",70,500,:quad_out)
     # )   
     # $game.sub_scene.black.do(to("opacity",255,255/30))
     # wait(31)
     # music_fadeout
+    
   	@phase = :victory_xp  	
 
   end
@@ -18854,7 +18952,77 @@ class Scene_Battle
   end
 
 
-end"ß#==============================================================================
+end"\
+class Scene_Battle
+
+  def phase_misc_text
+
+  	data = @texts.shift
+
+
+  	# Get speaker name
+  	speaker = data.split(":")[0]
+  	text = data.split(":")[1]
+
+  	force = speaker
+
+  	# If speaker is enemy, get name somehow
+  	if speaker.include?("E.")
+  		log_info(speaker)
+  		force = $battle.enemies[speaker.split(".")[1].to_i].name
+  		log_info(force)
+  	end
+
+  	if $party.active.include?(speaker)
+  		force = $party.get(speaker).name
+  		speaker = "A.#{$party.active.index(speaker)}"
+  	end
+
+	$scene.message.force_name = force
+
+	# Convert actor speaker to event format
+
+	#speaker = $scene.
+
+	log_scr(speaker+": "+text)
+
+	#if $party.active.include?()
+    $scene.message.start(speaker+": "+text)
+
+    wait(1)
+
+  	@phase = :misc_check
+
+  end
+
+  def phase_misc_check
+
+  	
+  	if !@texts.empty?
+
+  		# If text still going, allow it
+  		@phase = :misc_text
+
+  	elsif @skill == true
+
+  		# If a skill is queued, start it
+  		@phase = :main_prep
+
+  	else
+
+  		# Else back to main
+  		@phase = :start_turn
+
+  	end
+
+  end
+
+  def phase_misc_escape
+
+  end
+
+ end
+"ß#==============================================================================
 # ** Scene_GameOver
 #==============================================================================
 
