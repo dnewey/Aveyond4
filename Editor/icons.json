@@ -332,6 +332,7 @@
 "states/cursed",
 "states/minion-double",
 "states/poison",
+"states/shriek",
 "states/sleep",
 "states/stun",
 "states/web",

@@ -66,6 +66,7 @@ class StateData
 	attr_reader :stats
 	attr_reader :mods
 	attr_reader :remove
+	attr_reader :stun
 	attr_reader :color
 end
 
@@ -153,7 +154,7 @@ end
 
 class VictoryData
 	attr_reader :id
-	attr_reader :speaker
+	attr_reader :dialogue
 end
 
 class BookData

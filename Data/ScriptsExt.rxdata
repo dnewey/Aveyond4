@@ -1,4 +1,4 @@
-["ú#==============================================================================
+["ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -2371,6 +2371,21 @@ end
 def atmosphere_restore
 	# Restore the zone music
 	$map.setup_audio
+end"â
+def bqs(skill,turn)
+	$battle.queue_sill(skill,turn)
+end
+
+def bqt(text,turn)
+	$battle.queue_text(text,turn)
+end
+
+def bqe(turn)
+	$battle.queue_escape(turn)
+end
+
+def bgj(who,turn)
+	$battle.queue_join(who,turn)
 end"	#==============================================================================
 # ** Common Functions
 #==============================================================================
@@ -16585,7 +16600,7 @@ class Game_Player < Game_Character
   end
 
 end
-"š&
+"('
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16647,20 +16662,25 @@ class Game_Battle
   end
 
   # Queue up skills to use before battle starts
-  def skill(enemy_id,skill_id,turn=1)
+  def queue_skill(enemy_id,skill_id,turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:skill,enemy_id,skill_id])
   end
 
   # Queue up text for scene before battle
-  def text(txt,turn=1)
+  def queue_text(txt,turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:text,txt])
   end
 
-  def escape(turn=1)
+  def queue_escape(turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:escape])
+  end
+
+  def queue_join(who,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:join,who])
   end
 
   def setup(src_event)
@@ -19013,7 +19033,7 @@ class Scene_Battle
 
   end
 
-end"
+end"¡
 class Scene_Battle
 
   def phase_victory_init
@@ -19025,24 +19045,28 @@ class Scene_Battle
     # Choose a dialogue
     if $battle.victory_text != nil
 
-  	   text = $battle.victory_text
+       data = $battle.victory_text.split(": ")
+       speaker = data[0]
+  	   text = data[1]
 
     else
 
       # Get dialogue for a party member currently active
       speaker = $party.alive_members.sample
 
+      # What will they say?
+      idx = 1#rand(1)
+      text = $data.victories["#{speaker}-#{idx}"].dialogue
+
     end
 
-    $scene.message.force_name = 'Boyle'
-    $scene.message.start('A.0:'+text)
+    log_info(speaker)
 
-    # @map.do(
-    #     go("cam_oy",70,500,:quad_out)
-    # )   
-    # $game.sub_scene.black.do(to("opacity",255,255/30))
-    # wait(31)
-    # music_fadeout
+    force = $party.get(speaker).name
+    speaker = "A.#{$party.active.index(speaker)}"
+    
+    $scene.message.force_name = force
+    $scene.message.start(speaker+": "+text)
     
   	@phase = :victory_xp  	
 
@@ -20743,7 +20767,7 @@ class CacheManager
       GC.start
     end
 
-  end"z#==============================================================================
+  end"y#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -20812,7 +20836,7 @@ class DataManager
     @potions = load_json("potions",PotionData)
     @profiles = load_json("profiles",ProfileData)
 
-    #@victories = load_json("victories",VictoryData)
+    @victories = load_json("victories",VictoryData)
     @books = load_json("books",BookData)
     @shop = load_json("shop",ShopData)
 
@@ -22083,7 +22107,7 @@ end"øclass Bitmap
 	end
 
 end
-"»
+"Ğ
 
 class UsableData
 	attr_reader :id
@@ -22152,6 +22176,7 @@ class StateData
 	attr_reader :stats
 	attr_reader :mods
 	attr_reader :remove
+	attr_reader :stun
 	attr_reader :color
 end
 
@@ -22239,7 +22264,7 @@ end
 
 class VictoryData
 	attr_reader :id
-	attr_reader :speaker
+	attr_reader :dialogue
 end
 
 class BookData

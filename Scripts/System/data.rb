@@ -67,7 +67,7 @@ class DataManager
     @potions = load_json("potions",PotionData)
     @profiles = load_json("profiles",ProfileData)
 
-    #@victories = load_json("victories",VictoryData)
+    @victories = load_json("victories",VictoryData)
     @books = load_json("books",BookData)
     @shop = load_json("shop",ShopData)
 

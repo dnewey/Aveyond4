@@ -60,20 +60,25 @@ class Game_Battle
   end
 
   # Queue up skills to use before battle starts
-  def skill(enemy_id,skill_id,turn=1)
+  def queue_skill(enemy_id,skill_id,turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:skill,enemy_id,skill_id])
   end
 
   # Queue up text for scene before battle
-  def text(txt,turn=1)
+  def queue_text(txt,turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:text,txt])
   end
 
-  def escape(turn=1)
+  def queue_escape(turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:escape])
+  end
+
+  def queue_join(who,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:join,who])
   end
 
   def setup(src_event)

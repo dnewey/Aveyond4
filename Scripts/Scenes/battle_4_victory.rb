@@ -10,24 +10,28 @@ class Scene_Battle
     # Choose a dialogue
     if $battle.victory_text != nil
 
-  	   text = $battle.victory_text
+       data = $battle.victory_text.split(": ")
+       speaker = data[0]
+  	   text = data[1]
 
     else
 
       # Get dialogue for a party member currently active
       speaker = $party.alive_members.sample
 
+      # What will they say?
+      idx = 1#rand(1)
+      text = $data.victories["#{speaker}-#{idx}"].dialogue
+
     end
 
-    $scene.message.force_name = 'Boyle'
-    $scene.message.start('A.0:'+text)
+    log_info(speaker)
 
-    # @map.do(
-    #     go("cam_oy",70,500,:quad_out)
-    # )   
-    # $game.sub_scene.black.do(to("opacity",255,255/30))
-    # wait(31)
-    # music_fadeout
+    force = $party.get(speaker).name
+    speaker = "A.#{$party.active.index(speaker)}"
+    
+    $scene.message.force_name = force
+    $scene.message.start(speaker+": "+text)
     
   	@phase = :victory_xp  	
 
