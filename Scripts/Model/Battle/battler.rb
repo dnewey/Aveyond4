@@ -42,7 +42,7 @@ class Game_Battler
     @equips = {}
 
     @states = []
-    @state_counter = {}
+    @states_counter = {}
 
     @skills = []
     @cooldowns = {}
@@ -175,20 +175,14 @@ class Game_Battler
   
   def transform(into)
 
-    @transform = into
+    @transform = 'x-'+into
 
-    @transform = nil if @transform == 'nil'
-    log_scr("TRANSFORM NOW")
+    @transform = nil if into == 'nil'
 
     if @transform != nil
-
-      ev.character_name = "Player/#{@id}-#{into}"
-      ev.direction = 4
-
+      ev.character_name = "Player/#{@id}-#{@transform}"
     else
-
       ev.character_name = "Player/#{@id}-idle"
-
     end
 
   end

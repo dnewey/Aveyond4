@@ -91,6 +91,11 @@ class Scene_Battle < Scene_Base
           end
         end
 
+      else
+
+        # This battler not used, hide it
+        hide(ev)
+
       end
 
     }
@@ -103,6 +108,8 @@ class Scene_Battle < Scene_Base
         log_sys("HP")
         log_sys($battle.enemies[i].stat('hp'))
         ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+      else
+        hide(ev)
       end
     }
 

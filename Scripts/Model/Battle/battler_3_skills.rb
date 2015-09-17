@@ -34,10 +34,12 @@ class Game_Battler
   	  @action = 'attack'
       @skill_id = 'attack'
       @target = $party.attackable_battlers.sample
+      @scope = 'rand'
     elsif is_minion?
       @action = 'attack'
       @skill_id = 'attack'
       @target = $battle.attackable_enemies.sample
+      @scope = 'rand'
     end
   end  
 

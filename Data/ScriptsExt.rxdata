@@ -1550,7 +1550,7 @@ class Label < Sprite
         
   end
   
-end"[A#==============================================================================
+end"^A#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1987,7 +1987,7 @@ class List
 
     item = $data.quests[data]
 
-    ico = $cache.icon('misc/unknown')
+    ico = $cache.icon('misc/'+item.type)
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
@@ -2384,7 +2384,7 @@ def bqe(turn)
 	$battle.queue_escape(turn)
 end
 
-def bgj(who,turn)
+def bqj(who,turn)
 	$battle.queue_join(who,turn)
 end"	#==============================================================================
 # ** Common Functions
@@ -4056,7 +4056,7 @@ def cauldron_graphic(ev)
 end"
 def word_length
 
-end"o
+end"
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -4068,21 +4068,11 @@ class BattleHud
 
 	def initialize(vp)
 
-		# Bottom bar
+		@vp = vp
+
 		@chars = []
-		idx = 0
-		cx = 5
-		cx = 240 if $party.active.count == 1
-		cx = 170 if $party.active.count == 2
-		cx = 85 if $party.active.count == 3
-		$party.active.each{ |char|
-			view = CharView.new(vp,$party.actor_by_id(char),idx)
-			view.x = cx + (idx * 158)
-			view.y = 340
-			@chars.push(view)
-			$party.get(char).view = view
-			idx += 1
-		}
+
+		build_views
 
 		# Help box
 		@help_box = Box.new(vp)
@@ -4104,7 +4094,28 @@ class BattleHud
 	end
 
 	def dispose
+		@chars.each{ |c| c.dispose }
+		@help_box.dispose
+		@help_text.dispose
+	end
 
+	def build_views
+		# Bottom bar
+		@chars.each{ |c| c.dispose }
+		@chars = []
+		idx = 0
+		cx = 5
+		cx = 240 if $party.active.count == 1
+		cx = 170 if $party.active.count == 2
+		cx = 85 if $party.active.count == 3
+		$party.active.each{ |char|
+			view = CharView.new(@vp,$party.actor_by_id(char),idx)
+			view.x = cx + (idx * 158)
+			view.y = 340
+			@chars.push(view)
+			$party.get(char).view = view
+			idx += 1
+		}
 	end
 
 	def all_win
@@ -4130,6 +4141,20 @@ class BattleHud
 
 		@help_box.update
 
+		if @popper
+			@popper.update 
+			if $input.action? || $input.click?
+				$tweens.clear(@popper)
+				@popper.dispose
+				@popper = nil
+			end
+		end
+
+	end
+
+	def open_popper()
+		@popper = Ui_Popper.new(@vp)
+		return @popper
 	end
 
 end"Ö
@@ -4449,7 +4474,7 @@ class ActorCmd
 
 	end
 
-end"Ä
+end"@
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -4538,6 +4563,11 @@ class CharView < SpriteGroup
 
 	end
 
+	def dispose
+		# BUILD THIS!!!!!!!!!!!!!!!!!!!!!!
+		log_err("MAKE A DISPOSE")
+	end
+
 	def update
 
 		@box.update
@@ -4564,9 +4594,9 @@ class CharView < SpriteGroup
 		end
 
 		# Has the state changed?
-		if @battler.state != @state
+		if !@battler.states.empty? && @battler.states[0] != @state
 
-			@state = @battler.state
+			@state = @battler.states[0]
 
 			if @state == nil
 
@@ -4739,7 +4769,7 @@ class ItemCmd
 		return @item
 	end
 
-end"t
+end"\
 class SkillCmd < ItemCmd
 
 	def setup(battler,action)
@@ -4748,7 +4778,6 @@ class SkillCmd < ItemCmd
 
 		skill_list = @battler.skill_list(action)
 
-		log_info(skill_list)
 		@box.type = :skill
 		@list.type = :skill
 		@list.user = @battler.id
@@ -6984,8 +7013,8 @@ class Ui_Message
     return if @word == nil
 
     #Check for vars
-    if @word.include?("@")
-      @word.sub!("@","")
+    if @word.include?("&")
+      @word.sub!("&","")
       @word = $state.varval(@word).to_s
     end 
 
@@ -9336,7 +9365,7 @@ class Mnu_Equip < Mnu_Base
 
 	end
 
-end",#==============================================================================
+end"Á#==============================================================================
 # ** Mnu_Profile
 #==============================================================================
 
@@ -9350,6 +9379,7 @@ class Mnu_Profile < Mnu_Base
 		@subtitle.text = "Master of deception"
 
 		@char = $party.get($menu.char)
+		profile = $data.profiles[$menu.char]
 
 		remove_menu
 		remove_info
@@ -9359,34 +9389,106 @@ class Mnu_Profile < Mnu_Base
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
 		self.left.push(@box)
+
+		spacing = 28
 		
 		data = []
-		data.push(["faces/boy","Name: Boyle"])
-		data.push(["faces/boy","Home: Wyrmwood"])
-		data.push(["faces/boy","Age: 29Â¾"])
+		data.push(["faces/boy","Name: #{profile.name}"])
+		data.push(["faces/boy","Home: #{profile.home}"])
+		data.push(["faces/boy","Age: #{profile.age}"])
+		data.push(["faces/boy","Biography:"])
 
 		cx = 30
 		cy = 125
 
-		data.each{ |d|
+		# Name
+		lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon("faces/#{$menu.char}")
+	    lbl.text = "Name: #{profile.name}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
-			lbl = Label.new(vp)
-			lbl.icon = $cache.icon(d[0])
-	     	lbl.font = $fonts.list
-	     	lbl.shadow = $fonts.list_shadow
-	     	lbl.text = d[1]
-	     	lbl.move(cx,cy)
-	     	self.left.push(lbl)
+	    cy += spacing
 
-	     	cy += 31
+	    # Age
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/cooldown')
+	    lbl.text = "Age: #{profile.age}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
-	     }
+	    cy += spacing
 
-	    @desc = Area.new(vp)
-    	@desc.font = $fonts.pop_text
-    	@desc.text = "Boyle Wolfman, more wolf than man and even less man than dingo. Next line."
-    	@desc.move(cx,cy)
-    	self.left.push(@desc)
+	    # Home
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/home')
+	    lbl.text = "Home: #{profile.home}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    # Bio
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/bio')
+	    lbl.text = "Biography"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    area = Area.new(vp)
+    	area.font = $fonts.pop_text
+    	area.text = profile.bio
+    	area.move(cx+10,cy)
+    	self.left.push(area)
+
+    	cy += area.height - 4
+
+    	# Hint
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/credits')
+	    lbl.text = "Tip"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    area = Area.new(vp)
+    	area.font = $fonts.pop_text
+    	area.text = profile.tip
+    	area.move(cx+10,cy)
+    	self.left.push(area)
+
+    	cy += area.height - 4
+
+    	# Fact
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/fact')
+	    lbl.text = "Fun Fact"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    area = Area.new(vp)
+    	area.font = $fonts.pop_text
+    	area.text = profile.fact
+    	area.move(cx+10,cy)
+    	self.left.push(area)
+
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -9549,7 +9651,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/heal")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max HP: #{@char.maxhp}  (#{@char.stat_base('hp')} + #{@char.stat_gear('hp')})"
+	    lbl.text = "Max HP: #{@char.maxhp}  (#{@char.stat_pure('hp')} + #{@char.stat_gear('hp')})"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -9570,7 +9672,7 @@ class Mnu_Status < Mnu_Base
 				type = "MP"
 			end
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "Max #{type}: #{@char.maxmp}  (#{@char.stat_base('mp')} + #{@char.stat_gear('mp')})"
+		    lbl.text = "Max #{type}: #{@char.maxmp}  (#{@char.stat_pure('mp')} + #{@char.stat_gear('mp')})"
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 
@@ -9581,7 +9683,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/str")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}  (#{@char.stat_base('str')} + #{@char.stat_gear('str')})"
+	    lbl.text = "Strength: #{@char.str}  (#{@char.stat_pure('str')} + #{@char.stat_gear('str')})"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -9590,7 +9692,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/def")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}  (#{@char.stat_base('def')} + #{@char.stat_gear('def')})"
+	    lbl.text = "Defense: #{@char.def}  (#{@char.stat_pure('def')} + #{@char.stat_gear('def')})"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -9611,7 +9713,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/luck")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.luk}  (#{@char.stat_base('luk')} + #{@char.stat_gear('luk')})"
+	    lbl.text = "Luck: #{@char.luk}  (#{@char.stat_pure('luk')} + #{@char.stat_gear('luk')})"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -9620,7 +9722,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/eva")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.eva}  (#{@char.stat_base('eva')} + #{@char.stat_gear('eva')})"
+	    lbl.text = "Evasion: #{@char.eva}  (#{@char.stat_pure('eva')} + #{@char.stat_gear('eva')})"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -9629,7 +9731,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/res")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.res}  (#{@char.stat_base('res')} + #{@char.stat_gear('res')})"
+	    lbl.text = "Resist: #{@char.res}  (#{@char.stat_pure('res')} + #{@char.stat_gear('res')})"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -11826,7 +11928,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"Ä#==============================================================================
+end"ñ#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -11870,7 +11972,7 @@ class Game_Battler
     @equips = {}
 
     @states = []
-    @state_counter = []
+    @states_counter = {}
 
     @skills = []
     @cooldowns = {}
@@ -12003,20 +12105,14 @@ class Game_Battler
   
   def transform(into)
 
-    @transform = into
+    @transform = 'x-'+into
 
-    @transform = nil if @transform == 'nil'
-    log_scr("TRANSFORM NOW")
+    @transform = nil if into == 'nil'
 
     if @transform != nil
-
-      ev.character_name = "Player/#{@id}-#{into}"
-      ev.direction = 4
-
+      ev.character_name = "Player/#{@id}-#{@transform}"
     else
-
       ev.character_name = "Player/#{@id}-idle"
-
     end
 
   end
@@ -12064,12 +12160,18 @@ class Game_Battler
   def down?
     @hp <= 0 
   end
+  
   def attackable?
     return !down?
   end
 
   def can_attack?
+
+    # Any states stopping this?
+    return false if !@states.select{ |s| s.stun }.empty?
+
     return !down?
+
   end
 
 
@@ -12090,7 +12192,7 @@ class Game_Battler
 
 
 end
-"r
+"ˆ
 class Game_Battler
 
   # For displays
@@ -12196,7 +12298,8 @@ class Game_Battler
     return val.to_i
   end
 
-  def stat_base(stat)
+  # For menu display
+  def stat_pure(stat)
     val = 0
     val += stat_base(stat) # Player base stat from level
     val *= stat_base_mod(stat) # Modify per actor
@@ -12205,7 +12308,7 @@ class Game_Battler
   end
 
   def stat_gear(stat)
-    return stat(stat) - stat_base(stat)
+    return stat(stat) - stat_pure(stat)
   end
 
   def stat_base(stat)
@@ -12258,7 +12361,7 @@ class Game_Battler
     return 1.0
   end
 
-end"Q
+end"ö
 class Game_Battler
 
 
@@ -12270,44 +12373,17 @@ class Game_Battler
     return @states.include?(state_id)
   end
 
-  def state
-    return @state
+  def states
+    return @states
   end
 
   def add_state(state_id)
     @states.push(state_id)
+    @states_counter[state_id] = 0
   end
 
   def remove_state(id)
     @states.delete(id)
-  end
-
-  #--------------------------------------------------------------------------
-  # * Get Restriction
-  #--------------------------------------------------------------------------
-  def restriction
-    restriction_max = 0
-    # Get maximum restriction from currently added states
-    for i in @states
-      if $data_states[i].restriction >= restriction_max
-        restriction_max = $data_states[i].restriction
-      end
-    end
-    return restriction_max
-  end
-
-  #--------------------------------------------------------------------------
-  # â— Has Restriction
-  #   Determines if battler has a special restriction
-  #--------------------------------------------------------------------------
-  def has_restriction?(restriction)
-    for i in @states
-      if $data_states[i].restriction == restriction
-        return true
-      end
-    end
-    
-    return false
   end
 
   #--------------------------------------------------------------------------
@@ -12323,41 +12399,33 @@ class Game_Battler
   end
 
   #--------------------------------------------------------------------------
-  # * Remove Battle States (called up during end of battle)
+  # * Remove Battle States
   #--------------------------------------------------------------------------
   def remove_states_battle
-    for i in @states.clone
-      if $data_states[i].battle_only
-        remove_state(i)
-      end
-    end
+    @states.delete_if{ |s| $data.states[s].rmv_battle }
   end
 
   #--------------------------------------------------------------------------
-  # * Natural Removal of States (called up each turn)
-  #--------------------------------------------------------------------------
-  def remove_states_auto
-    for i in @states_turn.keys.clone
-      if @states_turn[i] > 0
-        @states_turn[i] -= 1
-      elsif rand(100) < $data_states[i].auto_release_prob
-        remove_state(i)
-      end
-    end
-  end
-
-  #--------------------------------------------------------------------------
-  # * State Removed by Shock (called up each time physical damage occurs)
+  # * State Removed by Shock
   #--------------------------------------------------------------------------
   def remove_states_shock
-    for i in @states.clone
-      if rand(100) < $data_states[i].shock_release_prob
-        remove_state(i)
-      end
-    end
+    @states.delete_if{ |s| $data.states[s].rmv_shock }
   end
 
- end"¹class Game_Battler
+  #--------------------------------------------------------------------------
+  # * Natural Removal of States
+  #--------------------------------------------------------------------------
+  def remove_states_turn
+    
+    # Add a turn to the counter
+    @states_counter.values.each{ |v| v += 1 }
+
+    # If done
+    @states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
+
+  end
+
+ end"çclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -12393,10 +12461,12 @@ class Game_Battler
   	  @action = 'attack'
       @skill_id = 'attack'
       @target = $party.attackable_battlers.sample
+      @scope = 'rand'
     elsif is_minion?
       @action = 'attack'
       @skill_id = 'attack'
       @target = $battle.attackable_enemies.sample
+      @scope = 'rand'
     end
   end  
 
@@ -14083,7 +14153,7 @@ class Game_Character
     # If horizontal distance is longer
     if sx.abs > sy.abs
       # Turn to the right or left towards event
-      sx > 0 ? turn_left : turn_right
+      sx > 0 ? turn_right : turn_left
     # If vertical distance is longer
     else
       # Turn up or down towards event
@@ -14221,7 +14291,7 @@ class Game_Character
 
 
 end
-")K#==============================================================================
+"7K#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14559,7 +14629,7 @@ class Game_Event < Game_Character
 
   def label_applies?(label)
 
-    case label.split(":")[0]
+    case label.gsub(' ',':').split(":")[0]
 
       when '@else'
         return true
@@ -14996,7 +15066,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"£9#==============================================================================
+end"¢9#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -15182,7 +15252,7 @@ class Interpreter
       return if $scene.busy?
 
 
-      #return if $scene.map.camera_moving?
+      return if $scene.map.camera_moving?
 
       # If waiting for move to end
       if @move_route_waiting
@@ -15535,7 +15605,7 @@ class Interpreter
   end
 
 end
-"%;#==============================================================================
+"E;#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15680,6 +15750,7 @@ class Game_Map
 
     # Clear forced terrains
     @force_terrains.clear
+    $audio.clear_env
 
     # Set map event data
     @events = {}
@@ -15819,7 +15890,7 @@ class Game_Map
       $menu.common_event = nil
     end
 
-    @interpreter.update
+    @interpreter.update #if @cam_snap
     return if $scene.is_a?(Scene_Menu)
 
     update_events
@@ -15832,9 +15903,7 @@ class Game_Map
 
     # Mouse update
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
-    update_mouse
-
-    
+    update_mouse    
 
   end
 
@@ -15956,7 +16025,7 @@ class Game_Map
           end
 
           if !y_snap
-            y_snap = true if @cam_x <= 0 && dx < 0
+            y_snap = true if @cam_y <= 0 && dy < 0
           end
 
           can_snap = true if x_snap && y_snap
@@ -16600,7 +16669,7 @@ class Game_Player < Game_Character
   end
 
 end
-"('
+"''
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16634,7 +16703,7 @@ class Game_Battle
     @zone_maps = []
     @next_map = nil
 
-    @victory_text = "nil"
+    @victory_text = nil
 
 	end
 
@@ -16828,8 +16897,6 @@ class Game_Battle
 
   def build_attack_plan(attacker)
 
-    log_sys(attacker)
-
     plan = Attack_Plan.new
 
     skill = nil
@@ -16945,9 +17012,6 @@ class Game_Battle
         result.damage = is_dmg ? 1 : 0
       end
 
-      log_sys result.damage
-      log_sys result.heal
-
       results.push(result)
 
     }
@@ -16966,9 +17030,9 @@ class Game_Battle
     end
 
     if data.scope == 'one'
-      return $battle.enemies
+      return $battle.attackable_enemies
     elsif data.scope == 'ally'
-      return $party.active_battlers
+      return $party.attackable_battlers
     end
 
   end
@@ -16976,7 +17040,7 @@ class Game_Battle
   def build_target_list(attacker,skill)
 
     # Get scope, prepare targets, return list
-    case skill.scope
+    case attacker.scope
 
       when 'one', 'ally', 'down'
 
@@ -17055,8 +17119,6 @@ class Game_Battle
     end
   end
 
-
-
   def get_targetable(attacker)
 
     case $data.skills(attack.skill_id).scope
@@ -17075,6 +17137,9 @@ class Game_Battle
     return @enemies.select{ |a| a.attackable? }
   end
 
+  def all_battlers
+    return @enemies + $party.all_battlers
+  end
   
 end"Ç
 # Menu state
@@ -17438,8 +17503,8 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    # set_active("mys")
+    #set_active("ing")
+    #set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
@@ -17614,7 +17679,7 @@ end"‰class Progress
 		@demons.push(demon)
 	end
 
-end"œclass State
+end"´class State
 
 	def initialize
 
@@ -17633,12 +17698,12 @@ end"œclass State
 
 	def flag(f)
 		@flags.push(f) if !@flags.include?(f)
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def unflag(f)
 		@flags.delete(f)
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def flag?(f)
@@ -17675,12 +17740,12 @@ end"œclass State
 
 	def state(e,s)
 		@states[[$map.id,e,s]] = true
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def unstate(e,s)
 		@states[[$map.id,e,s]] = false
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def state?(e,s)
@@ -18062,7 +18127,7 @@ class Scene_Base
   # end
 
 end
-"‚#==============================================================================
+"ì#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -18155,6 +18220,11 @@ class Scene_Battle < Scene_Base
           end
         end
 
+      else
+
+        # This battler not used, hide it
+        hide(ev)
+
       end
 
     }
@@ -18167,6 +18237,8 @@ class Scene_Battle < Scene_Base
         log_sys("HP")
         log_sys($battle.enemies[i].stat('hp'))
         ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+      else
+        hide(ev)
       end
     }
 
@@ -18331,7 +18403,7 @@ class Scene_Battle < Scene_Base
 
   end
 
-end"n
+end" 
 class Scene_Battle
 
   def phase_intro_init
@@ -18417,6 +18489,13 @@ class Scene_Battle
         when :escape      
 
           @phase = :misc_escape
+
+        when :join
+
+          join_s 'mys'
+          @hud.build_views
+          unhide('A.1')
+          $party.get('mys').ev = gev('A.1')
 
       end
 
@@ -18657,7 +18736,7 @@ class Scene_Battle
     
   end
 
-end"‡
+end"5 
 class Scene_Battle
 
   def phase_main_init
@@ -18674,8 +18753,6 @@ class Scene_Battle
 
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue
-
-    log_err(@battle_queue)
     
     # certain attacks always go first, robin's team move with phye for example
 
@@ -18686,8 +18763,6 @@ class Scene_Battle
 
   # Prepare attack of next guy to attack, next_actor called before this
   def phase_main_prep
-
-    log_info("GO #{@active_battler.id}")
 
     # Apply the cooldown for this skill
     if @active_battler.action == :skill
@@ -18715,23 +18790,25 @@ class Scene_Battle
     # -----------------------------
     # ERROR CORRECTIONS 
 
+    log_sys(@active_battler.scope)
+
     # If specific target, random if down
-    if [:one,:ally].include?(@active_battler.scope)
+    if ['one','ally'].include?(@active_battler.scope) && @active_battler.target.down?
 
       # If a tranform, cancel
-      if @active_battler.skill_id.include("xform")
+      if @active_battler.skill_id.include?("xform")
         @attack_plan.cancel
         @phase = :main_next
         return
       else
         # Doesn't really work, hmmmmm
-        @active_battler.scope = :rand
+        @active_battler.scope = 'rand'
       end
 
     end
 
     # If rez, random if up, or cancel
-    if [:down].include?(@active_battler.scope)
+    if ['down'].include?(@active_battler.scope)
 
       # Check if target is down
       if !@active.battler.target.down?
@@ -18751,7 +18828,6 @@ class Scene_Battle
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
     @active_battler.ev.flash_dur = 15
-
 
 
     # Show text if there is
@@ -18778,14 +18854,18 @@ class Scene_Battle
   def phase_main_anim
 
     # Face at target of attack
-    if @active_battler.target != nil
-      @active_battler.ev.turn_toward_event(@active_battler.target.ev.id)
+    if @active_battler.target != nil && @active_battler.target.is_enemy?
+      @active_battler.ev.direction = 10 - @active_battler.target.ev.direction
+      #@active_battler.ev.turn_toward_event(@active_battler.target.ev.id)      
     end
 
     @attack_results.each{ |result|
 
       # Target face attacker
-      result.target.ev.turn_toward_event(@active_battler.ev)
+      #result.target.ev.turn_toward_event(@active_battler.ev.id)
+      if @active_battler.is_enemy?
+        result.target.ev.direction = 10 - @active_battler.ev.direction
+      end
 
       if @attack_round.anim
         if @attack_round.anim.include?("spark")
@@ -18847,7 +18927,7 @@ class Scene_Battle
             result.target.view.damage
           end
 
-          if result.target.is_enemy?
+          if result.target.is_enemy? && result.target.down?
             result.target.ev.color = Color.new(0,0,0,200)
           end
 
@@ -18855,8 +18935,6 @@ class Scene_Battle
 
         # Heal
         if result.heal > 0
-
-          log_sys result.heal
 
           result.target.heal(result.heal)
           pop_dmg(result.target.ev,result.heal)
@@ -18930,18 +19008,13 @@ class Scene_Battle
         result.target.ev.icons.push(result.state_add)
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
         result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
-        result.target.ev.pulse_colors.push(Color.new(240,0,0,130))
 
-        # case result.state_add 
-        #   when "poison"
-        #     result.target.ev.pulse_color = Color.new(46,174,43,150)
-        # end
       end
 
     }
 
     @phase = :main_tick
-    wait(30) # Might wait if a state was aded
+    wait(30) # Might wait only if a state was aded
 
   end
 
@@ -18950,8 +19023,15 @@ class Scene_Battle
     # Take damage from poison states
 
 
-    # Remove used up states
-    # Remove the pulse and icons also
+    # Remove states by shock
+    @attack_results.each{ |result|
+
+      if result.damage > 0
+        result.target.remove_states_shock
+      end
+
+    }
+
 
     @phase = :main_fall
     wait(1)
@@ -19026,14 +19106,14 @@ class Scene_Battle
   def phase_main_end
     
     # Remove states and that before next turn starts
-
+    $battle.all_battlers.each{ |b| b.remove_states_turn }
 
     # Go to next turn
     @phase = :start_turn
 
   end
 
-end"¡
+end"ã
 class Scene_Battle
 
   def phase_victory_init
@@ -19052,7 +19132,7 @@ class Scene_Battle
     else
 
       # Get dialogue for a party member currently active
-      speaker = $party.alive_members.sample
+      speaker = $party.alive_members.sample.id
 
       # What will they say?
       idx = 1#rand(1)
@@ -19104,6 +19184,8 @@ class Scene_Battle
   end
 
   def phase_victory_end
+
+    $battle.all_battlers.each{ |b| b.remove_states_battle }
 
     $battle.clear
   	$game.pop_scene
@@ -20357,7 +20439,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"c#==============================================================================
+end"5#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -20426,6 +20508,15 @@ class AudioManager
       end
     }
     @environmental.push(EnviroSource.new(file,pos))
+    @environmental.each{ |e| e.update }    
+  end
+
+  def clear_env
+    @environmental.each{ |e|
+      e.stop
+      e.dispose
+    }
+    @environmental.clear
   end
 
   def music(file,vol=1.0)
@@ -20616,10 +20707,15 @@ class EnviroSource < Seal::Source
     @positions = [pos]
     self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
     self.looping = true
+    self.gain = 0.0
     self.play
 
     @short = 96 * 4 # *4 to convert to REAL coords
     @long = 320 * 4
+
+  end
+
+  def dispose
 
   end
 
@@ -20667,7 +20763,6 @@ class EnviroSource < Seal::Source
 
     # Scale
     self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
-
 
   end
 
@@ -22107,8 +22202,7 @@ end"øclass Bitmap
 	end
 
 end
-"Ð
-
+"@
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -22173,11 +22267,13 @@ end
 class StateData
 	attr_reader :id
 	attr_reader :name
+	attr_reader :color
 	attr_reader :stats
 	attr_reader :mods
-	attr_reader :remove
 	attr_reader :stun
-	attr_reader :color
+	attr_reader :rmv_battle
+	attr_reader :rmv_shock
+	attr_reader :rmv_turn	
 end
 
 class ActorData
@@ -22250,7 +22346,10 @@ class ProfileData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :age
-	attr_reader :desc
+	attr_reader :home
+	attr_reader :bio
+	attr_reader :tip
+	attr_reader :fact
 end
 
 class PotionData

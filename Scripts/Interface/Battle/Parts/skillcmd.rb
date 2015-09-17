@@ -7,7 +7,6 @@ class SkillCmd < ItemCmd
 
 		skill_list = @battler.skill_list(action)
 
-		log_info(skill_list)
 		@box.type = :skill
 		@list.type = :skill
 		@list.user = @battler.id

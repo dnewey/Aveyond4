@@ -10,21 +10,11 @@ class BattleHud
 
 	def initialize(vp)
 
-		# Bottom bar
+		@vp = vp
+
 		@chars = []
-		idx = 0
-		cx = 5
-		cx = 240 if $party.active.count == 1
-		cx = 170 if $party.active.count == 2
-		cx = 85 if $party.active.count == 3
-		$party.active.each{ |char|
-			view = CharView.new(vp,$party.actor_by_id(char),idx)
-			view.x = cx + (idx * 158)
-			view.y = 340
-			@chars.push(view)
-			$party.get(char).view = view
-			idx += 1
-		}
+
+		build_views
 
 		# Help box
 		@help_box = Box.new(vp)
@@ -46,7 +36,28 @@ class BattleHud
 	end
 
 	def dispose
+		@chars.each{ |c| c.dispose }
+		@help_box.dispose
+		@help_text.dispose
+	end
 
+	def build_views
+		# Bottom bar
+		@chars.each{ |c| c.dispose }
+		@chars = []
+		idx = 0
+		cx = 5
+		cx = 240 if $party.active.count == 1
+		cx = 170 if $party.active.count == 2
+		cx = 85 if $party.active.count == 3
+		$party.active.each{ |char|
+			view = CharView.new(@vp,$party.actor_by_id(char),idx)
+			view.x = cx + (idx * 158)
+			view.y = 340
+			@chars.push(view)
+			$party.get(char).view = view
+			idx += 1
+		}
 	end
 
 	def all_win
@@ -72,6 +83,20 @@ class BattleHud
 
 		@help_box.update
 
+		if @popper
+			@popper.update 
+			if $input.action? || $input.click?
+				$tweens.clear(@popper)
+				@popper.dispose
+				@popper = nil
+			end
+		end
+
+	end
+
+	def open_popper()
+		@popper = Ui_Popper.new(@vp)
+		return @popper
 	end
 
 end

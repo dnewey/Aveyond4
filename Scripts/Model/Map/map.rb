@@ -283,7 +283,7 @@ class Game_Map
       $menu.common_event = nil
     end
 
-    @interpreter.update
+    @interpreter.update #if @cam_snap
     return if $scene.is_a?(Scene_Menu)
 
     update_events
@@ -296,9 +296,7 @@ class Game_Map
 
     # Mouse update
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
-    update_mouse
-
-    
+    update_mouse    
 
   end
 
@@ -420,7 +418,7 @@ class Game_Map
           end
 
           if !y_snap
-            y_snap = true if @cam_x <= 0 && dx < 0
+            y_snap = true if @cam_y <= 0 && dy < 0
           end
 
           can_snap = true if x_snap && y_snap

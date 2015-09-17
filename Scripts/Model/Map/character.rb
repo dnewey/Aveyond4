@@ -1438,7 +1438,7 @@ class Game_Character
     # If horizontal distance is longer
     if sx.abs > sy.abs
       # Turn to the right or left towards event
-      sx > 0 ? turn_left : turn_right
+      sx > 0 ? turn_right : turn_left
     # If vertical distance is longer
     else
       # Turn up or down towards event

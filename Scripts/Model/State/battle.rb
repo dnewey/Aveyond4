@@ -32,7 +32,7 @@ class Game_Battle
     @zone_maps = []
     @next_map = nil
 
-    @victory_text = "nil"
+    @victory_text = nil
 
 	end
 
@@ -226,8 +226,6 @@ class Game_Battle
 
   def build_attack_plan(attacker)
 
-    log_sys(attacker)
-
     plan = Attack_Plan.new
 
     skill = nil
@@ -343,9 +341,6 @@ class Game_Battle
         result.damage = is_dmg ? 1 : 0
       end
 
-      log_sys result.damage
-      log_sys result.heal
-
       results.push(result)
 
     }
@@ -364,9 +359,9 @@ class Game_Battle
     end
 
     if data.scope == 'one'
-      return $battle.enemies
+      return $battle.attackable_enemies
     elsif data.scope == 'ally'
-      return $party.active_battlers
+      return $party.attackable_battlers
     end
 
   end
@@ -374,7 +369,7 @@ class Game_Battle
   def build_target_list(attacker,skill)
 
     # Get scope, prepare targets, return list
-    case skill.scope
+    case attacker.scope
 
       when 'one', 'ally', 'down'
 
@@ -472,7 +467,7 @@ class Game_Battle
   end
 
   def all_battlers
-    return @enemies + $party.battlers
+    return @enemies + $party.all_battlers
   end
   
 end

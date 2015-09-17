@@ -11,6 +11,6 @@ def bqe(turn)
 	$battle.queue_escape(turn)
 end
 
-def bgj(who,turn)
+def bqj(who,turn)
 	$battle.queue_join(who,turn)
 end

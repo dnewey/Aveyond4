@@ -87,6 +87,11 @@ class CharView < SpriteGroup
 
 	end
 
+	def dispose
+		# BUILD THIS!!!!!!!!!!!!!!!!!!!!!!
+		log_err("MAKE A DISPOSE")
+	end
+
 	def update
 
 		@box.update
@@ -113,9 +118,9 @@ class CharView < SpriteGroup
 		end
 
 		# Has the state changed?
-		if @battler.state != @state
+		if !@battler.states.empty? && @battler.states[0] != @state
 
-			@state = @battler.state
+			@state = @battler.states[0]
 
 			if @state == nil
 

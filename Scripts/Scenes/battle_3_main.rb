@@ -15,8 +15,6 @@ class Scene_Battle
 
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue
-
-    log_err(@battle_queue)
     
     # certain attacks always go first, robin's team move with phye for example
 
@@ -27,8 +25,6 @@ class Scene_Battle
 
   # Prepare attack of next guy to attack, next_actor called before this
   def phase_main_prep
-
-    log_info("GO #{@active_battler.id}")
 
     # Apply the cooldown for this skill
     if @active_battler.action == :skill
@@ -56,23 +52,25 @@ class Scene_Battle
     # -----------------------------
     # ERROR CORRECTIONS 
 
+    log_sys(@active_battler.scope)
+
     # If specific target, random if down
-    if [:one,:ally].include?(@active_battler.scope)
+    if ['one','ally'].include?(@active_battler.scope) && @active_battler.target.down?
 
       # If a tranform, cancel
-      if @active_battler.skill_id.include("xform")
+      if @active_battler.skill_id.include?("xform")
         @attack_plan.cancel
         @phase = :main_next
         return
       else
         # Doesn't really work, hmmmmm
-        @active_battler.scope = :rand
+        @active_battler.scope = 'rand'
       end
 
     end
 
     # If rez, random if up, or cancel
-    if [:down].include?(@active_battler.scope)
+    if ['down'].include?(@active_battler.scope)
 
       # Check if target is down
       if !@active.battler.target.down?
@@ -92,7 +90,6 @@ class Scene_Battle
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
     @active_battler.ev.flash_dur = 15
-
 
 
     # Show text if there is
@@ -119,14 +116,18 @@ class Scene_Battle
   def phase_main_anim
 
     # Face at target of attack
-    if @active_battler.target != nil
-      @active_battler.ev.turn_toward_event(@active_battler.target.ev.id)
+    if @active_battler.target != nil && @active_battler.target.is_enemy?
+      @active_battler.ev.direction = 10 - @active_battler.target.ev.direction
+      #@active_battler.ev.turn_toward_event(@active_battler.target.ev.id)      
     end
 
     @attack_results.each{ |result|
 
       # Target face attacker
-      result.target.ev.turn_toward_event(@active_battler.ev)
+      #result.target.ev.turn_toward_event(@active_battler.ev.id)
+      if @active_battler.is_enemy?
+        result.target.ev.direction = 10 - @active_battler.ev.direction
+      end
 
       if @attack_round.anim
         if @attack_round.anim.include?("spark")
@@ -188,7 +189,7 @@ class Scene_Battle
             result.target.view.damage
           end
 
-          if result.target.is_enemy?
+          if result.target.is_enemy? && result.target.down?
             result.target.ev.color = Color.new(0,0,0,200)
           end
 
@@ -196,8 +197,6 @@ class Scene_Battle
 
         # Heal
         if result.heal > 0
-
-          log_sys result.heal
 
           result.target.heal(result.heal)
           pop_dmg(result.target.ev,result.heal)
@@ -272,10 +271,6 @@ class Scene_Battle
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
         result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
 
-        # case result.state_add 
-        #   when "poison"
-        #     result.target.ev.pulse_color = Color.new(46,174,43,150)
-        # end
       end
 
     }
@@ -373,7 +368,7 @@ class Scene_Battle
   def phase_main_end
     
     # Remove states and that before next turn starts
-    $battle.all_battlers.remove_states_turn
+    $battle.all_battlers.each{ |b| b.remove_states_turn }
 
     # Go to next turn
     @phase = :start_turn

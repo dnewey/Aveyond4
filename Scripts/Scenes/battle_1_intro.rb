@@ -85,6 +85,13 @@ class Scene_Battle
 
           @phase = :misc_escape
 
+        when :join
+
+          join_s 'mys'
+          @hud.build_views
+          unhide('A.1')
+          $party.get('mys').ev = gev('A.1')
+
       end
 
     }

@@ -17,12 +17,12 @@ class State
 
 	def flag(f)
 		@flags.push(f) if !@flags.include?(f)
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def unflag(f)
 		@flags.delete(f)
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def flag?(f)
@@ -59,12 +59,12 @@ class State
 
 	def state(e,s)
 		@states[[$map.id,e,s]] = true
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def unstate(e,s)
 		@states[[$map.id,e,s]] = false
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def state?(e,s)

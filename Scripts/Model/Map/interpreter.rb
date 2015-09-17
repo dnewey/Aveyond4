@@ -184,7 +184,7 @@ class Interpreter
       return if $scene.busy?
 
 
-      #return if $scene.map.camera_moving?
+      return if $scene.map.camera_moving?
 
       # If waiting for move to end
       if @move_route_waiting

@@ -684,8 +684,8 @@ class Ui_Message
     return if @word == nil
 
     #Check for vars
-    if @word.include?("@")
-      @word.sub!("@","")
+    if @word.include?("&")
+      @word.sub!("&","")
       @word = $state.varval(@word).to_s
     end 
 

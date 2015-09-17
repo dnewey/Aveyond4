@@ -17,7 +17,7 @@ class Scene_Battle
     else
 
       # Get dialogue for a party member currently active
-      speaker = $party.alive_members.sample
+      speaker = $party.alive_members.sample.id
 
       # What will they say?
       idx = 1#rand(1)
@@ -70,7 +70,7 @@ class Scene_Battle
 
   def phase_victory_end
 
-    $battle.all_battlers.remove_states_battle
+    $battle.all_battlers.each{ |b| b.remove_states_battle }
 
     $battle.clear
   	$game.pop_scene
