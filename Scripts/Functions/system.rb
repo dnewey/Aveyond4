@@ -78,12 +78,22 @@ end
 
 def open_shop_sell
 	$menu.sub_only = true
-	$menu.menu_page = "Shop"
+	$menu.menu_page = "Sell"
 end
 
-def open_shop_creatures
+def open_shop_smith
 	$menu.sub_only = true
-	$menu.menu_page = "Creatures"
+	$menu.menu_page = "Smith"
+end
+
+def open_shop_magic
+	$menu.sub_only = true
+	$menu.menu_page = "Magic"
+end
+
+def open_shop_chester
+	$menu.sub_only = true
+	$menu.menu_page = "Chester"
 end
 
 

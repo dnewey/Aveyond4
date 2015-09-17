@@ -9,6 +9,8 @@ class Scene_Battle < Scene_Base
   def initialize
     super
 
+    $scene = self
+
     @phase = :intro_init
     @turn = 0
     @wait_frames = 0
@@ -18,6 +20,7 @@ class Scene_Battle < Scene_Base
     @skill = false # Auto skill happening
 
     @map.setup($battle.map)
+    @map.interpreter.battlemap = true # Allow to run during battle
     @tilemap.refresh(@map)
 
     # Init player and camera 
@@ -116,6 +119,8 @@ class Scene_Battle < Scene_Base
     #hide(@minion)
 
     reload_map
+
+    start_events
             
   end
   
@@ -148,6 +153,12 @@ class Scene_Battle < Scene_Base
 
     update_phase
 
+  end
+
+  def start_events
+    $scene.map.events.values.each{ |e|
+      e.start if e.turn == @turn
+    }
   end
 
   def update_phase

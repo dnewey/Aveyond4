@@ -44,4 +44,9 @@ class Info_Box < SpriteGroup
 		@window.update
 	end
 
+    def refresh
+        @gold.text = "#{$party.gold}G"
+        @magics.text = "#{$party.magics}"
+    end
+
 end

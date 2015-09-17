@@ -23,6 +23,15 @@ def pop_gold(number,type)
 
 end
 
+def pop_magics(number)
+
+	ib = $cache.icon('misc/magics')
+	b = "#{number} Magic"	
+
+	pop_get('r',b,ib,'wizard')
+
+end
+
 def pop_ing_pickup(i)
 	ib = $cache.icon($data.items[i].icon)
 	pop_get('p',$data.items[i].name,ib)

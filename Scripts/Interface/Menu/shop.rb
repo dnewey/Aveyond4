@@ -10,7 +10,7 @@ class Mnu_Shop < Mnu_Base
 		@title.change('Smith')
 		@subtitle.text = "Armors and Weapons"
 
-		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
+		#@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -34,12 +34,37 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
+	def setup(type)
+		@title.change(type)
+		case type
+			when "Shop"
+				@subtitle.text = "General Goods"
+			when "Smith"
+				@subtitle.text = "Armors and Weapons"
+			when "Magic"
+				@subtitle.text = "Enchantments"
+			when "Chester"
+				@subtitle.text = "Learn Skills and Abilities"
+		end
+	end
+
+	def sellmode
+		@sellmode = true
+
+		# Show tabs
+		@subtitle.hide
+
+		# Put all sellable items?
+		#@menu.list.setup($menu.shop)
+	end
+
 	def update
 		super
 		
 	end
 
 	def change(option)
+
 		#@info.title.text = option
 		@item_box.item(option)
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
@@ -60,6 +85,10 @@ class Mnu_Shop < Mnu_Base
 			$party.add_item(option)
 			$party.add_gold(-item.price)
 			sys("coins")
+			@info.refresh
+			@menu.list.refresh
+			# Rebuild list to show unavailable for price
+
 		end
 	end
 

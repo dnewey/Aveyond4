@@ -1,6 +1,7 @@
 
 def spark(ev,fx,ox=0,oy=0)
 
+	return if gev(ev) == nil
 	$scene.add_spark(fx,gev(ev).real_x/4+16+ox,gev(ev).real_y/4+16-10+oy)
 
 end

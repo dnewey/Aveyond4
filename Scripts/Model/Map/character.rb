@@ -48,8 +48,8 @@ class Game_Character
   attr_accessor :off_x, :off_y
   attr_accessor :zoom
 
+  attr_accessor :color
   attr_accessor :flash_dur # flash always white?
-
   attr_accessor :pulse_colors
   attr_accessor :icons
 
@@ -398,7 +398,6 @@ class Game_Character
     @pattern = 0 if mini
 
     return if mini && !jumping? # Force jumps to finish
-
 
     # Mouse pathfinding
     run_path if @runpath == true    

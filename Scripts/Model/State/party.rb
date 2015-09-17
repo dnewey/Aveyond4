@@ -237,6 +237,18 @@ class Game_Party
     return @gold >= n
   end
 
+
+  def add_magics(n)
+    @magics += n
+    @magics = 0 if @magics < 0
+  end
+
+  def has_magics?(n)
+    return @magics >= n
+  end
+
+
+
   def item_list
     items = []
     @items.each{ |k,v|
@@ -287,7 +299,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
+    set_active("ing")
     # set_active("mys")
     # set_active("rob")
     # set_reserve("hib")

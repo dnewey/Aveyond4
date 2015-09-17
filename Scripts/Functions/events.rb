@@ -125,7 +125,7 @@ def face2face
 end
 
 def wfc
-	$map.interpreter.command_210
+	$scene.map.interpreter.command_210
 end
 
 def td(e) gev(e).turn_down end
@@ -237,6 +237,8 @@ def path(ev,tx,ty,after=nil)
 end
 
 def route(ev,move)
+
+	log_err("ROUTING")
 
 	char = gev(ev)
 

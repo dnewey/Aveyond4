@@ -150,3 +150,13 @@ class PotionData
 	attr_reader :problems
 	attr_reader :result
 end
+
+class VictoryData
+	attr_reader :id
+	attr_reader :speaker
+end
+
+class BookData
+	attr_reader :id
+	attr_reader :title
+end

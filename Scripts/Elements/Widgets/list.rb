@@ -361,6 +361,7 @@ class List
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       ico = $cache.icon("misc/coins")

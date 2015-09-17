@@ -30,7 +30,7 @@ class Game_Map
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
-  def initialize
+  def initialize()
 
     @id = nil
 
@@ -358,6 +358,8 @@ class Game_Map
           $mouse.change_cursor('Battle')
         when 'T'
           $mouse.change_cursor('Transfer')
+        when 'C'
+          $mouse.change_cursor('Coins')
         else
           $mouse.change_cursor('Default')
 

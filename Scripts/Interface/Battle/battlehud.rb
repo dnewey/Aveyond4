@@ -40,8 +40,8 @@ class BattleHud
 		@help_text.move(166,9)
 
 		# Try hiding the info box
-		@help_box.hide
-		@help_text.hide
+		#@help_box.hide
+		#@help_text.hide
 
 	end
 
