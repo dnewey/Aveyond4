@@ -6,7 +6,21 @@
     "field": "name"
   },
   {
-    "field": "desc",
+    "field": "age"
+  },
+  {
+    "field": "home"
+  },
+  {
+    "field": "bio",
+    "edit": "area"
+  },
+  {
+    "field": "tip",
+    "edit": "area"
+  },
+  {
+    "field": "fact",
     "edit": "area"
   }
 ]

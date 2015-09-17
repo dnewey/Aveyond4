@@ -70,6 +70,8 @@ class Scene_Battle
 
   def phase_victory_end
 
+    $battle.all_battlers.remove_states_battle
+
     $battle.clear
   	$game.pop_scene
   end

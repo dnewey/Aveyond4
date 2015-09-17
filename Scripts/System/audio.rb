@@ -67,6 +67,15 @@ class AudioManager
       end
     }
     @environmental.push(EnviroSource.new(file,pos))
+    @environmental.each{ |e| e.update }    
+  end
+
+  def clear_env
+    @environmental.each{ |e|
+      e.stop
+      e.dispose
+    }
+    @environmental.clear
   end
 
   def music(file,vol=1.0)
@@ -257,10 +266,15 @@ class EnviroSource < Seal::Source
     @positions = [pos]
     self.buffer = Seal::Buffer.new("Audio/Sounds/#{sound}.ogg")
     self.looping = true
+    self.gain = 0.0
     self.play
 
     @short = 96 * 4 # *4 to convert to REAL coords
     @long = 320 * 4
+
+  end
+
+  def dispose
 
   end
 
@@ -308,7 +322,6 @@ class EnviroSource < Seal::Source
 
     # Scale
     self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
-
 
   end
 

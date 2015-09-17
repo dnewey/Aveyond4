@@ -104,7 +104,8 @@ class Game_Battler
     return val.to_i
   end
 
-  def stat_base(stat)
+  # For menu display
+  def stat_pure(stat)
     val = 0
     val += stat_base(stat) # Player base stat from level
     val *= stat_base_mod(stat) # Modify per actor
@@ -113,7 +114,7 @@ class Game_Battler
   end
 
   def stat_gear(stat)
-    return stat(stat) - stat_base(stat)
+    return stat(stat) - stat_pure(stat)
   end
 
   def stat_base(stat)

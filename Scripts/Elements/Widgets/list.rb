@@ -435,7 +435,7 @@ class List
 
     item = $data.quests[data]
 
-    ico = $cache.icon('misc/unknown')
+    ico = $cache.icon('misc/'+item.type)
     
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 

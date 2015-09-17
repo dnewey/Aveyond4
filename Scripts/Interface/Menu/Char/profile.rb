@@ -12,6 +12,7 @@ class Mnu_Profile < Mnu_Base
 		@subtitle.text = "Master of deception"
 
 		@char = $party.get($menu.char)
+		profile = $data.profiles[$menu.char]
 
 		remove_menu
 		remove_info
@@ -21,34 +22,106 @@ class Mnu_Profile < Mnu_Base
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
 		self.left.push(@box)
+
+		spacing = 28
 		
 		data = []
-		data.push(["faces/boy","Name: Boyle"])
-		data.push(["faces/boy","Home: Wyrmwood"])
-		data.push(["faces/boy","Age: 29¾"])
+		data.push(["faces/boy","Name: #{profile.name}"])
+		data.push(["faces/boy","Home: #{profile.home}"])
+		data.push(["faces/boy","Age: #{profile.age}"])
+		data.push(["faces/boy","Biography:"])
 
 		cx = 30
 		cy = 125
 
-		data.each{ |d|
+		# Name
+		lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon("faces/#{$menu.char}")
+	    lbl.text = "Name: #{profile.name}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
-			lbl = Label.new(vp)
-			lbl.icon = $cache.icon(d[0])
-	     	lbl.font = $fonts.list
-	     	lbl.shadow = $fonts.list_shadow
-	     	lbl.text = d[1]
-	     	lbl.move(cx,cy)
-	     	self.left.push(lbl)
+	    cy += spacing
 
-	     	cy += 31
+	    # Age
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/cooldown')
+	    lbl.text = "Age: #{profile.age}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
 
-	     }
+	    cy += spacing
 
-	    @desc = Area.new(vp)
-    	@desc.font = $fonts.pop_text
-    	@desc.text = "Boyle Wolfman, more wolf than man and even less man than dingo. Next line."
-    	@desc.move(cx,cy)
-    	self.left.push(@desc)
+	    # Home
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/home')
+	    lbl.text = "Home: #{profile.home}"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    # Bio
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/bio')
+	    lbl.text = "Biography"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    area = Area.new(vp)
+    	area.font = $fonts.pop_text
+    	area.text = profile.bio
+    	area.move(cx+10,cy)
+    	self.left.push(area)
+
+    	cy += area.height - 4
+
+    	# Hint
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/credits')
+	    lbl.text = "Tip"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    area = Area.new(vp)
+    	area.font = $fonts.pop_text
+    	area.text = profile.tip
+    	area.move(cx+10,cy)
+    	self.left.push(area)
+
+    	cy += area.height - 4
+
+    	# Fact
+	    lbl = Label.new(vp)
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.icon = $cache.icon('misc/fact')
+	    lbl.text = "Fun Fact"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += spacing
+
+	    area = Area.new(vp)
+    	area.font = $fonts.pop_text
+    	area.text = profile.fact
+    	area.move(cx+10,cy)
+    	self.left.push(area)
+
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)

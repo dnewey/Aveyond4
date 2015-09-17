@@ -271,7 +271,6 @@ class Scene_Battle
         result.target.ev.icons.push(result.state_add)
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
         result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
-        result.target.ev.pulse_colors.push(Color.new(240,0,0,130))
 
         # case result.state_add 
         #   when "poison"
@@ -282,7 +281,7 @@ class Scene_Battle
     }
 
     @phase = :main_tick
-    wait(30) # Might wait if a state was aded
+    wait(30) # Might wait only if a state was aded
 
   end
 
@@ -291,8 +290,15 @@ class Scene_Battle
     # Take damage from poison states
 
 
-    # Remove used up states
-    # Remove the pulse and icons also
+    # Remove states by shock
+    @attack_results.each{ |result|
+
+      if result.damage > 0
+        result.target.remove_states_shock
+      end
+
+    }
+
 
     @phase = :main_fall
     wait(1)
@@ -367,7 +373,7 @@ class Scene_Battle
   def phase_main_end
     
     # Remove states and that before next turn starts
-
+    $battle.all_battlers.remove_states_turn
 
     # Go to next turn
     @phase = :start_turn

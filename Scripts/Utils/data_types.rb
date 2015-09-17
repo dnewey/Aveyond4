@@ -63,11 +63,13 @@ end
 class StateData
 	attr_reader :id
 	attr_reader :name
+	attr_reader :color
 	attr_reader :stats
 	attr_reader :mods
-	attr_reader :remove
 	attr_reader :stun
-	attr_reader :color
+	attr_reader :rmv_battle
+	attr_reader :rmv_shock
+	attr_reader :rmv_turn	
 end
 
 class ActorData
@@ -140,7 +142,10 @@ class ProfileData
 	attr_reader :id
 	attr_reader :name
 	attr_reader :age
-	attr_reader :desc
+	attr_reader :home
+	attr_reader :bio
+	attr_reader :tip
+	attr_reader :fact
 end
 
 class PotionData

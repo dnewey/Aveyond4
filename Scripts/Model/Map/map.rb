@@ -143,6 +143,7 @@ class Game_Map
 
     # Clear forced terrains
     @force_terrains.clear
+    $audio.clear_env
 
     # Set map event data
     @events = {}

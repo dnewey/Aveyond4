@@ -10,10 +10,6 @@
     "edit": "area"
   },
   {
-    "field": "icon",
-    "edit": "icon"
-  },
-  {
     "field": "location"
   },
   {
@@ -22,6 +18,7 @@
     "help": "Format - type:id:count Item, Var or Flag"
   },
   {
-    "field": "type"
+    "field": "type",
+    "default": "main"
   }
 ]

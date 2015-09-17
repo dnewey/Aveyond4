@@ -42,7 +42,7 @@ class Game_Battler
     @equips = {}
 
     @states = []
-    @state_counter = []
+    @state_counter = {}
 
     @skills = []
     @cooldowns = {}
@@ -236,12 +236,18 @@ class Game_Battler
   def down?
     @hp <= 0 
   end
+  
   def attackable?
     return !down?
   end
 
   def can_attack?
+
+    # Any states stopping this?
+    return false if !@states.select{ |s| s.stun }.empty?
+
     return !down?
+
   end
 
 

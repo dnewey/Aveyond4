@@ -7,6 +7,9 @@
     "default": "New State"
   },
   {
+    "field": "color"
+  },
+  {
     "field": "stats",
     "edit": "area"
   },
@@ -15,14 +18,19 @@
     "edit": "area"
   },
   {
-    "field": "remove",
-    "edit": "area"
-  },
-  {
     "field": "stun",
     "default": "false"
   },
   {
-    "field": "color"
+    "field": "rmv_battle",
+    "default": "true"
+  },
+  {
+    "field": "rmv_shock",
+    "default": "true"
+  },
+  {
+    "field": "rmv_turn",
+    "default": "0"
   }
 ]

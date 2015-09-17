@@ -453,8 +453,6 @@ class Game_Battle
     end
   end
 
-
-
   def get_targetable(attacker)
 
     case $data.skills(attack.skill_id).scope
@@ -473,5 +471,8 @@ class Game_Battle
     return @enemies.select{ |a| a.attackable? }
   end
 
+  def all_battlers
+    return @enemies + $party.battlers
+  end
   
 end
