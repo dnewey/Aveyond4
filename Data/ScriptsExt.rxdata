@@ -3172,7 +3172,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"Õ#==============================================================================
+"p	#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3293,8 +3293,13 @@ def make_active(who)
 end
 
 
+def grant_stat(who,stat,amount)
+	log_err("MAKE THE STAT GRANTING TTHINGS WITH POPPER")
+end
 
-"
+def grant_level(who)
+	log_err("MAKING THE GRANT LEVEL")
+end"
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3467,7 +3472,7 @@ def pop_unquest(q)
 	popper = $scene.hud.open_popper
 	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
 
-end"#==============================================================================
+end"ß#==============================================================================
 # ** Progress Functions
 #==============================================================================
 
@@ -3500,7 +3505,19 @@ def progress(id) $progress.progress(id) end
 def progress?(id) return $progress.progress?(id) end
 
 def before?(id) return $progress.before?(id) end
-def beyond?(id) return $progress.beyond?(id) end"Ï
+def beyond?(id) return $progress.beyond?(id) end
+
+def attract(who)
+	case who
+		when 'boy'
+			$progress.attract_boy += 1
+		when 'hib'
+			$progress.attract_hib += 1
+		when 'phy'
+			$progress.attract_phy += 1
+	end
+	log_err("DO THE ATTRACT POPPER NOW!")
+end"Ï
 
 def shop_choice
 
@@ -17202,7 +17219,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"L$#==============================================================================
+end"`$#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17575,16 +17592,16 @@ class Game_Party
 
 
     # Sample items
-    add_item('covey')
-    add_item('haunch')
-    add_item('bread')
-    add_item('cheese')
-    add_item('vamp-teeth')
-    add_item('doll')
-    add_item('quarter-map')
-    add_item('ticket')
-    add_item('wh-weight')
-    add_item('doll-ghost')
+    # add_item('covey')
+    # add_item('haunch')
+    # add_item('bread')
+    # add_item('cheese')
+    # add_item('vamp-teeth')
+    # add_item('doll')
+    # add_item('quarter-map')
+    # add_item('ticket')
+    # add_item('wh-weight')
+    # add_item('doll-ghost')
 
 
   end

@@ -32,3 +32,15 @@ def progress?(id) return $progress.progress?(id) end
 
 def before?(id) return $progress.before?(id) end
 def beyond?(id) return $progress.beyond?(id) end
+
+def attract(who)
+	case who
+		when 'boy'
+			$progress.attract_boy += 1
+		when 'hib'
+			$progress.attract_hib += 1
+		when 'phy'
+			$progress.attract_phy += 1
+	end
+	log_err("DO THE ATTRACT POPPER NOW!")
+end

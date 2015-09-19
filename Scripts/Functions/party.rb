@@ -119,4 +119,10 @@ def make_active(who)
 end
 
 
+def grant_stat(who,stat,amount)
+	log_err("MAKE THE STAT GRANTING TTHINGS WITH POPPER")
+end
 
+def grant_level(who)
+	log_err("MAKING THE GRANT LEVEL")
+end

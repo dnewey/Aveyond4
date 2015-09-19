@@ -371,16 +371,16 @@ class Game_Party
 
 
     # Sample items
-    add_item('covey')
-    add_item('haunch')
-    add_item('bread')
-    add_item('cheese')
-    add_item('vamp-teeth')
-    add_item('doll')
-    add_item('quarter-map')
-    add_item('ticket')
-    add_item('wh-weight')
-    add_item('doll-ghost')
+    # add_item('covey')
+    # add_item('haunch')
+    # add_item('bread')
+    # add_item('cheese')
+    # add_item('vamp-teeth')
+    # add_item('doll')
+    # add_item('quarter-map')
+    # add_item('ticket')
+    # add_item('wh-weight')
+    # add_item('doll-ghost')
 
 
   end
