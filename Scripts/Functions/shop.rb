@@ -12,7 +12,7 @@ def shop_choice
 
 		when 'Info'
 
-			text("That's a covey balm")
+			text("36: That's a covey balm")
 
 
 		when 'Cancel'

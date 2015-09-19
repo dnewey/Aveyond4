@@ -115,16 +115,17 @@ class Ui_Screen
 
 		@item = Item_Box.new(@vp)
 		@item.item(i)
-		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+		@item.move($player.screen_x-@item.width/2,$player.screen_y-64-@item.height)
 
 		# Also grid opens
 		grid = open_grid
 		grid.spacing = 0
 		grid.x = @item.x#$player.screen_x
-		grid.y = @item.y+@item.height
-		grid.add_button('Buy',"Buy",'misc/unknown')
-		grid.add_button('Info',"Info",'misc/unknown')
-		grid.add_button('Cancel',"Cancel",'misc/unknown')
+		grid.y = @item.y+@item.height + 64
+		grid.add_button('Buy',"Buy",'misc/coins')
+		grid.add_button('Info',"Info",'misc/dots')
+		grid.add_button('Exit',"Exit",'misc/cross')
+
 	end
 
 	def open_sell_item(i)

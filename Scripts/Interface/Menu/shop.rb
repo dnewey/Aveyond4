@@ -70,7 +70,10 @@ class Mnu_Shop < Mnu_Base
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 		@users.clear
 		@users.move(@item_box.x,@item_box.y + @item_box.height)
-		@users.add_users(option)
+		
+		# Only if gear
+		#@users.add_users(option)
+
 		data = $data.items[option]
 		# if data.is_a?(GearData)
 		# 	$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|

@@ -194,7 +194,7 @@ class Ui_Grid
 	def add_button(name,text,icon)
 
 		# Create new things
-		btn = add_part_box(name,120,46)
+		btn = add_part_box(name,100,46)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -210,9 +210,11 @@ class Ui_Grid
      	choose(@boxes[0].name) if @boxes.count == 1
 
      	# Next
-     	if @layout == :vertical
-     		@cy += btn.height + @spacing
-     	end
+     	#if @layout == :vertical
+     		#@cy += btn.height + @spacing
+     	#end
+
+     	@cx += btn.width
 
 	end
 
