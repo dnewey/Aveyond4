@@ -275,6 +275,22 @@ class Game_Map
   #--------------------------------------------------------------------------
   def update
 
+    # Build event cache
+    @ev_cache = {}
+    @events.values.each{ |e|
+      # Include size of the event
+      sx = e.x
+      sy = e.y
+      (sx..sx+e.width).each{ |x| 
+        (sy..sy+e.height).each{ |y|
+          loc = [x,y]
+          @ev_cache[loc] = [] if !@ev_cache.has_key?(loc)
+          @ev_cache[loc].push(e)
+        }
+      }
+
+    }
+
     update_camera
 
     # If common event is queued, start it
@@ -304,18 +320,22 @@ class Game_Map
 
     @events.values.each{ |e| e.update }
 
-    # x1 = (display_x/128) - 2
-    # y1 = (display_y/128) -2
+    # x1 = ((display_x/128) - 2).to_i
+    # y1 = ((display_y/128) -2).to_i
     # x2 = x1 + 20 + 4
     # y2 = y1 + 15 + 4
 
-    # @events.values.each{ |e|
-    #   next if e.x < x1
-    #   next if e.y < y1
-    #   next if e.x > x2
-    #   next if e.y > y2
-    #   e.update 
+    # updaters = []
+    # (x1..x2).each{ |x|
+    #   (y1..y2).each{ |y|
+    #     evs = events_at(x,y)
+    #     if evs != nil
+    #       updaters += evs 
+    #     end    
+    #   }
     # }
+
+    # updaters.uniq.each{ |e| e.update }
 
   end
 
@@ -340,6 +360,7 @@ class Game_Map
     ev = event_at(mx+1,my-1) if ev == nil
     ev = event_at(mx+1,my+1) if ev == nil
 
+
     # What event is there
     if ev != nil && ev.mousein
 
@@ -359,6 +380,8 @@ class Game_Map
           $mouse.change_cursor('Transfer')
         when 'C'
           $mouse.change_cursor('Coins')
+        when 'R'
+          $mouse.change_cursor('Read')
         else
           $mouse.change_cursor('Default')
 
@@ -497,16 +520,19 @@ class Game_Map
     bit = (1 << (d / 2 - 1)) & 0x0f
 
     # Loop all events
-    events.values.each{ |e| 
-      if e != self_event and e.at?(x,y)
-         return true if e.bridge && [4,6].include?(d) && e.width > 1
-         return true if e.bridge && [2,8].include?(d) && e.height > 1
-         return false if e.bridge && [2,8].include?(d) && e.height == 1
-         return false if e.bridge && [4,6].include?(d) && e.width == 1
-         return false if !(e.through || e.above || e.below)
-         return false if (monster || e.ysnp) && e.name == "YSNP"
-      end
-    }
+    evs = events_at(x,y)
+    if evs != nil
+      evs.each{ |e| 
+        if e != self_event #and e.at?(x,y)
+           return true if e.bridge && [4,6].include?(d) && e.width > 1
+           return true if e.bridge && [2,8].include?(d) && e.height > 1
+           return false if e.bridge && [2,8].include?(d) && e.height == 1
+           return false if e.bridge && [4,6].include?(d) && e.width == 1
+           return false if !(e.through || e.above || e.below)
+           return false if (monster || e.ysnp) && e.name == "YSNP"
+        end
+      }
+    end
 
     # Loop searches in order from top of layer
     [2, 1, 0].each{ |i|
@@ -560,8 +586,16 @@ class Game_Map
   # * Event At
   #--------------------------------------------------------------------------
   def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
-  def event_at(x, y) @events.values.find{ |e| e.at?(x,y) } end
-  def events_at(x, y) @events.values.select{ |e| e.at?(x,y) } end
+  def event_at(x, y) 
+    return nil if !@ev_cache.has_key?([x,y])
+    return @ev_cache[[x,y]][0]
+    #@events.values.find{ |e| e.at?(x,y) } 
+  end
+  def events_at(x, y) 
+    return nil if !@ev_cache.has_key?([x,y])
+    return @ev_cache[[x,y]]
+    #@events.values.select{ |e| e.at?(x,y) } 
+  end
   def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
 
   def find_other(name,id)
