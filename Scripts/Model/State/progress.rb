@@ -18,13 +18,6 @@ class Progress
 
 		add_quest('ch0-domination')
 
-		# Samplers
-		add_quest('sq-windmill-ghosts')
-		add_quest('ch5-prison')
-		add_quest('sq-save-turtle-eggs')
-		add_quest('ch3-scarecrows')
-		add_quest('sq-bad-luck')
-		add_quest('ch5-to-potion-3')		
 
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone

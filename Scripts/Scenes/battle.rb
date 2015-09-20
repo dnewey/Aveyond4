@@ -130,6 +130,9 @@ class Scene_Battle < Scene_Base
   end
   
   def terminate
+
+    
+    
     super  
   end
 
