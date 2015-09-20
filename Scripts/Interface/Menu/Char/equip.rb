@@ -202,7 +202,6 @@ class Mnu_Equip < Mnu_Base
 		@grid.clear
 		@grid.move(15,115)
 		 @char.slots.each{ |slot| 
-		 	log_scr slot
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
 

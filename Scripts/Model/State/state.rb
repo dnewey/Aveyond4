@@ -17,7 +17,7 @@ class State
 
 	def flag(f)
 		@flags.push(f) if !@flags.include?(f)
-		$scene.map.need_refresh = true
+		$scene.map.need_refresh = true if !$scene.is_a?(Scene_Menu)
 	end
 
 	def unflag(f)

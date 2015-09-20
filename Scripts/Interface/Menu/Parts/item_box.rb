@@ -30,6 +30,16 @@ class Item_Box < SpriteGroup
     	# @cat.text = "POTION"
     	# add(@cat,226,13)
 
+        @price = Label.new(vp)
+        @price.fixed_width = 250
+        @price.icon = $cache.icon("misc/coins")
+        @price.font = $fonts.pop_type
+        @price.align = 0
+        @price.text = "256"
+        add(@price,226,13)
+        @price.hide
+
+
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
     	@desc.text = "Missing Descriptor"
@@ -43,6 +53,10 @@ class Item_Box < SpriteGroup
     	item('unknown')
 
 	end
+
+    def show_price
+        @price.show
+    end
 
     def width
         return @window.width
@@ -86,6 +100,8 @@ class Item_Box < SpriteGroup
         @title.text = data.name
         @title.icon = $cache.icon(data.icon)
         @desc.text = data.description
+
+        @price.text = data.price
 
         @stats.each{ |s| 
             s.dispose

@@ -52,8 +52,6 @@ class Scene_Battle
     # -----------------------------
     # ERROR CORRECTIONS 
 
-    log_sys(@active_battler.scope)
-
     # If specific target, random if down
     if ['one','ally'].include?(@active_battler.scope) && @active_battler.target.down?
 

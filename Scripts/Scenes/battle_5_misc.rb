@@ -14,9 +14,7 @@ class Scene_Battle
 
   	# If speaker is enemy, get name somehow
   	if speaker.include?("E.")
-  		log_info(speaker)
   		force = $battle.enemies[speaker.split(".")[1].to_i].name
-  		log_info(force)
   	end
 
   	if $party.active.include?(speaker)
@@ -29,8 +27,6 @@ class Scene_Battle
 	# Convert actor speaker to event format
 
 	#speaker = $scene.
-
-	log_scr(speaker+": "+text)
 
 	#if $party.active.include?()
     $scene.message.start(speaker+": "+text)

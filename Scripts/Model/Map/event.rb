@@ -19,6 +19,7 @@ class Game_Event < Game_Character
   attr_reader :below2 # For things that are below below, aka very below
   attr_reader :bridge # Behave like a bridge for passability
   attr_reader :faceoff # How far offset is the face for message box
+  attr_reader :ysnp # Don't walk past blockers
 
   attr_reader :page_idx
 
@@ -61,6 +62,7 @@ class Game_Event < Game_Character
     @below2 = false
     @bridge = false
     @stairs = false
+    @ysnp = false
     @faceoff = 0
 
     @width = 1
@@ -117,7 +119,6 @@ class Game_Event < Game_Character
   end
 
   def force_clone(src)
-      log_scr(src)
       unlock
       clone_ev = $data.clones[src]
       @pages = clone_ev.pages
@@ -294,6 +295,8 @@ class Game_Event < Game_Character
         return false if $progress.complete?(cond[1])
       when '?quest'
         return false if !$progress.quest?(cond[1])
+      when '?anyquest' # Any of these 3 quests will allow
+        return false if !$progress.quest?(cond[1]) && !$progress.quest?(cond[2]) && !$progress.quest?(cond[3])
 
       # Party member check
       when '?boyle', '?boy'
@@ -424,6 +427,17 @@ class Game_Event < Game_Character
         return false if @voll != 7
       when '@v8'
         return false if @voll != 8
+
+      # Custom witch recruit
+      when '@bones' # bones the highest var
+        return false if @state.varval('bones') < $state.varval('serpent')
+        return false if @state.varval('bones') < $state.varval('chains')
+      when '@serpent'
+        return false if @state.varval('serpent') < $state.varval('bones')
+        return false if @state.varval('serpent') < $state.varval('chains')
+      when '@chains'
+        return false if @state.varval('chains') < $state.varval('serpent')
+        return false if @state.varval('chains') < $state.varval('bones')
 
 
     end
@@ -619,6 +633,14 @@ class Game_Event < Game_Character
         when "#icon"
           @character_name = "Icons/#{data[1]}"
 
+        when '#cardicon'
+          cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
+          cards.each{ |c|
+            if $state.state?(@id,'card-'+c)
+              @character_name = "Icons/vault/card-#{c}"
+            end
+          }
+
         when "#cauldron"
           cauldron_graphic(self)
 
@@ -627,7 +649,7 @@ class Game_Event < Game_Character
           oy = 0
           ox = data[2].to_i if data.count > 2
           oy = data[3].to_i if data.count > 3
-          $scene.add_spark(data[1],self.real_x/4+16+ox,self.real_y/4+16-10+oy)
+          $scene.add_spark(data[1],self.real_x/4+16+ox,self.real_y/4+16-10+oy,@id)
 
         when '#rand-pattern'
           @force_pattern = rand(3)
@@ -649,6 +671,10 @@ class Game_Event < Game_Character
 
         when '#fxtrail'
           @fxtrail = data[1]
+
+        when '#ysnp','#YSNP'
+          @ysnp = true
+          @monster = true
 
         when '#avoid'
           self.move_type = 4

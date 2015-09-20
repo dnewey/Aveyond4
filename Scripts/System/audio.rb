@@ -89,6 +89,9 @@ class AudioManager
       return
     end
     
+    @music = nil
+    @music = Seal::Source.new
+
     @music_file = file
 
     @music_gain = 1.0
@@ -113,6 +116,9 @@ class AudioManager
     if file == nil  || file == ''
       return
     end
+
+    @atmosphere = nil
+    @atmosphere = Seal::Source.new
     
     @atmosphere_file = file
 

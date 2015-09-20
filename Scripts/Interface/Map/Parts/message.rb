@@ -753,9 +753,6 @@ class Ui_Message
     @grid.move(@box.x,@box.y+@box.height+72)
     @choices.each{ |c|
       data = c.split(": ")
-      log_info(data)
-      log_info(data[0])
-      log_info(data[1])
       @grid.add_choice(data[0],data[1],@box.width)
     }
   end

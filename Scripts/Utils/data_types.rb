@@ -18,6 +18,7 @@ class KeyItemData
 	attr_reader :name
 	attr_reader :description
 	attr_reader :icon
+	attr_reader :price
 	attr_reader :notes
 	attr_accessor :tab
 end
@@ -27,7 +28,7 @@ class ShopData
 	attr_reader :name
 	attr_reader :description
 	attr_reader :icon
-	attr_reader :value
+	attr_reader :price
 	attr_accessor :tab
 end
 

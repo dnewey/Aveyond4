@@ -65,7 +65,6 @@ class Game_Battler
     $data.items[item].action.split("\n").each{ |actn|
 
       dta = actn.split('=>')
-      log_scr(dta)
       case dta[0]
         when 'heal'
           plus += dta[1].to_i

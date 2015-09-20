@@ -150,11 +150,13 @@ class Sprite_Character < Sprite
 
   def update_spark_trail
 
-    if @character.fxtrail != nil && @character.moving?
+    return if @character == $player
+
+    if @character.fxtrail != nil && @character.moving? && !@character.deleted
       @fx_delay -= 1
       if @fx_delay <= 0
         @fx_delay = 8
-        spark(@character.id,@character.fxtrail,0,5)
+        spark(@character.id,@character.fxtrail,@character.off_x,@character.off_y+8)
       end
     end
 

@@ -1,6 +1,8 @@
 
 class Spark < Sprite
 
+	attr_accessor :ev
+
 	def initialize(fx,x,y,vp)
 		super(vp)
 

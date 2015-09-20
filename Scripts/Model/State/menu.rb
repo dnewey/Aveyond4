@@ -22,6 +22,7 @@ class MenuState
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
+	attr_accessor :choose_cat
 
 
 	# Player position for saving
@@ -48,6 +49,7 @@ class MenuState
 		@potion_page = 0
 
 		@chosen = nil
+		@choose_cat = nil
 		
 	end
 

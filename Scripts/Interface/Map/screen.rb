@@ -114,6 +114,7 @@ class Ui_Screen
 	def open_buy_item(i)
 
 		@item = Item_Box.new(@vp)
+		@item.show_price
 		@item.item(i)
 		@item.move($player.screen_x-@item.width/2,$player.screen_y-64-@item.height)
 

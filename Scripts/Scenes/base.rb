@@ -144,11 +144,18 @@ class Scene_Base
     
   end
 
-  def clear_sparks
+  def clear_sparks(e=nil)
 
-      # Clear sparks
-      @sparks.each{ |s| s.dispose }
-      @sparks.clear
+      if e == nil
+        # Clear sparks
+        @sparks.each{ |s| s.dispose }
+        @sparks.clear
+      else
+
+        @sparks.each{ |s| s.dispose if s.ev == e }
+        @sparks.delete_if{ |s| s.disposed? }
+
+       end
 
   end
 
@@ -283,9 +290,10 @@ class Scene_Base
 
   end
 
-  def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
+  def add_spark(fx,x,y,e=nil,vp=@vp_main) # might want custom vp
 
     sprk = Spark.new(fx,x,y,@vp_main)
+    sprk.ev = e
     @sparks.push(sprk)
     return sprk
 

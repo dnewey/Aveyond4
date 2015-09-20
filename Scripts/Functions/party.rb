@@ -66,6 +66,18 @@ def grant_items
 	}
 end
 
+# For the vault
+def item_from_card(e)
+	cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
+    cards.each{ |c|
+        if $state.state?(e,'card-'+c)
+          item('card-'+c)
+          unstate(e,'card-'+c)
+          unstate(e,'on')
+          return
+        end        
+    }
+end
 
 #==============================================================================
 # ** Members

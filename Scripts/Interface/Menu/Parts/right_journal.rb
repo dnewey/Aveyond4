@@ -122,8 +122,7 @@ class Right_Journal < SpriteGroup
 
         num = 1
 
-        log_scr(reqs)
-
+        # Per req
         # Per req
         reqs.split("\n").each{ |req|
 

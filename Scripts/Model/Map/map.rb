@@ -504,7 +504,7 @@ class Game_Map
          return false if e.bridge && [2,8].include?(d) && e.height == 1
          return false if e.bridge && [4,6].include?(d) && e.width == 1
          return false if !(e.through || e.above || e.below)
-         return false if monster && e.name == "YSNP"
+         return false if (monster || e.ysnp) && e.name == "YSNP"
       end
     }
 

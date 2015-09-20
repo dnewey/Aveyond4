@@ -20,7 +20,6 @@ class Game_Battler
 		@slots.each{ |s|
 			list.push(@equips[s])
 		}
-		log_info(list)
 		return list
 	end
 

@@ -25,8 +25,6 @@ class Scene_Battle
 
     end
 
-    log_info(speaker)
-
     force = $party.get(speaker).name
     speaker = "A.#{$party.active.index(speaker)}"
     

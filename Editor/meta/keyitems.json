@@ -15,6 +15,9 @@
     "edit": "icon"
   },
   {
+    "field": "price"
+  },
+  {
     "field": "notes"
   }
 ]

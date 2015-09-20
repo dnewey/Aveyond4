@@ -132,12 +132,7 @@ class List
     @back_sprite.bitmap.clear if @back_sprite.bitmap
     @content_sprite.bitmap.clear if @content_sprite.bitmap
 
-    #log_sys(data)
   	@data = data
-    # Need an original per page in case less items are given
-    # And then aditional items are given
-    #@per_page = @data.count if @data.count < @per_page
-    #@per_page = 1 if @per_page == 0
     @scroll_idx = 0
     @page_idx = idx
     @select_sprite.y = idx * row_height
@@ -299,8 +294,6 @@ class List
   end
 
   def draw_item(data,row)
-
-    log_sys(data)
 
     item = $data.items[data] if data != 'remove'
 

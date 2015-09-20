@@ -42,9 +42,22 @@ class List_Common < SpriteGroup
 
 	# All the various data that can be shown
 	def setup_items(category)
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(UsableData) # &&
-		}
+		case category
+
+			when 'all'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].is_a?(UsableData) # &&
+				}
+
+			when 'cards'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].id.include?('card-')
+				}
+
+			else
+				items = []
+
+		end
 		@list.setup(items)
 	end
 

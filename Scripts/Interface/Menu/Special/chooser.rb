@@ -8,7 +8,7 @@ class Mnu_Chooser < Mnu_Base
 		super(vp)
 
 		@title.change('choose')
-		@title.change_icon("items")
+		#@title.change_icon("items")
 		#@subtitle.text = "Various items of collection"
 
 		@port = Port_Full.new(vp)
@@ -19,9 +19,9 @@ class Mnu_Chooser < Mnu_Base
 		@item_box.hide
 		self.right.push(@item_box)
 
-		grant_items
+		#grant_items
 
-		@menu.setup_items('all')
+		@menu.setup_items($menu.choose_cat)
 
 		open
 

@@ -65,7 +65,6 @@ class Scene_Battle
       case action[0]
 
         when :text
-          log_scr action[1]
           @texts.push(action[1])
           @phase = :misc_text
 

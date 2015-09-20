@@ -61,8 +61,9 @@ def open_potions_menu
 	$menu.menu_page = "Potions"
 end
 
-def open_chooser_menu
+def open_chooser_menu(cat=nil)
 	$menu.sub_only = true
+	$menu.choose_cat = cat
 	$menu.menu_page = "Chooser"
 end
 

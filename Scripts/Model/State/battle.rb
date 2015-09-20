@@ -107,7 +107,6 @@ class Game_Battle
 
   def xp_total
     total = 0
-    log_sys(@enemies)
     @enemies.each{ |enemy|
       total += enemy.xp.to_i if enemy.xp != nil
     }
@@ -121,7 +120,6 @@ class Game_Battle
     if data.drops != nil
       data.drops.split("/n").each{ |item|
 
-        log_sys(item)
         # If possible, give it
         dta = item.split("=>")
         type = dta[1]
@@ -147,7 +145,6 @@ class Game_Battle
       dta = data.gold.split("=>")
       golds = dta[0].split("-")
       chance = dta[1].to_f
-      log_info(chance)
       if rand <= chance
         if golds.count == 1
           return gold(golds[0].to_i)
@@ -178,7 +175,6 @@ class Game_Battle
 
     # Prep the minion
     min = $party.get('boy').slot('minion')
-    log_scr(min)
     if min == nil
       @minion = nil
     else
@@ -208,7 +204,6 @@ class Game_Battle
   end
 
   def victory?
-    log_scr(@enemies)
     return @enemies.select{ |e| !e.down? }.empty?
   end
 
@@ -435,7 +430,6 @@ class Game_Battle
   end
 
   def calc_hits(skill)
-    log_sys(skill)
     return 1 if skill.is_a?(UsableData)
     hits = skill.hits
     if hits.include?("-")

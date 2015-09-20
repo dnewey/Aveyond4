@@ -134,14 +134,12 @@ class Game_Character
 
   # For offsets > 32, snap the position and remove offset
   def snap_offset
-    #log_sys @off_y
     @y += @off_y / 32
     @x += @off_x / 32
     @real_x = @x * 128
     @real_y = @y * 128
     @off_y = 0#@off_y % 32
     @off_x = 0#@off_x % 32
-    #log_sys @off_y
   end
 
   #--------------------------------------------------------------------------
@@ -1532,8 +1530,6 @@ class Game_Character
       while !old_positions.empty?
 
         x,y = old_positions.shift
-
-        #log_sys([x,y])
 
         if x == sx and y == sy
           #log_scr("WINWINWINW")

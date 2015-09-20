@@ -10,8 +10,6 @@ class Mnu_Help < Mnu_Base
 		@title.change('help')
 		@subtitle.text = "HELP HELP"
 
-		log_scr("HUH")
-
 		@menu.list.type = :quest
 
 		data = $progress.quests

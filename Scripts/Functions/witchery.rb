@@ -27,8 +27,6 @@ def potion_current
 end
 
 def potion_chose_secret?		
-	log_sys(potion_current.ingredient)
-	log_scr $menu.chosen
 	return potion_current.ingredient == $menu.chosen
 end
 

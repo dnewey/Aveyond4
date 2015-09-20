@@ -382,8 +382,6 @@ class Game_Player < Game_Character
         $audio.fadeout      
       end
 
-      log_info(@trans_type)
-
       case @trans_type
 
         when :cross
