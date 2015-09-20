@@ -8,6 +8,7 @@ def shop_choice
 
 			# Have money, buy it
 			item(gev(me).name,'b')
+			state(me,'sold')
 
 
 		when 'Info'

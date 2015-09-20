@@ -3517,7 +3517,7 @@ def attract(who)
 			$progress.attract_phy += 1
 	end
 	log_err("DO THE ATTRACT POPPER NOW!")
-end"Ï
+end"Ó
 
 def shop_choice
 
@@ -3531,7 +3531,7 @@ def shop_choice
 
 		when 'Info'
 
-			text("That's a covey balm")
+			text("36: That's a covey balm")
 
 
 		when 'Cancel'
@@ -4951,7 +4951,7 @@ class TargetCmd
 	end
 
 end
-".#==============================================================================
+")#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -5068,16 +5068,17 @@ class Ui_Screen
 
 		@item = Item_Box.new(@vp)
 		@item.item(i)
-		@item.move($player.screen_x-@item.width,$player.screen_y-64-@item.height-40)
+		@item.move($player.screen_x-@item.width/2,$player.screen_y-64-@item.height)
 
 		# Also grid opens
 		grid = open_grid
 		grid.spacing = 0
 		grid.x = @item.x#$player.screen_x
-		grid.y = @item.y+@item.height
-		grid.add_button('Buy',"Buy",'misc/unknown')
-		grid.add_button('Info',"Info",'misc/unknown')
-		grid.add_button('Cancel',"Cancel",'misc/unknown')
+		grid.y = @item.y+@item.height + 64
+		grid.add_button('Buy',"Buy",'misc/coins')
+		grid.add_button('Info',"Info",'misc/dots')
+		grid.add_button('Exit',"Exit",'misc/cross')
+
 	end
 
 	def open_sell_item(i)
@@ -5440,7 +5441,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"Å@#==============================================================================
+end"â@#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -5636,7 +5637,7 @@ class Ui_Grid
 	def add_button(name,text,icon)
 
 		# Create new things
-		btn = add_part_box(name,120,46)
+		btn = add_part_box(name,100,46)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -5652,9 +5653,11 @@ class Ui_Grid
      	choose(@boxes[0].name) if @boxes.count == 1
 
      	# Next
-     	if @layout == :vertical
-     		@cy += btn.height + @spacing
-     	end
+     	#if @layout == :vertical
+     		#@cy += btn.height + @spacing
+     	#end
+
+     	@cx += btn.width
 
 	end
 
@@ -9044,7 +9047,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"½#==============================================================================
+end"Ö#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -9116,7 +9119,10 @@ class Mnu_Shop < Mnu_Base
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
 		@users.clear
 		@users.move(@item_box.x,@item_box.y + @item_box.height)
-		@users.add_users(option)
+		
+		# Only if gear
+		#@users.add_users(option)
+
 		data = $data.items[option]
 		# if data.is_a?(GearData)
 		# 	$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
