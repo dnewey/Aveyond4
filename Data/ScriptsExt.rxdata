@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"	#==============================================================================
+end"g#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -225,11 +225,13 @@ class Sprite_Character < Sprite
 
   def update_spark_trail
 
-    if @character.fxtrail != nil && @character.moving?
+    return if @character == $player
+
+    if @character.fxtrail != nil && @character.moving? && !@character.deleted
       @fx_delay -= 1
       if @fx_delay <= 0
         @fx_delay = 8
-        spark(@character.id,@character.fxtrail,0,5)
+        spark(@character.id,@character.fxtrail,@character.off_x,@character.off_y+8)
       end
     end
 
@@ -596,8 +598,10 @@ class Projectile < Sprite
 
 	end
 
-end"Á
+end"×
 class Spark < Sprite
+
+	attr_accessor :ev
 
 	def initialize(fx,x,y,vp)
 		super(vp)
@@ -1550,7 +1554,7 @@ class Label < Sprite
         
   end
   
-end"^A#==============================================================================
+end"n@#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1684,12 +1688,7 @@ class List
     @back_sprite.bitmap.clear if @back_sprite.bitmap
     @content_sprite.bitmap.clear if @content_sprite.bitmap
 
-    #log_sys(data)
   	@data = data
-    # Need an original per page in case less items are given
-    # And then aditional items are given
-    #@per_page = @data.count if @data.count < @per_page
-    #@per_page = 1 if @per_page == 0
     @scroll_idx = 0
     @page_idx = idx
     @select_sprite.y = idx * row_height
@@ -1851,8 +1850,6 @@ class List
   end
 
   def draw_item(data,row)
-
-    log_sys(data)
 
     item = $data.items[data] if data != 'remove'
 
@@ -3172,7 +3169,8 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"b	#==============================================================================
+"­
+#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3240,6 +3238,18 @@ def grant_items
 	}
 end
 
+# For the vault
+def item_from_card(e)
+	cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
+    cards.each{ |c|
+        if $state.state?(e,'card-'+c)
+          item('card-'+c)
+          unstate(e,'card-'+c)
+          unstate(e,'on')
+          return
+        end        
+    }
+end
 
 #==============================================================================
 # ** Members
@@ -3575,7 +3585,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"Q
+"s
 # Misc
 
 def text(t)
@@ -3638,8 +3648,9 @@ def open_potions_menu
 	$menu.menu_page = "Potions"
 end
 
-def open_chooser_menu
+def open_chooser_menu(cat=nil)
 	$menu.sub_only = true
+	$menu.choose_cat = cat
 	$menu.menu_page = "Chooser"
 end
 
@@ -3922,7 +3933,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"Â
+ end"†
 # Potion making
 
 def potion_learn(potion)
@@ -3951,8 +3962,6 @@ def potion_current
 end
 
 def potion_chose_secret?		
-	log_sys(potion_current.ingredient)
-	log_scr $menu.chosen
 	return potion_current.ingredient == $menu.chosen
 end
 
@@ -4952,7 +4961,7 @@ class TargetCmd
 	end
 
 end
-")#==============================================================================
+"=#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -5068,6 +5077,7 @@ class Ui_Screen
 	def open_buy_item(i)
 
 		@item = Item_Box.new(@vp)
+		@item.show_price
 		@item.item(i)
 		@item.move($player.screen_x-@item.width/2,$player.screen_y-64-@item.height)
 
@@ -6348,7 +6358,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"6\#==============================================================================
+end"î[#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -7103,9 +7113,6 @@ class Ui_Message
     @grid.move(@box.x,@box.y+@box.height+72)
     @choices.each{ |c|
       data = c.split(": ")
-      log_info(data)
-      log_info(data[0])
-      log_info(data[1])
       @grid.add_choice(data[0],data[1],@box.width)
     }
   end
@@ -7850,7 +7857,7 @@ class Mnu_Healing < Mnu_Base
 		
 	end
 
-end"Ô#==============================================================================
+end"À#==============================================================================
 # ** Mnu_Help
 #==============================================================================
 
@@ -7861,8 +7868,6 @@ class Mnu_Help < Mnu_Base
 
 		@title.change('help')
 		@subtitle.text = "HELP HELP"
-
-		log_scr("HUH")
 
 		@menu.list.type = :quest
 
@@ -9157,7 +9162,7 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end"÷#==============================================================================
+end"å#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -9361,7 +9366,6 @@ class Mnu_Equip < Mnu_Base
 		@grid.clear
 		@grid.move(15,115)
 		 @char.slots.each{ |slot| 
-		 	log_scr slot
 		 	@grid.add_slot(slot,@char.equips[slot])
 		 }
 
@@ -10472,7 +10476,7 @@ class Info_Box < SpriteGroup
     end
 
 end
-"B
+" 
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -10504,6 +10508,16 @@ class Item_Box < SpriteGroup
     	# @cat.text = "POTION"
     	# add(@cat,226,13)
 
+        @price = Label.new(vp)
+        @price.fixed_width = 250
+        @price.icon = $cache.icon("misc/coins")
+        @price.font = $fonts.pop_type
+        @price.align = 0
+        @price.text = "256"
+        add(@price,226,13)
+        @price.hide
+
+
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
     	@desc.text = "Missing Descriptor"
@@ -10517,6 +10531,10 @@ class Item_Box < SpriteGroup
     	item('unknown')
 
 	end
+
+    def show_price
+        @price.show
+    end
 
     def width
         return @window.width
@@ -10560,6 +10578,8 @@ class Item_Box < SpriteGroup
         @title.text = data.name
         @title.icon = $cache.icon(data.icon)
         @desc.text = data.description
+
+        @price.text = data.price
 
         @stats.each{ |s| 
             s.dispose
@@ -10745,7 +10765,7 @@ return if data == nil
 
     end
 
-end"P
+end"
 class List_Common < SpriteGroup
 
 	attr_accessor :list, :window
@@ -10789,9 +10809,22 @@ class List_Common < SpriteGroup
 
 	# All the various data that can be shown
 	def setup_items(category)
-		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(UsableData) # &&
-		}
+		case category
+
+			when 'all'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].is_a?(UsableData) # &&
+				}
+
+			when 'cards'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].id.include?('card-')
+				}
+
+			else
+				items = []
+
+		end
 		@list.setup(items)
 	end
 
@@ -10984,7 +11017,7 @@ class Port_Full < Sprite
 	def confused() self.bitmap = $cache.face_menu("#{$menu.char}-c") end
 	def xtra() self.bitmap = $cache.face_menu("#{$menu.char}-x") end
 
-end"£
+end"
 class Right_Journal < SpriteGroup
 
 	def initialize(vp)
@@ -11108,8 +11141,7 @@ class Right_Journal < SpriteGroup
 
         num = 1
 
-        log_scr(reqs)
-
+        # Per req
         # Per req
         reqs.split("\n").each{ |req|
 
@@ -11252,7 +11284,7 @@ class Right_Page < SpriteGroup
         @page_title.text = text
     end
 
-end"S#==============================================================================
+end"`#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -11262,7 +11294,7 @@ class Mnu_Chooser < Mnu_Base
 		super(vp)
 
 		@title.change('choose')
-		@title.change_icon("items")
+		#@title.change_icon("items")
 		#@subtitle.text = "Various items of collection"
 
 		@port = Port_Full.new(vp)
@@ -11273,9 +11305,9 @@ class Mnu_Chooser < Mnu_Base
 		@item_box.hide
 		self.right.push(@item_box)
 
-		grant_items
+		#grant_items
 
-		@menu.setup_items('all')
+		@menu.setup_items($menu.choose_cat)
 
 		open
 
@@ -12216,7 +12248,7 @@ class Game_Battler
 
 
 end
-"ˆ
+"t
 class Game_Battler
 
   # For displays
@@ -12283,7 +12315,6 @@ class Game_Battler
     $data.items[item].action.split("\n").each{ |actn|
 
       dta = actn.split('=>')
-      log_scr(dta)
       case dta[0]
         when 'heal'
           plus += dta[1].to_i
@@ -12538,7 +12569,7 @@ class Game_Battler
 
   end
 
-end"Œ
+end"z
 class Game_Battler
 
 	def equip(slot,new_equip)
@@ -12560,7 +12591,6 @@ class Game_Battler
 		@slots.each{ |s|
 			list.push(@equips[s])
 		}
-		log_info(list)
 		return list
 	end
 
@@ -12737,7 +12767,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"-´#==============================================================================
+end"è³#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -12873,14 +12903,12 @@ class Game_Character
 
   # For offsets > 32, snap the position and remove offset
   def snap_offset
-    #log_sys @off_y
     @y += @off_y / 32
     @x += @off_x / 32
     @real_x = @x * 128
     @real_y = @y * 128
     @off_y = 0#@off_y % 32
     @off_x = 0#@off_x % 32
-    #log_sys @off_y
   end
 
   #--------------------------------------------------------------------------
@@ -14272,8 +14300,6 @@ class Game_Character
 
         x,y = old_positions.shift
 
-        #log_sys([x,y])
-
         if x == sx and y == sy
           #log_scr("WINWINWINW")
           return [true, map, step-1] 
@@ -14315,7 +14341,7 @@ class Game_Character
 
 
 end
-"7K#==============================================================================
+"ÆO#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -14336,6 +14362,7 @@ class Game_Event < Game_Character
   attr_reader :below2 # For things that are below below, aka very below
   attr_reader :bridge # Behave like a bridge for passability
   attr_reader :faceoff # How far offset is the face for message box
+  attr_reader :ysnp # Don't walk past blockers
 
   attr_reader :page_idx
 
@@ -14378,6 +14405,7 @@ class Game_Event < Game_Character
     @below2 = false
     @bridge = false
     @stairs = false
+    @ysnp = false
     @faceoff = 0
 
     @width = 1
@@ -14434,7 +14462,6 @@ class Game_Event < Game_Character
   end
 
   def force_clone(src)
-      log_scr(src)
       unlock
       clone_ev = $data.clones[src]
       @pages = clone_ev.pages
@@ -14611,6 +14638,8 @@ class Game_Event < Game_Character
         return false if $progress.complete?(cond[1])
       when '?quest'
         return false if !$progress.quest?(cond[1])
+      when '?anyquest' # Any of these 3 quests will allow
+        return false if !$progress.quest?(cond[1]) && !$progress.quest?(cond[2]) && !$progress.quest?(cond[3])
 
       # Party member check
       when '?boyle', '?boy'
@@ -14741,6 +14770,17 @@ class Game_Event < Game_Character
         return false if @voll != 7
       when '@v8'
         return false if @voll != 8
+
+      # Custom witch recruit
+      when '@bones' # bones the highest var
+        return false if @state.varval('bones') < $state.varval('serpent')
+        return false if @state.varval('bones') < $state.varval('chains')
+      when '@serpent'
+        return false if @state.varval('serpent') < $state.varval('bones')
+        return false if @state.varval('serpent') < $state.varval('chains')
+      when '@chains'
+        return false if @state.varval('chains') < $state.varval('serpent')
+        return false if @state.varval('chains') < $state.varval('bones')
 
 
     end
@@ -14936,6 +14976,14 @@ class Game_Event < Game_Character
         when "#icon"
           @character_name = "Icons/#{data[1]}"
 
+        when '#cardicon'
+          cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
+          cards.each{ |c|
+            if $state.state?(@id,'card-'+c)
+              @character_name = "Icons/vault/card-#{c}"
+            end
+          }
+
         when "#cauldron"
           cauldron_graphic(self)
 
@@ -14944,7 +14992,7 @@ class Game_Event < Game_Character
           oy = 0
           ox = data[2].to_i if data.count > 2
           oy = data[3].to_i if data.count > 3
-          $scene.add_spark(data[1],self.real_x/4+16+ox,self.real_y/4+16-10+oy)
+          $scene.add_spark(data[1],self.real_x/4+16+ox,self.real_y/4+16-10+oy,@id)
 
         when '#rand-pattern'
           @force_pattern = rand(3)
@@ -14966,6 +15014,10 @@ class Game_Event < Game_Character
 
         when '#fxtrail'
           @fxtrail = data[1]
+
+        when '#ysnp','#YSNP'
+          @ysnp = true
+          @monster = true
 
         when '#avoid'
           self.move_type = 4
@@ -15629,7 +15681,7 @@ class Interpreter
   end
 
 end
-"E;#==============================================================================
+"Q;#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -16135,7 +16187,7 @@ class Game_Map
          return false if e.bridge && [2,8].include?(d) && e.height == 1
          return false if e.bridge && [4,6].include?(d) && e.width == 1
          return false if !(e.through || e.above || e.below)
-         return false if monster && e.name == "YSNP"
+         return false if (monster || e.ysnp) && e.name == "YSNP"
       end
     }
 
@@ -16257,7 +16309,7 @@ class Moblin
 
 	end
 
-end"‹,#==============================================================================
+end"l,#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -16641,8 +16693,6 @@ class Game_Player < Game_Character
         $audio.fadeout      
       end
 
-      log_info(@trans_type)
-
       case @trans_type
 
         when :cross
@@ -16693,7 +16743,7 @@ class Game_Player < Game_Character
   end
 
 end
-"''
+"¤&
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16802,7 +16852,6 @@ class Game_Battle
 
   def xp_total
     total = 0
-    log_sys(@enemies)
     @enemies.each{ |enemy|
       total += enemy.xp.to_i if enemy.xp != nil
     }
@@ -16816,7 +16865,6 @@ class Game_Battle
     if data.drops != nil
       data.drops.split("/n").each{ |item|
 
-        log_sys(item)
         # If possible, give it
         dta = item.split("=>")
         type = dta[1]
@@ -16842,7 +16890,6 @@ class Game_Battle
       dta = data.gold.split("=>")
       golds = dta[0].split("-")
       chance = dta[1].to_f
-      log_info(chance)
       if rand <= chance
         if golds.count == 1
           return gold(golds[0].to_i)
@@ -16873,7 +16920,6 @@ class Game_Battle
 
     # Prep the minion
     min = $party.get('boy').slot('minion')
-    log_scr(min)
     if min == nil
       @minion = nil
     else
@@ -16903,7 +16949,6 @@ class Game_Battle
   end
 
   def victory?
-    log_scr(@enemies)
     return @enemies.select{ |e| !e.down? }.empty?
   end
 
@@ -17130,7 +17175,6 @@ class Game_Battle
   end
 
   def calc_hits(skill)
-    log_sys(skill)
     return 1 if skill.is_a?(UsableData)
     hits = skill.hits
     if hits.include?("-")
@@ -17165,7 +17209,7 @@ class Game_Battle
     return @enemies + $party.all_battlers
   end
   
-end"Ç
+end"ø
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -17189,6 +17233,7 @@ class MenuState
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
+	attr_accessor :choose_cat
 
 
 	# Player position for saving
@@ -17215,6 +17260,7 @@ class MenuState
 		@potion_page = 0
 
 		@chosen = nil
+		@choose_cat = nil
 		
 	end
 
@@ -17703,7 +17749,7 @@ end"‰class Progress
 		@demons.push(demon)
 	end
 
-end"´class State
+end"Ñclass State
 
 	def initialize
 
@@ -17722,7 +17768,7 @@ end"´class State
 
 	def flag(f)
 		@flags.push(f) if !@flags.include?(f)
-		$scene.map.need_refresh = true
+		$scene.map.need_refresh = true if !$scene.is_a?(Scene_Menu)
 	end
 
 	def unflag(f)
@@ -17816,7 +17862,7 @@ end"´class State
 	end
 
 end
-"Ö#==============================================================================
+"‹#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -17962,11 +18008,18 @@ class Scene_Base
     
   end
 
-  def clear_sparks
+  def clear_sparks(e=nil)
 
-      # Clear sparks
-      @sparks.each{ |s| s.dispose }
-      @sparks.clear
+      if e == nil
+        # Clear sparks
+        @sparks.each{ |s| s.dispose }
+        @sparks.clear
+      else
+
+        @sparks.each{ |s| s.dispose if s.ev == e }
+        @sparks.delete_if{ |s| s.disposed? }
+
+       end
 
   end
 
@@ -18101,9 +18154,10 @@ class Scene_Base
 
   end
 
-  def add_spark(fx,x,y,vp=@vp_main) # might want custom vp
+  def add_spark(fx,x,y,e=nil,vp=@vp_main) # might want custom vp
 
     sprk = Spark.new(fx,x,y,@vp_main)
+    sprk.ev = e
     @sparks.push(sprk)
     return sprk
 
@@ -18151,7 +18205,7 @@ class Scene_Base
   # end
 
 end
-"ì#==============================================================================
+"¥#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -18258,8 +18312,6 @@ class Scene_Battle < Scene_Base
       next if ev == nil
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
-        log_sys("HP")
-        log_sys($battle.enemies[i].stat('hp'))
         ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
       else
         hide(ev)
@@ -18427,7 +18479,7 @@ class Scene_Battle < Scene_Base
 
   end
 
-end" 
+end"ã
 class Scene_Battle
 
   def phase_intro_init
@@ -18494,7 +18546,6 @@ class Scene_Battle
       case action[0]
 
         when :text
-          log_scr action[1]
           @texts.push(action[1])
           @phase = :misc_text
 
@@ -18760,7 +18811,7 @@ class Scene_Battle
     
   end
 
-end"5 
+end" 
 class Scene_Battle
 
   def phase_main_init
@@ -18813,8 +18864,6 @@ class Scene_Battle
 
     # -----------------------------
     # ERROR CORRECTIONS 
-
-    log_sys(@active_battler.scope)
 
     # If specific target, random if down
     if ['one','ally'].include?(@active_battler.scope) && @active_battler.target.down?
@@ -19137,7 +19186,7 @@ class Scene_Battle
 
   end
 
-end"ã
+end"Ê
 class Scene_Battle
 
   def phase_victory_init
@@ -19163,8 +19212,6 @@ class Scene_Battle
       text = $data.victories["#{speaker}-#{idx}"].dialogue
 
     end
-
-    log_info(speaker)
 
     force = $party.get(speaker).name
     speaker = "A.#{$party.active.index(speaker)}"
@@ -19216,7 +19263,7 @@ class Scene_Battle
   end
 
 
-end"\
+end"
 class Scene_Battle
 
   def phase_misc_text
@@ -19232,9 +19279,7 @@ class Scene_Battle
 
   	# If speaker is enemy, get name somehow
   	if speaker.include?("E.")
-  		log_info(speaker)
   		force = $battle.enemies[speaker.split(".")[1].to_i].name
-  		log_info(force)
   	end
 
   	if $party.active.include?(speaker)
@@ -19247,8 +19292,6 @@ class Scene_Battle
 	# Convert actor speaker to event format
 
 	#speaker = $scene.
-
-	log_scr(speaker+": "+text)
 
 	#if $party.active.include?()
     $scene.message.start(speaker+": "+text)
@@ -20463,7 +20506,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"5#==============================================================================
+end"¥#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -20554,6 +20597,9 @@ class AudioManager
       return
     end
     
+    @music = nil
+    @music = Seal::Source.new
+
     @music_file = file
 
     @music_gain = 1.0
@@ -20578,6 +20624,9 @@ class AudioManager
     if file == nil  || file == ''
       return
     end
+
+    @atmosphere = nil
+    @atmosphere = Seal::Source.new
     
     @atmosphere_file = file
 
@@ -22226,7 +22275,7 @@ end"øclass Bitmap
 	end
 
 end
-"@
+"U
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -22246,6 +22295,7 @@ class KeyItemData
 	attr_reader :name
 	attr_reader :description
 	attr_reader :icon
+	attr_reader :price
 	attr_reader :notes
 	attr_accessor :tab
 end
@@ -22255,7 +22305,7 @@ class ShopData
 	attr_reader :name
 	attr_reader :description
 	attr_reader :icon
-	attr_reader :value
+	attr_reader :price
 	attr_accessor :tab
 end
 
