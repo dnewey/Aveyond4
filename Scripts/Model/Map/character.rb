@@ -573,7 +573,7 @@ class Game_Character
       @move_angle = 0
     end
 
-    distance = 128 if $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
+    distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
 
     # If logical coordinates are further down than real coordinates
     if @y * 128 > @real_y

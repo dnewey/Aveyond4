@@ -587,14 +587,14 @@ class Game_Map
   #--------------------------------------------------------------------------
   def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
   def event_at(x, y) 
-    return nil if !@ev_cache.has_key?([x,y])
-    return @ev_cache[[x,y]][0]
-    #@events.values.find{ |e| e.at?(x,y) } 
+    # return nil if !@ev_cache.has_key?([x,y])
+    # return @ev_cache[[x,y]][0]
+    @events.values.find{ |e| e.at?(x,y) } 
   end
   def events_at(x, y) 
-    return nil if !@ev_cache.has_key?([x,y])
-    return @ev_cache[[x,y]]
-    #@events.values.select{ |e| e.at?(x,y) } 
+    # return nil if !@ev_cache.has_key?([x,y])
+    # return @ev_cache[[x,y]]
+    @events.values.select{ |e| e.at?(x,y) } 
   end
   def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
 
