@@ -2814,7 +2814,7 @@ end
 
 
 
-"Å#==============================================================================
+"j#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3053,8 +3053,6 @@ def path(ev,tx,ty,after=nil)
 end
 
 def route(ev,move)
-
-	log_err("ROUTING")
 
 	char = gev(ev)
 
@@ -16783,7 +16781,7 @@ class Game_Player < Game_Character
   end
 
 end
-"'
+"*'
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16828,12 +16826,12 @@ class Game_Battle
 
   def clear
     @enemy_list = []
-    # @enemies.each{ |e| e.dispose }
+    #@enemies.each{ |e| e.dispose }
     @enemies = []
-    # @props.each{ |p| p.dispose }
+    #@props.each{ |p| p.dispose }
     @props = []
     @queue = {}
-    # $party.actors.each{ |a| a.ev = nil }
+    $party.all_battlers.each{ |a| a.ev = nil; a.view = nil }
   end
 
   def change_maps(maps)
@@ -17702,7 +17700,7 @@ class Game_Party
 
   end
         
-end"âclass Progress
+end"ºclass Progress
 
 	attr_accessor :quests, :complete
 
@@ -17722,13 +17720,6 @@ end"âclass Progress
 
 		add_quest('ch0-domination')
 
-		# Samplers
-		add_quest('sq-windmill-ghosts')
-		add_quest('ch5-prison')
-		add_quest('sq-save-turtle-eggs')
-		add_quest('ch3-scarecrows')
-		add_quest('sq-bad-luck')
-		add_quest('ch5-to-potion-3')		
 
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
@@ -18248,7 +18239,7 @@ class Scene_Base
   # end
 
 end
-"•#==============================================================================
+"≥#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -18380,6 +18371,9 @@ class Scene_Battle < Scene_Base
   end
   
   def terminate
+
+    
+    
     super  
   end
 
@@ -19229,7 +19223,7 @@ class Scene_Battle
 
   end
 
-end" 
+end"–
 class Scene_Battle
 
   def phase_victory_init
@@ -19303,6 +19297,7 @@ class Scene_Battle
 
     $battle.clear
   	$game.pop_scene
+    
   end
 
 

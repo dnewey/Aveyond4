@@ -43,21 +43,12 @@ class Game_Battle
 
   def clear
     @enemy_list = []
-<<<<<<< HEAD
-    # @enemies.each{ |e| e.dispose }
-    @enemies = []
-    # @props.each{ |p| p.dispose }
-    @props = []
-    @queue = {}
-    # $party.actors.each{ |a| a.ev = nil }
-=======
     #@enemies.each{ |e| e.dispose }
     @enemies = []
     #@props.each{ |p| p.dispose }
     @props = []
     @queue = {}
     $party.all_battlers.each{ |a| a.ev = nil; a.view = nil }
->>>>>>> origin/master
   end
 
   def change_maps(maps)
