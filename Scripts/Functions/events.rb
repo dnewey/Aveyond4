@@ -238,8 +238,6 @@ end
 
 def route(ev,move)
 
-	log_err("ROUTING")
-
 	char = gev(ev)
 
 	data = move.split(',')
