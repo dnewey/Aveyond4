@@ -15,6 +15,7 @@ class SettingsManager
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
   attr_accessor :debug_draw_helpers
+  attr_accessor :debug_power_test
   
 
   # In settings
@@ -38,6 +39,7 @@ class SettingsManager
     @debug_skip_title = true
     @debug_draw_fps = true
     @debug_draw_helpers = false
+    @debug_power_test = true
 
     # Create the settings file if needed
     if !FileTest.exist?($appdata+'\settings.txt')

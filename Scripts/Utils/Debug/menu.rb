@@ -62,6 +62,7 @@ class DebugMenu
 				add(":: Toggle skip title - "+$settings.debug_skip_title.to_s.upcase,Proc.new{ $settings.debug_skip_title ^= true })
 				add(":: Toggle draw fps - "+$settings.debug_draw_fps.to_s.upcase,Proc.new{ $settings.debug_draw_fps ^= true })
 				add(":: Toggle draw helpers - "+$settings.debug_draw_helpers.to_s.upcase,Proc.new{ $settings.debug_draw_helpers ^= true })
+				add(":: Toggle power test - "+$settings.debug_power_test.to_s.upcase,Proc.new{ $settings.debug_power_test ^= true })
 
 				@esc = Proc.new{ page(:main) }
 

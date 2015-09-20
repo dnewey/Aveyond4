@@ -12767,7 +12767,11 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
+<<<<<<< HEAD
 end"è³#==============================================================================
+=======
+end";´#==============================================================================
+>>>>>>> origin/master
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -13341,6 +13345,8 @@ class Game_Character
     else
       @move_angle = 0
     end
+
+    distance = 128 if $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
 
     # If logical coordinates are further down than real coordinates
     if @y * 128 > @real_y
@@ -16309,7 +16315,11 @@ class Moblin
 
 	end
 
+<<<<<<< HEAD
 end"l,#==============================================================================
+=======
+end"`-#==============================================================================
+>>>>>>> origin/master
 # ** Game_Player
 #==============================================================================
 
@@ -16503,14 +16513,14 @@ class Game_Player < Game_Character
     end
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
-
+    #if ($settings.bottombar == false || $mouse.y < 448) && ($input.click? || ($keyboard.state?(VK_LBUTTON) && rand > 0.8))
     if ($settings.bottombar == false || $mouse.y < 448) && $input.click?
 
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
         
-        $audio.sys('walkto',0.7)
+        
         
         
         # Turn Character in direction
@@ -16522,7 +16532,10 @@ class Game_Player < Game_Character
         if @event_at_path == nil
 
           # If walk to empty pos, show fx
-          $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
+          if $map.passable?(mx,my,$player.direction)
+            $audio.sys('walkto',0.7)
+            $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
+          end
 
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil
@@ -16530,6 +16543,7 @@ class Game_Player < Game_Character
 
           # Flash target event
           flash(@event_at_path)
+          $audio.sys('walkto',0.7)
 
           dx = @x - @event_at_path.x
           dy = @y - @event_at_path.y
@@ -22017,7 +22031,7 @@ class MouseManager
   def hide_cursor() @sprite.opacity = 0 end
   def show_cursor() @sprite.opacity = 255 end
 
-end"ú#==============================================================================
+end";	#==============================================================================
 # ** Game_Settings
 #==============================================================================
 
@@ -22034,6 +22048,7 @@ class SettingsManager
   attr_accessor :debug_skip_title
   attr_accessor :debug_draw_fps
   attr_accessor :debug_draw_helpers
+  attr_accessor :debug_power_test
   
 
   # In settings
@@ -22057,6 +22072,7 @@ class SettingsManager
     @debug_skip_title = true
     @debug_draw_fps = true
     @debug_draw_helpers = false
+    @debug_power_test = true
 
     # Create the settings file if needed
     if !FileTest.exist?($appdata+'\settings.txt')
@@ -22901,7 +22917,7 @@ end"Cmodule Graphics
     end
     
   end
-end"8#==============================================================================
+end"²#==============================================================================
 # ** Actions
 #==============================================================================
 
@@ -22965,6 +22981,7 @@ class DebugMenu
 				add(":: Toggle skip title - "+$settings.debug_skip_title.to_s.upcase,Proc.new{ $settings.debug_skip_title ^= true })
 				add(":: Toggle draw fps - "+$settings.debug_draw_fps.to_s.upcase,Proc.new{ $settings.debug_draw_fps ^= true })
 				add(":: Toggle draw helpers - "+$settings.debug_draw_helpers.to_s.upcase,Proc.new{ $settings.debug_draw_helpers ^= true })
+				add(":: Toggle power test - "+$settings.debug_power_test.to_s.upcase,Proc.new{ $settings.debug_power_test ^= true })
 
 				@esc = Proc.new{ page(:main) }
 
