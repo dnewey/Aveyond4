@@ -72,6 +72,7 @@ class Scene_Battle
 
     $battle.clear
   	$game.pop_scene
+    
   end
 
 
