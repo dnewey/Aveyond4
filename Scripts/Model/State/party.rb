@@ -277,7 +277,7 @@ class Game_Party
   end
 
   def restore_party_loc
-    $player.transfer(@party_loc[0],@party_loc[1],@party_loc[2],@party_loc[3])    
+    $player.transfer(@party_loc[0],@party_loc[1],@party_loc[2],$player.direction)    
     @party_loc = nil
   end
 

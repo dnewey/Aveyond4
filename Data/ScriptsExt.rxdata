@@ -3172,7 +3172,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"p	#==============================================================================
+"b	#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3219,7 +3219,7 @@ def item(id,number=1,type='f')
 		type = number
 		number = 1
 	end
-	#sfx 'fireworks-explode'
+	sfx 'item'
 	$party.add_item(id,number)
 	return if !$scene.is_a?(Scene_Map)
 	pop_item(id,number,type) if type != 's'
@@ -3517,7 +3517,7 @@ def attract(who)
 			$progress.attract_phy += 1
 	end
 	log_err("DO THE ATTRACT POPPER NOW!")
-end"Ó
+end"è
 
 def shop_choice
 
@@ -3527,6 +3527,7 @@ def shop_choice
 
 			# Have money, buy it
 			item(gev(me).name,'b')
+			state(me,'sold')
 
 
 		when 'Info'
@@ -3712,7 +3713,7 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"WORLD_MAP_ID = 146
+end"WORLD_MAP_ID = 146
 
 def start_transfer(map,room=nil,dir=nil)
 
@@ -3818,7 +3819,7 @@ def transfer_map(dir=nil)
 end
 
 def transfer_chester_in(dir=nil)
-	transfer_in("Chester Chove",dir)
+	transfer(48,1,dir)
 	$player.trans_type = :cave
 end
 
@@ -17225,7 +17226,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"`$#==============================================================================
+end"d$#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17504,7 +17505,7 @@ class Game_Party
   end
 
   def restore_party_loc
-    $player.transfer(@party_loc[0],@party_loc[1],@party_loc[2],@party_loc[3])    
+    $player.transfer(@party_loc[0],@party_loc[1],@party_loc[2],$player.direction)    
     @party_loc = nil
   end
 

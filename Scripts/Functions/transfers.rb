@@ -104,7 +104,7 @@ def transfer_map(dir=nil)
 end
 
 def transfer_chester_in(dir=nil)
-	transfer_in("Chester Chove",dir)
+	transfer(48,1,dir)
 	$player.trans_type = :cave
 end
 
