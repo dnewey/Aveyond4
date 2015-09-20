@@ -192,14 +192,14 @@ class Game_Player < Game_Character
     end
 
     # Unless Interpretter Running, Forcing a Route or Message Showing
-
+    #if ($settings.bottombar == false || $mouse.y < 448) && ($input.click? || ($keyboard.state?(VK_LBUTTON) && rand > 0.8))
     if ($settings.bottombar == false || $mouse.y < 448) && $input.click?
 
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
         
-        $audio.sys('walkto',0.7)
+        
         
         
         # Turn Character in direction
@@ -211,7 +211,10 @@ class Game_Player < Game_Character
         if @event_at_path == nil
 
           # If walk to empty pos, show fx
-          $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
+          if $map.passable?(mx,my,$player.direction)
+            $audio.sys('walkto',0.7)
+            $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))
+          end
 
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil
@@ -219,6 +222,7 @@ class Game_Player < Game_Character
 
           # Flash target event
           flash(@event_at_path)
+          $audio.sys('walkto',0.7)
 
           dx = @x - @event_at_path.x
           dy = @y - @event_at_path.y
