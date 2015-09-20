@@ -16783,7 +16783,7 @@ class Game_Player < Game_Character
   end
 
 end
-"¤&
+"'
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -16828,9 +16828,12 @@ class Game_Battle
 
   def clear
     @enemy_list = []
+    # @enemies.each{ |e| e.dispose }
     @enemies = []
+    # @props.each{ |p| p.dispose }
     @props = []
     @queue = {}
+    # $party.actors.each{ |a| a.ev = nil }
   end
 
   def change_maps(maps)
