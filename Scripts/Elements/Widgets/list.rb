@@ -619,6 +619,17 @@ class List
 
   end
 
+  def down_one
+      # Move the sprite down, but not too far!
+      @select_sprite.y += row_height      
+      @page_idx += 1
+  end
+
+  def up_one
+      @select_sprite.y -= row_height      
+      @page_idx -= 1
+  end
+
   def scroll_down
     
     @change.call(current) if !@change.nil?

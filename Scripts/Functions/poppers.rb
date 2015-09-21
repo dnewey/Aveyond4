@@ -32,6 +32,18 @@ def pop_magics(number)
 
 end
 
+def pop_level(who)
+
+end
+
+def pop_level_all
+
+end
+
+def pop_stat_bonus(who,stat,amount)
+
+end
+
 def pop_ing_pickup(i)
 	ib = $cache.icon($data.items[i].icon)
 	pop_get('p',$data.items[i].name,ib)

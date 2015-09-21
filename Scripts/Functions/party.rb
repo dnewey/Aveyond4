@@ -132,9 +132,21 @@ end
 
 
 def grant_stat(who,stat,amount)
-	log_err("MAKE THE STAT GRANTING TTHINGS WITH POPPER")
+	$party.get(who).grant_stat(stat,amount)
+	pop_stat_bonus(who,stat,amount)
+end
+
+def grant_level_all
+	$party.all_battlers.grant_level
+	pop_level_all
 end
 
 def grant_level(who)
-	log_err("MAKING THE GRANT LEVEL")
+	$party.get(who).grant_level
+	pop_level(who)
+end
+
+def grant_level_free(who)
+	$party.get(who).grant_level(false)
+	pop_level(who)
 end

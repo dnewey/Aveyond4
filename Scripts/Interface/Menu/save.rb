@@ -21,6 +21,7 @@ class Mnu_Save < Mnu_Base
 
 		@menu.list.type = :file
 		@menu.list.setup($files.save_file_list)
+		@menu.list.down_one
 
 		@page = Right_Page.new(vp)
 		@right.push(@page)
@@ -72,6 +73,7 @@ class Mnu_Save < Mnu_Base
 	def loadmode
 		@title.change('load')
 		@load = true
+		@menu.list.up_one
 	end
 
 	def update

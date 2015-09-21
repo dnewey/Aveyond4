@@ -19,6 +19,11 @@ class Game_Battler
   	return false
   end
 
+  def grant_level(reset_xp = true)
+    @level += 1
+    @xp = 0 if reset_xp
+  end
+
   def gain_xp(gain)
   	# Add trinket access to xp here if smart
   	@xp += gain

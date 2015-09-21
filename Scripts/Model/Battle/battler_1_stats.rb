@@ -54,6 +54,11 @@ class Game_Battler
 
   end
 
+  def grant_stat(stat,amount)
+    @stat_plus[stat] = 0 if !@stat_plus.has_key?(stat)
+    @stat_plus[stat] += amount
+  end
+
   #--------------------------------------------------------------------------
   # * Item Usage
   #-------------------------------------------------------------------------- 
