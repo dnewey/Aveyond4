@@ -3178,8 +3178,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"­
-#==============================================================================
+"r#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3313,12 +3312,24 @@ end
 
 
 def grant_stat(who,stat,amount)
-	log_err("MAKE THE STAT GRANTING TTHINGS WITH POPPER")
+	$party.get(who).grant_stat(stat,amount)
+	pop_stat_bonus(who,stat,amount)
+end
+
+def grant_level_all
+	$party.all_battlers.grant_level
+	pop_level_all
 end
 
 def grant_level(who)
-	log_err("MAKING THE GRANT LEVEL")
-end"
+	$party.get(who).grant_level
+	pop_level(who)
+end
+
+def grant_level_free(who)
+	$party.get(who).grant_level(false)
+	pop_level(who)
+end"ƒ
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3349,6 +3360,18 @@ def pop_magics(number)
 	b = "#{number} Magic"	
 
 	pop_get('r',b,ib,'wizard')
+
+end
+
+def pop_level(who)
+
+end
+
+def pop_level_all
+
+end
+
+def pop_stat_bonus(who,stat,amount)
 
 end
 
@@ -12259,7 +12282,7 @@ class Game_Battler
 
 
 end
-"t
+"ô
 class Game_Battler
 
   # For displays
@@ -12313,6 +12336,11 @@ class Game_Battler
 
     return [maxhp,maxmp,str,self.def,luk,eva,res]
 
+  end
+
+  def grant_stat(stat,amount)
+    @stat_plus[stat] = 0 if !@stat_plus.has_key?(stat)
+    @stat_plus[stat] += amount
   end
 
   #--------------------------------------------------------------------------
@@ -12681,7 +12709,7 @@ class Game_Battler
 		
 	end
 
-end"w
+end"Î
 class Game_Battler
 
   #--------------------------------------------------------------------------
@@ -12700,6 +12728,11 @@ class Game_Battler
   		return true
   	end
   	return false
+  end
+
+  def grant_level(reset_xp = true)
+    @level += 1
+    @xp = 0 if reset_xp
   end
 
   def gain_xp(gain)
