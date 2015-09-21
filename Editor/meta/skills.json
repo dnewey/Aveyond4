@@ -47,5 +47,8 @@
   {
     "field": "user",
     "color": "true"
+  },
+  {
+    "field": "price"
   }
 ]

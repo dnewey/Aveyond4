@@ -299,9 +299,9 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
-    #set_active("mys")
-    # set_active("rob")
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
     #set_active("phy")   
@@ -343,11 +343,16 @@ class Game_Party
     @actors['phy'].equip('staff','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('heavy','phy-helm-start')
+    
 
     # Initial skills per actor
     @actors["boy"].learn('contempt')
     @actors["boy"].learn('flames')
 
+    @actors['ing'].learn('mudball')
+    @actors['ing'].learn('missiles')
+
+    @actors["ing"].learn('xform-normal')
     @actors["ing"].learn('xform-snake')
     @actors["ing"].learn('xform-cat')
     @actors["ing"].learn('xform-frog')
