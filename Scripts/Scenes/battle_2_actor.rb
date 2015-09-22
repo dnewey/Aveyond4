@@ -43,6 +43,8 @@ class Scene_Battle
     # Player command inputs section
     if $input.action? || $input.click?
 
+      sys 'action'
+
       action = @actor_cmd.get_action
       @active_battler.action = action
       @actor_cmd.close
@@ -201,7 +203,7 @@ class Scene_Battle
     end
 
     if $input.action? || $input.click?
-      sys('attack')
+      sys('open')
       @active_battler.target = @target_cmd.active
       @target_cmd.close
       @phase = :actor_next
