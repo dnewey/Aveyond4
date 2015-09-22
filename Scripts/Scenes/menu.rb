@@ -14,6 +14,7 @@ class Scene_Menu
     @closing = false
 
     $mouse.change_cursor('Default')
+    sys('open')
 
     # Vp
     @vp = Viewport.new(0,0,$game.width,$game.height)
@@ -201,6 +202,7 @@ class Scene_Menu
   # end
 
   def close
+    sys('close')
     @closing = true
     @bg.do(go("opacity",-255,300))
     self.do(delay(300))

@@ -112,6 +112,7 @@ class FileManager
   
   # Could be in game? just the contents part here? Strange to give files such power
   def load_game(i)
+    sys('load')
     File.open(filename(i), "rb") do |file|
       Marshal.load(file)
       extract_save_contents(Marshal.load(file))

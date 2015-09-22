@@ -106,13 +106,13 @@ end
 
 def pop_huh(ev)
 
-	pop_icon(ev,"misc/exclaim","jump")
+	pop_icon(ev,"misc/exclaim","exclaim")
 
 end
 
 def pop_huh_r(ev)
 
-	pop_icon_r(ev,"misc/exclaim-r","jump")
+	pop_icon_r(ev,"misc/exclaim-r","exclaim")
 
 end
 
@@ -124,7 +124,7 @@ end
 
 def pop_wha(ev)
 
-	pop_icon(ev,"misc/unknown","jump")
+	pop_icon(ev,"misc/unknown","wha")
 
 end
 
@@ -133,7 +133,7 @@ def pop_sweat(ev,o=false)
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots",nil)
+	pop_icon(ev,"misc/dots",'dots')
 end
 
 def pop_bulb(ev)

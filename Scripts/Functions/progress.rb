@@ -4,12 +4,14 @@
 
 # Quests
 def quest(id) 
+	sys('quest-complete')
 	$progress.add_quest(id) 
 	pop_quest(id)
 	$scene.hud.quest_sparkle("misc/profile")
 end
 
 def unquest(id)
+	sys('unquest')
 	$progress.end_quest(id)
 	pop_unquest(id)
 end
@@ -42,5 +44,6 @@ def attract(who)
 		when 'phy'
 			$progress.attract_phy += 1
 	end
+	sys('attract')
 	log_err("DO THE ATTRACT POPPER NOW!")
 end

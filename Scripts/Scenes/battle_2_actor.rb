@@ -201,6 +201,7 @@ class Scene_Battle
     end
 
     if $input.action? || $input.click?
+      sys('attack')
       @active_battler.target = @target_cmd.active
       @target_cmd.close
       @phase = :actor_next

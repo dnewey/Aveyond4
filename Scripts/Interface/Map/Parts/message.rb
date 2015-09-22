@@ -533,7 +533,7 @@ class Ui_Message
     @char_idx += 1
 
     # Play a lovely character sound
-    sys('txt2',1.0) #if $settings.value('text_sound') 
+    sys('talk2',0.15) #if $settings.value('text_sound') 
     
     # Wait before drawing another character
     @next_char = @text_delay if !skip_wait_test
@@ -771,7 +771,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def check_input_done
     if $input.action? || $input.click?
-      #sound(:text_next)
+      sys('next')
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
@@ -813,7 +813,7 @@ class Ui_Message
   def check_input_choice
     return if @choice_delay > 0
     if $input.action? || $input.click?
-      #sound(:text_next)
+#      sys('next')
       #self.slide_zy(0.0)
 
       @last_choice = @choices[@grid.idx].split(":")[0]

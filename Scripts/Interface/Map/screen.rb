@@ -58,6 +58,7 @@ class Ui_Screen
 			if $input.action? || $input.click?
 				$tweens.clear(@popper)
 				@popper.dispose
+				sys('next')
 				@popper = nil
 			end
 		end

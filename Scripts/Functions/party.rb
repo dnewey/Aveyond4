@@ -85,6 +85,7 @@ end
 
 # Only this one will do popper
 def join(who)
+	sys('join')
 	$party.set_active(who)
 	pop_join(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
@@ -96,6 +97,7 @@ def join_s(who)
 end
 
 def unjoin(who)
+	sys('unjoin')
 	pop_leave(who)
 	$party.back_to_pavillion(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)

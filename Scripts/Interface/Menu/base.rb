@@ -111,11 +111,13 @@ class Mnu_Base
 	end
 
 	def close_soon(d=10)
+		sys('cancel')
 		@close_soon = true
 		@close_delay = d
 	end
 
 	def close_now
+		sys('cancel')
 		@close_soon = true
 		@close_delay = 0
 	end

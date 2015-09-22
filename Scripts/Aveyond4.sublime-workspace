@@ -72,44 +72,10 @@
 			}
 		},
 		{
-			"contents": "Searching 234 files for \"grant_level\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\party.rb:\n  136  end\n  137  \n  138: def grant_level(who)\n  139  	log_err(\"MAKING THE GRANT LEVEL\")\n  140  end\n\n1 match in 1 file\n",
+			"file": "System/files.rb",
 			"settings":
 			{
-				"buffer_size": 215,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "Functions/party.rb",
-			"settings":
-			{
-				"buffer_size": 2779,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/Battle/battler_5_xp.rb",
-			"settings":
-			{
-				"buffer_size": 926,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/Battle/battler_1_stats.rb",
-			"settings":
-			{
-				"buffer_size": 3399,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/Battle/battler.rb",
-			"settings":
-			{
-				"buffer_size": 4585,
+				"buffer_size": 3338,
 				"line_ending": "Windows"
 			}
 		},
@@ -118,6 +84,80 @@
 			"settings":
 			{
 				"buffer_size": 2762,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 234 files for \"def gold\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\party.rb:\n    3  #==============================================================================\n    4  \n    5: def gold(amount,type='f')\n    6  	sys('coins')\n    7  	$party.add_gold(amount)\n    .\n   14  end\n   15  \n   16: def gold?(amount)\n   17  	return $party.has_gold?(amount)\n   18  end\n\n2 matches in 1 file\n\n\nSearching 234 files for \"open_main_menu\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\system.rb:\n   41  # Menus Access\n   42  \n   43: def open_main_menu\n   44  	$menu.sub_only = false\n   45  	$menu.menu_page = \"Main\"\n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\screen.rb:\n  107        	$game.snapshot = Graphics.snap_to_bitmap\n  108        	$mouse.show_cursor\n  109:       	open_main_menu\n  110        end\n  111  \n\n2 matches across 2 files\n\n\nSearching 234 files for \"def quest\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\progress.rb:\n    4  \n    5  # Quests\n    6: def quest(id) \n    7  	$progress.add_quest(id) \n    8  	pop_quest(id)\n    .\n   15  end\n   16  \n   17: def quest?(id)\n   18  	return active?(id) || complete?(id)\n   19  end\n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\screen.rb:\n  174  	end\n  175  \n  176: 	def quest_sparkle(icon)\n  177  		@bar.add_quest(icon)\n  178  	end\n\nC:\\Aveyond4\\Scripts\\Model\\State\\progress.rb:\n   58  	end\n   59  \n   60: 	def quest_active?(q)\n   61  		return @quests.include?(q)\n   62  	end\n   63  \n   64: 	def quest_complete?(q)\n   65  		return @complete.include?(q)\n   66  	end\n\n5 matches across 3 files\n\n\nSearching 234 files for \"attract\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\progress.rb:\n   36  def beyond?(id) return $progress.beyond?(id) end\n   37  \n   38: def attract(who)\n   39  	case who\n   40  		when 'boy'\n   41: 			$progress.attract_boy += 1\n   42  		when 'hib'\n   43: 			$progress.attract_hib += 1\n   44  		when 'phy'\n   45: 			$progress.attract_phy += 1\n   46  	end\n   47  	log_err(\"DO THE ATTRACT POPPER NOW!\")\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\Customs\\ingrid.rb:\n   97  \n   98  		lbl = Label.new(vp)\n   99: 		lbl.icon = $cache.icon(\"misc/attract-get\")\n  100  	    lbl.font = $fonts.list\n  101  	    lbl.shadow = $fonts.list_shadow\n\nC:\\Aveyond4\\Scripts\\Model\\State\\progress.rb:\n    4  \n    5  	attr_accessor :night_rank, :night_xp\n    6:   	attr_accessor :attract_boy, :attract_hib, :attract_phy\n    7  \n    8    	attr_accessor :guild_id\n    .\n   35  \n   36  	    # Attraction\n   37: 	    @attract_boy = 0\n   38: 	    @attract_hib = 0\n   39: 	    @attract_phy = 0\n   40  \n   41  	    # Guild info\n\nC:\\Aveyond4\\Editor\\icons.json:\n  247  \"items/witch-hat\",\n  248  \"items/worm\",\n  249: \"misc/attract-get\",\n  250: \"misc/attract-heart\",\n  251  \"misc/bio\",\n  252  \"misc/bottombar\",\n\nC:\\Aveyond4\\Editor\\json\\keyitems.json:\n    1: [{\"id\":\"ch1-prison-key\",\"name\":\"Windy Hills Prison Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"to save gimble\",\"modified\":\"1442375557592\",\"price\":\"\"},{\"id\":\"cheeki\",\"name\":\"Cheeki\",\"description\":\"Take these to Chester to increase Boyle's power4\",\"icon\":\"items/creature\",\"notes\":\"\",\"modified\":\"1442385212287\",\"price\":\"500\"},{\"id\":\"badge-1\",\"name\":\"Storm Badge\",\"description\":\"\",\"icon\":\"items/badge-1\",\"notes\":\"crusade\",\"modified\":\"1439781381062\",\"price\":\"\"},{\"id\":\"arch-vhs\",\"name\":\"Ancient Trash\",\"description\":\"\",\"icon\":\"items/vhs\",\"notes\":\"\",\"modified\":\"1442656659026\",\"price\":\"\"},{\"id\":\"witch-hat\",\"name\":\"Witch Hat\",\"description\":\"\",\"icon\":\"items/witch-hat\",\"notes\":\"for guild join\",\"modified\":\"1441853131591\",\"price\":\"\"},{\"id\":\"chapter-2\",\"name\":\"Chapter 2\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"vault\",\"modified\":\"1442550802332\",\"price\":\"\"},{\"id\":\"chapter-3\",\"name\":\"Chapter 3\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"vault\",\"modified\":\"1442550802332\",\"price\":\"\"},{\"id\":\"chapter-4\",\"name\":\"Chapter 4\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"vault\",\"modified\":\"1442550802332\",\"price\":\"\"},{\"id\":\"eow-son-1\",\"name\":\"Bucket\",\"description\":\"\",\"icon\":\"items/bucket-empty\",\"notes\":\"end of world quest\",\"modified\":\"1441270267863\",\"price\":\"\"},{\"id\":\"doll-witch\",\"name\":\"Witch Doll\",\"description\":\"\",\"icon\":\"items/doll-witch\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\",\"price\":\"\"},{\"id\":\"key-archer\",\"name\":\"Archer Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"arch-quest\",\"name\":\"Owl Transfigurine\",\"description\":\"\",\"icon\":\"items/owl-transfigurine\",\"notes\":\"\",\"modified\":\"1442632434732\",\"price\":\"\"},{\"id\":\"card-archer\",\"name\":\"Archer Card\",\"description\":\"\",\"icon\":\"vault/card-archer\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"cheese-round\",\"name\":\"Round of cheese\",\"description\":\"Nobody could eat a whole round of cheese\",\"icon\":\"items/cheese-round\",\"notes\":\"for pala quest\",\"modified\":\"1441436162958\",\"price\":\"\"},{\"id\":\"ch2-cave-key\",\"name\":\"Cell Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"for briar cave\",\"modified\":\"1440169194468\"},{\"id\":\"potion-choco\",\"name\":\"Choco Dream\",\"description\":\"\",\"icon\":\"items/potion-brown\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"arch-attract\",\"name\":\"Magic Stone\",\"description\":\"\",\"icon\":\"items/love-stone\",\"notes\":\"\",\"modified\":\"1442632383292\"},{\"id\":\"witchetty-grub\",\"name\":\"Witchetty Grub\",\"description\":\"\",\"icon\":\"witchery/witchetty-grub\",\"notes\":\"ingrid\",\"modified\":\"1436610384223\",\"price\":\"\"},{\"id\":\"witch-teleport\",\"name\":\"Potion Teleporter\",\"description\":\"\",\"icon\":\"items/slippers\",\"notes\":\"to teleport home\",\"modified\":\"1439779774076\"},{\"id\":\"soda-ash\",\"name\":\"Soda Ash\",\"description\":\"\",\"icon\":\"witchery/soda-ash\",\"notes\":\"ingrid\",\"modified\":\"1436610279733\",\"price\":\"\"},{\"id\":\"elf-cloth\",\"name\":\"Elven Cloth\",\"description\":\"purdy and soft\",\"icon\":\"items/elf-cloth\",\"notes\":\"\",\"modified\":\"1442536475538\",\"price\":\"\"},{\"id\":\"tonic\",\"name\":\"Tonic\",\"description\":\"\",\"icon\":\"witchery/tonic\",\"notes\":\"ingrid\",\"modified\":\"1436610375205\",\"price\":\"\"},{\"id\":\"feather\",\"name\":\"Feather\",\"description\":\"\",\"icon\":\"witchery/feather\",\"notes\":\"ingrid\",\"modified\":\"1436610336503\",\"price\":\"\"},{\"id\":\"antiwere\",\"name\":\"Antiwere Salv\",\"description\":\"\",\"icon\":\"items/antiwere\",\"notes\":\"nightwatch\",\"modified\":\"1441854566365\",\"price\":\"\"},{\"id\":\"ct-frame\",\"name\":\"Royal Frame\",\"description\":\"\",\"icon\":\"items/frame\",\"notes\":\"for king\",\"modified\":\"1440244234566\",\"price\":\"\"},{\"id\":\"tentacle\",\"name\":\"Tentacle\",\"description\":\"\",\"icon\":\"witchery/tentacle\",\"notes\":\"ingrid\",\"modified\":\"1436610375022\",\"price\":\"\"},{\"id\":\"key-false\",\"name\":\"King Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"hot-spice\",\"name\":\"hot spice\",\"description\":\"for potion\",\"icon\":\"witchery/star-leaf\",\"notes\":\"\",\"modified\":\"1439193778002\",\"price\":\"\"},{\"id\":\"card-false\",\"name\":\"False Card\",\"description\":\"\",\"icon\":\"vault/card-false\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"goblin-toe\",\"name\":\"goblin toe\",\"description\":\"\",\"icon\":\"items/boat-plank\",\"notes\":\"job board\",\"modified\":\"1439022029817\"},{\"id\":\"love-stone\",\"name\":\"Love Stone\",\"description\":\"\",\"icon\":\"items/love-stone\",\"notes\":\"attraction point\",\"modified\":\"1442531825486\"},{\"id\":\"novel-page\",\"name\":\"Novel Page\",\"description\":\"A page of somebody's novel\",\"icon\":\"items/map\",\"notes\":\"job board\",\"modified\":\"1439020110818\"},{\"id\":\"sugar-cube\",\"name\":\"Sugar Cube\",\"description\":\"\",\"icon\":\"witchery/sugar-cube\",\"notes\":\"ingrid\",\"modified\":\"1436610335939\"},{\"id\":\"frog-prince\",\"name\":\"New Item\",\"description\":\"\",\"icon\":\"items/frog-prince\",\"notes\":\"fang quest\",\"modified\":\"1439814991756\",\"price\":\"\"},{\"id\":\"owl-feather\",\"name\":\"Owl Feather\",\"description\":\"\",\"icon\":\"items/owl-feather\",\"notes\":\"nightwatch\",\"modified\":\"1441853136272\"},{\"id\":\"blood-sample\",\"name\":\"Captain's Blood\",\"description\":\"\",\"icon\":\"items/blood-sample\",\"notes\":\"job board quest\",\"modified\":\"1439382249248\"},{\"id\":\"potion-unslave\",\"name\":\"Unslave Potion\",\"description\":\"\",\"icon\":\"items/potion-brown\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"glacial-essence\",\"name\":\"Glacial Essence\",\"description\":\"\",\"icon\":\"witchery/glacial-essence\",\"notes\":\"ingrid\",\"modified\":\"1436610279034\",\"price\":\"\"},{\"id\":\"anti-bear-salve\",\"name\":\"Anti-bear Salve\",\"description\":\"\",\"icon\":\"\",\"notes\":\"werebear\",\"modified\":\"1442274384148\"},{\"id\":\"boat-figurehead\",\"name\":\"a figurehead\",\"description\":\"\",\"icon\":\"items/boat-figurehead\",\"notes\":\"\",\"modified\":\"1438770885097\"},{\"id\":\"rosemary\",\"name\":\"New Item\",\"description\":\"attract boy\",\"icon\":\"items/rosemary\",\"notes\":\"\",\"modified\":\"1442655509852\",\"price\":\"\"},{\"id\":\"doll-ghost\",\"name\":\"Ghost Doll\",\"description\":\"\",\"icon\":\"items/doll-ghost\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\",\"price\":\"\"},{\"id\":\"card-arrow\",\"name\":\"Arrow Card\",\"description\":\"\",\"icon\":\"vault/card-arrow\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"card-crown\",\"name\":\"Crown Card\",\"description\":\"\",\"icon\":\"vault/card-crown\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"rock-powder\",\"name\":\"Rock Powder\",\"description\":\"\",\"icon\":\"witchery/rock-powder\",\"notes\":\"ingrid\",\"modified\":\"1436610279611\"},{\"id\":\"dream-shroom\",\"name\":\"Dream Shroom\",\"description\":\"\",\"icon\":\"witchery/dream-shroom\",\"notes\":\"ingrid\",\"modified\":\"1436609702285\"},{\"id\":\"teddy-cursed\",\"name\":\"Cursed Teddy\",\"description\":\"\",\"icon\":\"items/teddy-cursed\",\"notes\":\"curse coven quest\",\"modified\":\"1441853739674\"},{\"id\":\"magic-scroll-summon\",\"name\":\"Summoning Scroll\",\"description\":\"\",\"icon\":\"items/magic-scroll\",\"notes\":\"for robin quest\",\"modified\":\"1440567689526\"},{\"id\":\"rw-grapes\",\"name\":\"grapes\",\"description\":\"for job board quest\",\"icon\":\"items/grapes\",\"notes\":\"\",\"modified\":\"1439183039823\"},{\"id\":\"spider-eyes\",\"name\":\"Spider Eyes\",\"description\":\"\",\"icon\":\"witchery/spider-eyes\",\"notes\":\"ingrid\",\"modified\":\"1436610336855\"},{\"id\":\"kobold-stones\",\"name\":\"Kobold Stones\",\"description\":\"\",\"icon\":\"items/kobold-stone\",\"notes\":\"job board quest\",\"modified\":\"1439304990964\"},{\"id\":\"list-paladins\",\"name\":\"List of Fighters\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"crusade quest\",\"modified\":\"1440949362571\"},{\"id\":\"juniper\",\"name\":\"Juniper\",\"description\":\"\",\"icon\":\"items/juniper\",\"notes\":\"transform coven quest\",\"modified\":\"1441853769679\"},{\"id\":\"stinger\",\"name\":\"Stinger\",\"description\":\"\",\"icon\":\"witchery/stinger\",\"notes\":\"ingrid\",\"modified\":\"1436610336995\"},{\"id\":\"boat-oar\",\"name\":\"a oar\",\"description\":\"\",\"icon\":\"items/boat-plank\",\"notes\":\"\",\"modified\":\"1438770884859\"},{\"id\":\"god-water\",\"name\":\"God Water\",\"description\":\"Makes things grow. Quickly.\",\"icon\":\"items/potion-blue\",\"notes\":\"bird god quest\",\"modified\":\"1439875990679\"},{\"id\":\"moon-tear\",\"name\":\"Moon Tear\",\"description\":\"\",\"icon\":\"witchery/moon-tear\",\"notes\":\"ingrid\",\"modified\":\"1436610279362\"},{\"id\":\"crab-hammer\",\"name\":\"Crab Hammer\",\"description\":\"\",\"icon\":\"items/crab-hammer\",\"notes\":\"attraction point\",\"modified\":\"1442535546934\"},{\"id\":\"card-begger\",\"name\":\"Begger Card\",\"description\":\"\",\"icon\":\"vault/card-begger\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"card-dagger\",\"name\":\"Dagger Card\",\"description\":\"\",\"icon\":\"vault/card-dagger\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"potion-blabber\",\"name\":\"Blabbermouth Potion\",\"description\":\"\",\"icon\":\"items/potion-blue\",\"notes\":\"\",\"modified\":\"1437399447434\"},{\"id\":\"recipe-blabber\",\"name\":\"Blabbermouth Recipe\",\"description\":\"\",\"icon\":\"items/potion-recipe\",\"notes\":\"ingrid\",\"modified\":\"1436777068450\"},{\"id\":\"vault-key\",\"name\":\"Vault Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"steal from ron\",\"modified\":\"1440999617285\"},{\"id\":\"ticket\",\"name\":\"Prize Ticket\",\"description\":\"\",\"icon\":\"items/ticket\",\"chapter\":\"\",\"modified\":\"1435115632568\",\"notes\":\"opening\"},{\"id\":\"full-map\",\"name\":\"full map\",\"description\":\"take to guy\",\"icon\":\"items/full-map\",\"notes\":\"crab quest\",\"modified\":\"1439188285283\"},{\"id\":\"wh-weight\",\"name\":\"Heavy Stone\",\"description\":\"\",\"icon\":\"items/weight\",\"notes\":\"windy hills\",\"modified\":\"1438234334574\"},{\"id\":\"hat-skull\",\"name\":\"Hat Skull\",\"description\":\"\",\"icon\":\"items/hat-skull\",\"notes\":\"curse guild hat making\",\"modified\":\"1441865123466\"},{\"id\":\"doll-vamp\",\"name\":\"Vampire Doll\",\"description\":\"\",\"icon\":\"items/doll-vamp\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\"},{\"id\":\"kobold-artifact\",\"name\":\"Kobold Keepsake\",\"description\":\"\",\"icon\":\"items/kobold-special\",\"notes\":\"for shop quest\",\"modified\":\"1441267912104\"},{\"id\":\"eow-son-2\",\"name\":\"Bucket of Water\",\"description\":\"\",\"icon\":\"items/bucket-full\",\"notes\":\"end of world quest\",\"modified\":\"1441270273054\"},{\"id\":\"werebear-metal\",\"name\":\"Werebear Metal\",\"description\":\"Able to resist werebear claws\",\"icon\":\"items/werebear-metal\",\"notes\":\"crusade joiner\",\"modified\":\"1439782606139\"},{\"id\":\"lizard-tail\",\"name\":\"Lizard Tail\",\"description\":\"\",\"icon\":\"witchery/lizard-tail\",\"notes\":\"ingrid\",\"modified\":\"1436610279203\"},{\"id\":\"spice-leaf\",\"name\":\"Spice Leaf\",\"description\":\"\",\"icon\":\"witchery/racoon-tail\",\"notes\":\"hot spice\",\"modified\":\"1439779119082\"},{\"id\":\"racoon-tail\",\"name\":\"Racoon Tail\",\"description\":\"\",\"icon\":\"witcheyr/racoon-tail\",\"notes\":\"ingrid\",\"modified\":\"1436610279489\"},{\"id\":\"potion-calming\",\"name\":\"Calming Potion\",\"description\":\"\",\"icon\":\"items/potion-aqua\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"brightsword-potion\",\"name\":\"Drakefang Potion\",\"description\":\"\",\"icon\":\"items/potion-aqua\",\"notes\":\"brightsword quest\",\"modified\":\"1439521745072\"},{\"id\":\"ancient-blood\",\"name\":\"Blood of Ancients\",\"description\":\"\",\"icon\":\"\",\"notes\":\"demon summon quest\",\"modified\":\"1441521697442\"},{\"id\":\"badge-2\",\"name\":\"Marsh Badge\",\"description\":\"\",\"icon\":\"items/badge-2\",\"notes\":\"crusade\",\"modified\":\"1439781381062\"},{\"id\":\"badge-3\",\"name\":\"Cole Badge\",\"description\":\"\",\"icon\":\"items/badge-3\",\"notes\":\"crusade\",\"modified\":\"1439781381062\"},{\"id\":\"doll-5\",\"name\":\"Last Doll\",\"description\":\"\",\"icon\":\"items/boar-oar\",\"notes\":\"doll quest\",\"modified\":\"1439772633188\"},{\"id\":\"boat-plank\",\"name\":\"Plank\",\"description\":\"\",\"icon\":\"items/boat-plank\",\"notes\":\"\",\"modified\":\"1438770885354\"},{\"id\":\"library-book\",\"name\":\"Library Book\",\"description\":\"\\\"So you're dating a witch\\\"\",\"icon\":\"items/book-witch\",\"notes\":\"\",\"modified\":\"1440955705283\"},{\"id\":\"cookie-boy\",\"name\":\"Ginger Biscuit\",\"description\":\"\",\"icon\":\"items/cookie-boy\",\"notes\":\"\",\"modified\":\"1442537594589\"},{\"id\":\"cookie-hib\",\"name\":\"Choc-Chip Biscuit\",\"description\":\"\",\"icon\":\"items/cookie-hib\",\"notes\":\"\",\"modified\":\"1442537594805\"},{\"id\":\"cookie-phy\",\"name\":\"Honey Butter Buscuit\",\"description\":\"\",\"icon\":\"items/cookie-phy\",\"notes\":\"\",\"modified\":\"1442537595011\"},{\"id\":\"doll-wolf\",\"name\":\"Werebear Doll\",\"description\":\"\",\"icon\":\"items/doll-wolf\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\"},{\"id\":\"turtle-egg\",\"name\":\"Turtle Egg\",\"description\":\"\",\"icon\":\"items/egg-1\",\"notes\":\"\",\"modified\":\"1439338821006\"},{\"id\":\"dragon-egg\",\"name\":\"Dragon Egg\",\"description\":\"\",\"icon\":\"items/egg-2\",\"notes\":\"for tor mayoor quest\",\"modified\":\"1440956955052\"},{\"id\":\"flip-deck\",\"name\":\"2 Card Flip Deck\",\"description\":\"\",\"icon\":\"items/flip-deck\",\"notes\":\"start with\",\"modified\":\"1441445578955\"},{\"id\":\"brightsword-key\",\"name\":\"Brightsword Key\",\"description\":\"\",\"icon\":\"items/key-gold\",\"notes\":\"brightsword quest\",\"modified\":\"1439521713358\"},{\"id\":\"dragon-key\",\"name\":\"Dragon Bone Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"to get in dwarf place\",\"modified\":\"1441263451881\"},{\"id\":\"windmill-key\",\"name\":\"Windmill Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"\",\"modified\":\"1438835048097\"},{\"id\":\"centipede-leg\",\"name\":\"Centipede Leg\",\"description\":\"\",\"icon\":\"items/key-stick\",\"notes\":\"job board\",\"modified\":\"1439016819193\"},{\"id\":\"dale-key\",\"name\":\"Mysterious Key\",\"description\":\"\",\"icon\":\"items/key-wings\",\"notes\":\"brightsword quest\",\"modified\":\"1439525057024\"},{\"id\":\"castle-map\",\"name\":\"Castle Map\",\"description\":\"\",\"icon\":\"items/map\",\"notes\":\"map to secret door\",\"modified\":\"1440955655755\"},{\"id\":\"mir-wood\",\"name\":\"Mir Wood\",\"description\":\"Burns green and burns for days.\",\"price\":\"\",\"icon\":\"items/mir-wood\",\"category\":\"Other\",\"chapter\":\"\",\"notes\":\"opening\"},{\"id\":\"night-bug\",\"name\":\"Night Bug\",\"description\":\"\",\"icon\":\"items/nightbugs\",\"notes\":\"nightwatch\",\"modified\":\"1441853136487\"},{\"id\":\"parsnip\",\"name\":\"Parsnip\",\"description\":\"\",\"icon\":\"items/parsnip\",\"notes\":\"parsnip job board\",\"modified\":\"1441424022021\"},{\"id\":\"pendant-boy\",\"name\":\"Villain Pendant\",\"description\":\"\",\"icon\":\"items/pendant-boy\",\"notes\":\"attraction point\",\"modified\":\"1442535571377\"},{\"id\":\"pendant-hib\",\"name\":\"Healing Pendant\",\"description\":\"\",\"icon\":\"items/pendant-hib\",\"notes\":\"attraction point\",\"modified\":\"1442535571673\"},{\"id\":\"pendant-phy\",\"name\":\"Vengeful Pendant\",\"description\":\"\",\"icon\":\"items/pendant-phy\",\"notes\":\"attraction point\",\"modified\":\"1442535572049\"},{\"id\":\"potion-love-hib\",\"name\":\"Dreamy Love Potion\",\"description\":\"\",\"icon\":\"items/potion-blue\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"potion-neon\",\"name\":\"Neon Potion\",\"description\":\"\",\"icon\":\"items/potion-green\",\"notes\":\"\",\"modified\":\"1437399447434\"},{\"id\":\"potion-berry\",\"name\":\"Very Berry Potion\",\"description\":\"\",\"icon\":\"items/potion-purple\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"potion-shrink\",\"name\":\"Resize Potion\",\"description\":\"\",\"icon\":\"items/potion-red\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"potion-love-boy\",\"name\":\"Wicked Love Potion\",\"description\":\"\",\"icon\":\"items/potion-red\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"potion-love-phy\",\"name\":\"Burning Love Potion\",\"description\":\"\",\"icon\":\"items/potion-yellow\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"potion-mindbend\",\"name\":\"Mindbender Potion\",\"description\":\"\",\"icon\":\"items/potion-yellow\",\"notes\":\"\",\"modified\":\"1439193778199\"},{\"id\":\"ws-prison-key\",\"name\":\"Windshire Prison Key\",\"description\":\"\",\"icon\":\"items/prison-key\",\"notes\":\"\",\"modified\":\"1439303943984\"},{\"id\":\"quarter-map\",\"name\":\"quarter map\",\"description\":\"get 4\",\"icon\":\"items/quarter-map\",\"notes\":\"crab quest\",\"modified\":\"1439188285283\"},{\"id\":\"red-tag\",\"name\":\"red tag\",\"description\":\"bring five to greeter\",\"icon\":\"items/red-tag\",\"notes\":\"castle town explore quest\",\"modified\":\"1439191672210\"},{\"id\":\"stone-boy\",\"name\":\"Power Stone\",\"description\":\"\",\"icon\":\"items/stone-boy\",\"notes\":\"attraction point\",\"modified\":\"1442535569969\"},{\"id\":\"stone-hib\",\"name\":\"Dream Stone\",\"description\":\"\",\"icon\":\"items/stone-hib\",\"notes\":\"attraction point\",\"modified\":\"1442535570281\"},{\"id\":\"stone-phy\",\"name\":\"Dragon Stone\",\"description\":\"\",\"icon\":\"items/stone-phy\",\"notes\":\"attraction point\",\"modified\":\"1442535570593\"},{\"id\":\"teddy\",\"name\":\"Teddy Bear\",\"description\":\"\",\"icon\":\"items/teddy\",\"notes\":\"curse coven quest\",\"modified\":\"1441853136683\"},{\"id\":\"tiny-lizard\",\"name\":\"Enchanted Dragon Bone\",\"description\":\"\",\"icon\":\"items/tiny-lizard\",\"notes\":\"potion quest\",\"modified\":\"1439797749047\"},{\"id\":\"trap-ward\",\"name\":\"Trap Ward\",\"description\":\"\",\"icon\":\"items/trap-ward\",\"notes\":\"\",\"modified\":\"1439880263073\"},{\"id\":\"worm\",\"name\":\"Dirt Worm\",\"description\":\"\",\"icon\":\"items/worm\",\"notes\":\"transform coven quest\",\"modified\":\"1441854300688\"},{\"id\":\"acorn\",\"name\":\"Acorn of Eternity\",\"description\":\"\",\"icon\":\"witchery/acorn\",\"notes\":\"ingrid\",\"modified\":\"1436609414038\"},{\"id\":\"baby-dragon\",\"name\":\"Baby Dragon\",\"description\":\"\",\"icon\":\"witchery/baby-dragon\",\"notes\":\"ingrid\",\"modified\":\"1436610336399\"},{\"id\":\"goo\",\"name\":\"Goopy Goo\",\"description\":\"\",\"icon\":\"witchery/goo\",\"notes\":\"ingrid\",\"modified\":\"1436610336615\"},{\"id\":\"mineral-man\",\"name\":\"Mineral Man\",\"description\":\"\",\"icon\":\"witchery/mineral-man\",\"notes\":\"ingrid\",\"modified\":\"1436610336728\"},{\"id\":\"star-leaf\",\"name\":\"Star Leaf\",\"description\":\"\",\"icon\":\"witchery/star-leaf\",\"notes\":\"ingrid\",\"modified\":\"1436610279881\"},{\"id\":\"tiny-egg\",\"name\":\"Tiny Egg\",\"description\":\"\",\"icon\":\"witchery/tiny-egg\",\"notes\":\"ingrid\",\"modified\":\"1436610336128\"},{\"id\":\"violin\",\"name\":\"Violin\",\"description\":\"\",\"icon\":\"witchery/violin\",\"notes\":\"ingrid\",\"modified\":\"1436610336399\"},{\"id\":\"wing\",\"name\":\"Batty Wing\",\"description\":\"\",\"icon\":\"witchery/wing\",\"notes\":\"ingrid\",\"modified\":\"1436610336279\"},{\"id\":\"card-blank\",\"name\":\"Blank Card\",\"description\":\"\",\"icon\":\"vault/card-blank\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"card-gold\",\"name\":\"Gold Card\",\"description\":\"\",\"icon\":\"vault/card-gold\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"card-king\",\"name\":\"King Card\",\"description\":\"\",\"icon\":\"vault/card-king\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"card-poison\",\"name\":\"Poison Card\",\"description\":\"\",\"icon\":\"vault/card-poison\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"card-thief\",\"name\":\"Thief Card\",\"description\":\"\",\"icon\":\"vault/card-theif\",\"notes\":\"vault\",\"modified\":\"1442550138443\"},{\"id\":\"key-thief\",\"name\":\"Thief Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\"},{\"id\":\"key-king\",\"name\":\"King Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"power-yam\",\"name\":\"Power Yam\",\"description\":\"\",\"icon\":\"items/power-yam\",\"notes\":\"\",\"modified\":\"1442631845246\",\"price\":\"\"},{\"id\":\"dig-shop\",\"name\":\"Mystery Item\",\"description\":\"to sell at shop\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845453\",\"price\":\"\"},{\"id\":\"dig-quest\",\"name\":\"Mystery Item\",\"description\":\"for quest complete\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845941\",\"price\":\"\"},{\"id\":\"dig-attract\",\"name\":\"Mystery Item\",\"description\":\"for attraction point\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845941\",\"price\":\"\"},{\"id\":\"dig-nothing\",\"name\":\"Mystery Item\",\"description\":\"buh bow\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845941\",\"price\":\"\"},{\"id\":\"moneybag\",\"name\":\"New Item\",\"description\":\"\",\"icon\":\"items/moneybag\",\"notes\":\"\",\"modified\":\"1442634952006\",\"price\":\"\"},{\"id\":\"lavender\",\"name\":\"New Item\",\"description\":\"attract hib\",\"icon\":\"items/lavender\",\"notes\":\"\",\"modified\":\"1442655511196\",\"price\":\"\"},{\"id\":\"volcandar\",\"name\":\"New Item\",\"description\":\"attract phy\",\"icon\":\"items/volcandar\",\"notes\":\"\",\"modified\":\"1442655511364\",\"price\":\"\"},{\"id\":\"dig-vhs\",\"name\":\"Mystery Item\",\"description\":\"\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442656653066\",\"price\":\"\"},{\"id\":\"ch1-boyle-house-key\",\"name\":\"Key to Boyle's House\",\"description\":\"The key to Boyle's house\",\"icon\":\"items/key-silver\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442761249559\"},{\"id\":\"spell-pig\",\"name\":\"Higglety Pigglety\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"spell-pie\",\"name\":\"Pudding and Pie\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"spell-zit\",\"name\":\"Zit Burst\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"spell-mud\",\"name\":\"Mudball #3\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"spell-mis\",\"name\":\"Missiles #3\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"}]\n\n27 matches across 5 files\n\n\nSearching 234 files for \"pop_huh\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\effects.rb:\n  105  \n  106  \n  107: def pop_huh(ev)\n  108  \n  109  	pop_icon(ev,\"misc/exclaim\",\"exclaim\")\n  ...\n  111  end\n  112  \n  113: def pop_huh_r(ev)\n  114  \n  115  	pop_icon_r(ev,\"misc/exclaim-r\",\"exclaim\")\n\n2 matches in 1 file\n",
+			"settings":
+			{
+				"buffer_size": 23379,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "Functions/effects.rb",
+			"settings":
+			{
+				"buffer_size": 4400,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/progress.rb",
+			"settings":
+			{
+				"buffer_size": 1001,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Scenes/menu.rb",
+			"settings":
+			{
+				"buffer_size": 4319,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Menu/base.rb",
+			"settings":
+			{
+				"buffer_size": 2601,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/party.rb",
+			"settings":
+			{
+				"buffer_size": 2807,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/Parts/message.rb",
+			"settings":
+			{
+				"buffer_size": 22592,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Interface/Map/screen.rb",
+			"settings":
+			{
+				"buffer_size": 3478,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Scenes/battle_2_actor.rb",
+			"settings":
+			{
+				"buffer_size": 5629,
 				"line_ending": "Windows"
 			}
 		},
@@ -193,7 +233,13 @@
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/Scripts/Model/Battle/battler_1_stats.rb",
 		"/C/Aveyond4/Scripts/Functions/effects.rb",
+		"/C/Aveyond4/Scripts/Model/Battle/battler_5_xp.rb",
+		"/C/Aveyond4/Scripts/Model/State/party.rb",
+		"/C/Aveyond4/Scripts/Utils/data_types.rb",
+		"/C/Aveyond4/Editor/meta/skills.json",
+		"/C/Aveyond4/Scripts/Functions/party.rb",
 		"/C/Aveyond4/Scripts/System/keyboard.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_1_intro.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
@@ -202,7 +248,6 @@
 		"/C/Aveyond4/Scripts/Model/Map/character.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler.rb",
 		"/C/Aveyond4/Scripts/Model/State/progress.rb",
-		"/C/Aveyond4/Scripts/Model/State/party.rb",
 		"/C/Aveyond4/Scripts/System/files.rb",
 		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Model/Map/map.rb",
@@ -217,11 +262,9 @@
 		"/C/Aveyond4/Scripts/Scenes/battle_4_victory.rb",
 		"/C/Aveyond4/Scripts/System/audio.rb",
 		"/C/Aveyond4/Editor/meta/shop.json",
-		"/C/Aveyond4/Scripts/Utils/data_types.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_2_states.rb",
 		"/C/Aveyond4/Scripts/Functions/state.rb",
 		"/C/Aveyond4/Scripts/Utils/Debug/menu.rb",
-		"/C/Aveyond4/Scripts/Functions/party.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Special/chooser.rb",
 		"/C/Aveyond4/Scripts/System/debug.rb",
 		"/C/Aveyond4/Scripts/System/settings.rb",
@@ -235,7 +278,6 @@
 		"/C/Aveyond4/Scripts/Interface/Menu/help.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/equip.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_journal.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_1_stats.rb",
 		"/C/Aveyond4/Scripts/Model/Map/interpreter.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_5_misc.rb",
 		"/C/Aveyond4/Scripts/Functions/system.rb",
@@ -318,9 +360,7 @@
 		"/C/Aveyond4/Scripts/Interface/Menu/Title/misc-title.rb",
 		"/C/Aveyond4/Scripts/Utils/Extensions/mousewheel.rb",
 		"/C/Aveyond4/Editor/edit.js",
-		"/C/Aveyond4/Editor/meta/zones.json",
-		"/C/Aveyond4/Scripts/Utils/Debug/spellcheck.rb",
-		"/G/John Wizard/Games/Harvest Noon/Safe From C/Project/Data/dialogues.rb"
+		"/C/Aveyond4/Editor/meta/zones.json"
 	],
 	"find":
 	{
@@ -339,6 +379,17 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"sys",
+			"text2",
+			"text",
+			"pop_huh",
+			"attract",
+			"def quest",
+			"open_main_menu",
+			"def gold",
+			"pop_attract",
+			"load_game",
+			"pop_dots",
 			"grant_level",
 			"ROUTING",
 			"make_save_con",
@@ -455,18 +506,7 @@
 			"def unpause",
 			"def fadeout",
 			"def screen_x",
-			"display",
-			"def screen_y",
-			"check_event_trigger_auto",
-			"refresh",
-			"change_cursor",
-			"cursor",
-			"Blood of the",
-			"lose_item",
-			"def damage",
-			"heal-p",
-			"def state?",
-			"Heal"
+			"display"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -484,7 +524,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 12,
 			"sheets":
 			[
 				{
@@ -574,7 +614,7 @@
 						"translation.y": 625.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -600,36 +640,36 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
@@ -640,21 +680,21 @@
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"translate_tabs_to_spaces": false
@@ -663,129 +703,24 @@
 						"translation.y": 840.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "System/files.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 215,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										126,
-										137
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								132,
-								132
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
-							],
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Functions/party.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2779,
+						"buffer_size": 3338,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2294,
-								2294
+								1809,
+								1809
 							]
 						],
 						"settings":
@@ -794,125 +729,36 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 119.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Model/Battle/battler_5_xp.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 926,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								471,
-								471
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
@@ -923,214 +769,35 @@
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1755.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "Model/Battle/battler_1_stats.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3399,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								935,
-								935
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 540.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "Model/Battle/battler.rb",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 4585,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 300.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
+					"buffer": 3,
 					"file": "Functions/poppers.rb",
 					"semi_transient": false,
 					"settings":
@@ -1142,8 +809,8 @@
 						"selection":
 						[
 							[
-								511,
-								511
+								465,
+								465
 							]
 						],
 						"settings":
@@ -1152,36 +819,36 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
@@ -1192,34 +859,1002 @@
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2280.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 23379,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										195,
+										203
+									],
+									[
+										306,
+										314
+									],
+									[
+										539,
+										553
+									],
+									[
+										766,
+										780
+									],
+									[
+										962,
+										971
+									],
+									[
+										1064,
+										1073
+									],
+									[
+										1208,
+										1217
+									],
+									[
+										1348,
+										1357
+									],
+									[
+										1433,
+										1442
+									],
+									[
+										1704,
+										1711
+									],
+									[
+										1774,
+										1781
+									],
+									[
+										1831,
+										1838
+									],
+									[
+										1888,
+										1895
+									],
+									[
+										2093,
+										2100
+									],
+									[
+										2310,
+										2317
+									],
+									[
+										2324,
+										2331
+									],
+									[
+										2338,
+										2345
+									],
+									[
+										2444,
+										2451
+									],
+									[
+										2473,
+										2480
+									],
+									[
+										2502,
+										2509
+									],
+									[
+										2643,
+										2650
+									],
+									[
+										2670,
+										2677
+									],
+									[
+										5083,
+										5090
+									],
+									[
+										7076,
+										7083
+									],
+									[
+										8415,
+										8422
+									],
+									[
+										10757,
+										10764
+									],
+									[
+										16316,
+										16323
+									],
+									[
+										16460,
+										16467
+									],
+									[
+										16605,
+										16612
+									],
+									[
+										18100,
+										18107
+									],
+									[
+										18236,
+										18243
+									],
+									[
+										18373,
+										18380
+									],
+									[
+										21255,
+										21262
+									],
+									[
+										21305,
+										21312
+									],
+									[
+										21715,
+										21722
+									],
+									[
+										21853,
+										21860
+									],
+									[
+										23184,
+										23191
+									],
+									[
+										23286,
+										23293
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								23188,
+								23188
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
-								"bh_square_content"
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 5,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 10140.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Functions/effects.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4400,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1176,
+								1176
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1975.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "Functions/progress.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1001,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								956,
+								956
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": -0.0,
-						"translation.y": 180.0,
+						"translation.y": 344.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Scenes/menu.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4216,
+								4228
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3474.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Interface/Menu/base.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2601,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2462,
+								2462
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2040.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Functions/party.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2807,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1947,
+								1947
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1380.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Interface/Map/Parts/message.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22592,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12500,
+								12500
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 10274.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Interface/Map/screen.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3478,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								896,
+								896
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 840.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 12,
+					"file": "Scenes/battle_2_actor.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4875,
+								4875
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3480.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
 					"file": "Elements/Widgets/list.rb",
 					"semi_transient": false,
 					"settings":
@@ -1305,7 +1940,7 @@
 						"translation.y": 12118.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 12,
 					"type": "text"
 				}
 			]
@@ -1364,6 +1999,30 @@
 		"selected_items":
 		[
 			[
+				"scre",
+				"Scripts\\Interface\\Map\\screen.rb"
+			],
+			[
+				"message",
+				"Scripts\\Interface\\Map\\Parts\\message.rb"
+			],
+			[
+				"popp",
+				"Scripts\\Functions\\poppers.rb"
+			],
+			[
+				"menu",
+				"Scripts\\Scenes\\menu.rb"
+			],
+			[
+				"screen",
+				"Scripts\\Interface\\Map\\screen.rb"
+			],
+			[
+				"party",
+				"Scripts\\Model\\State\\party.rb"
+			],
+			[
 				"list",
 				"Scripts\\Elements\\Widgets\\list.rb"
 			],
@@ -1382,10 +2041,6 @@
 			[
 				"prog",
 				"Scripts\\Model\\State\\progress.rb"
-			],
-			[
-				"party",
-				"Scripts\\Model\\State\\party.rb"
 			],
 			[
 				"battler",
@@ -1428,10 +2083,6 @@
 				"Scripts\\System\\settings.rb"
 			],
 			[
-				"menu",
-				"Scripts\\Model\\State\\menu.rb"
-			],
-			[
 				"state",
 				"Scripts\\Model\\State\\state.rb"
 			],
@@ -1458,10 +2109,6 @@
 			[
 				"shop",
 				"Scripts\\Interface\\Menu\\shop.rb"
-			],
-			[
-				"message",
-				"Scripts\\Interface\\Map\\Parts\\message.rb"
 			],
 			[
 				"battle_min",
@@ -1630,10 +2277,6 @@
 			[
 				"key",
 				"Scripts\\System\\keyboard.rb"
-			],
-			[
-				"screen",
-				"Scripts\\Interface\\Map\\screen.rb"
 			],
 			[
 				"load",
