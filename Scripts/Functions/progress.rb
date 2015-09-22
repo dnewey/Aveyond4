@@ -4,14 +4,14 @@
 
 # Quests
 def quest(id) 
-	sys('quest-complete')
+	sys('quest')
 	$progress.add_quest(id) 
 	pop_quest(id)
 	$scene.hud.quest_sparkle("misc/profile")
 end
 
 def unquest(id)
-	sys('unquest')
+	sys('quest-complete')
 	$progress.end_quest(id)
 	pop_unquest(id)
 end
