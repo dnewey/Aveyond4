@@ -152,3 +152,8 @@ def grant_level_free(who)
 	$party.get(who).grant_level(false)
 	pop_level(who)
 end
+
+def learn_skill(who,skill)
+	pop_learn(skill,who)
+	$party.get(who).learn(skill)
+end
