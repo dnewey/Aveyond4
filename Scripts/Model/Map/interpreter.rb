@@ -275,7 +275,7 @@ class Interpreter
           return true
         end
 
-        if @list[@index].code == 108
+        if @list[@index].code == 108 && this != nil
           break if this.label_applies?(@list[@index].parameters[0])
         end
 
