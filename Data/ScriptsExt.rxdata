@@ -15201,7 +15201,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"¢9#==============================================================================
+end"±9#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -15478,7 +15478,7 @@ class Interpreter
           return true
         end
 
-        if @list[@index].code == 108
+        if @list[@index].code == 108 && this != nil
           break if this.label_applies?(@list[@index].parameters[0])
         end
 
