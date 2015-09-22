@@ -2512,7 +2512,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"a
+end"i
 def spark(ev,fx,ox=0,oy=0)
 
 	return if gev(ev) == nil
@@ -2620,13 +2620,13 @@ end
 
 def pop_huh(ev)
 
-	pop_icon(ev,"misc/exclaim","jump")
+	pop_icon(ev,"misc/exclaim","exclaim")
 
 end
 
 def pop_huh_r(ev)
 
-	pop_icon_r(ev,"misc/exclaim-r","jump")
+	pop_icon_r(ev,"misc/exclaim-r","exclaim")
 
 end
 
@@ -2638,7 +2638,7 @@ end
 
 def pop_wha(ev)
 
-	pop_icon(ev,"misc/unknown","jump")
+	pop_icon(ev,"misc/unknown","wha")
 
 end
 
@@ -2647,7 +2647,7 @@ def pop_sweat(ev,o=false)
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots",nil)
+	pop_icon(ev,"misc/dots",'dots')
 end
 
 def pop_bulb(ev)
@@ -3178,7 +3178,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"r#==============================================================================
+"ê#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3265,6 +3265,7 @@ end
 
 # Only this one will do popper
 def join(who)
+	sys('join')
 	$party.set_active(who)
 	pop_join(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
@@ -3276,6 +3277,7 @@ def join_s(who)
 end
 
 def unjoin(who)
+	sys('unjoin')
 	pop_leave(who)
 	$party.back_to_pavillion(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
@@ -3514,18 +3516,20 @@ def pop_unquest(q)
 	popper = $scene.hud.open_popper
 	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
 
-end"ﬂ#==============================================================================
+end"#==============================================================================
 # ** Progress Functions
 #==============================================================================
 
 # Quests
 def quest(id) 
+	sys('quest-complete')
 	$progress.add_quest(id) 
 	pop_quest(id)
 	$scene.hud.quest_sparkle("misc/profile")
 end
 
 def unquest(id)
+	sys('unquest')
 	$progress.end_quest(id)
 	pop_unquest(id)
 end
@@ -3558,6 +3562,7 @@ def attract(who)
 		when 'phy'
 			$progress.attract_phy += 1
 	end
+	sys('attract')
 	log_err("DO THE ATTRACT POPPER NOW!")
 end"Ë
 
@@ -4993,7 +4998,7 @@ class TargetCmd
 	end
 
 end
-"=#==============================================================================
+"N#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -5053,6 +5058,7 @@ class Ui_Screen
 			if $input.action? || $input.click?
 				$tweens.clear(@popper)
 				@popper.dispose
+				sys('next')
 				@popper = nil
 			end
 		end
@@ -6390,7 +6396,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"Ó[#==============================================================================
+end"„[#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6925,7 +6931,7 @@ class Ui_Message
     @char_idx += 1
 
     # Play a lovely character sound
-    sys('txt2',1.0) #if $settings.value('text_sound') 
+    sys('talk2',0.15) #if $settings.value('text_sound') 
     
     # Wait before drawing another character
     @next_char = @text_delay if !skip_wait_test
@@ -7163,7 +7169,7 @@ class Ui_Message
   #--------------------------------------------------------------------------
   def check_input_done
     if $input.action? || $input.click?
-      #sound(:text_next)
+      sys('next')
       #self.slide_zy(0.0)
       @state = :closing
       @textbox.bitmap.clear
@@ -7205,7 +7211,7 @@ class Ui_Message
   def check_input_choice
     return if @choice_delay > 0
     if $input.action? || $input.click?
-      #sound(:text_next)
+#      sys('next')
       #self.slide_zy(0.0)
 
       @last_choice = @choices[@grid.idx].split(":")[0]
@@ -7475,7 +7481,7 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end"á
+end"©
 #==============================================================================
 # ** Mnu_Base
 #==============================================================================
@@ -7589,11 +7595,13 @@ class Mnu_Base
 	end
 
 	def close_soon(d=10)
+		sys('cancel')
 		@close_soon = true
 		@close_delay = d
 	end
 
 	def close_now
+		sys('cancel')
 		@close_soon = true
 		@close_delay = 0
 	end
@@ -18666,7 +18674,7 @@ class Scene_Battle
 
   end
 
-end"“
+end"Á
 
 class Scene_Battle
 
@@ -18869,6 +18877,7 @@ class Scene_Battle
     end
 
     if $input.action? || $input.click?
+      sys('attack')
       @active_battler.target = @target_cmd.active
       @target_cmd.close
       @phase = :actor_next
@@ -19510,7 +19519,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"è#==============================================================================
+"≤#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -19526,6 +19535,7 @@ class Scene_Menu
     @closing = false
 
     $mouse.change_cursor('Default')
+    sys('open')
 
     # Vp
     @vp = Viewport.new(0,0,$game.width,$game.height)
@@ -19713,6 +19723,7 @@ class Scene_Menu
   # end
 
   def close
+    sys('close')
     @closing = true
     @bg.do(go("opacity",-255,300))
     self.do(delay(300))
@@ -21383,7 +21394,7 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"™#==============================================================================
+end"ª#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
@@ -21497,6 +21508,7 @@ class FileManager
   
   # Could be in game? just the contents part here? Strange to give files such power
   def load_game(i)
+    sys('load')
     File.open(filename(i), "rb") do |file|
       Marshal.load(file)
       extract_save_contents(Marshal.load(file))
