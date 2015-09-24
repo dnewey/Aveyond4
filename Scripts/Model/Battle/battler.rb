@@ -195,7 +195,7 @@ class Game_Battler
   # * Recover All
   #--------------------------------------------------------------------------
   def recover_all
-    @hp = maxhp / 2
+    @hp = maxhp
     if ['ing','hib'].include?(@id)
       @mp = maxmp
     end

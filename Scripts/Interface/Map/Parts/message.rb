@@ -894,7 +894,7 @@ class Ui_Message
       cursor = 0
       lines = [[]]
       text.split(" ").each{ |word|
-        if cursor + word_width(word) >= limit 
+        if !lines[-1].empty? && cursor + word_width(word) >= limit 
           lines.push([])
           cursor = 0
         end
@@ -912,7 +912,7 @@ class Ui_Message
     limit = @namebox.width + 44 if @namebox.width + 44 > limit
     cursor = 0
     text.split(" ").each{ |word|
-      if cursor + word_width(word) > limit
+      if !lines[-1].empty? && cursor + word_width(word) > limit
         # Don't go beyond first line
         if lines.count == 1
           limit = cursor

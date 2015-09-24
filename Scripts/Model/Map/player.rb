@@ -175,8 +175,6 @@ class Game_Player < Game_Character
 
     return if @static
 
-
-
     return super if @move_route_forcing
     return super(true) if ($scene.busy?) || $debug.busy? # Still finish turn anim
 
@@ -202,10 +200,7 @@ class Game_Player < Game_Character
         # Gets Mouse X & Y
         mx, my = *$mouse.grid
 
-        
-        
-        
-        
+                
         # Turn Character in direction
         #turn_toward_pos(mx,my)
         
@@ -228,25 +223,60 @@ class Game_Player < Game_Character
           flash(@event_at_path)
           $audio.sys('walkto',0.7)
 
+          @turn_after_path = nil
+
           dx = @x - @event_at_path.x
           dy = @y - @event_at_path.y
 
-          if dx.abs > dy.abs
-            if dx > 0
-              find_path(@event_at_path.x+1, @event_at_path.y)
-              @turn_after_path = 'l'
+          x = @event_at_path.x
+          y = @event_at_path.y
+
+          can_up = $map.passable?(x,y-1,2)
+          can_down = $map.passable?(x,y+1,8)
+          can_left = $map.passable?(x+1,y,4)
+          can_right = $map.passable?(x-1,y,6)
+
+          # Vile
+          if dx.abs > dy.abs && (can_left || can_right)
+            if can_left && can_right
+              if dx > 0
+                find_path(@event_at_path.x+1, @event_at_path.y)
+                @turn_after_path = 'l'
+              else
+                find_path(@event_at_path.x-1, @event_at_path.y)
+                @turn_after_path = 'r'
+              end
             else
-              find_path(@event_at_path.x-1, @event_at_path.y)
-              @turn_after_path = 'r'
+              if can_left
+                find_path(@event_at_path.x+1, @event_at_path.y)
+                @turn_after_path = 'l'
+              elsif can_right
+                find_path(@event_at_path.x-1, @event_at_path.y)
+                @turn_after_path = 'r'
+              end
             end
-          else
-            if dy > 0
-              find_path(@event_at_path.x, @event_at_path.y+1)
-              @turn_after_path = 'u'
+          end
+
+          # Only if no path set
+          if @turn_after_path == nil && (can_up || can_down)
+            if can_up && can_down
+              if dy > 0
+                find_path(@event_at_path.x, @event_at_path.y+1)
+                @turn_after_path = 'u'
+              else 
+                find_path(@event_at_path.x, @event_at_path.y-1)
+                @turn_after_path = 'd'                
+              end
             else
-              find_path(@event_at_path.x, @event_at_path.y-1)
-              @turn_after_path = 'd'
+              if can_down
+                find_path(@event_at_path.x, @event_at_path.y+1)
+                @turn_after_path = 'u'
+              elsif can_up
+                find_path(@event_at_path.x, @event_at_path.y-1)
+                @turn_after_path = 'd'
+              end
             end
+
           end
 
         end
@@ -297,6 +327,7 @@ class Game_Player < Game_Character
       end
 
       unless @runpath == true
+
         if @event_at_path != nil
           case @turn_after_path
             when 'd'
@@ -308,9 +339,17 @@ class Game_Player < Game_Character
             when 'u'
               @direction = 8
           end
-          @event_at_path.start
+
+          # Check if event is adjacent
+          dx = (self.x - @event_at_path.x).abs
+          dy = (self.y - @event_at_path.y).abs
+          if dx + dy == 1
+            @event_at_path.start
+          end
           @event_at_path = nil
+
         end
+
       end
 
     end

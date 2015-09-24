@@ -343,6 +343,11 @@ class Game_Map
 
   def update_mouse
 
+    if $scene.hud.busy?
+      $mouse.change_cursor('Default')
+      return
+    end
+
     if $mouse.y > 448
       $mouse.change_cursor('Default')
       return
