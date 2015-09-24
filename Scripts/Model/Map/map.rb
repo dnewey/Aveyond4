@@ -84,7 +84,7 @@ class Game_Map
     # If there was an old map, save the locs
     if @id != nil
       @events.values.each{ |e|
-        next if !e.saveloc
+        next if !e.save
         $state.loc(e)
       }
       $scene.clear_sparks
