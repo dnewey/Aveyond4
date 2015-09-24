@@ -1554,7 +1554,7 @@ class Label < Sprite
         
   end
   
-end"aA#==============================================================================
+end"zA#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1882,9 +1882,9 @@ class List
     if item != nil
       name = item.name
       ico = $cache.icon("misc/unknown")
-      #ico = $cache.icon(item.icon)
+      ico = $cache.icon($data.items['potion-'+data].icon)
     else
-      name = "Remove"
+      name = "ERROR NIL"
       ico = $cache.icon("misc/unknown")
     end
     
@@ -4166,7 +4166,7 @@ def cauldron_graphic(ev)
 end"
 def word_length
 
-end"
+end")
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -4265,6 +4265,10 @@ class BattleHud
 	def open_popper()
 		@popper = Ui_Popper.new(@vp)
 		return @popper
+	end
+
+	def busy?
+		true
 	end
 
 end"Ö
@@ -8235,7 +8239,7 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-end"¾#==============================================================================
+end"n#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -8312,10 +8316,18 @@ class Mnu_Main
 		end
 
 
-		@data = ['Journal','Items','Party','Progress',
-  	 		     'Options','Help','Quit','Load','Save']
+		if $party.reserve.empty?
+			@data = ['Journal','Items','Progress',
+  	 			     'Options','Help','Quit','Load','Save']
+  	 		@cy = 36
+		else
+			@data = ['Journal','Items','Party','Progress',
+  	 			     'Options','Help','Quit','Load','Save']
+  	 		@cy = 15
+  	 	end
 
-		cy = 15
+  	 	cy = @cy
+		
 
 		@buttons = []
 		@texts = []
@@ -8506,7 +8518,7 @@ class Mnu_Main
 		idx2 = 0
 		@icons.each{ |i|
 			i.src_rect = Rect.new(36,0,120,50)
-			i.y = 25+(idx2*51)-23
+			i.y = @cy+10+(idx2*51)-23
 			#i.x = @buttons[idx2].x
 			#i.do(go("y"))
 			$tweens.clear(i) if dosound
@@ -8566,10 +8578,8 @@ class Mnu_Main
 
 	def select(option)
 
-		sys('action')
-
 		case option
-			when "Journal", "Items", "Party", "Progress", "Options", "Help", "Quit", "Load", "Save"
+			when "Journal", "Items", "Progress", "Options", "Help", "Quit", "Load", "Save"
 				$scene.queue_menu(option)
 			else
 				# C.1
@@ -8583,6 +8593,7 @@ class Mnu_Main
 
 		end
 
+		sys('action')
 		@selected_box.flash_heavy
 		$menu.menu_cursor = option
 
@@ -10288,7 +10299,7 @@ class Mnu_Phye < Mnu_Base
 		
 	end
 
-end" "?
+end" "K
 
 class Char_Box_Large < SpriteGroup
 
@@ -10328,7 +10339,7 @@ class Char_Box_Large < SpriteGroup
 	    @level.font = $fonts.list
 	    @level.shadow = $fonts.list_shadow
 	    @level.gradient = true
-	    @level.text = "15"
+	    @level.text = @char.level.to_s
 	    add(@level,20,27)
 
 
@@ -10926,7 +10937,7 @@ class List_Common < SpriteGroup
 
 	end
 
-end"+	#==============================================================================
+end"0	#==============================================================================
 # Tabs
 #==============================================================================
 
@@ -11006,7 +11017,7 @@ class Page_Tabs < Sprite
         @idx = @names.count - 1
         return
       end
-      @change.call(@names[@idx]) if @change
+      change_tab
       refresh      
   	end
 
@@ -11016,7 +11027,7 @@ class Page_Tabs < Sprite
         @idx = 0
         return
       end
-      @change.call(@names[@idx]) if @change
+      change_tab
       refresh  
   	end
 
@@ -11045,13 +11056,18 @@ class Page_Tabs < Sprite
       if $input.click?
 
         @idx = i
-        @change.call(@names[@idx]) if @change
+        change_tab
         refresh  
 
       end
       
     }
 
+  end
+
+  def change_tab
+    sys('tab')
+    @change.call(@names[@idx]) if @change
   end
 
  end"x
@@ -14447,7 +14463,7 @@ class Game_Character
 
 
 end
-"ÆO#==============================================================================
+"5P#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -15044,6 +15060,10 @@ class Game_Event < Game_Character
 
         when '#faceoff'
           @faceoff = data[1].to_i
+
+        when '#floating'
+          g = go('off_y',6,600,:qio)
+          self.do(repeat(seq(g,g.reverse)))
 
         when '#save'
           @save = true
@@ -21843,7 +21863,7 @@ class FontManager
 	   	@page_text_color = Font.new
 		@page_text_color.name = "Georgia"
 	    @page_text_color.size = 20
-	    @page_text_color.color = Color.new(44,240,44)
+	    @page_text_color.color = Color.new(71,143,32)
 
 
 		# Misc
