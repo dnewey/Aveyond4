@@ -217,7 +217,13 @@ class Item_Box < SpriteGroup
             stats(data.mods)
             #gains(data.stats,$party.get('boy'))
         elsif data.is_a?(KeyItemData)
-            
+            # Draw secret ingredient
+            if id.include?('recipe-') || id.include?('potion-')                
+                potion = id.sub('recipe-','')
+                potion = potion.sub('potion-','')
+                ing = $data.potions[potion].ingredient
+                stat('phy-not',$data.items[ing].name)
+            end
         elsif data.is_a?(UsableData)
             stats(data.action)
         elsif data.is_a?(ShopData)
@@ -257,7 +263,7 @@ class Item_Box < SpriteGroup
         data = get_data(id)       
 
 
-return if data == nil
+        return if data == nil
 
         base(data)
 

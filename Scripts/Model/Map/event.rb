@@ -314,6 +314,9 @@ class Game_Event < Game_Character
       when '?phye', '?phy'
         return false if !$party.has_member?('phy')
 
+      when '?leader'
+        return false if $party.leader != cond[1]
+
       # Inventory
       when '?gold'
         return false if !$party.has_gold?(cond[1].to_i)
@@ -326,6 +329,9 @@ class Game_Event < Game_Character
       when '?nitem'
         cond[2] = 1 if cond.count < 3
         return false if ($party.item_number(cond[1]) >= cond[2].to_i)
+
+      when '?chosen'
+        return false if $menu.chosen == nil
 
       when '?partyloc'
         return false if !$party.party_loc_saved?
@@ -757,7 +763,7 @@ class Game_Event < Game_Character
     super
 
     # Automatic event starting determinant
-    check_event_trigger_auto if @starting == false
+    check_event_trigger_auto #if @starting == false
 
     # If parallel process is valid
     if @interpreter != nil

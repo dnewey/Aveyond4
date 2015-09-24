@@ -40,28 +40,42 @@ end
 
 # Menus Access
 
+def menu_snapshot
+
+	$mouse.hide_cursor
+      	Graphics.update
+      	$game.snapshot = Graphics.snap_to_bitmap
+      	$mouse.show_cursor
+
+end
+
 def open_main_menu
+	menu_snapshot
 	$menu.sub_only = false
 	$menu.menu_page = "Main"
 end
 
 def open_sub_menu(which)
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = which
 end
 
 def open_char_menu(who)
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.char = who
 	$menu.menu_page = "Char"
 end
 
 def open_potions_menu
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = "Potions"
 end
 
 def open_chooser_menu(cat=nil)
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.choose_cat = cat
 	$menu.menu_page = "Chooser"
@@ -73,26 +87,31 @@ def open_potions_book
 end
 
 def open_shop_buy
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = "Shop"
 end
 
 def open_shop_sell
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = "Sell"
 end
 
 def open_shop_smith
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = "Smith"
 end
 
 def open_shop_magic
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = "Magic"
 end
 
 def open_shop_chester
+	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = "Chester"
 end

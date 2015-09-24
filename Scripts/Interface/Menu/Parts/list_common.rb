@@ -55,7 +55,9 @@ class List_Common < SpriteGroup
 				}
 
 			else
-				items = []
+				items = $party.items.keys.select{ |i|
+					$data.items[i].is_a?(KeyItemData) # &&
+				}
 
 		end
 		@list.setup(items)

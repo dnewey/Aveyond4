@@ -1,14 +1,6 @@
 
-# Potion making
 
-def potion_learn(potion)
-	return if potion_known?(potion)
-	$party.potions.push(potion)
-end
 
-def potion_known?(potion)
-	return $party.potions.include?(potion)
-end
 
 def potion_equip(item)
 	$party.potion_item = item
@@ -20,14 +12,167 @@ end
 
 def potion_state(s)
 	$party.potion_state = s
+	$map.need_refresh = true
 end
 
 def potion_current
 	return $data.potions[$party.potion_id]
 end
 
+def potion_chose_recipe
+
+	# Check if this is even a recipe
+	if $menu.chosen.include?('recipe')
+
+		recipe = $menu.chosen.sub('recipe-','')
+		log_scr(recipe)
+		$party.potion_id = recipe
+		$menu.chosen = nil
+		potion_state('start')
+
+	else
+
+		text("ing: This isn't a potion recipe!")
+		$menu.chosen = nil
+		potion_state('empty')
+
+	end
+
+	# Clear
+	
+
+end
+
 def potion_chose_secret?		
+	log_sys($menu.chosen)
+	log_ev(potion_current.ingredient)
 	return potion_current.ingredient == $menu.chosen
+end
+
+def potion_use_item
+
+	case $party.potion_item
+
+		when 'glacial-essence'
+
+			a = "Ingrid adds a few drops of"
+			ia = $cache.icon("faces/ing")
+
+			b = "Glacial Essence" 
+			ib = $cache.icon("witchery/glacial-essence")
+
+		when 'dream-shroom'
+
+			a = "Ingrid shankes the "
+			ia = $cache.icon("faces/ing")
+
+			b = "Dream Shroom" 
+			ib = $cache.icon("witchery/dream-shroom")
+
+		when 'rock-powder'
+
+			a = "Ingrid shaves off some"
+			ia = $cache.icon("faces/ing")
+
+			b = "Rock Powder" 
+			ib = $cache.icon("witchery/rock-powder")
+
+		when 'moon-tear'
+
+			a = "Ingrid squeezes the"
+			ia = $cache.icon("faces/ing")
+
+			b = "Moon Tear" 
+			ib = $cache.icon("witchery/moon-tear")
+
+		when 'violin'
+
+			a = "Ingrid plays the"
+			ia = $cache.icon("faces/ing")
+
+			b = "Violin" 
+			ib = $cache.icon("witchery/violin")
+
+		when 'soda-ash'
+
+			a = "Ingrid adds a handful of"
+			ia = $cache.icon("faces/ing")
+
+			b = "Soda Ash" 
+			ib = $cache.icon("witchery/soda-ash")
+
+		when 'baby-dragon'
+
+			a = "The"
+			ia = nil
+
+			b = "Baby Dragon breathes fire"
+			ib = $cache.icon("witchery/baby-dragon")
+
+		when 'mineral-man'
+		
+			a = "Ingrid breaks off a piece of the"
+			ia = $cache.icon("faces/ing")
+				
+			b = "Mineral Man"
+			ib = $cache.icon("witchery/mineral-man")
+
+		else
+
+			text("ing: I need to add something.")
+			return
+
+	end
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def potion_problem
+
+	i = $party.potion_item	
+
+	solved = false
+	case $party.potion_state
+
+		when 'hot' # Glacial Essence
+			if i == 'glacial-essence'	
+
+				solved = true
+
+			end
+
+		when 'rotten' # Mineral man
+			solved = true if i == 'mineral-man'	
+
+
+		when 'acidic' # Soda ash
+			solved = true if i == 'soda-ash'	
+
+		when 'claggy' # dream leaf
+			solved = true if i == 'dream-shroom'	
+
+		when 'slimy' # Rock Powder
+			solved = true if i == 'rock-powder'	
+
+		when 'cold' # Baby Dragon
+			solved = true if i == 'baby-dragon'	
+
+		when 'sour' # moon tear
+			solved = true if i == 'moon-tear'	
+
+		when 'volatile' # MUSIC
+			solved = true if i == 'violin'	
+
+	end
+
+	if solved
+		potion_next_problem
+	else
+		text("ing: That didn't work.")
+	end
+
 end
 
 def potion_next_problem
@@ -40,6 +185,18 @@ def potion_next_problem
 	else
 		problem = problems[$party.potion_level-1]
 		$party.potion_state = problem
+	end
+
+	$map.need_refresh = true
+
+	case $party.potion_state
+
+		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
+			text("ing: That doesn't look right.")
+
+		else
+			text("ing: That's it! Perfect!")
+
 	end
 
 end
@@ -60,17 +217,13 @@ def cauldron_graphic(ev)
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 2
 
-		when 'start-ing'
+		when 'started'
 			ev.character_name = 'Objects/cauldron-base'
 			ev.direction = 4
 
-		when 'choose-item'
-			ev.character_name = 'Objects/cauldron-base'
-			ev.direction = 2
-
 		when 'kaboom'
 			ev.character_name = 'Objects/cauldron-base'
-			ev.direction = 2
+			ev.direction = 4
 
 		when 'hot' # Glacial Essence
 			ev.character_name = 'Objects/cauldron-problem-a'

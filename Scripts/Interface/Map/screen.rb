@@ -103,10 +103,6 @@ class Ui_Screen
       if $input.cancel? || $input.rclick?
       	$menu.player_x = $player.screen_x
       	$menu.player_y = $player.screen_y
-      	$mouse.hide_cursor
-      	Graphics.update
-      	$game.snapshot = Graphics.snap_to_bitmap
-      	$mouse.show_cursor
       	open_main_menu
       end
 
