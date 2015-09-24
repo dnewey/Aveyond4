@@ -340,9 +340,11 @@ class Ui_Message
 
     # Figure things out from speaker
     #speaker = gev(speaker.to_i).name if speaker.numeric? # This is cut so you can just do 25: Text, instead of npc2, npc3
-    speaker = this.name if speaker == 'this'
-    speaker = this.name if speaker == 'me'
-    speaker = this.name if speaker == 'This'
+    from_this = false
+    if ['this','me','This'].include?(speaker)
+      from_this = true
+      speaker = this.name
+    end
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 
     # Special allowance for names of ???
@@ -384,7 +386,11 @@ class Ui_Message
         @speaker = $player
         $player.looklike(name.split('-')[0])
       elsif speaker != nil
-        @speaker = gev(speaker.split("-")[0])
+        if from_this
+          @speaker = this
+        else
+          @speaker = gev(speaker.split("-")[0])
+        end
         @mode = :sys if @speaker == nil
       end
     end
@@ -533,7 +539,7 @@ class Ui_Message
     @char_idx += 1
 
     # Play a lovely character sound
-    sys('talk2',0.15) #if $settings.value('text_sound') 
+    sys('talk2',0.15) if !@super_skipping
     
     # Wait before drawing another character
     @next_char = @text_delay if !skip_wait_test

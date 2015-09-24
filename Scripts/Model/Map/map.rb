@@ -282,8 +282,8 @@ class Game_Map
       # Include size of the event
       sx = e.x
       sy = e.y
-      (sx..sx+e.width).each{ |x| 
-        (sy..sy+e.height).each{ |y|
+      (sx..sx+e.width-1).each{ |x| 
+        (sy..sy+e.height-1).each{ |y|
           loc = [x,y]
           @ev_cache[loc] = [] if !@ev_cache.has_key?(loc)
           @ev_cache[loc].push(e)

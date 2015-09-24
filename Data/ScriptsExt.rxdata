@@ -1554,7 +1554,7 @@ class Label < Sprite
         
   end
   
-end"RA#==============================================================================
+end"aA#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1963,7 +1963,7 @@ class List
       @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
       @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,cooldown.to_s,0)
 
-    else
+    elsif item.cost > 0
 
       # Mana
       if @user == 'boy'
@@ -3336,7 +3336,7 @@ end
 def learn_skill(who,skill)
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
-end"ƒ
+end"s
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3367,18 +3367,6 @@ def pop_magics(number)
 	b = "#{number} Magic"	
 
 	pop_get('r',b,ib,'wizard')
-
-end
-
-def pop_level(who)
-
-end
-
-def pop_level_all
-
-end
-
-def pop_stat_bonus(who,stat,amount)
 
 end
 
@@ -3521,7 +3509,59 @@ def pop_unquest(q)
 	popper = $scene.hud.open_popper
 	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
 
-end"#==============================================================================
+end
+
+def pop_level(who)
+	
+	a = "#{$party.get(who).name} gains a level"
+	ia = $cache.icon("faces/#{who}")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_level_all
+
+	a = "Everybody gains a level!"
+	ia = $cache.icon("faces/attract")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_stat_bonus(who,stat,amount)
+
+	a = "#{$party.get(who).name} gains #{amount} #{stat}}"
+	ia = $cache.icon("faces/#{who}")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_attract(who)
+	
+	a = "Ingrid gains an"
+	ia = $cache.icon("faces/ing")
+	
+	b = "Attraction Point with #{$party.get(who).name}"
+	ib = $cache.icon("misc/attract-get")
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end"#==============================================================================
 # ** Progress Functions
 #==============================================================================
 
@@ -3568,7 +3608,7 @@ def attract(who)
 			$progress.attract_phy += 1
 	end
 	sys('attract')
-	log_err("DO THE ATTRACT POPPER NOW!")
+	pop_attract(who)
 end"è
 
 def shop_choice
@@ -6401,7 +6441,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"ã[#==============================================================================
+end"\#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -6743,9 +6783,11 @@ class Ui_Message
 
     # Figure things out from speaker
     #speaker = gev(speaker.to_i).name if speaker.numeric? # This is cut so you can just do 25: Text, instead of npc2, npc3
-    speaker = this.name if speaker == 'this'
-    speaker = this.name if speaker == 'me'
-    speaker = this.name if speaker == 'This'
+    from_this = false
+    if ['this','me','This'].include?(speaker)
+      from_this = true
+      speaker = this.name
+    end
     name = speaker.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, '') # Remove numbers
 
     # Special allowance for names of ???
@@ -6787,7 +6829,11 @@ class Ui_Message
         @speaker = $player
         $player.looklike(name.split('-')[0])
       elsif speaker != nil
-        @speaker = gev(speaker.split("-")[0])
+        if from_this
+          @speaker = this
+        else
+          @speaker = gev(speaker.split("-")[0])
+        end
         @mode = :sys if @speaker == nil
       end
     end
@@ -6936,7 +6982,7 @@ class Ui_Message
     @char_idx += 1
 
     # Play a lovely character sound
-    sys('talk2',0.15) #if $settings.value('text_sound') 
+    sys('talk2',0.15) if !@super_skipping
     
     # Wait before drawing another character
     @next_char = @text_delay if !skip_wait_test
@@ -15740,7 +15786,7 @@ class Interpreter
   end
 
 end
-"K>#==============================================================================
+"›>#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -15794,6 +15840,7 @@ class Game_Map
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
 
     @namecache = {}
+    @ev_cache = {}
 
   end
 
@@ -16018,13 +16065,13 @@ class Game_Map
   def update
 
     # Build event cache
-    @ev_cache = {}
+    @ev_cache.clear
     @events.values.each{ |e|
       # Include size of the event
       sx = e.x
       sy = e.y
-      (sx..sx+e.width).each{ |x| 
-        (sy..sy+e.height).each{ |y|
+      (sx..sx+e.width-1).each{ |x| 
+        (sy..sy+e.height-1).each{ |y|
           loc = [x,y]
           @ev_cache[loc] = [] if !@ev_cache.has_key?(loc)
           @ev_cache[loc].push(e)
@@ -16060,6 +16107,7 @@ class Game_Map
 
   def update_events
 
+    # Keep track of starting events and always update those
     @events.values.each{ |e| e.update }
 
     # x1 = ((display_x/128) - 2).to_i
@@ -16329,14 +16377,14 @@ class Game_Map
   #--------------------------------------------------------------------------
   def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
   def event_at(x, y) 
-    # return nil if !@ev_cache.has_key?([x,y])
-    # return @ev_cache[[x,y]][0]
-    @events.values.find{ |e| e.at?(x,y) } 
+    return nil if !@ev_cache.has_key?([x,y])
+    return @ev_cache[[x,y]][0]
+    #@events.values.find{ |e| e.at?(x,y) } 
   end
   def events_at(x, y) 
-    # return nil if !@ev_cache.has_key?([x,y])
-    # return @ev_cache[[x,y]]
-    @events.values.select{ |e| e.at?(x,y) } 
+    return nil if !@ev_cache.has_key?([x,y])
+    return @ev_cache[[x,y]]
+    #@events.values.select{ |e| e.at?(x,y) } 
   end
   def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
 
@@ -17376,7 +17424,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ß$#==============================================================================
+end"¸&#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17427,7 +17475,7 @@ class Game_Party
     # Inventory
     @items = {}
     @gold = 250
-    @magics = 111
+    @magics = 0
 
     # Party stats
     @luck = 0 # Cut probably
@@ -17724,9 +17772,11 @@ class Game_Party
     
 
     # Initial skills per actor
+    @actors["boy"].learn('staff')
     @actors["boy"].learn('contempt')
     #@actors["boy"].learn('flames')
 
+    @actors['ing'].learn('wand')
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
 
@@ -17738,6 +17788,15 @@ class Game_Party
     @actors["ing"].learn('xform-goat')
     @actors["ing"].learn('xform-squirrel')
 
+    @actors['mys'].learn('envelop')
+    @actors['mys'].learn('soothe')
+    @actors['mys'].learn('four-legs')
+    @actors['mys'].learn('pounce')
+    @actors['mys'].learn('swipe')
+    @actors['mys'].learn('two-legs')
+
+    @actors['rob'].learn('bash')
+    @actors['rob'].learn('defend')
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")
     @actors["rob"].learn("team-mys")
@@ -17745,6 +17804,12 @@ class Game_Party
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
 
+    #@actors['hib'].learn('claw')
+
+    @actors['row'].learn('dagger')
+
+
+    @actors['phy'].learn('strike')
 
     # Start items
     add_item('flip-deck')
@@ -18307,7 +18372,7 @@ class Scene_Base
   # end
 
 end
-"³#==============================================================================
+"Ô#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -18423,7 +18488,7 @@ class Scene_Battle < Scene_Base
     #$battle.add_prop('money')
 
     # And the minion
-    if $battle.minion != nil
+    if $party.active.include?('boy') && $battle.minion != nil
       @minion = $battle.minion
       @minion.ev = @map.event_by_evname("MINION")
       @minion.ev.character_name = "Player/#{@minion.id}"

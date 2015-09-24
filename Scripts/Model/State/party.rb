@@ -49,7 +49,7 @@ class Game_Party
     # Inventory
     @items = {}
     @gold = 250
-    @magics = 111
+    @magics = 0
 
     # Party stats
     @luck = 0 # Cut probably
