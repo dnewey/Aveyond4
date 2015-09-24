@@ -346,9 +346,11 @@ class Game_Party
     
 
     # Initial skills per actor
+    @actors["boy"].learn('staff')
     @actors["boy"].learn('contempt')
     #@actors["boy"].learn('flames')
 
+    @actors['ing'].learn('wand')
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
 
@@ -360,6 +362,15 @@ class Game_Party
     @actors["ing"].learn('xform-goat')
     @actors["ing"].learn('xform-squirrel')
 
+    @actors['mys'].learn('envelop')
+    @actors['mys'].learn('soothe')
+    @actors['mys'].learn('four-legs')
+    @actors['mys'].learn('pounce')
+    @actors['mys'].learn('swipe')
+    @actors['mys'].learn('two-legs')
+
+    @actors['rob'].learn('bash')
+    @actors['rob'].learn('defend')
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")
     @actors["rob"].learn("team-mys")
@@ -367,6 +378,12 @@ class Game_Party
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
 
+    #@actors['hib'].learn('claw')
+
+    @actors['row'].learn('dagger')
+
+
+    @actors['phy'].learn('strike')
 
     # Start items
     add_item('flip-deck')

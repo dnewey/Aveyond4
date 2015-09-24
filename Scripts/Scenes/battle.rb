@@ -114,7 +114,7 @@ class Scene_Battle < Scene_Base
     #$battle.add_prop('money')
 
     # And the minion
-    if $battle.minion != nil
+    if $party.active.include?('boy') && $battle.minion != nil
       @minion = $battle.minion
       @minion.ev = @map.event_by_evname("MINION")
       @minion.ev.character_name = "Player/#{@minion.id}"

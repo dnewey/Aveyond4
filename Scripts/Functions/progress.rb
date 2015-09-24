@@ -45,5 +45,5 @@ def attract(who)
 			$progress.attract_phy += 1
 	end
 	sys('attract')
-	log_err("DO THE ATTRACT POPPER NOW!")
+	pop_attract(who)
 end

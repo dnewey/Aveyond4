@@ -52,6 +52,7 @@ class Game_Map
     #self.do(pingpong("cam_oy",-70,350,:quad_in_out))
 
     @namecache = {}
+    @ev_cache = {}
 
   end
 
@@ -276,7 +277,7 @@ class Game_Map
   def update
 
     # Build event cache
-    @ev_cache = {}
+    @ev_cache.clear
     @events.values.each{ |e|
       # Include size of the event
       sx = e.x
@@ -318,6 +319,7 @@ class Game_Map
 
   def update_events
 
+    # Keep track of starting events and always update those
     @events.values.each{ |e| e.update }
 
     # x1 = ((display_x/128) - 2).to_i
@@ -587,14 +589,14 @@ class Game_Map
   #--------------------------------------------------------------------------
   def valid?(x, y) x >= 0 and x < width and y >= 0 and y < height end
   def event_at(x, y) 
-    # return nil if !@ev_cache.has_key?([x,y])
-    # return @ev_cache[[x,y]][0]
-    @events.values.find{ |e| e.at?(x,y) } 
+    return nil if !@ev_cache.has_key?([x,y])
+    return @ev_cache[[x,y]][0]
+    #@events.values.find{ |e| e.at?(x,y) } 
   end
   def events_at(x, y) 
-    # return nil if !@ev_cache.has_key?([x,y])
-    # return @ev_cache[[x,y]]
-    @events.values.select{ |e| e.at?(x,y) } 
+    return nil if !@ev_cache.has_key?([x,y])
+    return @ev_cache[[x,y]]
+    #@events.values.select{ |e| e.at?(x,y) } 
   end
   def lowest_event_at(x, y) nil end #events_at(x,y).min_by{ |e| e.y } end
 

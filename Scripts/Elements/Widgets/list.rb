@@ -407,7 +407,7 @@ class List
       @content_sprite.bitmap.blt(220,(row*row_height)+6,ico,ico.rect)
       @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,cooldown.to_s,0)
 
-    else
+    elsif item.cost > 0
 
       # Mana
       if @user == 'boy'

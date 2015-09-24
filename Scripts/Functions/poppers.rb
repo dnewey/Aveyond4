@@ -32,18 +32,6 @@ def pop_magics(number)
 
 end
 
-def pop_level(who)
-
-end
-
-def pop_level_all
-
-end
-
-def pop_stat_bonus(who,stat,amount)
-
-end
-
 def pop_ing_pickup(i)
 	ib = $cache.icon($data.items[i].icon)
 	pop_get('p',$data.items[i].name,ib)
@@ -182,5 +170,57 @@ def pop_unquest(q)
 
 	popper = $scene.hud.open_popper
 	popper.setup("Quest complete: ",nil,$data.quests[q].name,nil)
+
+end
+
+def pop_level(who)
+	
+	a = "#{$party.get(who).name} gains a level"
+	ia = $cache.icon("faces/#{who}")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_level_all
+
+	a = "Everybody gains a level!"
+	ia = $cache.icon("faces/attract")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_stat_bonus(who,stat,amount)
+
+	a = "#{$party.get(who).name} gains #{amount} #{stat}}"
+	ia = $cache.icon("faces/#{who}")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_attract(who)
+	
+	a = "Ingrid gains an"
+	ia = $cache.icon("faces/ing")
+	
+	b = "Attraction Point with #{$party.get(who).name}"
+	ib = $cache.icon("misc/attract-get")
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
 
 end
