@@ -38,7 +38,7 @@ class Char_Box_Large < SpriteGroup
 	    @level.font = $fonts.list
 	    @level.shadow = $fonts.list_shadow
 	    @level.gradient = true
-	    @level.text = "15"
+	    @level.text = @char.level.to_s
 	    add(@level,20,27)
 
 

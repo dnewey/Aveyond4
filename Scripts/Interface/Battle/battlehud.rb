@@ -99,4 +99,8 @@ class BattleHud
 		return @popper
 	end
 
+	def busy?
+		true
+	end
+
 end

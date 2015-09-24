@@ -78,7 +78,7 @@ class Page_Tabs < Sprite
         @idx = @names.count - 1
         return
       end
-      @change.call(@names[@idx]) if @change
+      change_tab
       refresh      
   	end
 
@@ -88,7 +88,7 @@ class Page_Tabs < Sprite
         @idx = 0
         return
       end
-      @change.call(@names[@idx]) if @change
+      change_tab
       refresh  
   	end
 
@@ -117,13 +117,18 @@ class Page_Tabs < Sprite
       if $input.click?
 
         @idx = i
-        @change.call(@names[@idx]) if @change
+        change_tab
         refresh  
 
       end
       
     }
 
+  end
+
+  def change_tab
+    sys('tab')
+    @change.call(@names[@idx]) if @change
   end
 
  end

@@ -149,7 +149,7 @@ class FontManager
 	   	@page_text_color = Font.new
 		@page_text_color.name = "Georgia"
 	    @page_text_color.size = 20
-	    @page_text_color.color = Color.new(44,240,44)
+	    @page_text_color.color = Color.new(71,143,32)
 
 
 		# Misc

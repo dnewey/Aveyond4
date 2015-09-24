@@ -326,9 +326,9 @@ class List
     if item != nil
       name = item.name
       ico = $cache.icon("misc/unknown")
-      #ico = $cache.icon(item.icon)
+      ico = $cache.icon($data.items['potion-'+data].icon)
     else
-      name = "Remove"
+      name = "ERROR NIL"
       ico = $cache.icon("misc/unknown")
     end
     

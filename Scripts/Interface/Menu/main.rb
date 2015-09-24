@@ -75,10 +75,18 @@ class Mnu_Main
 		end
 
 
-		@data = ['Journal','Items','Party','Progress',
-  	 		     'Options','Help','Quit','Load','Save']
+		if $party.reserve.empty?
+			@data = ['Journal','Items','Progress',
+  	 			     'Options','Help','Quit','Load','Save']
+  	 		@cy = 36
+		else
+			@data = ['Journal','Items','Party','Progress',
+  	 			     'Options','Help','Quit','Load','Save']
+  	 		@cy = 15
+  	 	end
 
-		cy = 15
+  	 	cy = @cy
+		
 
 		@buttons = []
 		@texts = []
@@ -269,7 +277,7 @@ class Mnu_Main
 		idx2 = 0
 		@icons.each{ |i|
 			i.src_rect = Rect.new(36,0,120,50)
-			i.y = 25+(idx2*51)-23
+			i.y = @cy+10+(idx2*51)-23
 			#i.x = @buttons[idx2].x
 			#i.do(go("y"))
 			$tweens.clear(i) if dosound
@@ -329,10 +337,8 @@ class Mnu_Main
 
 	def select(option)
 
-		sys('action')
-
 		case option
-			when "Journal", "Items", "Party", "Progress", "Options", "Help", "Quit", "Load", "Save"
+			when "Journal", "Items", "Progress", "Options", "Help", "Quit", "Load", "Save"
 				$scene.queue_menu(option)
 			else
 				# C.1
@@ -346,6 +352,7 @@ class Mnu_Main
 
 		end
 
+		sys('action')
 		@selected_box.flash_heavy
 		$menu.menu_cursor = option
 
