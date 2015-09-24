@@ -119,6 +119,12 @@ def transfer_house_in2(dir=nil)
 end
 
 def transfer_house_out(dir=nil)
+	sfx 'door-open'
+	transfer_out(dir)
+	$player.trans_type = :fade
+end
+
+def transfer_house_out_s(dir=nil)
 	transfer_out(dir)
 	$player.trans_type = :fade
 end

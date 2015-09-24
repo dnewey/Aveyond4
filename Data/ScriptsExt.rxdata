@@ -3807,7 +3807,7 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"WORLD_MAP_ID = 146
+end"xWORLD_MAP_ID = 146
 
 def start_transfer(map,room=nil,dir=nil)
 
@@ -3928,6 +3928,12 @@ def transfer_house_in2(dir=nil)
 end
 
 def transfer_house_out(dir=nil)
+	sfx 'door-open'
+	transfer_out(dir)
+	$player.trans_type = :fade
+end
+
+def transfer_house_out_s(dir=nil)
 	transfer_out(dir)
 	$player.trans_type = :fade
 end
