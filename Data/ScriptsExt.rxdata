@@ -21169,8 +21169,8 @@ class AudioManager
   def minimize
     @atmosphere_target = 0.0
     @music_target = 0.0
-    @atmosphere_gain = 0.2
-    @music_gain = 0.2
+    @atmosphere_gain = 0.4
+    @music_gain = 0.4
   end
 
   def update
