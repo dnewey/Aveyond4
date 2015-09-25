@@ -113,7 +113,11 @@ class Mnu_Save < Mnu_Base
 				end
 			}
 
-			@pic.bitmap = Bitmap.new("#{$appdata}//Av4-#{option}.png")
+		  begin
+            @pic.bitmap = Bitmap.new("#{$appdata}//Av4-#{option}.png")
+          rescue
+          	@pic.bitmap = Bitmap.new(1,1)
+          end 			
 
 		end
 
