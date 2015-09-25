@@ -117,7 +117,14 @@ class Game_Map
     autoplay = false
     newzone = get_zone(@id)
     newzone = "@" + newzone.split("@")[1]
+
+    if @map_name == 'Indoor'
+      newzone = '@indoor'
+    end
+
     if newzone != @zone.id
+
+      $audio.minimize
 
       @zone = $data.zones[newzone]
 

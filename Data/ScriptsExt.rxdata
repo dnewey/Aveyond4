@@ -15996,7 +15996,7 @@ class Interpreter
   end
 
 end
-"ñ>#==============================================================================
+"P?#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -16115,7 +16115,14 @@ class Game_Map
     autoplay = false
     newzone = get_zone(@id)
     newzone = "@" + newzone.split("@")[1]
+
+    if @map_name == 'Indoor'
+      newzone = '@indoor'
+    end
+
     if newzone != @zone.id
+
+      $audio.minimize
 
       @zone = $data.zones[newzone]
 
@@ -20936,13 +20943,14 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"¥#==============================================================================
+end"W#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
 class AudioManager
 
   attr_accessor :music_target, :atmosphere_target
+  attr_accessor :music_gain, :atmosphere_gain
 
   def initialize
 
@@ -21156,6 +21164,13 @@ class AudioManager
 
   def refresh_sound_volume
     (@sys + @sfx).each{ |s| s.gain = $settings.sound_vol}
+  end
+
+  def minimize
+    @atmosphere_target = 0.0
+    @music_target = 0.0
+    @atmosphere_gain = 0.2
+    @music_gain = 0.2
   end
 
   def update

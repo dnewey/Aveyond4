@@ -5,6 +5,7 @@
 class AudioManager
 
   attr_accessor :music_target, :atmosphere_target
+  attr_accessor :music_gain, :atmosphere_gain
 
   def initialize
 
@@ -218,6 +219,13 @@ class AudioManager
 
   def refresh_sound_volume
     (@sys + @sfx).each{ |s| s.gain = $settings.sound_vol}
+  end
+
+  def minimize
+    @atmosphere_target = 0.0
+    @music_target = 0.0
+    @atmosphere_gain = 0.4
+    @music_gain = 0.4
   end
 
   def update
