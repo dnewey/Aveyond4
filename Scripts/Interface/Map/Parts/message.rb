@@ -692,7 +692,20 @@ class Ui_Message
     #Check for vars
     if @word.include?("&")
       @word.sub!("&","")
-      @word = $state.varval(@word).to_s
+      if @word == 'forth-level'
+        case $state.varval(@word)
+          when 3; @word = 'three'
+          when 4; @word = 'four'
+          when 5; @word = 'five'
+          when 6; @word = 'six'
+          when 7; @word = 'seven'
+          when 8; @word = 'eight'
+          when 9; @word = 'nine'
+          when 10; @word = 'ten'
+        end
+      else
+        @word = $state.varval(@word).to_s
+      end
     end 
 
     # CHECK FOR COMMANDS
