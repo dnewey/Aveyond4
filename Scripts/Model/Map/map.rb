@@ -124,7 +124,7 @@ class Game_Map
 
     if newzone != @zone.id
 
-      $audio.minimize
+      #$audio.minimize
 
       @zone = $data.zones[newzone]
 
