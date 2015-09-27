@@ -5,7 +5,9 @@ class Scene_Battle
 
   	# Everybody grin
   	@hud.all_win
-    music_fadeout
+    sys 'fall'
+    wait(15)
+    music 'battle-final'
 
     # Choose a dialogue
     if $battle.victory_text != nil
@@ -46,6 +48,7 @@ class Scene_Battle
     }
 
   	@phase = :victory_level
+    music_fadeout
 
   end
 
@@ -72,6 +75,7 @@ class Scene_Battle
 
     $battle.clear
   	$game.pop_scene
+    music_restore
     
   end
 

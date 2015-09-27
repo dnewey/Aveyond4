@@ -91,7 +91,7 @@ class Game_Battler
     if data.mods != ""
       data.mods.split("\n").each{ |m|
         md = m.split("=>")
-        @stat_mods[md[0]] = md[1].to_i
+        @stat_mods[md[0]] = md[1].to_f
       }
     end
 

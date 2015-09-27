@@ -58,7 +58,7 @@ class Game_Battler
     @states_counter.values.each{ |v| v += 1 }
 
     # If done
-    @states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
+    #@states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
 
   end
 

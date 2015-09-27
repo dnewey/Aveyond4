@@ -59,6 +59,9 @@ class Scene_Battle
         when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
 
           @skill_cmd.setup(@active_battler,action)
+          
+          sys 'action'
+
           @phase = :actor_skill
 
         when "two-legs", "four-legs"
@@ -96,6 +99,7 @@ class Scene_Battle
         @active_battler.item_id = nil
         @active_battler.skill_id = @skill_cmd.get_skill
         @phase = :actor_strategize
+        sys 'action'
       else
         sys("buzz")
       end

@@ -439,7 +439,7 @@ class Game_Battle
       data = hits.split("-")
       low = data[0].to_i
       high = data[0].to_i
-      return low + rand(hi-low)
+      return (low + rand(high-low)).ceil
     else
       return skill.hits.to_i
     end

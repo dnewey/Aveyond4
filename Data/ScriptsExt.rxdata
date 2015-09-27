@@ -12414,7 +12414,7 @@ class Game_Battler
     if data.mods != ""
       data.mods.split("\n").each{ |m|
         md = m.split("=>")
-        @stat_mods[md[0]] = md[1].to_i
+        @stat_mods[md[0]] = md[1].to_f
       }
     end
 
@@ -12758,7 +12758,7 @@ class Game_Battler
     return 1.0
   end
 
-end"ö
+end"÷
 class Game_Battler
 
 
@@ -12818,11 +12818,11 @@ class Game_Battler
     @states_counter.values.each{ |v| v += 1 }
 
     # If done
-    @states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
+    #@states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
 
   end
 
- end"çclass Game_Battler
+ end"åclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -12861,7 +12861,7 @@ class Game_Battler
       @scope = 'rand'
     elsif is_minion?
       @action = 'attack'
-      @skill_id = 'attack'
+      @skill_id = 'bite'
       @target = $battle.attackable_enemies.sample
       @scope = 'rand'
     end
@@ -17201,7 +17201,7 @@ class Game_Player < Game_Character
   end
 
 end
-"*'
+"3'
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -17642,7 +17642,7 @@ class Game_Battle
       data = hits.split("-")
       low = data[0].to_i
       high = data[0].to_i
-      return low + rand(hi-low)
+      return (low + rand(high-low)).ceil
     else
       return skill.hits.to_i
     end
@@ -17733,7 +17733,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"¸&#==============================================================================
+end"ý&#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17845,6 +17845,10 @@ class Game_Party
     return @active.map{ |a| @actors[a] }.select{ |a| !a.down? }
   end
 
+  def recover_all
+    @actors.each{ |a| a.recover_all }
+  end
+  
   #--------------------------------------------------------------------------
   # * Add an Actor
   #     actor_id : actor ID
@@ -19057,7 +19061,7 @@ class Scene_Battle
 
   end
 
-end"û
+end"7
 
 class Scene_Battle
 
@@ -19118,6 +19122,9 @@ class Scene_Battle
         when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
 
           @skill_cmd.setup(@active_battler,action)
+          
+          sys 'action'
+
           @phase = :actor_skill
 
         when "two-legs", "four-legs"
@@ -19155,6 +19162,7 @@ class Scene_Battle
         @active_battler.item_id = nil
         @active_battler.skill_id = @skill_cmd.get_skill
         @phase = :actor_strategize
+        sys 'action'
       else
         sys("buzz")
       end
@@ -19293,10 +19301,15 @@ class Scene_Battle
     
   end
 
-end" 
+end"Ž!
 class Scene_Battle
 
   def phase_main_init
+
+    wait(15)
+
+    # Play nice noise
+    # sys 'join'
    	
     # Choose enemy actions
     $battle.enemies.each{ |e|
@@ -19344,7 +19357,10 @@ class Scene_Battle
   # Start a round of the attack
   def phase_main_start
 
-    # -----------------------------
+    # Play nice noise
+    sys 'talk2'
+
+      # -----------------------------
     # ERROR CORRECTIONS 
 
     # If specific target, random if down
@@ -19384,10 +19400,26 @@ class Scene_Battle
 
     @active_battler.ev.flash_dur = 15
 
+    case @active_battler.id
+
+    when 'minion-fang'
+
+      sfx 'fang-1'
+
+    when 'mys'
+
+      sfx 'mys1'
+
+    when 'minion-colby'
+
+      sfx 'rat'
+
+    end
+
 
     # Show text if there is
     @phase = :main_text
-    wait(30)
+    wait(15)
 
   end
 
@@ -19401,7 +19433,7 @@ class Scene_Battle
     end
 
     @phase = :main_anim
-    wait(20)
+    wait(15)
 
   end
 
@@ -19470,6 +19502,7 @@ class Scene_Battle
 
   def phase_main_hit
 
+
     # Do damage or healing
     @attack_results.each{ |result|
         
@@ -19511,7 +19544,12 @@ class Scene_Battle
 
     @attack_results.each{ |result|
       if result.critical
+        
+        # Play nice noise
+        sys 'attack'
+
         pop_crit(result.target.event)
+
       end
     }
 
@@ -19536,7 +19574,7 @@ class Scene_Battle
         x = @active_battler.ev.screen_x
         y = @active_battler.ev.screen_y - 15
         add_spark('mana-blue',x,y)
-        wait(30)
+        wait(15)
     }
 
     @phase = :main_state
@@ -19569,7 +19607,7 @@ class Scene_Battle
     }
 
     @phase = :main_tick
-    wait(30) # Might wait only if a state was aded
+    wait(20) # Might wait only if a state was aded
 
   end
 
@@ -19660,6 +19698,9 @@ class Scene_Battle
 
   def phase_main_end
     
+    # Play nice noise
+    sys 'open'
+
     # Remove states and that before next turn starts
     $battle.all_battlers.each{ |b| b.remove_states_turn }
 
@@ -19668,14 +19709,16 @@ class Scene_Battle
 
   end
 
-end"Ð
+end"
 class Scene_Battle
 
   def phase_victory_init
 
   	# Everybody grin
   	@hud.all_win
-    music_fadeout
+    sys 'fall'
+    wait(15)
+    music 'battle-final'
 
     # Choose a dialogue
     if $battle.victory_text != nil
@@ -19716,6 +19759,7 @@ class Scene_Battle
     }
 
   	@phase = :victory_level
+    music_fadeout
 
   end
 
@@ -19742,6 +19786,7 @@ class Scene_Battle
 
     $battle.clear
   	$game.pop_scene
+    music_restore
     
   end
 

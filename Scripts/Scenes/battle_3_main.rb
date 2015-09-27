@@ -2,6 +2,11 @@
 class Scene_Battle
 
   def phase_main_init
+
+    wait(15)
+
+    # Play nice noise
+    # sys 'join'
    	
     # Choose enemy actions
     $battle.enemies.each{ |e|
@@ -49,7 +54,10 @@ class Scene_Battle
   # Start a round of the attack
   def phase_main_start
 
-    # -----------------------------
+    # Play nice noise
+    sys 'talk2'
+
+      # -----------------------------
     # ERROR CORRECTIONS 
 
     # If specific target, random if down
@@ -89,10 +97,26 @@ class Scene_Battle
 
     @active_battler.ev.flash_dur = 15
 
+    case @active_battler.id
+
+    when 'minion-fang'
+
+      sfx 'fang-1'
+
+    when 'mys'
+
+      sfx 'mys1'
+
+    when 'minion-colby'
+
+      sfx 'rat'
+
+    end
+
 
     # Show text if there is
     @phase = :main_text
-    wait(30)
+    wait(15)
 
   end
 
@@ -106,7 +130,7 @@ class Scene_Battle
     end
 
     @phase = :main_anim
-    wait(20)
+    wait(15)
 
   end
 
@@ -175,6 +199,7 @@ class Scene_Battle
 
   def phase_main_hit
 
+
     # Do damage or healing
     @attack_results.each{ |result|
         
@@ -216,7 +241,12 @@ class Scene_Battle
 
     @attack_results.each{ |result|
       if result.critical
+        
+        # Play nice noise
+        sys 'attack'
+
         pop_crit(result.target.event)
+
       end
     }
 
@@ -241,7 +271,7 @@ class Scene_Battle
         x = @active_battler.ev.screen_x
         y = @active_battler.ev.screen_y - 15
         add_spark('mana-blue',x,y)
-        wait(30)
+        wait(15)
     }
 
     @phase = :main_state
@@ -274,7 +304,7 @@ class Scene_Battle
     }
 
     @phase = :main_tick
-    wait(30) # Might wait only if a state was aded
+    wait(20) # Might wait only if a state was aded
 
   end
 
@@ -365,6 +395,9 @@ class Scene_Battle
 
   def phase_main_end
     
+    # Play nice noise
+    sys 'open'
+
     # Remove states and that before next turn starts
     $battle.all_battlers.each{ |b| b.remove_states_turn }
 

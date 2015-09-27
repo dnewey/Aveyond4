@@ -110,6 +110,10 @@ class Game_Party
     return @active.map{ |a| @actors[a] }.select{ |a| !a.down? }
   end
 
+  def recover_all
+    @actors.each{ |a| a.recover_all }
+  end
+  
   #--------------------------------------------------------------------------
   # * Add an Actor
   #     actor_id : actor ID
