@@ -50,7 +50,7 @@ class Scene_Battle < Scene_Base
 
 
     # Find battler events
-    [0,1,2,3].each{ |i| 
+    [0,1,2,3,4,5,6,7,8,9].each{ |i| 
       
       ev = @map.event_by_evname("A.#{i}")
       
@@ -100,7 +100,7 @@ class Scene_Battle < Scene_Base
 
     }
 
-    [0,1,2,3,4].each{ |i| 
+    [0,1,2,3,4,5,6,7,8,9].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
       next if ev == nil
       if $battle.enemies.count > i
