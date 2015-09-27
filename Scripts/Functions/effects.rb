@@ -282,8 +282,23 @@ def pop_crit(ev)
 	y = gev(ev).screen_y + 5
 		
 	# Create the pop
-	pop = Pop.new(:rise,:fade,@vp_over)
+	pop = Pop.new(:blast,:fade,@vp_over)
     pop.image('critical')
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_evade(ev)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y + 5
+		
+	# Create the pop
+	pop = Pop.new(:blast,:fade,@vp_over)
+    pop.image('evade')
     pop.move(x,y)
     pop.start
 	$scene.add_pop(pop)

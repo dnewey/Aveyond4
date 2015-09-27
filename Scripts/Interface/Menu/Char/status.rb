@@ -132,7 +132,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/luck")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.luk}  (#{@char.stat_pure('luk')} + #{@char.stat_gear('luk')})"
+	    lbl.text = "Luck: #{@char.luk}%"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -141,7 +141,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/eva")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.eva}  (#{@char.stat_pure('eva')} + #{@char.stat_gear('eva')})"
+	    lbl.text = "Evasion: #{@char.eva}%"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -150,7 +150,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/res")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.res}  (#{@char.stat_pure('res')} + #{@char.stat_gear('res')})"
+	    lbl.text = "Resist: #{@char.res}%"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 

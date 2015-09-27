@@ -1023,7 +1023,7 @@ class Area < Sprite
     
   end
   
-end"¨	
+end"´	
 
 def build_value_bmp(num)
 
@@ -1138,12 +1138,12 @@ class Bar < Sprite
 		self.bitmap.fill_rect(0,0,vw,@height,@bar_color)
 
 		# Draw border
-		if @border
-			self.bitmap.fill_rect(0,0,@width,1,@border)
-			self.bitmap.fill_rect(0,@height-1,@width,1,@border)
-			self.bitmap.fill_rect(0,1,1,@height-2,@border)
-			self.bitmap.fill_rect(@width-1,1,1,@height-2,@border)
-		end
+		# if @border
+		# 	self.bitmap.fill_rect(0,0,@width,1,@border)
+		# 	self.bitmap.fill_rect(0,@height-1,@width,1,@border)
+		# 	self.bitmap.fill_rect(0,1,1,@height-2,@border)
+		# 	self.bitmap.fill_rect(@width-1,1,1,@height-2,@border)
+		# end
 
 	end
 
@@ -2512,7 +2512,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"i
+end"U
 def spark(ev,fx,ox=0,oy=0)
 
 	return if gev(ev) == nil
@@ -2796,8 +2796,23 @@ def pop_crit(ev)
 	y = gev(ev).screen_y + 5
 		
 	# Create the pop
-	pop = Pop.new(:rise,:fade,@vp_over)
+	pop = Pop.new(:blast,:fade,@vp_over)
     pop.image('critical')
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_evade(ev)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y + 5
+		
+	# Create the pop
+	pop = Pop.new(:blast,:fade,@vp_over)
+    pop.image('evade')
     pop.move(x,y)
     pop.start
 	$scene.add_pop(pop)
@@ -3178,7 +3193,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"Œ
+"
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3206,6 +3221,15 @@ def arch_investigate
 
 	unitem($menu.chosen)
 	$menu.chosen = nil
+
+end
+
+def gogogo
+
+	log_ev("Debug function GO!")
+
+	log_sys("Refreshing stat mods")
+	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
 end"ö#==============================================================================
 # ** Item Functions
@@ -4514,7 +4538,7 @@ class Popper < Sprite
 
 	end
 
-end"
+end"
 class ActorCmd
 
 	def initialize(vp)
@@ -4783,7 +4807,7 @@ class ActorCmd
 		pos[0] += 13
 		pos[1] += 34
 			@icons.each{ |i|
-			if i.within?(pos[0],pos[1])
+			if i.within?(pos[0],pos[1],0,30)
 				break if @icons.index(i) == @idx
 				@idx = @icons.index(i)
 				select
@@ -5252,7 +5276,7 @@ class TargetCmd
 	end
 
 end
-"Ï#==============================================================================
+"ü#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -5354,6 +5378,7 @@ class Ui_Screen
 
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
+	  return if $party.leader == "minion-fang"
       if $input.cancel? || $input.rclick?
       	$menu.player_x = $player.screen_x
       	$menu.player_y = $player.screen_y
@@ -9930,7 +9955,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"ú#==============================================================================
+end"R#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -10064,7 +10089,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/luck")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.luk}  (#{@char.stat_pure('luk')} + #{@char.stat_gear('luk')})"
+	    lbl.text = "Luck: #{@char.luk}%"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -10073,7 +10098,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/eva")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.eva}  (#{@char.stat_pure('eva')} + #{@char.stat_gear('eva')})"
+	    lbl.text = "Evasion: #{@char.eva}%"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -10082,7 +10107,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/res")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.res}  (#{@char.stat_pure('res')} + #{@char.stat_gear('res')})"
+	    lbl.text = "Resist: #{@char.res}%"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -12585,8 +12610,24 @@ class Game_Battler
 
 
 end
-"ô
+"
 class Game_Battler
+
+
+  def refresh_stat_mods
+
+      data = $data.actors[@id]
+
+      if data.mods != ""
+      data.mods.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_mods[md[0]] = md[1].to_f
+      }
+    end
+
+    log_info("New stat mods for #{@name}")
+
+  end
 
   # For displays
   def hp_percent
@@ -13060,7 +13101,7 @@ class Game_Battler
 
   end
 
-end"Ž
+end"§
 class Attack_Result
 
 	attr_accessor :target
@@ -13069,6 +13110,8 @@ class Attack_Result
 	attr_accessor :critical
 
 	attr_accessor :heal
+
+	attr_accessor :evade
 
 	attr_accessor :gain_mana
 
@@ -17201,7 +17244,7 @@ class Game_Player < Game_Character
   end
 
 end
-"3'
+"T(
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -17530,16 +17573,29 @@ class Game_Battle
         end
       }
 
+      # Calc evade
+      result.evade = rand(100) < t.eva
+
+      # Calc crit
+      result.critical = rand(100) < t.luk
+
+
       # Build final damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
       result.damage -= (t.def) # Remove damage of the defense
-
+      result.damage *= 1.8 if result.critical
+      
       result.heal = heal_base
       result.heal += t.maxhp * heal_p
+      result.heal *= 1.5 if result.critical
 
       # If there was no attack, don't have a damage amount
       if result.damage <= 0
         result.damage = is_dmg ? 1 : 0
+      end
+
+      if result.evade
+        result.damage = 0
       end
 
       results.push(result)
@@ -19301,7 +19357,7 @@ class Scene_Battle
     
   end
 
-end"Ž!
+end"Ò"
 class Scene_Battle
 
   def phase_main_init
@@ -19508,6 +19564,7 @@ class Scene_Battle
         
         # Damage
         if result.damage > 0
+
           result.target.damage(result.damage)
           pop_dmg(result.target.ev,result.damage)
           
@@ -19532,6 +19589,7 @@ class Scene_Battle
           end
 
         end
+
     }
 
     # Onto the next
@@ -19547,10 +19605,19 @@ class Scene_Battle
         
         # Play nice noise
         sys 'attack'
-
-        pop_crit(result.target.event)
+        pop_crit(result.target.ev)
 
       end
+
+      # Evade
+      if result.evade
+
+        # Play nice noise
+        sfx 'whoosh2'
+        pop_evade(result.target.ev)
+
+      end
+
     }
 
     # Onto the next
@@ -19639,6 +19706,11 @@ class Scene_Battle
       if result.target.down?
         if result.target.is_actor?
           #sys('fall')
+          if result.target.id == 'mys'
+            x = result.target.ev.screen_x
+            y = result.target.ev.screen_y - 32
+            add_spark("myst",x,y)
+          end
           result.target.fall
           result.target.view.down if result.target.view
           #fade(result.target.ev)
@@ -19709,7 +19781,7 @@ class Scene_Battle
 
   end
 
-end"
+end"
 class Scene_Battle
 
   def phase_victory_init
@@ -19751,26 +19823,22 @@ class Scene_Battle
   def phase_victory_xp
 
     xp = $battle.xp_total
+    $scene.message.force_name = nil
     $party.alive_members.each{ |b| b.gain_xp(xp) }
-  	$scene.message.start("sys:#{xp} XP GAINED!")
-
-    $party.alive_battlers.each{ |b|
-      @hud.chars.each{ |c| c.box.wallpaper = $cache.menu_wallpaper("green")}
-    }
+  	$scene.message.start("sys:#{xp} XP gained!")
 
   	@phase = :victory_level
     music_fadeout
 
   end
 
-  def phase_victory_level
-
-    
+  def phase_victory_level    
 
     # Only show level ups in active party?
     $party.alive_battlers.each{ |b|
       
       if b.level_up?
+        b.view.box.wallpaper = $cache.menu_wallpaper("green")        
         $scene.message.start("sys:#{b.name} is now level #{b.level}!")
       end
 
@@ -23186,7 +23254,7 @@ class Fixnum
   end
 end
 
-"# Extensions to sprite class
+";# Extensions to sprite class
 
 class Sprite
 
@@ -23216,11 +23284,11 @@ class Sprite
 		return self.bitmap.height
 	end
 
-	def within?(x,y)
-		return false if x < self.x
-		return false if y < self.y
-		return false if x > self.x + width
-		return false if y > self.y + height
+	def within?(x,y,px=0,py=0)
+		return false if x < self.x - px
+		return false if y < self.y - py
+		return false if x > self.x + width + px
+		return false if y > self.y + height + py
 		return true
 	end
 

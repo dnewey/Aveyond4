@@ -113,12 +113,12 @@ class Bar < Sprite
 		self.bitmap.fill_rect(0,0,vw,@height,@bar_color)
 
 		# Draw border
-		if @border
-			self.bitmap.fill_rect(0,0,@width,1,@border)
-			self.bitmap.fill_rect(0,@height-1,@width,1,@border)
-			self.bitmap.fill_rect(0,1,1,@height-2,@border)
-			self.bitmap.fill_rect(@width-1,1,1,@height-2,@border)
-		end
+		# if @border
+		# 	self.bitmap.fill_rect(0,0,@width,1,@border)
+		# 	self.bitmap.fill_rect(0,@height-1,@width,1,@border)
+		# 	self.bitmap.fill_rect(0,1,1,@height-2,@border)
+		# 	self.bitmap.fill_rect(@width-1,1,1,@height-2,@border)
+		# end
 
 	end
 

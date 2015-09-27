@@ -28,11 +28,11 @@ class Sprite
 		return self.bitmap.height
 	end
 
-	def within?(x,y)
-		return false if x < self.x
-		return false if y < self.y
-		return false if x > self.x + width
-		return false if y > self.y + height
+	def within?(x,y,px=0,py=0)
+		return false if x < self.x - px
+		return false if y < self.y - py
+		return false if x > self.x + width + px
+		return false if y > self.y + height + py
 		return true
 	end
 

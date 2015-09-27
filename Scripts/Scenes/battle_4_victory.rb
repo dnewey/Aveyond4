@@ -40,26 +40,22 @@ class Scene_Battle
   def phase_victory_xp
 
     xp = $battle.xp_total
+    $scene.message.force_name = nil
     $party.alive_members.each{ |b| b.gain_xp(xp) }
-  	$scene.message.start("sys:#{xp} XP GAINED!")
-
-    $party.alive_battlers.each{ |b|
-      @hud.chars.each{ |c| c.box.wallpaper = $cache.menu_wallpaper("green")}
-    }
+  	$scene.message.start("sys:#{xp} XP gained!")
 
   	@phase = :victory_level
     music_fadeout
 
   end
 
-  def phase_victory_level
-
-    
+  def phase_victory_level    
 
     # Only show level ups in active party?
     $party.alive_battlers.each{ |b|
       
       if b.level_up?
+        b.view.box.wallpaper = $cache.menu_wallpaper("green")        
         $scene.message.start("sys:#{b.name} is now level #{b.level}!")
       end
 

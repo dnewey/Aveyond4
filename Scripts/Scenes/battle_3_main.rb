@@ -205,6 +205,7 @@ class Scene_Battle
         
         # Damage
         if result.damage > 0
+
           result.target.damage(result.damage)
           pop_dmg(result.target.ev,result.damage)
           
@@ -229,6 +230,7 @@ class Scene_Battle
           end
 
         end
+
     }
 
     # Onto the next
@@ -244,10 +246,19 @@ class Scene_Battle
         
         # Play nice noise
         sys 'attack'
-
-        pop_crit(result.target.event)
+        pop_crit(result.target.ev)
 
       end
+
+      # Evade
+      if result.evade
+
+        # Play nice noise
+        sfx 'whoosh2'
+        pop_evade(result.target.ev)
+
+      end
+
     }
 
     # Onto the next
@@ -336,6 +347,11 @@ class Scene_Battle
       if result.target.down?
         if result.target.is_actor?
           #sys('fall')
+          if result.target.id == 'mys'
+            x = result.target.ev.screen_x
+            y = result.target.ev.screen_y - 32
+            add_spark("myst",x,y)
+          end
           result.target.fall
           result.target.view.down if result.target.view
           #fade(result.target.ev)

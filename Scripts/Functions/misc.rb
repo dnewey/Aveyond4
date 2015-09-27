@@ -28,3 +28,12 @@ def arch_investigate
 	$menu.chosen = nil
 
 end
+
+def gogogo
+
+	log_ev("Debug function GO!")
+
+	log_sys("Refreshing stat mods")
+	$party.all_battlers.each{ |b| b.refresh_stat_mods }
+
+end

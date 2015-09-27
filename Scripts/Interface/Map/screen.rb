@@ -100,6 +100,7 @@ class Ui_Screen
 
 	  # Check inputs
 	  return if busy? or $map.interpreter.running?
+	  return if $party.leader == "minion-fang"
       if $input.cancel? || $input.rclick?
       	$menu.player_x = $player.screen_x
       	$menu.player_y = $player.screen_y

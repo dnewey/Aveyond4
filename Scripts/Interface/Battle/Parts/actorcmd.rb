@@ -267,7 +267,7 @@ class ActorCmd
 		pos[0] += 13
 		pos[1] += 34
 			@icons.each{ |i|
-			if i.within?(pos[0],pos[1])
+			if i.within?(pos[0],pos[1],0,30)
 				break if @icons.index(i) == @idx
 				@idx = @icons.index(i)
 				select

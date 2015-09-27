@@ -8,6 +8,8 @@ class Attack_Result
 
 	attr_accessor :heal
 
+	attr_accessor :evade
+
 	attr_accessor :gain_mana
 
 	attr_accessor :state_add

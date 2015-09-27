@@ -327,16 +327,29 @@ class Game_Battle
         end
       }
 
+      # Calc evade
+      result.evade = rand(100) < t.eva
+
+      # Calc crit
+      result.critical = rand(100) < t.luk
+
+
       # Build final damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
       result.damage -= (t.def) # Remove damage of the defense
-
+      result.damage *= 1.8 if result.critical
+      
       result.heal = heal_base
       result.heal += t.maxhp * heal_p
+      result.heal *= 1.5 if result.critical
 
       # If there was no attack, don't have a damage amount
       if result.damage <= 0
         result.damage = is_dmg ? 1 : 0
+      end
+
+      if result.evade
+        result.damage = 0
       end
 
       results.push(result)

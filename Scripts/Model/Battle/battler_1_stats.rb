@@ -1,6 +1,22 @@
 
 class Game_Battler
 
+
+  def refresh_stat_mods
+
+      data = $data.actors[@id]
+
+      if data.mods != ""
+      data.mods.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_mods[md[0]] = md[1].to_f
+      }
+    end
+
+    log_info("New stat mods for #{@name}")
+
+  end
+
   # For displays
   def hp_percent
     return @hp / maxhp
