@@ -603,6 +603,10 @@ class Game_Event < Game_Character
           @faceoff = data[1].to_i
 
         when '#floating'
+          g = go('off_x',2,80,:qio)
+          self.do(repeat(seq(g,g.reverse)))
+
+        when '#shaking'
           g = go('off_y',6,600,:qio)
           self.do(repeat(seq(g,g.reverse)))
 
