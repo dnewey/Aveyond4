@@ -88,6 +88,7 @@ $(function()
     
     // Buttons
     $('#dan-btn-create').click(function () { json_create(); });
+    $('#dan-btn-create-rev').click(function () { json_create_rev(); });
     $('#dan-btn-rev').click(function () { json_rev(); });
     //$('#dan-btn-mod').click(function () { json_sortmodified(); });
     $('#dan-btn-allpp').click(function () { json_allpp(); });
@@ -451,6 +452,26 @@ json_create = function()
     refresh_table();
 };
 
+json_create_rev = function()
+{
+    var obj = new Object();
+    for (var idx in $meta_data)
+    {
+        var fld = $meta_data[idx].field;
+        var val = $meta_data[idx].default;
+        obj[fld] = val;
+    }
+
+    date = new Date();
+    obj['modified'] = date.getTime().toString();
+
+    $json_data.unshift(obj);
+
+    refresh_json();
+    refresh_pages();
+    refresh_table();
+};
+
 // --------------------------------------------------------------------------------
 // Reverse the table
 // --------------------------------------------------------------------------------
@@ -462,7 +483,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-08-25
+// Sort by last modified 2015-09-27
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()
@@ -494,8 +515,9 @@ json_allpp = function()
 // --------------------------------------------------------------------------------
 
 json_dup = function(row)
-{
-    $json_data.push(JSON.parse(JSON.stringify($json_data[row])));
+{   
+    data = JSON.parse(JSON.stringify($json_data[row]))
+    $json_data.splice(row,0,data);
 
     refresh_json();
     refresh_table();
