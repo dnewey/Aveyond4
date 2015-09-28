@@ -603,8 +603,8 @@ class Game_Event < Game_Character
           @faceoff = data[1].to_i
 
         when '#floating'
-          g = go('off_x',2,80,:qio)
-          self.do(repeat(seq(g,g.reverse)))
+          g = pingpong('off_y',8,1500,:qio)
+          self.do(g)
 
         when '#shaking'
           g = go('off_y',6,600,:qio)
@@ -675,6 +675,8 @@ class Game_Event < Game_Character
           @off_x = data[1].to_i
         when '#oy'
           @off_y = data[1].to_i
+        when '#oxcloud'
+          @off_x = $cloud
 
         when '#moblin'
           data.push(1) if data.count < 2
