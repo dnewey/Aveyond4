@@ -86,7 +86,7 @@ def pop_get(type,b,ib,color=nil)
 			ia = nil
 
 		when 'sister'
-			a = "Hildhilda receives: "
+			a = "Lorelai receives: "
 			ia = nil
 
 		when 'rat'

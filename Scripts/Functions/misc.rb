@@ -29,6 +29,14 @@ def arch_investigate
 
 end
 
+def show_book(which)
+
+	data = $data.books[which]
+	text('sys:'+data.title)
+
+
+end
+
 def gogogo
 
 	log_ev("Debug function GO!")
