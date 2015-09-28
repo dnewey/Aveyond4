@@ -431,6 +431,9 @@ class Game_Player < Game_Character
 
       case @trans_type
 
+        when :instant
+          Graphics.transition(0)
+
         when :cross
           Graphics.transition(16)
 

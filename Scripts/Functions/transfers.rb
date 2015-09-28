@@ -63,6 +63,11 @@ def transfer_cross(map,room=nil,dir=nil)
 	start_transfer(map,room,dir)
 end
 
+def transfer_instant(map,room=nil,dir=nil)
+	$player.trans_type = :instant
+	start_transfer(map,room,dir)
+end
+
 def transfer_fade(map,room=nil,dir=nil)
 	$player.trans_type = :fade
 	start_transfer(map,room,dir)
