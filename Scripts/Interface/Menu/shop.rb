@@ -45,6 +45,8 @@ class Mnu_Shop < Mnu_Base
 				@subtitle.text = "Enchantments"
 			when "Chester"
 				@subtitle.text = "Learn Skills and Abilities"
+				@menu.list.type = :chester
+				@menu.list.refresh
 		end
 	end
 

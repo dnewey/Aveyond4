@@ -47,6 +47,8 @@ class Scene_Battle
       return
     end
 
+    @last_attack = nil
+
   	@phase = :main_start
 
   end
@@ -95,7 +97,14 @@ class Scene_Battle
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
-    @active_battler.ev.flash_dur = 15
+    # For multi hits, only flash and wait the first time
+    if @attack_round.skill != @last_attack
+      @active_battler.ev.flash_dur = 15
+      wait(15)
+      @last_attack = @attack_round.skill
+    else
+      wait(3)
+    end
 
     case @active_battler.id
 
@@ -116,7 +125,7 @@ class Scene_Battle
 
     # Show text if there is
     @phase = :main_text
-    wait(15)
+    
 
   end
 

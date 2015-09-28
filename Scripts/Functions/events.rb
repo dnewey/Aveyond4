@@ -75,7 +75,11 @@ end
 
 def occupied?(e)
 	ev = gev(e)
-	return $map.events_at(ev.x,ev.y).count > 1
+	(ev.x..ev.x+ev.width-1).each{ |x|
+		(ev.y..ev.y+ev.height-1).each{ |y|
+			return $map.events_at(x,y).count > 1
+		}
+	}
 end
 
 def other_here(e)

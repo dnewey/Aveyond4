@@ -110,6 +110,8 @@ class Game_Battler
 
     @xp = data.xp
 
+    @actions = data.actions.split(" | ")
+
     # Get stat plus per enemy
     if data.stats != ""
       data.stats.split("\n").each{ |m|

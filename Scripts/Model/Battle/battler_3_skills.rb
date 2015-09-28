@@ -4,6 +4,10 @@ class Game_Battler
   	@skills.push(skill)
   end
 
+  def has_skill?(skill)
+    return @skills.include?(skill)
+  end
+
   def skill_list(action)
     result = @skills.select{ |s| $data.skills[s].book == action }
     if action == "team"
@@ -30,17 +34,19 @@ class Game_Battler
   end
 
   def choose_action
-    if is_enemy?
-  	  @action = 'attack'
-      @skill_id = 'attack'
-      @target = $party.attackable_battlers.sample
+
+    targets = is_enemy? ? $party.attackable_battlers : $battle.attackable_enemies
+
+
+  	@action = 'attack'
+    @skill_id = @actions[0]
+    #if $data.skills(@skill_id).scope == 'rand'
+      @target = targets.sample
       @scope = 'rand'
-    elsif is_minion?
-      @action = 'attack'
-      @skill_id = 'bite'
-      @target = $battle.attackable_enemies.sample
-      @scope = 'rand'
-    end
+    #else
+
+    #end
+
   end  
 
   def set_action(skill)
