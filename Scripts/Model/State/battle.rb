@@ -117,6 +117,7 @@ class Game_Battle
   end
 
   def loot_for(src_event)
+
     data = $data.enemies[src_event.monster]
 
     # Check drops first
@@ -143,34 +144,38 @@ class Game_Battle
       }
     end
 
-    # Check gold
-    if data.gold != nil
-      dta = data.gold.split("=>")
-      golds = dta[0].split("-")
-      chance = dta[1].to_f
-      if rand <= chance
-        if golds.count == 1
-          return gold(golds[0].to_i)
-        else
-          return gold(golds[0].to_i + rand(golds[1].to_i-golds[0].to_i))
-        end
-      end
+    # Cutting gold chance
+    change = rand
+
+    if rand < 0.2
+
+        # Nothing!
+        return pop_nothing         
+
     end
 
-    # Check loot
-    if data.loot != nil
+    if rand < 0.6 && data.loot != nil && data.loot != ''
       possible = []
       data.loot.split("/n").each{ |item| 
+        log_sys(item)
         dta = item.split("=>")
+        log_scr(dta)
         dta[1].to_i.times{
           possible.push(dta[0])
         }
       }
+      log_info(possible)
       return item(possible.sample)
     end
 
-    # Nothing!
-    pop_nothing    
+    # Check gold
+    if data.gold != nil && data.gold != ''
+      golds = data.gold.split("-")
+      return gold(golds[0].to_i + rand(1+golds[1].to_i-golds[0].to_i))
+    end
+
+
+    return pop_nothing 
 
   end
 
@@ -350,6 +355,13 @@ class Game_Battle
 
       if result.evade
         result.damage = 0
+      end
+
+      # Custom hacking
+      if skill.id == 'pounce' 
+        if t.state?('bleed')
+          result.damage *= 2
+        end
       end
 
       results.push(result)

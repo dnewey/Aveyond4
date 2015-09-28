@@ -264,6 +264,8 @@ class List
         draw_potion(data,row)
       when :shop
         draw_shop(data,row)
+      when :chester
+        draw_chester(data,row)
       when :equip
         draw_equip(data,row)
       when :skill
@@ -358,6 +360,34 @@ class List
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       ico = $cache.icon("misc/coins")
+      @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
+    end
+
+  end
+
+  def draw_chester(data,row)
+
+    log_sys(data)
+
+    item = $data.skills[data]
+
+    if item != nil
+      name = item.name
+      ico = $cache.icon(item.icon)
+      price = item.price.to_i
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+      price = 0
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    if price > 0
+      ico = $cache.icon("misc/magics")
       @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
       @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
     end

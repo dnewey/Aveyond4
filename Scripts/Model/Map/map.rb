@@ -26,6 +26,8 @@ class Game_Map
 
   attr_accessor :skip_music_change
 
+  attr_reader :zone
+
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -118,9 +120,9 @@ class Game_Map
     newzone = get_zone(@id)
     newzone = "@" + newzone.split("@")[1]
 
-    if @map_name == 'Indoor'
-      newzone = '@indoor'
-    end
+    # if @map_name == 'Indoor'
+    #   newzone = '@indoor'
+    # end
 
     if newzone != @zone.id
 

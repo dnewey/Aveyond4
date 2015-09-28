@@ -132,7 +132,11 @@ class Game_Party
     # Make sure this actor is not in reserve
     @reserve.delete(actor)
       
-    @active.push(actor)
+    if actor == 'boy'
+      @active.unshift(actor)
+    else
+      @active.push(actor)
+    end
 
   end
 

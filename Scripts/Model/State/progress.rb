@@ -7,7 +7,7 @@ class Progress
 
   	attr_accessor :guild_id
 
-  	attr_reader :creatures, :creature_shop_level
+  	attr_reader :creatures, :chester_level
 
   	attr_reader :demons
 
@@ -24,7 +24,7 @@ class Progress
 		@creatures['wyrmwood'] = 12
 
 		# Boyle skills
-		@creature_shop_level = 0
+		@chester_level = 0
 
 		# Phy
 		@demons = ['baal'] # Demons defeated
