@@ -1554,7 +1554,7 @@ class Label < Sprite
         
   end
   
-end"zA#==============================================================================
+end"ìD#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1820,6 +1820,8 @@ class List
         draw_potion(data,row)
       when :shop
         draw_shop(data,row)
+      when :chester
+        draw_chester(data,row)
       when :equip
         draw_equip(data,row)
       when :skill
@@ -1914,6 +1916,34 @@ class List
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       ico = $cache.icon("misc/coins")
+      @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
+    end
+
+  end
+
+  def draw_chester(data,row)
+
+    log_sys(data)
+
+    item = $data.skills[data]
+
+    if item != nil
+      name = item.name
+      ico = $cache.icon(item.icon)
+      price = item.price.to_i
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+      price = 0
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
+    @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    if price > 0
+      ico = $cache.icon("misc/magics")
       @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
       @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
     end
@@ -2840,7 +2870,7 @@ end
 
 
 
-"j#==============================================================================
+"¹#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -2917,7 +2947,11 @@ end
 
 def occupied?(e)
 	ev = gev(e)
-	return $map.events_at(ev.x,ev.y).count > 1
+	(ev.x..ev.x+ev.width-1).each{ |x|
+		(ev.y..ev.y+ev.height-1).each{ |y|
+			return $map.events_at(x,y).count > 1
+		}
+	}
 end
 
 def other_here(e)
@@ -3663,7 +3697,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"è
+end"Y
 
 def shop_choice
 
@@ -3685,6 +3719,202 @@ def shop_choice
 
 	end
 
+
+end
+
+def setup_item_shop
+
+	$menu.shop_init
+	stock = []
+
+	case $map.zone.id
+
+		when '@windshire'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
+		when '@tor'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
+		when '@royal-town'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
+		when '@elf-town'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
+		when '@dwarf-town'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
+	end
+
+	stock.each{ |s| $menu.shop_add(s) }
+	open_shop_buy
+
+end
+
+def setup_smith_shop
+
+	$menu.shop_init
+	stock = []
+
+	case $map.zone.id
+
+		when '@windshire'	
+			stock.push('mid-arm-shire')
+
+		when '@tor'	
+			stock.push('mid-arm-tor')
+			stock.push('heavy-arm-tor')
+			stock.push('helm-tor')
+			stock.push('rob-shield-tor')
+
+		when '@royal-town'	
+			stock.push('mid-arm-royal')
+
+		when '@royal-crusade'	
+			stock.push('helm-royal')
+
+		when '@elf-town'	
+			stock.push('mid-arm-elves')
+			stock.push('heavy-arm-elves')
+			stock.push('rob-shield-elves')
+
+		when '@dwarf-town'	
+			stock.push('mid-arm-shire')
+
+	end
+
+	stock.each{ |s| $menu.shop_add(s) }
+	open_shop_smith
+
+end
+
+def setup_magic_shop
+
+	$menu.shop_init
+	stock = []
+
+	case $map.zone.id
+
+		when '@windshire'	
+			stock.push('light-arm-shire')
+			stock.push('ing-athame-shire')
+
+		when '@tor'	
+			stock.push('light-arm-tor')
+			stock.push('mys-claw-tor')
+			stock.push('ing-wand-tor')
+
+		when '@royal-town'	
+			stock.push('light-arm_royal')
+			stock.push('ing-wand-royal')
+			stock.push('mys-claw-royal')
+
+		when '@weeville'	
+			stock.push('light-arm-wee')
+			stock.push('ing-athame-wee')
+
+		when '@elf-town'	
+			stock.push('light-arm-elves')
+
+		when '@dwarf-town'	
+			stock.push('light-arm-dwarves')
+
+	end
+
+	stock.each{ |s| $menu.shop_add(s) }
+	open_shop_magic
+
+end
+
+def setup_chester_shop
+
+	$menu.shop_init
+	stock = []
+
+	boy = $party.get('boy')
+
+	# Based on $progress.chester_level
+
+
+
+	# Skills to add at level five - DEMONS
+	if $progress.chester_level >= 5
+		
+		stock.push('ug-mana-5')
+		stock.push('ug-staff-7')
+		stock.push('ug-passive-scare')
+	end
+
+	# Skills to add at level 4 - DWARVIES
+	if $progress.chester_level >= 4
+		stock.push('ug-mana-4')
+		stock.push('ug-charge-3')
+		stock.push('ug-staff-6')
+		stock.push('ug-passive-cheeki')
+		stock.push('ug-magic-minion')
+		stock.push('triumph-2')
+	end
+
+	# Skills to add at level 3 - ELVES
+	if $progress.chester_level >= 3
+		stock.push('levitate')
+		stock.push('flames-3')
+		stock.push('ug-mana-3')
+		stock.push('ug-staff-5')
+		stock.push('ug-passive-shop')
+	end
+
+	# Skills to add at level 2 - ROYAL
+	if $progress.chester_level >= 2
+		stock.push('sacrifice')
+		stock.push('contempt-3')
+		stock.push('ug-mana-2')
+		stock.push('ug-charge-2')
+		stock.push('ug-staff-3')
+		stock.push('ug-staff-4')
+	end
+
+	# Skills to add at level 1 - TOR
+	if $progress.chester_level >= 1
+		stock.push('triumph')
+		stock.push('flames-2')
+		stock.push('ug-mana-1')
+		stock.push('ug-staff-2')
+	end
+
+	# Skills to add ALWAYS - WINSHIRE
+	if $progress.chester_level >= 0
+		stock.push('empower')
+		stock.push('contempt-2')
+		stock.push('ug-charge-1')
+		stock.push('ug-staff-1')
+	end
+	
+
+	# Don't include multiple of the same types
+
+
+	# Don't add if have
+	stock.delete_if{ |s| boy.has_skill?(s) }
+
+	# Add skills to shop
+	stock.each{ |s| $menu.shop_add(s) }
+	open_shop_chester
 
 end"q#==============================================================================
 # ** State Functions
@@ -9401,7 +9631,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"Ö#==============================================================================
+end"	#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -9448,6 +9678,8 @@ class Mnu_Shop < Mnu_Base
 				@subtitle.text = "Enchantments"
 			when "Chester"
 				@subtitle.text = "Learn Skills and Abilities"
+				@menu.list.type = :chester
+				@menu.list.refresh
 		end
 	end
 
@@ -12346,7 +12578,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"í#==============================================================================
+end"#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -12457,6 +12689,8 @@ class Game_Battler
     @name = data.name
 
     @xp = data.xp
+
+    @actions = data.actions.split(" | ")
 
     # Get stat plus per enemy
     if data.stats != ""
@@ -12863,10 +13097,14 @@ class Game_Battler
 
   end
 
- end"åclass Game_Battler
+ end"class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
+  end
+
+  def has_skill?(skill)
+    return @skills.include?(skill)
   end
 
   def skill_list(action)
@@ -12895,17 +13133,19 @@ class Game_Battler
   end
 
   def choose_action
-    if is_enemy?
-  	  @action = 'attack'
-      @skill_id = 'attack'
-      @target = $party.attackable_battlers.sample
+
+    targets = is_enemy? ? $party.attackable_battlers : $battle.attackable_enemies
+
+
+  	@action = 'attack'
+    @skill_id = @actions[0]
+    #if $data.skills(@skill_id).scope == 'rand'
+      @target = targets.sample
       @scope = 'rand'
-    elsif is_minion?
-      @action = 'attack'
-      @skill_id = 'bite'
-      @target = $battle.attackable_enemies.sample
-      @scope = 'rand'
-    end
+    #else
+
+    #end
+
   end  
 
   def set_action(skill)
@@ -16087,7 +16327,7 @@ class Interpreter
   end
 
 end
-"Q?#==============================================================================
+"n?#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -16114,6 +16354,8 @@ class Game_Map
   attr_accessor :cam_x, :cam_y
 
   attr_accessor :skip_music_change
+
+  attr_reader :zone
 
 
   #--------------------------------------------------------------------------
@@ -16207,9 +16449,9 @@ class Game_Map
     newzone = get_zone(@id)
     newzone = "@" + newzone.split("@")[1]
 
-    if @map_name == 'Indoor'
-      newzone = '@indoor'
-    end
+    # if @map_name == 'Indoor'
+    #   newzone = '@indoor'
+    # end
 
     if newzone != @zone.id
 
@@ -17244,7 +17486,7 @@ class Game_Player < Game_Character
   end
 
 end
-"T(
+")
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -17363,6 +17605,7 @@ class Game_Battle
   end
 
   def loot_for(src_event)
+
     data = $data.enemies[src_event.monster]
 
     # Check drops first
@@ -17389,34 +17632,38 @@ class Game_Battle
       }
     end
 
-    # Check gold
-    if data.gold != nil
-      dta = data.gold.split("=>")
-      golds = dta[0].split("-")
-      chance = dta[1].to_f
-      if rand <= chance
-        if golds.count == 1
-          return gold(golds[0].to_i)
-        else
-          return gold(golds[0].to_i + rand(golds[1].to_i-golds[0].to_i))
-        end
-      end
+    # Cutting gold chance
+    change = rand
+
+    if rand < 0.2
+
+        # Nothing!
+        return pop_nothing         
+
     end
 
-    # Check loot
-    if data.loot != nil
+    if rand < 0.6 && data.loot != nil && data.loot != ''
       possible = []
       data.loot.split("/n").each{ |item| 
+        log_sys(item)
         dta = item.split("=>")
+        log_scr(dta)
         dta[1].to_i.times{
           possible.push(dta[0])
         }
       }
+      log_info(possible)
       return item(possible.sample)
     end
 
-    # Nothing!
-    pop_nothing    
+    # Check gold
+    if data.gold != nil && data.gold != ''
+      golds = data.gold.split("-")
+      return gold(golds[0].to_i + rand(1+golds[1].to_i-golds[0].to_i))
+    end
+
+
+    return pop_nothing 
 
   end
 
@@ -17596,6 +17843,13 @@ class Game_Battle
 
       if result.evade
         result.damage = 0
+      end
+
+      # Custom hacking
+      if skill.id == 'pounce' 
+        if t.state?('bleed')
+          result.damage *= 2
+        end
       end
 
       results.push(result)
@@ -17789,7 +18043,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ý&#==============================================================================
+end"G'#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -17923,7 +18177,11 @@ class Game_Party
     # Make sure this actor is not in reserve
     @reserve.delete(actor)
       
-    @active.push(actor)
+    if actor == 'boy'
+      @active.unshift(actor)
+    else
+      @active.push(actor)
+    end
 
   end
 
@@ -18202,7 +18460,7 @@ class Game_Party
 
   end
         
-end"¼class Progress
+end"°class Progress
 
 	attr_accessor :quests, :complete
 
@@ -18211,7 +18469,7 @@ end"¼class Progress
 
   	attr_accessor :guild_id
 
-  	attr_reader :creatures, :creature_shop_level
+  	attr_reader :creatures, :chester_level
 
   	attr_reader :demons
 
@@ -18228,7 +18486,7 @@ end"¼class Progress
 		@creatures['wyrmwood'] = 12
 
 		# Boyle skills
-		@creature_shop_level = 0
+		@chester_level = 0
 
 		# Phy
 		@demons = ['baal'] # Demons defeated
@@ -19357,7 +19615,7 @@ class Scene_Battle
     
   end
 
-end"Ò"
+end"¨#
 class Scene_Battle
 
   def phase_main_init
@@ -19405,6 +19663,8 @@ class Scene_Battle
       @phase = :main_next
       return
     end
+
+    @last_attack = nil
 
   	@phase = :main_start
 
@@ -19454,7 +19714,14 @@ class Scene_Battle
     # Calculate damage here and now
     @attack_results = $battle.build_attack_results(@active_battler,@attack_round.skill)
 
-    @active_battler.ev.flash_dur = 15
+    # For multi hits, only flash and wait the first time
+    if @attack_round.skill != @last_attack
+      @active_battler.ev.flash_dur = 15
+      wait(15)
+      @last_attack = @attack_round.skill
+    else
+      wait(3)
+    end
 
     case @active_battler.id
 
@@ -19475,7 +19742,7 @@ class Scene_Battle
 
     # Show text if there is
     @phase = :main_text
-    wait(15)
+    
 
   end
 
