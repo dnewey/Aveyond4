@@ -87,7 +87,7 @@ class Game_Map
     if @id != nil
       @events.values.each{ |e|
         next if !e.save
-        $state.loc(e)
+        $state.loc(e.id)
       }
       $scene.clear_sparks
     end

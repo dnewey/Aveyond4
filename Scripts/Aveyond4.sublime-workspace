@@ -76,21 +76,19 @@
 			}
 		},
 		{
-			"file": "Functions/shop.rb",
+			"file": "Functions/misc.rb",
 			"settings":
 			{
-				"buffer_size": 3710,
+				"buffer_size": 583,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 234 files for \"open_shop_chester\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\shop.rb:\n  216  	# Add skills to shop\n  217  	stock.each{ |s| $menu.shop_add(s) }\n  218: 	open_shop_chester\n  219  \n  220  end\n\nC:\\Aveyond4\\Scripts\\Functions\\system.rb:\n  111  end\n  112  \n  113: def open_shop_chester\n  114  	menu_snapshot\n  115  	$menu.sub_only = true\n\n2 matches across 2 files\n\n\nSearching 234 files for \"Chester\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\system.rb:\n  114  	menu_snapshot\n  115  	$menu.sub_only = true\n  116: 	$menu.menu_page = \"Chester\"\n  117  end\n  118  \n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\Parts\\message.rb:\n  510          $scene.hud.message.wallpaper = 'fangder'\n  511  \n  512:       when 'Chester'\n  513          $scene.hud.message.wallpaper = 'wizard'\n  514  \n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\shop.rb:\n   44  			when \"Magic\"\n   45  				@subtitle.text = \"Enchantments\"\n   46: 			when \"Chester\"\n   47  				@subtitle.text = \"Learn Skills and Abilities\"\n   48  		end\n\nC:\\Aveyond4\\Scripts\\Scenes\\menu.rb:\n  156        # Cheekis\n  157  \n  158:       when \"Shop\",\"Smith\",\"Magic\",\"Chester\"\n  159          @menu = Mnu_Shop.new(@vp)\n  160          @menu.setup(@next_menu)\n\nC:\\Aveyond4\\Editor\\json\\keyitems.json:\n    1: [{\"id\":\"witch-hat\",\"name\":\"Witch Hat\",\"description\":\"A plain witch hat for a coven-less witch\",\"icon\":\"items/witch-hat\",\"notes\":\"for guild join\",\"modified\":\"1441853131591\",\"price\":\"\"},{\"id\":\"witch-teleport\",\"name\":\"Potion Teleporter\",\"description\":\"\",\"icon\":\"items/slippers\",\"notes\":\"to teleport home\",\"modified\":\"1439779774076\",\"price\":\"\"},{\"id\":\"doll-witch\",\"name\":\"Witch Doll\",\"description\":\"It looks nothing like Ingrid\",\"icon\":\"items/doll-witch\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\",\"price\":\"\"},{\"id\":\"witchetty-grub\",\"name\":\"Whispering Grub\",\"description\":\"The best sort of grub for potion-making\",\"icon\":\"witchery/witchetty-grub\",\"notes\":\"ingrid\",\"modified\":\"1436610384223\",\"price\":\"\"},{\"id\":\"spell-zit\",\"name\":\"Zit Burst\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"dig-attract\",\"name\":\"Mystery Item\",\"description\":\"for attraction point\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845941\",\"price\":\"\"},{\"id\":\"arch-attract\",\"name\":\"Magic Stone\",\"description\":\"A stone that will change in accordance with the desires of the person it is presented to\",\"icon\":\"items/love-stone\",\"notes\":\"\",\"modified\":\"1442632383292\",\"price\":\"\"},{\"id\":\"wing\",\"name\":\"Batty Wing\",\"description\":\"It's not from a bat but something very like one\",\"icon\":\"witchery/wing\",\"notes\":\"ingrid\",\"modified\":\"1436610336279\",\"price\":\"\"},{\"id\":\"kobold-artifact\",\"name\":\"Kobold Keepsake\",\"description\":\"\",\"icon\":\"items/kobold-special\",\"notes\":\"for shop quest\",\"modified\":\"1441267912104\",\"price\":\"\"},{\"id\":\"ticket\",\"name\":\"Prize Ticket\",\"description\":\"Can be used to trade for cool prizes\",\"icon\":\"items/ticket\",\"chapter\":\"\",\"modified\":\"1435115632568\",\"notes\":\"opening\",\"price\":\"\"},{\"id\":\"ct-frame\",\"name\":\"Royal Frame\",\"description\":\"A bejeweled frame fit for a king\",\"icon\":\"items/frame\",\"notes\":\"for king\",\"modified\":\"1440244234566\",\"price\":\"\"},{\"id\":\"wh-weight\",\"name\":\"Heavy Stone\",\"description\":\"Weighs more than your average stone\",\"icon\":\"items/weight\",\"notes\":\"windy hills\",\"modified\":\"1438234334574\",\"price\":\"\"},{\"id\":\"dig-quest\",\"name\":\"Mystery Item\",\"description\":\"for quest complete\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845941\",\"price\":\"\"},{\"id\":\"arch-quest\",\"name\":\"Owl Transfigurine\",\"description\":\"Its large eyes indicate wisdom and also critter hunting ability\",\"icon\":\"items/owl-transfigurine\",\"notes\":\"\",\"modified\":\"1442632434732\",\"price\":\"\"},{\"id\":\"doll-ghost\",\"name\":\"Ghost Doll\",\"description\":\"The least effective kind of villain doll\",\"icon\":\"items/doll-ghost\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\",\"price\":\"\"},{\"id\":\"windmill-key\",\"name\":\"Windmill Key\",\"description\":\"A silver key that must unlock something around here\",\"icon\":\"items/key-silver\",\"notes\":\"\",\"modified\":\"1438835048097\",\"price\":\"\"},{\"id\":\"tonic\",\"name\":\"Tonic\",\"description\":\"Secret ingredient for potion-making\",\"icon\":\"witchery/tonic\",\"notes\":\"ingrid\",\"modified\":\"1436610375205\",\"price\":\"\"},{\"id\":\"cheeki\",\"name\":\"Cheeki\",\"description\":\"Take these to Chester to increase Boyle's power\",\"icon\":\"items/creature\",\"notes\":\"\",\"modified\":\"1442385212287\",\"price\":\"500\"},{\"id\":\"card-arrow\",\"name\":\"Arrow Card\",\"description\":\"\",\"icon\":\"vault/card-arrow\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"soda-ash\",\"name\":\"Soda Ash\",\"description\":\"Adds life to mellow potions\",\"icon\":\"witchery/soda-ash\",\"notes\":\"ingrid\",\"modified\":\"1436610279733\",\"price\":\"\"},{\"id\":\"elf-cloth\",\"name\":\"Elven Cloth\",\"description\":\"A soft, delicate cloth created by the elves that is stronger than it appears\",\"icon\":\"items/elf-cloth\",\"notes\":\"\",\"modified\":\"1442536475538\",\"price\":\"\"},{\"id\":\"stone-hib\",\"name\":\"Dream Stone\",\"description\":\"A stone that ensures pleasant dreams forever\",\"icon\":\"items/stone-hib\",\"notes\":\"attraction point\",\"modified\":\"1442535570281\",\"price\":\"\"},{\"id\":\"key-thief\",\"name\":\"Thief Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"cookie-hib\",\"name\":\"Choc-Chip Biscuit\",\"description\":\"An old-fashioned family favorite\",\"icon\":\"items/cookie-hib\",\"notes\":\"\",\"modified\":\"1442537594805\",\"price\":\"\"},{\"id\":\"card-thief\",\"name\":\"Thief Card\",\"description\":\"\",\"icon\":\"vault/card-thief\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"pendant-hib\",\"name\":\"Healing Pendant\",\"description\":\"A pendant with healing abilities\",\"icon\":\"items/pendant-hib\",\"notes\":\"attraction point\",\"modified\":\"1442535571673\",\"price\":\"\"},{\"id\":\"dig-nothing\",\"name\":\"Mystery Item\",\"description\":\"buh bow\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845941\",\"price\":\"\"},{\"id\":\"potion-love-hib\",\"name\":\"Dreamy Love Potion\",\"description\":\"A potion when you need to be the desire of someone's dreams\",\"icon\":\"items/potion-blue\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"ancient-blood\",\"name\":\"Blood of Ancients\",\"description\":\"\",\"icon\":\"items/blood-sample\",\"notes\":\"demon summon quest\",\"modified\":\"1441521697442\",\"price\":\"\"},{\"id\":\"blood-sample\",\"name\":\"Captain's Blood\",\"description\":\"Exactly what it sounds like\",\"icon\":\"items/blood-sample\",\"notes\":\"job board quest\",\"modified\":\"1439382249248\",\"price\":\"\"},{\"id\":\"mir-wood\",\"name\":\"Mir Wood\",\"description\":\"Burns green and burns for days\",\"price\":\"\",\"icon\":\"items/mir-wood\",\"category\":\"Other\",\"chapter\":\"\",\"notes\":\"opening\"},{\"id\":\"goo\",\"name\":\"Goopy Goo\",\"description\":\"It's all gooey\",\"icon\":\"witchery/goo\",\"notes\":\"ingrid\",\"modified\":\"1436610336615\",\"price\":\"\"},{\"id\":\"card-gold\",\"name\":\"Gold Card\",\"description\":\"One of the fancier cards\",\"icon\":\"vault/card-gold\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"trap-ward\",\"name\":\"Trap Ward\",\"description\":\"To trap even the craftiest victim\",\"icon\":\"items/trap-ward\",\"notes\":\"\",\"modified\":\"1439880263073\",\"price\":\"\"},{\"id\":\"moon-tear\",\"name\":\"Moon Tear\",\"description\":\"Even the moon has feelings\",\"icon\":\"witchery/moon-tear\",\"notes\":\"ingrid\",\"modified\":\"1436610279362\",\"price\":\"\"},{\"id\":\"spell-mud\",\"name\":\"Mudball #3\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"god-water\",\"name\":\"God Water\",\"description\":\"Makes things grow quickly\",\"icon\":\"items/potion-blue\",\"notes\":\"bird god quest\",\"modified\":\"1439875990679\",\"price\":\"\"},{\"id\":\"card-blank\",\"name\":\"Blank Card\",\"description\":\"Not for writing on\",\"icon\":\"vault/card-blank\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"goblin-toe\",\"name\":\"Goblin Toe\",\"description\":\"Guess he didn't see the end table\",\"icon\":\"items/boat-plank\",\"notes\":\"job board\",\"modified\":\"1439022029817\",\"price\":\"\"},{\"id\":\"love-stone\",\"name\":\"Love Stone\",\"description\":\"A stone that will change in accordance with the desires of the person it is presented to\",\"icon\":\"items/love-stone\",\"notes\":\"attraction point\",\"modified\":\"1442531825486\",\"price\":\"\"},{\"id\":\"cookie-boy\",\"name\":\"Ginger Biscuit\",\"description\":\"The kind of biscuit an adult would enjoy\",\"icon\":\"items/cookie-boy\",\"notes\":\"\",\"modified\":\"1442537594589\",\"price\":\"\"},{\"id\":\"cookie-phy\",\"name\":\"Honey Butter Buscuit\",\"description\":\"When regular biscuits aren't sweet enough\",\"icon\":\"items/cookie-phy\",\"notes\":\"\",\"modified\":\"1442537595011\",\"price\":\"\"},{\"id\":\"racoon-tail\",\"name\":\"Racoon Tail\",\"description\":\"For potions that require a certain amount of cheekiness\",\"icon\":\"witcheyr/racoon-tail\",\"notes\":\"ingrid\",\"modified\":\"1436610279489\",\"price\":\"\"},{\"id\":\"tiny-lizard\",\"name\":\"Enchanted Dragon Bone\",\"description\":\"Much more effective in potions than non-enchanted dragon bones\",\"icon\":\"items/tiny-lizard\",\"notes\":\"potion quest\",\"modified\":\"1439797749047\",\"price\":\"\"},{\"id\":\"library-book\",\"name\":\"Library Book\",\"description\":\"\\\"So you're dating a witch\\\"\",\"icon\":\"items/book-witch\",\"notes\":\"\",\"modified\":\"1440955705283\",\"price\":\"\"},{\"id\":\"cheese-round\",\"name\":\"Round of cheese\",\"description\":\"Nobody could eat a whole round of cheese\",\"icon\":\"items/cheese-round\",\"notes\":\"for pala quest\",\"modified\":\"1441436162958\",\"price\":\"\"},{\"id\":\"teddy-cursed\",\"name\":\"Cursed Teddy\",\"description\":\"Poor Ted\",\"icon\":\"items/teddy-cursed\",\"notes\":\"curse coven quest\",\"modified\":\"1441853739674\",\"price\":\"\"},{\"id\":\"dream-shroom\",\"name\":\"Dream Shroom\",\"description\":\"Poisonous if eaten but works well in certain potions\",\"icon\":\"witchery/dream-shroom\",\"notes\":\"ingrid\",\"modified\":\"1436609702285\",\"price\":\"\"},{\"id\":\"potion-blabber\",\"name\":\"Blabbermouth Potion\",\"description\":\"A potion to loosen lips\",\"icon\":\"items/potion-blue\",\"notes\":\"\",\"modified\":\"1437399447434\",\"price\":\"\"},{\"id\":\"recipe-blabber\",\"name\":\"Blabbermouth Recipe\",\"description\":\"The recipe for a simple potion\",\"icon\":\"items/potion-recipe\",\"notes\":\"ingrid\",\"modified\":\"1436777068450\",\"price\":\"\"},{\"id\":\"potion-love-boy\",\"name\":\"Wicked Love Potion\",\"description\":\"\",\"icon\":\"items/potion-red\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"potion-love-phy\",\"name\":\"Burning Love Potion\",\"description\":\"\",\"icon\":\"items/potion-yellow\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"boat-figurehead\",\"name\":\"Figurehead\",\"description\":\"A figurehead from a friendly dragon\",\"icon\":\"items/boat-figurehead\",\"notes\":\"\",\"modified\":\"1438770885097\",\"price\":\"\"},{\"id\":\"potion-mindbend\",\"name\":\"Mindbender Potion\",\"description\":\"\",\"icon\":\"items/potion-yellow\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"potion-choco\",\"name\":\"Choco Dream\",\"description\":\"A delicious dreamy potion\",\"icon\":\"items/potion-brown\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"hat-skull\",\"name\":\"Lovely Skull Talisman\",\"description\":\"The symbol of the Hexin guild\",\"icon\":\"items/hat-skull\",\"notes\":\"curse guild hat making\",\"modified\":\"1441865123466\",\"price\":\"\"},{\"id\":\"lizard-tail\",\"name\":\"Lizard Tail\",\"description\":\"Eventually it stops wiggling and can be used in potions\",\"icon\":\"witchery/lizard-tail\",\"notes\":\"ingrid\",\"modified\":\"1436610279203\",\"price\":\"\"},{\"id\":\"werebear-metal\",\"name\":\"Werebear Metal\",\"description\":\"Able to resist werebear claws\",\"icon\":\"items/werebear-metal\",\"notes\":\"crusade joiner\",\"modified\":\"1439782606139\",\"price\":\"\"},{\"id\":\"card-archer\",\"name\":\"Archer Card\",\"description\":\"\",\"icon\":\"vault/card-archer\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"card-king\",\"name\":\"King Card\",\"description\":\"\",\"icon\":\"vault/card-king\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"card-false\",\"name\":\"False Card\",\"description\":\"\",\"icon\":\"vault/card-false\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"card-crown\",\"name\":\"Crown Card\",\"description\":\"\",\"icon\":\"vault/card-crown\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"card-begger\",\"name\":\"Beggar Card\",\"description\":\"This card can't be a chooser\",\"icon\":\"vault/card-begger\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"card-dagger\",\"name\":\"Dagger Card\",\"description\":\"\",\"icon\":\"vault/card-dagger\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"card-poison\",\"name\":\"Poison Card\",\"description\":\"\",\"icon\":\"vault/card-poison\",\"notes\":\"vault\",\"modified\":\"1442550138443\",\"price\":\"\"},{\"id\":\"volcandar\",\"name\":\"New Item\",\"description\":\"attract phy\",\"icon\":\"items/volcandar\",\"notes\":\"\",\"modified\":\"1442655511364\",\"price\":\"\"},{\"id\":\"parsnip\",\"name\":\"Parsnip\",\"description\":\"It's like a carrot and a potato had a baby\",\"icon\":\"items/parsnip\",\"notes\":\"parsnip job board\",\"modified\":\"1441424022021\",\"price\":\"\"},{\"id\":\"boat-oar\",\"name\":\"an Oar\",\"description\":\"The ferryman will probably need this\",\"icon\":\"items/boat-plank\",\"notes\":\"\",\"modified\":\"1438770884859\",\"price\":\"\"},{\"id\":\"arch-vhs\",\"name\":\"Ancient Trash\",\"description\":\"Some kind of old timey device that has no use in the modern world\",\"icon\":\"items/vhs\",\"notes\":\"\",\"modified\":\"1442656659026\",\"price\":\"\"},{\"id\":\"rosemary\",\"name\":\"New Item\",\"description\":\"attract boy\",\"icon\":\"items/rosemary\",\"notes\":\"\",\"modified\":\"1442655509852\",\"price\":\"\"},{\"id\":\"star-leaf\",\"name\":\"Star Leaf\",\"description\":\"A leaf with five points used in certain hexes and spells\",\"icon\":\"witchery/star-leaf\",\"notes\":\"ingrid\",\"modified\":\"1436610279881\",\"price\":\"\"},{\"id\":\"key-archer\",\"name\":\"Archer Key\",\"description\":\"A silver key that must unlock something around here\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"sugar-cube\",\"name\":\"Sugar Cube\",\"description\":\"Heaven in a cube\",\"icon\":\"witchery/sugar-cube\",\"notes\":\"ingrid\",\"modified\":\"1436610335939\",\"price\":\"\"},{\"id\":\"castle-map\",\"name\":\"Castle Map\",\"description\":\"A full map that will reveal all the castle's secrets\",\"icon\":\"items/map\",\"notes\":\"map to secret door\",\"modified\":\"1440955655755\",\"price\":\"\"},{\"id\":\"quarter-map\",\"name\":\"Quarter Map\",\"description\":\"Find 4 to make one whole map\",\"icon\":\"items/quarter-map\",\"notes\":\"crab quest\",\"modified\":\"1439188285283\",\"price\":\"\"},{\"id\":\"ch2-cave-key\",\"name\":\"Cell Key\",\"description\":\"A silver key that must unlock something around here\",\"icon\":\"items/key-silver\",\"notes\":\"for briar cave\",\"modified\":\"1440169194468\",\"price\":\"\"},{\"id\":\"potion-calming\",\"name\":\"Calming Potion\",\"description\":\"This potion could calm even the angriest punk goblin\",\"icon\":\"items/potion-aqua\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"anti-bear-salve\",\"name\":\"Anti-bear Salve\",\"description\":\"\",\"icon\":\"\",\"notes\":\"werebear\",\"modified\":\"1442274384148\",\"price\":\"\"},{\"id\":\"brightsword-key\",\"name\":\"Brightsword Key\",\"description\":\"A gold key that must unlock something around here\",\"icon\":\"items/key-gold\",\"notes\":\"brightsword quest\",\"modified\":\"1439521713358\",\"price\":\"\"},{\"id\":\"brightsword-potion\",\"name\":\"Drakefang Potion\",\"description\":\"\",\"icon\":\"items/potion-aqua\",\"notes\":\"brightsword quest\",\"modified\":\"1439521745072\",\"price\":\"\"},{\"id\":\"feather\",\"name\":\"Feather\",\"description\":\"Good for potions and tickling enemies\",\"icon\":\"witchery/feather\",\"notes\":\"ingrid\",\"modified\":\"1436610336503\",\"price\":\"\"},{\"id\":\"juniper\",\"name\":\"Juniper\",\"description\":\"A berry-like plant that grows in shrubs, useful in many potions\",\"icon\":\"items/juniper\",\"notes\":\"transform coven quest\",\"modified\":\"1441853769679\",\"price\":\"\"},{\"id\":\"stinger\",\"name\":\"Stinger\",\"description\":\"Watch out for the pointy end\",\"icon\":\"witchery/stinger\",\"notes\":\"ingrid\",\"modified\":\"1436610336995\",\"price\":\"\"},{\"id\":\"lavender\",\"name\":\"Lavender \",\"description\":\"A most relaxing and peaceful flower to help people sleep\",\"icon\":\"items/lavender\",\"notes\":\"\",\"modified\":\"1442655511196\",\"price\":\"\"},{\"id\":\"owl-feather\",\"name\":\"Owl Feather\",\"description\":\"The wisest kind of feather\",\"icon\":\"items/owl-feather\",\"notes\":\"nightwatch\",\"modified\":\"1441853136272\",\"price\":\"\"},{\"id\":\"rock-powder\",\"name\":\"Rock Powder\",\"description\":\"Powder from a rock that has been smashed for many hours by hand\",\"icon\":\"witchery/rock-powder\",\"notes\":\"ingrid\",\"modified\":\"1436610279611\",\"price\":\"\"},{\"id\":\"crab-hammer\",\"name\":\"Crab Hammer\",\"description\":\"It takes a certain amount of striking power to get into a crab's innards\",\"icon\":\"items/crab-hammer\",\"notes\":\"attraction point\",\"modified\":\"1442535546934\",\"price\":\"\"},{\"id\":\"ch1-prison-key\",\"name\":\"Prison Key\",\"description\":\"A silver key that must unlock something around here\",\"icon\":\"items/key-silver\",\"notes\":\"to save gimble\",\"modified\":\"1442375557592\",\"price\":\"\"},{\"id\":\"badge-1\",\"name\":\"Storm Badge\",\"description\":\"A light drizzle is etched into the badge\",\"icon\":\"items/badge-1\",\"notes\":\"crusade\",\"modified\":\"1439781381062\",\"price\":\"\"},{\"id\":\"chapter-2\",\"name\":\"Chapter 2\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"vault\",\"modified\":\"1442550802332\",\"price\":\"\"},{\"id\":\"chapter-3\",\"name\":\"Chapter 3\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"vault\",\"modified\":\"1442550802332\",\"price\":\"\"},{\"id\":\"chapter-4\",\"name\":\"Chapter 4\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"vault\",\"modified\":\"1442550802332\",\"price\":\"\"},{\"id\":\"eow-son-1\",\"name\":\"Bucket\",\"description\":\"Sure, it's empty now, but it could hold all sorts of things\",\"icon\":\"items/bucket-empty\",\"notes\":\"end of world quest\",\"modified\":\"1441270267863\",\"price\":\"\"},{\"id\":\"antiwere\",\"name\":\"Antiwere Salv\",\"description\":\"\",\"icon\":\"items/antiwere\",\"notes\":\"nightwatch\",\"modified\":\"1441854566365\",\"price\":\"\"},{\"id\":\"tentacle\",\"name\":\"Tentacle\",\"description\":\"A basic disgusting potion ingredient\",\"icon\":\"witchery/tentacle\",\"notes\":\"ingrid\",\"modified\":\"1436610375022\",\"price\":\"\"},{\"id\":\"key-false\",\"name\":\"King Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"hot-spice\",\"name\":\"Hot Spice\",\"description\":\"Add a little spice to your potion\",\"icon\":\"witchery/star-leaf\",\"notes\":\"\",\"modified\":\"1439193778002\",\"price\":\"\"},{\"id\":\"novel-page\",\"name\":\"Novel Page\",\"description\":\"A page of somebody's novel\",\"icon\":\"items/map\",\"notes\":\"job board\",\"modified\":\"1439020110818\",\"price\":\"\"},{\"id\":\"frog-prince\",\"name\":\"Frog Prince\",\"description\":\"It's handy to have a prince that fits in your pocket\",\"icon\":\"items/frog-prince\",\"notes\":\"fang quest\",\"modified\":\"1439814991756\",\"price\":\"\"},{\"id\":\"potion-unslave\",\"name\":\"Unslave Potion\",\"description\":\"A potion to release a slave from their master's control\",\"icon\":\"items/potion-brown\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"glacial-essence\",\"name\":\"Glacial Essence\",\"description\":\"Essence of a glacier to cool overheated potions\",\"icon\":\"witchery/glacial-essence\",\"notes\":\"ingrid\",\"modified\":\"1436610279034\",\"price\":\"\"},{\"id\":\"magic-scroll-summon\",\"name\":\"Summoning Scroll\",\"description\":\"\",\"icon\":\"items/magic-scroll\",\"notes\":\"for robin quest\",\"modified\":\"1440567689526\",\"price\":\"\"},{\"id\":\"rw-grapes\",\"name\":\"Grapes\",\"description\":\"Delicious juicy fruits for job board quest\",\"icon\":\"items/grapes\",\"notes\":\"\",\"modified\":\"1439183039823\",\"price\":\"\"},{\"id\":\"spider-eyes\",\"name\":\"Spider Eyes\",\"description\":\"There's just so many\",\"icon\":\"witchery/spider-eyes\",\"notes\":\"ingrid\",\"modified\":\"1436610336855\",\"price\":\"\"},{\"id\":\"kobold-stones\",\"name\":\"Kobold Stones\",\"description\":\"\",\"icon\":\"items/kobold-stone\",\"notes\":\"job board quest\",\"modified\":\"1439304990964\",\"price\":\"\"},{\"id\":\"list-paladins\",\"name\":\"List of Fighters\",\"description\":\"\",\"icon\":\"items/page\",\"notes\":\"crusade quest\",\"modified\":\"1440949362571\",\"price\":\"\"},{\"id\":\"vault-key\",\"name\":\"Vault Key\",\"description\":\"Key to the Vault\",\"icon\":\"items/key-silver\",\"notes\":\"steal from ron\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"full-map\",\"name\":\"Full Map\",\"description\":\"\",\"icon\":\"items/full-map\",\"notes\":\"crab quest\",\"modified\":\"1439188285283\",\"price\":\"\"},{\"id\":\"doll-vamp\",\"name\":\"Vampire Doll\",\"description\":\"Can be sold or used to distract teenage girls\",\"icon\":\"items/doll-vamp\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\",\"price\":\"\"},{\"id\":\"eow-son-2\",\"name\":\"Bucket of Water\",\"description\":\"Now you won't spill the water by carrying it in your hands\",\"icon\":\"items/bucket-full\",\"notes\":\"end of world quest\",\"modified\":\"1441270273054\",\"price\":\"\"},{\"id\":\"spice-leaf\",\"name\":\"Spice Leaf\",\"description\":\"Can be used in potions and certain curries\",\"icon\":\"witchery/racoon-tail\",\"notes\":\"hot spice\",\"modified\":\"1439779119082\",\"price\":\"\"},{\"id\":\"badge-2\",\"name\":\"Marsh Badge\",\"description\":\"It's all slimy\",\"icon\":\"items/badge-2\",\"notes\":\"crusade\",\"modified\":\"1439781381062\",\"price\":\"\"},{\"id\":\"badge-3\",\"name\":\"Cole Badge\",\"description\":\"It has a cool picture of a pickaxe on it\",\"icon\":\"items/badge-3\",\"notes\":\"crusade\",\"modified\":\"1439781381062\",\"price\":\"\"},{\"id\":\"doll-5\",\"name\":\"Last Doll\",\"description\":\"The final doll\",\"icon\":\"items/boar-oar\",\"notes\":\"doll quest\",\"modified\":\"1439772633188\",\"price\":\"\"},{\"id\":\"boat-plank\",\"name\":\"Plank\",\"description\":\"For building various wooden items\",\"icon\":\"items/boat-plank\",\"notes\":\"\",\"modified\":\"1438770885354\",\"price\":\"\"},{\"id\":\"doll-wolf\",\"name\":\"Werebear Doll\",\"description\":\"\",\"icon\":\"items/doll-wolf\",\"notes\":\"doll quest\",\"modified\":\"1439772522658\",\"price\":\"\"},{\"id\":\"turtle-egg\",\"name\":\"Turtle Egg\",\"description\":\"It's quite warm so it must be a female inside\",\"icon\":\"items/egg-1\",\"notes\":\"\",\"modified\":\"1439338821006\",\"price\":\"\"},{\"id\":\"dragon-egg\",\"name\":\"Dragon Egg\",\"description\":\"Baby dragons should be treated like adult dragons\",\"icon\":\"items/egg-2\",\"notes\":\"for tor mayoor quest\",\"modified\":\"1440956955052\",\"price\":\"\"},{\"id\":\"flip-deck\",\"name\":\"2 Card Flip Deck\",\"description\":\"A deck to play the most universally known card game\",\"icon\":\"items/flip-deck\",\"notes\":\"start with\",\"modified\":\"1441445578955\",\"price\":\"\"},{\"id\":\"dragon-key\",\"name\":\"Dragon Bone Key\",\"description\":\"A silver key that must unlock something around here\",\"icon\":\"items/key-silver\",\"notes\":\"to get in dwarf place\",\"modified\":\"1441263451881\",\"price\":\"\"},{\"id\":\"centipede-leg\",\"name\":\"Centipede Leg\",\"description\":\"It's not like it really needed that many anyway\",\"icon\":\"items/key-stick\",\"notes\":\"job board\",\"modified\":\"1439016819193\",\"price\":\"\"},{\"id\":\"dale-key\",\"name\":\"Mysterious Key\",\"description\":\"Not your every day silver key\",\"icon\":\"items/key-wings\",\"notes\":\"brightsword quest\",\"modified\":\"1439525057024\",\"price\":\"\"},{\"id\":\"night-bug\",\"name\":\"Night Bug\",\"description\":\"A nocturnal creature that will sneak into your ears\",\"icon\":\"items/nightbugs\",\"notes\":\"nightwatch\",\"modified\":\"1441853136487\",\"price\":\"\"},{\"id\":\"pendant-boy\",\"name\":\"Villain Pendant\",\"description\":\"Even bad guys need to accessorize\",\"icon\":\"items/pendant-boy\",\"notes\":\"attraction point\",\"modified\":\"1442535571377\",\"price\":\"\"},{\"id\":\"pendant-phy\",\"name\":\"Vengeful Pendant\",\"description\":\"A tough looking pendant for even the most vengeful person\",\"icon\":\"items/pendant-phy\",\"notes\":\"attraction point\",\"modified\":\"1442535572049\",\"price\":\"\"},{\"id\":\"potion-neon\",\"name\":\"Neon Potion\",\"description\":\"A potion that will light you up so you can see and be seen in dark places\",\"icon\":\"items/potion-green\",\"notes\":\"\",\"modified\":\"1437399447434\",\"price\":\"\"},{\"id\":\"potion-berry\",\"name\":\"Very Berry Potion\",\"description\":\"Delicious and nutritious potion\",\"icon\":\"items/potion-purple\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"potion-shrink\",\"name\":\"Resize Potion\",\"description\":\"\",\"icon\":\"items/potion-red\",\"notes\":\"\",\"modified\":\"1439193778199\",\"price\":\"\"},{\"id\":\"ws-prison-key\",\"name\":\"Prison Key\",\"description\":\"A silver key that must unlock something around here\",\"icon\":\"items/prison-key\",\"notes\":\"\",\"modified\":\"1439303943984\",\"price\":\"\"},{\"id\":\"stone-boy\",\"name\":\"Power Stone\",\"description\":\"A stone for those who yearn to be powerful\",\"icon\":\"items/stone-boy\",\"notes\":\"attraction point\",\"modified\":\"1442535569969\",\"price\":\"\"},{\"id\":\"stone-phy\",\"name\":\"Dragon Stone\",\"description\":\"A stone for those who value pure strength\",\"icon\":\"items/stone-phy\",\"notes\":\"attraction point\",\"modified\":\"1442535570593\",\"price\":\"\"},{\"id\":\"teddy\",\"name\":\"Teddy Bear\",\"description\":\"A cuddly friend\",\"icon\":\"items/teddy\",\"notes\":\"curse coven quest\",\"modified\":\"1441853136683\",\"price\":\"\"},{\"id\":\"worm\",\"name\":\"Dirt Worm\",\"description\":\"Useful in spells but gross to collect\",\"icon\":\"items/worm\",\"notes\":\"transform coven quest\",\"modified\":\"1441854300688\",\"price\":\"\"},{\"id\":\"acorn\",\"name\":\"Acorn of Eternity\",\"description\":\"An acorn that's been around for quite a while\",\"icon\":\"witchery/acorn\",\"notes\":\"ingrid\",\"modified\":\"1436609414038\",\"price\":\"\"},{\"id\":\"baby-dragon\",\"name\":\"Baby Dragon\",\"description\":\"Sure, it's cute NOW\",\"icon\":\"witchery/baby-dragon\",\"notes\":\"ingrid\",\"modified\":\"1436610336399\",\"price\":\"\"},{\"id\":\"mineral-man\",\"name\":\"Mineral Man\",\"description\":\"He's neither animal nor vegetable\",\"icon\":\"witchery/mineral-man\",\"notes\":\"ingrid\",\"modified\":\"1436610336728\",\"price\":\"\"},{\"id\":\"tiny-egg\",\"name\":\"Tiny Egg\",\"description\":\"It wouldn't even make a single omelette\",\"icon\":\"witchery/tiny-egg\",\"notes\":\"ingrid\",\"modified\":\"1436610336128\",\"price\":\"\"},{\"id\":\"violin\",\"name\":\"Violin\",\"description\":\"A soothing instrument that calm even the most volatile potion\",\"icon\":\"witchery/violin\",\"notes\":\"ingrid\",\"modified\":\"1436610336399\",\"price\":\"\"},{\"id\":\"key-king\",\"name\":\"King Key\",\"description\":\"\",\"icon\":\"items/key-silver\",\"notes\":\"vault\",\"modified\":\"1440999617285\",\"price\":\"\"},{\"id\":\"power-yam\",\"name\":\"Power Yam\",\"description\":\"When you need a yam to keep you going\",\"icon\":\"items/power-yam\",\"notes\":\"\",\"modified\":\"1442631845246\",\"price\":\"\"},{\"id\":\"dig-shop\",\"name\":\"Mystery Item\",\"description\":\"to sell at shop\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442631845453\",\"price\":\"\"},{\"id\":\"moneybag\",\"name\":\"New Item\",\"description\":\"\",\"icon\":\"items/moneybag\",\"notes\":\"\",\"modified\":\"1442634952006\",\"price\":\"\"},{\"id\":\"dig-vhs\",\"name\":\"Mystery Item\",\"description\":\"\",\"icon\":\"items/arch-item\",\"notes\":\"\",\"modified\":\"1442656653066\",\"price\":\"\"},{\"id\":\"ch1-boyle-house-key\",\"name\":\"Key to Boyle's House\",\"description\":\"Get into Boyle's things\",\"icon\":\"items/key-silver\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442761249559\"},{\"id\":\"spell-pig\",\"name\":\"Higglety Pigglety\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"spell-pie\",\"name\":\"Pudding and Pie\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"},{\"id\":\"spell-mis\",\"name\":\"Missiles #3\",\"description\":\"Teaches Ingrid this spell\",\"icon\":\"items/spellbook\",\"price\":\"\",\"notes\":\"\",\"modified\":\"1442843649191\"}]\n\n5 matches across 5 files\n\n\nSearching 234 files for \"def setup\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Elements\\Widgets\\list.rb:\n  128    end\n  129  \n  130:   def setup(data,idx=0)\n  131  \n  132      @back_sprite.bitmap.clear if @back_sprite.bitmap\n\nC:\\Aveyond4\\Scripts\\Functions\\shop.rb:\n   24  end\n   25  \n   26: def setup_item_shop\n   27  \n   28  	$menu.shop_init\n   ..\n   68  end\n   69  \n   70: def setup_smith_shop\n   71  \n   72  	$menu.shop_init\n   ..\n  105  end\n  106  \n  107: def setup_magic_shop\n  108  \n  109  	$menu.shop_init\n  ...\n  143  end\n  144  \n  145: def setup_chester_shop\n  146  \n  147  	$menu.shop_init\n\nC:\\Aveyond4\\Scripts\\Interface\\Battle\\Parts\\actorcmd.rb:\n   14  	end\n   15  \n   16: 	def setup(battler)\n   17  \n   18  		close\n\nC:\\Aveyond4\\Scripts\\Interface\\Battle\\Parts\\itemcmd.rb:\n   35  	end\n   36  \n   37: 	def setup\n   38  \n   39  		item_list = $party.battle_item_list\n\nC:\\Aveyond4\\Scripts\\Interface\\Battle\\Parts\\skillcmd.rb:\n    2  class SkillCmd < ItemCmd\n    3  \n    4: 	def setup(battler,action)\n    5  \n    6  		@battler = battler\n\nC:\\Aveyond4\\Scripts\\Interface\\Battle\\Parts\\targetcmd.rb:\n   22  	end\n   23  \n   24: 	def setup(targets)\n   25  \n   26  		@arrow.show\n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\Parts\\popper.rb:\n   48  	end\n   49  \n   50: 	def setup(a,ia,b,ib)\n   51  \n   52  		data = $data.items[id]\n\nC:\\Aveyond4\\Scripts\\Interface\\Map\\Parts\\shop.rb:\n   58  	end\n   59  \n   60: 	def setup()\n   61  \n   62  		\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\healing.rb:\n   51  	end\n   52  \n   53: 	def setup_grid\n   54  \n   55  		@grid.clear\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\party.rb:\n   50  	end\n   51  \n   52: 	def setup_grid\n   53  		\n   54  		@grid.move(30,138)\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\shop.rb:\n   35  	end\n   36  \n   37: 	def setup(type)\n   38  		@title.change(type)\n   39  		case type\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\Parts\\char_box_small.rb:\n   67  	end\n   68  \n   69: 	def setup(char)\n   70  \n   71  	end\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\Parts\\list_common.rb:\n   42  \n   43  	# All the various data that can be shown\n   44: 	def setup_items(category)\n   45  		case category\n   46  \n   ..\n   64  	end\n   65  \n   66: 	def setup_gear(slot)\n   67  \n   68  	end\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\Parts\\right_page.rb:\n   51      end\n   52  \n   53:     def setup(save)\n   54  \n   55          # Get save header\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n 1518    # * Setup Map\n 1519    #--------------------------------------------------------------------------\n 1520:   def setup_map(sx,sy,tx,ty) #tx and ty in params for external call\n 1521  \n 1522      map = Table.new($map.width, $map.height)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\event.rb:\n  482    end  \n  483    \n  484:   def setup_page(new_page)\n  485  \n  486      # Set @page as current event page\n  ...\n  511    end\n  512  \n  513:   def setup_page_settings\n  514      \n  515      # Set each instance variable\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\interpreter.rb:\n   61    #     event_id : event ID\n   62    #--------------------------------------------------------------------------\n   63:   def setup(list, event_id)\n   64      \n   65      # Clear inner situation of interpreter\n   ..\n  100    # * Starting Event Setup\n  101    #--------------------------------------------------------------------------\n  102:   def setup_starting_event\n  103      \n  104      # Refresh map if necessary\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n   82    #     map_id : map ID\n   83    #--------------------------------------------------------------------------\n   84:   def setup(id)\n   85  \n   86      # If there was an old map, save the locs\n   ..\n  203    end\n  204  \n  205:   def setup_audio\n  206  \n  207      # Ignore if skip next\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n   85    end\n   86  \n   87:   def setup(src_event)\n   88  \n   89      # Find all enemies in the group\n\n26 matches across 19 files\n\n\nSearching 234 files for \"make_active\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\party.rb:\n  129  end\n  130  \n  131: def make_active(who)\n  132  	$party.set_active(who)\n  133  end\n\n1 match in 1 file\n\n\nSearching 234 files for \"set_active\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\party.rb:\n   87  def join(who)\n   88  	sys('join')\n   89: 	$party.set_active(who)\n   90  	pop_join(who)\n   91  	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)\n   ..\n   93  \n   94  def join_s(who)\n   95: 	$party.set_active(who)\n   96  	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)\n   97  end\n   ..\n  130  \n  131  def make_active(who)\n  132: 	$party.set_active(who)\n  133  end\n  134  \n\nC:\\Aveyond4\\Scripts\\Model\\State\\party.rb:\n  119    #     actor_id : actor ID\n  120    #--------------------------------------------------------------------------\n  121:   def set_active(actor)\n  122  \n  123      # If already active, forget it\n  ...\n  144      # If active is full, somebody gets removed\n  145      if @reserve.count > 3\n  146:       set_active(@reserve[3])\n  147        @reserve.delete(@reserve[3])\n  148      end\n  ...\n  303      # -----------------------------------\n  304  \n  305:     set_active(\"boy\")\n  306:     #set_active(\"ing\")\n  307:     #set_active(\"mys\")\n  308:     #set_active(\"rob\")\n  309      #set_reserve(\"hib\")\n  310      #set_reserve(\"row\")\n  311:     #set_active(\"phy\")   \n  312      #set_reserve(\"phy\")   \n  313    \n\n10 matches across 2 files\n\n\nSearching 234 files for \"loot_for\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  117    end\n  118  \n  119:   def loot_for(src_event)\n  120      data = $data.enemies[src_event.monster]\n  121  \n\n1 match in 1 file\n\n\nSearching 234 files for \"def next_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\result.rb:\n   42  	end\n   43  \n   44: 	def next_attack\n   45  		return @attacks.shift\n   46  	end\n\n1 match in 1 file\n",
+			"file": "Functions/poppers.rb",
 			"settings":
 			{
-				"buffer_size": 32218,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
+				"buffer_size": 3472,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -153,7 +151,7 @@
 			"file": "Model/Map/map.rb",
 			"settings":
 			{
-				"buffer_size": 15583,
+				"buffer_size": 15586,
 				"line_ending": "Windows"
 			}
 		},
@@ -202,14 +200,6 @@
 			"settings":
 			{
 				"buffer_size": 1708,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Scenes/battle_2_actor.rb",
-			"settings":
-			{
-				"buffer_size": 5703,
 				"line_ending": "Windows"
 			}
 		},
@@ -283,6 +273,9 @@
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/Scripts/Model/State/state.rb",
+		"/C/Aveyond4/Scripts/Functions/shop.rb",
+		"/C/Aveyond4/Scripts/Model/Map/event.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/result.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/shop.rb",
 		"/C/Aveyond4/Scripts/Model/State/progress.rb",
@@ -312,7 +305,6 @@
 		"/C/Aveyond4/Scripts/Functions/audio.rb",
 		"/C/Aveyond4/Scripts/System/cache.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
-		"/C/Aveyond4/Scripts/Model/State/state.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/save.rb",
 		"/C/Aveyond4/Scripts/System/files.rb",
 		"/C/Aveyond4/Scripts/Model/Map/map.rb",
@@ -326,7 +318,6 @@
 		"/C/Aveyond4/Scripts/Interface/Battle/battlehud.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/item_box.rb",
-		"/C/Aveyond4/Scripts/Model/Map/event.rb",
 		"/C/Aveyond4/Scripts/Scenes/menu.rb",
 		"/C/Aveyond4/Scripts/System/game.rb",
 		"/C/Aveyond4/Scripts/System/fonts.rb",
@@ -362,7 +353,6 @@
 		"/C/Aveyond4/Scripts/Interface/Menu/shop.rb",
 		"/C/Aveyond4/Scripts/System/mouse.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/book.rb",
-		"/C/Aveyond4/Scripts/Functions/shop.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/grid.rb",
 		"/C/Program Files (x86)/Yummy Drink Factory/Yummy Drink Factory/main.cs",
 		"/C/Aveyond4/Scripts/Interface/Menu/Customs/ingrid.rb",
@@ -429,6 +419,9 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"#save",
+			"book",
+			"Hildhilda",
 			"def next_attack",
 			"loot_for",
 			"set_active",
@@ -553,10 +546,7 @@
 			"ysnp",
 			"def passable",
 			"passable",
-			"def spark",
-			"spark_trail",
-			"def shop_choice",
-			"open_buy_item"
+			"def spark"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -575,7 +565,7 @@
 	"groups":
 	[
 		{
-			"selected": 17,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -665,7 +655,7 @@
 						"translation.y": 1539.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -754,24 +744,24 @@
 						"translation.y": 5330.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "Functions/shop.rb",
+					"file": "Functions/misc.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3710,
+						"buffer_size": 583,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3706,
-								3706
+								441,
+								441
 							]
 						],
 						"settings":
@@ -780,31 +770,21 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
 								"bh_regex_close",
 								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -815,274 +795,110 @@
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content"
 							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage"
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3774.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "Functions/poppers.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 32218,
+						"buffer_size": 3472,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										182,
-										199
-									],
-									[
-										291,
-										308
-									],
-									[
-										561,
-										568
-									],
-									[
-										725,
-										732
-									],
-									[
-										924,
-										931
-									],
-									[
-										1113,
-										1120
-									],
-									[
-										4291,
-										4298
-									],
-									[
-										26581,
-										26590
-									],
-									[
-										26737,
-										26746
-									],
-									[
-										26821,
-										26830
-									],
-									[
-										26906,
-										26915
-									],
-									[
-										26991,
-										27000
-									],
-									[
-										27131,
-										27140
-									],
-									[
-										27257,
-										27266
-									],
-									[
-										27425,
-										27434
-									],
-									[
-										27573,
-										27582
-									],
-									[
-										27701,
-										27710
-									],
-									[
-										27840,
-										27849
-									],
-									[
-										27946,
-										27955
-									],
-									[
-										28064,
-										28073
-									],
-									[
-										28190,
-										28199
-									],
-									[
-										28343,
-										28352
-									],
-									[
-										28502,
-										28511
-									],
-									[
-										28593,
-										28602
-									],
-									[
-										28725,
-										28734
-									],
-									[
-										28944,
-										28953
-									],
-									[
-										29145,
-										29154
-									],
-									[
-										29259,
-										29268
-									],
-									[
-										29511,
-										29520
-									],
-									[
-										29733,
-										29742
-									],
-									[
-										29972,
-										29981
-									],
-									[
-										30082,
-										30091
-									],
-									[
-										30213,
-										30222
-									],
-									[
-										30441,
-										30452
-									],
-									[
-										30672,
-										30682
-									],
-									[
-										30820,
-										30830
-									],
-									[
-										30962,
-										30972
-									],
-									[
-										31173,
-										31183
-									],
-									[
-										31347,
-										31357
-									],
-									[
-										31502,
-										31512
-									],
-									[
-										31532,
-										31542
-									],
-									[
-										31562,
-										31572
-									],
-									[
-										31592,
-										31602
-									],
-									[
-										31684,
-										31694
-									],
-									[
-										31908,
-										31916
-									],
-									[
-										32140,
-										32155
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								32145,
-								32145
+								1304,
+								1304
 							]
 						],
 						"settings":
 						{
 							"BracketHighlighterBusy": false,
+							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -1093,41 +909,20 @@
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 7,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 9600.0,
+						"translation.y": 1418.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1217,7 +1012,7 @@
 						"translation.y": 1955.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1759,15 +1554,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15583,
+						"buffer_size": 15586,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2905,
-								2837
+								3826,
+								3826
 							]
 						],
 						"settings":
@@ -1776,71 +1571,71 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_regex",
 								"bh_regex_center",
 								"bh_regex_open",
 								"bh_regex_close",
 								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1920.0,
+						"translation.y": 2818.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -2018,7 +1813,7 @@
 						"translation.y": 2460.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -2197,7 +1992,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -2287,7 +2082,7 @@
 						"translation.y": 2100.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -2303,8 +2098,8 @@
 						"selection":
 						[
 							[
-								829,
-								829
+								859,
+								859
 							]
 						],
 						"settings":
@@ -2313,31 +2108,46 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
@@ -2348,26 +2158,11 @@
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
@@ -2377,100 +2172,11 @@
 						"translation.y": 380.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 18,
-					"file": "Scenes/battle_2_actor.rb",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 5703,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								618,
-								618
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2400.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 19,
 					"file": "Elements/Widgets/bar.rb",
 					"semi_transient": false,
 					"settings":
@@ -2554,7 +2260,7 @@
 						"translation.y": 1570.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 17,
 					"type": "text"
 				}
 			]
@@ -2613,6 +2319,14 @@
 		"selected_items":
 		[
 			[
+				"state",
+				"Scripts\\Model\\State\\state.rb"
+			],
+			[
+				"map",
+				"Scripts\\Model\\Map\\map.rb"
+			],
+			[
 				"battler",
 				"Scripts\\Model\\Battle\\battler_2_states.rb"
 			],
@@ -2631,10 +2345,6 @@
 			[
 				"progress",
 				"Scripts\\Model\\State\\progress.rb"
-			],
-			[
-				"map",
-				"Scripts\\Model\\Map\\map.rb"
 			],
 			[
 				"bar",
@@ -2671,10 +2381,6 @@
 			[
 				"mess",
 				"Scripts\\Interface\\Map\\Parts\\message.rb"
-			],
-			[
-				"state",
-				"Scripts\\Model\\State\\state.rb"
 			],
 			[
 				"cache",

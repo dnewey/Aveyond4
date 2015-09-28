@@ -16342,7 +16342,7 @@ class Interpreter
   end
 
 end
-"n?#==============================================================================
+"’?#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -16431,7 +16431,7 @@ class Game_Map
     if @id != nil
       @events.values.each{ |e|
         next if !e.save
-        $state.loc(e)
+        $state.loc(e.id)
       }
       $scene.clear_sparks
     end
@@ -16510,6 +16510,7 @@ class Game_Map
 
       # Restore loc
       if $state.loc?(i)
+        log_scr("LOADING #{i}")
         loc = $state.getloc(i)
         @events[i].moveto(loc[0],loc[1])
         @events[i].direction = loc[2]
