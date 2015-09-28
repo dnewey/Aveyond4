@@ -458,6 +458,9 @@ class Game_Player < Game_Character
       # Now do the zone etc
       $map.setup_audio
 
+      #camera snap
+      camera_snap
+
       # Start common event if there is a queue
       if @next_common != nil
 
