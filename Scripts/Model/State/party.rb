@@ -111,7 +111,7 @@ class Game_Party
   end
 
   def recover_all
-    @actors.each{ |a| a.recover_all }
+    @actors.values.each{ |a| a.recover_all }
   end
   
   #--------------------------------------------------------------------------
@@ -329,8 +329,8 @@ class Game_Party
     @actors['ing'].equip('light','ing-arm-start')
 
     # Myst
-    @actors['mys'].equip('lclaw','mys-claw-start')
-    @actors['mys'].equip('rclaw','mys-claw-start')
+    @actors['mys'].equip('claw1','mys-claw-start')
+    @actors['mys'].equip('claw2','mys-claw-start')
     @actors['mys'].equip('light','mys-arm-start')
 
     # Robin

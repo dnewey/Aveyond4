@@ -302,7 +302,18 @@ class Ui_Grid
      	if item != nil && item.stats != ''
 	    	data = item.stats.split("/n")[0].split("=>")
 	    	stat.icon = $cache.icon("stats/#{data[0]}")
-	    	stat.text = "#{data[1]} Strength"
+	    	case data[0]
+	    		when 'str'
+	    			stat.text = "#{data[1]} Strength"
+	    		when 'def'
+					stat.text = "#{data[1]} Defense"
+	    		when 'eva'
+	    			stat.text = "#{data[1]}% Evasion"
+	    		when 'luk'
+	    			stat.text = "#{data[1]}% Luck"
+	    		when 'res'
+	    			stat.text = "#{data[1]}% Resist"
+	    	end
 	    end
 
      	@extra.push(stat)
@@ -313,7 +324,7 @@ class Ui_Grid
     	cat.fixed_width = 100
     	cat.font = $fonts.pop_type
     	cat.align = 2
-    	cat.text = slot.upcase
+    	cat.text = slot.upcase.delete("12")
     	cat.opacity = 200
     	@extra.push(cat)
 
@@ -345,12 +356,26 @@ class Ui_Grid
 		# Find all users
 		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
 
+		# If too many users, cut some
+
+
+
 		# Draw all of the icons now
 		tick = Sprite.new(@vp)
 		tick.bitmap = $cache.icon("misc/tick")
 		tick.move(@cx+10,@cy+10)
 		@extra.push(tick)
 		@cx += 28
+
+		if users.empty?
+			tick.bitmap = $cache.icon("misc/cross") if users.empty?
+			icon = Label.new(@vp)
+			icon.font = $fonts.pop_text
+			icon.text = "No Users In Party"
+			icon.move(@cx+10,@cy+7)
+			@extra.push(icon)
+			return
+		end
 
 		users.each{ |u|
 			icon = Label.new(@vp)
@@ -359,7 +384,7 @@ class Ui_Grid
 			icon.text = u.equip_result(data)
 			icon.move(@cx+10,@cy+7)
 			@extra.push(icon)
-			@cx += 80
+			@cx += icon.width
 		}
 
 		@cy += 46
@@ -628,7 +653,7 @@ class Ui_Grid
 
 	     	port = Sprite.new(@vp)
 			port.bitmap = $cache.face_small(id)
-			port.bitmap = $cache.face_small(id+'d') if char.down?
+			port.bitmap = $cache.face_small(id+'-d') if char.down?
 			port.src_rect.height = port.height() 
 			@extra.push(port)
 			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)

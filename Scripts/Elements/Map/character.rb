@@ -176,7 +176,7 @@ class Sprite_Character < Sprite
 
       total = (@icons.count-1) * (24+2)
       total -= 2
-      cx = -total/2
+      cx = 0#-total/2
 
       @character.icons.each{ |i|
 

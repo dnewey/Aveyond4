@@ -96,14 +96,14 @@ class Mnu_Items < Mnu_Base
 			@grid.add_users(option)
 		end
 
-		if item.is_a?(UsableData)
+		#if item.is_a?(UsableData)
 
 			# If healing, show results
-			if item.action.include?('mana')
-				@grid.add_mana(option)
-			end
+		#	if item.action.include?('mana')
+				#@grid.add_mana(option)
+		#	end
 
-		end
+		#end
 
 		@grid.disable
 

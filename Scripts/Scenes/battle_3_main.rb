@@ -66,13 +66,15 @@ class Scene_Battle
     if ['one','ally'].include?(@active_battler.scope) && @active_battler.target.down?
 
       # If a tranform, cancel
-      if @active_battler.skill_id.include?("xform")
-        @attack_plan.cancel
-        @phase = :main_next
-        return
-      else
-        # Doesn't really work, hmmmmm
-        @active_battler.scope = 'rand'
+      if @active_battler.skill_id != nil
+        if @active_battler.skill_id.include?("xform")
+          @attack_plan.cancel
+          @phase = :main_next
+          return
+        else
+          # Doesn't really work, hmmmmm
+          @active_battler.scope = 'rand'
+        end
       end
 
     end

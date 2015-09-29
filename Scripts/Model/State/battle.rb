@@ -147,7 +147,7 @@ class Game_Battle
     # Cutting gold chance
     chance = rand
 
-    if chance < 0.2
+    if chance < 0.12
 
         # Nothing!
         return pop_nothing         
@@ -157,9 +157,7 @@ class Game_Battle
     if chance < 0.6 && data.loot != nil && data.loot != ''
       possible = []
       data.loot.split("/n").each{ |item| 
-        log_sys(item)
         dta = item.split("=>")
-        log_scr(dta)
         dta[1].to_i.times{
           possible.push(dta[0])
         }

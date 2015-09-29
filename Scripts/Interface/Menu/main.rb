@@ -74,6 +74,13 @@ class Mnu_Main
 			@chars[1].move(420,140)
 		end
 
+		if $party.reserve.count == 0 && $party.active.count > 2
+			@chars[0].move(200,50)
+			@chars[1].move(420,50)
+			@chars[2].move(200,233)
+			@chars[3].move(420,233) if $party.active.count > 3
+		end
+
 
 		if $party.reserve.empty?
 			@data = ['Journal','Items','Progress',
