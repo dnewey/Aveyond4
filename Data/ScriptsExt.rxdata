@@ -1944,8 +1944,8 @@ class List
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       ico = $cache.icon("misc/magics")
-      @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
-      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
+      @content_sprite.bitmap.blt(228,(row*row_height)+5,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(254,row*row_height,@item_width,@item_height,price.to_s,0)
     end
 
   end
@@ -3227,7 +3227,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"u
+"&
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3258,6 +3258,158 @@ def arch_investigate
 
 end
 
+def test_riddle_answer
+
+	win = false
+
+	# Does the item match the current quest
+	if $progress.quest_active?('rq-riddle-1')
+		win = ($menu.chosen == 'punkin-key')	
+	end
+
+	if $progress.quest_active?('rq-riddle-2')
+		win = ($menu.chosen == 'cheese')			
+	end
+
+	if $progress.quest_active?('rq-riddle-3')
+		win = ($menu.chosen == 'chocolate')			
+	end
+
+	if $progress.quest_active?('rq-riddle-4')
+		win = ($menu.chosen == 'lemon')			
+	end
+
+	if $progress.quest_active?('rq-riddle-5')
+		win = ($menu.chosen == 'elf-bread')			
+	end
+
+	if $progress.quest_active?('rq-riddle-6')
+		win = ($menu.chosen == 'doll-witch')			
+	end
+
+	if $progress.quest_active?('rq-riddle-7')
+		win = ($menu.chosen == 'mist-food')			
+	end
+
+	if win
+		state(me,'riddle-win')
+	else
+		text('this: Not right!')
+	end
+	$menu.chosen = nil
+
+end
+
+def complete_riddle
+
+	# Does the item match the current quest
+	if $progress.quest_active?('rq-riddle-1')
+		unquest('rq-riddle-1')	
+	end
+
+	if $progress.quest_active?('rq-riddle-2')
+		unquest('rq-riddle-2')	
+	end
+
+	if $progress.quest_active?('rq-riddle-3')
+		unquest('rq-riddle-3')	
+	end
+
+	if $progress.quest_active?('rq-riddle-4')
+		unquest('rq-riddle-4')	
+	end
+
+	if $progress.quest_active?('rq-riddle-5')
+		unquest('rq-riddle-5')	
+	end
+
+	if $progress.quest_active?('rq-riddle-6')
+		unquest('rq-riddle-6')	
+	end
+
+	if $progress.quest_active?('rq-riddle-7')
+		unquest('rq-riddle-7')	
+	end
+
+end
+
+def text_riddle
+
+	# Does the item match the current quest
+	if $progress.quest_active?('rq-riddle-1')
+		txt = $data.quests['rq-riddle-1'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-2')
+		txt = $data.quests['rq-riddle-2'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-3')
+		txt = $data.quests['rq-riddle-3'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-4')
+		txt = $data.quests['rq-riddle-4'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-5')
+		txt = $data.quests['rq-riddle-5'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-6')
+		txt = $data.quests['rq-riddle-6'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-7')
+		txt = $data.quests['rq-riddle-7'].description
+		text('this:'+txt)
+	end
+
+end
+
+def next_riddle
+
+	if $progress.quest_complete?('rq-riddle-7')
+		
+	end
+
+	if $progress.quest_complete?('rq-riddle-6')
+		quest('rq-riddle-7')	
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-5')
+		quest('rq-riddle-6')
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-4')
+		quest('rq-riddle-5')	
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-3')
+		quest('rq-riddle-4')	
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-2')
+		quest('rq-riddle-3')
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-1')
+		quest('rq-riddle-2')
+	end
+
+end
+
 def show_book(which)
 
 	data = $data.books[which]
@@ -3273,7 +3425,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"ö#==============================================================================
+end"3#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3421,6 +3573,10 @@ end
 def grant_level(who)
 	$party.get(who).grant_level
 	pop_level(who)
+end
+
+def grant_level_s(who)
+	$party.get(who).grant_level
 end
 
 def grant_level_free(who)
@@ -3705,7 +3861,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"Y
+end"z
 
 def shop_choice
 
@@ -3783,6 +3939,7 @@ def setup_smith_shop
 
 		when '@windshire'	
 			stock.push('mid-arm-shire')
+			stock.push('mys-claw-shire')
 
 		when '@tor'	
 			stock.push('mid-arm-tor')
@@ -3959,7 +4116,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"ª	
+"»	
 # Misc
 
 def text(t)
@@ -4011,6 +4168,7 @@ def menu_snapshot
 end
 
 def open_main_menu
+	unitem nil,500
 	menu_snapshot
 	$menu.sub_only = false
 	$menu.menu_page = "Main"
@@ -15803,7 +15961,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"±9#==============================================================================
+end"Ó9#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -16180,6 +16338,10 @@ class Interpreter
 
     def next_event_code
     @list[@index+1].code
+  end
+
+  def queue_text(txt)
+
   end
 
     #--------------------------------------------------------------------------
@@ -17507,7 +17669,7 @@ class Game_Player < Game_Character
   end
 
 end
-")
+")
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -17654,16 +17816,16 @@ class Game_Battle
     end
 
     # Cutting gold chance
-    change = rand
+    chance = rand
 
-    if rand < 0.2
+    if chance < 0.2
 
         # Nothing!
         return pop_nothing         
 
     end
 
-    if rand < 0.6 && data.loot != nil && data.loot != ''
+    if chance < 0.6 && data.loot != nil && data.loot != ''
       possible = []
       data.loot.split("/n").each{ |item| 
         log_sys(item)
@@ -18064,7 +18226,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"G'#==============================================================================
+end"F'#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -18416,7 +18578,7 @@ class Game_Party
     # Phye
     @actors['phy'].equip('staff','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
-    @actors['phy'].equip('heavy','phy-helm-start')
+    @actors['phy'].equip('helm','phy-helm-start')
     
 
     # Initial skills per actor
