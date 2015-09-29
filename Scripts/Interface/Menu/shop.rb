@@ -12,6 +12,8 @@ class Mnu_Shop < Mnu_Base
 
 		#@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
+		@magic = false
+
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
 
@@ -44,6 +46,7 @@ class Mnu_Shop < Mnu_Base
 			when "Magic"
 				@subtitle.text = "Enchantments"
 			when "Chester"
+				@magic = true
 				@subtitle.text = "Learn Skills and Abilities"
 				@menu.list.type = :chester
 				@menu.list.refresh
@@ -85,14 +88,20 @@ class Mnu_Shop < Mnu_Base
 	end
 
 	def select(option)	
+
 		item = $data.items[option]
-		if $party.gold >= item.price
-			$party.add_item(option)
-			$party.add_gold(-item.price)
-			sys("coins")
-			@info.refresh
-			@menu.list.refresh
-			# Rebuild list to show unavailable for price
+
+		if @magic
+
+		else
+
+			if $party.gold >= item.price
+				$party.add_item(option)
+				$party.add_gold(-item.price)
+				sys("coins")
+				@info.refresh
+				@menu.list.refresh
+			end
 
 		end
 	end
