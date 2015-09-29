@@ -17,7 +17,7 @@ class Game_Battler
 
   attr_reader :slots, :equips
 
-  #--------------------------------------------------------------------------
+  #-------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
@@ -262,5 +262,56 @@ class Game_Battler
 
   end
 
+
+  # Return priority of current attack
+  def attack_priority
+
+    if @action == :item
+      return $data.items[@item_id].priority
+    else
+      return $data.skills[@skill_id].priority
+    end
+
+  end
+
+
+  def attack_sfx
+
+    if @transform
+
+      case @transform
+
+        when 'x-fox'
+          sfx ['mys1','mys2'].sample
+
+      end
+
+      return
+
+    end
+
+    # Normal noise
+    case @id
+
+      # Players
+      when 'mys'
+
+      # Minions
+      when 'minion-fang'
+        sfx ['fang-1','fang-2'].sample
+      when 'minion-colby'
+        sfx 'rat'        
+
+
+
+
+
+      # Enemies      
+
+
+
+    end
+
+  end
 
 end

@@ -219,11 +219,17 @@ class Game_Battle
 
   def build_attack_queue
 
-    if @minion
-      return ([$party.get('minion-fang')]+$party.active_battlers + @enemies).shuffle
-    else
-      return ($party.active_battlers + @enemies).shuffle
+    queue = $party.active_battlers + @enemies
+
+    # Add minion if there is
+    if $party.active.include?('boy') && $battle.minion != nil
+      minion = $party.get('boy').slot('minion')
+      minion = minion.sub("boy-","")
+      queue.push($party.get(minion))
     end
+
+    # Sort by priority, random within same
+    return queue.sort_by{ |battler| battler.attack_priority }
 
 
   end
@@ -289,6 +295,9 @@ class Game_Battle
       is_dmg = false
       is_heal = false
 
+      # Specials
+      is_half_armor = true
+
       # Items have actions, skills have effects, they are the same
       effects = nil
       if skill.is_a?(UsableData)
@@ -330,24 +339,59 @@ class Game_Battle
           # Misc
           when 'transform'
             result.transform = data[1]
+          when 'half-armor'
+            is_half_armor = true
+
+
         end
       }
 
+      # ---------------------------------------------
+      # CRITS, EVADES, RESISTS
+      # ---------------------------------------------
+
       # Calc evade
       result.evade = rand(100) < t.eva
+      result.evade = false if is_heal
 
       # Calc crit
       result.critical = rand(100) < t.luk
+      result.critical = false if result.evade
+
+      # Calc resist if state added and its a bad one?
 
 
-      # Build final damage
+      # --------------------------------------------
+      # DAMAGE
+      # --------------------------------------------
+      # Calc Damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
-      result.damage -= (t.def) # Remove damage of the defense
+
+      # Add variation
+      variation = result.damage * 0.2
+      result.damage = (result.damage - variation/2) + (variation * rand)
+
+      # Reduce by armor, less sometimes
+      if is_half_armor
+        result.damage -= (t.def/2) 
+      else
+        result.damage -= (t.def)
+      end
+
+      # Critical effect
       result.damage *= 1.8 if result.critical
+
       
+      # ---------------------------------------------
+      # HEALING
+      # ---------------------------------------------
       result.heal = heal_base
       result.heal += t.maxhp * heal_p
       result.heal *= 1.5 if result.critical
+
+      # ---------------------------------------------
+      # TIDY
+      # ---------------------------------------------
 
       # If there was no attack, don't have a damage amount
       if result.damage <= 0
@@ -357,6 +401,10 @@ class Game_Battle
       if result.evade
         result.damage = 0
       end
+
+      # ---------------------------------------------
+      # CUSTOMS
+      # ---------------------------------------------
 
       # Custom hacking
       if skill.id == 'pounce' 
@@ -372,6 +420,7 @@ class Game_Battle
     return results    
 
   end
+
 
   def possible_targets(attacker)
 

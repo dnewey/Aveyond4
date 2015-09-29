@@ -362,13 +362,12 @@ class Game_Party
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
 
-    @actors["ing"].learn('xform-normal')
-    @actors["ing"].learn('xform-snake')
-    @actors["ing"].learn('xform-cat')
     @actors["ing"].learn('xform-frog')
-    @actors["ing"].learn('xform-bear')
-    @actors["ing"].learn('xform-goat')
-    @actors["ing"].learn('xform-squirrel')
+    # @actors["ing"].learn('xform-snake')
+    # @actors["ing"].learn('xform-cat')
+    # @actors["ing"].learn('xform-bear')
+    # @actors["ing"].learn('xform-goat')
+    # @actors["ing"].learn('xform-squirrel')
 
     @actors['mys'].learn('envelop')
     @actors['mys'].learn('soothe')

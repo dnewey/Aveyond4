@@ -628,26 +628,45 @@ class Ui_Grid
 
 	     	port = Sprite.new(@vp)
 			port.bitmap = $cache.face_small(id)
+			port.bitmap = $cache.face_small(id+'d') if char.down?
 			port.src_rect.height = port.height() 
 			@extra.push(port)
 			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
 			port.z += 50
 
+			mp_bar = Bar.new(@vp,121,9)
+			@bars.push(mp_bar)
+			mp_bar.opacity = 200
+			mp_bar.for('boy')
+			case char.id 
+				when 'boy','phy','ing'
+					mp_bar.for(char.id)
+				else
+					mp_bar.hide
+			end
+			mp_bar.max = char.maxmp
+			mp_bar.value = char.mp
+			mp_bar.target = char.mp + char.mp_from_item(item)
+			mp_bar.move(@cx+12,@cy+46)
+			mp_bar.update
+			mp_bar.z += 52
 
+			mp_label = Sprite.new(@vp)
+			@extra.push(mp_label)
+			mp_label.opacity = 200
+			case char.id 
+				when 'boy'
+					mp_label.bitmap = $cache.menu_char("label-sp")
+				when 'phy'
+					mp_label.bitmap = $cache.menu_char("label-rp")
+				when 'ing'
+					mp_label.bitmap = $cache.menu_char("label-mp")
+				else
+					mp_label.hide
+			end			
+			mp_label.move(@cx+13,@cy + 39)
+			mp_label.z += 53
 
-
-			# mp_bar = Bar.new(@vp,120,9)
-			# @extra.push(mp_bar)
-			# mp_bar.opacity = 200
-			# mp_bar.for(:mp)
-			# mp_bar.move(@cx+15,@cy+44)
-
-			# mp_label = Sprite.new(@vp)
-			# @extra.push(mp_label)
-			# mp_label.bitmap = $cache.menu_char("label-mp")
-			# mp_label.opacity = 200
-			# mp_label.move(@cx+16,@cy + 37)
-			# mp_label.z += 50
 
 
 			hp_bar = Bar.new(@vp,121,9)
@@ -659,18 +678,14 @@ class Ui_Grid
 			hp_bar.target = char.hp + char.hp_from_item(item)
 			hp_bar.move(@cx+12,@cy+61)
 			hp_bar.update
+			hp_bar.z += 52
 
 			hp_label = Sprite.new(@vp)
 			@extra.push(hp_label)
 			hp_label.bitmap = $cache.menu_char("label-hp")
 			hp_label.opacity = 200
 			hp_label.move(@cx+13,@cy + 54)
-			hp_label.z += 50
-
-
-
-			#mp_bar.z += 50
-			hp_bar.z += 50
+			hp_label.z += 53
 			
 	     	choose(@boxes[0].name) if @boxes.count == 1
 

@@ -39,7 +39,13 @@ class Game_Battler
   # * Remove Battle States
   #--------------------------------------------------------------------------
   def remove_states_battle
+
+    # Break transforms
+    @transform = nil
+
+    # Remove states
     @states.delete_if{ |s| $data.states[s].rmv_battle }
+    
   end
 
   #--------------------------------------------------------------------------

@@ -14,7 +14,7 @@ class Scene_Battle
     }
 
     # Choose minion action
-    if $battle.minion != nil
+    if $party.active.include?('boy') && $battle.minion != nil
       $battle.minion.choose_action
     end
 
@@ -106,21 +106,7 @@ class Scene_Battle
       wait(3)
     end
 
-    case @active_battler.id
-
-    when 'minion-fang'
-
-      sfx 'fang-1'
-
-    when 'mys'
-
-      sfx 'mys1'
-
-    when 'minion-colby'
-
-      sfx 'rat'
-
-    end
+    @active_battler.attack_sfx
 
 
     # Show text if there is
@@ -182,7 +168,9 @@ class Scene_Battle
     if @active_battler.action == "items"
       # Item is taken immediately when selected
     else
-      @active_battler.lose_mana(@attack_round.skill.cost)
+      if @attack_round.skill != @last_attack
+        @active_battler.lose_mana(@attack_round.skill.cost)
+      end
     end
 
     # Onto the next

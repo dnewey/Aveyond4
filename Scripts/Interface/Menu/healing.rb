@@ -133,7 +133,7 @@ class Mnu_Healing < Mnu_Base
 		end
 
 		# Get chosen grid option
-		if $input.action? || $input.click?
+		if ex && $input.action? || $input.click?
 			choose(@grid.get_chosen)
 		end
 
@@ -143,6 +143,16 @@ class Mnu_Healing < Mnu_Base
 
 	def choose(option)	
 
+		# ADD GETTING PERMANENT STAT UPGRADES
+
+		# Is it even going to do anything?
+		if $party.get(option).mp_from_item($menu.use_item) == 0
+			if $party.get(option).hp_from_item($menu.use_item) == 0
+				sys('deny')
+				return
+			end
+		end
+
 		sys('quest')
 
 		$party.lose_item($menu.use_item)
@@ -150,9 +160,19 @@ class Mnu_Healing < Mnu_Base
 		@item_grid.move(@item_box.x,@item_box.y + @item_box.height)
 		@item_grid.add_stock($menu.use_item)
 
-		idx = $party.all.index(option)
-		change = $party.get(option).hp_from_item($menu.use_item)
-		@grid.bars[idx].do(go("value",change,750,:qio))				
+		# Heal mana
+		if $party.get(option).mp_from_item($menu.use_item) > 0
+			idx = $party.all.index(option)*2
+			change = $party.get(option).mp_from_item($menu.use_item)
+			@grid.bars[idx].do(go("value",change,250,:qio))		
+		end
+
+		# Heal hp
+		if $party.get(option).hp_from_item($menu.use_item) > 0
+			idx = $party.all.index(option)*2+1
+			change = $party.get(option).hp_from_item($menu.use_item)
+			@grid.bars[idx].do(go("value",change,250,:qio))		
+		end		
 		
 		$party.get(option).use_item($menu.use_item)	
 		
