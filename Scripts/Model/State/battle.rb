@@ -145,16 +145,16 @@ class Game_Battle
     end
 
     # Cutting gold chance
-    change = rand
+    chance = rand
 
-    if rand < 0.2
+    if chance < 0.2
 
         # Nothing!
         return pop_nothing         
 
     end
 
-    if rand < 0.6 && data.loot != nil && data.loot != ''
+    if chance < 0.6 && data.loot != nil && data.loot != ''
       possible = []
       data.loot.split("/n").each{ |item| 
         log_sys(item)

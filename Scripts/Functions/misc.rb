@@ -29,6 +29,158 @@ def arch_investigate
 
 end
 
+def test_riddle_answer
+
+	win = false
+
+	# Does the item match the current quest
+	if $progress.quest_active?('rq-riddle-1')
+		win = ($menu.chosen == 'punkin-key')	
+	end
+
+	if $progress.quest_active?('rq-riddle-2')
+		win = ($menu.chosen == 'cheese')			
+	end
+
+	if $progress.quest_active?('rq-riddle-3')
+		win = ($menu.chosen == 'chocolate')			
+	end
+
+	if $progress.quest_active?('rq-riddle-4')
+		win = ($menu.chosen == 'lemon')			
+	end
+
+	if $progress.quest_active?('rq-riddle-5')
+		win = ($menu.chosen == 'elf-bread')			
+	end
+
+	if $progress.quest_active?('rq-riddle-6')
+		win = ($menu.chosen == 'doll-witch')			
+	end
+
+	if $progress.quest_active?('rq-riddle-7')
+		win = ($menu.chosen == 'mist-food')			
+	end
+
+	if win
+		state(me,'riddle-win')
+	else
+		text('this: Not right!')
+	end
+	$menu.chosen = nil
+
+end
+
+def complete_riddle
+
+	# Does the item match the current quest
+	if $progress.quest_active?('rq-riddle-1')
+		unquest('rq-riddle-1')	
+	end
+
+	if $progress.quest_active?('rq-riddle-2')
+		unquest('rq-riddle-2')	
+	end
+
+	if $progress.quest_active?('rq-riddle-3')
+		unquest('rq-riddle-3')	
+	end
+
+	if $progress.quest_active?('rq-riddle-4')
+		unquest('rq-riddle-4')	
+	end
+
+	if $progress.quest_active?('rq-riddle-5')
+		unquest('rq-riddle-5')	
+	end
+
+	if $progress.quest_active?('rq-riddle-6')
+		unquest('rq-riddle-6')	
+	end
+
+	if $progress.quest_active?('rq-riddle-7')
+		unquest('rq-riddle-7')	
+	end
+
+end
+
+def text_riddle
+
+	# Does the item match the current quest
+	if $progress.quest_active?('rq-riddle-1')
+		txt = $data.quests['rq-riddle-1'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-2')
+		txt = $data.quests['rq-riddle-2'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-3')
+		txt = $data.quests['rq-riddle-3'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-4')
+		txt = $data.quests['rq-riddle-4'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-5')
+		txt = $data.quests['rq-riddle-5'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-6')
+		txt = $data.quests['rq-riddle-6'].description
+		text('this:'+txt)
+	end
+
+	if $progress.quest_active?('rq-riddle-7')
+		txt = $data.quests['rq-riddle-7'].description
+		text('this:'+txt)
+	end
+
+end
+
+def next_riddle
+
+	if $progress.quest_complete?('rq-riddle-7')
+		
+	end
+
+	if $progress.quest_complete?('rq-riddle-6')
+		quest('rq-riddle-7')	
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-5')
+		quest('rq-riddle-6')
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-4')
+		quest('rq-riddle-5')	
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-3')
+		quest('rq-riddle-4')	
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-2')
+		quest('rq-riddle-3')
+		return
+	end
+
+	if $progress.quest_complete?('rq-riddle-1')
+		quest('rq-riddle-2')
+	end
+
+end
+
 def show_book(which)
 
 	data = $data.books[which]
