@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"g#==============================================================================
+end"h#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -251,7 +251,7 @@ class Sprite_Character < Sprite
 
       total = (@icons.count-1) * (24+2)
       total -= 2
-      cx = total/2
+      cx = -total/2
 
       @character.icons.each{ |i|
 
@@ -2870,9 +2870,10 @@ end
 
 
 
-"¹#==============================================================================
+"»#==============================================================================
 # ** Event Functions
 #==============================================================================
+
 
 # Jumpings
 def jump(e,x,y)
@@ -3425,7 +3426,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"3#==============================================================================
+end"­#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3565,6 +3566,11 @@ def grant_stat(who,stat,amount)
 	pop_stat_bonus(who,stat,amount)
 end
 
+def ungrant_stat(who,stat,amount)
+	$party.get(who).ungrant_stat(stat,amount)
+	pop_stat_unbonus(who,stat,amount)
+end
+
 def grant_level_all
 	$party.all_battlers.grant_level
 	pop_level_all
@@ -3588,7 +3594,7 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
-end"q
+end"R
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3791,7 +3797,20 @@ end
 
 def pop_stat_bonus(who,stat,amount)
 
-	a = "#{$party.get(who).name} gains #{amount} #{stat}}"
+	a = "#{$party.get(who).name} gains #{amount} #{stat}"
+	ia = $cache.icon("faces/#{who}")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_stat_unbonus(who,stat,amount)
+
+	a = "#{$party.get(who).name} loses #{amount} #{stat}"
 	ia = $cache.icon("faces/#{who}")
 
 	b = nil
@@ -4939,7 +4958,7 @@ class Popper < Sprite
 
 	end
 
-end"
+end"¡
 class ActorCmd
 
 	def initialize(vp)
@@ -5052,6 +5071,11 @@ class ActorCmd
 	def reposition
 		sx = @battler.ev.screen_x
 		sy = @battler.ev.screen_y-44
+
+		# Move selectors down on myst as a fox, maybe do for frog etc too
+		if @battler.get_transform == 'x-fox'
+			sy += 16
+		end
 
 		@icons.each{ |i|
 
@@ -6166,7 +6190,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"â@#==============================================================================
+end"¾B#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -6796,26 +6820,45 @@ class Ui_Grid
 
 	     	port = Sprite.new(@vp)
 			port.bitmap = $cache.face_small(id)
+			port.bitmap = $cache.face_small(id+'d') if char.down?
 			port.src_rect.height = port.height() 
 			@extra.push(port)
 			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
 			port.z += 50
 
+			mp_bar = Bar.new(@vp,121,9)
+			@bars.push(mp_bar)
+			mp_bar.opacity = 200
+			mp_bar.for('boy')
+			case char.id 
+				when 'boy','phy','ing'
+					mp_bar.for(char.id)
+				else
+					mp_bar.hide
+			end
+			mp_bar.max = char.maxmp
+			mp_bar.value = char.mp
+			mp_bar.target = char.mp + char.mp_from_item(item)
+			mp_bar.move(@cx+12,@cy+46)
+			mp_bar.update
+			mp_bar.z += 52
 
+			mp_label = Sprite.new(@vp)
+			@extra.push(mp_label)
+			mp_label.opacity = 200
+			case char.id 
+				when 'boy'
+					mp_label.bitmap = $cache.menu_char("label-sp")
+				when 'phy'
+					mp_label.bitmap = $cache.menu_char("label-rp")
+				when 'ing'
+					mp_label.bitmap = $cache.menu_char("label-mp")
+				else
+					mp_label.hide
+			end			
+			mp_label.move(@cx+13,@cy + 39)
+			mp_label.z += 53
 
-
-			# mp_bar = Bar.new(@vp,120,9)
-			# @extra.push(mp_bar)
-			# mp_bar.opacity = 200
-			# mp_bar.for(:mp)
-			# mp_bar.move(@cx+15,@cy+44)
-
-			# mp_label = Sprite.new(@vp)
-			# @extra.push(mp_label)
-			# mp_label.bitmap = $cache.menu_char("label-mp")
-			# mp_label.opacity = 200
-			# mp_label.move(@cx+16,@cy + 37)
-			# mp_label.z += 50
 
 
 			hp_bar = Bar.new(@vp,121,9)
@@ -6827,18 +6870,14 @@ class Ui_Grid
 			hp_bar.target = char.hp + char.hp_from_item(item)
 			hp_bar.move(@cx+12,@cy+61)
 			hp_bar.update
+			hp_bar.z += 52
 
 			hp_label = Sprite.new(@vp)
 			@extra.push(hp_label)
 			hp_label.bitmap = $cache.menu_char("label-hp")
 			hp_label.opacity = 200
 			hp_label.move(@cx+13,@cy + 54)
-			hp_label.z += 50
-
-
-
-			#mp_bar.z += 50
-			hp_bar.z += 50
+			hp_label.z += 53
 			
 	     	choose(@boxes[0].name) if @boxes.count == 1
 
@@ -8411,7 +8450,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end"Ø#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -8546,7 +8585,7 @@ class Mnu_Healing < Mnu_Base
 		end
 
 		# Get chosen grid option
-		if $input.action? || $input.click?
+		if ex && $input.action? || $input.click?
 			choose(@grid.get_chosen)
 		end
 
@@ -8556,6 +8595,16 @@ class Mnu_Healing < Mnu_Base
 
 	def choose(option)	
 
+		# ADD GETTING PERMANENT STAT UPGRADES
+
+		# Is it even going to do anything?
+		if $party.get(option).mp_from_item($menu.use_item) == 0
+			if $party.get(option).hp_from_item($menu.use_item) == 0
+				sys('deny')
+				return
+			end
+		end
+
 		sys('quest')
 
 		$party.lose_item($menu.use_item)
@@ -8563,9 +8612,19 @@ class Mnu_Healing < Mnu_Base
 		@item_grid.move(@item_box.x,@item_box.y + @item_box.height)
 		@item_grid.add_stock($menu.use_item)
 
-		idx = $party.all.index(option)
-		change = $party.get(option).hp_from_item($menu.use_item)
-		@grid.bars[idx].do(go("value",change,750,:qio))				
+		# Heal mana
+		if $party.get(option).mp_from_item($menu.use_item) > 0
+			idx = $party.all.index(option)*2
+			change = $party.get(option).mp_from_item($menu.use_item)
+			@grid.bars[idx].do(go("value",change,250,:qio))		
+		end
+
+		# Heal hp
+		if $party.get(option).hp_from_item($menu.use_item) > 0
+			idx = $party.all.index(option)*2+1
+			change = $party.get(option).hp_from_item($menu.use_item)
+			@grid.bars[idx].do(go("value",change,250,:qio))		
+		end		
 		
 		$party.get(option).use_item($menu.use_item)	
 		
@@ -9802,7 +9861,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"	#==============================================================================
+end"/	#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -9815,6 +9874,8 @@ class Mnu_Shop < Mnu_Base
 		@subtitle.text = "Armors and Weapons"
 
 		#@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
+
+		@magic = false
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -9848,6 +9909,7 @@ class Mnu_Shop < Mnu_Base
 			when "Magic"
 				@subtitle.text = "Enchantments"
 			when "Chester"
+				@magic = true
 				@subtitle.text = "Learn Skills and Abilities"
 				@menu.list.type = :chester
 				@menu.list.refresh
@@ -9889,14 +9951,20 @@ class Mnu_Shop < Mnu_Base
 	end
 
 	def select(option)	
+
 		item = $data.items[option]
-		if $party.gold >= item.price
-			$party.add_item(option)
-			$party.add_gold(-item.price)
-			sys("coins")
-			@info.refresh
-			@menu.list.refresh
-			# Rebuild list to show unavailable for price
+
+		if @magic
+
+		else
+
+			if $party.gold >= item.price
+				$party.add_item(option)
+				$party.add_gold(-item.price)
+				sys("coins")
+				@info.refresh
+				@menu.list.refresh
+			end
 
 		end
 	end
@@ -12749,15 +12817,13 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"#==============================================================================
+end"»#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
 class Game_Battler
  
   attr_reader :id, :name, :level
-
-  attr_reader :transform
 
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
@@ -12768,7 +12834,7 @@ class Game_Battler
 
   attr_reader :slots, :equips
 
-  #--------------------------------------------------------------------------
+  #-------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
@@ -12926,6 +12992,10 @@ class Game_Battler
   # * Transform into something
   #--------------------------------------------------------------------------
   
+  def get_transform
+    return @transform
+  end
+
   def transform(into)
 
     @transform = 'x-'+into
@@ -13014,8 +13084,59 @@ class Game_Battler
   end
 
 
+  # Return priority of current attack
+  def attack_priority
+
+    if @action == :item
+      return $data.items[@item_id].priority
+    else
+      return $data.skills[@skill_id].priority
+    end
+
+  end
+
+
+  def attack_sfx
+
+    if @transform
+
+      case @transform
+
+        when 'x-fox'
+          sfx ['mys1','mys2'].sample
+
+      end
+
+      return
+
+    end
+
+    # Normal noise
+    case @id
+
+      # Players
+      when 'mys'
+
+      # Minions
+      when 'minion-fang'
+        sfx ['fang-1','fang-2'].sample
+      when 'minion-colby'
+        sfx 'rat'        
+
+
+
+
+
+      # Enemies      
+
+
+
+    end
+
+  end
+
 end
-"
+"½
 class Game_Battler
 
 
@@ -13092,11 +13213,23 @@ class Game_Battler
     @stat_plus[stat] += amount
   end
 
+  def ungrant_stat(stat,amount)
+    @stat_plus[stat] = 0 if !@stat_plus.has_key?(stat)
+    @stat_plus[stat] -= amount
+  end
+
   #--------------------------------------------------------------------------
   # * Item Usage
   #-------------------------------------------------------------------------- 
 
   def hp_from_item(item)
+
+    # Can't heal if down, unless cassia
+    if @hp == 0
+      return item == 'cassia' ? 1 : 0
+    end
+    return 0 if item == 'cassia' && @hp > 0
+
 
     # Do it
     plus = 0
@@ -13116,7 +13249,25 @@ class Game_Battler
   end
 
   def mp_from_item(item)
-    0
+
+    # Could change this if boyle gets a mana upgrade
+    return 0 if @id == 'boy'
+
+    # Do it
+    plus = 0
+    $data.items[item].action.split("\n").each{ |actn|
+
+      dta = actn.split('=>')
+      case dta[0]
+        when 'mana'
+          plus += dta[1].to_i
+        when 'mana-p'
+          plus += dta[1].to_f * maxmp
+      end
+    }
+    plus = (maxmp - mp) if plus > (maxmp - mp)
+    return plus
+
   end
 
   def use_item(item)
@@ -13204,7 +13355,7 @@ class Game_Battler
     return 1.0
   end
 
-end"÷
+end"D
 class Game_Battler
 
 
@@ -13245,7 +13396,13 @@ class Game_Battler
   # * Remove Battle States
   #--------------------------------------------------------------------------
   def remove_states_battle
+
+    # Break transforms
+    @transform = nil
+
+    # Remove states
     @states.delete_if{ |s| $data.states[s].rmv_battle }
+    
   end
 
   #--------------------------------------------------------------------------
@@ -13464,7 +13621,7 @@ class Game_Battler
 		
 	end
 
-end"Î
+end"Ú
 class Game_Battler
 
   #--------------------------------------------------------------------------
@@ -13479,10 +13636,20 @@ class Game_Battler
   		while @xp > next_exp
 	  		@xp -= next_exp
 	  		@level += 1
+        # If boyle, level up minions
+        if @id == 'boy'
+          ['cannon','rat','crab','crow','fang','skull','magic'].each{ |m|
+            $party.get('minion-'+m).set_level(@level)
+          }
+        end
 	  	end
   		return true
   	end
   	return false
+  end
+
+  def set_level(lvl)
+    @level = lvl
   end
 
   def grant_level(reset_xp = true)
@@ -17669,7 +17836,7 @@ class Game_Player < Game_Character
   end
 
 end
-")
+"p.
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -17889,11 +18056,17 @@ class Game_Battle
 
   def build_attack_queue
 
-    if @minion
-      return ([$party.get('minion-fang')]+$party.active_battlers + @enemies).shuffle
-    else
-      return ($party.active_battlers + @enemies).shuffle
+    queue = $party.active_battlers + @enemies
+
+    # Add minion if there is
+    if $party.active.include?('boy') && $battle.minion != nil
+      minion = $party.get('boy').slot('minion')
+      minion = minion.sub("boy-","")
+      queue.push($party.get(minion))
     end
+
+    # Sort by priority, random within same
+    return queue.sort_by{ |battler| battler.attack_priority }
 
 
   end
@@ -17959,6 +18132,9 @@ class Game_Battle
       is_dmg = false
       is_heal = false
 
+      # Specials
+      is_half_armor = true
+
       # Items have actions, skills have effects, they are the same
       effects = nil
       if skill.is_a?(UsableData)
@@ -18000,24 +18176,59 @@ class Game_Battle
           # Misc
           when 'transform'
             result.transform = data[1]
+          when 'half-armor'
+            is_half_armor = true
+
+
         end
       }
 
+      # ---------------------------------------------
+      # CRITS, EVADES, RESISTS
+      # ---------------------------------------------
+
       # Calc evade
       result.evade = rand(100) < t.eva
+      result.evade = false if is_heal
 
       # Calc crit
       result.critical = rand(100) < t.luk
+      result.critical = false if result.evade
+
+      # Calc resist if state added and its a bad one?
 
 
-      # Build final damage
+      # --------------------------------------------
+      # DAMAGE
+      # --------------------------------------------
+      # Calc Damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
-      result.damage -= (t.def) # Remove damage of the defense
+
+      # Add variation
+      variation = result.damage * 0.2
+      result.damage = (result.damage - variation/2) + (variation * rand)
+
+      # Reduce by armor, less sometimes
+      if is_half_armor
+        result.damage -= (t.def/2) 
+      else
+        result.damage -= (t.def)
+      end
+
+      # Critical effect
       result.damage *= 1.8 if result.critical
+
       
+      # ---------------------------------------------
+      # HEALING
+      # ---------------------------------------------
       result.heal = heal_base
       result.heal += t.maxhp * heal_p
       result.heal *= 1.5 if result.critical
+
+      # ---------------------------------------------
+      # TIDY
+      # ---------------------------------------------
 
       # If there was no attack, don't have a damage amount
       if result.damage <= 0
@@ -18027,6 +18238,10 @@ class Game_Battle
       if result.evade
         result.damage = 0
       end
+
+      # ---------------------------------------------
+      # CUSTOMS
+      # ---------------------------------------------
 
       # Custom hacking
       if skill.id == 'pounce' 
@@ -18042,6 +18257,7 @@ class Game_Battle
     return results    
 
   end
+
 
   def possible_targets(attacker)
 
@@ -18226,7 +18442,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"F'#==============================================================================
+end"&'#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -18590,13 +18806,12 @@ class Game_Party
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
 
-    @actors["ing"].learn('xform-normal')
-    @actors["ing"].learn('xform-snake')
-    @actors["ing"].learn('xform-cat')
     @actors["ing"].learn('xform-frog')
-    @actors["ing"].learn('xform-bear')
-    @actors["ing"].learn('xform-goat')
-    @actors["ing"].learn('xform-squirrel')
+    # @actors["ing"].learn('xform-snake')
+    # @actors["ing"].learn('xform-cat')
+    # @actors["ing"].learn('xform-bear')
+    # @actors["ing"].learn('xform-goat')
+    # @actors["ing"].learn('xform-squirrel')
 
     @actors['mys'].learn('envelop')
     @actors['mys'].learn('soothe')
@@ -18726,7 +18941,7 @@ end"°class Progress
 		@demons.push(demon)
 	end
 
-end"Ñclass State
+end"Íclass State
 
 	def initialize
 
@@ -18815,8 +19030,6 @@ end"Ñclass State
 	def getloc(e)
 		return @locs[[$map.id,e]]
 	end
-
-
 
 	def delete(e)
 		@deleted.push([$map.id,e])
@@ -19798,7 +20011,7 @@ class Scene_Battle
     
   end
 
-end"¨#
+end"x#
 class Scene_Battle
 
   def phase_main_init
@@ -19814,7 +20027,7 @@ class Scene_Battle
     }
 
     # Choose minion action
-    if $battle.minion != nil
+    if $party.active.include?('boy') && $battle.minion != nil
       $battle.minion.choose_action
     end
 
@@ -19906,21 +20119,7 @@ class Scene_Battle
       wait(3)
     end
 
-    case @active_battler.id
-
-    when 'minion-fang'
-
-      sfx 'fang-1'
-
-    when 'mys'
-
-      sfx 'mys1'
-
-    when 'minion-colby'
-
-      sfx 'rat'
-
-    end
+    @active_battler.attack_sfx
 
 
     # Show text if there is
@@ -19982,7 +20181,9 @@ class Scene_Battle
     if @active_battler.action == "items"
       # Item is taken immediately when selected
     else
-      @active_battler.lose_mana(@attack_round.skill.cost)
+      if @attack_round.skill != @last_attack
+        @active_battler.lose_mana(@attack_round.skill.cost)
+      end
     end
 
     # Onto the next

@@ -75,6 +75,11 @@ class Game_Battler
     @stat_plus[stat] += amount
   end
 
+  def ungrant_stat(stat,amount)
+    @stat_plus[stat] = 0 if !@stat_plus.has_key?(stat)
+    @stat_plus[stat] -= amount
+  end
+
   #--------------------------------------------------------------------------
   # * Item Usage
   #-------------------------------------------------------------------------- 
