@@ -13,10 +13,20 @@ class Game_Battler
   		while @xp > next_exp
 	  		@xp -= next_exp
 	  		@level += 1
+        # If boyle, level up minions
+        if @id == 'boy'
+          ['cannon','rat','crab','crow','fang','skull','magic'].each{ |m|
+            $party.get('minion-'+m).set_level(@level)
+          }
+        end
 	  	end
   		return true
   	end
   	return false
+  end
+
+  def set_level(lvl)
+    @level = lvl
   end
 
   def grant_level(reset_xp = true)

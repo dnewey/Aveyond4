@@ -23,6 +23,10 @@
     "color": "true"
   },
   {
+    "field": "priority",
+    "default": "3"
+  },
+  {
     "field": "text"
   },
   {

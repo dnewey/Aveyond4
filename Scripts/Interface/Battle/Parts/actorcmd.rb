@@ -112,6 +112,11 @@ class ActorCmd
 		sx = @battler.ev.screen_x
 		sy = @battler.ev.screen_y-44
 
+		# Move selectors down on myst as a fox, maybe do for frog etc too
+		if @battler.transform == 'x-fox'
+			sy += 16
+		end
+
 		@icons.each{ |i|
 
 				# Hide and fade in

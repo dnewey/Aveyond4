@@ -88,8 +88,6 @@ class State
 		return @locs[[$map.id,e]]
 	end
 
-
-
 	def delete(e)
 		@deleted.push([$map.id,e])
 	end

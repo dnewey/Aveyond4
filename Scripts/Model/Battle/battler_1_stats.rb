@@ -81,6 +81,13 @@ class Game_Battler
 
   def hp_from_item(item)
 
+    # Can't heal if down, unless cassia
+    if @hp == 0
+      return item == 'cassia' ? 1 : 0
+    end
+    return 0 if item == 'cassia' && @hp > 0
+
+
     # Do it
     plus = 0
     $data.items[item].action.split("\n").each{ |actn|
@@ -99,7 +106,25 @@ class Game_Battler
   end
 
   def mp_from_item(item)
-    0
+
+    # Could change this if boyle gets a mana upgrade
+    return 0 if @id == 'boy'
+
+    # Do it
+    plus = 0
+    $data.items[item].action.split("\n").each{ |actn|
+
+      dta = actn.split('=>')
+      case dta[0]
+        when 'mana'
+          plus += dta[1].to_i
+        when 'mana-p'
+          plus += dta[1].to_f * maxmp
+      end
+    }
+    plus = (maxmp - mp) if plus > (maxmp - mp)
+    return plus
+
   end
 
   def use_item(item)
