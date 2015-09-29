@@ -113,7 +113,7 @@ class ActorCmd
 		sy = @battler.ev.screen_y-44
 
 		# Move selectors down on myst as a fox, maybe do for frog etc too
-		if @battler.transform == 'x-fox'
+		if @battler.get_transform == 'x-fox'
 			sy += 16
 		end
 

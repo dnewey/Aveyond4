@@ -6,8 +6,6 @@ class Game_Battler
  
   attr_reader :id, :name, :level
 
-  attr_reader :transform
-
   attr_accessor :action, :skill_id, :item_id
   attr_accessor :target
   attr_accessor :scope, :target_idx
@@ -175,6 +173,10 @@ class Game_Battler
   # * Transform into something
   #--------------------------------------------------------------------------
   
+  def get_transform
+    return @transform
+  end
+
   def transform(into)
 
     @transform = 'x-'+into
