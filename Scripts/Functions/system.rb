@@ -50,6 +50,7 @@ def menu_snapshot
 end
 
 def open_main_menu
+	unitem nil,500
 	menu_snapshot
 	$menu.sub_only = false
 	$menu.menu_page = "Main"
