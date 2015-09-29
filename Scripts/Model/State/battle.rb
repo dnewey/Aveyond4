@@ -165,7 +165,6 @@ class Game_Battle
         }
       }
       log_info(possible)
-      possible.shuffle!
       return item(possible.sample)
     end
 
