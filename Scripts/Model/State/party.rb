@@ -350,7 +350,7 @@ class Game_Party
     # Phye
     @actors['phy'].equip('staff','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
-    @actors['phy'].equip('heavy','phy-helm-start')
+    @actors['phy'].equip('helm','phy-helm-start')
     
 
     # Initial skills per actor

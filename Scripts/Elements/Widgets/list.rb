@@ -388,8 +388,8 @@ class List
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       ico = $cache.icon("misc/magics")
-      @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
-      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
+      @content_sprite.bitmap.blt(228,(row*row_height)+5,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(254,row*row_height,@item_width,@item_height,price.to_s,0)
     end
 
   end
