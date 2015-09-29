@@ -8492,7 +8492,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"#==============================================================================
+end"š#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -8549,7 +8549,7 @@ class Mnu_Items < Mnu_Base
 		data = $party.items.keys
 
 		if option == 'all'
-			data = data.select{ |q| $data.items[q].tab != 'gear' }
+			data = data.select{ |q| log_sys(q);$data.items[q].tab != 'gear' }
 		end
 
 		if option == "usable"
@@ -16342,7 +16342,7 @@ class Interpreter
   end
 
 end
-"’?#==============================================================================
+"q?#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -16510,7 +16510,6 @@ class Game_Map
 
       # Restore loc
       if $state.loc?(i)
-        log_scr("LOADING #{i}")
         loc = $state.getloc(i)
         @events[i].moveto(loc[0],loc[1])
         @events[i].direction = loc[2]

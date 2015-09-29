@@ -55,7 +55,7 @@ class Mnu_Items < Mnu_Base
 		data = $party.items.keys
 
 		if option == 'all'
-			data = data.select{ |q| $data.items[q].tab != 'gear' }
+			data = data.select{ |q| log_sys(q);$data.items[q].tab != 'gear' }
 		end
 
 		if option == "usable"

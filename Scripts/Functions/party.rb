@@ -148,6 +148,10 @@ def grant_level(who)
 	pop_level(who)
 end
 
+def grant_level_s(who)
+	$party.get(who).grant_level
+end
+
 def grant_level_free(who)
 	$party.get(who).grant_level(false)
 	pop_level(who)
