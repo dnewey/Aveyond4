@@ -71,7 +71,7 @@
 			"file": "Model/Battle/battler.rb",
 			"settings":
 			{
-				"buffer_size": 5244,
+				"buffer_size": 5246,
 				"line_ending": "Windows"
 			}
 		},
@@ -80,6 +80,14 @@
 			"settings":
 			{
 				"buffer_size": 4742,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Scenes/battle_2_actor.rb",
+			"settings":
+			{
+				"buffer_size": 5703,
 				"line_ending": "Windows"
 			}
 		},
@@ -100,10 +108,10 @@
 			}
 		},
 		{
-			"contents": "Searching 235 files for \"build_attack_queue\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  218  \n  219  \n  220:   def build_attack_queue\n  221  \n  222      if @minion\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n   20  \n   21      # Determine order of attacks\n   22:     @battle_queue = $battle.build_attack_queue\n   23      \n   24      # certain attacks always go first, robin's team move with phye for example\n\n2 matches across 2 files\n\n\nSearching 235 files for \"level_up\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_5_xp.rb:\n    9    end\n   10  \n   11:   def level_up?\n   12    	if @xp > next_exp\n   13    		while @xp > next_exp\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_4_victory.rb:\n   55      $party.alive_battlers.each{ |b|\n   56        \n   57:       if b.level_up?\n   58          b.view.box.wallpaper = $cache.menu_wallpaper(\"green\")        \n   59          $scene.message.start(\"sys:#{b.name} is now level #{b.level}!\")\n\nC:\\Aveyond4\\Editor\\assets\\css\\font\\FontAwesome.otf:\n    <binary>\n\n3 matches across 3 files\n",
+			"contents": "Searching 235 files for \"build_attack_queue\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  218  \n  219  \n  220:   def build_attack_queue\n  221  \n  222      if @minion\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n   20  \n   21      # Determine order of attacks\n   22:     @battle_queue = $battle.build_attack_queue\n   23      \n   24      # certain attacks always go first, robin's team move with phye for example\n\n2 matches across 2 files\n\n\nSearching 235 files for \"level_up\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_5_xp.rb:\n    9    end\n   10  \n   11:   def level_up?\n   12    	if @xp > next_exp\n   13    		while @xp > next_exp\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_4_victory.rb:\n   55      $party.alive_battlers.each{ |b|\n   56        \n   57:       if b.level_up?\n   58          b.view.box.wallpaper = $cache.menu_wallpaper(\"green\")        \n   59          $scene.message.start(\"sys:#{b.name} is now level #{b.level}!\")\n\nC:\\Aveyond4\\Editor\\assets\\css\\font\\FontAwesome.otf:\n    <binary>\n\n3 matches across 3 files\n\n\nSearching 234 files for \"attack_prio\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  267  \n  268    # Return priority of current attack\n  269:   def attack_priority\n  270  \n  271      if @action == :item\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  229  \n  230      # Sort by priority, random within same\n  231:     return queue.sort_by{ |battler| battler.attack_priority }\n  232  \n  233  \n\n2 matches across 2 files\n",
 			"settings":
 			{
-				"buffer_size": 1046,
+				"buffer_size": 1483,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
@@ -341,6 +349,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"attack_prio",
 			"level_up",
 			"build_attack_queue",
 			"priority",
@@ -467,8 +476,7 @@
 			"Default",
 			"default",
 			"events.values.each",
-			"passable",
-			"event_at"
+			"passable"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -487,7 +495,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -577,7 +585,7 @@
 						"translation.y": 2963.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -586,15 +594,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5244,
+						"buffer_size": 5246,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								242,
-								242
+								4726,
+								4726
 							]
 						],
 						"settings":
@@ -633,11 +641,6 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
@@ -648,6 +651,11 @@
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
@@ -664,10 +672,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 67.0,
+						"translation.y": 4750.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -683,8 +691,8 @@
 						"selection":
 						[
 							[
-								1886,
-								1886
+								1662,
+								1662
 							]
 						],
 						"settings":
@@ -723,11 +731,6 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
@@ -738,6 +741,11 @@
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
@@ -756,11 +764,100 @@
 						"translation.y": 1710.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "Scenes/battle_2_actor.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5703,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 627.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "Model/Battle/battler_4_equips.rb",
 					"semi_transient": false,
 					"settings":
@@ -844,11 +941,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "Scenes/battle_3_main.rb",
 					"semi_transient": false,
 					"settings":
@@ -933,15 +1030,15 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1046,
+						"buffer_size": 1483,
 						"regions":
 						{
 							"match":
@@ -964,6 +1061,14 @@
 									[
 										789,
 										797
+									],
+									[
+										1215,
+										1226
+									],
+									[
+										1423,
+										1434
 									]
 								],
 								"scope": ""
@@ -972,8 +1077,8 @@
 						"selection":
 						[
 							[
-								599,
-								599
+								1220,
+								1220
 							]
 						],
 						"settings":
@@ -981,56 +1086,56 @@
 							"BracketHighlighterBusy": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
@@ -1039,7 +1144,7 @@
 							],
 							"detect_indentation": false,
 							"line_numbers": false,
-							"output_tag": 2,
+							"output_tag": 3,
 							"result_base_dir": "",
 							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
 							"result_line_regex": "^ +([0-9]+):",
@@ -1047,14 +1152,14 @@
 							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 361.0,
+						"translation.y": 836.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "Model/Battle/battler_5_xp.rb",
 					"semi_transient": false,
 					"settings":
@@ -1140,11 +1245,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "Interface/Menu/healing.rb",
 					"semi_transient": false,
 					"settings":
@@ -1229,11 +1334,11 @@
 						"translation.y": 2679.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
 					"file": "Interface/Menu/shop.rb",
 					"semi_transient": false,
 					"settings":
@@ -1318,7 +1423,7 @@
 						"translation.y": 1312.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1377,6 +1482,10 @@
 		"selected_items":
 		[
 			[
+				"battle",
+				"Scripts\\Scenes\\battle_2_actor.rb"
+			],
+			[
 				"battler",
 				"Scripts\\Model\\Battle\\battler.rb"
 			],
@@ -1387,10 +1496,6 @@
 			[
 				"healing",
 				"Scripts\\Interface\\Menu\\healing.rb"
-			],
-			[
-				"battle",
-				"Scripts\\Scenes\\battle_3_main.rb"
 			],
 			[
 				"bar",

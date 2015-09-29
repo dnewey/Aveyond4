@@ -268,7 +268,7 @@ class Game_Battler
   # Return priority of current attack
   def attack_priority
 
-    if @action == :item
+    if @action == "items"
       return $data.items[@item_id].priority
     else
       return $data.skills[@skill_id].priority
