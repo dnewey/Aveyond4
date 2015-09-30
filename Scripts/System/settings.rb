@@ -31,15 +31,15 @@ class SettingsManager
     @music_vol = 1.0
     @sound_vol = 1.0    
     @effects = false
-    @mouse = false
+    @mouse = true
     @tutorial = false
     @bottombar = true
 
     # Debug options
-    @debug_skip_title = true
-    @debug_draw_fps = true
+    @debug_skip_title = false
+    @debug_draw_fps = false
     @debug_draw_helpers = false
-    @debug_power_test = true
+    @debug_power_test = false
 
     # Create the settings file if needed
     if !FileTest.exist?($appdata+'\settings.txt')
