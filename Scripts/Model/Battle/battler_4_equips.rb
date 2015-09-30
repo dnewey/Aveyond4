@@ -15,6 +15,10 @@ class Game_Battler
 
 	end
 
+	def force_equip(slot,new_equip)
+		@equips[slot] = new_equip
+	end
+
 	def equip_list
 		list = []
 		@slots.each{ |s|

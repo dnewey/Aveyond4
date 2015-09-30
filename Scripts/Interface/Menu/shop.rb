@@ -89,13 +89,23 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-	def select(option)	
-
-		item = $data.items[option]
+	def select(option)			
 
 		if @magic
 
+			item = $data.skills[option]
+
+			if $party.magics >= item.price
+				buy_chester_skill(option)
+				$party.add_magics(-item.price)
+				sys("magics")
+				@info.refresh
+				@menu.list.refresh
+			end
+
 		else
+
+			item = $data.items[option]
 
 			if $party.gold >= item.price
 				$party.add_item(option)

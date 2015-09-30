@@ -49,7 +49,11 @@ class Mnu_Boyle < Mnu_Base
 		    lbl = Label.new(vp)
 			lbl.icon = $cache.icon("stats/creature")
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "#{found} of #{totals[i]} Caught"
+		    if $party.passive_cheekis
+		    	lbl.text = "#{found} of #{totals[i]} Caught"
+		    else
+		    	lbl.text = "#{found} Caught"
+		    end
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 

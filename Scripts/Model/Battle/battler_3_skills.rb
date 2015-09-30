@@ -4,6 +4,20 @@ class Game_Battler
   	@skills.push(skill)
   end
 
+  def replace_skill(os,ns)
+
+    # Find pretty close old skill
+    idx = 0
+    @skills.each_index{ |i|
+      if @skills[i].include?(os)
+        idx = i
+      end
+    }
+
+    @skills[idx] = ns
+
+  end
+
   def has_skill?(skill)
     return @skills.include?(skill)
   end

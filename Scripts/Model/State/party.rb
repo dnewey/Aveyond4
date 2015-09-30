@@ -21,6 +21,9 @@ class Game_Party
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
+  # Passives
+  attr_accessor :passive_shop, :passive_scare, :passive_cheekis
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------

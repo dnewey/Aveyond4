@@ -48,6 +48,12 @@ def setup_item_shop
 			stock.push('bread')
 			stock.push('mutton')
 
+		when '@weeville'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
 		when '@elf-town'	
 			stock.push('covey')
 			stock.push('cheese')
@@ -165,7 +171,7 @@ def setup_chester_shop
 	# Skills to add at level 4 - DWARVIES
 	if $progress.chester_level >= 4
 		stock.push('ug-mana-4')
-		stock.push('ug-charge-3')
+		stock.push('staff-4')
 		stock.push('ug-staff-6')
 		stock.push('ug-passive-cheeki')
 		stock.push('ug-magic-minion')
@@ -186,7 +192,7 @@ def setup_chester_shop
 		stock.push('sacrifice')
 		stock.push('contempt-3')
 		stock.push('ug-mana-2')
-		stock.push('ug-charge-2')
+		stock.push('staff-3')
 		stock.push('ug-staff-3')
 		stock.push('ug-staff-4')
 	end
@@ -203,19 +209,81 @@ def setup_chester_shop
 	if $progress.chester_level >= 0
 		stock.push('empower')
 		stock.push('contempt-2')
-		stock.push('ug-charge-1')
+		stock.push('staff-2')
 		stock.push('ug-staff-1')
 	end
 	
-
-	# Don't include multiple of the same types
-
-
 	# Don't add if have
 	stock.delete_if{ |s| boy.has_skill?(s) }
+
+	# Don't include multiple of the same types, only use lowest
 
 	# Add skills to shop
 	stock.each{ |s| $menu.shop_add(s) }
 	open_shop_chester
+
+end
+
+def buy_chester_skill(skill)
+
+	boy = $party.get('boy')
+
+	case skill
+
+		# New skills
+
+		when 'sacrifice','empower','triumph'
+			boy.learn(skill)
+
+		# Skill upgrades
+
+		when 'contempt-2','contempt-3'
+			boy.replace_skill('contempt',skill)
+
+		when 'flames-2','flames-3'
+			boy.replace_skill('flames',skill)
+
+		when 'staff-2','staff-3','staff-4','staff-5','staff-6'
+			boy.replace_skill('staff',skill)	
+
+		when 'triumph-2'
+			boy.replace_skill('triumph',skill)		
+
+
+		# Staff upgrades
+
+		when 'ug-staff-1','ug-staff-2','ug-staff-3','ug-staff-4','ug-staff-5','ug-staff-6','ug-staff-7'
+
+			# Replace boy equip with new
+			eq = skill.sub('ug','boy')
+			boy.force_equip('staff',eq)
+
+
+		# Stat upgrades
+
+		when 'ug-mana-1'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-2'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-3'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-4'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-5'
+			boy.grant_stat('mp',10)
+
+
+		# Passives
+		when 'ug-passive-shop'
+			$party.passive_shop = true
+
+		when 'ug-passive-cheeki'
+			$party.passive_cheekis = true
+
+		when 'ug-passive-scare'
+			$party.passive_scare = true
+
+
+	end
 
 end
