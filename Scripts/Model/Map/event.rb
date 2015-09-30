@@ -610,6 +610,25 @@ class Game_Event < Game_Character
           g = go('off_y',6,600,:qio)
           self.do(repeat(seq(g,g.reverse)))
 
+        when '#drifting'
+          pp = pingpong("off_y",10,1600,:qio)
+          self.do(pp)
+          a = go("off_x",5,800,:qo)
+          b = go("off_x",-10,1600,:qio)
+          c = go("off_x",5,800,:qi)
+          s = seq(a,b,c)
+          self.do(repeat(s))
+
+        when '#drifting2'
+          pp = pingpong("off_y",-10,1600,:qio)
+          self.do(pp)
+          a = go("off_x",-5,600,:qo)
+          b = go("off_x",10,1400,:qio)
+          c = go("off_x",-5,600,:qi)
+          s = seq(a,b,c)
+          self.do(repeat(s))
+
+
         when '#save'
           @save = true
 

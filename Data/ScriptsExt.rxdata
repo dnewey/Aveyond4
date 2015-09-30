@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"h#==============================================================================
+end"j#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -251,7 +251,7 @@ class Sprite_Character < Sprite
 
       total = (@icons.count-1) * (24+2)
       total -= 2
-      cx = -total/2
+      cx = 0#-total/2
 
       @character.icons.each{ |i|
 
@@ -3880,7 +3880,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"z
+end"š
 
 def shop_choice
 
@@ -3925,6 +3925,12 @@ def setup_item_shop
 			stock.push('mutton')
 
 		when '@royal-town'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('mutton')
+
+		when '@weeville'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
@@ -4047,7 +4053,7 @@ def setup_chester_shop
 	# Skills to add at level 4 - DWARVIES
 	if $progress.chester_level >= 4
 		stock.push('ug-mana-4')
-		stock.push('ug-charge-3')
+		stock.push('staff-4')
 		stock.push('ug-staff-6')
 		stock.push('ug-passive-cheeki')
 		stock.push('ug-magic-minion')
@@ -4068,7 +4074,7 @@ def setup_chester_shop
 		stock.push('sacrifice')
 		stock.push('contempt-3')
 		stock.push('ug-mana-2')
-		stock.push('ug-charge-2')
+		stock.push('staff-3')
 		stock.push('ug-staff-3')
 		stock.push('ug-staff-4')
 	end
@@ -4085,20 +4091,82 @@ def setup_chester_shop
 	if $progress.chester_level >= 0
 		stock.push('empower')
 		stock.push('contempt-2')
-		stock.push('ug-charge-1')
+		stock.push('staff-2')
 		stock.push('ug-staff-1')
 	end
 	
-
-	# Don't include multiple of the same types
-
-
 	# Don't add if have
 	stock.delete_if{ |s| boy.has_skill?(s) }
+
+	# Don't include multiple of the same types, only use lowest
 
 	# Add skills to shop
 	stock.each{ |s| $menu.shop_add(s) }
 	open_shop_chester
+
+end
+
+def buy_chester_skill(skill)
+
+	boy = $party.get('boy')
+
+	case skill
+
+		# New skills
+
+		when 'sacrifice','empower','triumph'
+			boy.learn(skill)
+
+		# Skill upgrades
+
+		when 'contempt-2','contempt-3'
+			boy.replace_skill('contempt',skill)
+
+		when 'flames-2','flames-3'
+			boy.replace_skill('flames',skill)
+
+		when 'staff-2','staff-3','staff-4','staff-5','staff-6'
+			boy.replace_skill('staff',skill)	
+
+		when 'triumph-2'
+			boy.replace_skill('triumph',skill)		
+
+
+		# Staff upgrades
+
+		when 'ug-staff-1','ug-staff-2','ug-staff-3','ug-staff-4','ug-staff-5','ug-staff-6','ug-staff-7'
+
+			# Replace boy equip with new
+			eq = skill.sub('ug','boy')
+			boy.force_equip('staff',eq)
+
+
+		# Stat upgrades
+
+		when 'ug-mana-1'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-2'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-3'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-4'
+			boy.grant_stat('mp',10)
+		when 'ug-mana-5'
+			boy.grant_stat('mp',10)
+
+
+		# Passives
+		when 'ug-passive-shop'
+			$party.passive_shop = true
+
+		when 'ug-passive-cheeki'
+			$party.passive_cheekis = true
+
+		when 'ug-passive-scare'
+			$party.passive_scare = true
+
+
+	end
 
 end"q#==============================================================================
 # ** State Functions
@@ -6190,7 +6258,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"¾B#==============================================================================
+end"E#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -6494,7 +6562,18 @@ class Ui_Grid
      	if item != nil && item.stats != ''
 	    	data = item.stats.split("/n")[0].split("=>")
 	    	stat.icon = $cache.icon("stats/#{data[0]}")
-	    	stat.text = "#{data[1]} Strength"
+	    	case data[0]
+	    		when 'str'
+	    			stat.text = "#{data[1]} Strength"
+	    		when 'def'
+					stat.text = "#{data[1]} Defense"
+	    		when 'eva'
+	    			stat.text = "#{data[1]}% Evasion"
+	    		when 'luk'
+	    			stat.text = "#{data[1]}% Luck"
+	    		when 'res'
+	    			stat.text = "#{data[1]}% Resist"
+	    	end
 	    end
 
      	@extra.push(stat)
@@ -6505,7 +6584,7 @@ class Ui_Grid
     	cat.fixed_width = 100
     	cat.font = $fonts.pop_type
     	cat.align = 2
-    	cat.text = slot.upcase
+    	cat.text = slot.upcase.delete("12")
     	cat.opacity = 200
     	@extra.push(cat)
 
@@ -6537,12 +6616,26 @@ class Ui_Grid
 		# Find all users
 		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
 
+		# If too many users, cut some
+
+
+
 		# Draw all of the icons now
 		tick = Sprite.new(@vp)
 		tick.bitmap = $cache.icon("misc/tick")
 		tick.move(@cx+10,@cy+10)
 		@extra.push(tick)
 		@cx += 28
+
+		if users.empty?
+			tick.bitmap = $cache.icon("misc/cross") if users.empty?
+			icon = Label.new(@vp)
+			icon.font = $fonts.pop_text
+			icon.text = "No Users In Party"
+			icon.move(@cx+10,@cy+7)
+			@extra.push(icon)
+			return
+		end
 
 		users.each{ |u|
 			icon = Label.new(@vp)
@@ -6551,7 +6644,7 @@ class Ui_Grid
 			icon.text = u.equip_result(data)
 			icon.move(@cx+10,@cy+7)
 			@extra.push(icon)
-			@cx += 80
+			@cx += icon.width
 		}
 
 		@cy += 46
@@ -6820,7 +6913,7 @@ class Ui_Grid
 
 	     	port = Sprite.new(@vp)
 			port.bitmap = $cache.face_small(id)
-			port.bitmap = $cache.face_small(id+'d') if char.down?
+			port.bitmap = $cache.face_small(id+'-d') if char.down?
 			port.src_rect.height = port.height() 
 			@extra.push(port)
 			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
@@ -8709,7 +8802,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"š#==============================================================================
+end"Ÿ#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -8807,14 +8900,14 @@ class Mnu_Items < Mnu_Base
 			@grid.add_users(option)
 		end
 
-		if item.is_a?(UsableData)
+		#if item.is_a?(UsableData)
 
 			# If healing, show results
-			if item.action.include?('mana')
-				@grid.add_mana(option)
-			end
+		#	if item.action.include?('mana')
+				#@grid.add_mana(option)
+		#	end
 
-		end
+		#end
 
 		@grid.disable
 
@@ -8937,7 +9030,7 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-end"n#==============================================================================
+end";#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -9011,6 +9104,13 @@ class Mnu_Main
 		if $party.active.count == 2
 			@chars[0].move(200,140)
 			@chars[1].move(420,140)
+		end
+
+		if $party.reserve.count == 0 && $party.active.count > 2
+			@chars[0].move(200,50)
+			@chars[1].move(420,50)
+			@chars[2].move(200,233)
+			@chars[3].move(420,233) if $party.active.count > 3
 		end
 
 
@@ -9861,7 +9961,8 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"/	#==============================================================================
+end"
+#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -9940,23 +10041,35 @@ class Mnu_Shop < Mnu_Base
 		@users.move(@item_box.x,@item_box.y + @item_box.height)
 		
 		# Only if gear
-		#@users.add_users(option)
+		#
 
 		data = $data.items[option]
-		# if data.is_a?(GearData)
-		# 	$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
-		# 		@users.add_compare(option,u)
-		# 	}
-		# end
+		if data.is_a?(GearData)
+			@users.add_users(option)
+			#$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
+			#	@users.add_compare(option,u)
+			#}
+		end
+
 	end
 
-	def select(option)	
-
-		item = $data.items[option]
+	def select(option)			
 
 		if @magic
 
+			item = $data.skills[option]
+
+			if $party.magics >= item.price
+				buy_chester_skill(option)
+				$party.add_magics(-item.price)
+				sys("magics")
+				@info.refresh
+				@menu.list.refresh
+			end
+
 		else
+
+			item = $data.items[option]
 
 			if $party.gold >= item.price
 				$party.add_item(option)
@@ -9981,7 +10094,7 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end"å#==============================================================================
+end"ò#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -10093,7 +10206,7 @@ class Mnu_Equip < Mnu_Base
 
 		# Find gear for this slot
 		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot
+			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot.delete("12")
 		}
 		items.push('remove') if @char.equips[@slot] != nil
 		@menu.list.setup(items)
@@ -10604,7 +10717,7 @@ class Mnu_Status < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end"q#==============================================================================
 # ** Mnu_Boyle
 #==============================================================================
 
@@ -10655,7 +10768,11 @@ class Mnu_Boyle < Mnu_Base
 		    lbl = Label.new(vp)
 			lbl.icon = $cache.icon("stats/creature")
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "#{found} of #{totals[i]} Caught"
+		    if $party.passive_cheekis
+		    	lbl.text = "#{found} of #{totals[i]} Caught"
+		    else
+		    	lbl.text = "#{found} Caught"
+		    end
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 
@@ -12817,7 +12934,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"»#==============================================================================
+end"½#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -13087,7 +13204,7 @@ class Game_Battler
   # Return priority of current attack
   def attack_priority
 
-    if @action == :item
+    if @action == "items"
       return $data.items[@item_id].priority
     else
       return $data.skills[@skill_id].priority
@@ -13425,10 +13542,24 @@ class Game_Battler
 
   end
 
- end"class Game_Battler
+ end"ßclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
+  end
+
+  def replace_skill(os,ns)
+
+    # Find pretty close old skill
+    idx = 0
+    @skills.each_index{ |i|
+      if @skills[i].include?(os)
+        idx = i
+      end
+    }
+
+    @skills[idx] = ns
+
   end
 
   def has_skill?(skill)
@@ -13520,7 +13651,7 @@ class Game_Battler
 
   end
 
-end"z
+end"Á
 class Game_Battler
 
 	def equip(slot,new_equip)
@@ -13535,6 +13666,10 @@ class Game_Battler
 			@equips[slot] = new_equip
 		end
 
+	end
+
+	def force_equip(slot,new_equip)
+		@equips[slot] = new_equip
 	end
 
 	def equip_list
@@ -15311,7 +15446,7 @@ class Game_Character
 
 
 end
-"WQ#==============================================================================
+"vS#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -15922,6 +16057,25 @@ class Game_Event < Game_Character
         when '#shaking'
           g = go('off_y',6,600,:qio)
           self.do(repeat(seq(g,g.reverse)))
+
+        when '#drifting'
+          pp = pingpong("off_y",10,1600,:qio)
+          self.do(pp)
+          a = go("off_x",5,800,:qo)
+          b = go("off_x",-10,1600,:qio)
+          c = go("off_x",5,800,:qi)
+          s = seq(a,b,c)
+          self.do(repeat(s))
+
+        when '#drifting2'
+          pp = pingpong("off_y",-10,1600,:qio)
+          self.do(pp)
+          a = go("off_x",-5,600,:qo)
+          b = go("off_x",10,1400,:qio)
+          c = go("off_x",-5,600,:qi)
+          s = seq(a,b,c)
+          self.do(repeat(s))
+
 
         when '#save'
           @save = true
@@ -17836,7 +17990,7 @@ class Game_Player < Game_Character
   end
 
 end
-"p.
+"D.
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -17985,7 +18139,7 @@ class Game_Battle
     # Cutting gold chance
     chance = rand
 
-    if chance < 0.2
+    if chance < 0.12
 
         # Nothing!
         return pop_nothing         
@@ -17995,9 +18149,7 @@ class Game_Battle
     if chance < 0.6 && data.loot != nil && data.loot != ''
       possible = []
       data.loot.split("/n").each{ |item| 
-        log_sys(item)
         dta = item.split("=>")
-        log_scr(dta)
         dta[1].to_i.times{
           possible.push(dta[0])
         }
@@ -18442,7 +18594,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"&'#==============================================================================
+end"~'#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -18464,6 +18616,9 @@ class Game_Party
 
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
+
+  # Passives
+  attr_accessor :passive_shop, :passive_scare, :passive_cheekis
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -18555,7 +18710,7 @@ class Game_Party
   end
 
   def recover_all
-    @actors.each{ |a| a.recover_all }
+    @actors.values.each{ |a| a.recover_all }
   end
   
   #--------------------------------------------------------------------------
@@ -18773,8 +18928,8 @@ class Game_Party
     @actors['ing'].equip('light','ing-arm-start')
 
     # Myst
-    @actors['mys'].equip('lclaw','mys-claw-start')
-    @actors['mys'].equip('rclaw','mys-claw-start')
+    @actors['mys'].equip('claw1','mys-claw-start')
+    @actors['mys'].equip('claw2','mys-claw-start')
     @actors['mys'].equip('light','mys-arm-start')
 
     # Robin
@@ -20011,7 +20166,7 @@ class Scene_Battle
     
   end
 
-end"x#
+end"½#
 class Scene_Battle
 
   def phase_main_init
@@ -20079,13 +20234,15 @@ class Scene_Battle
     if ['one','ally'].include?(@active_battler.scope) && @active_battler.target.down?
 
       # If a tranform, cancel
-      if @active_battler.skill_id.include?("xform")
-        @attack_plan.cancel
-        @phase = :main_next
-        return
-      else
-        # Doesn't really work, hmmmmm
-        @active_battler.scope = 'rand'
+      if @active_battler.skill_id != nil
+        if @active_battler.skill_id.include?("xform")
+          @attack_plan.cancel
+          @phase = :main_next
+          return
+        else
+          # Doesn't really work, hmmmmm
+          @active_battler.scope = 'rand'
+        end
       end
 
     end
