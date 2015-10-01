@@ -35,6 +35,7 @@ class Game_Character
   attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
+  attr_reader   :sthrough                  # sthrough - special through for fang, ignore events
   attr_accessor :animation_id             # animation ID
   attr_accessor :transparent              # transparent flag
   attr_accessor :ignore_movement          # ignore movement when finding path
@@ -573,7 +574,7 @@ class Game_Character
       @move_angle = 0
     end
 
-    distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
+    #distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
 
     # If logical coordinates are further down than real coordinates
     if @y * 128 > @real_y

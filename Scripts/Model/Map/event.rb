@@ -57,6 +57,7 @@ class Game_Event < Game_Character
 
     @starting = false
     @through = true
+    @sthrough = false
     @above = false
     @below = false
     @below2 = false
@@ -540,6 +541,7 @@ class Game_Event < Game_Character
     @interpreter = nil
 
     @save = false
+    @sthrough = false
     @bridge = false
     if @stairs
       $scene.map.remove_forced_terrain(self,2)
@@ -631,6 +633,9 @@ class Game_Event < Game_Character
 
         when '#save'
           @save = true
+
+        when '#sthrough'
+          @sthrough = true
 
         when '#opacity'
           self.opacity = data[1].to_i

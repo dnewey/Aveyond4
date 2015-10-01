@@ -11,6 +11,8 @@ class Progress
 
   	attr_reader :demons
 
+  	attr_accessor :store_level, :store_xp, :store_done
+
 	def initialize
 
 		@quests = []
@@ -40,6 +42,11 @@ class Progress
 
 	    # Guild info
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
+
+	    # Robin Shop
+	    @store_level = 2
+	    @store_xp = 0
+	    @store_done = []
 
 	end
 

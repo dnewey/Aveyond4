@@ -541,14 +541,14 @@ class Game_Map
 
     # Loop all events
     evs = events_at(x,y)
-    if evs != nil
+    if evs != nil && (self_event == nil || !self_event.sthrough)
       evs.each{ |e| 
         if e != self_event #and e.at?(x,y)
            return true if e.bridge && [4,6].include?(d) && e.width > 1
            return true if e.bridge && [2,8].include?(d) && e.height > 1
            return false if e.bridge && [2,8].include?(d) && e.height == 1
            return false if e.bridge && [4,6].include?(d) && e.width == 1
-           return false if !(e.through || e.above || e.below)
+           return false if !(e.through || e.above || e.below || e.sthrough)
            return false if (monster || e.ysnp) && e.name == "YSNP"
         end
       }

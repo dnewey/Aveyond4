@@ -30,6 +30,10 @@ class ShopData
 	attr_reader :description
 	attr_reader :icon
 	attr_reader :price
+	attr_reader :level
+	attr_reader :request
+	attr_reader :accept
+	attr_reader :deny
 	attr_accessor :tab
 end
 

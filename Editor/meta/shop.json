@@ -18,6 +18,9 @@
     "field": "price"
   },
   {
+    "field": "level"
+  },
+  {
     "field": "request",
     "edit": "area"
   },
