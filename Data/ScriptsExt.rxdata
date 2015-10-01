@@ -1,4 +1,4 @@
-["ú#==============================================================================
+["ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -4270,6 +4270,69 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
+"1
+
+def store_init
+
+	# Make a list of customers for this time
+
+	items = $data.shop.keys.shuffle
+
+	# Remove all not allowed
+	possible = []
+
+	items.each{ |i|
+		item = $data.shop[i]
+		next if $progress.store_done.include?(i)
+		next if item.level > $progress.store_level
+		possible.push(i)
+	}
+
+	# Choose 3
+	possible.sort_by { rand }
+
+	$store_customers = possible[0,3]
+
+end
+
+def store_next_customer
+
+	customer = $store_customers.shift
+	$customer = $data.shop[customer]
+
+	gev(1).opacity = 0
+	gev(1).character_name = "NPCS/Shop/#{customer}"
+	gev(1).direction = 8
+	gev(1).moveto(19,20)
+
+	unfade(1)
+	route(1,'u,u,u')
+
+end
+
+def store_say_request
+	log_sys($customer.request)
+	text("1: #{$customer.request}")
+end
+
+def store_test_item
+	if $menu.chosen == $customer.id
+		flag('store-accept')
+	else
+		flag('store-deny')
+	end
+	$menu.chosen = nil
+end
+
+def store_say_accept
+	text("1: #{$customer.accept}")
+	$progress.store_done.push($customer.id)
+	$progress.store_xp += 1
+end
+
+def store_say_deny
+	text("1: #{$customer.deny}")
+end
 "»	
 # Misc
 
@@ -11809,7 +11872,7 @@ class Item_Box < SpriteGroup
 
     end
 
-end"Z
+end"É
 class List_Common < SpriteGroup
 
 	attr_accessor :list, :window
@@ -11863,6 +11926,11 @@ class List_Common < SpriteGroup
 			when 'cards'
 				items = $party.items.keys.select{ |i|
 					$data.items[i].id.include?('card-')
+				}
+
+			when 'goods'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].is_a?(ShopData) # &&
 				}
 
 			else
@@ -14017,7 +14085,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"M´#==============================================================================
+end"¯´#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -14054,6 +14122,7 @@ class Game_Character
   attr_accessor   :pattern                  # pattern
   attr_reader   :move_route_forcing       # forced move route flag
   attr_reader   :through                  # through
+  attr_reader   :sthrough                  # sthrough - special through for fang, ignore events
   attr_accessor :animation_id             # animation ID
   attr_accessor :transparent              # transparent flag
   attr_accessor :ignore_movement          # ignore movement when finding path
@@ -14592,7 +14661,7 @@ class Game_Character
       @move_angle = 0
     end
 
-    distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
+    #distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
 
     # If logical coordinates are further down than real coordinates
     if @y * 128 > @real_y
@@ -15593,7 +15662,7 @@ class Game_Character
 
 
 end
-"vS#==============================================================================
+"ÜS#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -15652,6 +15721,7 @@ class Game_Event < Game_Character
 
     @starting = false
     @through = true
+    @sthrough = false
     @above = false
     @below = false
     @below2 = false
@@ -16135,6 +16205,7 @@ class Game_Event < Game_Character
     @interpreter = nil
 
     @save = false
+    @sthrough = false
     @bridge = false
     if @stairs
       $scene.map.remove_forced_terrain(self,2)
@@ -16226,6 +16297,9 @@ class Game_Event < Game_Character
 
         when '#save'
           @save = true
+
+        when '#sthrough'
+          @sthrough = true
 
         when '#opacity'
           self.opacity = data[1].to_i
@@ -16972,7 +17046,7 @@ class Interpreter
   end
 
 end
-"®?#==============================================================================
+"ë?#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17515,14 +17589,14 @@ class Game_Map
 
     # Loop all events
     evs = events_at(x,y)
-    if evs != nil
+    if evs != nil && (self_event == nil || !self_event.sthrough)
       evs.each{ |e| 
         if e != self_event #and e.at?(x,y)
            return true if e.bridge && [4,6].include?(d) && e.width > 1
            return true if e.bridge && [2,8].include?(d) && e.height > 1
            return false if e.bridge && [2,8].include?(d) && e.height == 1
            return false if e.bridge && [4,6].include?(d) && e.width == 1
-           return false if !(e.through || e.above || e.below)
+           return false if !(e.through || e.above || e.below || e.sthrough)
            return false if (monster || e.ysnp) && e.name == "YSNP"
         end
       }
@@ -17654,7 +17728,7 @@ class Moblin
 
 	end
 
-end"/3#==============================================================================
+end"M3#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -17675,6 +17749,8 @@ class Game_Player < Game_Character
     @trans_type = :cross
     @static = false
     @next_common = nil
+
+    #self.move_speed = 3.3
 
     @faceoff = 0 # Here to match event, possibly could have both in char
   end
@@ -19165,7 +19241,7 @@ class Game_Party
 
   end
         
-end"class Progress
+end"“class Progress
 
 	attr_accessor :quests, :complete
 
@@ -19177,6 +19253,8 @@ end"class Progress
   	attr_reader :creatures, :chester_level
 
   	attr_reader :demons
+
+  	attr_accessor :store_level, :store_xp, :store_done
 
 	def initialize
 
@@ -19207,6 +19285,11 @@ end"class Progress
 
 	    # Guild info
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
+
+	    # Robin Shop
+	    @store_level = 2
+	    @store_xp = 0
+	    @store_done = []
 
 	end
 
@@ -20768,7 +20851,7 @@ class Scene_Battle
 
   end
 
-end"
+end"
 class Scene_Battle
 
   def phase_victory_init
@@ -20842,6 +20925,7 @@ class Scene_Battle
     $battle.clear
   	$game.pop_scene
     music_restore
+    $scene.hud.show
     
   end
 
@@ -24014,7 +24098,7 @@ end"øclass Bitmap
 	end
 
 end
-"‚
+"Ø
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -24046,6 +24130,10 @@ class ShopData
 	attr_reader :description
 	attr_reader :icon
 	attr_reader :price
+	attr_reader :level
+	attr_reader :request
+	attr_reader :accept
+	attr_reader :deny
 	attr_accessor :tab
 end
 
