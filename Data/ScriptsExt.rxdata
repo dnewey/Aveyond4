@@ -3625,7 +3625,7 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
-end"?
+end"Õ
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3828,7 +3828,17 @@ end
 
 def pop_stat_bonus(who,stat,amount)
 
-	a = "#{$party.get(who).name} gains #{amount} #{stat}"
+	stat_text case stat
+		when 'hp'; "Max Hp"
+		when 'mp'; "Max Mp"
+		when 'str'; "Strength"
+		when 'def'; "Defense"
+		when 'eva'; "Evasion"
+		when 'luk'; "Luck"
+		when 'res'; "Resist"
+	end
+
+	a = "#{$party.get(who).name} gains #{amount} #{stat_text}"
 	ia = $cache.icon("faces/#{who}")
 
 	b = nil
@@ -3841,7 +3851,17 @@ end
 
 def pop_stat_unbonus(who,stat,amount)
 
-	a = "#{$party.get(who).name} loses #{amount} #{stat}"
+	stat_text case stat
+		when 'hp'; "Max Hp"
+		when 'mp'; "Max Mp"
+		when 'str'; "Strength"
+		when 'def'; "Defense"
+		when 'eva'; "Evasion"
+		when 'luk'; "Luck"
+		when 'res'; "Resist"
+	end
+
+	a = "#{$party.get(who).name} loses #{amount} #{stat_text}"
 	ia = $cache.icon("faces/#{who}")
 
 	b = nil
@@ -19233,7 +19253,7 @@ end"class Progress
 		# @night_xp = 100 if @night_xp >= 100		
 	end
 
-end"×class State
+end"class State
 
 	def initialize
 
@@ -19347,10 +19367,12 @@ end"×class State
 	end
 
 	def nospawn(e)
+		@nospawn = [] if @nospawn == nil
 		@nospawn.push([$scene.map.id,e])
 	end
 
 	def nospawn?(e)
+		@nospawn = [] if @nospawn == nil
 		return @nospawn.include?([$scene.map.id,e])
 	end
 
