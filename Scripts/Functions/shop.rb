@@ -127,7 +127,6 @@ def setup_magic_shop
 
 		when '@tor'	
 			stock.push('light-arm-tor')
-			stock.push('mys-claw-tor')
 			stock.push('ing-wand-tor')
 
 		when '@royal-town'	
