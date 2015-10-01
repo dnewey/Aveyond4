@@ -30,7 +30,7 @@ class Progress
 		@demons = ['baal'] # Demons defeated
 
 		# Nightwatch rank
-	    @night_rank = 3
+	    @night_rank = 1
 	    @night_xp = 0
 
 	    # Attraction
@@ -79,6 +79,11 @@ class Progress
 
 	def defeat_demon(demon)
 		@demons.push(demon)
+	end
+
+	def add_night_xp(amount)
+		@night_xp += amount
+		# @night_xp = 100 if @night_xp >= 100		
 	end
 
 end

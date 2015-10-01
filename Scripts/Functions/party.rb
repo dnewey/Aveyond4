@@ -35,9 +35,30 @@ def magics_exchange
 	adding = $party.item_number('cheeki')
 	mult = $data.numbers['cheeki-magic'].value
 	amount = adding*mult
-	amount = 7
+	#amount = 7
 	magics(amount)
 	pop_magics(amount)
+	unitem('cheeki',amount)
+end
+
+def bugs_exchange
+	sfx 'item'
+	adding = $party.item_number('night-bug')
+	mult = $data.numbers['night-bugs'].value
+	amount = adding*mult
+	$progress.add_night_xp(amount)
+	pop_night(amount)
+	unitem('night-bug',amount)
+end
+
+def bugs_owl
+	sfx 'item'
+	adding = $party.item_number('owl-feather')
+	mult = $data.numbers['owl-feather'].value
+	amount = adding*mult
+	$progress.add_night_xp(amount)
+	pop_night(amount)
+	unitem('owl-feather',amount)
 end
 
 def item(id,number=1,type='f')

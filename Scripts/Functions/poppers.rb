@@ -237,3 +237,16 @@ def pop_attract(who)
 	popper.setup(a,ia,b,ib)
 
 end
+
+def pop_night(amount)
+	
+	a = " |"
+	ia = $cache.icon("faces/rob")
+
+	b = " Nightwatch progress increased by " + amount.to_s + "%"
+	ib = $cache.icon("faces/mys")
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end

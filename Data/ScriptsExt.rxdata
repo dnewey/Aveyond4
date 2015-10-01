@@ -3436,7 +3436,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"­#==============================================================================
+end"”#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3473,9 +3473,30 @@ def magics_exchange
 	adding = $party.item_number('cheeki')
 	mult = $data.numbers['cheeki-magic'].value
 	amount = adding*mult
-	amount = 7
+	#amount = 7
 	magics(amount)
 	pop_magics(amount)
+	unitem('cheeki',amount)
+end
+
+def bugs_exchange
+	sfx 'item'
+	adding = $party.item_number('night-bug')
+	mult = $data.numbers['night-bugs'].value
+	amount = adding*mult
+	$progress.add_night_xp(amount)
+	pop_night(amount)
+	unitem('night-bug',amount)
+end
+
+def bugs_owl
+	sfx 'item'
+	adding = $party.item_number('owl-feather')
+	mult = $data.numbers['owl-feather'].value
+	amount = adding*mult
+	$progress.add_night_xp(amount)
+	pop_night(amount)
+	unitem('owl-feather',amount)
 end
 
 def item(id,number=1,type='f')
@@ -3604,7 +3625,7 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
-end"R
+end"?
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3838,6 +3859,19 @@ def pop_attract(who)
 	
 	b = "Attraction Point with #{$party.get(who).name}"
 	ib = $cache.icon("misc/attract-get")
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_night(amount)
+	
+	a = " |"
+	ia = $cache.icon("faces/rob")
+
+	b = " Nightwatch progress increased by " + amount.to_s + "%"
+	ib = $cache.icon("faces/mys")
 
 	popper = $scene.hud.open_popper
 	popper.setup(a,ia,b,ib)
@@ -19103,7 +19137,7 @@ class Game_Party
 
   end
         
-end"žclass Progress
+end"class Progress
 
 	attr_accessor :quests, :complete
 
@@ -19135,7 +19169,7 @@ end"žclass Progress
 		@demons = ['baal'] # Demons defeated
 
 		# Nightwatch rank
-	    @night_rank = 3
+	    @night_rank = 1
 	    @night_xp = 0
 
 	    # Attraction
@@ -19184,6 +19218,11 @@ end"žclass Progress
 
 	def defeat_demon(demon)
 		@demons.push(demon)
+	end
+
+	def add_night_xp(amount)
+		@night_xp += amount
+		# @night_xp = 100 if @night_xp >= 100		
 	end
 
 end"Íclass State
