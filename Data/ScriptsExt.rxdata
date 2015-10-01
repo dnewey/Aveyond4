@@ -1554,7 +1554,7 @@ class Label < Sprite
         
   end
   
-end"ìD#==============================================================================
+end"ÏE#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1853,6 +1853,8 @@ class List
 
   def draw_item(data,row)
 
+    return if !$data.items.has_key?(data)
+
     item = $data.items[data] if data != 'remove'
 
     active = true # $party.get(@user).can_use_item?(item) # Check if in battle perhaps?
@@ -1897,6 +1899,8 @@ class List
   end
 
   def draw_shop(data,row)
+
+    return if !$data.items.has_key?(data)
 
     item = $data.items[data]
 
@@ -1952,6 +1956,8 @@ class List
 
   def draw_equip(data,row)
 
+    return if !$data.items.has_key?(data)
+
     if data == nil
       icon =  $cache.icon("misc/unknown")
       name = "Nothing"
@@ -1973,6 +1979,8 @@ class List
   end
 
   def draw_skill(data,row)
+
+    return if !$data.skills.has_key?(data)
 
     item = $data.skills[data]
     ico = $cache.icon(item.icon)
@@ -2011,6 +2019,8 @@ class List
   end
 
   def draw_quest(data,row)
+
+    return if !$data.quests.has_key?(data)
 
     item = $data.quests[data]
 
@@ -4882,7 +4892,7 @@ def cauldron_graphic(ev)
 
 	end
 
-end")
+end"Š	
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -4905,17 +4915,19 @@ class BattleHud
 		@help_box.skin = $cache.menu_common("skin-plain")
     	@help_box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@help_box.resize(300,50)
-		@help_box.move(166,8)
+		@help_box.move(166,8-15)
 
 	    @help_text = Sprite.new(vp)
 	    @help_text.bitmap = Bitmap.new(300,50)
 	    @help_text.bitmap.font = $fonts.message
 	    @help_text.bitmap.draw_text(0,0,300,50,"Shadow - Gain Darkness",1)
-		@help_text.move(166,9)
+		@help_text.move(166,9-15)
 
 		# Try hiding the info box
-		#@help_box.hide
-		#@help_text.hide
+		@help_box.opacity = 0
+		@help_text.opacity = 0
+
+		@help_timer = -1
 
 	end
 
@@ -4954,12 +4966,36 @@ class BattleHud
 
 	def set_help(text)
 
+		# Show it for a bit when called
+
+		@help_timer = 120
+
+		# Fadein the help now
 		@help_text.bitmap.clear
 		@help_text.bitmap.draw_text(0,0,300,50,text,1)
+
+		@help_text.do(go('opacity',255,160,:qio))
+		@help_box.do(go('opacity',255,160,:qio))
+
+		@help_box.move(166,8-15)
+		@help_text.move(166,9-15)
+
+		@help_text.do(go('y',15,160,:qio))
+		@help_box.do(go('y',15,160,:qio))
 
 	end
 	
 	def update
+
+		@help_timer -= 1
+		if @help_timer == 0
+			# Fadeout the help now thx
+			@help_text.do(go('opacity',-255,160,:qio))
+			@help_box.do(go('opacity',-255,160,:qio))
+
+			@help_text.do(go('y',-15,160,:qio))
+			@help_box.do(go('y',-15,160,:qio))
+		end
 
 		@chars.each{ |c|
 			c.update
@@ -5026,7 +5062,7 @@ class Popper < Sprite
 
 	end
 
-end"¡
+end"¢
 class ActorCmd
 
 	def initialize(vp)
@@ -5265,7 +5301,7 @@ class ActorCmd
 		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.actions[@idx]}-on")
 		#seq = sequence(go("y",-3,400),go("y",3,400))
 		@icons[@idx].do(repeat(seq))
-		$scene.hud.set_help(@battler.actions[@idx])
+		#$scene.hud.set_help(@battler.actions[@idx])
 		@icons[@idx].ox = @icons[@idx].width/2
 		@icons[@idx].oy = @icons[@idx].height
 
@@ -8964,7 +9000,7 @@ class Mnu_Items < Mnu_Base
 		
 	end
 
-end"Ñ#==============================================================================
+end"2#==============================================================================
 # ** Mnu_Journal
 #==============================================================================
 
@@ -9017,6 +9053,11 @@ class Mnu_Journal < Mnu_Base
 	def change(option)
 
 		@page.clear
+
+		if !$data.quests.has_key?(option)
+			log_err("MISSING QUEST: #{option}")
+			return
+		end
 
 		@page.title = $data.quests[option].name
 		@page.description = $data.quests[option].description
@@ -9819,7 +9860,7 @@ class Mnu_Quit < Mnu_Base
 		
 	end
 
-end"
+end"L
 #==============================================================================
 # ** Mnu_Save
 #==============================================================================
@@ -9949,7 +9990,11 @@ class Mnu_Save < Mnu_Base
 
 		#log_info(option)
 		if @load
-			$files.load_game(option)
+			if $files.save_exists?(option)
+				$files.load_game(option)
+			else
+				sys('deny')
+			end
 		else
 			if option == 0
 				log_err("CAN'T OVERSAVE AUTOSAVE")
@@ -11966,7 +12011,7 @@ class Port_Full < Sprite
 	def confused() self.bitmap = $cache.face_menu("#{$menu.char}-c") end
 	def xtra() self.bitmap = $cache.face_menu("#{$menu.char}-x") end
 
-end"
+end"Õ
 class Right_Journal < SpriteGroup
 
 	def initialize(vp)
@@ -12088,17 +12133,19 @@ class Right_Journal < SpriteGroup
 
         #log_info(reqs)
 
-        num = 1
+        req_num = 1
 
         # Per req
         # Per req
         reqs.split("\n").each{ |req|
 
-            txt_req = @txt_req1 if num == 1
-            txt_req = @txt_req2 if num == 2
-            txt_req = @txt_req3 if num == 3
-            txt_req = @txt_req4 if num == 4
-            txt_req = @txt_req5 if num == 5
+            txt_req = @txt_req1 if req_num == 1
+            txt_req = @txt_req2 if req_num == 2
+            txt_req = @txt_req3 if req_num == 3
+            txt_req = @txt_req4 if req_num == 4
+            txt_req = @txt_req5 if req_num == 5
+
+            txt_req.show
 
             dta = req.split("=>")
             case dta[0] 
@@ -12142,7 +12189,7 @@ class Right_Journal < SpriteGroup
             txt_req.move(340,@cy)
             @cy += txt_req.height
 
-            num += 1
+            req_num += 1
         }
 
     end
@@ -13542,7 +13589,8 @@ class Game_Battler
 
   end
 
- end"ßclass Game_Battler
+ end"à
+class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -13595,15 +13643,57 @@ class Game_Battler
 
     targets = is_enemy? ? $party.attackable_battlers : $battle.attackable_enemies
 
-
   	@action = 'attack'
-    @skill_id = @actions[0]
-    #if $data.skills(@skill_id).scope == 'rand'
-      @target = targets.sample
-      @scope = 'rand'
-    #else
 
-    #end
+    if @actions.count == 1
+
+      @skill_id = @actions[0]
+
+    elsif @actions.count == 2
+
+      if rand < 0.65
+        @skill_id = @actions[0]
+      else
+        @skill_id = @actions[1]
+      end
+
+    elsif @actions.count == 3
+
+      if rand < 0.65
+        @skill_id = @actions[0]
+      else
+        if rand < 0.5
+          @skill_id = @actions[1]
+        else
+          @skill_id = @actions[2]
+        end
+      end
+
+    elsif @action.count == 4
+
+      if rand < 0.5
+        @skill_id = @actions[0]
+      else
+        if rand < 0.6
+          if rand < 0.5
+            @skill_id = @actions[1]
+          else
+            @skill_id = @actions[2]
+          end
+        else
+          @skill_id = @actions[3]
+        end
+      end
+
+    end
+
+    sk = $data.skills[@skill_id]
+
+    @scope = sk.scope
+
+    if @scope == 'rand' || @scope == 'one'
+      @target = targets.sample
+    end
 
   end  
 
@@ -19013,7 +19103,7 @@ class Game_Party
 
   end
         
-end"°class Progress
+end"žclass Progress
 
 	attr_accessor :quests, :complete
 
@@ -19088,8 +19178,8 @@ end"°class Progress
 		end
 	end
 
-	def inc_creature_shop_level(lvl)
-		@creature_shop_level = lvl if lvl > @creature_shop_level
+	def inc_chester_level(lvl)
+		@chester_level = lvl if lvl > @chester_level
 	end
 
 	def defeat_demon(demon)
@@ -20166,7 +20256,7 @@ class Scene_Battle
     
   end
 
-end"½#
+end"Ã$
 class Scene_Battle
 
   def phase_main_init
@@ -20215,9 +20305,19 @@ class Scene_Battle
       return
     end
 
+    # Show attack name
+    if @active_battler.action == "items"
+      it = $data.items[@active_battler.item_id]
+      @hud.set_help(it.name)
+    else
+      sk = $data.skills[@active_battler.skill_id]
+      @hud.set_help(sk.name)
+    end
+
     @last_attack = nil
 
   	@phase = :main_start
+    @wait = 15
 
   end
 
@@ -20225,7 +20325,7 @@ class Scene_Battle
   def phase_main_start
 
     # Play nice noise
-    sys 'talk2'
+    #sys 'talk2'
 
       # -----------------------------
     # ERROR CORRECTIONS 
@@ -20277,7 +20377,6 @@ class Scene_Battle
     end
 
     @active_battler.attack_sfx
-
 
     # Show text if there is
     @phase = :main_text
@@ -22819,7 +22918,7 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"»#==============================================================================
+end"ú#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
@@ -22876,6 +22975,10 @@ class FileManager
   
   def any_save_files?
     !Dir.glob('Av4-*.save').empty?
+  end
+
+  def save_exists?(i)
+    return @headers[i] != nil
   end
 
   def save_file_list
@@ -23803,7 +23906,7 @@ end"øclass Bitmap
 	end
 
 end
-"j
+"‚
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -23811,6 +23914,7 @@ class UsableData
 	attr_reader :icon
 	attr_reader :price
 	attr_reader :scope
+	attr_reader :priority
 	attr_reader :text
 	attr_reader :anim
 	attr_reader :action
