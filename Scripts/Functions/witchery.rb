@@ -32,7 +32,7 @@ def potion_chose_recipe
 
 	else
 
-		text("ing: This isn't a potion recipe!")
+		text("x-ing: This isn't a potion recipe!")
 		$menu.chosen = nil
 		potion_state('empty')
 
@@ -119,7 +119,7 @@ def potion_use_item
 
 		else
 
-			text("ing: I need to add something.")
+			text("x-ing: I need to add something.")
 			return
 
 	end
@@ -170,7 +170,7 @@ def potion_problem
 	if solved
 		potion_next_problem
 	else
-		text("ing: That didn't work.")
+		text("x-ing: That didn't work.")
 	end
 
 end
@@ -192,10 +192,10 @@ def potion_next_problem
 	case $party.potion_state
 
 		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
-			text("ing: That doesn't look right.")
+			text("x-ing: That doesn't look right.")
 
 		else
-			text("ing: That's it! Perfect!")
+			text("x-ing: That's it! Perfect!")
 
 	end
 
