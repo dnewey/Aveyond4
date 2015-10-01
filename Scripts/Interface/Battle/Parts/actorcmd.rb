@@ -237,7 +237,7 @@ class ActorCmd
 		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.actions[@idx]}-on")
 		#seq = sequence(go("y",-3,400),go("y",3,400))
 		@icons[@idx].do(repeat(seq))
-		$scene.hud.set_help(@battler.actions[@idx])
+		#$scene.hud.set_help(@battler.actions[@idx])
 		@icons[@idx].ox = @icons[@idx].width/2
 		@icons[@idx].oy = @icons[@idx].height
 

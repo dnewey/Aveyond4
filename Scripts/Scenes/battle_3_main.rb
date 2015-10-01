@@ -47,9 +47,19 @@ class Scene_Battle
       return
     end
 
+    # Show attack name
+    if @active_battler.action == "items"
+      it = $data.items[@active_battler.item_id]
+      @hud.set_help(it.name)
+    else
+      sk = $data.skills[@active_battler.skill_id]
+      @hud.set_help(sk.name)
+    end
+
     @last_attack = nil
 
   	@phase = :main_start
+    @wait = 15
 
   end
 
@@ -57,7 +67,7 @@ class Scene_Battle
   def phase_main_start
 
     # Play nice noise
-    sys 'talk2'
+    #sys 'talk2'
 
       # -----------------------------
     # ERROR CORRECTIONS 
@@ -109,7 +119,6 @@ class Scene_Battle
     end
 
     @active_battler.attack_sfx
-
 
     # Show text if there is
     @phase = :main_text

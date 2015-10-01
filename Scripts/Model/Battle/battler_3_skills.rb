@@ -51,15 +51,57 @@ class Game_Battler
 
     targets = is_enemy? ? $party.attackable_battlers : $battle.attackable_enemies
 
-
   	@action = 'attack'
-    @skill_id = @actions[0]
-    #if $data.skills(@skill_id).scope == 'rand'
-      @target = targets.sample
-      @scope = 'rand'
-    #else
 
-    #end
+    if @actions.count == 1
+
+      @skill_id = @actions[0]
+
+    elsif @actions.count == 2
+
+      if rand < 0.65
+        @skill_id = @actions[0]
+      else
+        @skill_id = @actions[1]
+      end
+
+    elsif @actions.count == 3
+
+      if rand < 0.65
+        @skill_id = @actions[0]
+      else
+        if rand < 0.5
+          @skill_id = @actions[1]
+        else
+          @skill_id = @actions[2]
+        end
+      end
+
+    elsif @action.count == 4
+
+      if rand < 0.5
+        @skill_id = @actions[0]
+      else
+        if rand < 0.6
+          if rand < 0.5
+            @skill_id = @actions[1]
+          else
+            @skill_id = @actions[2]
+          end
+        else
+          @skill_id = @actions[3]
+        end
+      end
+
+    end
+
+    sk = $data.skills[@skill_id]
+
+    @scope = sk.scope
+
+    if @scope == 'rand' || @scope == 'one'
+      @target = targets.sample
+    end
 
   end  
 

@@ -297,6 +297,8 @@ class List
 
   def draw_item(data,row)
 
+    return if !$data.items.has_key?(data)
+
     item = $data.items[data] if data != 'remove'
 
     active = true # $party.get(@user).can_use_item?(item) # Check if in battle perhaps?
@@ -341,6 +343,8 @@ class List
   end
 
   def draw_shop(data,row)
+
+    return if !$data.items.has_key?(data)
 
     item = $data.items[data]
 
@@ -396,6 +400,8 @@ class List
 
   def draw_equip(data,row)
 
+    return if !$data.items.has_key?(data)
+
     if data == nil
       icon =  $cache.icon("misc/unknown")
       name = "Nothing"
@@ -417,6 +423,8 @@ class List
   end
 
   def draw_skill(data,row)
+
+    return if !$data.skills.has_key?(data)
 
     item = $data.skills[data]
     ico = $cache.icon(item.icon)
@@ -455,6 +463,8 @@ class List
   end
 
   def draw_quest(data,row)
+
+    return if !$data.quests.has_key?(data)
 
     item = $data.quests[data]
 

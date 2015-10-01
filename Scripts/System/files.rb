@@ -57,6 +57,10 @@ class FileManager
     !Dir.glob('Av4-*.save').empty?
   end
 
+  def save_exists?(i)
+    return @headers[i] != nil
+  end
+
   def save_file_list
     i = 0
     list = []

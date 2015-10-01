@@ -52,6 +52,11 @@ class Mnu_Journal < Mnu_Base
 
 		@page.clear
 
+		if !$data.quests.has_key?(option)
+			log_err("MISSING QUEST: #{option}")
+			return
+		end
+
 		@page.title = $data.quests[option].name
 		@page.description = $data.quests[option].description
 

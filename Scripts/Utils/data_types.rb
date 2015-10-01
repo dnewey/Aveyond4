@@ -6,6 +6,7 @@ class UsableData
 	attr_reader :icon
 	attr_reader :price
 	attr_reader :scope
+	attr_reader :priority
 	attr_reader :text
 	attr_reader :anim
 	attr_reader :action
