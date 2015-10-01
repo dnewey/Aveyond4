@@ -7,8 +7,11 @@ def shop_choice
 		when 'Buy'
 
 			# Have money, buy it
+			data = $data.items[gev(me).name]
 			item(gev(me).name,'b')
 			state(me,'sold')
+			ungold(data.price)
+			delete(me)
 
 
 		when 'Info'

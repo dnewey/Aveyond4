@@ -91,7 +91,7 @@ class Ui_Screen
 
 		if @book
 			@book.update 
-			if $input.action? #|| $input.click?
+			if $input.action? || $input.cancel? || $input.rclick?
 				$tweens.clear(@book)
 				@book.dispose
 				@book = nil

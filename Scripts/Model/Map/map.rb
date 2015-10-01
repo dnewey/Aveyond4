@@ -158,6 +158,10 @@ class Game_Map
     # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
+
+      # Don't respawn
+      next if $state.nospawn?(i)
+
       @events[i] = Game_Event.new(@map.events[i])
 
       # if @events[i].name == "STAIRS"

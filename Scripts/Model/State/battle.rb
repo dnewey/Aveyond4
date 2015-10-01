@@ -103,6 +103,7 @@ class Game_Battle
 
     $map.all_by_name(src_event.name).each{ |mon|
       # Add this guy to battle using name
+      $state.nospawn(mon.id) if !src_event.name.include?("*")
       mon.force_clone("loot")
     }
 

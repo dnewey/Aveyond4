@@ -11,6 +11,9 @@ class State
 		@deleted = []
 		@disabled = []
 
+		# Deleted in future
+		@nospawn = []
+
 		# Menu indexes?
 
 	end
@@ -35,7 +38,7 @@ class State
 		else
 			@vars[v] = a
 		end
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def unvar(v,a)
@@ -44,7 +47,7 @@ class State
 		else
 			@vars[v] = -a
 		end
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def var?(v,t)
@@ -58,54 +61,62 @@ class State
 	end
 
 	def state(e,s)
-		@states[[$map.id,e,s]] = true
+		@states[[$scene.map.id,e,s]] = true
 		$scene.map.need_refresh = true
 	end
 
 	def unstate(e,s)
-		@states[[$map.id,e,s]] = false
+		@states[[$scene.map.id,e,s]] = false
 		$scene.map.need_refresh = true
 	end
 
 	def state?(e,s)
-		return false if !@states.has_key?([$map.id,e,s])
-		return @states[[$map.id,e,s]]
+		return false if !@states.has_key?([$scene.map.id,e,s])
+		return @states[[$scene.map.id,e,s]]
 	end
 
 	def loc(e)
 		ev = gev(e)
-		@locs[[$map.id,e]] = [ev.x,ev.y,ev.direction,ev.off_x,ev.off_y]
+		@locs[[$scene.map.id,e]] = [ev.x,ev.y,ev.direction,ev.off_x,ev.off_y]
 	end
 	def nloc(e)
-		@locs.delete([$map.id,e])
+		@locs.delete([$scene.map.id,e])
 	end
 
 	def loc?(e)
-		return @locs.has_key?([$map.id,e])			
+		return @locs.has_key?([$scene.map.id,e])			
 	end
 
 	def getloc(e)
-		return @locs[[$map.id,e]]
+		return @locs[[$scene.map.id,e]]
 	end
 
 	def delete(e)
-		@deleted.push([$map.id,e])
+		@deleted.push([$scene.map.id,e])
 	end
 
 	def delete?(e)
-		return @deleted.include?([$map.id,e])
+		return @deleted.include?([$scene.map.id,e])
 	end
 
 	def disable(e)
-		@disabled.push([$map.id,e])
+		@disabled.push([$scene.map.id,e])
 	end
 
 	def disable?(e)
-		return @disabled.include?([$map.id,e])
+		return @disabled.include?([$scene.map.id,e])
 	end
 
 	def enable(e)
-		@disabled.delete([$map.id,e])
+		@disabled.delete([$scene.map.id,e])
+	end
+
+	def nospawn(e)
+		@nospawn.push([$scene.map.id,e])
+	end
+
+	def nospawn?(e)
+		return @nospawn.include?([$scene.map.id,e])
 	end
 
 end

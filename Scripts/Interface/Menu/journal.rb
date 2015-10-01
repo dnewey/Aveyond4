@@ -22,7 +22,7 @@ class Mnu_Journal < Mnu_Base
 		open
 
 		# Open first
-		change($progress.quests[0]) if !$progress.quests.empty?
+		change($progress.quests[-1]) if !$progress.quests.empty?
 
 	end
 

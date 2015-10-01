@@ -32,7 +32,7 @@ class Scene_Menu
     @bg.bitmap = $cache.menu_background("sample")
     #@bg.bitmap = $cache.menu_background("witch")
     @bg.opacity = 0
-    @bg.do(go("opacity",255,300))
+    
     #@bg.y = 30
     #@bg.do(seq(go("y",-50,150,:qio),go("y",20,150,:qio)))
 
@@ -62,6 +62,8 @@ class Scene_Menu
   # * Update 
   #--------------------------------------------------------------------------
   def update
+
+    @bg.do(go("opacity",255,300)) if @bg.opacity == 0
 
     if @closing && $tweens.done?(self)
       $tweens.clear_all
