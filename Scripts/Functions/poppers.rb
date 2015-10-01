@@ -201,7 +201,17 @@ end
 
 def pop_stat_bonus(who,stat,amount)
 
-	a = "#{$party.get(who).name} gains #{amount} #{stat}"
+	stat_text case stat
+		when 'hp'; "Max Hp"
+		when 'mp'; "Max Mp"
+		when 'str'; "Strength"
+		when 'def'; "Defense"
+		when 'eva'; "Evasion"
+		when 'luk'; "Luck"
+		when 'res'; "Resist"
+	end
+
+	a = "#{$party.get(who).name} gains #{amount} #{stat_text}"
 	ia = $cache.icon("faces/#{who}")
 
 	b = nil
@@ -214,7 +224,17 @@ end
 
 def pop_stat_unbonus(who,stat,amount)
 
-	a = "#{$party.get(who).name} loses #{amount} #{stat}"
+	stat_text case stat
+		when 'hp'; "Max Hp"
+		when 'mp'; "Max Mp"
+		when 'str'; "Strength"
+		when 'def'; "Defense"
+		when 'eva'; "Evasion"
+		when 'luk'; "Luck"
+		when 'res'; "Resist"
+	end
+
+	a = "#{$party.get(who).name} loses #{amount} #{stat_text}"
 	ia = $cache.icon("faces/#{who}")
 
 	b = nil

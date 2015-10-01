@@ -112,10 +112,12 @@ class State
 	end
 
 	def nospawn(e)
+		@nospawn = [] if @nospawn == nil
 		@nospawn.push([$scene.map.id,e])
 	end
 
 	def nospawn?(e)
+		@nospawn = [] if @nospawn == nil
 		return @nospawn.include?([$scene.map.id,e])
 	end
 
