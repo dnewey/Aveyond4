@@ -3924,7 +3924,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"š
+end"å
 
 def shop_choice
 
@@ -3933,8 +3933,11 @@ def shop_choice
 		when 'Buy'
 
 			# Have money, buy it
+			data = $data.items[gev(me).name]
 			item(gev(me).name,'b')
 			state(me,'sold')
+			ungold(data.price)
+			delete(me)
 
 
 		when 'Info'
@@ -5839,7 +5842,7 @@ class TargetCmd
 	end
 
 end
-"ü#==============================================================================
+"#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -5932,7 +5935,7 @@ class Ui_Screen
 
 		if @book
 			@book.update 
-			if $input.action? #|| $input.click?
+			if $input.action? || $input.cancel? || $input.rclick?
 				$tweens.clear(@book)
 				@book.dispose
 				@book = nil
@@ -6199,7 +6202,7 @@ class Ui_Bar < SpriteGroup
 
 	end
 
-end"G	#==============================================================================
+end"E	#==============================================================================
 # Ui_Book
 #==============================================================================
 
@@ -6297,7 +6300,7 @@ class Ui_Book < SpriteGroup
 			sfx('page')
 		end
 
-		if @page_idx != 10 && $input.right?
+		if @page_idx != 5 && $input.right?
 			@page_idx += 1
 			@turn_step = 20
 			@turn_dir = 1
@@ -6308,7 +6311,7 @@ class Ui_Book < SpriteGroup
 		if $input.click?
 
 			# If to the right
-			if @page_idx != 10 && $mouse.x > 420
+			if @page_idx != 5 && $mouse.x > 420
 				@page_idx += 1
 				@turn_step = 20
 				@turn_dir = 1
@@ -9034,7 +9037,7 @@ class Mnu_Items < Mnu_Base
 		
 	end
 
-end"2#==============================================================================
+end"3#==============================================================================
 # ** Mnu_Journal
 #==============================================================================
 
@@ -9058,7 +9061,7 @@ class Mnu_Journal < Mnu_Base
 		open
 
 		# Open first
-		change($progress.quests[0]) if !$progress.quests.empty?
+		change($progress.quests[-1]) if !$progress.quests.empty?
 
 	end
 
@@ -16949,7 +16952,7 @@ class Interpreter
   end
 
 end
-"q?#==============================================================================
+"®?#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17109,6 +17112,10 @@ class Game_Map
     # Set map event data
     @events = {}
     @map.events.keys.each{ |i|
+
+      # Don't respawn
+      next if $state.nospawn?(i)
+
       @events[i] = Game_Event.new(@map.events[i])
 
       # if @events[i].name == "STAIRS"
@@ -18114,7 +18121,7 @@ class Game_Player < Game_Character
   end
 
 end
-"D.
+"ƒ.
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -18219,6 +18226,7 @@ class Game_Battle
 
     $map.all_by_name(src_event.name).each{ |mon|
       # Add this guy to battle using name
+      $state.nospawn(mon.id) if !src_event.name.include?("*")
       mon.force_clone("loot")
     }
 
@@ -19225,7 +19233,7 @@ end"class Progress
 		# @night_xp = 100 if @night_xp >= 100		
 	end
 
-end"Íclass State
+end"×class State
 
 	def initialize
 
@@ -19237,6 +19245,9 @@ end"Íclass State
 		@locs = {}
 		@deleted = []
 		@disabled = []
+
+		# Deleted in future
+		@nospawn = []
 
 		# Menu indexes?
 
@@ -19262,7 +19273,7 @@ end"Íclass State
 		else
 			@vars[v] = a
 		end
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def unvar(v,a)
@@ -19271,7 +19282,7 @@ end"Íclass State
 		else
 			@vars[v] = -a
 		end
-		$map.need_refresh = true
+		$scene.map.need_refresh = true
 	end
 
 	def var?(v,t)
@@ -19285,54 +19296,62 @@ end"Íclass State
 	end
 
 	def state(e,s)
-		@states[[$map.id,e,s]] = true
+		@states[[$scene.map.id,e,s]] = true
 		$scene.map.need_refresh = true
 	end
 
 	def unstate(e,s)
-		@states[[$map.id,e,s]] = false
+		@states[[$scene.map.id,e,s]] = false
 		$scene.map.need_refresh = true
 	end
 
 	def state?(e,s)
-		return false if !@states.has_key?([$map.id,e,s])
-		return @states[[$map.id,e,s]]
+		return false if !@states.has_key?([$scene.map.id,e,s])
+		return @states[[$scene.map.id,e,s]]
 	end
 
 	def loc(e)
 		ev = gev(e)
-		@locs[[$map.id,e]] = [ev.x,ev.y,ev.direction,ev.off_x,ev.off_y]
+		@locs[[$scene.map.id,e]] = [ev.x,ev.y,ev.direction,ev.off_x,ev.off_y]
 	end
 	def nloc(e)
-		@locs.delete([$map.id,e])
+		@locs.delete([$scene.map.id,e])
 	end
 
 	def loc?(e)
-		return @locs.has_key?([$map.id,e])			
+		return @locs.has_key?([$scene.map.id,e])			
 	end
 
 	def getloc(e)
-		return @locs[[$map.id,e]]
+		return @locs[[$scene.map.id,e]]
 	end
 
 	def delete(e)
-		@deleted.push([$map.id,e])
+		@deleted.push([$scene.map.id,e])
 	end
 
 	def delete?(e)
-		return @deleted.include?([$map.id,e])
+		return @deleted.include?([$scene.map.id,e])
 	end
 
 	def disable(e)
-		@disabled.push([$map.id,e])
+		@disabled.push([$scene.map.id,e])
 	end
 
 	def disable?(e)
-		return @disabled.include?([$map.id,e])
+		return @disabled.include?([$scene.map.id,e])
 	end
 
 	def enable(e)
-		@disabled.delete([$map.id,e])
+		@disabled.delete([$scene.map.id,e])
+	end
+
+	def nospawn(e)
+		@nospawn.push([$scene.map.id,e])
+	end
+
+	def nospawn?(e)
+		return @nospawn.include?([$scene.map.id,e])
 	end
 
 end
@@ -20963,7 +20982,7 @@ class Scene_Map < Scene_Base
   end
 
 end
-"²#==============================================================================
+"Î#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
@@ -20997,7 +21016,7 @@ class Scene_Menu
     @bg.bitmap = $cache.menu_background("sample")
     #@bg.bitmap = $cache.menu_background("witch")
     @bg.opacity = 0
-    @bg.do(go("opacity",255,300))
+    
     #@bg.y = 30
     #@bg.do(seq(go("y",-50,150,:qio),go("y",20,150,:qio)))
 
@@ -21027,6 +21046,8 @@ class Scene_Menu
   # * Update 
   #--------------------------------------------------------------------------
   def update
+
+    @bg.do(go("opacity",255,300)) if @bg.opacity == 0
 
     if @closing && $tweens.done?(self)
       $tweens.clear_all
@@ -23770,7 +23791,7 @@ class SettingsManager
     save
   end
 
-end"Ž#==============================================================================
+end"ˆ#==============================================================================
 # ** Nano Manager
 #==============================================================================
 
@@ -23778,6 +23799,7 @@ class TweenManager
 
 	def initialize
 		@tweens = []
+		@tweens_menu = []
 		@last = Time.now
 	end
 
@@ -23787,31 +23809,56 @@ class TweenManager
 		delta = ((Time.now - @last) * 1000).to_i
 		@last = Time.now
 
-		@tweens.delete_if{ |n| (n.is_a?(SpriteGroup) && n.disposed?) || (n.is_a?(Sprite) && n.disposed?) || n == nil || n.done? }
-		
-	    @tweens.each{ |n| n.update(delta) }
+		if $scene.is_a?(Scene_Menu)
+			@tweens_menu.delete_if{ |n| (n.is_a?(SpriteGroup) && n.disposed?) || (n.is_a?(Sprite) && n.disposed?) || n == nil || n.done? }		
+		    @tweens_menu.each{ |n| n.update(delta) }
+		else
+			@tweens.delete_if{ |n| (n.is_a?(SpriteGroup) && n.disposed?) || (n.is_a?(Sprite) && n.disposed?) || n == nil || n.done? }		
+		    @tweens.each{ |n| n.update(delta) }
+		end
 
 	end
 
 	def register(tween)
-		@tweens.push(tween)
+		# Register to the set for this scene
+		if $scene.is_a?(Scene_Menu)
+			@tweens_menu.push(tween)	
+		else
+			@tweens.push(tween)
+		end
 	end
 
 	def clear(object)
-		@tweens.delete_if{ |n| n.parent == object } 
+		if $scene.is_a?(Scene_Menu)
+			@tweens_menu.delete_if{ |n| n.parent == object } 
+		else
+			@tweens.delete_if{ |n| n.parent == object } 
+		end
 	end
 
 	def resolve(object)
-		@tweens.each{ |n| n.update(5000) if n.parent == object }
+		if $scene.is_a?(Scene_Menu)
+			@tweens_menu.each{ |n| n.update(5000) if n.parent == object }
+		else
+			@tweens.each{ |n| n.update(5000) if n.parent == object }
+		end
 		clear(object)
 	end
 
-	def clear_all
-		@tweens.clear
+	def clear_all		
+		if $scene.is_a?(Scene_Menu)
+			@tweens_menu.clear
+		else
+			@tweens.clear
+		end
 	end
 
 	def done?(object)
-		return @tweens.select{ |n| n.parent == object }.empty?
+		if $scene.is_a?(Scene_Menu)
+			return @tweens_menu.select{ |n| n.parent == object }.empty?
+		else
+			return @tweens.select{ |n| n.parent == object }.empty?
+		end
 	end
 
 end"øclass Bitmap
