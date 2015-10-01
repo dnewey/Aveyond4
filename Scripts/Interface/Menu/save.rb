@@ -127,7 +127,11 @@ class Mnu_Save < Mnu_Base
 
 		#log_info(option)
 		if @load
-			$files.load_game(option)
+			if $files.save_exists?(option)
+				$files.load_game(option)
+			else
+				sys('deny')
+			end
 		else
 			if option == 0
 				log_err("CAN'T OVERSAVE AUTOSAVE")

@@ -120,17 +120,19 @@ class Right_Journal < SpriteGroup
 
         #log_info(reqs)
 
-        num = 1
+        req_num = 1
 
         # Per req
         # Per req
         reqs.split("\n").each{ |req|
 
-            txt_req = @txt_req1 if num == 1
-            txt_req = @txt_req2 if num == 2
-            txt_req = @txt_req3 if num == 3
-            txt_req = @txt_req4 if num == 4
-            txt_req = @txt_req5 if num == 5
+            txt_req = @txt_req1 if req_num == 1
+            txt_req = @txt_req2 if req_num == 2
+            txt_req = @txt_req3 if req_num == 3
+            txt_req = @txt_req4 if req_num == 4
+            txt_req = @txt_req5 if req_num == 5
+
+            txt_req.show
 
             dta = req.split("=>")
             case dta[0] 
@@ -174,7 +176,7 @@ class Right_Journal < SpriteGroup
             txt_req.move(340,@cy)
             @cy += txt_req.height
 
-            num += 1
+            req_num += 1
         }
 
     end
