@@ -73,8 +73,8 @@ class Progress
 		end
 	end
 
-	def inc_creature_shop_level(lvl)
-		@creature_shop_level = lvl if lvl > @creature_shop_level
+	def inc_chester_level(lvl)
+		@chester_level = lvl if lvl > @chester_level
 	end
 
 	def defeat_demon(demon)
