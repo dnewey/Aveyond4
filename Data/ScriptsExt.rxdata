@@ -12137,7 +12137,7 @@ class Port_Full < Sprite
 	def confused() self.bitmap = $cache.face_menu("#{$menu.char}-c") end
 	def xtra() self.bitmap = $cache.face_menu("#{$menu.char}-x") end
 
-end"Õ
+end"
 class Right_Journal < SpriteGroup
 
 	def initialize(vp)
@@ -12252,7 +12252,13 @@ class Right_Journal < SpriteGroup
     end
 
     def add_reqs(reqs)
+
+
         return if reqs == ''
+        return if reqs == nil
+
+        log_sys reqs
+
         @sub_req.show
         @sub_req.move(340,@cy)
         @cy += 22
@@ -13715,7 +13721,7 @@ class Game_Battler
 
   end
 
- end"à
+ end"÷
 class Game_Battler
 
   def learn(skill)
@@ -13813,6 +13819,7 @@ class Game_Battler
 
     end
 
+    log_sys @skill_id
     sk = $data.skills[@skill_id]
 
     @scope = sk.scope

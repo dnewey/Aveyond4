@@ -113,7 +113,13 @@ class Right_Journal < SpriteGroup
     end
 
     def add_reqs(reqs)
+
+
         return if reqs == ''
+        return if reqs == nil
+
+        log_sys reqs
+
         @sub_req.show
         @sub_req.move(340,@cy)
         @cy += 22
