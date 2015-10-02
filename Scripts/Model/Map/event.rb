@@ -446,7 +446,6 @@ class Game_Event < Game_Character
         return false if @state.varval('chains') < $state.varval('serpent')
         return false if @state.varval('chains') < $state.varval('bones')
 
-
     end
 
     return true
@@ -460,6 +459,12 @@ class Game_Event < Game_Character
     @page_idx = find_page
     new_page = @pages[@page_idx] if @page_idx != nil
     setup_page(new_page) if new_page != @page
+  end
+
+  def force_refresh
+    @page_idx = find_page
+    new_page = @pages[@page_idx] if @page_idx != nil
+    setup_page(new_page)
   end
 
   def is_second?(page)
@@ -734,6 +739,10 @@ class Game_Event < Game_Character
 
         when '#turn'
           @turn = data[1].to_i
+
+        when '#word'
+          return if $word == nil
+          @character_name = "Props/z#{$word[data[1].to_i,1]}"
 
       end
     }
