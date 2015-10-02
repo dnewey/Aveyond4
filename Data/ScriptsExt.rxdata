@@ -3944,7 +3944,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"Æ
+end"9
 
 def shop_choice
 
@@ -3954,16 +3954,18 @@ def shop_choice
 
 			# Have money, buy it
 			data = $data.items[gev(me).name]
-			item(gev(me).name,'b')
-			state(me,'sold')
-			ungold(data.price)
-			delete(me)
-
+			if $party.gold >= data.price
+				item(gev(me).name,'b')
+				state(me,'sold')
+				ungold(data.price)
+				delete(me)
+			else
+				text("#{$shopkeep}: You can't afford that.")				
+			end
 
 		when 'Info'
 
-			text("36: That's a covey balm")
-
+			text("#{$shopkeep}: That's a covey balm.")
 
 		when 'Cancel'
 
@@ -14084,7 +14086,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"®´#==============================================================================
+end"´¶#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -14142,8 +14144,7 @@ class Game_Character
 
   attr_accessor :move_type
 
-
-  
+  attr_accessor :move_speed 
    
   
   #--------------------------------------------------------------------------
@@ -14985,7 +14986,6 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_down(turn_enabled = true)
 
-
     @move_angle = 0
 
     # Turn down
@@ -14997,8 +14997,17 @@ class Game_Character
 
       # Turn down
       turn_down
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       @y += 1
+
+      $scene.map.cache_push(@x,@y,self)
+
+      # Add to cache
+
       # Increase steps
       increase_steps
       # If impassable
@@ -15030,8 +15039,15 @@ class Game_Character
     if passable?(@x, @y, 4)
       # Turn left
       turn_left
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       @x -= 1
+
+      $scene.map.cache_push(@x,@y,self)
+
       # Increase steps
       increase_steps
     # If impassable
@@ -15058,8 +15074,15 @@ class Game_Character
     if passable?(@x, @y, 6)
       # Turn right
       turn_right
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       @x += 1
+
+      $scene.map.cache_push(@x,@y,self)
+
       # Increase steps
       increase_steps
     # If impassable
@@ -15086,9 +15109,16 @@ class Game_Character
     if passable?(@x, @y, 8)
       # Turn up
       turn_up
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       pt = terrain_tag
       @y -= 1
+
+      $scene.map.cache_push(@x,@y,self)
+
       # Increase steps
       increase_steps
     # If impassable
@@ -15661,7 +15691,7 @@ class Game_Character
 
 
 end
-"ÜS#==============================================================================
+"ÜT#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -16109,7 +16139,6 @@ class Game_Event < Game_Character
         return false if @state.varval('chains') < $state.varval('serpent')
         return false if @state.varval('chains') < $state.varval('bones')
 
-
     end
 
     return true
@@ -16123,6 +16152,12 @@ class Game_Event < Game_Character
     @page_idx = find_page
     new_page = @pages[@page_idx] if @page_idx != nil
     setup_page(new_page) if new_page != @page
+  end
+
+  def force_refresh
+    @page_idx = find_page
+    new_page = @pages[@page_idx] if @page_idx != nil
+    setup_page(new_page)
   end
 
   def is_second?(page)
@@ -16397,6 +16432,10 @@ class Game_Event < Game_Character
 
         when '#turn'
           @turn = data[1].to_i
+
+        when '#word'
+          return if $word == nil
+          @character_name = "Props/z#{$word[data[1].to_i,1]}"
 
       end
     }
@@ -17045,7 +17084,7 @@ class Interpreter
   end
 
 end
-"ë?#==============================================================================
+"¡@#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17331,6 +17370,16 @@ class Game_Map
     @interpreter.common_event_id = id
   end
 
+  # For moving events
+  def cache_clear(x,y,ev)
+    @ev_cache[[x,y]] = []
+  end
+
+  def cache_push(x,y,ev)
+    @ev_cache[[x,y]] = [] if !@ev_cache.has_key?([x,y])
+    @ev_cache[[x,y]].push(ev)
+  end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -17380,24 +17429,24 @@ class Game_Map
   def update_events
 
     # Keep track of starting events and always update those
-    @events.values.each{ |e| e.update }
+    #@events.values.each{ |e| e.update }
 
-    # x1 = ((display_x/128) - 2).to_i
-    # y1 = ((display_y/128) -2).to_i
-    # x2 = x1 + 20 + 4
-    # y2 = y1 + 15 + 4
+    x1 = ((display_x/128) - 2).to_i
+    y1 = ((display_y/128) -2).to_i
+    x2 = x1 + 20 + 4
+    y2 = y1 + 15 + 4
 
-    # updaters = []
-    # (x1..x2).each{ |x|
-    #   (y1..y2).each{ |y|
-    #     evs = events_at(x,y)
-    #     if evs != nil
-    #       updaters += evs 
-    #     end    
-    #   }
-    # }
+    updaters = []
+    (x1..x2).each{ |x|
+      (y1..y2).each{ |y|
+        evs = events_at(x,y)
+        if evs != nil
+          updaters += evs 
+        end    
+      }
+    }
 
-    # updaters.uniq.each{ |e| e.update }
+    updaters.uniq.each{ |e| e.update }
 
   end
 
@@ -17727,7 +17776,7 @@ class Moblin
 
 	end
 
-end"M3#==============================================================================
+end"L3#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -17749,7 +17798,7 @@ class Game_Player < Game_Character
     @static = false
     @next_common = nil
 
-    #self.move_speed = 3.3
+    self.move_speed = 3.3
 
     @faceoff = 0 # Here to match event, possibly could have both in char
   end

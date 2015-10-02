@@ -8,16 +8,18 @@ def shop_choice
 
 			# Have money, buy it
 			data = $data.items[gev(me).name]
-			item(gev(me).name,'b')
-			state(me,'sold')
-			ungold(data.price)
-			delete(me)
-
+			if $party.gold >= data.price
+				item(gev(me).name,'b')
+				state(me,'sold')
+				ungold(data.price)
+				delete(me)
+			else
+				text("#{$shopkeep}: You can't afford that.")				
+			end
 
 		when 'Info'
 
-			text("36: That's a covey balm")
-
+			text("#{$shopkeep}: That's a covey balm.")
 
 		when 'Cancel'
 

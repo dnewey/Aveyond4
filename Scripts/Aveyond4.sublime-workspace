@@ -68,84 +68,10 @@
 	"buffers":
 	[
 		{
-			"file": "Model/Map/event.rb",
+			"file": "Scenes/title.rb",
 			"settings":
 			{
-				"buffer_size": 20627,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 235 files for \"passable\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  202    # * Determine if Passable\n  203    #--------------------------------------------------------------------------\n  204:   def passable?(x, y, d) #d0 = jump\n  205  \n  206      #return true if self != $player\n  ...\n  218      # If enemy, check if I shall pass\n  219      if self.is_a?(Game_Event) && self.monster != nil\n  220:       return false unless $map.passable?(x, y, d, self) # From\n  221:       return false  unless $map.passable?(new_x, new_y, 10 - d,self,true) # To\n  222      else\n  223:       return false unless $map.passable?(x, y, d, self) # From\n  224:       return false  unless $map.passable?(new_x, new_y, 10 - d,self) # To\n  225      end\n  226  \n  ...\n  241      d = 6 if @y == $player.y and @x == $player.x - 1\n  242      \n  243:     return passable?(x,y,d)\n  244  \n  245    end\n  ...\n  906        turn_down\n  907      end\n  908:     # If passable\n  909:     if passable?(@x, @y, 2)\n  910  \n  911        # Turn down\n  ...\n  915        # Increase steps\n  916        increase_steps\n  917:       # If impassable\n  918        $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 || terrain_tag == 5\n  919        $audio.queue('ladder/ladder2',24,0.15) if terrain_tag == 3\n  ...\n  940        turn_left\n  941      end\n  942:     # If passable\n  943:     if passable?(@x, @y, 4)\n  944        # Turn left\n  945        turn_left\n  ...\n  948        # Increase steps\n  949        increase_steps\n  950:     # If impassable\n  951      $audio.queue(\"steps/foot#{rand(8)}\",12,0.4) if self == $player && terrain_tag != 3\n  952      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2\n  ...\n  968        turn_right\n  969      end\n  970:     # If passable\n  971:     if passable?(@x, @y, 6)\n  972        # Turn right\n  973        turn_right\n  ...\n  976        # Increase steps\n  977        increase_steps\n  978:     # If impassable\n  979      $audio.queue(\"steps/foot#{rand(8)}\",12,0.4) if self == $player && terrain_tag != 3\n  980      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2\n  ...\n  996        turn_up\n  997      end\n  998:     # If passable\n  999:     if passable?(@x, @y, 8)\n 1000        # Turn up\n 1001        turn_up\n ....\n 1005        # Increase steps\n 1006        increase_steps\n 1007:     # If impassable\n 1008        $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 && pt == 3\n 1009        $audio.queue('ladder/ladder1',24,0.15) if terrain_tag == 4\n ....\n 1026        @direction = (@direction == 6 ? 4 : @direction == 8 ? 2 : @direction)\n 1027      end\n 1028:     # When a down to left or a left to down course is passable\n 1029:     if (passable?(@x, @y, 2) and passable?(@x, @y + 1, 4)) or\n 1030:        (passable?(@x, @y, 4) and passable?(@x - 1, @y, 2))\n 1031        # Update coordinates\n 1032        @x -= 1\n ....\n 1045        @direction = (@direction == 4 ? 6 : @direction == 8 ? 2 : @direction)\n 1046      end\n 1047:     # When a down to right or a right to down course is passable\n 1048:     if (passable?(@x, @y, 2) and passable?(@x, @y + 1, 6)) or\n 1049:        (passable?(@x, @y, 6) and passable?(@x + 1, @y, 2))\n 1050        # Update coordinates\n 1051        @x += 1\n ....\n 1064        @direction = (@direction == 6 ? 4 : @direction == 2 ? 8 : @direction)\n 1065      end\n 1066:     # When an up to left or a left to up course is passable\n 1067:     if (passable?(@x, @y, 8) and passable?(@x, @y - 1, 4)) or\n 1068:        (passable?(@x, @y, 4) and passable?(@x - 1, @y, 8))\n 1069        # Update coordinates\n 1070        @x -= 1\n ....\n 1083        @direction = (@direction == 4 ? 6 : @direction == 2 ? 8 : @direction)\n 1084      end\n 1085:     # When an up to right or a right to up course is passable\n 1086:     if (passable?(@x, @y, 8) and passable?(@x, @y - 1, 6)) or\n 1087:        (passable?(@x, @y, 6) and passable?(@x + 1, @y, 8))\n 1088        # Update coordinates\n 1089        @x += 1\n ....\n 1236      new_x = @x + x_plus\n 1237      new_y = @y + y_plus\n 1238:     # If plus value is (0,0) or jump destination is passable\n 1239:     if (x_plus == 0 and y_plus == 0) or passable?(new_x, new_y, 0)\n 1240        # Straighten position\n 1241        straighten\n ....\n 1539          end\n 1540  \n 1541:         if map[x,y + 1] == 0 and passable?(x, y, 2) \n 1542            #log_err \"IN\"\n 1543            map[x,y + 1] = step\n ....\n 1545          end\n 1546  \n 1547:         if map[x - 1,y] == 0 and passable?(x, y, 4) \n 1548            map[x - 1,y] = step\n 1549            new_positions.push([x - 1,y])\n 1550          end\n 1551  \n 1552:         if map[x + 1,y] == 0 and passable?(x, y, 6) \n 1553            map[x + 1,y] = step\n 1554            new_positions.push([x + 1,y])\n 1555          end\n 1556  \n 1557:         if map[x,y - 1] == 0 and passable?(x, y, 8) \n 1558            map[x,y - 1] = step\n 1559            new_positions.push([x,y - 1])\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\event.rb:\n  176        return false\n  177      end\n  178:     # If this position on the map is impassable\n  179:     unless $map.passable?(@x, @y, 0)\n  180        # Starting determinant is face\n  181        return false\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  410      else\n  411  \n  412:       if $map.passable?(mx,my,$player.direction)\n  413          $mouse.change_cursor('Default')\n  414        else\n  ...\n  533    # * Determine if Passable\n  534    #--------------------------------------------------------------------------\n  535:   def passable?(x, y, d, self_event = nil, monster=false)\n  536  \n  537      return false unless valid?(x, y)\n  ...\n  571      }\n  572  \n  573:     # passable\n  574      return true\n  575  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\player.rb:\n   55    # * Passable Determinants\n   56    #--------------------------------------------------------------------------\n   57:   def passable?(x, y, d)\n   58      if DEBUG and Input.press?(Input::CTRL)\n   59        return true\n   ..\n  213  \n  214            # If walk to empty pos, show fx\n  215:           if $map.passable?(mx,my,$player.direction)\n  216              $audio.sys('walkto',0.7)\n  217              $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))\n  ...\n  234            y = @event_at_path.y\n  235  \n  236:           can_up = $map.passable?(x,y-1,2)\n  237:           can_down = $map.passable?(x,y+1,8)\n  238:           can_left = $map.passable?(x+1,y,4)\n  239:           can_right = $map.passable?(x-1,y,6)\n  240  \n  241            # Vile\n\n55 matches across 4 files\n\n\nSearching 235 files for \"passable\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\character.rb:\n  202    # * Determine if Passable\n  203    #--------------------------------------------------------------------------\n  204:   def passable?(x, y, d) #d0 = jump\n  205  \n  206      #return true if self != $player\n  ...\n  218      # If enemy, check if I shall pass\n  219      if self.is_a?(Game_Event) && self.monster != nil\n  220:       return false unless $map.passable?(x, y, d, self) # From\n  221:       return false  unless $map.passable?(new_x, new_y, 10 - d,self,true) # To\n  222      else\n  223:       return false unless $map.passable?(x, y, d, self) # From\n  224:       return false  unless $map.passable?(new_x, new_y, 10 - d,self) # To\n  225      end\n  226  \n  ...\n  241      d = 6 if @y == $player.y and @x == $player.x - 1\n  242      \n  243:     return passable?(x,y,d)\n  244  \n  245    end\n  ...\n  906        turn_down\n  907      end\n  908:     # If passable\n  909:     if passable?(@x, @y, 2)\n  910  \n  911        # Turn down\n  ...\n  915        # Increase steps\n  916        increase_steps\n  917:       # If impassable\n  918        $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 || terrain_tag == 5\n  919        $audio.queue('ladder/ladder2',24,0.15) if terrain_tag == 3\n  ...\n  940        turn_left\n  941      end\n  942:     # If passable\n  943:     if passable?(@x, @y, 4)\n  944        # Turn left\n  945        turn_left\n  ...\n  948        # Increase steps\n  949        increase_steps\n  950:     # If impassable\n  951      $audio.queue(\"steps/foot#{rand(8)}\",12,0.4) if self == $player && terrain_tag != 3\n  952      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2\n  ...\n  968        turn_right\n  969      end\n  970:     # If passable\n  971:     if passable?(@x, @y, 6)\n  972        # Turn right\n  973        turn_right\n  ...\n  976        # Increase steps\n  977        increase_steps\n  978:     # If impassable\n  979      $audio.queue(\"steps/foot#{rand(8)}\",12,0.4) if self == $player && terrain_tag != 3\n  980      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2\n  ...\n  996        turn_up\n  997      end\n  998:     # If passable\n  999:     if passable?(@x, @y, 8)\n 1000        # Turn up\n 1001        turn_up\n ....\n 1005        # Increase steps\n 1006        increase_steps\n 1007:     # If impassable\n 1008        $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 && pt == 3\n 1009        $audio.queue('ladder/ladder1',24,0.15) if terrain_tag == 4\n ....\n 1026        @direction = (@direction == 6 ? 4 : @direction == 8 ? 2 : @direction)\n 1027      end\n 1028:     # When a down to left or a left to down course is passable\n 1029:     if (passable?(@x, @y, 2) and passable?(@x, @y + 1, 4)) or\n 1030:        (passable?(@x, @y, 4) and passable?(@x - 1, @y, 2))\n 1031        # Update coordinates\n 1032        @x -= 1\n ....\n 1045        @direction = (@direction == 4 ? 6 : @direction == 8 ? 2 : @direction)\n 1046      end\n 1047:     # When a down to right or a right to down course is passable\n 1048:     if (passable?(@x, @y, 2) and passable?(@x, @y + 1, 6)) or\n 1049:        (passable?(@x, @y, 6) and passable?(@x + 1, @y, 2))\n 1050        # Update coordinates\n 1051        @x += 1\n ....\n 1064        @direction = (@direction == 6 ? 4 : @direction == 2 ? 8 : @direction)\n 1065      end\n 1066:     # When an up to left or a left to up course is passable\n 1067:     if (passable?(@x, @y, 8) and passable?(@x, @y - 1, 4)) or\n 1068:        (passable?(@x, @y, 4) and passable?(@x - 1, @y, 8))\n 1069        # Update coordinates\n 1070        @x -= 1\n ....\n 1083        @direction = (@direction == 4 ? 6 : @direction == 2 ? 8 : @direction)\n 1084      end\n 1085:     # When an up to right or a right to up course is passable\n 1086:     if (passable?(@x, @y, 8) and passable?(@x, @y - 1, 6)) or\n 1087:        (passable?(@x, @y, 6) and passable?(@x + 1, @y, 8))\n 1088        # Update coordinates\n 1089        @x += 1\n ....\n 1236      new_x = @x + x_plus\n 1237      new_y = @y + y_plus\n 1238:     # If plus value is (0,0) or jump destination is passable\n 1239:     if (x_plus == 0 and y_plus == 0) or passable?(new_x, new_y, 0)\n 1240        # Straighten position\n 1241        straighten\n ....\n 1539          end\n 1540  \n 1541:         if map[x,y + 1] == 0 and passable?(x, y, 2) \n 1542            #log_err \"IN\"\n 1543            map[x,y + 1] = step\n ....\n 1545          end\n 1546  \n 1547:         if map[x - 1,y] == 0 and passable?(x, y, 4) \n 1548            map[x - 1,y] = step\n 1549            new_positions.push([x - 1,y])\n 1550          end\n 1551  \n 1552:         if map[x + 1,y] == 0 and passable?(x, y, 6) \n 1553            map[x + 1,y] = step\n 1554            new_positions.push([x + 1,y])\n 1555          end\n 1556  \n 1557:         if map[x,y - 1] == 0 and passable?(x, y, 8) \n 1558            map[x,y - 1] = step\n 1559            new_positions.push([x,y - 1])\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\event.rb:\n  176        return false\n  177      end\n  178:     # If this position on the map is impassable\n  179:     unless $map.passable?(@x, @y, 0)\n  180        # Starting determinant is face\n  181        return false\n\nC:\\Aveyond4\\Scripts\\Model\\Map\\map.rb:\n  410      else\n  411  \n  412:       if $map.passable?(mx,my,$player.direction)\n  413          $mouse.change_cursor('Default')\n  414        else\n  ...\n  533    # * Determine if Passable\n  534    #--------------------------------------------------------------------------\n  535:   def passable?(x, y, d, self_event = nil, monster=false)\n  536  \n  537      return false unless valid?(x, y)\n  ...\n  571      }\n  572  \n  573:     # passable\n  574      return true\n  575  \n\nC:\\Aveyond4\\Scripts\\Model\\Map\\player.rb:\n   55    # * Passable Determinants\n   56    #--------------------------------------------------------------------------\n   57:   def passable?(x, y, d)\n   58      if DEBUG and Input.press?(Input::CTRL)\n   59        return true\n   ..\n  213  \n  214            # If walk to empty pos, show fx\n  215:           if $map.passable?(mx,my,$player.direction)\n  216              $audio.sys('walkto',0.7)\n  217              $scene.add_spark('click',$mouse.x+($map.display_x/4),$mouse.y+($map.display_y/4))\n  ...\n  234            y = @event_at_path.y\n  235  \n  236:           can_up = $map.passable?(x,y-1,2)\n  237:           can_down = $map.passable?(x,y+1,8)\n  238:           can_left = $map.passable?(x+1,y,4)\n  239:           can_right = $map.passable?(x-1,y,6)\n  240  \n  241            # Vile\n\n55 matches across 4 files\n\n\nSearching 235 files for \"open_chooser_menu\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\system.rb:\n   76  end\n   77  \n   78: def open_chooser_menu(cat=nil)\n   79  	menu_snapshot\n   80  	$menu.sub_only = true\n\n1 match in 1 file\n\n\nSearching 235 files for \"def setup_items\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Interface\\Menu\\Parts\\list_common.rb:\n   42  \n   43  	# All the various data that can be shown\n   44: 	def setup_items(category)\n   45  		case category\n   46  \n\n1 match in 1 file\n\n\nSearching 235 files for \"force_equip\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\shop.rb:\n  259  			# Replace boy equip with new\n  260  			eq = skill.sub('ug','boy')\n  261: 			boy.force_equip('staff',eq)\n  262  \n  263  \n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_4_equips.rb:\n   16  	end\n   17  \n   18: 	def force_equip(slot,new_equip)\n   19  		@equips[slot] = new_equip\n   20  	end\n\n2 matches across 2 files\n\n\nSearching 235 files for \"def state?\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\state.rb:\n   22  	$state.unstate(gid(e),s)\n   23  end\n   24: def state?(e,s)\n   25  	return $state.state?(gid(e),s)\n   26  end\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n    7    #--------------------------------------------------------------------------\n    8  \n    9:   def state?(state_id)\n   10      return @states.include?(state_id)\n   11    end\n\nC:\\Aveyond4\\Scripts\\Model\\State\\state.rb:\n   71  	end\n   72  \n   73: 	def state?(e,s)\n   74  		return false if !@states.has_key?([$scene.map.id,e,s])\n   75  		return @states[[$scene.map.id,e,s]]\n\nC:\\Aveyond4\\Scripts\\System\\keyboard.rb:\n   36  	end\n   37  \n   38: 	def state?(key)\n   39  		check = KeyState.call(key) #& 0x80 == 128\n   40  		return !(check == 1 || check == 0)\n\n4 matches across 4 files\n",
-			"settings":
-			{
-				"buffer_size": 14864,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "Model/Battle/battler_4_equips.rb",
-			"settings":
-			{
-				"buffer_size": 1880,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Interface/Menu/Parts/list_common.rb",
-			"settings":
-			{
-				"buffer_size": 1151,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Interface/Map/screen.rb",
-			"settings":
-			{
-				"buffer_size": 3417,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/State/battle.rb",
-			"settings":
-			{
-				"buffer_size": 11365,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Scenes/battle_4_victory.rb",
-			"settings":
-			{
-				"buffer_size": 1485,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Aveyond4/Editor/meta/enemies.json",
-			"settings":
-			{
-				"buffer_size": 407,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Functions/system.rb",
-			"settings":
-			{
-				"buffer_size": 2332,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Interface/Menu/Special/chooser.rb",
-			"settings":
-			{
-				"buffer_size": 1090,
+				"buffer_size": 2959,
 				"line_ending": "Windows"
 			}
 		},
@@ -153,7 +79,7 @@
 			"file": "Model/Map/map.rb",
 			"settings":
 			{
-				"buffer_size": 15704,
+				"buffer_size": 15876,
 				"line_ending": "Windows"
 			}
 		},
@@ -161,7 +87,7 @@
 			"file": "Model/Map/character.rb",
 			"settings":
 			{
-				"buffer_size": 44670,
+				"buffer_size": 45159,
 				"line_ending": "Windows"
 			}
 		},
@@ -169,7 +95,15 @@
 			"file": "Model/Map/player.rb",
 			"settings":
 			{
-				"buffer_size": 12644,
+				"buffer_size": 12643,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Functions/shop.rb",
+			"settings":
+			{
+				"buffer_size": 5141,
 				"line_ending": "Windows"
 			}
 		}
@@ -236,13 +170,24 @@
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/Scripts/Scenes/map.rb",
+		"/C/Aveyond4/Scripts/Model/Map/character.rb",
+		"/C/Aveyond4/Scripts/Model/Map/player.rb",
+		"/C/Aveyond4/Scripts/Model/Map/map.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Special/chooser.rb",
+		"/C/Aveyond4/Scripts/Functions/system.rb",
+		"/C/Aveyond4/Scripts/Scenes/battle_4_victory.rb",
+		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
+		"/C/Aveyond4/Scripts/Model/Map/event.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_common.rb",
+		"/C/Aveyond4/Scripts/System/game.rb",
+		"/C/Aveyond4/Scripts/Functions/party.rb",
+		"/C/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Title/title.rb",
 		"/C/Aveyond4/Scripts/Functions/poppers.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/journal.rb",
-		"/C/Aveyond4/Scripts/Functions/party.rb",
-		"/C/Aveyond4/Scripts/Model/Map/event.rb",
 		"/C/Aveyond4/Scripts/Model/State/state.rb",
-		"/C/Aveyond4/Scripts/Model/Map/map.rb",
 		"/C/Aveyond4/Scripts/Scenes/menu.rb",
 		"/C/Aveyond4/Scripts/System/tweens.rb",
 		"/C/Aveyond4/Scripts/Utils/Tweens/object.rb",
@@ -251,14 +196,11 @@
 		"/C/Aveyond4/Scripts/Model/State/progress.rb",
 		"/C/Aveyond4/Scripts/Functions/store.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/character.rb",
-		"/C/Aveyond4/Scripts/Model/Map/character.rb",
-		"/C/Aveyond4/Scripts/Model/Map/player.rb",
 		"/C/Aveyond4/Scripts/Utils/data_types.rb",
 		"/C/Aveyond4/Editor/meta/shop.json",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/book.rb",
 		"/C/Aveyond4/Scripts/Functions/battle.rb",
-		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Functions/events.rb",
 		"/C/Aveyond4/Scripts/Functions/shop.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/save.rb",
@@ -268,11 +210,8 @@
 		"/C/Aveyond4/Scripts/Scenes/battle_2_actor.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_3_skills.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_1_stats.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Customs/boyle.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/items.rb",
-		"/C/Aveyond4/Scripts/Scenes/battle_4_victory.rb",
-		"/C/Aveyond4/Scripts/System/game.rb",
 		"/C/Aveyond4/Scripts/Model/State/party.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_journal.rb",
@@ -296,7 +235,6 @@
 		"/C/Aveyond4/Scripts/Elements/Widgets/area.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_2_states.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
-		"/C/Aveyond4/Scripts/Functions/system.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/status.rb",
 		"/C/Aveyond4/Scripts/Utils/sprite.rb",
 		"/C/Aveyond4/Scripts/Functions/effects.rb",
@@ -307,7 +245,6 @@
 		"/C/Aveyond4/Scripts/Model/State/menu.rb",
 		"/C/Aveyond4/Scripts/System/audio.rb",
 		"/C/Aveyond4/Scripts/Functions/audio.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Special/chooser.rb",
 		"/C/Aveyond4/Editor/edit.html",
 		"/C/Aveyond4/Editor/json/enemies.json",
 		"/C/Aveyond4/Scripts/Functions/witchery.rb",
@@ -315,7 +252,6 @@
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/item_box.rb",
 		"/C/Aveyond4/Scripts/System/fonts.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/page_tabs.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_common.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Special/potions.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/info_box.rb",
 		"/C/Aveyond4/Scripts/Functions/progress.rb",
@@ -361,9 +297,7 @@
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/bar.rb",
 		"/C/Aveyond4/Scripts/Functions/transfers.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/targetcmd.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/port_full.rb",
-		"/C/Aveyond4/Editor/json/anims.json",
-		"/C/Aveyond4/Scripts/Interface/Menu/Char/skills.rb"
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/port_full.rb"
 	],
 	"find":
 	{
@@ -382,6 +316,10 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"move_down",
+			"mouse",
+			"bugs_exchange",
+			"nightwatch",
 			"def state?",
 			"force_equip",
 			"def setup_items",
@@ -505,11 +443,7 @@
 			"learn_potion",
 			"save",
 			"draw_potion",
-			"cy = 15",
-			"passable",
-			"update_mouse",
-			"busy",
-			"#=============================================================================="
+			"cy = 15"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -528,1136 +462,119 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Model/Map/event.rb",
+					"file": "Scenes/title.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20627,
+						"buffer_size": 2959,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								17863,
-								17863
+								2318,
+								2318
 							]
 						],
 						"settings":
 						{
 							"BracketHighlighterBusy": false,
-							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 13481.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14864,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										230,
-										238
-									],
-									[
-										460,
-										468
-									],
-									[
-										531,
-										539
-									],
-									[
-										632,
-										640
-									],
-									[
-										703,
-										711
-									],
-									[
-										864,
-										872
-									],
-									[
-										962,
-										970
-									],
-									[
-										985,
-										993
-									],
-									[
-										1123,
-										1131
-									],
-									[
-										1356,
-										1364
-									],
-									[
-										1379,
-										1387
-									],
-									[
-										1530,
-										1538
-									],
-									[
-										1779,
-										1787
-									],
-									[
-										1802,
-										1810
-									],
-									[
-										1955,
-										1963
-									],
-									[
-										2201,
-										2209
-									],
-									[
-										2224,
-										2232
-									],
-									[
-										2371,
-										2379
-									],
-									[
-										2700,
-										2708
-									],
-									[
-										2724,
-										2732
-									],
-									[
-										2749,
-										2757
-									],
-									[
-										2793,
-										2801
-									],
-									[
-										2818,
-										2826
-									],
-									[
-										3066,
-										3074
-									],
-									[
-										3090,
-										3098
-									],
-									[
-										3115,
-										3123
-									],
-									[
-										3159,
-										3167
-									],
-									[
-										3184,
-										3192
-									],
-									[
-										3427,
-										3435
-									],
-									[
-										3451,
-										3459
-									],
-									[
-										3476,
-										3484
-									],
-									[
-										3520,
-										3528
-									],
-									[
-										3545,
-										3553
-									],
-									[
-										3790,
-										3798
-									],
-									[
-										3814,
-										3822
-									],
-									[
-										3839,
-										3847
-									],
-									[
-										3883,
-										3891
-									],
-									[
-										3908,
-										3916
-									],
-									[
-										4116,
-										4124
-									],
-									[
-										4172,
-										4180
-									],
-									[
-										4331,
-										4339
-									],
-									[
-										4492,
-										4500
-									],
-									[
-										4663,
-										4671
-									],
-									[
-										4834,
-										4842
-									],
-									[
-										5066,
-										5074
-									],
-									[
-										5098,
-										5106
-									],
-									[
-										5273,
-										5281
-									],
-									[
-										5512,
-										5520
-									],
-									[
-										5656,
-										5664
-									],
-									[
-										5871,
-										5879
-									],
-									[
-										6053,
-										6061
-									],
-									[
-										6316,
-										6324
-									],
-									[
-										6368,
-										6376
-									],
-									[
-										6420,
-										6428
-									],
-									[
-										6473,
-										6481
-									],
-									[
-										6783,
-										6791
-									],
-									[
-										7013,
-										7021
-									],
-									[
-										7084,
-										7092
-									],
-									[
-										7185,
-										7193
-									],
-									[
-										7256,
-										7264
-									],
-									[
-										7417,
-										7425
-									],
-									[
-										7515,
-										7523
-									],
-									[
-										7538,
-										7546
-									],
-									[
-										7676,
-										7684
-									],
-									[
-										7909,
-										7917
-									],
-									[
-										7932,
-										7940
-									],
-									[
-										8083,
-										8091
-									],
-									[
-										8332,
-										8340
-									],
-									[
-										8355,
-										8363
-									],
-									[
-										8508,
-										8516
-									],
-									[
-										8754,
-										8762
-									],
-									[
-										8777,
-										8785
-									],
-									[
-										8924,
-										8932
-									],
-									[
-										9253,
-										9261
-									],
-									[
-										9277,
-										9285
-									],
-									[
-										9302,
-										9310
-									],
-									[
-										9346,
-										9354
-									],
-									[
-										9371,
-										9379
-									],
-									[
-										9619,
-										9627
-									],
-									[
-										9643,
-										9651
-									],
-									[
-										9668,
-										9676
-									],
-									[
-										9712,
-										9720
-									],
-									[
-										9737,
-										9745
-									],
-									[
-										9980,
-										9988
-									],
-									[
-										10004,
-										10012
-									],
-									[
-										10029,
-										10037
-									],
-									[
-										10073,
-										10081
-									],
-									[
-										10098,
-										10106
-									],
-									[
-										10343,
-										10351
-									],
-									[
-										10367,
-										10375
-									],
-									[
-										10392,
-										10400
-									],
-									[
-										10436,
-										10444
-									],
-									[
-										10461,
-										10469
-									],
-									[
-										10669,
-										10677
-									],
-									[
-										10725,
-										10733
-									],
-									[
-										10884,
-										10892
-									],
-									[
-										11045,
-										11053
-									],
-									[
-										11216,
-										11224
-									],
-									[
-										11387,
-										11395
-									],
-									[
-										11619,
-										11627
-									],
-									[
-										11651,
-										11659
-									],
-									[
-										11826,
-										11834
-									],
-									[
-										12065,
-										12073
-									],
-									[
-										12209,
-										12217
-									],
-									[
-										12424,
-										12432
-									],
-									[
-										12606,
-										12614
-									],
-									[
-										12869,
-										12877
-									],
-									[
-										12921,
-										12929
-									],
-									[
-										12973,
-										12981
-									],
-									[
-										13026,
-										13034
-									],
-									[
-										13239,
-										13256
-									],
-									[
-										13521,
-										13536
-									],
-									[
-										13784,
-										13795
-									],
-									[
-										13911,
-										13922
-									],
-									[
-										14160,
-										14170
-									],
-									[
-										14383,
-										14393
-									],
-									[
-										14533,
-										14543
-									],
-									[
-										14727,
-										14737
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								14014,
-								14014
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 6,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 9101.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Model/Battle/battler_4_equips.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1880,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								250,
-								250
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Interface/Menu/Parts/list_common.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1151,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								645,
-								645
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 420.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Interface/Map/screen.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3417,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								539,
-								500
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 1425.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "Model/State/battle.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11365,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3985,
-								3970
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3319.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "Scenes/battle_4_victory.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1485,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1468,
-								1468
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 855.0,
+						"translation.y": 1017.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "/C/Aveyond4/Editor/meta/enemies.json",
-					"semi_transient": true,
+					"buffer": 1,
+					"file": "Model/Map/map.rb",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 407,
+						"buffer_size": 15876,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								7571,
+								7571
 							]
 						],
 						"settings":
 						{
 							"BracketHighlighterBusy": false,
+							"auto_complete": false,
 							"bh_regions":
 							[
 								"bh_default",
@@ -1665,31 +582,26 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
@@ -1700,476 +612,305 @@
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 6315.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Model/Map/character.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 45159,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								25571,
+								25571
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 16692.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "Functions/system.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2332,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1048,
-								1048
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1009.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "Interface/Menu/Special/chooser.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1090,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "Model/Map/map.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15704,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								12598,
-								12598
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 9920.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "Model/Map/character.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 44670,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								970,
-								970
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
+					"buffer": 3,
 					"file": "Model/Map/player.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12644,
+						"buffer_size": 12643,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								304,
-								304
+								9298,
+								9298
 							]
 						],
 						"settings":
 						{
 							"BracketHighlighterBusy": false,
+							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
-								"bh_unmatched_content"
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
+						"translation.y": 5729.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Functions/shop.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5141,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								363,
+								363
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -2228,6 +969,26 @@
 		"selected_items":
 		[
 			[
+				"character",
+				"Scripts\\Model\\Map\\character.rb"
+			],
+			[
+				"map",
+				"Scripts\\Model\\Map\\map.rb"
+			],
+			[
+				"player",
+				"Scripts\\Model\\Map\\player.rb"
+			],
+			[
+				"title",
+				"Scripts\\Scenes\\title.rb"
+			],
+			[
+				"game",
+				"Scripts\\System\\game.rb"
+			],
+			[
 				"battle",
 				"Scripts\\Scenes\\battle_4_victory.rb"
 			],
@@ -2238,10 +999,6 @@
 			[
 				"choos",
 				"Scripts\\Interface\\Menu\\Special\\chooser.rb"
-			],
-			[
-				"player",
-				"Scripts\\Model\\Map\\player.rb"
 			],
 			[
 				"event",
@@ -2256,16 +1013,8 @@
 				"Scripts\\Model\\Map\\player.rb"
 			],
 			[
-				"character",
-				"Scripts\\Model\\Map\\character.rb"
-			],
-			[
 				"progress",
 				"Scripts\\Model\\State\\progress.rb"
-			],
-			[
-				"map",
-				"Scripts\\Model\\Map\\map.rb"
 			],
 			[
 				"menu",
@@ -2342,10 +1091,6 @@
 			[
 				"intro",
 				"Scripts\\Scenes\\intro.rb"
-			],
-			[
-				"game",
-				"Scripts\\System\\game.rb"
 			],
 			[
 				"party",

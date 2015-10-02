@@ -20,7 +20,7 @@ class Game_Player < Game_Character
     @static = false
     @next_common = nil
 
-    #self.move_speed = 3.3
+    self.move_speed = 3.3
 
     @faceoff = 0 # Here to match event, possibly could have both in char
   end

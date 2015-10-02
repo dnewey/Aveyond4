@@ -56,8 +56,7 @@ class Game_Character
 
   attr_accessor :move_type
 
-
-  
+  attr_accessor :move_speed 
    
   
   #--------------------------------------------------------------------------
@@ -899,7 +898,6 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_down(turn_enabled = true)
 
-
     @move_angle = 0
 
     # Turn down
@@ -911,8 +909,17 @@ class Game_Character
 
       # Turn down
       turn_down
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       @y += 1
+
+      $scene.map.cache_push(@x,@y,self)
+
+      # Add to cache
+
       # Increase steps
       increase_steps
       # If impassable
@@ -944,8 +951,15 @@ class Game_Character
     if passable?(@x, @y, 4)
       # Turn left
       turn_left
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       @x -= 1
+
+      $scene.map.cache_push(@x,@y,self)
+
       # Increase steps
       increase_steps
     # If impassable
@@ -972,8 +986,15 @@ class Game_Character
     if passable?(@x, @y, 6)
       # Turn right
       turn_right
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       @x += 1
+
+      $scene.map.cache_push(@x,@y,self)
+
       # Increase steps
       increase_steps
     # If impassable
@@ -1000,9 +1021,16 @@ class Game_Character
     if passable?(@x, @y, 8)
       # Turn up
       turn_up
+
+      # Remove from cache
+      $scene.map.cache_clear(@x,@y,self)
+
       # Update coordinates
       pt = terrain_tag
       @y -= 1
+
+      $scene.map.cache_push(@x,@y,self)
+
       # Increase steps
       increase_steps
     # If impassable
