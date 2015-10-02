@@ -14084,7 +14084,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"¯´#==============================================================================
+end"®´#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -14660,7 +14660,7 @@ class Game_Character
       @move_angle = 0
     end
 
-    #distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
+    distance = 28 if self == $player && $settings.debug_power_test && !$keyboard.state?(VK_SHIFT)
 
     # If logical coordinates are further down than real coordinates
     if @y * 128 > @real_y
