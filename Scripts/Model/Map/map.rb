@@ -343,24 +343,24 @@ class Game_Map
   def update_events
 
     # Keep track of starting events and always update those
-    #@events.values.each{ |e| e.update }
+    @events.values.each{ |e| e.update }
 
-    x1 = ((display_x/128) - 2).to_i
-    y1 = ((display_y/128) -2).to_i
-    x2 = x1 + 20 + 4
-    y2 = y1 + 15 + 4
+    # x1 = ((display_x/128) - 2).to_i
+    # y1 = ((display_y/128) -2).to_i
+    # x2 = x1 + 20 + 4
+    # y2 = y1 + 15 + 4
 
-    updaters = []
-    (x1..x2).each{ |x|
-      (y1..y2).each{ |y|
-        evs = events_at(x,y)
-        if evs != nil
-          updaters += evs 
-        end    
-      }
-    }
+    # updaters = []
+    # (x1..x2).each{ |x|
+    #   (y1..y2).each{ |y|
+    #     evs = events_at(x,y)
+    #     if evs != nil
+    #       updaters += evs 
+    #     end    
+    #   }
+    # }
 
-    updaters.uniq.each{ |e| e.update }
+    # updaters.uniq.each{ |e| e.update }
 
   end
 
