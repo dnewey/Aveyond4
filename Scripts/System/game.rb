@@ -73,8 +73,12 @@ class GameManager
     return @scenes[0]
   end
 
+  def quit
+    @quit = true
+  end
+
   def quit?
-    return false
+    return @quit
   end
 
   def update

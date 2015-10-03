@@ -4,56 +4,97 @@
 
 class Scene_Title
   
+  attr_accessor :next_menu
+
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
   def initialize
 
-    #Graphics.freeze
-
     @closing = false
-
-    $mouse.change_cursor('Default')
 
     # Vp
     @vp = Viewport.new(0,0,$game.width,$game.height)
-    @vp.z = 3500
+    #@vp.z = 3500
 
-    @snap = Sprite.new(@vp)
-    @snap.z = -101
-    @snap.bitmap = $game.snapshot
+    # Sprites
+    @sky = Sprite.new(@vp)
+    @sky.z = -2
+    @clouds = Sprite.new(@vp)
+    @clouds.z = -2
+    @wall = Sprite.new(@vp)
+    @wall.z = -2
 
-    # Background
-    @bg = Sprite.new(@vp)
-    @bg.z = -100
-    #@bg.bitmap = Bitmap.new(640,480)
-    #@bg.bitmap.fill(Color.new(0,0,0,180))
-    @bg.bitmap = $cache.menu_background("boyle")
-    #@bg.bitmap = $cache.menu_background("witch")
-    @bg.opacity = 0
-    @bg.do(go("opacity",255,300))
-    #@bg.y = 30
-    #@bg.do(seq(go("y",-50,150,:qio),go("y",20,150,:qio)))
+    @sparks = [] # Update all
 
-    #self.do(delay(300))
+    # Higher Sprites
+    @char = Sprite.new(@vp)
+    @title = Sprite.new(@vp)
 
-    @next_menu = "Title"
+    # Overlays
+    @mtop = Sprite.new(@vp)
+    @mtop.bitmap = $cache.title('cloud-top')
+    @mtop.z = 8888
+    @mtop.blend_type = 1
+    @mbtm = Sprite.new(@vp)
+    @mbtm.bitmap = $cache.title('cloud-btm')
+    @mbtm.z = 8888
+    @mbtm.blend_type = 1
+    @mleft = Sprite.new(@vp)
+    @mleft.bitmap = $cache.title('cloud-left')
+    @mleft.z = 8888
+    @mleft.blend_type = 1
+    @mright = Sprite.new(@vp)
+    @mright.bitmap = $cache.title('cloud-right')
+    @mright.z = 8888
+    @mist = Sprite.new(@vp)
+    @mist.bitmap = $cache.overlay('mist-portal')
+    @mist.z = 9999
 
-    @menu = nil
 
-    #Graphics.transition(20,'Graphics/Transitions/trans')     
+    # Init 
+    init_boy
+
+    d = 600
+
+    # Start the transition in
+    @mtop.do(go('opacity',-255,3000))
+    @mright.do(go('opacity',-255,3000))
+    @mleft.do(go('opacity',-255,3000))
+    @mbtm.do(go('opacity',-255,3000))
+
+    @mtop.do(go('y',-380,1500,:qio))
+    @mbtm.do(go('y',280,1500,:qio))
+    @mright.do(go('x',280,1500,:qio))
+    @mleft.do(go('x',-280,1500,:qio))    
+
+    @mist.do(go('opacity',-255,1500))
+ 
+    @next_menu = nil
+    @menu = Mnu_Title.new(@vp)
 
   end
   
   def terminate
 
-    @menu.dispose if @menu != nil
-
-    @bg.dispose
-    @snap.dispose
-
     @vp.dispose
 
+  end
+
+  def hide_logo
+    @title.opacity = 0
+  end
+
+  def show_logo
+    @title.opacity = 255
+  end
+
+  def hide_char
+    @char.opacity = 0
+  end
+
+  def show_char
+    @char.opacity = 255
   end
 
   #--------------------------------------------------------------------------
@@ -61,13 +102,17 @@ class Scene_Title
   #--------------------------------------------------------------------------
   def update
 
+    @sparks.each{ |s| s.update }
+
+    #@bg.do(go("opacity",255,300)) if @bg.opacity == 0
+
     if @closing && $tweens.done?(self)
       $tweens.clear_all
       $game.pop_scene
-      $game.push_scene(Scene_Map.new)
     end
 
     return if @closing
+
 
     if @menu == nil
 
@@ -111,26 +156,24 @@ class Scene_Title
       @menu = nil
     end
 
+    if @next_menu == "Main"
+      @next_menu = nil if $menu.sub_only
+    end    
+
     # The current menu
     case @next_menu
 
-      when "Title"; 
-        @menu = Mnu_Title.new(@vp)
+      when "Title"; @menu = Mnu_Title.new(@vp)
 
-      when "New"
+      when "New"; @menu = Mnu_Main.new(@vp)
 
-      when "Load"
-        @menu = Mnu_TitleLoad.new(@vp)
+      when "Continue"; 
+        @menu = Mnu_Load_Title.new(@vp)
 
-      when "Options"
-        @menu = Mnu_TitleOptions.new(@vp)
+      when "Options";
+        @menu = Mnu_Options_Title.new(@vp)
 
-      when "Quit"
-        $game.pop_scene
-
-
-      #when "Title"; @menu = Mnu_Title.new(@vp)
-      
+      when "Quit"; @menu = Mnu_Main.new(@vp)
 
     end
 
@@ -163,10 +206,53 @@ class Scene_Title
   # end
 
   def close
+    sys('close')
     @closing = true
     @bg.do(go("opacity",-255,300))
     self.do(delay(300))
   end
 
+
+
+
+  def init_boy
+
+    # Sky
+    @sky.bitmap = $cache.title("test-sky")
+    #@sky.opacity = 0
+
+    # Clouds
+    @clouds.bitmap = $cache.title("test-clouds")
+    @clouds.x -= 50
+    #@clouds.opacity = 0
+    @clouds.do(pingpong("x",100,6000,:qio))
+
+    # Wall
+    @wall.bitmap = $cache.title("test-wall")
+    #@wall.opacity = 0
+
+    sprk = Spark.new('evil-aura',270,60,@vp)
+    sprk.zoom_x = 2.0
+    sprk.zoom_y = 2.0
+    #sprk.opacity = 0
+    sprk.z = -1
+    @sparks.push(sprk)
+
+    sprk = Spark.new('evil-aura',420,60,@vp)
+    sprk.zoom_x = 2.0
+    sprk.zoom_y = 2.0
+    #sprk.opacity = 0
+    sprk.z = -1
+    @sparks.push(sprk)
+
+    # Boy
+    @char.bitmap = $cache.title("test-boy")
+    #@char.opacity = 0
+
+    # Title
+    @title.bitmap = $cache.title("test-title")
+    #@title.opacity = 0
+
+  end
 
 end

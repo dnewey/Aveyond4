@@ -133,7 +133,7 @@ class Mnu_Items < Mnu_Base
 		# If item needs a target, do it
 		case scope
 
-			when 'ally'
+			when 'ally', 'down'
 				$menu.use_item = option
 				$scene.queue_menu("Healing")
 				close_soon

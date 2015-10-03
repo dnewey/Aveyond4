@@ -21,7 +21,14 @@ class TweenManager
 		    @tweens_menu.each{ |n| n.update(delta) }
 		else
 			@tweens.delete_if{ |n| (n.is_a?(SpriteGroup) && n.disposed?) || (n.is_a?(Sprite) && n.disposed?) || n == nil || n.done? }		
-		    @tweens.each{ |n| n.update(delta) }
+		    
+		    @tweens.each{ |n| 
+		    	begin
+		    		n.update(delta) 
+		    	rescue
+				end
+		    }
+			
 		end
 
 	end
