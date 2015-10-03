@@ -167,6 +167,7 @@ end
 def stop
 
 	$player.clear_path
+	w 1
 
 end
 

@@ -2880,7 +2880,7 @@ end
 
 
 
-"»#==============================================================================
+"Á#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3049,6 +3049,7 @@ end
 def stop
 
 	$player.clear_path
+	w 1
 
 end
 
@@ -3436,7 +3437,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"”#==============================================================================
+end"•#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3544,7 +3545,7 @@ end
 
 # Only this one will do popper
 def join(who)
-	sys('join')
+	sys('join2')
 	$party.set_active(who)
 	pop_join(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
@@ -3944,7 +3945,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"9
+end"¡
 
 def shop_choice
 
@@ -4043,9 +4044,12 @@ def setup_smith_shop
 
 		when '@royal-town'	
 			stock.push('mid-arm-royal')
+			stock.push('heavy-arm-royal')
+			stock.push('rob-hammer-royal')
 
 		when '@royal-crusade'	
 			stock.push('helm-royal')
+			stock.push('rob-shield-royal')
 
 		when '@elf-town'	
 			stock.push('mid-arm-elves')
@@ -4078,7 +4082,7 @@ def setup_magic_shop
 			stock.push('ing-wand-tor')
 
 		when '@royal-town'	
-			stock.push('light-arm_royal')
+			stock.push('light-arm-royal')
 			stock.push('ing-wand-royal')
 			stock.push('mys-claw-royal')
 
@@ -20906,7 +20910,7 @@ class Scene_Battle
 
   end
 
-end"
+end"
 class Scene_Battle
 
   def phase_victory_init
@@ -20915,7 +20919,7 @@ class Scene_Battle
   	@hud.all_win
     sys 'fall'
     wait(15)
-    music 'battle-final'
+    music 'victory2'
 
     # Choose a dialogue
     if $battle.victory_text != nil

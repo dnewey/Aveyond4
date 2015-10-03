@@ -97,9 +97,12 @@ def setup_smith_shop
 
 		when '@royal-town'	
 			stock.push('mid-arm-royal')
+			stock.push('heavy-arm-royal')
+			stock.push('rob-hammer-royal')
 
 		when '@royal-crusade'	
 			stock.push('helm-royal')
+			stock.push('rob-shield-royal')
 
 		when '@elf-town'	
 			stock.push('mid-arm-elves')
@@ -132,7 +135,7 @@ def setup_magic_shop
 			stock.push('ing-wand-tor')
 
 		when '@royal-town'	
-			stock.push('light-arm_royal')
+			stock.push('light-arm-royal')
 			stock.push('ing-wand-royal')
 			stock.push('mys-claw-royal')
 
