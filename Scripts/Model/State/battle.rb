@@ -285,6 +285,7 @@ class Game_Battle
       # Check damage effects
 
       dmg_base = 0
+      dmg_p = 0.0
       dmg_mod = 0.0 # 1.0 is use str number as damage
 
       heal_base = 0
@@ -295,6 +296,7 @@ class Game_Battle
 
       # Specials
       is_half_armor = true
+      empower = false
 
       # Items have actions, skills have effects, they are the same
       effects = nil
@@ -311,6 +313,9 @@ class Game_Battle
           # Damage
           when 'dmg-base'
             dmg_base = data[1].to_i
+            is_dmg = true
+          when 'dmg-p'
+            dmg_p = data[1].to_i
             is_dmg = true
           when 'dmg-mod'
             dmg_mod = data[1].to_f
@@ -339,6 +344,8 @@ class Game_Battle
             result.transform = data[1]
           when 'half-armor'
             is_half_armor = true
+          when 'empower'
+            empower = true
 
 
         end
@@ -364,6 +371,7 @@ class Game_Battle
       # --------------------------------------------
       # Calc Damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
+      result.damage += t.maxhp * dmg_p
 
       # Add variation
       variation = result.damage * 0.2
@@ -409,6 +417,10 @@ class Game_Battle
         if t.state?('bleed')
           result.damage *= 2
         end
+      end
+
+      if empower
+        result.empower = true
       end
 
       results.push(result)

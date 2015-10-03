@@ -17,6 +17,8 @@ class Attack_Result
 
 	attr_accessor :transform
 
+	attr_accessor :empower
+
 end
 
 class Attack_Round

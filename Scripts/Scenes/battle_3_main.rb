@@ -302,6 +302,26 @@ class Scene_Battle
 
     @attack_results.each{ |result|
 
+      # Empower minion
+      if result.empower
+        $battle.minion.add_state('empower')
+        $battle.minion.ev.character_name = $battle.minion.ev.character_name + '-wild'
+        x = $battle.minion.ev.screen_x
+        y = $battle.minion.ev.screen_y - 16
+        add_spark('redstar',x,y)
+      end
+
+      if result.state_remove
+
+        log_sys(result.state_remove)
+
+          if result.target.state?(result.state_remove)
+            result.target.remove_state(result.state_remove)            
+            result.target.ev.icons.delete(result.state_remove)
+          end
+
+      end
+
       if result.state_add
 
         # Only if a new state, else refresh
@@ -316,7 +336,7 @@ class Scene_Battle
         # Show icon?
         result.target.ev.icons.push(result.state_add)
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
-        result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
+        #result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
 
       end
 
