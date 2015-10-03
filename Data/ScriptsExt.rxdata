@@ -1554,7 +1554,7 @@ class Label < Sprite
         
   end
   
-end"ÏE#==============================================================================
+end"ÔE#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1650,7 +1650,7 @@ class List
     @scroll_up.press = Proc.new{ self.scrollbar_up }
 
     # Setup
-    @select_sprite.bitmap = $cache.menu_common('list-bar-purple')    
+    @select_sprite.bitmap = $cache.menu_common('list-bar-'+$menu.char)    
 
     @active = true
 
@@ -2552,7 +2552,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"U
+end"¨
 def spark(ev,fx,ox=0,oy=0)
 
 	return if gev(ev) == nil
@@ -2687,7 +2687,11 @@ def pop_sweat(ev,o=false)
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots",'dots')
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 70
+	$scene.add_icon('misc/dots',x,y,:blast,:fade)
+
+	sfx('dots')
 end
 
 def pop_bulb(ev)
@@ -3626,7 +3630,7 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
-end"Õ
+end"
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3661,6 +3665,7 @@ def pop_magics(number)
 end
 
 def pop_ing_pickup(i)
+	sfx 'item'
 	ib = $cache.icon($data.items[i].icon)
 	pop_get('p',$data.items[i].name,ib)
 end
@@ -3703,6 +3708,10 @@ def pop_get(type,b,ib,color=nil)
 
 		when 'b'
 			a = "You bought: "
+			ia = nil
+
+		when 'm'
+			a = "You made: "
 			ia = nil
 
 		when 'r'
@@ -3945,7 +3954,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"
+end"Á
 
 def shop_choice
 
@@ -3992,31 +4001,28 @@ def setup_item_shop
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 		when '@royal-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
 			stock.push('mutton')
+			stock.push('cheese-round')
 
 		when '@weeville'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 		when '@elf-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 		when '@dwarf-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 	end
 
@@ -4341,7 +4347,7 @@ end
 def store_say_deny
 	text("1: #{$customer.deny}")
 end
-"»	
+"Ì	
 # Misc
 
 def text(t)
@@ -4400,6 +4406,7 @@ def open_main_menu
 end
 
 def open_sub_menu(which)
+	unitem nil,500
 	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = which
@@ -4500,7 +4507,7 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"êWORLD_MAP_ID = 146
+end"WORLD_MAP_ID = 146
 
 def start_transfer(map,room=nil,dir=nil)
 
@@ -4581,6 +4588,7 @@ def transfer_cave(map,room=nil,dir=nil)
 end
 
 def transfer_same(dir=nil)
+	$player.trans_type = :cross
 	id = $scene.map.id
 	name = $map.events[me].name
 	room = $map.find_other(name,me)
@@ -5933,7 +5941,7 @@ class TargetCmd
 	end
 
 end
-"#==============================================================================
+"!#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6040,6 +6048,24 @@ class Ui_Screen
       	$menu.player_x = $player.screen_x
       	$menu.player_y = $player.screen_y
       	open_main_menu
+      end
+
+      # if $keyboard.press?(VK_J)
+      # 	$menu.player_x = $player.screen_x
+      # 	$menu.player_y = $player.screen_y
+      # 	open_sub_menu("Journal")
+      # end
+
+      # if $keyboard.press?(VK_I)
+      # 	$menu.player_x = $player.screen_x
+      # 	$menu.player_y = $player.screen_y
+      # 	open_sub_menu("Items")
+      # end
+
+      if !$party.reserve.empty? && $keyboard.press?(VK_P)
+      	$menu.player_x = $player.screen_x
+      	$menu.player_y = $player.screen_y
+      	open_sub_menu("Party")
       end
 
 	end
@@ -6422,7 +6448,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"E#==============================================================================
+end".E#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -6460,7 +6486,7 @@ class Ui_Grid
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow-#{$menu.char}"))
      	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
      	@glow.z += 50
 
@@ -7292,7 +7318,7 @@ class Ui_Grid
 		@selected_box.flash_light
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow-#{$menu.char}"))
 		@glow.move(glowon.x+6,glowon.y+6)
 
 	end
@@ -8601,7 +8627,8 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"¥	#==============================================================================
+end"±
+#==============================================================================
 # ** Mnu_Char
 #==============================================================================
 
@@ -8660,9 +8687,23 @@ class Mnu_Char < Mnu_Base
 	end
 
 	def update
+		
+
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
+		end
+
 		super
 
-		@grid.update
+		@grid.update	
 
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -9199,7 +9240,7 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-end";#==============================================================================
+end"W#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -9330,7 +9371,7 @@ class Mnu_Main
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(@buttons[0].width-12,@buttons[0].height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow-#{$menu.char}"))
      	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
 
      	@idx = 0
@@ -9525,7 +9566,7 @@ class Mnu_Main
 		@selected_box.flash_light
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow-#{$menu.char}"))
 		@glow.move(glowon.x+6,glowon.y+6)
 
 	end
@@ -9901,7 +9942,7 @@ class Mnu_Party < Mnu_Base
 
 	end
 
-end"D#==============================================================================
+end"é#==============================================================================
 # ** Mnu_Progress
 #==============================================================================
 
@@ -9910,36 +9951,151 @@ class Mnu_Progress < Mnu_Base
 	def initialize(vp)
 		super(vp)
 
-		@title.change('progress')
-		@subtitle.text = "Good so far"
+		@title.change('Progress')
+		@title.icon($menu.char)
+		@subtitle.text = "1 MILLION PERCENT!"
+
+		@char = $party.get($menu.char)
 
 		remove_menu
 		remove_info
 
+		@box = Box.new(vp,300,350)
+		@box.skin = $cache.menu_common("skin")
+		@box.wallpaper = $cache.menu_wallpaper("diamonds")
+		@box.move(15,115)
+		self.left.push(@box)
 
-		# A bunch of images with mouseover text
+		cx = 28
+		cy = 124
 
-		# Grid selection system, without the box and wallpaper
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/level")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Quests"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/level")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Main Quests: 10/15"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/xp")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Side Quests: 45/50"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+		
+		cx = 28
+		cy += 28
+
+		lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/primary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Primary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/heal")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Max HP: #{@char.maxhp}  (#{@char.stat_pure('hp')} + #{@char.stat_gear('hp')})"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/str")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Strength: #{@char.str}  (#{@char.stat_pure('str')} + #{@char.stat_gear('str')})"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	   	cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/def")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Defense: #{@char.def}  (#{@char.stat_pure('def')} + #{@char.stat_gear('def')})"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 28
+		cy += 28
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("misc/secondary")
+	    lbl.font = $fonts.list
+	    lbl.shadow = $fonts.list_shadow
+	    lbl.text = "Secondary Stats"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cx = 34
+	    cy += 30
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/luck")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Luck: #{@char.luk}%"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/eva")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Evasion: #{@char.eva}%"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+	    cy += 26
+
+	    lbl = Label.new(vp)
+		lbl.icon = $cache.icon("stats/res")
+	    lbl.font = $fonts.pop_text
+	    lbl.text = "Resist: #{@char.res}%"
+	    lbl.move(cx,cy)
+	    self.left.push(lbl)
+
+		@port = Port_Full.new(vp)
+		self.right.push(@port)
 
 		open
 
 	end
 
-	def update
-		super
-
-
-	end
-
-	def change(option)
-
-
-	end
-
-	def select(option)	
+	# def update
 		
-	end
-
+	# 	# Cancel out of grid
+	# 	if $input.cancel? || $input.rclick?
+	# 		@left.each{ |a| $tweens.clear(a) }
+	# 		@right.each{ |a| $tweens.clear(a) }
+	# 		@other.each{ |a| $tweens.clear(a) }
+	# 		$scene.queue_menu("Main")
+	# 		close_now
+	# 	end
+		
+	# 	super
+		
+	# end
 
 end"÷
 class Mnu_Quit < Mnu_Base
@@ -10267,7 +10423,7 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end"ò#==============================================================================
+end"ù#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -10344,6 +10500,18 @@ class Mnu_Equip < Mnu_Base
 	def update		
 
 		return if @closing
+
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Equip")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Equip")
+			close_soon(0)
+		end
 
 		@menu.update if @menu.list.active
 		@grid.update if !@menu.list.active
@@ -10498,7 +10666,7 @@ class Mnu_Equip < Mnu_Base
 
 	end
 
-end"Á#==============================================================================
+end"Ì#==============================================================================
 # ** Mnu_Profile
 #==============================================================================
 
@@ -10631,6 +10799,18 @@ class Mnu_Profile < Mnu_Base
 	end
 
 	def update
+
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Profile")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Profile")
+			close_soon(0)
+		end
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -10645,7 +10825,7 @@ class Mnu_Profile < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end"#==============================================================================
 # ** Mnu_Skills
 #==============================================================================
 
@@ -10680,6 +10860,17 @@ class Mnu_Skills < Mnu_Base
 
 	def update
 		
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Skills")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Skills")
+			close_soon(0)
+		end
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -10712,7 +10903,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"R#==============================================================================
+end"[#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -10876,6 +11067,18 @@ class Mnu_Status < Mnu_Base
 	end
 
 	def update
+
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Status")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Status")
+			close_soon(0)
+		end
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -15288,7 +15491,7 @@ class Game_Character
 
 
 end
-"ÜT#==============================================================================
+"ÛT#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -15904,7 +16107,7 @@ class Game_Event < Game_Character
           self.do(g)
 
         when '#shaking'
-          g = go('off_y',6,600,:qio)
+          g = go('off_x',1,80,:qio)
           self.do(repeat(seq(g,g.reverse)))
 
         when '#drifting'
@@ -18467,7 +18670,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"~'#==============================================================================
+end"—(#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -18691,6 +18894,23 @@ class Game_Party
     return @active + @reserve
   end
 
+  def get_next(mem)
+    idx = all.index(mem)
+    idx += 1
+    if idx >= all.count
+      idx = 0
+    end
+    return all[idx]
+  end
+
+  def get_prev(mem)
+    idx = all.index(mem)
+    idx -= 1
+    if idx < 0
+      idx = all.count - 1
+    end
+    return all[idx]
+  end
 
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed
@@ -23252,7 +23472,7 @@ class GameManager
     showm.call(18,0,2,0)
   end
 
-end"	#============================================================================== 
+end"j#============================================================================== 
 # ** Input
 #==============================================================================
 
@@ -23285,6 +23505,11 @@ class InputManager
 		return $keyboard.press?(VK_RBUTTON)
 	end
 
+	def mclick?
+		return false if !$settings.mouse
+		return $keyboard.press?(VK_MBUTTON)
+	end
+
 	def left?
 		return $keyboard.press?(VK_LEFT) || $keyboard.press?(VK_A)
 	end
@@ -23309,7 +23534,7 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"¸#==============================================================================
+end"Û#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
 
@@ -23337,6 +23562,10 @@ VK_A = 65
 VK_W = 87
 VK_D = 68
 VK_S = 83
+
+VK_J = 74
+VK_I = 73
+VK_P = 80
 
 class KeyboardManager
 

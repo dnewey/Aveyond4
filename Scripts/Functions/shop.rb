@@ -45,31 +45,28 @@ def setup_item_shop
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 		when '@royal-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
 			stock.push('mutton')
+			stock.push('cheese-round')
 
 		when '@weeville'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 		when '@elf-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 		when '@dwarf-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 
 	end
 

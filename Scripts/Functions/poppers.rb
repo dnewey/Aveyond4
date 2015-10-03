@@ -33,6 +33,7 @@ def pop_magics(number)
 end
 
 def pop_ing_pickup(i)
+	sfx 'item'
 	ib = $cache.icon($data.items[i].icon)
 	pop_get('p',$data.items[i].name,ib)
 end
@@ -75,6 +76,10 @@ def pop_get(type,b,ib,color=nil)
 
 		when 'b'
 			a = "You bought: "
+			ia = nil
+
+		when 'm'
+			a = "You made: "
 			ia = nil
 
 		when 'r'

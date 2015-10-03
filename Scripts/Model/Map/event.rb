@@ -614,7 +614,7 @@ class Game_Event < Game_Character
           self.do(g)
 
         when '#shaking'
-          g = go('off_y',6,600,:qio)
+          g = go('off_x',1,80,:qio)
           self.do(repeat(seq(g,g.reverse)))
 
         when '#drifting'

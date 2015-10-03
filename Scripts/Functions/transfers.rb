@@ -79,6 +79,7 @@ def transfer_cave(map,room=nil,dir=nil)
 end
 
 def transfer_same(dir=nil)
+	$player.trans_type = :cross
 	id = $scene.map.id
 	name = $map.events[me].name
 	room = $map.find_other(name,me)

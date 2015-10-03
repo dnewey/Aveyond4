@@ -133,7 +133,11 @@ def pop_sweat(ev,o=false)
 end
 
 def pop_dots(ev)
-	pop_icon(ev,"misc/dots",'dots')
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 70
+	$scene.add_icon('misc/dots',x,y,:blast,:fade)
+
+	sfx('dots')
 end
 
 def pop_bulb(ev)
