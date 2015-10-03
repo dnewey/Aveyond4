@@ -378,6 +378,8 @@ class Game_Party
     @actors["boy"].learn('contempt')
     #@actors["boy"].learn('flames')
 
+    @actors["boy"].learn('empower')
+
     @actors['ing'].learn('wand')
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
@@ -397,7 +399,7 @@ class Game_Party
     @actors['mys'].learn('two-legs')
 
     @actors['rob'].learn('bash')
-    @actors['rob'].learn('defend')
+    @actors['rob'].learn('protect')
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")
     @actors["rob"].learn("team-mys")
@@ -405,12 +407,14 @@ class Game_Party
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
 
-    #@actors['hib'].learn('claw')
+    @actors['hib'].learn('claw')
 
     @actors['row'].learn('dagger')
 
 
     @actors['phy'].learn('strike')
+    @actors['phy'].learn('provoke')
+    @actors['phy'].learn('dragon-fire')
 
     # Start items
     add_item('flip-deck')

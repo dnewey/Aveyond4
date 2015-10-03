@@ -165,7 +165,9 @@ class Scene_Title
 
       when "Title"; @menu = Mnu_Title.new(@vp)
 
-      when "New"; @menu = Mnu_Main.new(@vp)
+      when "New";
+        $game.pop_scene
+        $game.push_scene Scene_Map.new()
 
       when "Continue"; 
         @menu = Mnu_Load_Title.new(@vp)

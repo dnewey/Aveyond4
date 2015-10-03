@@ -60,7 +60,8 @@ class Mnu_Title
 		if $input.action?
 			case @selected
 				when 0
-					log_sys("START NEW GAME")
+					$scene.next_menu = "New"
+					close_soon
 
 				when 1
 					$scene.hide_logo

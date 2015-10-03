@@ -310,6 +310,7 @@ build_select = function(type)
             + '{value: "three", text: "three"},'
             + '{value: "all", text: "all"},'
             + '{value: "ally", text: "ally"},'
+            + '{value: "allies", text: "allies"},'
             + '{value: "party", text: "party"},'
             + '{value: "down", text: "down"},'
             + '{value: "self", text: "self"},'
@@ -484,7 +485,7 @@ json_rev = function()
 }
 
 // --------------------------------------------------------------------------------
-// Sort by last modified 2015-09-29
+// Sort by last modified 2015-10-03
 // --------------------------------------------------------------------------------
 
 json_sortmodified = function()

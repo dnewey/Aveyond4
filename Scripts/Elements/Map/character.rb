@@ -174,18 +174,19 @@ class Sprite_Character < Sprite
       @icons.each{ |i| i.dispose }
       @icons.clear
 
-      total = (@icons.count-1) * (24+2)
-      total -= 2
+      total = (@icons.count-1) * (16+2)
+      #total -= 2
       cx = 0#-total/2
 
       @character.icons.each{ |i|
 
         spr = Sprite.new(@vp)
         spr.bitmap = $cache.icon("states/#{i}")
-        spr.ox = 12
-        spr.oy = 12
+        spr.ox = 8
+        spr.oy = 8
         spr.x = self.x - cx
         spr.y = self.y - @ch
+        spr.z += 1000
         @icons.push(spr)
 
         cx += 26
