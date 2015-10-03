@@ -76,6 +76,18 @@ class Mnu_Equip < Mnu_Base
 
 		return if @closing
 
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Equip")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Equip")
+			close_soon(0)
+		end
+
 		@menu.update if @menu.list.active
 		@grid.update if !@menu.list.active
 

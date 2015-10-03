@@ -94,7 +94,7 @@ class List
     @scroll_up.press = Proc.new{ self.scrollbar_up }
 
     # Setup
-    @select_sprite.bitmap = $cache.menu_common('list-bar-purple')    
+    @select_sprite.bitmap = $cache.menu_common('list-bar-'+$menu.char)    
 
     @active = true
 

@@ -57,6 +57,7 @@ def open_main_menu
 end
 
 def open_sub_menu(which)
+	unitem nil,500
 	menu_snapshot
 	$menu.sub_only = true
 	$menu.menu_page = which

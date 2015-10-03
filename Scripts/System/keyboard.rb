@@ -27,6 +27,10 @@ VK_W = 87
 VK_D = 68
 VK_S = 83
 
+VK_J = 74
+VK_I = 73
+VK_P = 80
+
 class KeyboardManager
 
 	KeyState = Win32API.new("user32","GetKeyState",['i'],'i')

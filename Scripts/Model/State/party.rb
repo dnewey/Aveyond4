@@ -222,6 +222,23 @@ class Game_Party
     return @active + @reserve
   end
 
+  def get_next(mem)
+    idx = all.index(mem)
+    idx += 1
+    if idx >= all.count
+      idx = 0
+    end
+    return all[idx]
+  end
+
+  def get_prev(mem)
+    idx = all.index(mem)
+    idx -= 1
+    if idx < 0
+      idx = all.count - 1
+    end
+    return all[idx]
+  end
 
   #--------------------------------------------------------------------------
   # * Get Number of Items Possessed

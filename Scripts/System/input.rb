@@ -31,6 +31,11 @@ class InputManager
 		return $keyboard.press?(VK_RBUTTON)
 	end
 
+	def mclick?
+		return false if !$settings.mouse
+		return $keyboard.press?(VK_MBUTTON)
+	end
+
 	def left?
 		return $keyboard.press?(VK_LEFT) || $keyboard.press?(VK_A)
 	end

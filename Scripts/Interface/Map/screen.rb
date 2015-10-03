@@ -107,6 +107,24 @@ class Ui_Screen
       	open_main_menu
       end
 
+      if $keyboard.press?(VK_J)
+      	$menu.player_x = $player.screen_x
+      	$menu.player_y = $player.screen_y
+      	open_sub_menu("Journal")
+      end
+
+      if $keyboard.press?(VK_I)
+      	$menu.player_x = $player.screen_x
+      	$menu.player_y = $player.screen_y
+      	open_sub_menu("Items")
+      end
+
+      if !$party.reserve.empty? && $keyboard.press?(VK_P)
+      	$menu.player_x = $player.screen_x
+      	$menu.player_y = $player.screen_y
+      	open_sub_menu("Party")
+      end
+
 	end
 
 	def open_buy_item(i)

@@ -162,6 +162,18 @@ class Mnu_Status < Mnu_Base
 	end
 
 	def update
+
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Status")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Status")
+			close_soon(0)
+		end
 		
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?

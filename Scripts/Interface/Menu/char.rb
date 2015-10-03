@@ -57,9 +57,23 @@ class Mnu_Char < Mnu_Base
 	end
 
 	def update
+		
+
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
+		end
+
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
+		end
+
 		super
 
-		@grid.update
+		@grid.update	
 
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?

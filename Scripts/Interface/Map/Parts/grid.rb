@@ -36,7 +36,7 @@ class Ui_Grid
 
      	@glow = Sprite.new(vp)
      	@glow.bitmap = Bitmap.new(100,100)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow-#{$menu.char}"))
      	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
      	@glow.z += 50
 
@@ -868,7 +868,7 @@ class Ui_Grid
 		@selected_box.flash_light
 
 		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
+     	@glow.bitmap.borderskin($cache.menu_common("skin-glow-#{$menu.char}"))
 		@glow.move(glowon.x+6,glowon.y+6)
 
 	end
