@@ -7,7 +7,7 @@ class Scene_Battle
   	@hud.all_win
     sys 'fall'
     wait(15)
-    music 'battle-final'
+    music 'victory2'
 
     # Choose a dialogue
     if $battle.victory_text != nil

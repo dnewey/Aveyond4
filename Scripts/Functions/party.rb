@@ -106,7 +106,7 @@ end
 
 # Only this one will do popper
 def join(who)
-	sys('join')
+	sys('join2')
 	$party.set_active(who)
 	pop_join(who)
 	$scene.hud.bar.refresh if $scene.is_a?(Scene_Map)
