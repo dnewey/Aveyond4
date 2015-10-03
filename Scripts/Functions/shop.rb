@@ -165,32 +165,36 @@ def setup_chester_shop
 
 	# Based on $progress.chester_level
 
+	# Skills to add at level five - RAVWYN
+	if $progress.chester_level >= 6
+		stock.push('ug-staff-7')
+	end
 
-
-	# Skills to add at level five - DEMONS
+	# Skills to add at level five - DWARVES
 	if $progress.chester_level >= 5
 		
 		stock.push('ug-mana-5')
-		stock.push('ug-staff-7')
+		stock.push('ug-staff-6')
+		stock.push('flames-4')
 		stock.push('ug-passive-scare')
 	end
 
-	# Skills to add at level 4 - DWARVIES
+	# Skills to add at level 4 - ELVES
 	if $progress.chester_level >= 4
 		stock.push('ug-mana-4')
 		stock.push('staff-4')
-		stock.push('ug-staff-6')
+		stock.push('ug-staff-5')
 		stock.push('ug-passive-cheeki')
 		stock.push('ug-magic-minion')
 		stock.push('triumph-2')
 	end
 
-	# Skills to add at level 3 - ELVES
+	# Skills to add at level 3 - WEE
 	if $progress.chester_level >= 3
 		stock.push('levitate')
 		stock.push('flames-3')
 		stock.push('ug-mana-3')
-		stock.push('ug-staff-5')
+		stock.push('ug-staff-4')
 		stock.push('ug-passive-shop')
 	end
 
@@ -201,7 +205,6 @@ def setup_chester_shop
 		stock.push('ug-mana-2')
 		stock.push('staff-3')
 		stock.push('ug-staff-3')
-		stock.push('ug-staff-4')
 	end
 
 	# Skills to add at level 1 - TOR

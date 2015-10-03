@@ -1,4 +1,4 @@
-["ú#==============================================================================
+["ú#==============================================================================
 # ** Game
 #==============================================================================
 
@@ -3945,7 +3945,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"¡
+end"
 
 def shop_choice
 
@@ -4112,32 +4112,36 @@ def setup_chester_shop
 
 	# Based on $progress.chester_level
 
+	# Skills to add at level five - RAVWYN
+	if $progress.chester_level >= 6
+		stock.push('ug-staff-7')
+	end
 
-
-	# Skills to add at level five - DEMONS
+	# Skills to add at level five - DWARVES
 	if $progress.chester_level >= 5
 		
 		stock.push('ug-mana-5')
-		stock.push('ug-staff-7')
+		stock.push('ug-staff-6')
+		stock.push('flames-4')
 		stock.push('ug-passive-scare')
 	end
 
-	# Skills to add at level 4 - DWARVIES
+	# Skills to add at level 4 - ELVES
 	if $progress.chester_level >= 4
 		stock.push('ug-mana-4')
 		stock.push('staff-4')
-		stock.push('ug-staff-6')
+		stock.push('ug-staff-5')
 		stock.push('ug-passive-cheeki')
 		stock.push('ug-magic-minion')
 		stock.push('triumph-2')
 	end
 
-	# Skills to add at level 3 - ELVES
+	# Skills to add at level 3 - WEE
 	if $progress.chester_level >= 3
 		stock.push('levitate')
 		stock.push('flames-3')
 		stock.push('ug-mana-3')
-		stock.push('ug-staff-5')
+		stock.push('ug-staff-4')
 		stock.push('ug-passive-shop')
 	end
 
@@ -4148,7 +4152,6 @@ def setup_chester_shop
 		stock.push('ug-mana-2')
 		stock.push('staff-3')
 		stock.push('ug-staff-3')
-		stock.push('ug-staff-4')
 	end
 
 	# Skills to add at level 1 - TOR
@@ -8963,7 +8966,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"Ÿ#==============================================================================
+end"§#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -9098,7 +9101,7 @@ class Mnu_Items < Mnu_Base
 		# If item needs a target, do it
 		case scope
 
-			when 'ally'
+			when 'ally', 'down'
 				$menu.use_item = option
 				$scene.queue_menu("Healing")
 				close_soon
@@ -12527,300 +12530,55 @@ class Mnu_Potions < Mnu_Base
 		self.close_soon
 	end
 
-end" "•#==============================================================================
-# ** Mnu_MiscTitle
-#==============================================================================
-
-class Mnu_MiscTitle
+end"*
+class Mnu_Load_Title < Mnu_Save
 
 	def initialize(vp)
-
-		@vp = vp
-		@closing = false
-		@close_soon = false
-		@close_delay = 0
-
-		@data = ['New']
-
-		cx = 100
-		cy = 15
-
-		@buttons = []
-		@texts = []
-		@icons = []
-
-		@data.each{ |item|
-
-			btn = Box.new(vp,270,145)
-	     	btn.skin = $cache.menu_common("skin-plain")
-	     	btn.wallpaper = $cache.menu_wallpaper("diamonds")
-	     	btn.move(cx+15,cy)
-	     	btn.name = item
-	     	@buttons.push(btn)
-
-	     	text = Label.new(vp)
-	     	text.font = $fonts.list
-	     	text.shadow = $fonts.list_shadow
-	     	text.gradient = true
-	     	text.text = item
-	     	text.move(cx+194,cy+7)
-	     	@texts.push(text)
-
-	     	icon = Sprite.new(vp)
-	     	icon.bitmap = $cache.menu("Icons/"+item)
-	     	icon.move(cx-4+28,cy+10)
-	     	#icon.src_rect = Rect.new(68,0,120,50)
-	     	icon.z += 50
-	     	@icons.push(icon)
-
-	     	cy += 51
-
-     	}
-
-     	@glow = Sprite.new(vp)
-     	@glow.bitmap = Bitmap.new(@buttons[0].width-12,@buttons[0].height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
-     	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
-
-     	@idx = 0
-     	@sr = 0
-
-     	@boxes = @buttons
-
-     	# Everything fade in
-     	(@buttons+@texts+@icons).each{ |c|
-     		c.opacity = 0
-     		c.do(go("opacity",255,200,:linear))
-     	}
-
-     	dist = 30
-
-     	(@buttons+@texts+@icons).each{ |c|
-			c.x -= dist
-     		c.do(go("x",dist,200,:qio))
-     	}
-
-     	self.do(delay(200))
-     	
-     	@selected = @data[0]#$menu.menu_cursor #{}"Journal"
-     	@selected_box = nil
-     	choose(@selected,false)
-
-	end
-
-	def dispose
-
-		@glow.dispose
-		@icons.each{ |i| i.dispose }
-		@texts.each{ |i| i.dispose }
-		@buttons.each{ |i| i.dispose }
-
+		super(vp)
+		loadmode
+		remove_info
 	end
 
 	def update
 
-		@glow.move(@selected_box.x+6,@selected_box.y+6)
-		return if !$tweens.done?(@boxes[0])
-
-		#@menu.update
-		@boxes.each{ |b| b.update }
-
-		@glow.move(@selected_box.x+6,@selected_box.y+6)
-
-		if $input.action? || $input.click?
-			select(@selected)
-		end
-
+		# Use up inputs
 		if $input.cancel? || $input.rclick?
+			$scene.show_logo
+			$scene.show_char
+			$scene.next_menu = "Title"
 			close_soon
 		end
 
-		if @close_soon && !@closing
-			@close_delay -= 1
-			if @close_delay <= 0
-				close
-			end
+		super
+
+	end
+
+end"e
+class Mnu_Options_Title < Mnu_Options
+
+	def initialize(vp)
+		super(vp)
+		@port.dispose
+		@right.delete(@port)
+		#@title.y = -1000
+		#@subtitle.y = -1000
+		remove_info
+	end
+
+	def update
+
+		# Use up inputs
+		if $input.cancel? || $input.rclick?
+			$scene.show_logo
+			$scene.next_menu = "Title"
+			close_soon
 		end
 
-		# Just remember selected I would suppose
-		box = @selected_box
-			
-		if $input.right?		
-			sx = box.x + box.width
-			sy = box.y + box.height/2	
-			search(sx,sy,3,1)
-		end
-
-		if $input.left?
-			sx = box.x
-			sy = box.y + box.height/2
-			search(sx,sy,-3,1)
-		end
-
-		if $input.down?
-			sx = box.x + box.width/2		
-			sy = box.y + box.height
-			search(sx,sy,1,3)
-		end
-
-		if $input.up?
-			sx = box.x + box.width/2		
-			sy = box.y
-			search(sx,sy,1,-3)
-		end
-
-		pos = $mouse.position
-     
-
-		# Mousing
-		@boxes.each{ |b| 
-
-			next if b == @selected_box
-			next if pos[0] < b.x
-		    next if pos[1] < b.y
-		    next if pos[0] > b.x + b.width
-		    next if pos[1] > b.y + b.height
-			choose(b.name)
-			break
-
-		}
+		super
 
 	end
 
-	def search(sx,sy,x,y)
-
-		before = @selected
-
-		cx = sx
-		cy = sy
-
-		# Start moving until find something
-		while true
-
-			cx += x
-			cy += y
-
-			@boxes.each{ |box|
-				if box.window.within?(cx,cy)
-					return choose(box.name)
-				end
-			}
-
-			cy = 0 if cy > 480
-			cx = 0 if cx > 640
-			cy = 480 if cy < 0
-			cx = 640 if cx < 0
-
-		end
-
-	end
-
-	def choose(target,dosound=true)
-
-		sys('select') if dosound
-
-		@selected = target
-
-		@sr = 0
-
-
-		idx2 = 0
-		@icons.each{ |i|
-			#i.src_rect = Rect.new(36,0,120,50)
-			i.y = 25+(idx2*51)-23
-			#i.x = @buttons[idx2].x
-			#i.do(go("y"))
-			$tweens.clear(i) if dosound
-			idx2 += 1
-		}
-
-
-		# Find the icon if this is journal
-		@idx = nil
-		if !@buttons.select{ |b| b.name == target }.empty?
-
-			idx = 0
-			@buttons.each{ |b|
-				break if b.name == target
-				idx += 1
-			}
-
-			@idx = idx
-
-			#@icons[idx].do(go("y",-12,250,:quad_in_out))
-			#self.do(go("srcrecter",12,250,:quad_in_out))
-
-		end
-
-		@selected_box = @boxes.find{ |b| b.name == target }
-
-		glowon = @selected_box
-
-		@selected_box.flash_light
-
-		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
-		@glow.move(glowon.x+6,glowon.y+6)
-
-	end
-
-	def srcrecter
-		return @sr
-	end
-
-	def srcrecter=(y)
-		if @idx == nil
-			$tweens.clear(self)
-			return
-		end
-		@sr = y
-		#@icons[@idx].src_rect = Rect.new(36,0,120,50+y)
-	end
-
-	def select(option)
-
-		$scene.queue_menu(option)		
-
-		@selected_box.flash_heavy
-		
-		close_soon
-
-	end
-
-	def close_soon(delay=10)
-		@close_soon = true
-		@close_delay = delay
-	end
-
-	def close
-
-		@closing = true
-
-		# Everything fade in
-     	(@buttons+@texts+@icons).each{ |c|
-     		c.do(go("opacity",-255,200,:linear))
-     	}
-
-		dist = 30
-     	(@buttons+@texts+@icons).each{ |c|
-     		c.do(go("x",-dist,200,:qio))
-     	}
-
-     	@glow.hide
-     	self.do(delay(200))
-
-	end
-
-
-	def closing?
-		return @closing
-	end
-
-	def done?
-		return @closing && $tweens.done?(self)
-	end
-
-end" "#==============================================================================
+end"´#==============================================================================
 # ** Mnu_Title
 #==============================================================================
 
@@ -12833,103 +12591,36 @@ class Mnu_Title
 		@close_soon = false
 		@close_delay = 0
 
-		@data = ['New','Load','Options','Quit']
-		@strings = ["New Game","Load Game","Options","Quit"]
-		
-		cx = 180
-		cy = 140
-
-		@cy = cy
+		@data = ['new','continue','options','quit']
+		cx = 135
+		cy = 110
 
 		@buttons = []
-		@texts = []
-		@icons = []
 
 		@data.each{ |item|
 
-			btn = Box.new(vp,240,45)
-	     	btn.skin = $cache.menu_common("skin-plain")
-	     	btn.wallpaper = $cache.menu_wallpaper("diamonds")
-	     	btn.move(cx+15,cy)
-	     	btn.name = item
+			btn = Sprite.new(@vp)
+	     	btn.bitmap = $cache.title("btn-#{item}")
+	     	btn.ox = btn.bitmap.width / 2
+	     	btn.move(cx,cy)
 	     	@buttons.push(btn)
 
-	     	text = Label.new(vp)
-	     	text.font = $fonts.list
-	     	text.shadow = $fonts.list_shadow
-	     	text.gradient = true
-	     	text.text = @strings[@data.index(item)]
-	     	text.move(cx+94,cy+7)
-	     	@texts.push(text)
-
-	     	icon = Sprite.new(vp)
-	     	icon.bitmap = $cache.menu("Icons/"+item)
-	     	icon.move(cx-4+28,cy-12)
-	     	#icon.src_rect = Rect.new(68,0,120,50)
-	     	icon.z += 50
-	     	@icons.push(icon)
-
-	     	cy += 51
+	     	cy += 40
 
      	}
 
-     	@glow = Sprite.new(vp)
-     	@glow.bitmap = Bitmap.new(@buttons[0].width-12,@buttons[0].height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
-     	@glow.do(pingpong("opacity",-100,300,:quad_in_out))
-
-     	@idx = 0
-     	@sr = 0
-
-     	@boxes = @buttons
-
-     	# Everything fade in
-     	(@buttons+@texts+@icons).each{ |c|
-     		c.opacity = 0
-     		c.do(go("opacity",255,200,:linear))
-     	}
-
-     	dist = 30
-
-     	(@buttons+@texts+@icons).each{ |c|
-			c.x -= dist
-     		c.do(go("x",dist,200,:qio))
-     	}
-
-     	self.do(delay(200))
-     	
-     	@selected = "New" #{}"Journal"
-     	@selected_box = nil
-     	choose(@selected,false)
+     	@selected = 0
+     	choose(0)
 
 	end
 
 	def dispose
 
-		@glow.dispose
-		@icons.each{ |i| i.dispose }
-		@texts.each{ |i| i.dispose }
 		@buttons.each{ |i| i.dispose }
 
 	end
 
 	def update
-
-		@glow.move(@selected_box.x+6,@selected_box.y+6)
-		return if !$tweens.done?(@boxes[0])
-
-		#@menu.update
-		@boxes.each{ |b| b.update }
-
-		@glow.move(@selected_box.x+6,@selected_box.y+6)
-
-		if $input.action? || $input.click?
-			select(@selected)
-		end
-
-		if $input.cancel? || $input.rclick?
-			close_soon
-		end
 
 		if @close_soon && !@closing
 			@close_delay -= 1
@@ -12938,150 +12629,47 @@ class Mnu_Title
 			end
 		end
 
-		# Just remember selected I would suppose
-		box = @selected_box
-			
-		if $input.right?		
-			sx = box.x + box.width
-			sy = box.y + box.height/2	
-			search(sx,sy,3,1)
-		end
-
-		if $input.left?
-			sx = box.x
-			sy = box.y + box.height/2
-			search(sx,sy,-3,1)
-		end
-
 		if $input.down?
-			sx = box.x + box.width/2		
-			sy = box.y + box.height
-			search(sx,sy,1,3)
+			choose(@selected + 1)
 		end
 
 		if $input.up?
-			sx = box.x + box.width/2		
-			sy = box.y
-			search(sx,sy,1,-3)
+			choose(@selected - 1)
 		end
 
-		pos = $mouse.position
-     
+		if $input.action?
+			case @selected
+				when 0
+					log_sys("START NEW GAME")
 
-		# Mousing
-		@boxes.each{ |b| 
+				when 1
+					$scene.hide_logo
+					$scene.hide_char
+					$scene.next_menu = "Continue"
+					close_soon
 
-			next if b == @selected_box
-			next if pos[0] < b.x
-		    next if pos[1] < b.y
-		    next if pos[0] > b.x + b.width
-		    next if pos[1] > b.y + b.height
-			choose(b.name)
-			break
+				when 2
+					$scene.hide_logo
+					$scene.next_menu = "Options"
+					close_soon
 
-		}
-
-	end
-
-	def search(sx,sy,x,y)
-
-		before = @selected
-
-		cx = sx
-		cy = sy
-
-		# Start moving until find something
-		while true
-
-			cx += x
-			cy += y
-
-			@boxes.each{ |box|
-				if box.window.within?(cx,cy)
-					return choose(box.name)
-				end
-			}
-
-			cy = 0 if cy > 480
-			cx = 0 if cx > 640
-			cy = 480 if cy < 0
-			cx = 640 if cx < 0
-
+				when 3
+					$game.quit
+			end
 		end
 
 	end
 
-	def choose(target,dosound=true)
-
-		sys('select') if dosound
-
-		@selected = target
-
-		@sr = 0
-
-
-		idx2 = 0
-		@icons.each{ |i|
-			i.src_rect = Rect.new(36,0,120,50)
-			i.y = @cy+10+(idx2*51)-23
-			#i.x = @buttons[idx2].x
-			#i.do(go("y"))
-			$tweens.clear(i) if dosound
-			idx2 += 1
-		}
-
-
-		# Find the icon if this is journal
-		@idx = nil
-		if !@buttons.select{ |b| b.name == target }.empty?
-
+	def choose(idx)
+		if idx > @buttons.count - 1
 			idx = 0
-			@buttons.each{ |b|
-				break if b.name == target
-				idx += 1
-			}
-
-			@idx = idx
-
-			@icons[idx].do(go("y",-12,250,:quad_in_out))
-			self.do(go("srcrecter",12,250,:quad_in_out))
-
 		end
-
-		@selected_box = @boxes.find{ |b| b.name == target }
-
-		glowon = @selected_box
-
-		@selected_box.flash_light
-
-		@glow.bitmap = Bitmap.new(glowon.width-12,glowon.height-12)
-     	@glow.bitmap.borderskin($cache.menu_common("skin-glow"))
-		@glow.move(glowon.x+6,glowon.y+6)
-
-	end
-
-	def srcrecter
-		return @sr
-	end
-
-	def srcrecter=(y)
-		if @idx == nil
-			$tweens.clear(self)
-			return
+		if idx < 0
+			idx = @buttons.count - 1
 		end
-		@sr = y
-		@icons[@idx].src_rect = Rect.new(36,0,120,50+y)
-	end
-
-	def select(option)
-
-		$scene.queue_menu(option)
-
-		@selected_box.flash_heavy
-		#$menu.menu_cursor = option
-
-		close_soon
-
+		@selected = idx
+		@buttons.each{ |b| b.opacity = 150 }
+		@buttons[@selected].opacity = 255
 	end
 
 	def close_soon(delay=10)
@@ -13093,21 +12681,19 @@ class Mnu_Title
 
 		@closing = true
 
-		# Everything fade in
-     	(@buttons+@texts+@icons).each{ |c|
+		# Everything fade out
+     	(@buttons).each{ |c|
      		c.do(go("opacity",-255,200,:linear))
      	}
 
      	dist = 30
-     	(@buttons+@texts+@icons).each{ |c|
+     	(@buttons).each{ |c|
      		c.do(go("x",-dist,200,:qio))
      	}
 
-     	@glow.hide
      	self.do(delay(200))
 
 	end
-
 
 	def closing?
 		return @closing
@@ -21360,8 +20946,7 @@ class Scene_Menu
   end
 
 
-end"Œ
-#==============================================================================
+end"‚#==============================================================================
 # ** Scene_Splash
 #==============================================================================
 
@@ -21373,64 +20958,33 @@ class Scene_Splash
 
 		@vp = Viewport.new(0,0,$game.width,$game.height)
 
+		@white = Sprite.new(@vp)
+		@white.bitmap = $cache.title("white")
+		#@white.opacity = 0
+
 		@logo = Sprite.new(@vp)
-		@logo.bitmap = $cache.menu("Splash/logo")
-		@logo.y = 100
+		@logo.bitmap = $cache.title("logo")
+		@logo.x = 320
+		@logo.y = 340		
+		@logo.ox = 320
+		@logo.oy = 340
+		@logo.y -= 50
 		@logo.opacity = 0
 
-
-		# Sky
-		@sky = Sprite.new(@vp)
-		@sky.bitmap = $cache.menu("Splash/test-sky")
-		@sky.opacity = 0
-
-		# Clouds
-		@clouds = Sprite.new(@vp)
-		@clouds.bitmap = $cache.menu("Splash/test-clouds")
-		@clouds.x -= 50
-		@clouds.opacity = 0
-		#@clouds.do(pingpong("x",100,6000,:qio))
-
-		# Wall
-		@wall = Sprite.new(@vp)
-		@wall.bitmap = $cache.menu("Splash/test-wall")
-		@wall.opacity = 0
-
-		@spark = Spark.new('evil-aura',270,60,@vp)
-		@spark.zoom_x = 2.0
-		@spark.zoom_y = 2.0
-		@spark.opacity = 0
-
-		@spark2 = Spark.new('evil-aura',420,60,@vp)
-		@spark2.zoom_x = 2.0
-		@spark2.zoom_y = 2.0
-		@spark2.opacity = 0
-
-		# Boy
-		@boy = Sprite.new(@vp)
-		@boy.bitmap = $cache.menu("Splash/test-boy")
-		@boy.opacity = 0
-
-		# Title
-		@title = Sprite.new(@vp)
-		@title.bitmap = $cache.menu("Splash/test-title")
-		@title.opacity = 0
-
-		# @boy = Sprite.new(@vp)
-		# @boy.bitmap = $cache.face_menu("boy")
-		# @boy.x = 160
-		# @boy.y = 30
-		# @boy.opacity = 0
+		@sheen = Sprite.new(@vp)
+		@sheen.bitmap = $cache.title("sheen")
+		@sheen.blend_type = 1
+		@sheen.x = -300
+		@sheen.opacity = 220
 
 		@mist = Sprite.new(@vp)
 		@mist.bitmap = $cache.overlay('mist-portal')
 		@mist.opacity = 0
 
 		@round = :logo_appear
-		@wait = 30
+		@wait = 15
 
-		#@round = :reveal
-		#@wait = 0
+		@round = :title
 		
 	end
 
@@ -21443,9 +20997,6 @@ class Scene_Splash
 
 	def update
 
-		@spark.update
-		@spark2.update
-
 		@wait -= 1
 		return if @wait > 0
 
@@ -21455,109 +21006,135 @@ class Scene_Splash
 			when :logo_appear
 				
 				@logo.do(go('opacity',255,700,:qio))
-				@logo.do(go('y',-100,500,:qio))
+				@logo.do(go('y',50,600,:quad_io))
 
+				@round = :logo_sheen
+				@wait = 20
+
+			when :logo_sheen
+
+				sys('logo')
+				@sheen.do(go('x',800,750,:qio))
 				@round = :mist_in
-				@wait = 90
+				@wait = 50
 
-			when :mist_in
+			when :mist_in				
 				
 				Graphics.freeze
 				@mist.opacity = 255
 				src = "Graphics/Transitions/Cave"
-				Graphics.transition(200,src)
+				Graphics.transition(230,src)
 				#@logo.do(go('opacity',-255,1500,:qio))
 
-				@round = :start
-				@wait = 15
-
-			when :start
-
-				Graphics.freeze
-
-				@mist.opacity = 0
-
-				# Prepare the title and all that
-				@sky.opacity = 255
-				@clouds.opacity = 255
-				@wall.opacity = 255
-				@spark.opacity = 255
-				@spark2.opacity = 255
-				@boy.opacity = 255
-				@title.opacity = 255
-
-				src = "Graphics/Transitions/Cave_inv"
-				Graphics.transition(20,src)
-
+				@wait = 1
 				@round = :title
-				@wait = 120
-
-			when :reveal
 
 			when :title
 				$game.pop_scene
 				$game.push_scene Scene_Title.new()
 				@round = :enough
+
 		end
 
 	end
 
-end":#==============================================================================
+end"N#==============================================================================
 # ** Scene_Title
 #==============================================================================
 
 class Scene_Title
   
+  attr_accessor :next_menu
+
   #--------------------------------------------------------------------------
   # * Set up the scene
   #--------------------------------------------------------------------------
   def initialize
 
-    #Graphics.freeze
-
     @closing = false
-
-    $mouse.change_cursor('Default')
 
     # Vp
     @vp = Viewport.new(0,0,$game.width,$game.height)
-    @vp.z = 3500
+    #@vp.z = 3500
 
-    @snap = Sprite.new(@vp)
-    @snap.z = -101
-    @snap.bitmap = $game.snapshot
+    # Sprites
+    @sky = Sprite.new(@vp)
+    @sky.z = -2
+    @clouds = Sprite.new(@vp)
+    @clouds.z = -2
+    @wall = Sprite.new(@vp)
+    @wall.z = -2
 
-    # Background
-    @bg = Sprite.new(@vp)
-    @bg.z = -100
-    #@bg.bitmap = Bitmap.new(640,480)
-    #@bg.bitmap.fill(Color.new(0,0,0,180))
-    @bg.bitmap = $cache.menu_background("boyle")
-    #@bg.bitmap = $cache.menu_background("witch")
-    @bg.opacity = 0
-    @bg.do(go("opacity",255,300))
-    #@bg.y = 30
-    #@bg.do(seq(go("y",-50,150,:qio),go("y",20,150,:qio)))
+    @sparks = [] # Update all
 
-    #self.do(delay(300))
+    # Higher Sprites
+    @char = Sprite.new(@vp)
+    @title = Sprite.new(@vp)
 
-    @next_menu = "Title"
+    # Overlays
+    @mtop = Sprite.new(@vp)
+    @mtop.bitmap = $cache.title('cloud-top')
+    @mtop.z = 8888
+    @mtop.blend_type = 1
+    @mbtm = Sprite.new(@vp)
+    @mbtm.bitmap = $cache.title('cloud-btm')
+    @mbtm.z = 8888
+    @mbtm.blend_type = 1
+    @mleft = Sprite.new(@vp)
+    @mleft.bitmap = $cache.title('cloud-left')
+    @mleft.z = 8888
+    @mleft.blend_type = 1
+    @mright = Sprite.new(@vp)
+    @mright.bitmap = $cache.title('cloud-right')
+    @mright.z = 8888
+    @mist = Sprite.new(@vp)
+    @mist.bitmap = $cache.overlay('mist-portal')
+    @mist.z = 9999
 
-    @menu = nil
 
-    #Graphics.transition(20,'Graphics/Transitions/trans')     
+    # Init 
+    init_boy
+
+    d = 600
+
+    # Start the transition in
+    @mtop.do(go('opacity',-255,3000))
+    @mright.do(go('opacity',-255,3000))
+    @mleft.do(go('opacity',-255,3000))
+    @mbtm.do(go('opacity',-255,3000))
+
+    @mtop.do(go('y',-380,1500,:qio))
+    @mbtm.do(go('y',280,1500,:qio))
+    @mright.do(go('x',280,1500,:qio))
+    @mleft.do(go('x',-280,1500,:qio))    
+
+    @mist.do(go('opacity',-255,1500))
+ 
+    @next_menu = nil
+    @menu = Mnu_Title.new(@vp)
 
   end
   
   def terminate
 
-    @menu.dispose if @menu != nil
-
-    @bg.dispose
-    @snap.dispose
-
     @vp.dispose
 
+  end
+
+  def hide_logo
+    @title.opacity = 0
+  end
+
+  def show_logo
+    @title.opacity = 255
+  end
+
+  def hide_char
+    @char.opacity = 0
+  end
+
+  def show_char
+    @char.opacity = 255
   end
 
   #--------------------------------------------------------------------------
@@ -21565,13 +21142,17 @@ class Scene_Title
   #--------------------------------------------------------------------------
   def update
 
+    @sparks.each{ |s| s.update }
+
+    #@bg.do(go("opacity",255,300)) if @bg.opacity == 0
+
     if @closing && $tweens.done?(self)
       $tweens.clear_all
       $game.pop_scene
-      $game.push_scene(Scene_Map.new)
     end
 
     return if @closing
+
 
     if @menu == nil
 
@@ -21615,26 +21196,24 @@ class Scene_Title
       @menu = nil
     end
 
+    if @next_menu == "Main"
+      @next_menu = nil if $menu.sub_only
+    end    
+
     # The current menu
     case @next_menu
 
-      when "Title"; 
-        @menu = Mnu_Title.new(@vp)
+      when "Title"; @menu = Mnu_Title.new(@vp)
 
-      when "New"
+      when "New"; @menu = Mnu_Main.new(@vp)
 
-      when "Load"
-        @menu = Mnu_TitleLoad.new(@vp)
+      when "Continue"; 
+        @menu = Mnu_Load_Title.new(@vp)
 
-      when "Options"
-        @menu = Mnu_TitleOptions.new(@vp)
+      when "Options";
+        @menu = Mnu_Options_Title.new(@vp)
 
-      when "Quit"
-        $game.pop_scene
-
-
-      #when "Title"; @menu = Mnu_Title.new(@vp)
-      
+      when "Quit"; @menu = Mnu_Main.new(@vp)
 
     end
 
@@ -21667,11 +21246,54 @@ class Scene_Title
   # end
 
   def close
+    sys('close')
     @closing = true
     @bg.do(go("opacity",-255,300))
     self.do(delay(300))
   end
 
+
+
+
+  def init_boy
+
+    # Sky
+    @sky.bitmap = $cache.title("test-sky")
+    #@sky.opacity = 0
+
+    # Clouds
+    @clouds.bitmap = $cache.title("test-clouds")
+    @clouds.x -= 50
+    #@clouds.opacity = 0
+    @clouds.do(pingpong("x",100,6000,:qio))
+
+    # Wall
+    @wall.bitmap = $cache.title("test-wall")
+    #@wall.opacity = 0
+
+    sprk = Spark.new('evil-aura',270,60,@vp)
+    sprk.zoom_x = 2.0
+    sprk.zoom_y = 2.0
+    #sprk.opacity = 0
+    sprk.z = -1
+    @sparks.push(sprk)
+
+    sprk = Spark.new('evil-aura',420,60,@vp)
+    sprk.zoom_x = 2.0
+    sprk.zoom_y = 2.0
+    #sprk.opacity = 0
+    sprk.z = -1
+    @sparks.push(sprk)
+
+    # Boy
+    @char.bitmap = $cache.title("test-boy")
+    #@char.opacity = 0
+
+    # Title
+    @title.bitmap = $cache.title("test-title")
+    #@title.opacity = 0
+
+  end
 
 end"ÂCmodule Seal
 
@@ -22688,7 +22310,7 @@ class EnviroSource < Seal::Source
 
   end
 
-end"a
+end"™
 class CacheManager
 
     def initialize
@@ -22719,6 +22341,8 @@ class CacheManager
     def menu_char(filename) load("Menus/Char/", filename) end
     def menu_page(filename) load("Menus/Page/", filename) end
     def menu_book(filename) load("Menus/Book/", filename) end
+
+    def title(filename) load("Title/", filename) end
 
     def cursor(filename) load("Cursors/", filename) end
     def icon(filename) load("Icons/", filename) end
@@ -23511,7 +23135,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"##==============================================================================
+end"J#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -23586,8 +23210,12 @@ class GameManager
     return @scenes[0]
   end
 
+  def quit
+    @quit = true
+  end
+
   def quit?
-    return false
+    return @quit
   end
 
   def update
@@ -23956,7 +23584,7 @@ class SettingsManager
     save
   end
 
-end"ˆ#==============================================================================
+end"Í#==============================================================================
 # ** Nano Manager
 #==============================================================================
 
@@ -23979,7 +23607,14 @@ class TweenManager
 		    @tweens_menu.each{ |n| n.update(delta) }
 		else
 			@tweens.delete_if{ |n| (n.is_a?(SpriteGroup) && n.disposed?) || (n.is_a?(Sprite) && n.disposed?) || n == nil || n.done? }		
-		    @tweens.each{ |n| n.update(delta) }
+		    
+		    @tweens.each{ |n| 
+		    	begin
+		    		n.update(delta) 
+		    	rescue
+				end
+		    }
+			
 		end
 
 	end
