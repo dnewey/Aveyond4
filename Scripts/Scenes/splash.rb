@@ -36,7 +36,7 @@ class Scene_Splash
 		@round = :logo_appear
 		@wait = 15
 
-		@round = :title
+		#@round = :title
 		
 	end
 
