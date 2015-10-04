@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"j#==============================================================================
+end"€#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -249,18 +249,19 @@ class Sprite_Character < Sprite
       @icons.each{ |i| i.dispose }
       @icons.clear
 
-      total = (@icons.count-1) * (24+2)
-      total -= 2
+      total = (@icons.count-1) * (16+2)
+      #total -= 2
       cx = 0#-total/2
 
       @character.icons.each{ |i|
 
         spr = Sprite.new(@vp)
         spr.bitmap = $cache.icon("states/#{i}")
-        spr.ox = 12
-        spr.oy = 12
+        spr.ox = 8
+        spr.oy = 8
         spr.x = self.x - cx
         spr.y = self.y - @ch
+        spr.z += 1000
         @icons.push(spr)
 
         cx += 26
@@ -12781,7 +12782,7 @@ class Mnu_Options_Title < Mnu_Options
 
 	end
 
-end"´#==============================================================================
+end"Ä#==============================================================================
 # ** Mnu_Title
 #==============================================================================
 
@@ -12843,7 +12844,8 @@ class Mnu_Title
 		if $input.action?
 			case @selected
 				when 0
-					log_sys("START NEW GAME")
+					$scene.next_menu = "New"
+					close_soon
 
 				when 1
 					$scene.hide_logo
@@ -13830,7 +13832,7 @@ class Game_Battler
 
   end
 
-end"§
+end"Â
 class Attack_Result
 
 	attr_accessor :target
@@ -13848,6 +13850,8 @@ class Attack_Result
 	attr_accessor :state_remove
 
 	attr_accessor :transform
+
+	attr_accessor :empower
 
 end
 
@@ -18065,7 +18069,7 @@ class Game_Player < Game_Character
   end
 
 end
-"ƒ.
+"ž/
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -18352,6 +18356,7 @@ class Game_Battle
       # Check damage effects
 
       dmg_base = 0
+      dmg_p = 0.0
       dmg_mod = 0.0 # 1.0 is use str number as damage
 
       heal_base = 0
@@ -18362,6 +18367,7 @@ class Game_Battle
 
       # Specials
       is_half_armor = true
+      empower = false
 
       # Items have actions, skills have effects, they are the same
       effects = nil
@@ -18378,6 +18384,9 @@ class Game_Battle
           # Damage
           when 'dmg-base'
             dmg_base = data[1].to_i
+            is_dmg = true
+          when 'dmg-p'
+            dmg_p = data[1].to_i
             is_dmg = true
           when 'dmg-mod'
             dmg_mod = data[1].to_f
@@ -18406,6 +18415,8 @@ class Game_Battle
             result.transform = data[1]
           when 'half-armor'
             is_half_armor = true
+          when 'empower'
+            empower = true
 
 
         end
@@ -18431,6 +18442,7 @@ class Game_Battle
       # --------------------------------------------
       # Calc Damage
       result.damage = dmg_base + (attacker.str * dmg_mod)
+      result.damage += t.maxhp * dmg_p
 
       # Add variation
       variation = result.damage * 0.2
@@ -18476,6 +18488,10 @@ class Game_Battle
         if t.state?('bleed')
           result.damage *= 2
         end
+      end
+
+      if empower
+        result.empower = true
       end
 
       results.push(result)
@@ -18670,7 +18686,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"—(#==============================================================================
+end")#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19050,6 +19066,8 @@ class Game_Party
     @actors["boy"].learn('contempt')
     #@actors["boy"].learn('flames')
 
+    @actors["boy"].learn('empower')
+
     @actors['ing'].learn('wand')
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
@@ -19069,7 +19087,7 @@ class Game_Party
     @actors['mys'].learn('two-legs')
 
     @actors['rob'].learn('bash')
-    @actors['rob'].learn('defend')
+    @actors['rob'].learn('protect')
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")
     @actors["rob"].learn("team-mys")
@@ -19077,12 +19095,14 @@ class Game_Party
     @actors["rob"].learn("team-hib")
     @actors["rob"].learn("team-phy")
 
-    #@actors['hib'].learn('claw')
+    @actors['hib'].learn('claw')
 
     @actors['row'].learn('dagger')
 
 
     @actors['phy'].learn('strike')
+    @actors['phy'].learn('provoke')
+    @actors['phy'].learn('dragon-fire')
 
     # Start items
     add_item('flip-deck')
@@ -20284,7 +20304,7 @@ class Scene_Battle
     
   end
 
-end"Ã$
+end"$'
 class Scene_Battle
 
   def phase_main_init
@@ -20588,6 +20608,26 @@ class Scene_Battle
 
     @attack_results.each{ |result|
 
+      # Empower minion
+      if result.empower
+        $battle.minion.add_state('empower')
+        $battle.minion.ev.character_name = $battle.minion.ev.character_name + '-wild'
+        x = $battle.minion.ev.screen_x
+        y = $battle.minion.ev.screen_y - 16
+        add_spark('redstar',x,y)
+      end
+
+      if result.state_remove
+
+        log_sys(result.state_remove)
+
+          if result.target.state?(result.state_remove)
+            result.target.remove_state(result.state_remove)            
+            result.target.ev.icons.delete(result.state_remove)
+          end
+
+      end
+
       if result.state_add
 
         # Only if a new state, else refresh
@@ -20602,7 +20642,7 @@ class Scene_Battle
         # Show icon?
         result.target.ev.icons.push(result.state_add)
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
-        result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
+        #result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
 
       end
 
@@ -21166,7 +21206,7 @@ class Scene_Menu
   end
 
 
-end"‚#==============================================================================
+end"ƒ#==============================================================================
 # ** Scene_Splash
 #==============================================================================
 
@@ -21204,7 +21244,7 @@ class Scene_Splash
 		@round = :logo_appear
 		@wait = 15
 
-		@round = :title
+		#@round = :title
 		
 	end
 
@@ -21258,7 +21298,7 @@ class Scene_Splash
 
 	end
 
-end"N#==============================================================================
+end"w#==============================================================================
 # ** Scene_Title
 #==============================================================================
 
@@ -21425,7 +21465,9 @@ class Scene_Title
 
       when "Title"; @menu = Mnu_Title.new(@vp)
 
-      when "New"; @menu = Mnu_Main.new(@vp)
+      when "New";
+        $game.pop_scene
+        $game.push_scene Scene_Map.new()
 
       when "Continue"; 
         @menu = Mnu_Load_Title.new(@vp)
