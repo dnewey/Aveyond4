@@ -3631,7 +3631,7 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
-end"
+end"_
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -3706,6 +3706,10 @@ def pop_get(type,b,ib,color=nil)
 		when 'f'
 			a = "You found: "
 			ia = nil
+
+		when 'mf'
+			a = "Myst found: "
+			ia = ia = $cache.icon("faces/mys")
 
 		when 'b'
 			a = "You bought: "
@@ -18686,7 +18690,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end")#==============================================================================
+end")#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -18802,6 +18806,7 @@ class Game_Party
   end
 
   def recover_all
+    sfx 'inn'
     @actors.values.each{ |a| a.recover_all }
   end
   

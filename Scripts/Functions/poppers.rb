@@ -74,6 +74,10 @@ def pop_get(type,b,ib,color=nil)
 			a = "You found: "
 			ia = nil
 
+		when 'mf'
+			a = "Myst found: "
+			ia = ia = $cache.icon("faces/mys")
+
 		when 'b'
 			a = "You bought: "
 			ia = nil

@@ -114,6 +114,7 @@ class Game_Party
   end
 
   def recover_all
+    sfx 'inn'
     @actors.values.each{ |a| a.recover_all }
   end
   
