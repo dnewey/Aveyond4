@@ -354,10 +354,9 @@ class Ui_Grid
 		@cy += 2
 
 		# Find all users
-		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot) }
+		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot.delete('12')) }
 
 		# If too many users, cut some
-
 
 
 		# Draw all of the icons now

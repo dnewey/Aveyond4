@@ -122,7 +122,7 @@ class Mnu_Equip < Mnu_Base
 
 		# Find gear for this slot
 		items = $party.items.keys.select{ |i|
-			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot.delete("12")
+			$data.items[i].is_a?(GearData) && $data.items[i].slot == @slot.delete('12')
 		}
 		items.push('remove') if @char.equips[@slot] != nil
 		@menu.list.setup(items)

@@ -355,7 +355,7 @@ class Game_Party
     @actors['mys'].equip('light','mys-arm-start')
 
     # Robin
-    @actors['rob'].equip('sword','rob-hammer-start')
+    @actors['rob'].equip('sword','rob-sword-start')
     @actors['rob'].equip('heavy','rob-arm-start')
 
     # Hiberu

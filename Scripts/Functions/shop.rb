@@ -75,6 +75,35 @@ def setup_item_shop
 
 end
 
+def setup_special_shop(type)
+
+	$menu.shop_init
+	stock = []
+
+	case type
+
+		when 'fruit'	
+			stock.push('fruit-a')
+
+		when 'grape'	
+			stock.push('fruit-a')
+
+		when 'pastry'	
+			stock.push('fruit-a')
+
+		when 'ingredients'	
+			stock.push('fruit-a')
+
+		when 'keys'	
+			stock.push('fruit-a')
+
+	end
+
+	stock.each{ |s| $menu.shop_add(s) }
+	open_shop_buy
+
+end
+
 def setup_smith_shop
 
 	$menu.shop_init
@@ -154,6 +183,8 @@ def setup_magic_shop
 end
 
 def setup_chester_shop
+
+	$menu.char = 'boy'
 
 	$menu.shop_init
 	stock = []

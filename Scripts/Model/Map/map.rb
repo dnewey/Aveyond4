@@ -72,6 +72,7 @@ class Game_Map
   end
 
   def resetup
+    update_camera
     @zone = nil
     setup(@id)
     setup_audio
@@ -392,7 +393,7 @@ class Game_Map
 
 
     # What event is there
-    if ev != nil && ev.mousein
+    if ev != nil && ev.mousein && ev.character_name != ''
 
       # Check actual mouse xy to see if inside
 

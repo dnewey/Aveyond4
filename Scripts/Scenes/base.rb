@@ -102,7 +102,7 @@ class Scene_Base
 
     # Model update
     @map.update      
-    return if $scene.is_a?(Scene_Menu)
+    #return if $scene.is_a?(Scene_Menu)
     @player.update
 
     # Elements update

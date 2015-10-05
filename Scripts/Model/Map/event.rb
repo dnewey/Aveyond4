@@ -675,6 +675,7 @@ class Game_Event < Game_Character
           @character_name = "Doors/#{data[1]}"
         when "#icon"
           @character_name = "Icons/#{data[1]}"
+          @icon = 'U' if @character_name.include?('bugs')
 
         when '#cardicon'
           cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
