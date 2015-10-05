@@ -775,12 +775,8 @@ class Game_Event < Game_Character
 
     if @trigger == 3
 
-      if DEBUG && $keyboard.state?(VK_CTRL)
-        erase
-        return
-      else
-        start
-      end
+      start
+      
     end
 
   end

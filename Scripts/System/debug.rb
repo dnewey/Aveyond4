@@ -23,9 +23,9 @@ class DebugManager
 	attr_reader :last_color
 
 	def initialize		
-		return if !DEBUG
+		#return if !DEBUG
 
-		$DEBUG = true
+		#$DEBUG = true
 
 		# Temp debug options
 		@disable_flags = false
@@ -51,7 +51,7 @@ class DebugManager
 	end	
 
 	def update
-		return if !DEBUG
+		#return if !DEBUG
 
 		@console.update if !@menu.active?
 		@menu.update if !@console.active?
@@ -73,7 +73,7 @@ class DebugManager
 	end
 
 	def log(msg,type='LOG')
-	    return if !DEBUG
+	    #return if !DEBUG
 
 	    msg = "NIL" if msg == nil
 	    if msg.is_a?(Array)

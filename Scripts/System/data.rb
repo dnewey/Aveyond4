@@ -165,61 +165,7 @@ class DataManager
 
     # Export to rxdata for later
     # Disabled for now to not crowd up github commits
-    #save_data(data,"Data/Json/#{file}.rxdata")
-
-    return data
-
-  end
-
-  def load_json_set(file,type)
-
-    # Load from rxdata if not debug
-    if !DEBUG
-      return load_data("Data/Json/#{file}.rxdata")
-    end
-
-    # Clear out garbage files
-    process_data_files(file)
-
-    # If there is no data file, make blank
-    if !FileTest.exist?("Editor/json/#{file}.json")
-      log_sys "Missing data file: #{file}.json"
-      return {}
-    end
-
-    # Load up the data
-    json_data = File.read("Editor/json/#{file}.json")
-    json_data = json_data.gsub(/[:]/, '=>')
-    json_data = eval(json_data)
-
-  
-    # Create datas
-    data = {}
-    json_data.each{ |v|
-      item = type.new
-      v.each{ |var,val|
-        
-        # Ignore modified field
-        next if var == 'modified'
-
-        # Attempt to convert val to int or float
-        if val.numeric?
-          if val.include?(".")
-            val = val.to_f
-          else
-            val = val.to_i
-          end
-        end
-
-        item.instance_variable_set("@#{var}", val)
-      }
-      data[item.id] = item
-      
-    }
-
-    # Export to rxdata for later
-    # Disabled for now to not crowd up github commits
-    #save_data(data,"Data/Json/#{file}.rxdata")
+    save_data(data,"Data/Json/#{file}.rxdata")
 
     return data
 
