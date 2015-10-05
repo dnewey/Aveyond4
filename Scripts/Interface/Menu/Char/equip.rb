@@ -183,7 +183,8 @@ class Mnu_Equip < Mnu_Base
 		gear = option
 		gear = nil if option == 'remove'
 
-		# Replace the gear in the slot hahahhahah
+		# Replace the gear in the slot
+		sys('equip2')
 		@char.equip(@slot,gear)
 		back_to_slots
 		

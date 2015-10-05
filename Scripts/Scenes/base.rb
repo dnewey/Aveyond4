@@ -99,10 +99,12 @@ class Scene_Base
   def update
 
     return if $scene.is_a?(Scene_Menu)
+    return if $scene.is_a?(Scene_GameOver)
 
     # Model update
     @map.update      
-    #return if $scene.is_a?(Scene_Menu)
+    return if $scene.is_a?(Scene_Menu)
+    return if $scene.is_a?(Scene_GameOver)
     @player.update
 
     # Elements update

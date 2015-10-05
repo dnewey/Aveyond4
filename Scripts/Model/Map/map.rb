@@ -326,6 +326,7 @@ class Game_Map
 
     @interpreter.update #if @cam_snap
     return if $scene.is_a?(Scene_Menu)
+    return if $scene.is_a?(Scene_GameOver)
 
     update_events
 

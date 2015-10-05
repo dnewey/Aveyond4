@@ -358,14 +358,19 @@ class Ui_Message
 
       @tail.hide
 
-      # Set vn face
-      @vn_port.bitmap = $cache.face_vn(speaker)
-      @vn_port.x = ($game.width - @vn_port.width)/2
-      @vn_port.y = $game.height - @vn_port.height
-      #@vn_port.opacity = 0
-      $tweens.clear(@vn_port)
-      @vn_port.do(go("opacity",255,400,:quad_in_out))
-      #speaker = nil
+      # Hack to hide vn face on gameover
+      if !$scene.is_a?(Scene_GameOver)
+
+        # Set vn face
+        @vn_port.bitmap = $cache.face_vn(speaker)
+        @vn_port.x = ($game.width - @vn_port.width)/2
+        @vn_port.y = $game.height - @vn_port.height
+        #@vn_port.opacity = 0
+        $tweens.clear(@vn_port)
+        @vn_port.do(go("opacity",255,400,:quad_in_out))
+        #speaker = nil
+
+      end
 
     end
 
@@ -491,6 +496,7 @@ class Ui_Message
       @nametext.bitmap.clear
       @namebox.bitmap.clear
 
+      return if name == 'abc'
       return if name == ''
       return if name == nil
 
@@ -511,13 +517,13 @@ class Ui_Message
     case name
 
       when '???'
-        $scene.hud.message.wallpaper = 'fangder'
+        wallpaper = 'fangder'
 
       when 'Chester'
-        $scene.hud.message.wallpaper = 'wizard'
+        wallpaper = 'wizard'
 
       else
-        $scene.hud.message.wallpaper = 'diamonds'
+        wallpaper = 'diamonds'
 
     end
 

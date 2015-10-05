@@ -153,7 +153,16 @@ class Mnu_Healing < Mnu_Base
 			end
 		end
 
-		sys('quest')
+		#sys('quest')
+		first = $data.items[$menu.use_item].action.split("/n")[0]
+		log_info(first)
+		if first.include?('heal')
+			sys('eat')
+		elsif first.include?('mana')
+			sys('drink')
+		end
+
+		# If cassia, do special sound
 
 		$party.lose_item($menu.use_item)
 		@item_grid.clear

@@ -151,6 +151,8 @@ class Interpreter
     
     # Loop
     loop do
+
+      return if $scene.is_a?(Scene_GameOver)
       
       # Add 1 to loop count
       @loop_count += 1
@@ -180,6 +182,7 @@ class Interpreter
 
       # Misc hud busy
       return if $scene.is_a?(Scene_Menu)
+
       return if $scene.is_a?(Scene_Battle) && !battlemap
       return if $scene.busy?
 
