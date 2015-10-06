@@ -100,7 +100,20 @@ class Scene_Battle < Scene_Base
 
     }
 
+    # Enemy setups
     [0,1,2,3,4,5,6,7,8,9].each{ |i| 
+      ev = @map.event_by_evname("E.#{i}") 
+      next if ev == nil
+      if $battle.enemies.count > i
+        $battle.enemies[i].ev = ev
+        ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+      else
+        hide(ev)
+      end
+    }
+
+    # Ally setups
+    [0,1,2].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
       next if ev == nil
       if $battle.enemies.count > i

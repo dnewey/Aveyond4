@@ -72,7 +72,7 @@ class GameManager
     #$tweens.clear_all
     @scenes.shift.terminate
     $scene = @scenes[0]
-    $scene.viz
+    $scene.viz if $scene != nil
   end
 
   def sub_scene

@@ -40,6 +40,14 @@ class Scene_Splash
 		
 	end
 
+	  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
+  end
+
 	def terminate
 
 		@logo.dispose

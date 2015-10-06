@@ -6,6 +6,8 @@ class Game_Battle
   attr_reader :enemies
   attr_reader :minion
 
+  attr :allies
+
   attr_reader :enemy_types # Enemies for the current zone
   attr_reader :enemy_list # 
 
@@ -60,6 +62,12 @@ class Game_Battle
     battler.init_enemy(enemy)
     @enemy_list.push(enemy)
     @enemies.push(battler)
+  end
+
+  def add_ally(ally)
+    battler = Game_Battler.new
+    battler.init_enemy(ally)
+    @allies.push(battler)
   end
 
   # Queue up skills to use before battle starts

@@ -24,6 +24,7 @@ class Scene_Title
     @clouds.z = -2
     @wall = Sprite.new(@vp)
     @wall.z = -2
+    @wall.opacity = 0
 
     @sparks = [] # Update all
 
@@ -95,6 +96,15 @@ class Scene_Title
 
   def show_char
     @char.opacity = 255
+  end
+
+
+  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
   end
 
   #--------------------------------------------------------------------------

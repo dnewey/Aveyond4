@@ -1029,7 +1029,7 @@ end"´
 def build_value_bmp(num)
 
 	# prepare number data
-    data = num.to_i.to_s.split(//)
+    data = num.ceil.to_s.split(//)
     nums = []
     data.each{ |n| nums.push(n.to_i) }
 
@@ -4813,7 +4813,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"õ
+ end"
 
 
 
@@ -5007,7 +5007,8 @@ def potion_next_problem
 	case $party.potion_state
 
 		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
-			text("x-ing: That doesn't look right.")
+			
+			text("x-ing: Something isn't right, it's very red.")
 
 		else
 			text("x-ing: That's it! Perfect!")
@@ -5861,7 +5862,7 @@ class ItemCmd
 		return @item
 	end
 
-end"\
+end"v
 class SkillCmd < ItemCmd
 
 	def setup(battler,action)
@@ -5871,6 +5872,7 @@ class SkillCmd < ItemCmd
 		skill_list = @battler.skill_list(action)
 
 		@box.type = :skill
+		@list.max_per_page = 6
 		@list.type = :skill
 		@list.user = @battler.id
 		@list.setup(skill_list)
@@ -9346,7 +9348,7 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-end"W#==============================================================================
+end"‚#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -9526,11 +9528,13 @@ class Mnu_Main
 		@glow.move(@selected_box.x+6,@selected_box.y+6)
 		return if !$tweens.done?(@chars[0])
 
+
 		#@menu.update
 		@chars.each{ |c| c.update }
 		@boxes.each{ |b| b.update }
 
 		@glow.move(@selected_box.x+6,@selected_box.y+6)
+
 
 		if $input.action? || $input.click?
 			select(@selected)
@@ -9546,6 +9550,8 @@ class Mnu_Main
 				close
 			end
 		end
+
+		return if @closing || @close_soon
 
 		# Just remember selected I would suppose
 		box = @selected_box
@@ -11760,7 +11766,7 @@ class Char_Box_Large < SpriteGroup
 		@port.do(to("oy",0,-2))
 	end
 
-end"0
+end"
 
 class Char_Box_Small < SpriteGroup
 
@@ -11800,14 +11806,17 @@ class Char_Box_Small < SpriteGroup
 	    @level.font = $fonts.list
 	    @level.shadow = $fonts.list_shadow
 	    @level.gradient = true
-	    @level.text = "15"
+	    @level.text = @char.level.to_s
 	    add(@level,20,27)
 	    @level.z += 50
 
+
 		@xp_bar = Bar.new(vp,106,8)
+		add(@xp_bar,11,64)
+		@xp_bar.opacity = 180
 		@xp_bar.value = @char.xp
 		@xp_bar.max = @char.next_exp
-		add(@xp_bar,11,64)
+		@xp_bar.for(:xp)
 		@xp_bar.z += 50
 
 		@xp_label = Sprite.new(vp)
@@ -11815,6 +11824,12 @@ class Char_Box_Small < SpriteGroup
 		@xp_label.opacity = 200
 		add(@xp_label,12,56)
 		@xp_label.z += 50
+
+		@xp_value = Sprite.new(vp)
+		@xp_value.bitmap = build_value_bmp(@char.xp)
+		@xp_value.opacity = 200
+		add(@xp_value,186-@xp_value.bitmap.width,141)
+		@xp_value.z += 50
 
 	end
 
@@ -17123,7 +17138,7 @@ class Interpreter
   end
 
 end
-"A#==============================================================================
+"®A#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17173,6 +17188,8 @@ class Game_Map
     @cam_oy = 0#-16
     @cam_dur = nil
 
+    @cam_hy = 0 # Hiding
+
     @force_terrains = {}
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
@@ -17201,6 +17218,14 @@ class Game_Map
     @zone = nil
     setup(@id)
     setup_audio
+  end
+
+  def hide
+    @cam_hy = 5000
+  end
+
+  def show
+    @cam_hy = 0
   end
   
   #--------------------------------------------------------------------------
@@ -17366,7 +17391,8 @@ class Game_Map
     # cam_y = 0 if cam_y < 0
     # h = ($map.height * 128) - ($game.height * 4)
     # cam_y = h if cam_y > h
-    return @cam_y + (@cam_oy*4)
+    @cam_hy = 0 if @cam_hy == nil
+    return @cam_y + (@cam_oy*4) - @cam_hy
   end
 
   #--------------------------------------------------------------------------
@@ -18306,13 +18332,15 @@ class Game_Player < Game_Character
   end
 
 end
-"»/
+"E0
 class Game_Battle
 
   attr_accessor :map, :weather
 
   attr_reader :enemies
   attr_reader :minion
+
+  attr :allies
 
   attr_reader :enemy_types # Enemies for the current zone
   attr_reader :enemy_list # 
@@ -18368,6 +18396,12 @@ class Game_Battle
     battler.init_enemy(enemy)
     @enemy_list.push(enemy)
     @enemies.push(battler)
+  end
+
+  def add_ally(ally)
+    battler = Game_Battler.new
+    battler.init_enemy(ally)
+    @allies.push(battler)
   end
 
   # Queue up skills to use before battle starts
@@ -19586,7 +19620,7 @@ end"class State
 	end
 
 end
-"ã#==============================================================================
+"+ #==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -19654,6 +19688,14 @@ class Scene_Base
     # UI
     @hud = nil # Define in sub
             
+  end
+
+  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
   end
   
   def terminate
@@ -19931,7 +19973,7 @@ class Scene_Base
   # end
 
 end
-"ê#==============================================================================
+")#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -20033,7 +20075,20 @@ class Scene_Battle < Scene_Base
 
     }
 
+    # Enemy setups
     [0,1,2,3,4,5,6,7,8,9].each{ |i| 
+      ev = @map.event_by_evname("E.#{i}") 
+      next if ev == nil
+      if $battle.enemies.count > i
+        $battle.enemies[i].ev = ev
+        ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+      else
+        hide(ev)
+      end
+    }
+
+    # Ally setups
+    [0,1,2].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
       next if ev == nil
       if $battle.enemies.count > i
@@ -21144,7 +21199,7 @@ class Scene_Battle
   end
 
  end
-"×#==============================================================================
+"#==============================================================================
 # ** Scene_GameOver
 #==============================================================================
 
@@ -21208,6 +21263,14 @@ class Scene_GameOver
 
   def show_char
     @char.opacity = 255
+  end
+
+  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
   end
 
   #--------------------------------------------------------------------------
@@ -21634,7 +21697,7 @@ class Scene_Menu
   end
 
 
-end"ƒ#==============================================================================
+end"Ì#==============================================================================
 # ** Scene_Splash
 #==============================================================================
 
@@ -21675,6 +21738,14 @@ class Scene_Splash
 		#@round = :title
 		
 	end
+
+	  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
+  end
 
 	def terminate
 
@@ -21726,7 +21797,7 @@ class Scene_Splash
 
 	end
 
-end"w#==============================================================================
+end"Ø#==============================================================================
 # ** Scene_Title
 #==============================================================================
 
@@ -21752,6 +21823,7 @@ class Scene_Title
     @clouds.z = -2
     @wall = Sprite.new(@vp)
     @wall.z = -2
+    @wall.opacity = 0
 
     @sparks = [] # Update all
 
@@ -21823,6 +21895,15 @@ class Scene_Title
 
   def show_char
     @char.opacity = 255
+  end
+
+
+  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
   end
 
   #--------------------------------------------------------------------------
@@ -23772,7 +23853,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"¹#==============================================================================
+end"	#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -23836,15 +23917,17 @@ class GameManager
   end
 
   def push_scene(scene)
+    @scenes[-1].inviz if !@scenes.empty?
     $scene = scene
     @scenes.unshift(scene)
   end
 
   def pop_scene
     #Graphics.freeze
-    $tweens.clear_all
+    #$tweens.clear_all
     @scenes.shift.terminate
     $scene = @scenes[0]
+    $scene.viz if $scene != nil
   end
 
   def sub_scene
