@@ -84,9 +84,15 @@ def setup_special_shop(type)
 
 		when 'fruit'	
 			stock.push('fruit-a')
+			stock.push('fruit-b')
+			stock.push('fruit-c')
+			stock.push('fruit-d')
+			stock.push('fruit-e')
 
 		when 'grape'	
-			stock.push('fruit-a')
+			stock.push('grape-drink')
+			stock.push('pine-drink')
+			stock.push('apple-drink')
 
 		when 'pastry'	
 			stock.push('fruit-a')
@@ -95,7 +101,15 @@ def setup_special_shop(type)
 			stock.push('fruit-a')
 
 		when 'keys'	
-			stock.push('fruit-a')
+			stock.push('game-key-1')
+			stock.push('game-key-2')
+			stock.push('game-key-3')
+			stock.push('game-key-4')
+			stock.push('game-key-5')
+			stock.push('game-key-6')
+			stock.push('game-key-7')
+			stock.push('game-key-8')
+			stock.push('game-key-9')
 
 	end
 
@@ -144,7 +158,6 @@ def setup_smith_shop
 			stock.push('helm-dwarf')
 			stock.push('heavy-arm-dwarf')
 			stock.push('rob-shield-dwarf')
-			stock.push('rob-hammer-dwarf')
 
 	end
 

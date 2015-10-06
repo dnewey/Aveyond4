@@ -3443,7 +3443,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end".#==============================================================================
+end"Ì#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3620,7 +3620,12 @@ def grant_xp(who,amount)
 end
 
 def grant_level_all
-	$party.all_battlers.grant_level
+	$party.get('boy').grant_level
+	$party.get('ing').grant_level
+	$party.get('rob').grant_level
+	$party.get('mys').grant_level
+	$party.get('hib').grant_level
+	$party.get('row').grant_level
 	pop_level_all
 end
 
@@ -3970,7 +3975,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"U
+end"Q
 
 def shop_choice
 
@@ -4056,9 +4061,15 @@ def setup_special_shop(type)
 
 		when 'fruit'	
 			stock.push('fruit-a')
+			stock.push('fruit-b')
+			stock.push('fruit-c')
+			stock.push('fruit-d')
+			stock.push('fruit-e')
 
 		when 'grape'	
-			stock.push('fruit-a')
+			stock.push('grape-drink')
+			stock.push('pine-drink')
+			stock.push('apple-drink')
 
 		when 'pastry'	
 			stock.push('fruit-a')
@@ -4067,7 +4078,15 @@ def setup_special_shop(type)
 			stock.push('fruit-a')
 
 		when 'keys'	
-			stock.push('fruit-a')
+			stock.push('game-key-1')
+			stock.push('game-key-2')
+			stock.push('game-key-3')
+			stock.push('game-key-4')
+			stock.push('game-key-5')
+			stock.push('game-key-6')
+			stock.push('game-key-7')
+			stock.push('game-key-8')
+			stock.push('game-key-9')
 
 	end
 
@@ -4085,6 +4104,8 @@ def setup_smith_shop
 
 		when '@windshire'	
 			stock.push('mid-arm-shire')
+			stock.push('mid-arm-shire-a')
+			stock.push('mid-arm-shire-e')
 			stock.push('mys-claw-shire')
 
 		when '@tor'	
@@ -4106,9 +4127,14 @@ def setup_smith_shop
 			stock.push('mid-arm-elves')
 			stock.push('heavy-arm-elves')
 			stock.push('rob-shield-elves')
+			stock.push('rob-hammer-elves')
+			stock.push('helm-elves')
 
 		when '@dwarf-town'	
-			stock.push('mid-arm-shire')
+			stock.push('mid-arm-dwarf')
+			stock.push('helm-dwarf')
+			stock.push('heavy-arm-dwarf')
+			stock.push('rob-shield-dwarf')
 
 	end
 
@@ -4143,9 +4169,13 @@ def setup_magic_shop
 
 		when '@elf-town'	
 			stock.push('light-arm-elves')
+			stock.push('ing-wand-elves')
+			stock.push('mys-claw-elves')
 
 		when '@dwarf-town'	
-			stock.push('light-arm-dwarves')
+			stock.push('light-arm-dwarf')
+			stock.push('ing-athame-dwarf')
+			stock.push('mys-claw-dwarf')
 
 	end
 
@@ -4394,7 +4424,7 @@ end
 def store_say_deny
 	text("1: #{$customer.deny}")
 end
-"Ì	
+"î	
 # Misc
 
 def text(t)
@@ -4422,6 +4452,10 @@ def camera_xy(x,y,dur=nil)
 end
 
 def camera_snap
+	$map.camera_snap
+end
+
+def sn
 	$map.camera_snap
 end
 
@@ -4554,7 +4588,7 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"WORLD_MAP_ID = 146
+end"HWORLD_MAP_ID = 146
 
 def start_transfer(map,room=nil,dir=nil)
 
@@ -4644,6 +4678,8 @@ end
 
 def transfer_world(dir=nil)
 
+	$player.trans_type = :cross
+
 	# Get name of transfer
 	room = $map.events[me].name
 
@@ -4653,6 +4689,8 @@ def transfer_world(dir=nil)
 end
 
 def transfer_map(dir=nil)
+
+	$player.trans_type = :cross
 	
 	# Get name of transfer
 	room = $map.events[me].name
@@ -4775,7 +4813,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"ö
+ end"õ
 
 
 
@@ -4840,7 +4878,7 @@ def potion_use_item
 
 		when 'dream-shroom'
 
-			a = "Ingrid shankes the "
+			a = "Ingrid shakes the "
 			ia = $cache.icon("faces/ing")
 
 			b = "Dream Shroom" 
@@ -5988,7 +6026,7 @@ class TargetCmd
 	end
 
 end
-"!#==============================================================================
+"+#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6109,11 +6147,11 @@ class Ui_Screen
       # 	open_sub_menu("Items")
       # end
 
-      if !$party.reserve.empty? && $keyboard.press?(VK_P)
-      	$menu.player_x = $player.screen_x
-      	$menu.player_y = $player.screen_y
-      	open_sub_menu("Party")
-      end
+      # if !$party.reserve.empty? && $keyboard.press?(VK_P)
+      # 	$menu.player_x = $player.screen_x
+      # 	$menu.player_y = $player.screen_y
+      # 	open_sub_menu("Party")
+      # end
 
 	end
 
@@ -15688,7 +15726,7 @@ class Game_Character
 
 
 end
-"¹T#==============================================================================
+"IU#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -16073,19 +16111,19 @@ class Game_Event < Game_Character
 
       # Char in party
       when '@boy'
-        return false if $party.leader != 'boy'      
+        return false if !$party.has_member?('boy')    
       when '@ing'
-        return false if $party.leader != 'ing'
+        return false if !$party.has_member?('ing')
       when '@mys'
-        return false if $party.leader != 'mys'
+        return false if !$party.has_member?('mys')
       when '@rob'
-        return false if $party.leader != 'rob'
+        return false if !$party.has_member?('rob')
       when '@hib'
-        return false if $party.leader != 'hib'
+        return false if !$party.has_member?('hib')
       when '@row'
-        return false if $party.leader != 'row'
+        return false if !$party.has_member?('row')
       when '@phy'
-        return false if $party.leader != 'phy'
+        return false if !$party.has_member?('phy')
 
       # Choices
       when '@a', '@b', '@c', '@d'
@@ -16303,6 +16341,10 @@ class Game_Event < Game_Character
           g = pingpong('off_y',8,1500,:qio)
           self.do(g)
 
+        when '#floating-rock'
+          g = go('off_y',6,600,:qio)
+          self.do(repeat(seq(g,g.reverse)))
+
         when '#shaking'
           g = go('off_x',1,80,:qio)
           self.do(repeat(seq(g,g.reverse)))
@@ -16312,7 +16354,7 @@ class Game_Event < Game_Character
           self.do(pp)
           a = go("off_x",5,800,:qo)
           b = go("off_x",-10,1600,:qio)
-          c = go("off_x",5,800,:qi)
+          c = go("off_x",5,800,:qio)
           s = seq(a,b,c)
           self.do(repeat(s))
 
@@ -16321,7 +16363,7 @@ class Game_Event < Game_Character
           self.do(pp)
           a = go("off_x",-5,600,:qo)
           b = go("off_x",10,1400,:qio)
-          c = go("off_x",-5,600,:qi)
+          c = go("off_x",-5,600,:qio)
           s = seq(a,b,c)
           self.do(repeat(s))
 
@@ -18883,7 +18925,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end")#==============================================================================
+end"K)#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -18999,7 +19041,7 @@ class Game_Party
   end
 
   def recover_all
-    sfx 'inn'
+    # sfx 'inn'
     @actors.values.each{ |a| a.recover_all }
   end
   
@@ -19254,9 +19296,10 @@ class Game_Party
     # Give extra gadget
 
     # Phye
-    @actors['phy'].equip('staff','phy-sword-1')
+    @actors['phy'].equip('sword','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('helm','phy-helm-start')
+    @actors['phy'].equip('belt','phy-belt-1')
     
 
     # Initial skills per actor
