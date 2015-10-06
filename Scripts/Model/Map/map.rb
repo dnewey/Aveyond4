@@ -72,6 +72,7 @@ class Game_Map
   end
 
   def resetup
+    update_camera
     @zone = nil
     setup(@id)
     setup_audio
@@ -325,6 +326,7 @@ class Game_Map
 
     @interpreter.update #if @cam_snap
     return if $scene.is_a?(Scene_Menu)
+    return if $scene.is_a?(Scene_GameOver)
 
     update_events
 
@@ -392,7 +394,7 @@ class Game_Map
 
 
     # What event is there
-    if ev != nil && ev.mousein
+    if ev != nil && ev.mousein && ev.character_name != ''
 
       # Check actual mouse xy to see if inside
 

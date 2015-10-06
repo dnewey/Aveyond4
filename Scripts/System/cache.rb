@@ -31,6 +31,7 @@ class CacheManager
     def menu_book(filename) load("Menus/Book/", filename) end
 
     def title(filename) load("Title/", filename) end
+    def gameover(filename) load("Gameover/", filename) end
 
     def cursor(filename) load("Cursors/", filename) end
     def icon(filename) load("Icons/", filename) end

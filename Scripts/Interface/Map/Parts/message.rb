@@ -358,25 +358,30 @@ class Ui_Message
 
       @tail.hide
 
-      # Set vn face
-      @vn_port.bitmap = $cache.face_vn(speaker)
-      @vn_port.x = ($game.width - @vn_port.width)/2
-      @vn_port.y = $game.height - @vn_port.height
-      #@vn_port.opacity = 0
-      $tweens.clear(@vn_port)
-      @vn_port.do(go("opacity",255,400,:quad_in_out))
-      #speaker = nil
+      # Hack to hide vn face on gameover
+      if !$scene.is_a?(Scene_GameOver)
+
+        # Set vn face
+        @vn_port.bitmap = $cache.face_vn(speaker)
+        @vn_port.x = ($game.width - @vn_port.width)/2
+        @vn_port.y = $game.height - @vn_port.height
+        #@vn_port.opacity = 0
+        $tweens.clear(@vn_port)
+        @vn_port.do(go("opacity",255,400,:quad_in_out))
+        #speaker = nil
+
+      end
 
     end
 
     # System message
-    if speaker.split("-")[0] == 'sys'
+    if speaker.split("-")[0] == 'sys' || speaker.split("-")[0] == 'top'
+      @mode = speaker.split("-")[0].to_sym
       if speaker.split("-").count > 1
         @box.wallpaper = $cache.menu_wallpaper(speaker.split("-")[1])
       end
       speaker = nil
-      name = ''
-      @mode = :sys
+      name = ''      
       @tail.hide
     end
     
@@ -477,6 +482,10 @@ class Ui_Message
       @sprites.move(($game.width-@width)/2,220)
     end
         
+    if @mode == :top
+      @sprites.move(($game.width-@width)/2,50)
+    end
+
   end
 
   def build_namebox(name)
@@ -487,6 +496,7 @@ class Ui_Message
       @nametext.bitmap.clear
       @namebox.bitmap.clear
 
+      return if name == 'abc'
       return if name == ''
       return if name == nil
 
@@ -507,13 +517,13 @@ class Ui_Message
     case name
 
       when '???'
-        $scene.hud.message.wallpaper = 'fangder'
+        wallpaper = 'fangder'
 
       when 'Chester'
-        $scene.hud.message.wallpaper = 'wizard'
+        wallpaper = 'wizard'
 
       else
-        $scene.hud.message.wallpaper = 'diamonds'
+        wallpaper = 'diamonds'
 
     end
 
@@ -770,6 +780,7 @@ class Ui_Message
     @state = :choice
     @grid = Ui_Grid.new(@vp)
     @grid.move(@box.x,@box.y+@box.height+72)
+    @grid.move(@box.x,@box.y+@box.height+112) if @mode == :top
     @choices.each{ |c|
       data = c.split(": ")
       @grid.add_choice(data[0],data[1],@box.width)

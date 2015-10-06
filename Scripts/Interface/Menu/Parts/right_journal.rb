@@ -33,33 +33,33 @@ class Right_Journal < SpriteGroup
     	# Subtitles ready for later
     	@sub_req = Sprite.new(vp)
     	@sub_req.bitmap = $cache.menu_page("reqs")
-        add(@sub_req)
+        add(@sub_req,340)
 
     	@sub_zone = Sprite.new(vp)
     	@sub_zone.bitmap = $cache.menu_page("location")
-        add(@sub_zone)
+        add(@sub_zone,340)
 
     	# Text sprites
 
         @txt_req1 = Label.new(vp)
         @txt_req1.font = $fonts.page_text
-        add(@txt_req1)
+        add(@txt_req1,340)
 
         @txt_req2 = Label.new(vp)
         @txt_req2.font = $fonts.page_text
-        add(@txt_req2)
+        add(@txt_req2,340)
 
         @txt_req3 = Label.new(vp)
         @txt_req3.font = $fonts.page_text
-        add(@txt_req3)
+        add(@txt_req3,340)
 
         @txt_req4 = Label.new(vp)
         @txt_req4.font = $fonts.page_text
-        add(@txt_req4)
+        add(@txt_req4,340)
 
         @txt_req5 = Label.new(vp)
         @txt_req5.font = $fonts.page_text
-        add(@txt_req5)
+        add(@txt_req5,340)
 
     	@txt_zone = Label.new(vp)
     	@txt_zone.font = $fonts.page_text
@@ -114,11 +114,8 @@ class Right_Journal < SpriteGroup
 
     def add_reqs(reqs)
 
-
         return if reqs == ''
         return if reqs == nil
-
-        log_sys reqs
 
         @sub_req.show
         @sub_req.move(340,@cy)
@@ -169,7 +166,8 @@ class Right_Journal < SpriteGroup
 
                 when 'flag'
                     icon = 'misc/profile'
-                    name = "#{dta[1]}"
+                    name = "#{dta[2]}"
+                    
                 when 'gold'
                     icon = 'misc/coins'
                     name = "#{dta[1]} gold"
@@ -179,7 +177,8 @@ class Right_Journal < SpriteGroup
             txt_req.text = name
             txt_req.icon = $cache.icon(icon)
             txt_req.show
-            txt_req.move(340,@cy)
+            #txt_req.move(340,@cy)
+            txt_req.y = @cy
             @cy += txt_req.height
 
             req_num += 1

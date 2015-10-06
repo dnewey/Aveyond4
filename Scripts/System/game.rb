@@ -43,12 +43,16 @@ class GameManager
   end
 
   def do_reload
+    Graphics.freeze
     @need_reload = false
     $scene = nil
     @scenes.each{ |s| s.terminate }
     @scenes = []
     push_scene(Scene_Map.new($map,$player))
     $map.resetup
+    $scene.update
+    t = 'Graphics/Transitions/battle'
+    Graphics.transition(30,t) 
   end
 
   def resize(w,h)

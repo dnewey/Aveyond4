@@ -153,7 +153,16 @@ class Mnu_Healing < Mnu_Base
 			end
 		end
 
-		sys('quest')
+		#sys('quest')
+		first = $data.items[$menu.use_item].action.split("/n")[0]
+		log_info(first)
+		if first.include?('heal')
+			sys('eat')
+		elsif first.include?('mana')
+			sys('drink')
+		end
+
+		# If cassia, do special sound
 
 		$party.lose_item($menu.use_item)
 		@item_grid.clear
@@ -164,7 +173,8 @@ class Mnu_Healing < Mnu_Base
 		if $party.get(option).mp_from_item($menu.use_item) > 0
 			idx = $party.all.index(option)*2
 			change = $party.get(option).mp_from_item($menu.use_item)
-			@grid.bars[idx].do(go("value",change,250,:qio))		
+			@grid.bars[idx].do(go("value",change,250,:qio))	
+			@grid.bars[idx].do(go("target",change,250,:qio))		
 		end
 
 		# Heal hp
@@ -172,6 +182,7 @@ class Mnu_Healing < Mnu_Base
 			idx = $party.all.index(option)*2+1
 			change = $party.get(option).hp_from_item($menu.use_item)
 			@grid.bars[idx].do(go("value",change,250,:qio))		
+			@grid.bars[idx].do(go("target",change,250,:qio))		
 		end		
 		
 		$party.get(option).use_item($menu.use_item)	

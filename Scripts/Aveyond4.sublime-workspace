@@ -71,80 +71,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "Interface/Menu/options.rb",
-			"settings":
-			{
-				"buffer_size": 3467,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Functions/party.rb",
-			"settings":
-			{
-				"buffer_size": 3544,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/State/party.rb",
-			"settings":
-			{
-				"buffer_size": 10064,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/Battle/battler_5_xp.rb",
-			"settings":
-			{
-				"buffer_size": 1184,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Scenes/battle_3_main.rb",
-			"settings":
-			{
-				"buffer_size": 9568,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Elements/Map/character.rb",
-			"settings":
-			{
-				"buffer_size": 5510,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 235 files for \"state-add\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  330  \n  331            # States\n  332:           when 'state-add'\n  333              result.state_add = data[1]\n  334            when 'state-remove'\n\nC:\\Aveyond4\\Editor\\json\\skills(1).json:\n    1: [{\"id\":\"pounce\",\"name\":\"Pounce\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1:0\\nstate-remove:bleed\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547292747\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:pound\",\"price\":\"\"},{\"id\":\"pound\",\"name\":\"Pound\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"punch\",\"name\":\"Punch\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"sacrifice\",\"name\":\"Sacrifice Life\",\"book\":\"spells\",\"description\":\"Sacrifice party mem hp for mana\\n\",\"icon\":\"skills/sacrifice\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"gain-mana:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"goblin-ice\",\"name\":\"Ice\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"all\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"bite\",\"name\":\"Bite\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"skills/bite\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:bite\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"haunt\",\"name\":\"haunt\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"swipe\",\"name\":\"Swipe\",\"action\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.6\\nstate-add:bleed\\ndmg-base:2\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:claw\",\"price\":\"\"},{\"id\":\"strike\",\"name\":\"Sword Strike\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1432551674591\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-hit\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"nibble\",\"name\":\"Nibble\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"bubble\",\"name\":\"Bubble\",\"book\":\"witchery\",\"description\":\"Bubble beam attack\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.2\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"soothe\",\"name\":\"Soothe\",\"action\":\"\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"heal:10\\nheal-p:0.18\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/soothe\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"},{\"id\":\"empower\",\"name\":\"Empower Minion\",\"book\":\"spells\",\"description\":\"Double damage of minion for this fight\",\"icon\":\"skills/empower\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"ally\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"22\"},{\"id\":\"provoke\",\"name\":\"Provoke\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1430846475388\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"redstar.12\",\"anim_b\":\"\",\"icon\":\"skills/fire-charge\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"levitate\",\"name\":\"Levitate\",\"book\":\"spells\",\"description\":\"Use all mana, spells use none for a bit, super moves\",\"icon\":\"skills/levitate\",\"cost\":\"15\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"four-legs\",\"name\":\"Four Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:fox\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"dragon-fire\",\"name\":\"Dragon Fire\",\"book\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-wings\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"goblin-fire\",\"name\":\"Fire\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"one\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.5\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"xform-snake\",\"name\":\"Snake\",\"book\":\"transform\",\"description\":\"Turns the target into a snake\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:snake\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"transform\",\"icon\":\"skills/xform-snake\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-squirrel\",\"name\":\"Squirrel\",\"book\":\"transform\",\"description\":\"Turns the target into a squirrel\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:squirrel\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"envelop\",\"name\":\"Envelop\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.3\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/envelop\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"},{\"name\":\"Confuse\",\"id\":\"team-mys\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"1430364878750\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/mys\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Test Subject\",\"id\":\"team-ing\",\"book\":\"team\",\"description\":\"Let Ingrid practice her transformations\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/ing\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Team Phye\",\"id\":\"team-phy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/phy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Two Card Flip\",\"id\":\"team-boy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/boy\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Induce Nightmare\",\"id\":\"team-hib\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/hib\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"team-row\",\"name\":\"Team Row\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/row\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Bash\",\"id\":\"bash\",\"book\":\"\",\"description\":\"\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.7\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Protect\",\"id\":\"protect\",\"book\":\"\",\"description\":\"\",\"scope\":\"party\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"chant\",\"name\":\"Chant\",\"book\":\"\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"hib\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"flames\",\"name\":\"Flames\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:2\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-2\",\"name\":\"Flames II\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-3\",\"name\":\"Flames III\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-4\",\"name\":\"Flames IV\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff\",\"name\":\"Darkness\",\"type\":\"staff\",\"description\":\"Gain 8 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:8\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-2\",\"name\":\"Darkness II\",\"type\":\"staff\",\"description\":\"Gain 12 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:12\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-3\",\"name\":\"Darkness III\",\"type\":\"staff\",\"description\":\"Gain 16 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:16\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-4\",\"name\":\"Darkness IV\",\"type\":\"staff\",\"description\":\"Gain 20 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:20\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"triumph\",\"name\":\"Dark Triumph\",\"book\":\"spells\",\"description\":\"Unleash a trio of  shadow attacks\",\"icon\":\"skills/triumph\",\"cost\":\"30\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"rand\",\"text\":\"\",\"anim\":\"spark:sword\",\"effects\":\"dmg-mod:1.0\\nbase-dmg:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"contempt-2\",\"name\":\"Contempt II\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"10\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"15\"},{\"id\":\"contempt\",\"name\":\"Contempt\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:4\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"7\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"contempt-3\",\"name\":\"Contempt III\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:40\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"claw\",\"name\":\"Claw\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:claw\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"beak\",\"name\":\"Beak Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"kick\",\"name\":\"Kick\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:kick\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"attack\",\"name\":\"Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"evil-charm\",\"name\":\"Charm $$$\",\"book\":\"passive\",\"description\":\"Buy for 10% off\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"evil-aura\",\"name\":\"Evil Aura\",\"book\":\"passive\",\"description\":\"Weak enemies flee\",\"icon\":\"skills/aura\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"cheeki-find\",\"name\":\"Cheeki Finder\",\"book\":\"passive\",\"description\":\"Show cheeki locations\",\"icon\":\"items/creature\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"ug-mana-2\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-1\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-3\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-4\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-5\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-staff-2\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-1\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"5\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-3\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-4\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-5\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-6\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-7\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-charge-2\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-1\",\"name\":\"Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"11\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-3\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"two-legs\",\"name\":\"Two Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:nil\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"missiles\",\"name\":\"Magic MIssiles\",\"book\":\"witchery\",\"description\":\"Randomly attack the enemy party with missiles\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.8\\ndmg-base:2\",\"user\":\"ing\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"25\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:missile\",\"price\":\"\"},{\"id\":\"splash\",\"name\":\"Splash\",\"book\":\"witchery\",\"description\":\"Splash around\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"pigs-fly\",\"name\":\"Higglety Pigglety\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/piggy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pinata\",\"name\":\"Pinata of Doom\",\"book\":\"witchery\",\"description\":\"Smash to damage all\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"ing\",\"price\":\"\",\"modified\":\"1442888274978\"},{\"id\":\"xform-bear\",\"name\":\"Bear\",\"book\":\"transform\",\"description\":\"Turns the target into a bear\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"toenail\",\"name\":\"Toenail Claw\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/toenail\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"mudball\",\"name\":\"Mudball\",\"book\":\"witchery\",\"description\":\"Sling mud at an enemy\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"10\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"xform-normal\",\"name\":\"Untransform\",\"book\":\"transform\",\"description\":\"Turns the target back to normal\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-dragon\",\"name\":\"Dragon\",\"book\":\"tranform\",\"description\":\"Turn Ingrid into a dragon\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:dragon\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-chicken\",\"name\":\"Chicken\",\"book\":\"transform\",\"description\":\"Turns the target into a chicken\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:chicken\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-chicken\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pudding\",\"name\":\"Pudding and Pie\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/pie\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-frog\",\"name\":\"Hoppify\",\"book\":\"transform\",\"description\":\"Turns the target into a frog\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:frog\",\"user\":\"ing\",\"modified\":\"1429860302553\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-frog\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"wand\",\"name\":\"Wand\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-base: 5\\ndmg-mod: 1.0\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547264682\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:attack\",\"price\":\"\"},{\"id\":\"zit\",\"name\":\"Zit Burst\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/zit-burst\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-cat\",\"name\":\"Cat\",\"book\":\"transform\",\"description\":\"Turns the target into a cat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:cat\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-cat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-goat\",\"name\":\"Goat\",\"book\":\"transform\",\"description\":\"Turns the target into a goat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:goat\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-goat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"}]\n\nC:\\Aveyond4\\Editor\\json\\skills.json:\n    1: [{\"name\":\"Confuse\",\"id\":\"team-mys\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"1430364878750\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/mys\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Test Subject\",\"id\":\"team-ing\",\"book\":\"team\",\"description\":\"Let Ingrid practice her transformations\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/ing\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Team Phye\",\"id\":\"team-phy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/phy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Two Card Flip\",\"id\":\"team-boy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/boy\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Induce Nightmare\",\"id\":\"team-hib\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/hib\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"team-row\",\"name\":\"Team Row\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/row\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Bash\",\"id\":\"bash\",\"book\":\"\",\"description\":\"\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.7\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Protect\",\"id\":\"protect\",\"book\":\"\",\"description\":\"\",\"scope\":\"party\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"chant\",\"name\":\"Chant\",\"book\":\"\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"hib\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"provoke\",\"name\":\"Provoke\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1430846475388\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"redstar.12\",\"anim_b\":\"\",\"icon\":\"skills/fire-charge\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"strike\",\"name\":\"Sword Strike\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1432551674591\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-hit\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"dragon-fire\",\"name\":\"Dragon Fire\",\"book\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-wings\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"flames\",\"name\":\"Flames\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:2\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-2\",\"name\":\"Flames II\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-3\",\"name\":\"Flames III\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-4\",\"name\":\"Flames IV\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff\",\"name\":\"Darkness\",\"type\":\"staff\",\"description\":\"Gain 8 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:8\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"levitate\",\"name\":\"Levitate\",\"book\":\"spells\",\"description\":\"Use all mana, spells use none for a bit, super moves\",\"icon\":\"skills/levitate\",\"cost\":\"15\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"sacrifice\",\"name\":\"Sacrifice Life\",\"book\":\"spells\",\"description\":\"Sacrifice party mem hp for mana\\n\",\"icon\":\"skills/sacrifice\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"gain-mana:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"staff-2\",\"name\":\"Darkness II\",\"type\":\"staff\",\"description\":\"Gain 12 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:12\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-3\",\"name\":\"Darkness III\",\"type\":\"staff\",\"description\":\"Gain 16 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:16\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-4\",\"name\":\"Darkness IV\",\"type\":\"staff\",\"description\":\"Gain 20 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:20\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"empower\",\"name\":\"Empower Minion\",\"book\":\"spells\",\"description\":\"Double damage of minion for this fight\",\"icon\":\"skills/empower\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"ally\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"22\"},{\"id\":\"triumph\",\"name\":\"Dark Triumph\",\"book\":\"spells\",\"description\":\"Unleash a trio of  shadow attacks\",\"icon\":\"skills/triumph\",\"cost\":\"30\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"rand\",\"text\":\"\",\"anim\":\"spark:sword\",\"effects\":\"dmg-mod:1.0\\nbase-dmg:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"contempt-2\",\"name\":\"Contempt II\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"10\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"15\"},{\"id\":\"contempt\",\"name\":\"Contempt\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:4\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"7\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"contempt-3\",\"name\":\"Contempt III\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:40\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"claw\",\"name\":\"Claw\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:claw\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"beak\",\"name\":\"Beak Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"nibble\",\"name\":\"Nibble\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"kick\",\"name\":\"Kick\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:kick\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"attack\",\"name\":\"Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"bite\",\"name\":\"Bite\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"skills/bite\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:bite\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"goblin-ice\",\"name\":\"Ice\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"all\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"goblin-fire\",\"name\":\"Fire\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"one\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.5\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"pound\",\"name\":\"Pound\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"punch\",\"name\":\"Punch\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"haunt\",\"name\":\"haunt\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"evil-charm\",\"name\":\"Charm $$$\",\"book\":\"passive\",\"description\":\"Buy for 10% off\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"evil-aura\",\"name\":\"Evil Aura\",\"book\":\"passive\",\"description\":\"Weak enemies flee\",\"icon\":\"skills/aura\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"cheeki-find\",\"name\":\"Cheeki Finder\",\"book\":\"passive\",\"description\":\"Show cheeki locations\",\"icon\":\"items/creature\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"ug-mana-2\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-1\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-3\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-4\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-5\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-staff-2\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-1\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"5\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-3\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-4\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-5\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-6\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-7\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-charge-2\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-1\",\"name\":\"Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"11\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-3\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"two-legs\",\"name\":\"Two Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:nil\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"swipe\",\"name\":\"Swipe\",\"action\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.6\\nstate-add:bleed\\ndmg-base:2\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:claw\",\"price\":\"\"},{\"id\":\"pounce\",\"name\":\"Pounce\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1:0\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547292747\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:pound\",\"price\":\"\"},{\"id\":\"missiles\",\"name\":\"Magic MIssiles\",\"book\":\"witchery\",\"description\":\"Randomly attack the enemy party with missiles\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.8\\ndmg-base:2\",\"user\":\"ing\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"25\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:missile\",\"price\":\"\"},{\"id\":\"splash\",\"name\":\"Splash\",\"book\":\"witchery\",\"description\":\"Splash around\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"pigs-fly\",\"name\":\"Higglety Pigglety\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/piggy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pinata\",\"name\":\"Pinata of Doom\",\"book\":\"witchery\",\"description\":\"Smash to damage all\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"ing\",\"price\":\"\",\"modified\":\"1442888274978\"},{\"id\":\"xform-bear\",\"name\":\"Bear\",\"book\":\"transform\",\"description\":\"Turns the target into a bear\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-snake\",\"name\":\"Snake\",\"book\":\"transform\",\"description\":\"Turns the target into a snake\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:snake\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"transform\",\"icon\":\"skills/xform-snake\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"bubble\",\"name\":\"Bubble\",\"book\":\"witchery\",\"description\":\"Bubble beam attack\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.2\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"toenail\",\"name\":\"Toenail Claw\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/toenail\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"mudball\",\"name\":\"Mudball\",\"book\":\"witchery\",\"description\":\"Sling mud at an enemy\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"10\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"xform-normal\",\"name\":\"Untransform\",\"book\":\"transform\",\"description\":\"Turns the target back to normal\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-squirrel\",\"name\":\"Squirrel\",\"book\":\"transform\",\"description\":\"Turns the target into a squirrel\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:squirrel\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-dragon\",\"name\":\"Dragon\",\"book\":\"tranform\",\"description\":\"Turn Ingrid into a dragon\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:dragon\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-chicken\",\"name\":\"Chicken\",\"book\":\"transform\",\"description\":\"Turns the target into a chicken\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:chicken\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-chicken\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pudding\",\"name\":\"Pudding and Pie\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/pie\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-frog\",\"name\":\"Hoppify\",\"book\":\"transform\",\"description\":\"Turns the target into a frog\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:frog\",\"user\":\"ing\",\"modified\":\"1429860302553\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-frog\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"wand\",\"name\":\"Wand\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-base: 5\\ndmg-mod: 1.0\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547264682\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:attack\",\"price\":\"\"},{\"id\":\"zit\",\"name\":\"Zit Burst\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/zit-burst\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-cat\",\"name\":\"Cat\",\"book\":\"transform\",\"description\":\"Turns the target into a cat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:cat\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-cat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-goat\",\"name\":\"Goat\",\"book\":\"transform\",\"description\":\"Turns the target into a goat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:goat\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-goat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"four-legs\",\"name\":\"Four Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:fox\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"soothe\",\"name\":\"Soothe\",\"action\":\"\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"heal:10\\nheal-p:0.18\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/soothe\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"},{\"id\":\"envelop\",\"name\":\"Envelop\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.3\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/envelop\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"}]\n\n3 matches across 3 files\n\n\nSearching 235 files for \"state-add\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  330  \n  331            # States\n  332:           when 'state-add'\n  333              result.state_add = data[1]\n  334            when 'state-remove'\n\nC:\\Aveyond4\\Editor\\json\\skills(1).json:\n    1: [{\"id\":\"pounce\",\"name\":\"Pounce\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1:0\\nstate-remove:bleed\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547292747\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:pound\",\"price\":\"\"},{\"id\":\"pound\",\"name\":\"Pound\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"punch\",\"name\":\"Punch\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"sacrifice\",\"name\":\"Sacrifice Life\",\"book\":\"spells\",\"description\":\"Sacrifice party mem hp for mana\\n\",\"icon\":\"skills/sacrifice\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"gain-mana:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"goblin-ice\",\"name\":\"Ice\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"all\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"bite\",\"name\":\"Bite\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"skills/bite\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:bite\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"haunt\",\"name\":\"haunt\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"swipe\",\"name\":\"Swipe\",\"action\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.6\\nstate-add:bleed\\ndmg-base:2\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:claw\",\"price\":\"\"},{\"id\":\"strike\",\"name\":\"Sword Strike\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1432551674591\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-hit\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"nibble\",\"name\":\"Nibble\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"bubble\",\"name\":\"Bubble\",\"book\":\"witchery\",\"description\":\"Bubble beam attack\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.2\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"soothe\",\"name\":\"Soothe\",\"action\":\"\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"heal:10\\nheal-p:0.18\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/soothe\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"},{\"id\":\"empower\",\"name\":\"Empower Minion\",\"book\":\"spells\",\"description\":\"Double damage of minion for this fight\",\"icon\":\"skills/empower\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"ally\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"22\"},{\"id\":\"provoke\",\"name\":\"Provoke\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1430846475388\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"redstar.12\",\"anim_b\":\"\",\"icon\":\"skills/fire-charge\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"levitate\",\"name\":\"Levitate\",\"book\":\"spells\",\"description\":\"Use all mana, spells use none for a bit, super moves\",\"icon\":\"skills/levitate\",\"cost\":\"15\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"four-legs\",\"name\":\"Four Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:fox\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"dragon-fire\",\"name\":\"Dragon Fire\",\"book\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-wings\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"goblin-fire\",\"name\":\"Fire\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"one\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.5\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"xform-snake\",\"name\":\"Snake\",\"book\":\"transform\",\"description\":\"Turns the target into a snake\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:snake\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"transform\",\"icon\":\"skills/xform-snake\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-squirrel\",\"name\":\"Squirrel\",\"book\":\"transform\",\"description\":\"Turns the target into a squirrel\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:squirrel\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"envelop\",\"name\":\"Envelop\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.3\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/envelop\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"},{\"name\":\"Confuse\",\"id\":\"team-mys\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"1430364878750\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/mys\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Test Subject\",\"id\":\"team-ing\",\"book\":\"team\",\"description\":\"Let Ingrid practice her transformations\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/ing\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Team Phye\",\"id\":\"team-phy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/phy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Two Card Flip\",\"id\":\"team-boy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/boy\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Induce Nightmare\",\"id\":\"team-hib\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/hib\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"team-row\",\"name\":\"Team Row\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/row\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Bash\",\"id\":\"bash\",\"book\":\"\",\"description\":\"\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.7\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Protect\",\"id\":\"protect\",\"book\":\"\",\"description\":\"\",\"scope\":\"party\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"chant\",\"name\":\"Chant\",\"book\":\"\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"hib\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"flames\",\"name\":\"Flames\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:2\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-2\",\"name\":\"Flames II\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-3\",\"name\":\"Flames III\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-4\",\"name\":\"Flames IV\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff\",\"name\":\"Darkness\",\"type\":\"staff\",\"description\":\"Gain 8 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:8\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-2\",\"name\":\"Darkness II\",\"type\":\"staff\",\"description\":\"Gain 12 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:12\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-3\",\"name\":\"Darkness III\",\"type\":\"staff\",\"description\":\"Gain 16 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:16\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-4\",\"name\":\"Darkness IV\",\"type\":\"staff\",\"description\":\"Gain 20 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:20\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"triumph\",\"name\":\"Dark Triumph\",\"book\":\"spells\",\"description\":\"Unleash a trio of  shadow attacks\",\"icon\":\"skills/triumph\",\"cost\":\"30\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"rand\",\"text\":\"\",\"anim\":\"spark:sword\",\"effects\":\"dmg-mod:1.0\\nbase-dmg:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"contempt-2\",\"name\":\"Contempt II\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"10\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"15\"},{\"id\":\"contempt\",\"name\":\"Contempt\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:4\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"7\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"contempt-3\",\"name\":\"Contempt III\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:40\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"claw\",\"name\":\"Claw\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:claw\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"beak\",\"name\":\"Beak Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"kick\",\"name\":\"Kick\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:kick\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"attack\",\"name\":\"Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"evil-charm\",\"name\":\"Charm $$$\",\"book\":\"passive\",\"description\":\"Buy for 10% off\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"evil-aura\",\"name\":\"Evil Aura\",\"book\":\"passive\",\"description\":\"Weak enemies flee\",\"icon\":\"skills/aura\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"cheeki-find\",\"name\":\"Cheeki Finder\",\"book\":\"passive\",\"description\":\"Show cheeki locations\",\"icon\":\"items/creature\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"ug-mana-2\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-1\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-3\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-4\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-5\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-staff-2\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-1\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"5\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-3\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-4\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-5\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-6\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-7\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-charge-2\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-1\",\"name\":\"Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"11\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-3\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"two-legs\",\"name\":\"Two Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:nil\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"missiles\",\"name\":\"Magic MIssiles\",\"book\":\"witchery\",\"description\":\"Randomly attack the enemy party with missiles\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.8\\ndmg-base:2\",\"user\":\"ing\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"25\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:missile\",\"price\":\"\"},{\"id\":\"splash\",\"name\":\"Splash\",\"book\":\"witchery\",\"description\":\"Splash around\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"pigs-fly\",\"name\":\"Higglety Pigglety\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/piggy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pinata\",\"name\":\"Pinata of Doom\",\"book\":\"witchery\",\"description\":\"Smash to damage all\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"ing\",\"price\":\"\",\"modified\":\"1442888274978\"},{\"id\":\"xform-bear\",\"name\":\"Bear\",\"book\":\"transform\",\"description\":\"Turns the target into a bear\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"toenail\",\"name\":\"Toenail Claw\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/toenail\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"mudball\",\"name\":\"Mudball\",\"book\":\"witchery\",\"description\":\"Sling mud at an enemy\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"10\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"xform-normal\",\"name\":\"Untransform\",\"book\":\"transform\",\"description\":\"Turns the target back to normal\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-dragon\",\"name\":\"Dragon\",\"book\":\"tranform\",\"description\":\"Turn Ingrid into a dragon\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:dragon\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-chicken\",\"name\":\"Chicken\",\"book\":\"transform\",\"description\":\"Turns the target into a chicken\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:chicken\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-chicken\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pudding\",\"name\":\"Pudding and Pie\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/pie\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-frog\",\"name\":\"Hoppify\",\"book\":\"transform\",\"description\":\"Turns the target into a frog\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:frog\",\"user\":\"ing\",\"modified\":\"1429860302553\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-frog\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"wand\",\"name\":\"Wand\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-base: 5\\ndmg-mod: 1.0\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547264682\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:attack\",\"price\":\"\"},{\"id\":\"zit\",\"name\":\"Zit Burst\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/zit-burst\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-cat\",\"name\":\"Cat\",\"book\":\"transform\",\"description\":\"Turns the target into a cat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:cat\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-cat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-goat\",\"name\":\"Goat\",\"book\":\"transform\",\"description\":\"Turns the target into a goat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:goat\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-goat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"}]\n\nC:\\Aveyond4\\Editor\\json\\skills.json:\n    1: [{\"name\":\"Confuse\",\"id\":\"team-mys\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"1430364878750\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/mys\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Test Subject\",\"id\":\"team-ing\",\"book\":\"team\",\"description\":\"Let Ingrid practice her transformations\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/ing\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Team Phye\",\"id\":\"team-phy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/phy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Two Card Flip\",\"id\":\"team-boy\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/boy\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Induce Nightmare\",\"id\":\"team-hib\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/hib\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"team-row\",\"name\":\"Team Row\",\"book\":\"team\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"faces/row\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"name\":\"Bash\",\"id\":\"bash\",\"book\":\"\",\"description\":\"\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.7\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"name\":\"Protect\",\"id\":\"protect\",\"book\":\"\",\"description\":\"\",\"scope\":\"party\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"rob\",\"hits\":\"2\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"chant\",\"name\":\"Chant\",\"book\":\"\",\"description\":\"\",\"scope\":\"\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"hib\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"provoke\",\"name\":\"Provoke\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1430846475388\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"redstar.12\",\"anim_b\":\"\",\"icon\":\"skills/fire-charge\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"strike\",\"name\":\"Sword Strike\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"1432551674591\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-hit\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"dragon-fire\",\"name\":\"Dragon Fire\",\"book\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"phy\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/fire-wings\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"flames\",\"name\":\"Flames\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:2\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-2\",\"name\":\"Flames II\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-3\",\"name\":\"Flames III\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"flames-4\",\"name\":\"Flames IV\",\"type\":\"warlock\",\"description\":\"Burn up and gain power\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/flame\",\"effects\":\"dmg-mod:0.5\\ndmg-base:20\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3-5\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:flame\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff\",\"name\":\"Darkness\",\"type\":\"staff\",\"description\":\"Gain 8 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:8\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"levitate\",\"name\":\"Levitate\",\"book\":\"spells\",\"description\":\"Use all mana, spells use none for a bit, super moves\",\"icon\":\"skills/levitate\",\"cost\":\"15\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"sacrifice\",\"name\":\"Sacrifice Life\",\"book\":\"spells\",\"description\":\"Sacrifice party mem hp for mana\\n\",\"icon\":\"skills/sacrifice\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"self\",\"text\":\"\",\"anim\":\"\",\"effects\":\"gain-mana:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"staff-2\",\"name\":\"Darkness II\",\"type\":\"staff\",\"description\":\"Gain 12 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:12\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-3\",\"name\":\"Darkness III\",\"type\":\"staff\",\"description\":\"Gain 16 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:16\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"staff-4\",\"name\":\"Darkness IV\",\"type\":\"staff\",\"description\":\"Gain 20 mana when attacking\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"action\":\"\",\"icon\":\"\",\"effects\":\"dmg-mod:1.0\\ngain-mana:20\",\"user\":\"boy\",\"book\":\"\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"redstar\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:sword\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"empower\",\"name\":\"Empower Minion\",\"book\":\"spells\",\"description\":\"Double damage of minion for this fight\",\"icon\":\"skills/empower\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"ally\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"22\"},{\"id\":\"triumph\",\"name\":\"Dark Triumph\",\"book\":\"spells\",\"description\":\"Unleash a trio of  shadow attacks\",\"icon\":\"skills/triumph\",\"cost\":\"30\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"rand\",\"text\":\"\",\"anim\":\"spark:sword\",\"effects\":\"dmg-mod:1.0\\nbase-dmg:10\",\"user\":\"boy\",\"modified\":\"1440827715574\",\"price\":\"10\"},{\"id\":\"contempt-2\",\"name\":\"Contempt II\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:10\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"10\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"15\"},{\"id\":\"contempt\",\"name\":\"Contempt\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:4\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"7\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"contempt-3\",\"name\":\"Contempt III\",\"type\":\"warlock\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"CUT, PUT DAMAGE IN EFFECTS\\n\",\"action\":\"warlock\",\"icon\":\"skills/contempt\",\"effects\":\"dmg-mod:1.4\\ndmg-base:40\",\"user\":\"boy\",\"book\":\"spells\",\"modified\":\"\",\"undefined\":\"\",\"tools\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"flame\",\"cost\":\"15\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"10\"},{\"id\":\"claw\",\"name\":\"Claw\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:claw\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"beak\",\"name\":\"Beak Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"nibble\",\"name\":\"Nibble\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:beak\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"kick\",\"name\":\"Kick\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:kick\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"attack\",\"name\":\"Attack\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"bite\",\"name\":\"Bite\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"skills/bite\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:bite\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"goblin-ice\",\"name\":\"Ice\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"all\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"goblin-fire\",\"name\":\"Fire\",\"book\":\"\",\"description\":\"\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"one\",\"text\":\"\",\"anim\":\"spark:flame\",\"effects\":\"dmg-mod:1.5\",\"user\":\"enemy\",\"price\":\"\",\"modified\":\"1443527623510\"},{\"id\":\"pound\",\"name\":\"Pound\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"punch\",\"name\":\"Punch\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:pound\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"haunt\",\"name\":\"haunt\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.0\",\"user\":\"enemy\",\"modified\":\"1432547305501\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"bite\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"anim\":\"spark:attack\",\"priority\":\"3\",\"price\":\"\"},{\"id\":\"evil-charm\",\"name\":\"Charm $$$\",\"book\":\"passive\",\"description\":\"Buy for 10% off\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"evil-aura\",\"name\":\"Evil Aura\",\"book\":\"passive\",\"description\":\"Weak enemies flee\",\"icon\":\"skills/aura\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"cheeki-find\",\"name\":\"Cheeki Finder\",\"book\":\"passive\",\"description\":\"Show cheeki locations\",\"icon\":\"items/creature\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-p\",\"price\":\"10\",\"modified\":\"1442888169682\"},{\"id\":\"ug-mana-2\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-1\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-3\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-4\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-mana-5\",\"name\":\"Max Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"misc/darkness\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-staff-2\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-1\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"5\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-3\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-4\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-5\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-6\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-staff-7\",\"name\":\"Staff Upgrade\",\"book\":\"\",\"description\":\"Extra Damage\",\"icon\":\"weapons/boy-staff-1\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443356402129\"},{\"id\":\"ug-charge-2\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-1\",\"name\":\"Darkness Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"11\",\"modified\":\"1443395132129\"},{\"id\":\"ug-charge-3\",\"name\":\"Dark Charge Upgrade\",\"book\":\"\",\"description\":\"\",\"icon\":\"skills/dark-upgrade\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"boy-s\",\"price\":\"10\",\"modified\":\"1443395132129\"},{\"id\":\"two-legs\",\"name\":\"Two Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:nil\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"swipe\",\"name\":\"Swipe\",\"action\":\"\",\"description\":\"\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.6\\nstate-add:bleed\\ndmg-base:2\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:claw\",\"price\":\"\"},{\"id\":\"pounce\",\"name\":\"Pounce\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1:0\",\"user\":\"fox\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547292747\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:pound\",\"price\":\"\"},{\"id\":\"missiles\",\"name\":\"Magic MIssiles\",\"book\":\"witchery\",\"description\":\"Randomly attack the enemy party with missiles\",\"scope\":\"rand\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:0.8\\ndmg-base:2\",\"user\":\"ing\",\"hits\":\"3\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"25\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:missile\",\"price\":\"\"},{\"id\":\"splash\",\"name\":\"Splash\",\"book\":\"witchery\",\"description\":\"Splash around\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"pigs-fly\",\"name\":\"Higglety Pigglety\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/piggy\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pinata\",\"name\":\"Pinata of Doom\",\"book\":\"witchery\",\"description\":\"Smash to damage all\",\"icon\":\"\",\"cost\":\"0\",\"hits\":\"1\",\"priority\":\"3\",\"scope\":\"\",\"text\":\"\",\"anim\":\"\",\"effects\":\"\",\"user\":\"ing\",\"price\":\"\",\"modified\":\"1442888274978\"},{\"id\":\"xform-bear\",\"name\":\"Bear\",\"book\":\"transform\",\"description\":\"Turns the target into a bear\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-snake\",\"name\":\"Snake\",\"book\":\"transform\",\"description\":\"Turns the target into a snake\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:snake\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"transform\",\"icon\":\"skills/xform-snake\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"bubble\",\"name\":\"Bubble\",\"book\":\"witchery\",\"description\":\"Bubble beam attack\",\"scope\":\"all\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.2\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/tornado\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"toenail\",\"name\":\"Toenail Claw\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/toenail\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"mudball\",\"name\":\"Mudball\",\"book\":\"witchery\",\"description\":\"Sling mud at an enemy\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.5\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/missiles\",\"cost\":\"10\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"flames\",\"price\":\"\"},{\"id\":\"xform-normal\",\"name\":\"Untransform\",\"book\":\"transform\",\"description\":\"Turns the target back to normal\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:bear\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-squirrel\",\"name\":\"Squirrel\",\"book\":\"transform\",\"description\":\"Turns the target into a squirrel\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:squirrel\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-dragon\",\"name\":\"Dragon\",\"book\":\"tranform\",\"description\":\"Turn Ingrid into a dragon\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:dragon\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-chicken\",\"name\":\"Chicken\",\"book\":\"transform\",\"description\":\"Turns the target into a chicken\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:chicken\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-chicken\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"pudding\",\"name\":\"Pudding and Pie\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/pie\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-frog\",\"name\":\"Hoppify\",\"book\":\"transform\",\"description\":\"Turns the target into a frog\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:frog\",\"user\":\"ing\",\"modified\":\"1429860302553\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-frog\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"wand\",\"name\":\"Wand\",\"book\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-base: 5\\ndmg-mod: 1.0\",\"user\":\"ing\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"modified\":\"1432547264682\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:attack\",\"price\":\"\"},{\"id\":\"zit\",\"name\":\"Zit Burst\",\"book\":\"witchery\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/zit-burst\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-cat\",\"name\":\"Cat\",\"book\":\"transform\",\"description\":\"Turns the target into a cat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:cat\",\"user\":\"ing\",\"modified\":\"1429860307835\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-cat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"5\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"xform-goat\",\"name\":\"Goat\",\"book\":\"transform\",\"description\":\"Turns the target into a goat\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:goat\",\"user\":\"ing\",\"modified\":\"1429860305473\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/xform-goat\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"four-legs\",\"name\":\"Four Legs\",\"action\":\"\",\"description\":\"\",\"scope\":\"self\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"transform:fox\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"myst\",\"icon\":\"\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"\",\"price\":\"\"},{\"id\":\"soothe\",\"name\":\"Soothe\",\"action\":\"\",\"description\":\"\",\"scope\":\"ally\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"heal:10\\nheal-p:0.18\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/soothe\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"},{\"id\":\"envelop\",\"name\":\"Envelop\",\"action\":\"\",\"description\":\"\",\"scope\":\"one\",\"animation\":\"\",\"stats\":\"\",\"effects\":\"dmg-mod:1.3\",\"user\":\"mys\",\"book\":\"\",\"hits\":\"1\",\"anim_a\":\"\",\"anim_b\":\"\",\"icon\":\"skills/envelop\",\"cost\":\"0\",\"text\":\"\",\"priority\":\"3\",\"anim\":\"spark:myst\",\"price\":\"\"}]\n\n3 matches across 3 files\n\n\nSearching 235 files for \"def add_state\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   15    end\n   16  \n   17:   def add_state(state_id)\n   18      @states.push(state_id)\n   19      @states_counter[state_id] = 0\n\n1 match in 1 file\n",
-			"settings":
-			{
-				"buffer_size": 95042,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "Model/State/battle.rb",
-			"settings":
-			{
-				"buffer_size": 11636,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Model/Battle/result.rb",
-			"settings":
-			{
-				"buffer_size": 648,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -198,65 +124,82 @@
 		"/C/Aveyond4/Scripts/Model/Battle",
 		"/C/Aveyond4/Scripts/Scenes",
 		"/C/Aveyond4/Scripts/System",
+		"/C/Aveyond4/Scripts/Utils",
+		"/C/Aveyond4/Scripts/Utils/Extensions",
+		"/C/Aveyond4/Scripts/Utils/Tweens",
 		"/C/Aveyond4/Editor",
 		"/C/Aveyond4/Editor/meta"
 	],
 	"file_history":
 	[
+		"/C/Aveyond4/README.md",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Title/gameover.rb",
+		"/C/Aveyond4/Scripts/Scenes/gameover.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
+		"/C/Aveyond4/Scripts/Model/Battle/battler_5_xp.rb",
+		"/C/Aveyond4/Scripts/Scenes/base.rb",
+		"/C/Aveyond4/Scripts/Scenes/map.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_journal.rb",
+		"/C/Aveyond4/Scripts/Model/Map/character.rb",
+		"/C/Aveyond4/Scripts/System/cache.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/healing.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Char/equip.rb",
+		"/C/Aveyond4/Scripts/Model/Map/interpreter.rb",
+		"/C/Aveyond4/Scripts/Model/Map/map.rb",
+		"/C/Aveyond4/Scripts/Scenes/battle_4_victory.rb",
+		"/C/Aveyond4/Scripts/Scenes/battle_3_main.rb",
+		"/C/Aveyond4/Scripts/Functions/party.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/items.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/label.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts/info.rb",
+		"/C/Aveyond4/Scripts/System/game.rb",
+		"/C/Aveyond4/Scripts/System/files.rb",
+		"/C/Aveyond4/Scripts/Model/State/battle.rb",
+		"/C/Aveyond4/Scripts/Model/State/party.rb",
+		"/C/Aveyond4/Scripts/System/audio.rb",
+		"/C/Aveyond4/Scripts/Functions/shop.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/journal.rb",
+		"/C/Aveyond4/Scripts/Scenes/menu.rb",
+		"/C/Aveyond4/Scripts/Model/Map/event.rb",
+		"/C/Aveyond4/Scripts/Interface/Map/Parts/grid.rb",
+		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
+		"/C/Aveyond4/Scripts/Model/Battle/result.rb",
+		"/C/Aveyond4/Scripts/Elements/Map/character.rb",
+		"/C/Aveyond4/Scripts/Scenes/splash.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/Title/title.rb",
+		"/C/Aveyond4/Scripts/Scenes/title.rb",
+		"/C/Aveyond4/Scripts/Interface/Menu/options.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_2_states.rb",
 		"/C/Aveyond4/Editor/edit.js",
 		"/C/Aveyond4/Scripts/Interface/Menu/Title/options_title.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Title/title.rb",
-		"/C/Aveyond4/Scripts/Scenes/title.rb",
-		"/C/Aveyond4/Scripts/System/cache.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/main.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/box.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
-		"/C/Aveyond4/Scripts/Model/State/party.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/status.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/skills.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Char/profile.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Char/equip.rb",
 		"/C/Aveyond4/Scripts/System/keyboard.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/screen.rb",
 		"/C/Aveyond4/Scripts/Functions/system.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/Parts/grid.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/char.rb",
 		"/C/Aveyond4/Scripts/System/input.rb",
-		"/C/Aveyond4/Scripts/Functions/party.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/progress.rb",
-		"/C/Aveyond4/Scripts/System/files.rb",
-		"/C/Aveyond4/Scripts/System/game.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Title/load_title.rb",
-		"/C/Aveyond4/Scripts/Scenes/splash.rb",
 		"/C/Aveyond4/Scripts/System/tweens.rb",
-		"/C/Aveyond4/Scripts/Scenes/battle_4_victory.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/button.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/items.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_1_stats.rb",
-		"/C/Aveyond4/Scripts/Functions/shop.rb",
 		"/C/Aveyond4/Scripts/Model/Map/player.rb",
-		"/C/Aveyond4/Scripts/Model/Map/character.rb",
-		"/C/Aveyond4/Scripts/Model/Map/map.rb",
-		"/C/Aveyond4/Scripts/Scenes/map.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Special/chooser.rb",
-		"/C/Aveyond4/Scripts/Model/State/battle.rb",
-		"/C/Aveyond4/Scripts/Model/Map/event.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Parts/list_common.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
 		"/C/Aveyond4/Scripts/Functions/poppers.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/journal.rb",
 		"/C/Aveyond4/Scripts/Model/State/state.rb",
-		"/C/Aveyond4/Scripts/Scenes/menu.rb",
 		"/C/Aveyond4/Scripts/Utils/Tweens/object.rb",
-		"/C/Aveyond4/Scripts/Scenes/battle_3_main.rb",
 		"/C/Aveyond4/Scripts/Model/State/progress.rb",
 		"/C/Aveyond4/Scripts/Functions/store.rb",
-		"/C/Aveyond4/Scripts/Elements/Map/character.rb",
 		"/C/Aveyond4/Scripts/Utils/data_types.rb",
 		"/C/Aveyond4/Editor/meta/shop.json",
-		"/C/Aveyond4/Scripts/Interface/Map/Parts/message.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/book.rb",
 		"/C/Aveyond4/Scripts/Functions/battle.rb",
 		"/C/Aveyond4/Scripts/Functions/events.rb",
@@ -267,28 +210,21 @@
 		"/C/Aveyond4/Scripts/Scenes/battle_2_actor.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler_3_skills.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/Customs/boyle.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_journal.rb",
 		"/C/Aveyond4/Scripts/System/settings.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/spark.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/weather.rb",
 		"/C/Aveyond4/Scripts/Scenes/intro.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/healing.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/battler_5_xp.rb",
 		"/C/Aveyond4/Scripts/Model/Battle/battler.rb",
 		"/C/Aveyond4/Editor/meta/items.json",
 		"/C/Aveyond4/Scripts/Scenes/battle.rb",
-		"/C/Aveyond4/Scripts/Model/Map/interpreter.rb",
 		"/C/Aveyond4/Scripts/Functions/misc.rb",
 		"/C/Aveyond4/Scripts/Elements/Widgets/area.rb",
-		"/C/Aveyond4/Scripts/Elements/Widgets/bar.rb",
 		"/C/Aveyond4/Scripts/Utils/sprite.rb",
 		"/C/Aveyond4/Scripts/Functions/effects.rb",
-		"/C/Aveyond4/Scripts/Model/Battle/result.rb",
 		"/C/Aveyond4/Scripts/Interface/Map/Parts/shop.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/pop.rb",
 		"/C/Stargazer/Data/Scripts/Data/loot.rb",
 		"/C/Aveyond4/Scripts/Model/State/menu.rb",
-		"/C/Aveyond4/Scripts/System/audio.rb",
 		"/C/Aveyond4/Scripts/Functions/audio.rb",
 		"/C/Aveyond4/Editor/edit.html",
 		"/C/Aveyond4/Editor/json/enemies.json",
@@ -306,7 +242,6 @@
 		"/C/Aveyond4/Scripts/Functions/state.rb",
 		"/C/Aveyond4/Scripts/Utils/Debug/menu.rb",
 		"/C/Aveyond4/Scripts/System/debug.rb",
-		"/C/Aveyond4/Scripts/Scenes/base.rb",
 		"/C/Aveyond4/Scripts/System/data.rb",
 		"/C/Aveyond4/Scripts/Interface/Menu/help.rb",
 		"/C/Aveyond4/Scripts/Scenes/battle_5_misc.rb",
@@ -324,13 +259,7 @@
 		"/C/Aveyond4/Editor/meta/victories.json",
 		"/C/Aveyond4/Scripts/Functions/common.rb",
 		"/C/Aveyond4/Scripts/Elements/Map/panorama.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/party.rb",
-		"/C/Aveyond4/Editor/meta/books.json",
-		"/C/Aveyond4/Scripts/Interface/Menu/Customs/nightwatch.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Customs/phye.rb",
-		"/C/Aveyond4/Editor/json/quests.json",
-		"/C/Aveyond4/Editor/json/keyitems.json",
-		"/C/Users/Dan/Desktop/keyitems.json"
+		"/C/Aveyond4/Scripts/Interface/Menu/party.rb"
 	],
 	"find":
 	{
@@ -349,6 +278,28 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"draw_namebox",
+			"build_wallpaper",
+			"wallpaper",
+			"def build_wallp",
+			"Scene_Menu",
+			"Scene_GameOver",
+			"Game_Over",
+			"Gameover",
+			"def grant_",
+			"RCLAW",
+			"draw_item",
+			"draw",
+			"cursor",
+			"align",
+			"Graphics.transition",
+			"sort_by{rand}",
+			"build_attack_queue",
+			"rob",
+			"No Users In",
+			"choices",
+			":sys",
+			"sys",
 			"def add_state",
 			"state_add",
 			"state-add",
@@ -454,29 +405,7 @@
 			"lose_item",
 			"unitem",
 			"pop_sweat",
-			"critical",
-			"crit",
-			"str",
-			"sfx(\"",
-			"start",
-			"$battle",
-			"start",
-			"$battle.start",
-			"item",
-			"wait(",
-			"sys 'at",
-			"minion",
-			"fang-1",
-			"wait(",
-			"wait(2",
-			":main_end",
-			"enemy",
-			"battle",
-			"turn",
-			"end",
-			"minion",
-			"remove_states",
-			"atk"
+			"critical"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -495,853 +424,8 @@
 	"groups":
 	[
 		{
-			"selected": 7,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "Interface/Menu/options.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3467,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1371,
-								1371
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 855.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Functions/party.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3544,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1637,
-								1637
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3135.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Model/State/party.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10064,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8597,
-								8597
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 6786.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Model/Battle/battler_5_xp.rb",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1184,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "Scenes/battle_3_main.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9568,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6353,
-								6353
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5270.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "Elements/Map/character.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5510,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4309,
-								4309
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2955.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 95042,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										154,
-										163
-									],
-									[
-										2370,
-										2379
-									],
-									[
-										40319,
-										40328
-									],
-									[
-										47545,
-										47554
-									],
-									[
-										49761,
-										49770
-									],
-									[
-										87710,
-										87719
-									],
-									[
-										94924,
-										94937
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								94927,
-								94927
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 3,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 30343.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "Model/State/battle.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11636,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8068,
-								8068
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 6869.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "Model/Battle/result.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 648,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								274,
-								274
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"auto_complete": false,
-							"bh_regions":
-							[
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content"
-							],
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -1398,20 +482,108 @@
 		"selected_items":
 		[
 			[
+				"gameo",
+				"Scripts\\Scenes\\gameover.rb"
+			],
+			[
+				"screen",
+				"Scripts\\Interface\\Map\\screen.rb"
+			],
+			[
+				"base",
+				"Scripts\\Scenes\\base.rb"
+			],
+			[
+				"game",
+				"Scripts\\Scenes\\gameover.rb"
+			],
+			[
+				"map",
+				"Scripts\\Scenes\\map.rb"
+			],
+			[
+				"inter",
+				"Scripts\\Model\\Map\\interpreter.rb"
+			],
+			[
 				"battle",
-				"Scripts\\Model\\State\\battle.rb"
+				"Scripts\\Scenes\\battle_4_victory.rb"
+			],
+			[
+				"cache",
+				"Scripts\\System\\cache.rb"
+			],
+			[
+				"equip",
+				"Scripts\\Interface\\Menu\\Char\\equip.rb"
+			],
+			[
+				"healing",
+				"Scripts\\Interface\\Menu\\healing.rb"
+			],
+			[
+				"character",
+				"Scripts\\Model\\Map\\character.rb"
+			],
+			[
+				"journal",
+				"Scripts\\Interface\\Menu\\Parts\\right_journal.rb"
+			],
+			[
+				"battler",
+				"Scripts\\Model\\Battle\\battler_5_xp.rb"
+			],
+			[
+				"items",
+				"Scripts\\Interface\\Menu\\items.rb"
+			],
+			[
+				"grid",
+				"Scripts\\Interface\\Map\\Parts\\grid.rb"
+			],
+			[
+				"list",
+				"Scripts\\Elements\\Widgets\\list.rb"
+			],
+			[
+				"event",
+				"Scripts\\Model\\Map\\event.rb"
+			],
+			[
+				"shop",
+				"Scripts\\Functions\\shop.rb"
+			],
+			[
+				"label",
+				"Scripts\\Elements\\Widgets\\label.rb"
+			],
+			[
+				"info",
+				"Scripts\\Interface\\Map\\Parts\\info.rb"
+			],
+			[
+				"files",
+				"Scripts\\System\\files.rb"
 			],
 			[
 				"party",
 				"Scripts\\Model\\State\\party.rb"
 			],
 			[
-				"character",
-				"Scripts\\Elements\\Map\\character.rb"
+				"bar",
+				"Scripts\\Elements\\Widgets\\bar.rb"
 			],
 			[
-				"screen",
-				"Scripts\\Interface\\Map\\screen.rb"
+				"audio",
+				"Scripts\\System\\audio.rb"
+			],
+			[
+				"mes",
+				"Scripts\\Interface\\Map\\Parts\\message.rb"
+			],
+			[
+				"title",
+				"Scripts\\Interface\\Menu\\Title\\title.rb"
 			],
 			[
 				"keyboard",
@@ -1434,18 +606,6 @@
 				"Scripts\\Interface\\Menu\\Parts\\char_box_large.rb"
 			],
 			[
-				"cache",
-				"Scripts\\System\\cache.rb"
-			],
-			[
-				"files",
-				"Scripts\\System\\files.rb"
-			],
-			[
-				"game",
-				"Scripts\\System\\game.rb"
-			],
-			[
 				"tweens",
 				"Scripts\\System\\tweens.rb"
 			],
@@ -1458,28 +618,12 @@
 				"Scripts\\Elements\\Widgets\\button.rb"
 			],
 			[
-				"items",
-				"Scripts\\Interface\\Menu\\items.rb"
-			],
-			[
-				"map",
-				"Scripts\\Model\\Map\\map.rb"
-			],
-			[
 				"player",
 				"Scripts\\Model\\Map\\player.rb"
 			],
 			[
-				"title",
-				"Scripts\\Scenes\\title.rb"
-			],
-			[
 				"choos",
 				"Scripts\\Interface\\Menu\\Special\\chooser.rb"
-			],
-			[
-				"event",
-				"Scripts\\Model\\Map\\event.rb"
 			],
 			[
 				"pla",
@@ -1502,20 +646,12 @@
 				"Scripts\\Utils\\Tweens\\object.rb"
 			],
 			[
-				"journal",
-				"Scripts\\Interface\\Menu\\journal.rb"
-			],
-			[
 				"book",
 				"Scripts\\Interface\\Map\\Parts\\book.rb"
 			],
 			[
 				"message",
 				"Scripts\\Interface\\Map\\Parts\\message.rb"
-			],
-			[
-				"shop",
-				"Scripts\\Functions\\shop.rb"
 			],
 			[
 				"hud",
@@ -1532,10 +668,6 @@
 			[
 				"events",
 				"Scripts\\Functions\\events.rb"
-			],
-			[
-				"list",
-				"Scripts\\Elements\\Widgets\\list.rb"
 			],
 			[
 				"settings",
@@ -1558,28 +690,8 @@
 				"Scripts\\Interface\\Menu\\Customs\\boyle.rb"
 			],
 			[
-				"battler",
-				"Scripts\\Model\\Battle\\battler_3_skills.rb"
-			],
-			[
-				"grid",
-				"Scripts\\Interface\\Map\\Parts\\grid.rb"
-			],
-			[
 				"item",
 				"Scripts\\Interface\\Menu\\items.rb"
-			],
-			[
-				"equip",
-				"Scripts\\Interface\\Menu\\Char\\equip.rb"
-			],
-			[
-				"healing",
-				"Scripts\\Interface\\Menu\\healing.rb"
-			],
-			[
-				"bar",
-				"Scripts\\Elements\\Widgets\\bar.rb"
 			],
 			[
 				"battle_3",
@@ -1614,10 +726,6 @@
 				"Scripts\\Interface\\Map\\Parts\\message.rb"
 			],
 			[
-				"audio",
-				"Scripts\\System\\audio.rb"
-			],
-			[
 				"play",
 				"Scripts\\Model\\Map\\player.rb"
 			],
@@ -1646,10 +754,6 @@
 				"Scripts\\System\\fonts.rb"
 			],
 			[
-				"info",
-				"Scripts\\Interface\\Menu\\Parts\\info_box.rb"
-			],
-			[
 				"scre",
 				"Scripts\\Interface\\Map\\screen.rb"
 			],
@@ -1672,10 +776,6 @@
 			[
 				"battle_min",
 				"Scripts\\Scenes\\battle_3_main.rb"
-			],
-			[
-				"inter",
-				"Scripts\\Model\\Map\\interpreter.rb"
 			],
 			[
 				"charview",
@@ -1728,14 +828,6 @@
 			[
 				"even",
 				"Scripts\\Model\\Map\\event.rb"
-			],
-			[
-				"label",
-				"Scripts\\Elements\\Widgets\\label.rb"
-			],
-			[
-				"base",
-				"Scripts\\Interface\\Menu\\base.rb"
 			],
 			[
 				"progres",

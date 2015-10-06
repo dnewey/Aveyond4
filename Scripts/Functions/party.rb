@@ -164,6 +164,16 @@ def ungrant_stat(who,stat,amount)
 	pop_stat_unbonus(who,stat,amount)
 end
 
+def grant_xp(who,amount)
+
+	# Need to show level ups
+	$party.get(who).gain_xp(amount)
+	if $party.get(who).level_up?
+		pop_level(who)
+	end
+
+end
+
 def grant_level_all
 	$party.get('boy').grant_level
 	$party.get('ing').grant_level

@@ -212,9 +212,11 @@ class List
     rows.times{ 
       @back_sprite.bitmap.blt(0,i*row_height,src,src.rect)
       # Draw each row
-      draw(@data[@scroll_idx + i-1],i) if can_scroll? # -1 makes the first row visible on can scrolls
-      draw(@data[@scroll_idx + i],i) if !can_scroll?
-      #draw(@data[@scroll_idx + i],i)
+      if can_scroll?
+        draw(@data[@scroll_idx + i-1],i) # -1 makes the first row visible on can scrolls
+      else
+        draw(@data[@scroll_idx + i],i)
+      end
       i += 1
     }
 
@@ -254,7 +256,6 @@ class List
     if data == nil
       return draw_empty(row)
     end
-
 
     # Drw the contents
     case @type
@@ -297,7 +298,7 @@ class List
 
   def draw_item(data,row)
 
-    return if !$data.items.has_key?(data)
+    return if data != 'remove' && !$data.items.has_key?(data)
 
     item = $data.items[data] if data != 'remove'
 

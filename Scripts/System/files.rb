@@ -136,6 +136,7 @@ class FileManager
   def make_save_header
     header = {}
     header[:leader] = $party.leader
+    header[:leader] = 'mys' if $party.leader == 'mys-x-fox'
     header[:time] = Graphics.frame_count
     header[:members] = $party.active
     header[:gold] = $party.gold
