@@ -141,6 +141,13 @@ def party_of_ing
 	join_s('ing')
 end
 
+def party_of_nightwatch
+	$party.backup_party
+	$party.leader = 'rob'
+	join_s('rob')
+	join_s('mys')
+end
+
 def party_of_all
 	$party.restore_party
 end
