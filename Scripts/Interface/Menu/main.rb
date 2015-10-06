@@ -178,11 +178,13 @@ class Mnu_Main
 		@glow.move(@selected_box.x+6,@selected_box.y+6)
 		return if !$tweens.done?(@chars[0])
 
+
 		#@menu.update
 		@chars.each{ |c| c.update }
 		@boxes.each{ |b| b.update }
 
 		@glow.move(@selected_box.x+6,@selected_box.y+6)
+
 
 		if $input.action? || $input.click?
 			select(@selected)
@@ -198,6 +200,8 @@ class Mnu_Main
 				close
 			end
 		end
+
+		return if @closing || @close_soon
 
 		# Just remember selected I would suppose
 		box = @selected_box

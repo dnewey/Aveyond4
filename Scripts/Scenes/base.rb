@@ -67,6 +67,14 @@ class Scene_Base
     @hud = nil # Define in sub
             
   end
+
+  def inviz
+    @map.hide
+  end
+
+  def viz
+    @map.show
+  end
   
   def terminate
 

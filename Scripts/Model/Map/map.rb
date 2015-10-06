@@ -48,6 +48,8 @@ class Game_Map
     @cam_oy = 0#-16
     @cam_dur = nil
 
+    @cam_hy = 0 # Hiding
+
     @force_terrains = {}
 
     #self.do(pingpong("cam_ox",50,70,:quad_in_out))
@@ -76,6 +78,14 @@ class Game_Map
     @zone = nil
     setup(@id)
     setup_audio
+  end
+
+  def hide
+    @cam_hy = 5000
+  end
+
+  def show
+    @cam_hy = 0
   end
   
   #--------------------------------------------------------------------------
@@ -241,7 +251,8 @@ class Game_Map
     # cam_y = 0 if cam_y < 0
     # h = ($map.height * 128) - ($game.height * 4)
     # cam_y = h if cam_y > h
-    return @cam_y + (@cam_oy*4)
+    @cam_hy = 0 if @cam_hy == nil
+    return @cam_y + (@cam_oy*4) - @cam_hy
   end
 
   #--------------------------------------------------------------------------

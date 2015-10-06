@@ -62,15 +62,17 @@ class GameManager
   end
 
   def push_scene(scene)
+    @scenes[-1].inviz if !@scenes.empty?
     $scene = scene
     @scenes.unshift(scene)
   end
 
   def pop_scene
     #Graphics.freeze
-    $tweens.clear_all
+    #$tweens.clear_all
     @scenes.shift.terminate
     $scene = @scenes[0]
+    $scene.viz
   end
 
   def sub_scene

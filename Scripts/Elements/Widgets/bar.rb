@@ -3,7 +3,7 @@
 def build_value_bmp(num)
 
 	# prepare number data
-    data = num.to_i.to_s.split(//)
+    data = num.ceil.to_s.split(//)
     nums = []
     data.each{ |n| nums.push(n.to_i) }
 

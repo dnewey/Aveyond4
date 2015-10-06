@@ -38,14 +38,17 @@ class Char_Box_Small < SpriteGroup
 	    @level.font = $fonts.list
 	    @level.shadow = $fonts.list_shadow
 	    @level.gradient = true
-	    @level.text = "15"
+	    @level.text = @char.level.to_s
 	    add(@level,20,27)
 	    @level.z += 50
 
+
 		@xp_bar = Bar.new(vp,106,8)
+		add(@xp_bar,11,64)
+		@xp_bar.opacity = 180
 		@xp_bar.value = @char.xp
 		@xp_bar.max = @char.next_exp
-		add(@xp_bar,11,64)
+		@xp_bar.for(:xp)
 		@xp_bar.z += 50
 
 		@xp_label = Sprite.new(vp)
@@ -53,6 +56,12 @@ class Char_Box_Small < SpriteGroup
 		@xp_label.opacity = 200
 		add(@xp_label,12,56)
 		@xp_label.z += 50
+
+		@xp_value = Sprite.new(vp)
+		@xp_value.bitmap = build_value_bmp(@char.xp)
+		@xp_value.opacity = 200
+		add(@xp_value,186-@xp_value.bitmap.width,141)
+		@xp_value.z += 50
 
 	end
 
