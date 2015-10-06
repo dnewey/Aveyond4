@@ -165,7 +165,12 @@ def ungrant_stat(who,stat,amount)
 end
 
 def grant_level_all
-	$party.all_battlers.grant_level
+	$party.get('boy').grant_level
+	$party.get('ing').grant_level
+	$party.get('rob').grant_level
+	$party.get('mys').grant_level
+	$party.get('hib').grant_level
+	$party.get('row').grant_level
 	pop_level_all
 end
 

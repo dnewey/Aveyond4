@@ -105,9 +105,15 @@ def setup_smith_shop
 			stock.push('mid-arm-elves')
 			stock.push('heavy-arm-elves')
 			stock.push('rob-shield-elves')
+			stock.push('rob-hammer-elves')
+			stock.push('helm-elves')
 
 		when '@dwarf-town'	
-			stock.push('mid-arm-shire')
+			stock.push('mid-arm-dwarf')
+			stock.push('helm-dwarf')
+			stock.push('heavy-arm-dwarf')
+			stock.push('rob-shield-dwarf')
+			stock.push('rob-hammer-dwarf')
 
 	end
 
@@ -142,9 +148,13 @@ def setup_magic_shop
 
 		when '@elf-town'	
 			stock.push('light-arm-elves')
+			stock.push('ing-wand-elves')
+			stock.push('mys-claw-elves')
 
 		when '@dwarf-town'	
-			stock.push('light-arm-dwarves')
+			stock.push('light-arm-dwarf')
+			stock.push('ing-athame-dwarf')
+			stock.push('mys-claw-dwarf')
 
 	end
 

@@ -119,11 +119,11 @@ class Ui_Screen
       # 	open_sub_menu("Items")
       # end
 
-      if !$party.reserve.empty? && $keyboard.press?(VK_P)
-      	$menu.player_x = $player.screen_x
-      	$menu.player_y = $player.screen_y
-      	open_sub_menu("Party")
-      end
+      # if !$party.reserve.empty? && $keyboard.press?(VK_P)
+      # 	$menu.player_x = $player.screen_x
+      # 	$menu.player_y = $player.screen_y
+      # 	open_sub_menu("Party")
+      # end
 
 	end
 

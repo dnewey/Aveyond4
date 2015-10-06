@@ -63,7 +63,7 @@ def potion_use_item
 
 		when 'dream-shroom'
 
-			a = "Ingrid shankes the "
+			a = "Ingrid shakes the "
 			ia = $cache.icon("faces/ing")
 
 			b = "Dream Shroom" 

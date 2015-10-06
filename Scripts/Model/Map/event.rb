@@ -383,19 +383,19 @@ class Game_Event < Game_Character
 
       # Char in party
       when '@boy'
-        return false if $party.leader != 'boy'      
+        return false if !$party.has_member?('boy')    
       when '@ing'
-        return false if $party.leader != 'ing'
+        return false if !$party.has_member?('ing')
       when '@mys'
-        return false if $party.leader != 'mys'
+        return false if !$party.has_member?('mys')
       when '@rob'
-        return false if $party.leader != 'rob'
+        return false if !$party.has_member?('rob')
       when '@hib'
-        return false if $party.leader != 'hib'
+        return false if !$party.has_member?('hib')
       when '@row'
-        return false if $party.leader != 'row'
+        return false if !$party.has_member?('row')
       when '@phy'
-        return false if $party.leader != 'phy'
+        return false if !$party.has_member?('phy')
 
       # Choices
       when '@a', '@b', '@c', '@d'
@@ -613,6 +613,10 @@ class Game_Event < Game_Character
           g = pingpong('off_y',8,1500,:qio)
           self.do(g)
 
+        when '#floating-rock'
+          g = go('off_y',6,600,:qio)
+          self.do(repeat(seq(g,g.reverse)))
+
         when '#shaking'
           g = go('off_x',1,80,:qio)
           self.do(repeat(seq(g,g.reverse)))
@@ -622,7 +626,7 @@ class Game_Event < Game_Character
           self.do(pp)
           a = go("off_x",5,800,:qo)
           b = go("off_x",-10,1600,:qio)
-          c = go("off_x",5,800,:qi)
+          c = go("off_x",5,800,:qio)
           s = seq(a,b,c)
           self.do(repeat(s))
 
@@ -631,7 +635,7 @@ class Game_Event < Game_Character
           self.do(pp)
           a = go("off_x",-5,600,:qo)
           b = go("off_x",10,1400,:qio)
-          c = go("off_x",-5,600,:qi)
+          c = go("off_x",-5,600,:qio)
           s = seq(a,b,c)
           self.do(repeat(s))
 

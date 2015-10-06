@@ -88,6 +88,8 @@ end
 
 def transfer_world(dir=nil)
 
+	$player.trans_type = :cross
+
 	# Get name of transfer
 	room = $map.events[me].name
 
@@ -97,6 +99,8 @@ def transfer_world(dir=nil)
 end
 
 def transfer_map(dir=nil)
+
+	$player.trans_type = :cross
 	
 	# Get name of transfer
 	room = $map.events[me].name

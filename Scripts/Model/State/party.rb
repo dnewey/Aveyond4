@@ -114,7 +114,7 @@ class Game_Party
   end
 
   def recover_all
-    sfx 'inn'
+    # sfx 'inn'
     @actors.values.each{ |a| a.recover_all }
   end
   
@@ -369,9 +369,10 @@ class Game_Party
     # Give extra gadget
 
     # Phye
-    @actors['phy'].equip('staff','phy-sword-1')
+    @actors['phy'].equip('sword','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('helm','phy-helm-start')
+    @actors['phy'].equip('belt','phy-belt-1')
     
 
     # Initial skills per actor
