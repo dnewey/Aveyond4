@@ -113,6 +113,8 @@ def setup_smith_shop
 
 		when '@windshire'	
 			stock.push('mid-arm-shire')
+			stock.push('mid-arm-shire-a')
+			stock.push('mid-arm-shire-e')
 			stock.push('mys-claw-shire')
 
 		when '@tor'	
