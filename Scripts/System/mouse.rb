@@ -5,6 +5,7 @@
 class MouseManager
 
   attr_reader :hwnd, :wheel
+  attr_accessor :mousing
 
   #--------------------------------------------------------------------------
   # * API Declaration
@@ -21,7 +22,8 @@ class MouseManager
     @sprite.z = 6000
     @sprite.ox = 32
     @sprite.oy = 32
-    @cursor = "Default"
+    @mousing = true # Disabled when keys pressed
+    @cursor = nil    
     change_cursor("Default")
   end
 
@@ -29,7 +31,7 @@ class MouseManager
   def y() @pos[1] end
   
   def position() 
-    $settings.mouse ? @pos : [-777,-777]
+    $settings.mouse && @mousing ? @pos : [-777,-777]
   end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
@@ -55,11 +57,15 @@ class MouseManager
     pos = [0,0].pack('ll')
     Cursor_Pos.call(pos)
     Scr2cli.call(@hwnd, pos) 
-    @pos = pos.unpack('ll')
+    pos2 = pos.unpack('ll')
 
-    # Update sprite pos
-    @sprite.x = @pos[0]
-    @sprite.y = @pos[1]
+    # Update sprite pos if moved
+    if pos2 != @pos
+      @pos = pos2
+      @sprite.x = @pos[0]
+      @sprite.y = @pos[1]
+      @mousing = true
+    end
 
     #on_screen?.to_i) # on_screen && mouse_mode
     

@@ -143,19 +143,19 @@ class Scene_Battle
   # Show anim on defender
   def phase_main_anim
 
-    # Face at target of attack
-    if @active_battler.target != nil && @active_battler.target.is_enemy?
-      @active_battler.ev.direction = 10 - @active_battler.target.ev.direction
-      #@active_battler.ev.turn_toward_event(@active_battler.target.ev.id)      
-    end
+    # Face at target of attack - CUT
+    # if @active_battler.target != nil && @active_battler.target.is_enemy?
+    #   @active_battler.ev.direction = 10 - @active_battler.target.ev.direction
+    #   #@active_battler.ev.turn_toward_event(@active_battler.target.ev.id)      
+    # end
 
     @attack_results.each{ |result|
 
       # Target face attacker
       #result.target.ev.turn_toward_event(@active_battler.ev.id)
-      if @active_battler.is_enemy?
-        result.target.ev.direction = 10 - @active_battler.ev.direction
-      end
+      # if @active_battler.is_enemy?
+      #   result.target.ev.direction = 10 - @active_battler.ev.direction
+      # end
 
       if @attack_round.anim
         if @attack_round.anim.include?("spark")

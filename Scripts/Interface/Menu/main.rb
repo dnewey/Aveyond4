@@ -349,7 +349,7 @@ class Mnu_Main
 	def select(option)
 
 		case option
-			when "Journal", "Items", "Progress", "Options", "Help", "Quit", "Load", "Save"
+			when "Journal", "Items", "Party","Progress", "Options", "Help", "Quit", "Load", "Save"
 				$scene.queue_menu(option)
 			else
 				# C.1

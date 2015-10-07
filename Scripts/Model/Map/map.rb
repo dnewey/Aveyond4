@@ -243,7 +243,7 @@ class Game_Map
     # cam_x = 0 if cam_x < 0
     # w = ($map.width * 128) - ($game.width * 4)
     # cam_x = w if cam_x > w
-    return @cam_x + (@cam_ox*4)
+    return (@cam_x + (@cam_ox*4)).to_i
   end
 
   def display_y
@@ -252,7 +252,7 @@ class Game_Map
     # h = ($map.height * 128) - ($game.height * 4)
     # cam_y = h if cam_y > h
     @cam_hy = 0 if @cam_hy == nil
-    return @cam_y + (@cam_oy*4) - @cam_hy
+    return (@cam_y + (@cam_oy*4) - @cam_hy).to_i
   end
 
   #--------------------------------------------------------------------------

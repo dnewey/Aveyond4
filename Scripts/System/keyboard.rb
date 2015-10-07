@@ -41,7 +41,10 @@ class KeyboardManager
 
 	def state?(key)
 		check = KeyState.call(key) #& 0x80 == 128
-		return !(check == 1 || check == 0)
+    result = !(check == 1 || check == 0)
+    # Disable mouse on keyboard input
+    $mouse.mousing = false if result
+		return result
 	end
 
 	def press?(key)

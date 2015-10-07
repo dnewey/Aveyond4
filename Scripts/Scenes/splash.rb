@@ -83,7 +83,7 @@ class Scene_Splash
 				Graphics.freeze
 				@mist.opacity = 255
 				src = "Graphics/Transitions/Cave"
-				Graphics.transition(230,src)
+				Graphics.transition(280,src)
 				#@logo.do(go('opacity',-255,1500,:qio))
 
 				@wait = 1

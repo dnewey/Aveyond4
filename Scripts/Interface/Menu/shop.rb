@@ -31,7 +31,7 @@ class Mnu_Shop < Mnu_Base
 		# #@grid.hide
 		self.right.push(@users)
 
-		change_tab("Items")
+		#change_tab("Items")
 		change($menu.shop[0])
 
 	end
@@ -50,6 +50,8 @@ class Mnu_Shop < Mnu_Base
 				@subtitle.text = "Learn Skills and Abilities"
 				@menu.list.type = :chester
 				@menu.list.refresh
+				@item_box.type = :skill
+				change($menu.shop[0])
 		end
 	end
 
@@ -72,7 +74,10 @@ class Mnu_Shop < Mnu_Base
 
 		#@info.title.text = option
 		@item_box.item(option)
+		@item_box.center(472,260)
+
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		@users.all.each{ |i| $tweens.clear(i) }
 		@users.clear
 		@users.move(@item_box.x,@item_box.y + @item_box.height)
 		
@@ -85,6 +90,23 @@ class Mnu_Shop < Mnu_Base
 			#$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
 			#	@users.add_compare(option,u)
 			#}
+		end
+
+		if @last_option != option
+			@last_option = option
+
+			$tweens.clear(@item_box)
+
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+
+			@users.all.each{ |i|
+				next if i.disposed?
+				$tweens.clear(i)
+				i.y -= 7
+				i.do(go("y",7,150,:qio))
+			}
+
 		end
 
 	end

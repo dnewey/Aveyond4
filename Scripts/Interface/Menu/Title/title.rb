@@ -57,7 +57,14 @@ class Mnu_Title
 			choose(@selected - 1)
 		end
 
-		if $input.action?
+		# Check mouseover buttons
+		@buttons.each{ |b| 
+			if b.within?($mouse.position[0],$mouse.position[1],b.width/2)
+				choose(@buttons.index(b))
+			end
+		}
+
+		if $input.action? || $input.click?
 			case @selected
 				when 0
 					$scene.next_menu = "New"

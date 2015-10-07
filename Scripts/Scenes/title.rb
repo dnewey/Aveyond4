@@ -33,21 +33,6 @@ class Scene_Title
     @title = Sprite.new(@vp)
 
     # Overlays
-    @mtop = Sprite.new(@vp)
-    @mtop.bitmap = $cache.title('cloud-top')
-    @mtop.z = 8888
-    @mtop.blend_type = 1
-    @mbtm = Sprite.new(@vp)
-    @mbtm.bitmap = $cache.title('cloud-btm')
-    @mbtm.z = 8888
-    @mbtm.blend_type = 1
-    @mleft = Sprite.new(@vp)
-    @mleft.bitmap = $cache.title('cloud-left')
-    @mleft.z = 8888
-    @mleft.blend_type = 1
-    @mright = Sprite.new(@vp)
-    @mright.bitmap = $cache.title('cloud-right')
-    @mright.z = 8888
     @mist = Sprite.new(@vp)
     @mist.bitmap = $cache.overlay('mist-portal')
     @mist.z = 9999
@@ -56,20 +41,10 @@ class Scene_Title
     # Init 
     init_boy
 
-    d = 600
-
-    # Start the transition in
-    @mtop.do(go('opacity',-255,3000))
-    @mright.do(go('opacity',-255,3000))
-    @mleft.do(go('opacity',-255,3000))
-    @mbtm.do(go('opacity',-255,3000))
-
-    @mtop.do(go('y',-380,1500,:qio))
-    @mbtm.do(go('y',280,1500,:qio))
-    @mright.do(go('x',280,1500,:qio))
-    @mleft.do(go('x',-280,1500,:qio))    
-
-    @mist.do(go('opacity',-255,1500))
+    Graphics.freeze
+    @mist.opacity = 0
+    src = "Graphics/Transitions/Cave_inv"
+        Graphics.transition(20,src)
  
     @next_menu = nil
     @menu = Mnu_Title.new(@vp)

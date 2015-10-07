@@ -8,6 +8,7 @@ class Ui_Info < SpriteGroup
 		super()
 
 		@message = message
+		@hiding = false
 
 		# Map
 		@map = Label.new(vp)
@@ -40,10 +41,20 @@ class Ui_Info < SpriteGroup
 		@gold.dispose
 	end
 
+	def hide
+		super
+		@hiding = true
+	end
+
+	def show
+		super
+		@hiding = false
+	end
+
 	def update
 		super
 
-		if @message.busy? && @message.mode == :vn
+		if (@message.busy? && @message.mode == :vn) || @hiding
 			@gold.opacity -= 5
 			@icon.opacity -= 5
 			@map.opacity -= 5

@@ -23,12 +23,34 @@ class Ui_Screen
 
 		@book = nil
 
+		@blackbars = Sprite.new(vp)
+		@blackbars.bitmap = $cache.menu_common('black-bars')
+		@blackbars.opacity = 0
+
 	end
 
 	def dispose
 		@message.dispose
 		@bar.dispose
 		@info.dispose
+	end
+
+	def blackbars
+		hide
+		@blackbars.do(go('opacity',255,1000,:qio))
+		@blackbars.zoom_x = 1.2
+		@blackbars.zoom_y = 1.2
+		@blackbars.do(go('zoom_x',-0.2,1000,:qio))
+		@blackbars.do(go('zoom_y',-0.2,1000,:qio))		
+	end
+
+	def quickbars
+		@blackbars.opacity = 255
+	end
+
+	def nobars
+		@blackbars.do(go('opacity',-255,1000,:qio))
+		show
 	end
 
 	def hide

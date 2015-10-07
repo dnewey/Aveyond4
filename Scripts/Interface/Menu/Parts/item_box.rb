@@ -206,6 +206,8 @@ class Item_Box < SpriteGroup
     # Shop display of items
 	def item(id)
 
+        return skill(id) if @type == :skill
+
         id = 'mid-arm-windshire' if id == "unknown"
         #log_sys(id)
 
@@ -226,6 +228,8 @@ class Item_Box < SpriteGroup
             end
         elsif data.is_a?(UsableData)
             stats(data.action)
+        elsif data.is_a?(SkillData)
+
         elsif data.is_a?(ShopData)
 
         end
@@ -258,10 +262,7 @@ class Item_Box < SpriteGroup
     # Battle display of skills, maybe different to menu display
 	def skill(id)
 
-
-
-        data = get_data(id)       
-
+        data = get_data(id)  
 
         return if data == nil
 

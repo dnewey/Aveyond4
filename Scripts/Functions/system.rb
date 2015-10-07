@@ -122,7 +122,6 @@ def open_shop_chester
 	$menu.menu_page = "Chester"
 end
 
-
 def open_difficulty_options
 	grid = $scene.hud.open_grid
 	grid.x = 70
