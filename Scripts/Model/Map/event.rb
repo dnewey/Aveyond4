@@ -680,6 +680,12 @@ class Game_Event < Game_Character
         when "#icon"
           @character_name = "Icons/#{data[1]}"
           @icon = 'U' if @character_name.include?('bugs')
+        when "#icon-item"
+          @character_name = "Icons/items/"+self.name.to_s
+          @icon = 'U' if @character_name.include?('bugs')
+        when "#icon-potion"
+          @character_name = "Icons/potions/"+self.name.to_s
+          @icon = 'U' if @character_name.include?('bugs')
 
         when '#cardicon'
           cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']

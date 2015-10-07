@@ -11,15 +11,29 @@ def shop_choice
 			if $party.gold >= data.price
 				item(gev(me).name,'b')
 				state(me,'sold')
+				state(me,'on')
 				ungold(data.price)
-				delete(me)
+				erase me
 			else
 				text("#{$shopkeep}: You can't afford that.")				
 			end
 
 		when 'Info'
 
-			text("#{$shopkeep}: That's a covey balm.")
+			case gev(me).name
+
+				#Royal Town
+
+				when 'helm-royal'
+					text("#{$shopkeep}: Royal Helm.")
+
+				when 'mutton'
+					text("#{$shopkeep}: I made these in the blacksmith's oven ... hee hee.")
+
+				when 'fruit-c'
+					text("#{$shopkeep}: Remove the skin before eating that.")
+
+			end
 
 		when 'Cancel'
 
@@ -39,34 +53,46 @@ def setup_item_shop
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
+			stock.push('haunch')
 			stock.push('mutton')
 
 		when '@tor'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
+			stock.push('haunch')
+			stock.push('kurry')
+			stock.push('cassia')
 
 		when '@royal-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
-			stock.push('mutton')
 			stock.push('cheese-round')
+			stock.push('haunch')
+			stock.push('cassia')
 
 		when '@weeville'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
+			stock.push('haunch')
+			stock.push('cassia')
 
 		when '@elf-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
+			stock.push('haunch')
+			stock.push('cassia')
+			stock.push('elf-bread')
 
 		when '@dwarf-town'	
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
+			stock.push('haunch')
+			stock.push('sausage')
 
 	end
 
@@ -93,6 +119,12 @@ def setup_special_shop(type)
 			stock.push('grape-drink')
 			stock.push('pine-drink')
 			stock.push('apple-drink')
+
+		when 'preserves'	
+			stock.push('lemon')
+			stock.push('gingerbread')
+			stock.push('jam')
+			stock.push('jam-2')
 
 		when 'pastry'	
 			stock.push('fruit-a')
