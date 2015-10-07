@@ -165,7 +165,7 @@ class DataManager
 
     # Export to rxdata for later
     # Disabled for now to not crowd up github commits
-    save_data(data,"Data/Json/#{file}.rxdata")
+    #save_data(data,"Data/Json/#{file}.rxdata")
 
     return data
 

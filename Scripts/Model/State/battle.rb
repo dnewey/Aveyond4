@@ -6,7 +6,7 @@ class Game_Battle
   attr_reader :enemies
   attr_reader :minion
 
-  attr :allies
+  attr_reader :allies
 
   attr_reader :enemy_types # Enemies for the current zone
   attr_reader :enemy_list # 
@@ -23,6 +23,8 @@ class Game_Battle
 
     @enemy_list = []
 		@enemies = []
+
+    @allies = []
 
     @props = []
 
@@ -66,7 +68,7 @@ class Game_Battle
 
   def add_ally(ally)
     battler = Game_Battler.new
-    battler.init_enemy(ally)
+    battler.init_ally(ally)
     @allies.push(battler)
   end
 
@@ -225,7 +227,7 @@ class Game_Battle
 
   def build_attack_queue
 
-    queue = $party.active_battlers + @enemies
+    queue = $party.active_battlers + @allies + @enemies 
 
     # Add minion if there is
     if $party.active.include?('boy') && $battle.minion != nil

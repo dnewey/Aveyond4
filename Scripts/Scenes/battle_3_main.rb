@@ -13,10 +13,16 @@ class Scene_Battle
     	e.choose_action
     }
 
+    
+    $battle.allies.each{ |a| 
+      a.choose_action
+    }
+
     # Choose minion action
     if $party.active.include?('boy') && $battle.minion != nil
       $battle.minion.choose_action
     end
+
 
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue

@@ -122,6 +122,31 @@ class Game_Battler
 
   end
 
+  def init_ally(id)
+
+    @type = :ally
+
+    data = $data.enemies[id]
+    @id = id
+
+    @name = data.name
+
+    @xp = data.xp
+
+    @actions = data.actions.split(" | ")
+
+    # Get stat plus per enemy
+    if data.stats != ""
+      data.stats.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_plus[md[0]] = md[1].to_i
+      }
+    end
+
+    recover_all
+
+  end
+
   def init_minion(id)
 
     @type = :minion

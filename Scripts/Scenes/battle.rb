@@ -114,11 +114,11 @@ class Scene_Battle < Scene_Base
 
     # Ally setups
     [0,1,2].each{ |i| 
-      ev = @map.event_by_evname("E.#{i}") 
+      ev = @map.event_by_evname("F.#{i}") 
       next if ev == nil
-      if $battle.enemies.count > i
-        $battle.enemies[i].ev = ev
-        ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+      if $battle.allies.count > i
+        $battle.allies[i].ev = ev
+        ev.character_name = "Monsters/#{$battle.allies[i].id}"
       else
         hide(ev)
       end
