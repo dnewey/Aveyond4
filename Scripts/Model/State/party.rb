@@ -24,6 +24,8 @@ class Game_Party
   # Passives
   attr_accessor :passive_shop, :passive_scare, :passive_cheekis
 
+  attr_accessor :difficulty
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
@@ -68,6 +70,8 @@ class Game_Party
 
     # Location when ingrid leaves
     @party_loc = nil
+
+    @difficulty = 'normal'
 
     # Hardcode Party Init
     init_party
