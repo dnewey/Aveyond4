@@ -3447,7 +3447,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end":#==============================================================================
+end"‘#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3582,6 +3582,12 @@ def party_of_boy
 	$party.backup_party
 	$party.leader = 'boy'
 	join_s('boy')
+end
+
+def party_of_boy
+	$party.backup_party
+	$party.leader = 'hib'
+	join_s('hib')
 end
 
 def party_of_ing
@@ -8800,7 +8806,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"±
+end"³
 #==============================================================================
 # ** Mnu_Char
 #==============================================================================
@@ -8830,8 +8836,8 @@ class Mnu_Char < Mnu_Base
 		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' #&& !$progress.creatures.empty?
 		@grid.add_wide("Ingrid","Witchery","items/potion-red") if $menu.char == 'ing'
 		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
-		@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
-		@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
+		#@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
+		#@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
 		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'
 
 		@grid.choose($menu.char_cursor)
@@ -10478,7 +10484,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"ž#==============================================================================
+end"2#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -10540,9 +10546,15 @@ class Mnu_Shop < Mnu_Base
 
 		# Show tabs
 		@subtitle.hide
+		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
+
+		#@tabs.push("all")
+		@tabs.push("usable")
+		@tabs.push("gear")
 
 		# Put all sellable items?
-		#@menu.list.setup($menu.shop)
+		change_tab("usable")
+
 	end
 
 	def update
@@ -10603,30 +10615,48 @@ class Mnu_Shop < Mnu_Base
 				sys("magics")
 				@info.refresh
 				@menu.list.refresh
+				close_soon
 			end
 
 		else
 
 			item = $data.items[option]
 
-			if $party.gold >= item.price
-				$party.add_item(option)
-				$party.add_gold(-item.price)
-				sys("coins")
+			if @sellmode
+
+				# Buy
+				$party.add_item(option,-1)
+				$party.add_gold(item.price)
+				sys('coins')
 				@info.refresh
 				@menu.list.refresh
+
+			else
+
+				# Buy
+
+				if $party.gold >= item.price
+					$party.add_item(option)
+					$party.add_gold(-item.price)
+					sys("coins")
+					@info.refresh
+					@menu.list.refresh
+				end
+
 			end
 
 		end
 	end
 
 	def change_tab(tab)
-		return
 
 		# Change list to certain items only
+		# This is for selling
 		list = []
-		$menu.shop.each{ |item|
-			list.push(item) if $data.items[item].category == tab
+		$party.items.keys.each{ |item|
+			next if $data.items[item].price == ''
+			next if $data.items[item].tab != tab
+			list.push(item) 
 		}
 		@menu.list.setup(list)
 
@@ -11626,7 +11656,7 @@ class Mnu_Nightwatch < Mnu_Base
 		
 	end
 
-end"u#==============================================================================
+end"Š#==============================================================================
 # ** Mnu_Phye
 #==============================================================================
 
@@ -11650,8 +11680,8 @@ class Mnu_Phye < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
-		src = ['baal','purple','serp','cerb','dragon']
-		titles = ['Baal the Brute','tower','ice','other','more']
+		src = ['arinya','kubaba','baal','crystalis','icetooth']
+		titles = ['Arinya','Kubaba','Baal the Brute','Crystalis','Icetooth']
 
 		cx = 28
 		cy = 128
@@ -12841,7 +12871,7 @@ class Right_Page < SpriteGroup
         @page_title.text = text
     end
 
-end"~#==============================================================================
+end"o#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -12852,7 +12882,7 @@ class Mnu_Chooser < Mnu_Base
 
 		@title.change('choose')
 		#@title.change_icon("items")
-		#@subtitle.text = "Various items of collection"
+		@subtitle.text = "Pick & Choose"
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -20118,7 +20148,7 @@ class Scene_Base
   # end
 
 end
-"&#==============================================================================
+"3#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -20244,6 +20274,7 @@ class Scene_Battle < Scene_Base
       end
     }
 
+    # Props
     #$battle.add_prop('money')
 
     # And the minion

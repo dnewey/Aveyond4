@@ -135,6 +135,12 @@ def party_of_boy
 	join_s('boy')
 end
 
+def party_of_boy
+	$party.backup_party
+	$party.leader = 'hib'
+	join_s('hib')
+end
+
 def party_of_ing
 	$party.backup_party
 	$party.leader = 'ing'
