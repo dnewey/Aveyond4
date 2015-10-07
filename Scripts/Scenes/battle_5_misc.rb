@@ -61,6 +61,13 @@ class Scene_Battle
 
   def phase_misc_escape
 
+    $battle.all_battlers.each{ |b| b.remove_states_battle }
+
+    $battle.clear
+    $game.pop_scene
+    music_restore
+    $scene.hud.show
+    
   end
 
  end
