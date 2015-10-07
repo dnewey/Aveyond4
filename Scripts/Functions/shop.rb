@@ -219,8 +219,8 @@ def setup_magic_shop
 			stock.push('mys-claw-royal')
 
 		when '@weeville'	
-			stock.push('light-arm-wee')
-			stock.push('ing-athame-wee')
+			stock.push('light-arm-little')
+			stock.push('ing-athame-little')
 
 		when '@elf-town'	
 			stock.push('light-arm-elves')

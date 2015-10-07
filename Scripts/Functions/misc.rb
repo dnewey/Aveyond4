@@ -19,7 +19,11 @@ def arch_investigate
 		when 'dig-attract'
 			flag("arch-attract")
 
+		when 'dig-chki'
+			flag("arch-chki")
+
 		else
+			item($menu.chosen,1,'s')
 			flag("arch-void")
 
 	end

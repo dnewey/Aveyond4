@@ -3245,7 +3245,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"&
+"n
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3266,7 +3266,11 @@ def arch_investigate
 		when 'dig-attract'
 			flag("arch-attract")
 
+		when 'dig-chki'
+			flag("arch-chki")
+
 		else
+			item($menu.chosen,1,'s')
 			flag("arch-void")
 
 	end
@@ -3982,7 +3986,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"
+end"
 
 def shop_choice
 
@@ -4203,8 +4207,8 @@ def setup_magic_shop
 			stock.push('mys-claw-royal')
 
 		when '@weeville'	
-			stock.push('light-arm-wee')
-			stock.push('ing-athame-wee')
+			stock.push('light-arm-little')
+			stock.push('ing-athame-little')
 
 		when '@elf-town'	
 			stock.push('light-arm-elves')
@@ -4365,7 +4369,8 @@ def buy_chester_skill(skill)
 
 	end
 
-end"q#==============================================================================
+end
+"q#==============================================================================
 # ** State Functions
 #==============================================================================
 
@@ -13254,7 +13259,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"½#==============================================================================
+end"E#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -13356,6 +13361,31 @@ class Game_Battler
   def init_enemy(id)
 
     @type = :enemy
+
+    data = $data.enemies[id]
+    @id = id
+
+    @name = data.name
+
+    @xp = data.xp
+
+    @actions = data.actions.split(" | ")
+
+    # Get stat plus per enemy
+    if data.stats != ""
+      data.stats.split("\n").each{ |m|
+        md = m.split("=>")
+        @stat_plus[md[0]] = md[1].to_i
+      }
+    end
+
+    recover_all
+
+  end
+
+  def init_ally(id)
+
+    @type = :ally
 
     data = $data.enemies[id]
     @id = id
@@ -13573,7 +13603,7 @@ class Game_Battler
   end
 
 end
-"½
+"X
 class Game_Battler
 
 
@@ -13789,7 +13819,10 @@ class Game_Battler
 
   # MAYBE
   def stat_mod_from_difficulty(stat)
-    return 1.0
+    return 1.0 if is_good?
+    return 0.9 if $party.difficulty == 'easy'
+    return 1.0 if $party.difficulty == 'normal'
+    return 1.1 if $party.difficulty == 'hard'
   end
 
 end"D
@@ -18438,7 +18471,7 @@ class Game_Player < Game_Character
   end
 
 end
-"E0
+"j0
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -18446,7 +18479,7 @@ class Game_Battle
   attr_reader :enemies
   attr_reader :minion
 
-  attr :allies
+  attr_reader :allies
 
   attr_reader :enemy_types # Enemies for the current zone
   attr_reader :enemy_list # 
@@ -18463,6 +18496,8 @@ class Game_Battle
 
     @enemy_list = []
 		@enemies = []
+
+    @allies = []
 
     @props = []
 
@@ -18506,7 +18541,7 @@ class Game_Battle
 
   def add_ally(ally)
     battler = Game_Battler.new
-    battler.init_enemy(ally)
+    battler.init_ally(ally)
     @allies.push(battler)
   end
 
@@ -18665,7 +18700,7 @@ class Game_Battle
 
   def build_attack_queue
 
-    queue = $party.active_battlers + @enemies
+    queue = $party.active_battlers + @allies + @enemies 
 
     # Add minion if there is
     if $party.active.include?('boy') && $battle.minion != nil
@@ -19065,7 +19100,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"K)#==============================================================================
+end"ˆ)#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19090,6 +19125,8 @@ class Game_Party
 
   # Passives
   attr_accessor :passive_shop, :passive_scare, :passive_cheekis
+
+  attr_accessor :difficulty
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -19135,6 +19172,8 @@ class Game_Party
 
     # Location when ingrid leaves
     @party_loc = nil
+
+    @difficulty = 'normal'
 
     # Hardcode Party Init
     init_party
@@ -20079,7 +20118,7 @@ class Scene_Base
   # end
 
 end
-")#==============================================================================
+"&#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -20195,11 +20234,11 @@ class Scene_Battle < Scene_Base
 
     # Ally setups
     [0,1,2].each{ |i| 
-      ev = @map.event_by_evname("E.#{i}") 
+      ev = @map.event_by_evname("F.#{i}") 
       next if ev == nil
-      if $battle.enemies.count > i
-        $battle.enemies[i].ev = ev
-        ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+      if $battle.allies.count > i
+        $battle.allies[i].ev = ev
+        ev.character_name = "Monsters/#{$battle.allies[i].id}"
       else
         hide(ev)
       end
@@ -20708,7 +20747,7 @@ class Scene_Battle
     
   end
 
-end"8'
+end"'
 class Scene_Battle
 
   def phase_main_init
@@ -20723,10 +20762,16 @@ class Scene_Battle
     	e.choose_action
     }
 
+    
+    $battle.allies.each{ |a| 
+      a.choose_action
+    }
+
     # Choose minion action
     if $party.active.include?('boy') && $battle.minion != nil
       $battle.minion.choose_action
     end
+
 
     # Determine order of attacks
     @battle_queue = $battle.build_attack_queue
@@ -23260,7 +23305,7 @@ class CacheManager
       GC.start
     end
 
-  end"´#==============================================================================
+  end"µ#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -23427,7 +23472,7 @@ class DataManager
 
     # Export to rxdata for later
     # Disabled for now to not crowd up github commits
-    save_data(data,"Data/Json/#{file}.rxdata")
+    #save_data(data,"Data/Json/#{file}.rxdata")
 
     return data
 
