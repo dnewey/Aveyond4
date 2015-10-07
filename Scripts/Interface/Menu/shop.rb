@@ -60,9 +60,15 @@ class Mnu_Shop < Mnu_Base
 
 		# Show tabs
 		@subtitle.hide
+		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
+
+		#@tabs.push("all")
+		@tabs.push("usable")
+		@tabs.push("gear")
 
 		# Put all sellable items?
-		#@menu.list.setup($menu.shop)
+		change_tab("usable")
+
 	end
 
 	def update
@@ -123,30 +129,48 @@ class Mnu_Shop < Mnu_Base
 				sys("magics")
 				@info.refresh
 				@menu.list.refresh
+				close_soon
 			end
 
 		else
 
 			item = $data.items[option]
 
-			if $party.gold >= item.price
-				$party.add_item(option)
-				$party.add_gold(-item.price)
-				sys("coins")
+			if @sellmode
+
+				# Buy
+				$party.add_item(option,-1)
+				$party.add_gold(item.price)
+				sys('coins')
 				@info.refresh
 				@menu.list.refresh
+
+			else
+
+				# Buy
+
+				if $party.gold >= item.price
+					$party.add_item(option)
+					$party.add_gold(-item.price)
+					sys("coins")
+					@info.refresh
+					@menu.list.refresh
+				end
+
 			end
 
 		end
 	end
 
 	def change_tab(tab)
-		return
 
 		# Change list to certain items only
+		# This is for selling
 		list = []
-		$menu.shop.each{ |item|
-			list.push(item) if $data.items[item].category == tab
+		$party.items.keys.each{ |item|
+			next if $data.items[item].price == ''
+			next if $data.items[item].tab != tab
+			list.push(item) 
 		}
 		@menu.list.setup(list)
 

@@ -22,8 +22,8 @@ class Mnu_Phye < Mnu_Base
 		@box.move(15,115)
 		self.left.push(@box)
 
-		src = ['baal','purple','serp','cerb','dragon']
-		titles = ['Baal the Brute','tower','ice','other','more']
+		src = ['arinya','kubaba','baal','crystalis','icetooth']
+		titles = ['Arinya','Kubaba','Baal the Brute','Crystalis','Icetooth']
 
 		cx = 28
 		cy = 128

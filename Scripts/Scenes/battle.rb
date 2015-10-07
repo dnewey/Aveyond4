@@ -124,6 +124,7 @@ class Scene_Battle < Scene_Base
       end
     }
 
+    # Props
     #$battle.add_prop('money')
 
     # And the minion
