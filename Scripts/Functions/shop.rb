@@ -226,11 +226,17 @@ def setup_magic_shop
 			stock.push('light-arm-elves')
 			stock.push('ing-wand-elves')
 			stock.push('mys-claw-elves')
+			stock.push('hib-charm-elf')
 
 		when '@dwarf-town'	
 			stock.push('light-arm-dwarf')
 			stock.push('ing-athame-dwarf')
 			stock.push('mys-claw-dwarf')
+			stock.push('hib-charm-dwarf')
+
+		when '@ravwyn'	
+			stock.push('light-arm-shadow')
+			stock.push('hib-charm-shadow')
 
 	end
 
