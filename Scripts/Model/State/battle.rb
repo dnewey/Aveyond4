@@ -50,6 +50,7 @@ class Game_Battle
     #@enemies.each{ |e| e.dispose }
     @enemies = []
     #@props.each{ |p| p.dispose }
+    @allies = []
     @props = []
     @queue = {}
     $party.all_battlers.each{ |a| a.ev = nil; a.view = nil }
