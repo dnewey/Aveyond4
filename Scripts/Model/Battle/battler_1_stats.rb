@@ -216,8 +216,8 @@ class Game_Battler
   def stat_mod_from_difficulty(stat)
     return 1.0 if is_good?
     return 0.9 if $party.difficulty == 'easy'
-    return 0.9 if $party.difficulty == 'normal'
-    return 0.9 if $party.difficulty == 'hard'
+    return 1.0 if $party.difficulty == 'normal'
+    return 1.1 if $party.difficulty == 'hard'
   end
 
 end
