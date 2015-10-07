@@ -143,6 +143,9 @@ def setup_special_shop(type)
 			stock.push('game-key-8')
 			stock.push('game-key-9')
 
+		when 'helms'	
+			stock.push('helm-ultimate')
+
 	end
 
 	stock.each{ |s| $menu.shop_add(s) }

@@ -53,6 +53,13 @@ class Scene_Battle
       return
     end
 
+    # If nothing attack
+    if @active_battler.skill_id == 'nothing'
+      @attack_plan.cancel
+      @phase = :main_next
+      return
+    end
+
     # Show attack name
     if @active_battler.action == "items"
       it = $data.items[@active_battler.item_id]

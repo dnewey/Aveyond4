@@ -3992,7 +3992,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"
+end"ä
 
 def shop_choice
 
@@ -4137,6 +4137,9 @@ def setup_special_shop(type)
 			stock.push('game-key-8')
 			stock.push('game-key-9')
 
+		when 'helms'	
+			stock.push('helm-ultimate')
+
 	end
 
 	stock.each{ |s| $menu.shop_add(s) }
@@ -4220,11 +4223,17 @@ def setup_magic_shop
 			stock.push('light-arm-elves')
 			stock.push('ing-wand-elves')
 			stock.push('mys-claw-elves')
+			stock.push('hib-charm-elf')
 
 		when '@dwarf-town'	
 			stock.push('light-arm-dwarf')
 			stock.push('ing-athame-dwarf')
 			stock.push('mys-claw-dwarf')
+			stock.push('hib-charm-dwarf')
+
+		when '@ravwyn'	
+			stock.push('light-arm-shadow')
+			stock.push('hib-charm-shadow')
 
 	end
 
@@ -18501,7 +18510,7 @@ class Game_Player < Game_Character
   end
 
 end
-"j0
+"|0
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -18553,6 +18562,7 @@ class Game_Battle
     #@enemies.each{ |e| e.dispose }
     @enemies = []
     #@props.each{ |p| p.dispose }
+    @allies = []
     @props = []
     @queue = {}
     $party.all_battlers.each{ |a| a.ev = nil; a.view = nil }
@@ -20778,7 +20788,7 @@ class Scene_Battle
     
   end
 
-end"'
+end"(
 class Scene_Battle
 
   def phase_main_init
@@ -20828,6 +20838,13 @@ class Scene_Battle
 
     # If this player has been defeated, skip
     if @active_battler.down?
+      @attack_plan.cancel
+      @phase = :main_next
+      return
+    end
+
+    # If nothing attack
+    if @active_battler.skill_id == 'nothing'
       @attack_plan.cancel
       @phase = :main_next
       return
@@ -21236,7 +21253,7 @@ class Scene_Battle
 
   end
 
-end"
+end"x
 class Scene_Battle
 
   def phase_victory_init
@@ -21307,15 +21324,20 @@ class Scene_Battle
 
     $battle.all_battlers.each{ |b| b.remove_states_battle }
 
+    Graphics.freeze
+
     $battle.clear
   	$game.pop_scene
     music_restore
     $scene.hud.show
+
+    t = 'Graphics/Transitions/battle'
+    Graphics.transition(30,t) 
     
   end
 
 
-end"
+end"¦
 class Scene_Battle
 
   def phase_misc_text
@@ -21378,6 +21400,13 @@ class Scene_Battle
 
   def phase_misc_escape
 
+    $battle.all_battlers.each{ |b| b.remove_states_battle }
+
+    $battle.clear
+    $game.pop_scene
+    music_restore
+    $scene.hud.show
+    
   end
 
  end
