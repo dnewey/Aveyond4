@@ -4463,7 +4463,7 @@ end
 def store_say_deny
 	text("1: #{$customer.deny}")
 end
-"î	
+"ì	
 # Misc
 
 def text(t)
@@ -4586,7 +4586,6 @@ def open_shop_chester
 	$menu.sub_only = true
 	$menu.menu_page = "Chester"
 end
-
 
 def open_difficulty_options
 	grid = $scene.hud.open_grid
@@ -6067,7 +6066,7 @@ class TargetCmd
 	end
 
 end
-"+#==============================================================================
+" #==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6092,12 +6091,34 @@ class Ui_Screen
 
 		@book = nil
 
+		@blackbars = Sprite.new(vp)
+		@blackbars.bitmap = $cache.menu_common('black-bars')
+		@blackbars.opacity = 0
+
 	end
 
 	def dispose
 		@message.dispose
 		@bar.dispose
 		@info.dispose
+	end
+
+	def blackbars
+		hide
+		@blackbars.do(go('opacity',255,1000,:qio))
+		@blackbars.zoom_x = 1.2
+		@blackbars.zoom_y = 1.2
+		@blackbars.do(go('zoom_x',-0.2,1000,:qio))
+		@blackbars.do(go('zoom_y',-0.2,1000,:qio))		
+	end
+
+	def quickbars
+		@blackbars.opacity = 255
+	end
+
+	def nobars
+		@blackbars.do(go('opacity',-255,1000,:qio))
+		show
 	end
 
 	def hide
@@ -7452,7 +7473,7 @@ class Ui_Grid
 		return @selected
 	end
 
-end"ñ#==============================================================================
+end"n#==============================================================================
 # Ui_Info
 #==============================================================================
 
@@ -7462,6 +7483,7 @@ class Ui_Info < SpriteGroup
 		super()
 
 		@message = message
+		@hiding = false
 
 		# Map
 		@map = Label.new(vp)
@@ -7494,10 +7516,20 @@ class Ui_Info < SpriteGroup
 		@gold.dispose
 	end
 
+	def hide
+		super
+		@hiding = true
+	end
+
+	def show
+		super
+		@hiding = false
+	end
+
 	def update
 		super
 
-		if @message.busy? && @message.mode == :vn
+		if (@message.busy? && @message.mode == :vn) || @hiding
 			@gold.opacity -= 5
 			@icon.opacity -= 5
 			@map.opacity -= 5
@@ -9387,7 +9419,7 @@ class Mnu_Journal < Mnu_Base
 
 	end
 
-end"‚#==============================================================================
+end"Š#==============================================================================
 # ** Mnu_Main
 #==============================================================================
 
@@ -9738,7 +9770,7 @@ class Mnu_Main
 	def select(option)
 
 		case option
-			when "Journal", "Items", "Progress", "Options", "Help", "Quit", "Load", "Save"
+			when "Journal", "Items", "Party","Progress", "Options", "Help", "Quit", "Load", "Save"
 				$scene.queue_menu(option)
 			else
 				# C.1
@@ -10441,8 +10473,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"
-#==============================================================================
+end"ž#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -10475,7 +10506,7 @@ class Mnu_Shop < Mnu_Base
 		# #@grid.hide
 		self.right.push(@users)
 
-		change_tab("Items")
+		#change_tab("Items")
 		change($menu.shop[0])
 
 	end
@@ -10494,6 +10525,8 @@ class Mnu_Shop < Mnu_Base
 				@subtitle.text = "Learn Skills and Abilities"
 				@menu.list.type = :chester
 				@menu.list.refresh
+				@item_box.type = :skill
+				change($menu.shop[0])
 		end
 	end
 
@@ -10516,7 +10549,10 @@ class Mnu_Shop < Mnu_Base
 
 		#@info.title.text = option
 		@item_box.item(option)
+		@item_box.center(472,260)
+
 		#@item_box.center(462,130+@menu.list.page_idx*@menu.list.item_height)
+		@users.all.each{ |i| $tweens.clear(i) }
 		@users.clear
 		@users.move(@item_box.x,@item_box.y + @item_box.height)
 		
@@ -10529,6 +10565,23 @@ class Mnu_Shop < Mnu_Base
 			#$party.all_battlers.select{ |b| b.slots.include?(data.slot) }.each{ |u|
 			#	@users.add_compare(option,u)
 			#}
+		end
+
+		if @last_option != option
+			@last_option = option
+
+			$tweens.clear(@item_box)
+
+			@item_box.y -= 7
+			@item_box.do(go("y",7,150,:qio))
+
+			@users.all.each{ |i|
+				next if i.disposed?
+				$tweens.clear(i)
+				i.y -= 7
+				i.do(go("y",7,150,:qio))
+			}
+
 		end
 
 	end
@@ -11949,7 +12002,7 @@ class Info_Box < SpriteGroup
     end
 
 end
-"ó
+">
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -12157,6 +12210,8 @@ class Item_Box < SpriteGroup
     # Shop display of items
 	def item(id)
 
+        return skill(id) if @type == :skill
+
         id = 'mid-arm-windshire' if id == "unknown"
         #log_sys(id)
 
@@ -12177,6 +12232,8 @@ class Item_Box < SpriteGroup
             end
         elsif data.is_a?(UsableData)
             stats(data.action)
+        elsif data.is_a?(SkillData)
+
         elsif data.is_a?(ShopData)
 
         end
@@ -12209,10 +12266,7 @@ class Item_Box < SpriteGroup
     # Battle display of skills, maybe different to menu display
 	def skill(id)
 
-
-
-        data = get_data(id)       
-
+        data = get_data(id)  
 
         return if data == nil
 
@@ -13067,7 +13121,7 @@ class Mnu_Options_Title < Mnu_Options
 
 	end
 
-end"Ä#==============================================================================
+end"y#==============================================================================
 # ** Mnu_Title
 #==============================================================================
 
@@ -13126,7 +13180,14 @@ class Mnu_Title
 			choose(@selected - 1)
 		end
 
-		if $input.action?
+		# Check mouseover buttons
+		@buttons.each{ |b| 
+			if b.within?($mouse.position[0],$mouse.position[1],b.width/2)
+				choose(@buttons.index(b))
+			end
+		}
+
+		if $input.action? || $input.click?
 			case @selected
 				when 0
 					$scene.next_menu = "New"
@@ -17183,7 +17244,7 @@ class Interpreter
   end
 
 end
-"®A#==============================================================================
+"¼A#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17428,7 +17489,7 @@ class Game_Map
     # cam_x = 0 if cam_x < 0
     # w = ($map.width * 128) - ($game.width * 4)
     # cam_x = w if cam_x > w
-    return @cam_x + (@cam_ox*4)
+    return (@cam_x + (@cam_ox*4)).to_i
   end
 
   def display_y
@@ -17437,7 +17498,7 @@ class Game_Map
     # h = ($map.height * 128) - ($game.height * 4)
     # cam_y = h if cam_y > h
     @cam_hy = 0 if @cam_hy == nil
-    return @cam_y + (@cam_oy*4) - @cam_hy
+    return (@cam_y + (@cam_oy*4) - @cam_hy).to_i
   end
 
   #--------------------------------------------------------------------------
@@ -20647,7 +20708,7 @@ class Scene_Battle
     
   end
 
-end"$'
+end"8'
 class Scene_Battle
 
   def phase_main_init
@@ -20792,19 +20853,19 @@ class Scene_Battle
   # Show anim on defender
   def phase_main_anim
 
-    # Face at target of attack
-    if @active_battler.target != nil && @active_battler.target.is_enemy?
-      @active_battler.ev.direction = 10 - @active_battler.target.ev.direction
-      #@active_battler.ev.turn_toward_event(@active_battler.target.ev.id)      
-    end
+    # Face at target of attack - CUT
+    # if @active_battler.target != nil && @active_battler.target.is_enemy?
+    #   @active_battler.ev.direction = 10 - @active_battler.target.ev.direction
+    #   #@active_battler.ev.turn_toward_event(@active_battler.target.ev.id)      
+    # end
 
     @attack_results.each{ |result|
 
       # Target face attacker
       #result.target.ev.turn_toward_event(@active_battler.ev.id)
-      if @active_battler.is_enemy?
-        result.target.ev.direction = 10 - @active_battler.ev.direction
-      end
+      # if @active_battler.is_enemy?
+      #   result.target.ev.direction = 10 - @active_battler.ev.direction
+      # end
 
       if @attack_round.anim
         if @attack_round.anim.include?("spark")
@@ -21827,7 +21888,7 @@ class Scene_Splash
 				Graphics.freeze
 				@mist.opacity = 255
 				src = "Graphics/Transitions/Cave"
-				Graphics.transition(230,src)
+				Graphics.transition(280,src)
 				#@logo.do(go('opacity',-255,1500,:qio))
 
 				@wait = 1
@@ -21842,7 +21903,7 @@ class Scene_Splash
 
 	end
 
-end"Ø#==============================================================================
+end"è#==============================================================================
 # ** Scene_Title
 #==============================================================================
 
@@ -21877,21 +21938,6 @@ class Scene_Title
     @title = Sprite.new(@vp)
 
     # Overlays
-    @mtop = Sprite.new(@vp)
-    @mtop.bitmap = $cache.title('cloud-top')
-    @mtop.z = 8888
-    @mtop.blend_type = 1
-    @mbtm = Sprite.new(@vp)
-    @mbtm.bitmap = $cache.title('cloud-btm')
-    @mbtm.z = 8888
-    @mbtm.blend_type = 1
-    @mleft = Sprite.new(@vp)
-    @mleft.bitmap = $cache.title('cloud-left')
-    @mleft.z = 8888
-    @mleft.blend_type = 1
-    @mright = Sprite.new(@vp)
-    @mright.bitmap = $cache.title('cloud-right')
-    @mright.z = 8888
     @mist = Sprite.new(@vp)
     @mist.bitmap = $cache.overlay('mist-portal')
     @mist.z = 9999
@@ -21900,20 +21946,10 @@ class Scene_Title
     # Init 
     init_boy
 
-    d = 600
-
-    # Start the transition in
-    @mtop.do(go('opacity',-255,3000))
-    @mright.do(go('opacity',-255,3000))
-    @mleft.do(go('opacity',-255,3000))
-    @mbtm.do(go('opacity',-255,3000))
-
-    @mtop.do(go('y',-380,1500,:qio))
-    @mbtm.do(go('y',280,1500,:qio))
-    @mright.do(go('x',280,1500,:qio))
-    @mleft.do(go('x',-280,1500,:qio))    
-
-    @mist.do(go('opacity',-255,1500))
+    Graphics.freeze
+    @mist.opacity = 0
+    src = "Graphics/Transitions/Cave_inv"
+        Graphics.transition(20,src)
  
     @next_menu = nil
     @menu = Mnu_Title.new(@vp)
@@ -24083,7 +24119,7 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"Û#==============================================================================
+end"=	#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
 
@@ -24126,7 +24162,10 @@ class KeyboardManager
 
 	def state?(key)
 		check = KeyState.call(key) #& 0x80 == 128
-		return !(check == 1 || check == 0)
+    result = !(check == 1 || check == 0)
+    # Disable mouse on keyboard input
+    $mouse.mousing = false if result
+		return result
 	end
 
 	def press?(key)
@@ -24200,13 +24239,14 @@ class KeyboardManager
 
   end
 
-end"‘#============================================================================== 
+end"<	#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
 class MouseManager
 
   attr_reader :hwnd, :wheel
+  attr_accessor :mousing
 
   #--------------------------------------------------------------------------
   # * API Declaration
@@ -24223,7 +24263,8 @@ class MouseManager
     @sprite.z = 6000
     @sprite.ox = 32
     @sprite.oy = 32
-    @cursor = "Default"
+    @mousing = true # Disabled when keys pressed
+    @cursor = nil    
     change_cursor("Default")
   end
 
@@ -24231,7 +24272,7 @@ class MouseManager
   def y() @pos[1] end
   
   def position() 
-    $settings.mouse ? @pos : [-777,-777]
+    $settings.mouse && @mousing ? @pos : [-777,-777]
   end
   def grid() 
     x = (@pos[0] + $map.display_x / 4) / 32
@@ -24257,11 +24298,15 @@ class MouseManager
     pos = [0,0].pack('ll')
     Cursor_Pos.call(pos)
     Scr2cli.call(@hwnd, pos) 
-    @pos = pos.unpack('ll')
+    pos2 = pos.unpack('ll')
 
-    # Update sprite pos
-    @sprite.x = @pos[0]
-    @sprite.y = @pos[1]
+    # Update sprite pos if moved
+    if pos2 != @pos
+      @pos = pos2
+      @sprite.x = @pos[0]
+      @sprite.y = @pos[1]
+      @mousing = true
+    end
 
     #on_screen?.to_i) # on_screen && mouse_mode
     
