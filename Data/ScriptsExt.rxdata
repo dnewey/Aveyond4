@@ -3584,7 +3584,7 @@ def party_of_boy
 	join_s('boy')
 end
 
-def party_of_boy
+def party_of_hib
 	$party.backup_party
 	$party.leader = 'hib'
 	join_s('hib')
