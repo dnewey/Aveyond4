@@ -49,6 +49,12 @@ def bugs_exchange
 	$progress.add_night_xp(amount)
 	pop_night(amount)
 	unitem('night-bug',amount)
+
+	if $progress.night-xp >= 100
+		#if 
+	end
+
+
 end
 
 def bugs_owl

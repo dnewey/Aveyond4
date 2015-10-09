@@ -3476,7 +3476,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"‘#==============================================================================
+end"Ä#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3527,6 +3527,12 @@ def bugs_exchange
 	$progress.add_night_xp(amount)
 	pop_night(amount)
 	unitem('night-bug',amount)
+
+	if $progress.night-xp >= 100
+		#if 
+	end
+
+
 end
 
 def bugs_owl
@@ -4900,7 +4906,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"
+ end""
 
 
 
@@ -4954,6 +4960,15 @@ end
 def potion_use_item
 
 	case $party.potion_item
+
+		when 'vials'
+
+			a = "Ingrid uses"
+			ia = $cache.icon("faces/ing")
+
+			b = "Undo Vials" 
+			ib = $cache.icon("witchery/vials")
+
 
 		when 'glacial-essence'
 
@@ -5028,6 +5043,12 @@ def potion_use_item
 
 	popper = $scene.hud.open_popper
 	popper.setup(a,ia,b,ib)
+
+	if $party.potion_item == 'vials'
+		potion_state('empty')
+		item(potion_current.ingredient,'s')
+		item(potion_current.ingredient)
+	end
 
 end
 
@@ -7633,7 +7654,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"ê^#==============================================================================
+end"_#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -8337,16 +8358,17 @@ class Ui_Message
     #Check for vars
     if @word.include?("&")
       @word.sub!("&","")
-      if @word == 'forth-level'
+      if @word == 'forth-lvl'
         case $state.varval(@word)
-          when 3; @word = 'three'
-          when 4; @word = 'four'
-          when 5; @word = 'five'
-          when 6; @word = 'six'
-          when 7; @word = 'seven'
-          when 8; @word = 'eight'
-          when 9; @word = 'nine'
-          when 10; @word = 'ten'
+          when 2; @word = 'two.'
+          when 3; @word = 'three.'
+          when 4; @word = 'four.'
+          when 5; @word = 'five.'
+          when 6; @word = 'six.'
+          when 7; @word = 'seven.'
+          when 8; @word = 'eight.'
+          when 9; @word = 'nine.'
+          when 10; @word = 'ten.'
         end
       else
         @word = $state.varval(@word).to_s
@@ -15993,7 +16015,7 @@ class Game_Character
 
 
 end
-"oV#==============================================================================
+"ÙV#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -16391,6 +16413,10 @@ class Game_Event < Game_Character
         return false if !$party.has_member?('row')
       when '@phy'
         return false if !$party.has_member?('phy')
+
+      when '@ingonly'
+        return false if $party.active.count == 1 && $party.active[0] == 'ing'
+
 
       # Choices
       when '@a', '@b', '@c', '@d'
@@ -18108,7 +18134,7 @@ class Moblin
 
 	end
 
-end"L3#==============================================================================
+end"n3#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -18136,17 +18162,19 @@ class Game_Player < Game_Character
   end
 
   def transfer(map,x,y,dir)
-    w 5
+    w 1
+    camera_snap
     @transferring = true
     @xfer_data = [map,x,y,dir]
-    w 5
+    w 1
   end
 
   def transfer_to(map,target,after=nil)
-    w 5
+    w 1
+    camera_snap
     @transferring = true
     @xfer_data = [map,target,after]
-    w 5
+    w 1
   end
 
   def name
@@ -19236,7 +19264,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"*#==============================================================================
+end"*#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19603,7 +19631,7 @@ class Game_Party
 
     # Hiberu
     @actors['hib'].equip('charm','hib-charm-start')
-    @actors['hib'].equip('charm','hib-book-sleep')
+    @actors['hib'].equip('book','hib-book-sleep')
     @actors['hib'].equip('mid','hib-arm-start')
     # Give accessory
 
@@ -19685,7 +19713,7 @@ class Game_Party
 
   end
         
-end"“class Progress
+end"class Progress
 
 	attr_accessor :quests, :complete
 
@@ -19716,7 +19744,7 @@ end"“class Progress
 		@chester_level = 0
 
 		# Phy
-		@demons = ['baal'] # Demons defeated
+		@demons = [] # Demons defeated
 
 		# Nightwatch rank
 	    @night_rank = 1

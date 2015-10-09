@@ -53,6 +53,15 @@ def potion_use_item
 
 	case $party.potion_item
 
+		when 'vials'
+
+			a = "Ingrid uses"
+			ia = $cache.icon("faces/ing")
+
+			b = "Undo Vials" 
+			ib = $cache.icon("witchery/vials")
+
+
 		when 'glacial-essence'
 
 			a = "Ingrid adds a few drops of"
@@ -126,6 +135,12 @@ def potion_use_item
 
 	popper = $scene.hud.open_popper
 	popper.setup(a,ia,b,ib)
+
+	if $party.potion_item == 'vials'
+		potion_state('empty')
+		item(potion_current.ingredient,'s')
+		item(potion_current.ingredient)
+	end
 
 end
 

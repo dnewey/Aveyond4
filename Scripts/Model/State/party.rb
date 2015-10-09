@@ -365,7 +365,7 @@ class Game_Party
 
     # Hiberu
     @actors['hib'].equip('charm','hib-charm-start')
-    @actors['hib'].equip('charm','hib-book-sleep')
+    @actors['hib'].equip('book','hib-book-sleep')
     @actors['hib'].equip('mid','hib-arm-start')
     # Give accessory
 

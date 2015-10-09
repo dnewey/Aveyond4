@@ -26,17 +26,19 @@ class Game_Player < Game_Character
   end
 
   def transfer(map,x,y,dir)
-    w 5
+    w 1
+    camera_snap
     @transferring = true
     @xfer_data = [map,x,y,dir]
-    w 5
+    w 1
   end
 
   def transfer_to(map,target,after=nil)
-    w 5
+    w 1
+    camera_snap
     @transferring = true
     @xfer_data = [map,target,after]
-    w 5
+    w 1
   end
 
   def name
