@@ -236,6 +236,7 @@ class Game_Battle
 
   def build_attack_queue
 
+    @allies = [] if @allies == nil
     queue = $party.active_battlers + @allies + @enemies 
 
     # Add minion if there is
@@ -464,7 +465,7 @@ class Game_Battle
 
     if data.scope == 'one'
       return $battle.attackable_enemies
-    elsif data.scope == 'ally'
+    elsif data.scope == 'ally' || data.scope == 'down'
       return $party.attackable_battlers
     end
 

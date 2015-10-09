@@ -180,7 +180,7 @@ class Scene_Battle
     @active_battler.scope = data.scope
 
     # If single, targetable?
-    if ["one","ally"].include?(data.scope)
+    if ["one","ally",'down'].include?(data.scope)
       targets = $battle.possible_targets(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      

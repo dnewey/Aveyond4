@@ -1555,7 +1555,7 @@ class Label < Sprite
         
   end
   
-end"ÁE#==============================================================================
+end"ÌF#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1715,6 +1715,14 @@ class List
     @content_sprite.do(go("opacity",255,300,:qio))
     @content_sprite.x = -20
     @content_sprite.do(go("x",20,300,:qio))
+  end
+
+  def set_idx(page_idx,scroll_idx)
+    @page_idx = page_idx
+    @scroll_idx = scroll_idx
+    @page_idx -= 1 while @page_idx >= @per_page
+    @page_idx -= 1 while @page_idx >= @data.count
+    refresh
   end
 
   def idx
@@ -1921,9 +1929,10 @@ class List
     @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
+      @content_sprite.bitmap.font = $fonts.pop_type
       ico = $cache.icon("misc/coins")
       @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
-      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
+      @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,price.to_s,0)
     end
 
   end
@@ -5940,7 +5949,7 @@ class ItemCmd
 		return @item
 	end
 
-end"v
+end"r
 class SkillCmd < ItemCmd
 
 	def setup(battler,action)
@@ -5950,7 +5959,7 @@ class SkillCmd < ItemCmd
 		skill_list = @battler.skill_list(action)
 
 		@box.type = :skill
-		@list.max_per_page = 6
+		@list.per_page = 6
 		@list.type = :skill
 		@list.user = @battler.id
 		@list.setup(skill_list)
@@ -6645,7 +6654,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"9E#==============================================================================
+end"F#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7003,7 +7012,12 @@ class Ui_Grid
 		# Find all users
 		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot.delete('12')) }
 
-		# If too many users, cut some
+		# If too many users, need rows
+		if users.count > 6
+			btn.height = 106
+		elsif users.count > 3
+			btn.height = 77
+		end
 
 
 		# Draw all of the icons now
@@ -7023,6 +7037,8 @@ class Ui_Grid
 			return
 		end
 
+		idx = 0
+
 		users.each{ |u|
 			icon = Label.new(@vp)
 			icon.icon = $cache.icon("faces/#{u.id}")
@@ -7030,7 +7046,15 @@ class Ui_Grid
 			icon.text = u.equip_result(data)
 			icon.move(@cx+10,@cy+7)
 			@extra.push(icon)
-			@cx += icon.width
+
+			idx += 1
+
+			if (idx == 3 || idx == 6) && users.count > idx
+				@cx = ocx + 32
+				@cy += 30
+			else
+				@cx += icon.width
+			end
 		}
 
 		@cy += 46
@@ -10531,7 +10555,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"2#==============================================================================
+end"k#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -10546,6 +10570,7 @@ class Mnu_Shop < Mnu_Base
 		#@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
 		@magic = false
+		@tab = ''
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -10631,6 +10656,12 @@ class Mnu_Shop < Mnu_Base
 			#}
 		end
 
+		if @sellmode
+			@users.clear
+			@users.move(@item_box.x,@item_box.y + @item_box.height)
+			@users.add_stock(option)
+		end	
+
 		if @last_option != option
 			@last_option = option
 
@@ -10677,6 +10708,7 @@ class Mnu_Shop < Mnu_Base
 				sys('coins')
 				@info.refresh
 				@menu.list.refresh
+				change_tab(@tab)
 
 			else
 
@@ -10697,6 +10729,8 @@ class Mnu_Shop < Mnu_Base
 
 	def change_tab(tab)
 
+		page_idx = @menu.list.page_idx
+
 		# Change list to certain items only
 		# This is for selling
 		list = []
@@ -10706,6 +10740,13 @@ class Mnu_Shop < Mnu_Base
 			list.push(item) 
 		}
 		@menu.list.setup(list)
+
+		if tab == @tab
+			@menu.list.set_idx(page_idx,0)
+		end
+		@tab = tab
+
+		change(list[@menu.list.idx])
 
 	end
 
@@ -17355,7 +17396,7 @@ class Interpreter
   end
 
 end
-"¼A#==============================================================================
+"]B#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17518,6 +17559,9 @@ class Game_Map
       end
 
     end
+
+    # Always do overlay change
+    $scene.change_overlay(@zone.overlay)
 
     # Clear forced terrains
     @force_terrains.clear
@@ -17938,6 +17982,10 @@ class Game_Map
     [2, 1, 0].each{ |i|
 
       tile_id = data[x, y, i]
+
+      if $party.leader == 'ship'
+        return terrain_tag(x,y) == 7
+      end
 
       # If obstacle bit is set
       return false if @passages[tile_id] & bit != 0
@@ -18549,7 +18597,7 @@ class Game_Player < Game_Character
   end
 
 end
-";1
+"w1
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -18787,6 +18835,7 @@ class Game_Battle
 
   def build_attack_queue
 
+    @allies = [] if @allies == nil
     queue = $party.active_battlers + @allies + @enemies 
 
     # Add minion if there is
@@ -19015,7 +19064,7 @@ class Game_Battle
 
     if data.scope == 'one'
       return $battle.attackable_enemies
-    elsif data.scope == 'ally'
+    elsif data.scope == 'ally' || data.scope == 'down'
       return $party.attackable_battlers
     end
 
@@ -19187,7 +19236,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ˆ)#==============================================================================
+end"*#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19480,7 +19529,9 @@ class Game_Party
   end
 
   def battle_item_list
-    return @items.keys.select{ |i| $data.items[i].is_a?(UsableData) }
+    return @items.keys.select{ |i| 
+      $data.items[i].is_a?(UsableData) && !$data.items[i].action.include?("common")
+    }
   end
 
   def defeated?
@@ -19521,13 +19572,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
-    #set_active("mys")
-    #set_active("rob")
-    #set_reserve("hib")
-    #set_reserve("row")
-    #set_active("phy")   
-    #set_reserve("phy")   
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
+    set_reserve("hib")
+    set_reserve("row")
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -19548,16 +19598,18 @@ class Game_Party
     @actors['mys'].equip('light','mys-arm-start')
 
     # Robin
-    @actors['rob'].equip('sword','rob-sword-start')
+    @actors['rob'].equip('sword','rob-hammer-start')
     @actors['rob'].equip('heavy','rob-arm-start')
 
     # Hiberu
-    @actors['hib'].equip('book','hib-wep-start')
+    @actors['hib'].equip('charm','hib-charm-start')
+    @actors['hib'].equip('charm','hib-book-sleep')
     @actors['hib'].equip('mid','hib-arm-start')
     # Give accessory
 
     # Rowen
-    @actors['row'].equip('dagger','row-dagger-start')
+    @actors['row'].equip('dagger','row-wrench-start')
+    @actors['row'].equip('dagger','row-gadget-satchel')
     @actors['row'].equip('mid','mid-arm-tor')
     # Give extra gadget
 
@@ -19565,7 +19617,7 @@ class Game_Party
     @actors['phy'].equip('sword','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('helm','phy-helm-start')
-    @actors['phy'].equip('belt','phy-belt-1')
+    @actors['phy'].equip('belt','phy-belt-start')
     
 
     # Initial skills per actor
@@ -20205,7 +20257,7 @@ class Scene_Base
   # end
 
 end
-"3#==============================================================================
+"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -20452,8 +20504,6 @@ class Scene_Battle < Scene_Base
         phase_main_text
       when :main_anim
         phase_main_anim
-      when :main_cost
-        phase_main_cost
       when :main_transform
         phase_main_transform
       when :main_hit
@@ -20595,7 +20645,7 @@ class Scene_Battle
 
   end
 
-end"7
+end">
 
 class Scene_Battle
 
@@ -20777,7 +20827,7 @@ class Scene_Battle
     @active_battler.scope = data.scope
 
     # If single, targetable?
-    if ["one","ally"].include?(data.scope)
+    if ["one","ally",'down'].include?(data.scope)
       targets = $battle.possible_targets(@active_battler)
       @target_cmd.setup(targets)
       @phase = :actor_target      
@@ -20835,7 +20885,7 @@ class Scene_Battle
     
   end
 
-end"(
+end"¨'
 class Scene_Battle
 
   def phase_main_init
@@ -20850,9 +20900,11 @@ class Scene_Battle
     	e.choose_action
     }
     
-    $battle.allies.each{ |a| 
-      a.choose_action
-    }
+    if $battle.allies != nil
+      $battle.allies.each{ |a| 
+        a.choose_action
+      }
+    end
 
     # Choose minion action
     if $party.active.include?('boy') && $battle.minion != nil
@@ -20939,19 +20991,20 @@ class Scene_Battle
     end
 
     # If rez, random if up, or cancel
-    if ['down'].include?(@active_battler.scope)
+    # NO JUST USE UP THE CASSIA
+    # if ['down'].include?(@active_battler.scope)
 
-      # Check if target is down
-      if !@active.battler.target.down?
+    #   # Check if target is down
+    #   if !@active.battler.target.down?
 
-        # Try to find an alternate target, else cancel
+    #     # Try to find an alternate target, else cancel
 
-      end
+    #   end
 
-      #@attack_plan.cancel
-      #@phase = :main_next
-      #return
-    end
+    #   #@attack_plan.cancel
+    #   #@phase = :main_next
+    #   #return
+    # end
 
     # -----------------------------
 
@@ -20962,7 +21015,18 @@ class Scene_Battle
     if @attack_round.skill != @last_attack
       @active_battler.ev.flash_dur = 15
       wait(15)
+      
+
+      # Mana cost
+      if @active_battler.action != "items"
+        if @attack_round.skill != @last_attack
+          @active_battler.lose_mana(@attack_round.skill.cost)
+        end
+      end
+
+      # Remember attack to avoid double mana use
       @last_attack = @attack_round.skill
+
     else
       wait(3)
     end
@@ -21018,26 +21082,7 @@ class Scene_Battle
     }
 
   	# Onto the next
-  	@phase = :main_cost
-
-  end
-
-  def phase_main_cost
-
-    # Use up mana or items or add cooldown
-    if @active_battler.action == "items"
-      # Item is taken immediately when selected
-    else
-      if @attack_round.skill != @last_attack
-        @active_battler.lose_mana(@attack_round.skill.cost)
-      end
-    end
-
-    # Onto the next
-    @phase = :main_transform
-    # Some anims might have a pause before hit
-    # Might use the sound delay on the anim
-    #wait(20) 
+  	@phase = :main_transform
 
   end
 

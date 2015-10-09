@@ -162,6 +162,9 @@ class Game_Map
 
     end
 
+    # Always do overlay change
+    $scene.change_overlay(@zone.overlay)
+
     # Clear forced terrains
     @force_terrains.clear
     $audio.clear_env
@@ -581,6 +584,10 @@ class Game_Map
     [2, 1, 0].each{ |i|
 
       tile_id = data[x, y, i]
+
+      if $party.leader == 'ship'
+        return terrain_tag(x,y) == 7
+      end
 
       # If obstacle bit is set
       return false if @passages[tile_id] & bit != 0

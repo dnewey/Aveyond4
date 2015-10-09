@@ -29,7 +29,7 @@ class Progress
 		@chester_level = 0
 
 		# Phy
-		@demons = ['baal'] # Demons defeated
+		@demons = [] # Demons defeated
 
 		# Nightwatch rank
 	    @night_rank = 1

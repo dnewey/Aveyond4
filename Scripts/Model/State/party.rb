@@ -291,7 +291,9 @@ class Game_Party
   end
 
   def battle_item_list
-    return @items.keys.select{ |i| $data.items[i].is_a?(UsableData) }
+    return @items.keys.select{ |i| 
+      $data.items[i].is_a?(UsableData) && !$data.items[i].action.include?("common")
+    }
   end
 
   def defeated?
@@ -332,13 +334,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("ing")
-    #set_active("mys")
-    #set_active("rob")
-    #set_reserve("hib")
-    #set_reserve("row")
-    #set_active("phy")   
-    #set_reserve("phy")   
+    set_active("ing")
+    set_active("mys")
+    set_active("rob")
+    set_reserve("hib")
+    set_reserve("row")
+    set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear
@@ -359,16 +360,18 @@ class Game_Party
     @actors['mys'].equip('light','mys-arm-start')
 
     # Robin
-    @actors['rob'].equip('sword','rob-sword-start')
+    @actors['rob'].equip('sword','rob-hammer-start')
     @actors['rob'].equip('heavy','rob-arm-start')
 
     # Hiberu
-    @actors['hib'].equip('book','hib-wep-start')
+    @actors['hib'].equip('charm','hib-charm-start')
+    @actors['hib'].equip('charm','hib-book-sleep')
     @actors['hib'].equip('mid','hib-arm-start')
     # Give accessory
 
     # Rowen
-    @actors['row'].equip('dagger','row-dagger-start')
+    @actors['row'].equip('dagger','row-wrench-start')
+    @actors['row'].equip('dagger','row-gadget-satchel')
     @actors['row'].equip('mid','mid-arm-tor')
     # Give extra gadget
 
@@ -376,7 +379,7 @@ class Game_Party
     @actors['phy'].equip('sword','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('helm','phy-helm-start')
-    @actors['phy'].equip('belt','phy-belt-1')
+    @actors['phy'].equip('belt','phy-belt-start')
     
 
     # Initial skills per actor

@@ -160,6 +160,14 @@ class List
     @content_sprite.do(go("x",20,300,:qio))
   end
 
+  def set_idx(page_idx,scroll_idx)
+    @page_idx = page_idx
+    @scroll_idx = scroll_idx
+    @page_idx -= 1 while @page_idx >= @per_page
+    @page_idx -= 1 while @page_idx >= @data.count
+    refresh
+  end
+
   def idx
     return @scroll_idx + @page_idx
   end
@@ -364,9 +372,10 @@ class List
     @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
+      @content_sprite.bitmap.font = $fonts.pop_type
       ico = $cache.icon("misc/coins")
       @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
-      @content_sprite.bitmap.draw_text(243,row*row_height,@item_width,@item_height,price.to_s,0)
+      @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,price.to_s,0)
     end
 
   end

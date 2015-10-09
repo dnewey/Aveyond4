@@ -8,7 +8,7 @@ class SkillCmd < ItemCmd
 		skill_list = @battler.skill_list(action)
 
 		@box.type = :skill
-		@list.max_per_page = 6
+		@list.per_page = 6
 		@list.type = :skill
 		@list.user = @battler.id
 		@list.setup(skill_list)

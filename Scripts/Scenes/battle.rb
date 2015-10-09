@@ -245,8 +245,6 @@ class Scene_Battle < Scene_Base
         phase_main_text
       when :main_anim
         phase_main_anim
-      when :main_cost
-        phase_main_cost
       when :main_transform
         phase_main_transform
       when :main_hit

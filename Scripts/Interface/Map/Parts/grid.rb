@@ -356,7 +356,12 @@ class Ui_Grid
 		# Find all users
 		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot.delete('12')) }
 
-		# If too many users, cut some
+		# If too many users, need rows
+		if users.count > 6
+			btn.height = 106
+		elsif users.count > 3
+			btn.height = 77
+		end
 
 
 		# Draw all of the icons now
@@ -376,6 +381,8 @@ class Ui_Grid
 			return
 		end
 
+		idx = 0
+
 		users.each{ |u|
 			icon = Label.new(@vp)
 			icon.icon = $cache.icon("faces/#{u.id}")
@@ -383,7 +390,15 @@ class Ui_Grid
 			icon.text = u.equip_result(data)
 			icon.move(@cx+10,@cy+7)
 			@extra.push(icon)
-			@cx += icon.width
+
+			idx += 1
+
+			if (idx == 3 || idx == 6) && users.count > idx
+				@cx = ocx + 32
+				@cy += 30
+			else
+				@cx += icon.width
+			end
 		}
 
 		@cy += 46

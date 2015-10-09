@@ -397,6 +397,10 @@ class Game_Event < Game_Character
       when '@phy'
         return false if !$party.has_member?('phy')
 
+      when '@ingonly'
+        return false if $party.active.count == 1 && $party.active[0] == 'ing'
+
+
       # Choices
       when '@a', '@b', '@c', '@d'
         return false if label.split(":")[0] != $scene.hud.message.last_choice

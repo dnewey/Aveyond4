@@ -13,9 +13,11 @@ class Scene_Battle
     	e.choose_action
     }
     
-    $battle.allies.each{ |a| 
-      a.choose_action
-    }
+    if $battle.allies != nil
+      $battle.allies.each{ |a| 
+        a.choose_action
+      }
+    end
 
     # Choose minion action
     if $party.active.include?('boy') && $battle.minion != nil
@@ -102,19 +104,20 @@ class Scene_Battle
     end
 
     # If rez, random if up, or cancel
-    if ['down'].include?(@active_battler.scope)
+    # NO JUST USE UP THE CASSIA
+    # if ['down'].include?(@active_battler.scope)
 
-      # Check if target is down
-      if !@active.battler.target.down?
+    #   # Check if target is down
+    #   if !@active.battler.target.down?
 
-        # Try to find an alternate target, else cancel
+    #     # Try to find an alternate target, else cancel
 
-      end
+    #   end
 
-      #@attack_plan.cancel
-      #@phase = :main_next
-      #return
-    end
+    #   #@attack_plan.cancel
+    #   #@phase = :main_next
+    #   #return
+    # end
 
     # -----------------------------
 
@@ -125,7 +128,18 @@ class Scene_Battle
     if @attack_round.skill != @last_attack
       @active_battler.ev.flash_dur = 15
       wait(15)
+      
+
+      # Mana cost
+      if @active_battler.action != "items"
+        if @attack_round.skill != @last_attack
+          @active_battler.lose_mana(@attack_round.skill.cost)
+        end
+      end
+
+      # Remember attack to avoid double mana use
       @last_attack = @attack_round.skill
+
     else
       wait(3)
     end
@@ -181,26 +195,7 @@ class Scene_Battle
     }
 
   	# Onto the next
-  	@phase = :main_cost
-
-  end
-
-  def phase_main_cost
-
-    # Use up mana or items or add cooldown
-    if @active_battler.action == "items"
-      # Item is taken immediately when selected
-    else
-      if @attack_round.skill != @last_attack
-        @active_battler.lose_mana(@attack_round.skill.cost)
-      end
-    end
-
-    # Onto the next
-    @phase = :main_transform
-    # Some anims might have a pause before hit
-    # Might use the sound delay on the anim
-    #wait(20) 
+  	@phase = :main_transform
 
   end
 

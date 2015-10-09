@@ -13,6 +13,7 @@ class Mnu_Shop < Mnu_Base
 		#@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
 
 		@magic = false
+		@tab = ''
 
 		@menu.list.type = :shop
 		@menu.list.setup($menu.shop)
@@ -98,6 +99,12 @@ class Mnu_Shop < Mnu_Base
 			#}
 		end
 
+		if @sellmode
+			@users.clear
+			@users.move(@item_box.x,@item_box.y + @item_box.height)
+			@users.add_stock(option)
+		end	
+
 		if @last_option != option
 			@last_option = option
 
@@ -144,6 +151,7 @@ class Mnu_Shop < Mnu_Base
 				sys('coins')
 				@info.refresh
 				@menu.list.refresh
+				change_tab(@tab)
 
 			else
 
@@ -164,6 +172,8 @@ class Mnu_Shop < Mnu_Base
 
 	def change_tab(tab)
 
+		page_idx = @menu.list.page_idx
+
 		# Change list to certain items only
 		# This is for selling
 		list = []
@@ -173,6 +183,13 @@ class Mnu_Shop < Mnu_Base
 			list.push(item) 
 		}
 		@menu.list.setup(list)
+
+		if tab == @tab
+			@menu.list.set_idx(page_idx,0)
+		end
+		@tab = tab
+
+		change(list[@menu.list.idx])
 
 	end
 
