@@ -74,6 +74,14 @@ class Ui_Info < SpriteGroup
 		@map.text = @visible_map
 		@gold.text = @visible_gold.to_s
 
+		if @visible_gold > 999
+			add(@gold,568,0)
+		elsif @visible_gold > 99
+			add(@gold,578,0)
+		else
+			add(@gold,588,0)
+		end
+
 	end
 
 end

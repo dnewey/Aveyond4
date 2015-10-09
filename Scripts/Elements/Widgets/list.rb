@@ -59,7 +59,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@max_per_page = 8
+  	@per_page = 8
 
   	# Sprites
     @back_sprite = Sprite.new(@vp)
@@ -169,7 +169,7 @@ class List
   end
 
   def can_scroll?
-    @data.count > @max_per_page
+    @data.count > @per_page
   end
 
   def call_change
@@ -183,14 +183,14 @@ class List
   # When data changes
   def refresh(ch=true)
 
-    @vp.rect = Rect.new(@x,@y,@item_width,row_height*@max_per_page)
+    @vp.rect = Rect.new(@x,@y,@item_width,row_height*@per_page)
 
-    @scroll_box.y = @y + (row_height*@max_per_page) + 2
+    @scroll_box.y = @y + (row_height*@per_page) + 2
     @scroll_down.y = @scroll_box.y + 2
     @scroll_up.y = @scroll_box.y + 2
 
     # Draw the background sprite and position it
-    rows = [@max_per_page,@data.count].min
+    rows = [@per_page,@data.count].min
     rows += 2 if can_scroll?
     rows = 1 if rows == 0
     height = row_height * rows
@@ -226,7 +226,7 @@ class List
 
   # ADD THIS MOUSE CONTROL
   def scrollbar_down
-    return if !can_scroll? || @scroll_idx >= (@data.count - @max_per_page)
+    return if !can_scroll? || @scroll_idx >= (@data.count - @per_page)
       #@page_idx += 1
       sys('select')   
       @select_sprite.y += row_height      
@@ -568,7 +568,7 @@ class List
   		
       #if @data.count > @max_per_page
 
-      if can_scroll? && @page_idx >= 6 && @scroll_idx < (@data.count - @max_per_page) #-1 # makes bottom row not visible on can_scroll
+      if can_scroll? && @page_idx >= (@per_page-2) && @scroll_idx < (@data.count - @per_page) #-1 # makes bottom row not visible on can_scroll
         scroll_up
   		else
         i = idx

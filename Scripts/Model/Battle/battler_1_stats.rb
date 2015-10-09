@@ -218,6 +218,7 @@ class Game_Battler
     return 0.9 if $party.difficulty == 'easy'
     return 1.0 if $party.difficulty == 'normal'
     return 1.1 if $party.difficulty == 'hard'
+    return 1.0
   end
 
 end

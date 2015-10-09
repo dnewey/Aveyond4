@@ -31,6 +31,15 @@ class Ui_Book < SpriteGroup
 		@page.bitmap = $cache.menu_book("page-#{@page_idx}")
 		@state = :fadein
 
+		# Key display
+		@key_left = Sprite.new(vp)
+		@key_left.bitmap = $cache.icon('misc/key-left')
+		@key_left.move(110,370)
+
+		@key_right = Sprite.new(vp)
+		@key_right.bitmap = $cache.icon('misc/key-right')
+		@key_right.move(530,370)
+
 		#refresh
 
 	end

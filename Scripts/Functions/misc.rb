@@ -193,6 +193,26 @@ def show_book(which)
 
 end
 
+def party_gossip
+
+	# Check who is in the party
+	if $party.all.include?('phy')
+		gossips = 10
+	elsif $party.all.include?('row')
+		gossips = 8
+	elsif $party.all.include?('hib')
+		gossips = 6
+	elsif $party.all.include?('rob')
+		gossips = 4
+	else
+		gossips = 2
+	end
+
+	# Choose a gossip
+	$player.next_common = 31 + rand(gossips)
+
+end
+
 def gogogo
 
 	log_ev("Debug function GO!")

@@ -12,7 +12,6 @@ class Scene_Battle
     $battle.enemies.each{ |e|
     	e.choose_action
     }
-
     
     $battle.allies.each{ |a| 
       a.choose_action

@@ -32,6 +32,8 @@ class Game_Battle
 
     @queue = {} # Should it have turn #?
 
+    @skip_minion = false # Don't have minion next battle
+
     @default_map = 65
     @zone_maps = []
     @next_map = nil
@@ -46,6 +48,7 @@ class Game_Battle
   end
 
   def clear
+    @skip_minion = false # Put minion back on
     @enemy_list = []
     #@enemies.each{ |e| e.dispose }
     @enemies = []
@@ -71,6 +74,10 @@ class Game_Battle
     battler = Game_Battler.new
     battler.init_ally(ally)
     @allies.push(battler)
+  end
+
+  def skip_minion
+    @skip_minion = true
   end
 
   # Queue up skills to use before battle starts
@@ -193,6 +200,7 @@ class Game_Battle
 
     # Prep the minion
     min = $party.get('boy').slot('minion')
+    min = nil if @skip_minion
     if min == nil
       @minion = nil
     else

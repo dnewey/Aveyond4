@@ -4,7 +4,7 @@ class ItemCmd
 	def initialize(vp)
 
 		# Left side window
-		@window = Box.new(vp,300,242)
+		@window = Box.new(vp,300,221)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
     	@window.move(14,66)

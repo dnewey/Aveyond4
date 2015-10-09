@@ -1555,7 +1555,7 @@ class Label < Sprite
         
   end
   
-end"ÑE#==============================================================================
+end"ÁE#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1616,7 +1616,7 @@ class List
   	@scroll_idx = 0
   	@page_idx = 0
 
-  	@max_per_page = 8
+  	@per_page = 8
 
   	# Sprites
     @back_sprite = Sprite.new(@vp)
@@ -1726,7 +1726,7 @@ class List
   end
 
   def can_scroll?
-    @data.count > @max_per_page
+    @data.count > @per_page
   end
 
   def call_change
@@ -1740,14 +1740,14 @@ class List
   # When data changes
   def refresh(ch=true)
 
-    @vp.rect = Rect.new(@x,@y,@item_width,row_height*@max_per_page)
+    @vp.rect = Rect.new(@x,@y,@item_width,row_height*@per_page)
 
-    @scroll_box.y = @y + (row_height*@max_per_page) + 2
+    @scroll_box.y = @y + (row_height*@per_page) + 2
     @scroll_down.y = @scroll_box.y + 2
     @scroll_up.y = @scroll_box.y + 2
 
     # Draw the background sprite and position it
-    rows = [@max_per_page,@data.count].min
+    rows = [@per_page,@data.count].min
     rows += 2 if can_scroll?
     rows = 1 if rows == 0
     height = row_height * rows
@@ -1783,7 +1783,7 @@ class List
 
   # ADD THIS MOUSE CONTROL
   def scrollbar_down
-    return if !can_scroll? || @scroll_idx >= (@data.count - @max_per_page)
+    return if !can_scroll? || @scroll_idx >= (@data.count - @per_page)
       #@page_idx += 1
       sys('select')   
       @select_sprite.y += row_height      
@@ -2125,7 +2125,7 @@ class List
   		
       #if @data.count > @max_per_page
 
-      if can_scroll? && @page_idx >= 6 && @scroll_idx < (@data.count - @max_per_page) #-1 # makes bottom row not visible on can_scroll
+      if can_scroll? && @page_idx >= (@per_page-2) && @scroll_idx < (@data.count - @per_page) #-1 # makes bottom row not visible on can_scroll
         scroll_up
   		else
         i = idx
@@ -3245,7 +3245,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"n
+"Ì
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3437,6 +3437,26 @@ def show_book(which)
 	data = $data.books[which]
 	text('sys:'+data.title)
 
+
+end
+
+def party_gossip
+
+	# Check who is in the party
+	if $party.all.include?('phy')
+		gossips = 10
+	elsif $party.all.include?('row')
+		gossips = 8
+	elsif $party.all.include?('hib')
+		gossips = 6
+	elsif $party.all.include?('rob')
+		gossips = 4
+	else
+		gossips = 2
+	end
+
+	# Choose a gossip
+	$player.next_common = 31 + rand(gossips)
 
 end
 
@@ -5822,7 +5842,7 @@ class ItemCmd
 	def initialize(vp)
 
 		# Left side window
-		@window = Box.new(vp,300,242)
+		@window = Box.new(vp,300,221)
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
     	@window.move(14,66)
@@ -6486,7 +6506,8 @@ class Ui_Bar < SpriteGroup
 
 	end
 
-end"E	#==============================================================================
+end"6
+#==============================================================================
 # Ui_Book
 #==============================================================================
 
@@ -6518,6 +6539,15 @@ class Ui_Book < SpriteGroup
 
 		@page.bitmap = $cache.menu_book("page-#{@page_idx}")
 		@state = :fadein
+
+		# Key display
+		@key_left = Sprite.new(vp)
+		@key_left.bitmap = $cache.icon('misc/key-left')
+		@key_left.move(110,370)
+
+		@key_right = Sprite.new(vp)
+		@key_right.bitmap = $cache.icon('misc/key-right')
+		@key_right.move(530,370)
 
 		#refresh
 
@@ -7493,7 +7523,7 @@ class Ui_Grid
 		return @selected
 	end
 
-end"n#==============================================================================
+end"ô#==============================================================================
 # Ui_Info
 #==============================================================================
 
@@ -7568,6 +7598,14 @@ class Ui_Info < SpriteGroup
 
 		@map.text = @visible_map
 		@gold.text = @visible_gold.to_s
+
+		if @visible_gold > 999
+			add(@gold,568,0)
+		elsif @visible_gold > 99
+			add(@gold,578,0)
+		else
+			add(@gold,588,0)
+		end
 
 	end
 
@@ -13642,7 +13680,7 @@ class Game_Battler
   end
 
 end
-"X
+"h
 class Game_Battler
 
 
@@ -13862,6 +13900,7 @@ class Game_Battler
     return 0.9 if $party.difficulty == 'easy'
     return 1.0 if $party.difficulty == 'normal'
     return 1.1 if $party.difficulty == 'hard'
+    return 1.0
   end
 
 end"D
@@ -18510,7 +18549,7 @@ class Game_Player < Game_Character
   end
 
 end
-"|0
+";1
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -18544,6 +18583,8 @@ class Game_Battle
 
     @queue = {} # Should it have turn #?
 
+    @skip_minion = false # Don't have minion next battle
+
     @default_map = 65
     @zone_maps = []
     @next_map = nil
@@ -18558,6 +18599,7 @@ class Game_Battle
   end
 
   def clear
+    @skip_minion = false # Put minion back on
     @enemy_list = []
     #@enemies.each{ |e| e.dispose }
     @enemies = []
@@ -18583,6 +18625,10 @@ class Game_Battle
     battler = Game_Battler.new
     battler.init_ally(ally)
     @allies.push(battler)
+  end
+
+  def skip_minion
+    @skip_minion = true
   end
 
   # Queue up skills to use before battle starts
@@ -18705,6 +18751,7 @@ class Game_Battle
 
     # Prep the minion
     min = $party.get('boy').slot('minion')
+    min = nil if @skip_minion
     if min == nil
       @minion = nil
     else
@@ -20788,7 +20835,7 @@ class Scene_Battle
     
   end
 
-end"(
+end"(
 class Scene_Battle
 
   def phase_main_init
@@ -20802,7 +20849,6 @@ class Scene_Battle
     $battle.enemies.each{ |e|
     	e.choose_action
     }
-
     
     $battle.allies.each{ |a| 
       a.choose_action
@@ -21337,7 +21383,7 @@ class Scene_Battle
   end
 
 
-end"¦
+end" 
 class Scene_Battle
 
   def phase_misc_text
@@ -21403,10 +21449,14 @@ class Scene_Battle
     $battle.all_battlers.each{ |b| b.remove_states_battle }
 
     $battle.clear
+    Graphics.freeze
     $game.pop_scene
     music_restore
     $scene.hud.show
-    
+
+    t = 'Graphics/Transitions/battle'
+    Graphics.transition(30,t) 
+
   end
 
  end

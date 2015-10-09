@@ -64,10 +64,14 @@ class Scene_Battle
     $battle.all_battlers.each{ |b| b.remove_states_battle }
 
     $battle.clear
+    Graphics.freeze
     $game.pop_scene
     music_restore
     $scene.hud.show
-    
+
+    t = 'Graphics/Transitions/battle'
+    Graphics.transition(30,t) 
+
   end
 
  end
