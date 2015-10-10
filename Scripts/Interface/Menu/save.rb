@@ -77,6 +77,14 @@ class Mnu_Save < Mnu_Base
 	end
 
 	def update
+
+		# If anim in done, change state
+		if $input.cancel? || $input.rclick?
+			$scene.savequit = false
+			close_now
+			$scene.queue_menu("Main")
+		end
+
 		super
 
 

@@ -10,11 +10,14 @@ class Mnu_Help < Mnu_Base
 		@title.change('help')
 		@subtitle.text = "HELP HELP"
 
-		@menu.list.type = :quest
+		@menu.list.type = :misc
 
-		data = $progress.quests
+		data = []
+		$data.help.values.each{ |h|
+			data.push([h.id,h.name,h.icon])
+		}
 
-		@page = Right_Page.new(vp)
+		@page = Right_Journal.new(vp)
 		@right.push(@page)
 
 		@menu.list.setup(data)		
@@ -36,6 +39,8 @@ class Mnu_Help < Mnu_Base
 
 	def change(option)
 
+		option = option[0]
+
 		#return
 
 		@page.clear
@@ -43,11 +48,11 @@ class Mnu_Help < Mnu_Base
 		# Change page to show this quest
 		#@info.title.text = option
 
-		@page.title = $data.quests[option].name
-		@page.description = $data.quests[option].description
+		@page.title = $data.help[option].name
+		@page.description = $data.help[option].description
 
-		@page.add_reqs($data.quests[option].req)
-		@page.add_zone($data.quests[option].location)
+		#@page.add_reqs($data.quests[option].req)
+		#@page.add_zone($data.quests[option].location)
 
 	end
 

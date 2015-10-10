@@ -17,7 +17,7 @@ class Mnu_Profile < Mnu_Base
 		remove_menu
 		remove_info
 
-		@box = Box.new(vp,300,350)
+		@box = Box.new(vp,350,350)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
@@ -31,7 +31,7 @@ class Mnu_Profile < Mnu_Base
 		data.push(["faces/boy","Age: #{profile.age}"])
 		data.push(["faces/boy","Biography:"])
 
-		cx = 30
+		cx = 26
 		cy = 125
 
 		# Name
@@ -79,12 +79,13 @@ class Mnu_Profile < Mnu_Base
 	    cy += spacing
 
 	    area = Area.new(vp)
+	    area.fixed_width = 310
     	area.font = $fonts.pop_text
     	area.text = profile.bio
-    	area.move(cx+10,cy)
+    	area.move(cx+4,cy)
     	self.left.push(area)
 
-    	cy += area.height - 4
+    	cy += area.height - 2
 
     	# Hint
 	    lbl = Label.new(vp)
@@ -98,12 +99,13 @@ class Mnu_Profile < Mnu_Base
 	    cy += spacing
 
 	    area = Area.new(vp)
+	    area.fixed_width = 310
     	area.font = $fonts.pop_text
     	area.text = profile.tip
-    	area.move(cx+10,cy)
+    	area.move(cx+4,cy)
     	self.left.push(area)
 
-    	cy += area.height - 4
+    	cy += area.height - 2
 
     	# Fact
 	    lbl = Label.new(vp)
@@ -117,13 +119,15 @@ class Mnu_Profile < Mnu_Base
 	    cy += spacing
 
 	    area = Area.new(vp)
+	    area.fixed_width = 310
     	area.font = $fonts.pop_text
     	area.text = profile.fact
-    	area.move(cx+10,cy)
+    	area.move(cx+4,cy)
     	self.left.push(area)
 
 
 		@port = Port_Full.new(vp)
+		@port.happy
 		self.right.push(@port)
 
 		open

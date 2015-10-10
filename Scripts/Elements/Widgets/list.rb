@@ -488,6 +488,8 @@ class List
 
   def draw_misc(data,row)
 
+    log_info(data)
+
     ico = $cache.icon(data[2])
 
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)

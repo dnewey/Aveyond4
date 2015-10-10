@@ -169,6 +169,13 @@ class VictoryData
 	attr_reader :dialogue
 end
 
+class HelpData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :icon
+end
+
 class BookData
 	attr_reader :id
 	attr_reader :title

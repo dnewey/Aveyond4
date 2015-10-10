@@ -58,7 +58,7 @@ class Area < Sprite
   			cx += @spacing
   		else
   			lines.push(word + ' ')
-  			cx = 0
+  			cx = w.width + @spacing
   		end
   	}
 
@@ -75,7 +75,7 @@ class Area < Sprite
 
     cy = 0
     lines.each{ |line|
-    	self.bitmap.draw_text(@padding,@padding+cy,w,height,line)
+    	self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
     	cy += height
     }
     

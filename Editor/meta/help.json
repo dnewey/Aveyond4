@@ -1,0 +1,14 @@
+[
+  {
+    "field": "id"
+  },
+  {
+    "field": "name"
+  },
+  {
+    "field": "description"
+  },
+  {
+    "field": "icon"
+  }
+]

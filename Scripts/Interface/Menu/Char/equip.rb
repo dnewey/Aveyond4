@@ -108,6 +108,11 @@ class Mnu_Equip < Mnu_Base
 	# Grid
 	def choose(option)
 
+		if @char.id == 'mys' && !flag?('mys-can-equip')
+			sys('deny')
+			return
+		end
+
 
 		@slot = option
 

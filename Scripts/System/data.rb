@@ -21,6 +21,7 @@ class DataManager
   attr_reader :numbers
   attr_reader :potions
   attr_reader :profiles
+  attr_reader :help
 
   attr_reader :victories
   attr_reader :books
@@ -66,6 +67,7 @@ class DataManager
     @numbers = load_json("numbers",NumberData)
     @potions = load_json("potions",PotionData)
     @profiles = load_json("profiles",ProfileData)
+    @help = load_json("help",HelpData)
 
     @victories = load_json("victories",VictoryData)
     @books = load_json("books",BookData)

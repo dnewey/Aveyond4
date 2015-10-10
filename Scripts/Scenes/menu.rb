@@ -3,6 +3,8 @@
 #==============================================================================
 
 class Scene_Menu
+
+  attr_accessor :savequit
   
   #--------------------------------------------------------------------------
   # * Set up the scene
@@ -12,6 +14,7 @@ class Scene_Menu
     #Graphics.freeze
 
     @closing = false
+    @savequit = false
 
     $mouse.change_cursor('Default')
     sys('open')
@@ -67,7 +70,11 @@ class Scene_Menu
 
     if @closing && $tweens.done?(self)
       $tweens.clear_all
-      $game.pop_scene
+      if @savequit
+        $game.quit 
+      else
+        $game.pop_scene
+      end
     end
 
     return if @closing

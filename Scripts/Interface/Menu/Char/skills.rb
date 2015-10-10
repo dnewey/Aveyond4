@@ -17,6 +17,7 @@ class Mnu_Skills < Mnu_Base
 		@menu.list.setup($party.get($menu.char).all_skill_list)
 
 		@port = Port_Full.new(vp)
+		@port.angry
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)

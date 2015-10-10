@@ -207,6 +207,8 @@ def potion_next_problem
 	case $party.potion_state
 
 		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
+
+		when 'hot'
 			
 			text("x-ing: Something isn't right, it's very red.")
 
