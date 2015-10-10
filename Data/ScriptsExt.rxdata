@@ -4029,7 +4029,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"ä
+end"Î
 
 def shop_choice
 
@@ -4123,7 +4123,16 @@ def setup_item_shop
 			stock.push('cheese')
 			stock.push('bread')
 			stock.push('haunch')
+			stock.push('cassia')
 			stock.push('sausage')
+
+		when '@ravwyn'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('haunch')
+			stock.push('cassia')
+			stock.push('biscuit')
 
 	end
 
@@ -4177,6 +4186,12 @@ def setup_special_shop(type)
 		when 'helms'	
 			stock.push('helm-ultimate')
 
+		when 'diamond'	
+			stock.push('heavy-arm-ultimate')
+
+		when 'leather'	
+			stock.push('mid-arm-ultimate')
+
 	end
 
 	stock.each{ |s| $menu.shop_add(s) }
@@ -4225,6 +4240,11 @@ def setup_smith_shop
 			stock.push('heavy-arm-dwarf')
 			stock.push('rob-shield-dwarf')
 
+		when '@ravwyn'	
+			stock.push('mid-arm-shadow')
+			stock.push('heavy-arm-shadow')
+			stock.push('helm-shadow')
+
 	end
 
 	stock.each{ |s| $menu.shop_add(s) }
@@ -4271,6 +4291,9 @@ def setup_magic_shop
 		when '@ravwyn'	
 			stock.push('light-arm-shadow')
 			stock.push('hib-charm-shadow')
+
+		when '@wind-tower'	
+			stock.push('light-arm-ultimate')
 
 	end
 
@@ -23145,7 +23168,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"V#==============================================================================
+end"W#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23228,7 +23251,7 @@ class AudioManager
 
   def music(file,vol=1.0)
 
-    return if @music_file == file
+    #return if @music_file == file
 
     @music.stop if @music
 

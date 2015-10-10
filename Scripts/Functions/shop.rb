@@ -92,7 +92,16 @@ def setup_item_shop
 			stock.push('cheese')
 			stock.push('bread')
 			stock.push('haunch')
+			stock.push('cassia')
 			stock.push('sausage')
+
+		when '@ravwyn'	
+			stock.push('covey')
+			stock.push('cheese')
+			stock.push('bread')
+			stock.push('haunch')
+			stock.push('cassia')
+			stock.push('biscuit')
 
 	end
 
@@ -146,6 +155,12 @@ def setup_special_shop(type)
 		when 'helms'	
 			stock.push('helm-ultimate')
 
+		when 'diamond'	
+			stock.push('heavy-arm-ultimate')
+
+		when 'leather'	
+			stock.push('mid-arm-ultimate')
+
 	end
 
 	stock.each{ |s| $menu.shop_add(s) }
@@ -194,6 +209,11 @@ def setup_smith_shop
 			stock.push('heavy-arm-dwarf')
 			stock.push('rob-shield-dwarf')
 
+		when '@ravwyn'	
+			stock.push('mid-arm-shadow')
+			stock.push('heavy-arm-shadow')
+			stock.push('helm-shadow')
+
 	end
 
 	stock.each{ |s| $menu.shop_add(s) }
@@ -240,6 +260,9 @@ def setup_magic_shop
 		when '@ravwyn'	
 			stock.push('light-arm-shadow')
 			stock.push('hib-charm-shadow')
+
+		when '@wind-tower'	
+			stock.push('light-arm-ultimate')
 
 	end
 
