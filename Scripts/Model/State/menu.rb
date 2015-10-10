@@ -22,6 +22,7 @@ class MenuState
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
+	attr_accessor :chosen_ev
 	attr_accessor :choose_cat
 
 
@@ -49,6 +50,7 @@ class MenuState
 		@potion_page = 0
 
 		@chosen = nil
+		@chosen_ev = nil
 		@choose_cat = nil
 		
 	end

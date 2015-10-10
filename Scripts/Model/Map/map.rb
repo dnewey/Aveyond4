@@ -81,7 +81,7 @@ class Game_Map
   end
 
   def hide
-    @cam_hy = 5000
+    @cam_hy = 50000
   end
 
   def show

@@ -213,6 +213,68 @@ def party_gossip
 
 end
 
+def vault_card_refresh
+
+	# MAIN ROOM MAIN ROOM
+	cards = []
+	[67,41,68].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	log_info cards
+
+	if cards.sort == ['','archer','thief']
+		flag('vaughn-ch1')
+	end
+
+	if cards.sort == ['archer','arrow','king']
+		flag('vaughn-ch2')
+	end
+
+	if cards.sort == ['','crown','thief']
+		flag('vaughn-ch3')
+	end
+
+	if cards.sort == ['begger','dagger','thief']
+		flag('vaughn-ch4')
+	end
+
+	# ARCHER POISONS ARROW
+
+	cards = []
+	[69,70,71].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	if cards.sort == ['archer','arrow','poison']
+		flag('vaughn-side-archer')
+	end
+	
+	# KING TRADES BEGGAR
+
+	cards = []
+	[72,73,74].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	if cards.sort == ['','beggar','king']
+		flag('vaughn-side-king')
+	end
+
+	# THIEF PAYS ARCHER
+
+	cards = []
+	[75,76,77].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	if cards.sort == ['archer','gold','thief']
+		flag('vaughn-side-payment')
+	end
+
+
+end
+
 def gogogo
 
 	log_ev("Debug function GO!")

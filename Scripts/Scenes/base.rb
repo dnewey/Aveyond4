@@ -69,10 +69,12 @@ class Scene_Base
   end
 
   def inviz
+    @tilemap.visible= false
     @map.hide
   end
 
   def viz
+    @tilemap.visible= true
     @map.show
   end
   
@@ -292,7 +294,6 @@ class Scene_Base
 
         }
       end
-
       
       #pano.z = -1000
       panorama.bitmap = $cache.panorama(dta[0])

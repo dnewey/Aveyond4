@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"Ä#==============================================================================
+end"r#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -98,13 +98,7 @@ class Sprite_Character < Sprite
 
     @windmill = @character.character_name.include?('mill')
 
-    # Clear the helper graphics
-    # Maybe move to cache? Or just clear the gfx
-    # if !$settings.debug_draw_helpers
-    #   if @character_name == "!!!" || @character_name == 'Block'
-    #     self.bitmap.clear
-    #   end
-    # end
+
 
 
     update
@@ -134,6 +128,14 @@ class Sprite_Character < Sprite
   # Updates
 
   def update_bitmap
+
+      # Clear the helper graphics
+      # if !$settings.debug_draw_helpers
+      #   if @character_name == "!!!" || @character_name == 'Block'
+      #     return
+      #     self.bitmap.clear
+      #   end
+      # end
 
       @character_name = @character.character_name
 
@@ -3256,7 +3258,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"Ã
+"°
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3471,6 +3473,68 @@ def party_gossip
 
 end
 
+def vault_card_refresh
+
+	# MAIN ROOM MAIN ROOM
+	cards = []
+	[67,41,68].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	log_info cards
+
+	if cards.sort == ['','archer','thief']
+		flag('vaughn-ch1')
+	end
+
+	if cards.sort == ['archer','arrow','king']
+		flag('vaughn-ch2')
+	end
+
+	if cards.sort == ['','crown','thief']
+		flag('vaughn-ch3')
+	end
+
+	if cards.sort == ['begger','dagger','thief']
+		flag('vaughn-ch4')
+	end
+
+	# ARCHER POISONS ARROW
+
+	cards = []
+	[69,70,71].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	if cards.sort == ['archer','arrow','poison']
+		flag('vaughn-side-archer')
+	end
+	
+	# KING TRADES BEGGAR
+
+	cards = []
+	[72,73,74].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	if cards.sort == ['','beggar','king']
+		flag('vaughn-side-king')
+	end
+
+	# THIEF PAYS ARCHER
+
+	cards = []
+	[75,76,77].each{|e|
+		cards.push(card_from_ev(e))
+	}
+
+	if cards.sort == ['archer','gold','thief']
+		flag('vaughn-side-payment')
+	end
+
+
+end
+
 def gogogo
 
 	log_ev("Debug function GO!")
@@ -3478,7 +3542,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"ƒ#==============================================================================
+end"™#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3530,14 +3594,27 @@ def bugs_exchange
 	pop_night(amount)
 	unitem('night-bug',amount)
 
-	if $progress.night-xp >= 100
-		#if 
+	if $progress.night_xp >= 400
+		$progress.night_rank = 5
+		flag('nw-rank-4') 
+	elsif $progress.night_xp >= 300
+		$progress.night_rank = 4
+		flag('nw-rank-3') 
+	elsif $progress.night_xp >= 200
+		$progress.night_rank = 3
+		flag('nw-rank-2') 
+	elsif $progress.night_xp >= 100
+		$progress.night_rank = 2
+		flag('nw-rank-1') 
+	else
+		$progress.night_rank = 1
+		flag('nw-rank-0') 
 	end
 
 
 end
 
-def bugs_owl
+def owl_exchange
 	sfx 'item'
 	adding = $party.item_number('owl-feather')
 	mult = $data.numbers['owl-feather'].value
@@ -3545,6 +3622,23 @@ def bugs_owl
 	$progress.add_night_xp(amount)
 	pop_night(amount)
 	unitem('owl-feather',amount)
+
+	if $progress.night_xp >= 400
+		$progress.night_rank = 5
+		flag('nw-rank-4') 
+	elsif $progress.night_xp >= 300
+		$progress.night_rank = 4
+		flag('nw-rank-3') 
+	elsif $progress.night_xp >= 200
+		$progress.night_rank = 3
+		flag('nw-rank-2') 
+	elsif $progress.night_xp >= 100
+		$progress.night_rank = 2
+		flag('nw-rank-1') 
+	else
+		$progress.night_rank = 1
+		flag('nw-rank-0') 
+	end
 end
 
 def item(id,number=1,type='f')
@@ -3584,6 +3678,16 @@ def item_from_card(e)
           return
         end        
     }
+end
+
+def card_from_ev(e)
+	cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
+    cards.each{ |c|
+        if $state.state?(e,'card-'+c)
+          return c
+        end        
+    }
+    return ''
 end
 
 #==============================================================================
@@ -4543,7 +4647,8 @@ end
 def store_say_deny
 	text("1: #{$customer.deny}")
 end
-"Ï	
+"
+
 # Misc
 
 def text(t)
@@ -4630,6 +4735,7 @@ def open_chooser_menu(cat=nil)
 	$menu.sub_only = true
 	$menu.choose_cat = cat
 	$menu.menu_page = "Chooser"
+	$menu.chosen_ev = me
 end
 
 def open_potions_book
@@ -4931,7 +5037,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"2
+ end"˛
 
 
 
@@ -5139,11 +5245,37 @@ def potion_next_problem
 
 	case $party.potion_state
 
-		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
-
 		when 'hot'
 			
 			text("x-ing: Something isn't right, it's very red.")
+
+		when 'rotten'
+			
+			text("x-ing: This is wrong, it shouldn't be orange.")
+
+		when 'acidic'
+			
+			text("x-ing: Hmm, it shouldn't be so yellow.")
+
+		when 'claggy'
+			
+			text("x-ing: All the color has come out of it.")
+
+		when 'slimy'
+			
+			text("x-ing: It's gone green, what will I do?")
+
+		when 'cold'
+			
+			text("x-ing: I wonder what made it so blue.")
+
+		when 'sour'
+			
+			text("x-ing: Something is wrong, it's pink!")
+
+		when 'volatile'
+			
+			text("x-ing: This purple color doesn't seem right.")
 
 		else
 			text("x-ing: That's it! Perfect!")
@@ -6703,7 +6835,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end".H#==============================================================================
+end"–K#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7030,20 +7162,52 @@ class Ui_Grid
      	stat.font = $fonts.pop_type
 
      	if item != nil && item.stats != ''
-	    	data = item.stats.split("/n")[0].split("=>")
+	    	data = item.stats.split("\n")[0].split("=>")
+	    	log_info(data)
 	    	stat.icon = $cache.icon("stats/#{data[0]}")
+	    	text = ''
 	    	case data[0]
 	    		when 'str'
-	    			stat.text = "#{data[1]} Strength"
+	    			text = "#{data[1]} Strength"
 	    		when 'def'
-					stat.text = "#{data[1]} Defense"
+					text = "#{data[1]} Defense"
 	    		when 'eva'
-	    			stat.text = "#{data[1]}% Evasion"
+	    			text = "#{data[1]}% Evasion"
 	    		when 'luk'
-	    			stat.text = "#{data[1]}% Luck"
+	    			text = "#{data[1]}% Luck"
 	    		when 'res'
-	    			stat.text = "#{data[1]}% Resist"
+	    			text = "#{data[1]}% Resist"
 	    	end
+	    	text += " +" if item.stats.split("\n").count > 1
+	    	stat.text = text
+	    end
+
+	    if item != nil && slot == 'minion'
+    		data = $data.actors[item.id.sub('boy-','')]
+    		actions = data.actions.split(' | ')
+    		actions.each{ |a|
+    			text += $data.skills[a].name
+    			text += ', ' if actions.count > 1 && a != actions[-1]
+    		}
+    		stat.icon = $cache.icon("stats/str")
+    		stat.text = text
+	    end
+
+	    if item != nil && slot == 'book'
+	    	case item.id
+	    		when 'hib-book-sleep'
+	    			text = 'Slumberfy, Rude Awakening'
+	    		when 'hib-book-dmg'
+	    			text = 'Recurring Nightmare, Chase'
+	    		when 'hib-book-heal'
+	    			text = 'Heal, Friendly Heal'
+	    		when 'hib-book-help'
+	    			text = 'Crit Chance, Detox'
+	    		when 'hib-book-ice'
+	    			text = 'Shard, Hail'
+	    	end
+    		stat.icon = $cache.icon("stats/str")
+    		stat.text = text
 	    end
 
      	@extra.push(stat)
@@ -10149,7 +10313,7 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end"L	
+end"d	
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -10277,6 +10441,7 @@ class Mnu_Party < Mnu_Base
 		@grid.hide_glow
 		dist = 30
 		@grid.all.each{ |a|
+			next if a.disposed?
 			if a.x > 320
 				a.do(go('x',dist,200,:qio))
 			else
@@ -11988,7 +12153,7 @@ class Mnu_Phye < Mnu_Base
 		
 	end
 
-end" "K
+end" "®
 
 class Char_Box_Large < SpriteGroup
 
@@ -12017,19 +12182,23 @@ class Char_Box_Large < SpriteGroup
 		add(@gradient,9,100)
 		@gradient.z += 50
 
-		@name = Label.new(vp)
-	    @name.font = $fonts.list
-	    @name.shadow = $fonts.list_shadow
-	    @name.gradient = true
-	    @name.text = @char.name
-	    add(@name,15,7)
+		@name = Sprite.new(vp)
+	    @name.bitmap = $cache.menu_char(char)
+	    add(@name,11,12)
+	    @name.z += 50
+	    #@name.opacity = 100
 
-		@level = Label.new(vp)
-	    @level.font = $fonts.list
-	    @level.shadow = $fonts.list_shadow
-	    @level.gradient = true
-	    @level.text = @char.level.to_s
-	    add(@level,20,27)
+		@lvl_label = Sprite.new(vp)
+		@lvl_label.bitmap = $cache.menu_char("label-lv")
+		@lvl_label.opacity = 200
+		add(@lvl_label,20,41)
+		@lvl_label.z += 50
+
+		@lvl_value = Sprite.new(vp)
+		@lvl_value.bitmap = build_value_bmp(@char.level)
+		@lvl_value.opacity = 200
+		add(@lvl_value,40,40)
+		@lvl_value.z += 50
 
 
 		@mp_bar = Bar.new(vp,180,9)
@@ -12135,7 +12304,7 @@ class Char_Box_Large < SpriteGroup
 		@port.do(to("oy",0,-2))
 	end
 
-end"
+end":
 
 class Char_Box_Small < SpriteGroup
 
@@ -12163,21 +12332,22 @@ class Char_Box_Small < SpriteGroup
 		add(@gradient,7,46)
 		@gradient.z += 50
 
-		@name = Label.new(vp)
-	    @name.font = $fonts.list
-	    @name.shadow = $fonts.list_shadow
-	    @name.gradient = true
-	    @name.text = @char.name
-	    add(@name,6,4)
+		@name = Sprite.new(vp)
+	    @name.bitmap = $cache.menu_char(char+'-s')
+	    add(@name,10,9)
 	    @name.z += 50
 
-		@level = Label.new(vp)
-	    @level.font = $fonts.list
-	    @level.shadow = $fonts.list_shadow
-	    @level.gradient = true
-	    @level.text = @char.level.to_s
-	    add(@level,20,27)
-	    @level.z += 50
+		@lvl_label = Sprite.new(vp)
+		@lvl_label.bitmap = $cache.menu_char("label-lv")
+		@lvl_label.opacity = 200
+		add(@lvl_label,18,31)
+		@lvl_label.z += 50
+
+		@lvl_value = Sprite.new(vp)
+		@lvl_value.bitmap = build_value_bmp(@char.level)
+		@lvl_value.opacity = 200
+		add(@lvl_value,38,30)
+		@lvl_value.z += 50
 
 
 		@xp_bar = Bar.new(vp,106,8)
@@ -12575,7 +12745,7 @@ class Item_Box < SpriteGroup
 
     end
 
-end"…
+end"œ
 class List_Common < SpriteGroup
 
 	attr_accessor :list, :window
@@ -12630,6 +12800,7 @@ class List_Common < SpriteGroup
 				items = $party.items.keys.select{ |i|
 					$data.items[i].id.include?('card-')
 				}
+				
 
 			when 'goods'
 				items = $party.items.keys.select{ |i|
@@ -13224,7 +13395,7 @@ class Mnu_Potions < Mnu_Base
 		self.close_soon
 	end
 
-end"Õ#==============================================================================
+end"ı#==============================================================================
 # ** Mnu_GameOver
 #==============================================================================
 
@@ -13311,6 +13482,7 @@ class Mnu_GameOver < Mnu_Base
 
 	def choose(option)
 
+		$scene.hide_char if option == "Load"
 		$scene.queue_menu(option)
 
 		$menu.char_cursor = option
@@ -16130,7 +16302,7 @@ class Game_Character
 
 
 end
-"ŸV#==============================================================================
+"	W#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -16464,6 +16636,7 @@ class Game_Event < Game_Character
         return false if ($party.item_number(cond[1]) >= cond[2].to_i)
 
       when '?chosen'
+        return false if $menu.chosen_ev != @id
         return false if $menu.chosen == nil
 
       when '?partyloc'
@@ -17537,7 +17710,7 @@ class Interpreter
   end
 
 end
-"]B#==============================================================================
+"èB#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17620,7 +17793,7 @@ class Game_Map
   end
 
   def hide
-    @cam_hy = 5000
+    @cam_hy = 50000
   end
 
   def show
@@ -17771,7 +17944,8 @@ class Game_Map
     
 
     # Play music from the zone
-    $audio.music(@zone.music)
+    # No music at night
+    $audio.music(@zone.music) if !flag?('night-time')
     $audio.atmosphere(@zone.atmosphere)
 
   end
@@ -18249,7 +18423,7 @@ class Moblin
 
 	end
 
-end"n3#==============================================================================
+end"¨3#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -18731,6 +18905,10 @@ class Game_Player < Game_Character
     $menu.player_x = screen_x
     $menu.player_y = screen_y
     $game.snapshot = Graphics.snap_to_bitmap
+
+    # Force camera on player after xfer
+    camera_snap
+
     $files.autosave
    # if !ENDING_MAPS.include?($game_map.map_id)
    #   save = Scene_Save.new(1)
@@ -19316,7 +19494,7 @@ class Game_Battle
     return @enemies + $party.all_battlers
   end
   
-end"¯
+end"'
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -19340,6 +19518,7 @@ class MenuState
 	attr_accessor :potion_page
 
 	attr_accessor :chosen
+	attr_accessor :chosen_ev
 	attr_accessor :choose_cat
 
 
@@ -19367,6 +19546,7 @@ class MenuState
 		@potion_page = 0
 
 		@chosen = nil
+		@chosen_ev = nil
 		@choose_cat = nil
 		
 	end
@@ -19379,7 +19559,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"*#==============================================================================
+end"*#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19751,13 +19931,13 @@ class Game_Party
     # Give accessory
 
     # Rowen
-    @actors['row'].equip('dagger','row-wrench-start')
-    @actors['row'].equip('dagger','row-gadget-satchel')
+    @actors['row'].equip('wrench','row-wrench-start')
+    @actors['row'].equip('gadget','row-gadget-satchel')
     @actors['row'].equip('mid','mid-arm-tor')
     # Give extra gadget
 
     # Phye
-    @actors['phy'].equip('sword','phy-sword-1')
+    @actors['phy'].equip('dsword','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('helm','phy-helm-start')
     @actors['phy'].equip('belt','phy-belt-start')
@@ -19828,7 +20008,7 @@ class Game_Party
 
   end
         
-end"çclass Progress
+end"cclass Progress
 
 	attr_accessor :quests, :complete
 
@@ -19919,8 +20099,7 @@ end"çclass Progress
 	end
 
 	def add_night_xp(amount)
-		@night_xp += amount
-		# @night_xp = 100 if @night_xp >= 100		
+		@night_xp += amount	
 	end
 
 end"class State
@@ -20047,7 +20226,7 @@ end"class State
 	end
 
 end
-"+ #==============================================================================
+"è #==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -20118,10 +20297,12 @@ class Scene_Base
   end
 
   def inviz
+    @tilemap.visible= false
     @map.hide
   end
 
   def viz
+    @tilemap.visible= true
     @map.show
   end
   
@@ -20129,8 +20310,10 @@ class Scene_Base
 
     # Dispose of things
     @panoramas.each{ |s| s.dispose }
+    @panoramas = nil
     @tilemap.dispose
     @characters.each{ |s| s.dispose }
+    @characters = nil
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
     @weather.dispose if @weather
@@ -20339,7 +20522,6 @@ class Scene_Base
 
         }
       end
-
       
       #pano.z = -1000
       panorama.bitmap = $cache.panorama(dta[0])
@@ -20400,7 +20582,7 @@ class Scene_Base
   # end
 
 end
-"#==============================================================================
+"{#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -20410,6 +20592,12 @@ class Scene_Battle < Scene_Base
 
   def initialize
     super
+
+    @vp_under.z = 4000
+    @vp_main.z = 5000
+    @vp_weather.z = 5999
+    @vp_over.z = 6000
+    @vp_ui.z = 7000
 
     $scene = self
 
@@ -20587,7 +20775,7 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
-    $debug.track(self,"phase")
+    #$debug.track(self,"phase")
 
     # Wait count here
     if @wait_frames > 0
@@ -21648,7 +21836,7 @@ class Scene_Battle
   end
 
  end
-"À#==============================================================================
+"+#==============================================================================
 # ** Scene_GameOver
 #==============================================================================
 
@@ -21707,11 +21895,13 @@ class Scene_GameOver
   end
 
   def hide_char
-    @char.opacity = 0
+    @char.do(go('opacity',-255,450,:qio))
+    @char.do(go('x',50,500,:qio))
   end
 
   def show_char
-    @char.opacity = 255
+    @char.do(go('opacity',255,450,:qio))
+    @char.do(go('x',-50,500,:qio))
   end
 
   def inviz
@@ -21798,7 +21988,7 @@ class Scene_GameOver
       when "Title"; @menu = Mnu_GameOver.new(@vp)
 
       when "Continue"; 
-        @menu = Mnu_Load_Title.new(@vp)
+        $files.load_game(0)
 
       when "Load";
         @menu = Mnu_Load_Title.new(@vp)
@@ -23168,7 +23358,7 @@ end"¬Cmodule Seal
 
     alias auto? auto
   end
-end"W#==============================================================================
+end"[#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23253,9 +23443,8 @@ class AudioManager
 
     #return if @music_file == file
 
-    @music.stop if @music
-
-    if file == nil || file == ''    
+    if file == nil || file == ''   
+      @music.stop if @music 
       return
     end
     
@@ -23279,11 +23468,10 @@ class AudioManager
     # Nightwatch hack
     file = 'woods-night' if flag?('night-time')
 
-    #return if @atmosphere_file == file
-
-    @atmosphere.stop if @music
+    #return if @atmosphere_file == file    
 
     if file == nil  || file == ''
+      @atmosphere.stop if @music
       return
     end
 

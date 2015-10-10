@@ -53,6 +53,7 @@ class List_Common < SpriteGroup
 				items = $party.items.keys.select{ |i|
 					$data.items[i].id.include?('card-')
 				}
+				
 
 			when 'goods'
 				items = $party.items.keys.select{ |i|

@@ -85,6 +85,7 @@ def open_chooser_menu(cat=nil)
 	$menu.sub_only = true
 	$menu.choose_cat = cat
 	$menu.menu_page = "Chooser"
+	$menu.chosen_ev = me
 end
 
 def open_potions_book

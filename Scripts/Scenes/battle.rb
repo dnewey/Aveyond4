@@ -9,6 +9,12 @@ class Scene_Battle < Scene_Base
   def initialize
     super
 
+    @vp_under.z = 4000
+    @vp_main.z = 5000
+    @vp_weather.z = 5999
+    @vp_over.z = 6000
+    @vp_ui.z = 7000
+
     $scene = self
 
     @phase = :intro_init
@@ -185,7 +191,7 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
-    $debug.track(self,"phase")
+    #$debug.track(self,"phase")
 
     # Wait count here
     if @wait_frames > 0

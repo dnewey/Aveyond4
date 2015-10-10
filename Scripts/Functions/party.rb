@@ -136,6 +136,16 @@ def item_from_card(e)
     }
 end
 
+def card_from_ev(e)
+	cards = ['archer','arrow','begger','crown','dagger','false','gold','king','poison','thief']
+    cards.each{ |c|
+        if $state.state?(e,'card-'+c)
+          return c
+        end        
+    }
+    return ''
+end
+
 #==============================================================================
 # ** Members
 #==============================================================================

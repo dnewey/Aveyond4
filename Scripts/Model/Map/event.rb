@@ -332,6 +332,7 @@ class Game_Event < Game_Character
         return false if ($party.item_number(cond[1]) >= cond[2].to_i)
 
       when '?chosen'
+        return false if $menu.chosen_ev != @id
         return false if $menu.chosen == nil
 
       when '?partyloc'
