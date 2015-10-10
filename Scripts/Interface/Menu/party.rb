@@ -126,6 +126,7 @@ class Mnu_Party < Mnu_Base
 		@grid.hide_glow
 		dist = 30
 		@grid.all.each{ |a|
+			next if a.disposed?
 			if a.x > 320
 				a.do(go('x',dist,200,:qio))
 			else

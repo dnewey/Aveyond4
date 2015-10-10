@@ -57,11 +57,13 @@ class Scene_GameOver
   end
 
   def hide_char
-    @char.opacity = 0
+    @char.do(go('opacity',-255,450,:qio))
+    @char.do(go('x',50,500,:qio))
   end
 
   def show_char
-    @char.opacity = 255
+    @char.do(go('opacity',255,450,:qio))
+    @char.do(go('x',-50,500,:qio))
   end
 
   def inviz
@@ -148,7 +150,7 @@ class Scene_GameOver
       when "Title"; @menu = Mnu_GameOver.new(@vp)
 
       when "Continue"; 
-        @menu = Mnu_Load_Title.new(@vp)
+        $files.load_game(0)
 
       when "Load";
         @menu = Mnu_Load_Title.new(@vp)

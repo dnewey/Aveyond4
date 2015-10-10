@@ -27,19 +27,23 @@ class Char_Box_Large < SpriteGroup
 		add(@gradient,9,100)
 		@gradient.z += 50
 
-		@name = Label.new(vp)
-	    @name.font = $fonts.list
-	    @name.shadow = $fonts.list_shadow
-	    @name.gradient = true
-	    @name.text = @char.name
-	    add(@name,15,7)
+		@name = Sprite.new(vp)
+	    @name.bitmap = $cache.menu_char(char)
+	    add(@name,11,12)
+	    @name.z += 50
+	    #@name.opacity = 100
 
-		@level = Label.new(vp)
-	    @level.font = $fonts.list
-	    @level.shadow = $fonts.list_shadow
-	    @level.gradient = true
-	    @level.text = @char.level.to_s
-	    add(@level,20,27)
+		@lvl_label = Sprite.new(vp)
+		@lvl_label.bitmap = $cache.menu_char("label-lv")
+		@lvl_label.opacity = 200
+		add(@lvl_label,20,41)
+		@lvl_label.z += 50
+
+		@lvl_value = Sprite.new(vp)
+		@lvl_value.bitmap = build_value_bmp(@char.level)
+		@lvl_value.opacity = 200
+		add(@lvl_value,40,40)
+		@lvl_value.z += 50
 
 
 		@mp_bar = Bar.new(vp,180,9)

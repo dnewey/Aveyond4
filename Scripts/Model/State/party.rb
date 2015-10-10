@@ -370,13 +370,13 @@ class Game_Party
     # Give accessory
 
     # Rowen
-    @actors['row'].equip('dagger','row-wrench-start')
-    @actors['row'].equip('dagger','row-gadget-satchel')
+    @actors['row'].equip('wrench','row-wrench-start')
+    @actors['row'].equip('gadget','row-gadget-satchel')
     @actors['row'].equip('mid','mid-arm-tor')
     # Give extra gadget
 
     # Phye
-    @actors['phy'].equip('sword','phy-sword-1')
+    @actors['phy'].equip('dsword','phy-sword-1')
     @actors['phy'].equip('heavy','phy-arm-start')
     @actors['phy'].equip('helm','phy-helm-start')
     @actors['phy'].equip('belt','phy-belt-start')

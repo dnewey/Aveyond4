@@ -89,8 +89,7 @@ class Progress
 	end
 
 	def add_night_xp(amount)
-		@night_xp += amount
-		# @night_xp = 100 if @night_xp >= 100		
+		@night_xp += amount	
 	end
 
 end

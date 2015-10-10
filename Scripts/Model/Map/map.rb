@@ -232,7 +232,8 @@ class Game_Map
     
 
     # Play music from the zone
-    $audio.music(@zone.music)
+    # No music at night
+    $audio.music(@zone.music) if !flag?('night-time')
     $audio.atmosphere(@zone.atmosphere)
 
   end

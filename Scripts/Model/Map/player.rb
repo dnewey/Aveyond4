@@ -480,6 +480,10 @@ class Game_Player < Game_Character
     $menu.player_x = screen_x
     $menu.player_y = screen_y
     $game.snapshot = Graphics.snap_to_bitmap
+
+    # Force camera on player after xfer
+    camera_snap
+
     $files.autosave
    # if !ENDING_MAPS.include?($game_map.map_id)
    #   save = Scene_Save.new(1)

@@ -206,11 +206,37 @@ def potion_next_problem
 
 	case $party.potion_state
 
-		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
-
 		when 'hot'
 			
 			text("x-ing: Something isn't right, it's very red.")
+
+		when 'rotten'
+			
+			text("x-ing: This is wrong, it shouldn't be orange.")
+
+		when 'acidic'
+			
+			text("x-ing: Hmm, it shouldn't be so yellow.")
+
+		when 'claggy'
+			
+			text("x-ing: All the color has come out of it.")
+
+		when 'slimy'
+			
+			text("x-ing: It's gone green, what will I do?")
+
+		when 'cold'
+			
+			text("x-ing: I wonder what made it so blue.")
+
+		when 'sour'
+			
+			text("x-ing: Something is wrong, it's pink!")
+
+		when 'volatile'
+			
+			text("x-ing: This purple color doesn't seem right.")
 
 		else
 			text("x-ing: That's it! Perfect!")

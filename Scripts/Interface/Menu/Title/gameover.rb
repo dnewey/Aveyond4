@@ -85,6 +85,7 @@ class Mnu_GameOver < Mnu_Base
 
 	def choose(option)
 
+		$scene.hide_char if option == "Load"
 		$scene.queue_menu(option)
 
 		$menu.char_cursor = option

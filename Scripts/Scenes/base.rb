@@ -80,8 +80,10 @@ class Scene_Base
 
     # Dispose of things
     @panoramas.each{ |s| s.dispose }
+    @panoramas = nil
     @tilemap.dispose
     @characters.each{ |s| s.dispose }
+    @characters = nil
     @sparks.each{ |s| s.dispose }
     @pops.each{ |s| s.dispose }
     @weather.dispose if @weather

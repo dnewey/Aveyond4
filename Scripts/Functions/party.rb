@@ -50,14 +50,27 @@ def bugs_exchange
 	pop_night(amount)
 	unitem('night-bug',amount)
 
-	if $progress.night-xp >= 100
-		#if 
+	if $progress.night_xp >= 400
+		$progress.night_rank = 5
+		flag('nw-rank-4') 
+	elsif $progress.night_xp >= 300
+		$progress.night_rank = 4
+		flag('nw-rank-3') 
+	elsif $progress.night_xp >= 200
+		$progress.night_rank = 3
+		flag('nw-rank-2') 
+	elsif $progress.night_xp >= 100
+		$progress.night_rank = 2
+		flag('nw-rank-1') 
+	else
+		$progress.night_rank = 1
+		flag('nw-rank-0') 
 	end
 
 
 end
 
-def bugs_owl
+def owl_exchange
 	sfx 'item'
 	adding = $party.item_number('owl-feather')
 	mult = $data.numbers['owl-feather'].value
@@ -65,6 +78,23 @@ def bugs_owl
 	$progress.add_night_xp(amount)
 	pop_night(amount)
 	unitem('owl-feather',amount)
+
+	if $progress.night_xp >= 400
+		$progress.night_rank = 5
+		flag('nw-rank-4') 
+	elsif $progress.night_xp >= 300
+		$progress.night_rank = 4
+		flag('nw-rank-3') 
+	elsif $progress.night_xp >= 200
+		$progress.night_rank = 3
+		flag('nw-rank-2') 
+	elsif $progress.night_xp >= 100
+		$progress.night_rank = 2
+		flag('nw-rank-1') 
+	else
+		$progress.night_rank = 1
+		flag('nw-rank-0') 
+	end
 end
 
 def item(id,number=1,type='f')

@@ -26,21 +26,22 @@ class Char_Box_Small < SpriteGroup
 		add(@gradient,7,46)
 		@gradient.z += 50
 
-		@name = Label.new(vp)
-	    @name.font = $fonts.list
-	    @name.shadow = $fonts.list_shadow
-	    @name.gradient = true
-	    @name.text = @char.name
-	    add(@name,6,4)
+		@name = Sprite.new(vp)
+	    @name.bitmap = $cache.menu_char(char+'-s')
+	    add(@name,10,9)
 	    @name.z += 50
 
-		@level = Label.new(vp)
-	    @level.font = $fonts.list
-	    @level.shadow = $fonts.list_shadow
-	    @level.gradient = true
-	    @level.text = @char.level.to_s
-	    add(@level,20,27)
-	    @level.z += 50
+		@lvl_label = Sprite.new(vp)
+		@lvl_label.bitmap = $cache.menu_char("label-lv")
+		@lvl_label.opacity = 200
+		add(@lvl_label,18,31)
+		@lvl_label.z += 50
+
+		@lvl_value = Sprite.new(vp)
+		@lvl_value.bitmap = build_value_bmp(@char.level)
+		@lvl_value.opacity = 200
+		add(@lvl_value,38,30)
+		@lvl_value.z += 50
 
 
 		@xp_bar = Bar.new(vp,106,8)

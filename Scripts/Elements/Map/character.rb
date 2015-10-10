@@ -23,13 +23,7 @@ class Sprite_Character < Sprite
 
     @windmill = @character.character_name.include?('mill')
 
-    # Clear the helper graphics
-    # Maybe move to cache? Or just clear the gfx
-    # if !$settings.debug_draw_helpers
-    #   if @character_name == "!!!" || @character_name == 'Block'
-    #     self.bitmap.clear
-    #   end
-    # end
+
 
 
     update
@@ -59,6 +53,14 @@ class Sprite_Character < Sprite
   # Updates
 
   def update_bitmap
+
+      # Clear the helper graphics
+      # if !$settings.debug_draw_helpers
+      #   if @character_name == "!!!" || @character_name == 'Block'
+      #     return
+      #     self.bitmap.clear
+      #   end
+      # end
 
       @character_name = @character.character_name
 

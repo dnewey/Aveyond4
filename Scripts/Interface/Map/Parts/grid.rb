@@ -325,20 +325,52 @@ class Ui_Grid
      	stat.font = $fonts.pop_type
 
      	if item != nil && item.stats != ''
-	    	data = item.stats.split("/n")[0].split("=>")
+	    	data = item.stats.split("\n")[0].split("=>")
+	    	log_info(data)
 	    	stat.icon = $cache.icon("stats/#{data[0]}")
+	    	text = ''
 	    	case data[0]
 	    		when 'str'
-	    			stat.text = "#{data[1]} Strength"
+	    			text = "#{data[1]} Strength"
 	    		when 'def'
-					stat.text = "#{data[1]} Defense"
+					text = "#{data[1]} Defense"
 	    		when 'eva'
-	    			stat.text = "#{data[1]}% Evasion"
+	    			text = "#{data[1]}% Evasion"
 	    		when 'luk'
-	    			stat.text = "#{data[1]}% Luck"
+	    			text = "#{data[1]}% Luck"
 	    		when 'res'
-	    			stat.text = "#{data[1]}% Resist"
+	    			text = "#{data[1]}% Resist"
 	    	end
+	    	text += " +" if item.stats.split("\n").count > 1
+	    	stat.text = text
+	    end
+
+	    if item != nil && slot == 'minion'
+    		data = $data.actors[item.id.sub('boy-','')]
+    		actions = data.actions.split(' | ')
+    		actions.each{ |a|
+    			text += $data.skills[a].name
+    			text += ', ' if actions.count > 1 && a != actions[-1]
+    		}
+    		stat.icon = $cache.icon("stats/str")
+    		stat.text = text
+	    end
+
+	    if item != nil && slot == 'book'
+	    	case item.id
+	    		when 'hib-book-sleep'
+	    			text = 'Slumberfy, Rude Awakening'
+	    		when 'hib-book-dmg'
+	    			text = 'Recurring Nightmare, Chase'
+	    		when 'hib-book-heal'
+	    			text = 'Heal, Friendly Heal'
+	    		when 'hib-book-help'
+	    			text = 'Crit Chance, Detox'
+	    		when 'hib-book-ice'
+	    			text = 'Shard, Hail'
+	    	end
+    		stat.icon = $cache.icon("stats/str")
+    		stat.text = text
 	    end
 
      	@extra.push(stat)
