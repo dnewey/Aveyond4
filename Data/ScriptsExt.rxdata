@@ -4133,7 +4133,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"Î
+end" 
 
 def shop_choice
 
@@ -4230,7 +4230,7 @@ def setup_item_shop
 			stock.push('cassia')
 			stock.push('sausage')
 
-		when '@ravwyn'	
+		when '@ravwyn'
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
@@ -4321,6 +4321,10 @@ def setup_smith_shop
 			stock.push('heavy-arm-tor')
 			stock.push('helm-tor')
 			stock.push('rob-shield-tor')
+
+		when '@tor'	
+			stock.push('mid-arm-thorn')
+			stock.push('acc-arena')
 
 		when '@royal-town'	
 			stock.push('mid-arm-royal')
@@ -18423,7 +18427,7 @@ class Moblin
 
 	end
 
-end"¬3#==============================================================================
+end"Š3#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -18451,19 +18455,17 @@ class Game_Player < Game_Character
   end
 
   def transfer(map,x,y,dir)
-    w 1
-    camera_snap
+    w 5
     @transferring = true
     @xfer_data = [map,x,y,dir]
-    w 1
+    w 5
   end
 
   def transfer_to(map,target,after=nil)
-    w 1
-    camera_snap
+    w 5
     @transferring = true
     @xfer_data = [map,target,after]
-    w 1
+    w 5
   end
 
   def name
@@ -19559,7 +19561,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"*#==============================================================================
+end""*#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19895,12 +19897,12 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("ing")
-    set_active("mys")
-    set_active("rob")
-    set_reserve("hib")
-    set_reserve("row")
-    set_reserve("phy")   
+    # set_active("ing")
+    # set_active("mys")
+    # set_active("rob")
+    # set_reserve("hib")
+    # set_reserve("row")
+    # set_reserve("phy")   
   
     # ----------------------------------
     # Initial Gear

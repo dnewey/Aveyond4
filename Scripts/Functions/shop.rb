@@ -95,7 +95,7 @@ def setup_item_shop
 			stock.push('cassia')
 			stock.push('sausage')
 
-		when '@ravwyn'	
+		when '@ravwyn'
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
@@ -186,6 +186,10 @@ def setup_smith_shop
 			stock.push('heavy-arm-tor')
 			stock.push('helm-tor')
 			stock.push('rob-shield-tor')
+
+		when '@tor'	
+			stock.push('mid-arm-thorn')
+			stock.push('acc-arena')
 
 		when '@royal-town'	
 			stock.push('mid-arm-royal')
