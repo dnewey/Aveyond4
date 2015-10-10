@@ -940,7 +940,7 @@ def dispose
 		@stars.each{ |s| s.dispose }
 	end
 
-end"K#==============================================================================
+end"^#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -1000,7 +1000,7 @@ class Area < Sprite
   			cx += @spacing
   		else
   			lines.push(word + ' ')
-  			cx = 0
+  			cx = w.width + @spacing
   		end
   	}
 
@@ -1017,7 +1017,7 @@ class Area < Sprite
 
     cy = 0
     lines.each{ |line|
-    	self.bitmap.draw_text(@padding,@padding+cy,w,height,line)
+    	self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
     	cy += height
     }
     
@@ -1555,7 +1555,7 @@ class Label < Sprite
         
   end
   
-end"ÌF#==============================================================================
+end"âF#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -2044,6 +2044,8 @@ class List
   end
 
   def draw_misc(data,row)
+
+    log_info(data)
 
     ico = $cache.icon(data[2])
 
@@ -4906,7 +4908,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end""
+ end"2
 
 
 
@@ -5115,6 +5117,8 @@ def potion_next_problem
 	case $party.potion_state
 
 		when 'hot','rotten','acidic','claggy','slimy','cold','sour','volatile'
+
+		when 'hot'
 			
 			text("x-ing: Something isn't right, it's very red.")
 
@@ -6136,7 +6140,7 @@ class TargetCmd
 	end
 
 end
-" #==============================================================================
+"#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6184,6 +6188,7 @@ class Ui_Screen
 
 	def quickbars
 		@blackbars.opacity = 255
+		hide
 	end
 
 	def nobars
@@ -6675,7 +6680,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"F#==============================================================================
+end".H#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -6926,6 +6931,31 @@ class Ui_Grid
 
 		# Create new things
 		btn = add_part_box(name,300,46)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = text
+     	@contents.push(cont)
+
+     	# Position
+     	cont.move(@cx+10,@cy+7)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + @spacing - 1
+     	end
+
+	end
+
+	def add_midwidth(name,text,icon)
+
+		# Create new things
+		btn = add_part_box(name,250,46)
 
      	cont = Label.new(@vp)
      	cont.font = $fonts.list
@@ -9232,7 +9262,7 @@ class Mnu_Healing < Mnu_Base
 		
 	end
 
-end"À#==============================================================================
+end"#==============================================================================
 # ** Mnu_Help
 #==============================================================================
 
@@ -9244,11 +9274,14 @@ class Mnu_Help < Mnu_Base
 		@title.change('help')
 		@subtitle.text = "HELP HELP"
 
-		@menu.list.type = :quest
+		@menu.list.type = :misc
 
-		data = $progress.quests
+		data = []
+		$data.help.values.each{ |h|
+			data.push([h.id,h.name,h.icon])
+		}
 
-		@page = Right_Page.new(vp)
+		@page = Right_Journal.new(vp)
 		@right.push(@page)
 
 		@menu.list.setup(data)		
@@ -9270,6 +9303,8 @@ class Mnu_Help < Mnu_Base
 
 	def change(option)
 
+		option = option[0]
+
 		#return
 
 		@page.clear
@@ -9277,11 +9312,11 @@ class Mnu_Help < Mnu_Base
 		# Change page to show this quest
 		#@info.title.text = option
 
-		@page.title = $data.quests[option].name
-		@page.description = $data.quests[option].description
+		@page.title = $data.help[option].name
+		@page.description = $data.help[option].description
 
-		@page.add_reqs($data.quests[option].req)
-		@page.add_zone($data.quests[option].location)
+		#@page.add_reqs($data.quests[option].req)
+		#@page.add_zone($data.quests[option].location)
 
 	end
 
@@ -10384,54 +10419,110 @@ class Mnu_Progress < Mnu_Base
 		
 	# end
 
-end"÷
+end"œ#==============================================================================
+# ** Mnu_Quit
+#==============================================================================
+
 class Mnu_Quit < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
 
-		@title.change('quit')
-		@subtitle.text = "YE WIMP!"
+		@title.change('Quit')
+		@subtitle.text = "Dare thee skulk?"
 
-		remove_menu
-		remove_info
+		@menu.dispose
+		self.left.delete(@menu)
 		
 		@grid = Ui_Grid.new(vp)
-		@grid.move(135,135)
-		@grid.add_wide("continue","Continue Playing","misc/unknown")
-		@grid.add_wide("save","Save and Quit","misc/unknown")
-		@grid.add_wide("quit","Quit Without Saving","misc/unknown")
+		@grid.move(15,113)
+
+		char = $party.get($menu.char)
+		
+		@grid.add_wide("Continue","Continue",char.weapon_icon)
+		@grid.add_wide("Save","Save and Quit","skills/sparkle")
+		@grid.add_wide("Quit","Quit Without Saving","misc/primary")		
+
 		self.left.push(@grid)
+
+		# Fade and slide in
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+
+		@port = Port_Full.new(vp)
+		@port.shock
+		self.right.push(@port)
 
 		open
 
 	end
 
+	def dispose
+		super
+		@grid.dispose
+	end
+
 	def update
+
 		super
 
-		@grid.update
+		@grid.update	
 
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
-			close
+			close_now
 		end
 
-	end
-
-	def change(option)
-
-
-	end
-
-	def select(option)	
+		# Get chosen grid option
+		if $input.action? || $input.click?
+			choose(@grid.get_chosen)
+		end
 		
 	end
 
-end"L
+	def choose(option)
+
+		if option == "Continue"
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			close_now
+		elsif option == "Save"
+			$scene.savequit = true
+			$scene.queue_menu("Save")
+		elsif option == "Quit"
+			$game.quit
+		end
+
+		$menu.char_cursor = option
+		@grid.selected_box.flash_heavy
+		self.close_soon
+
+	end
+
+	def close
+		super
+
+		@grid.hide_glow
+
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		
+	end
+
+end"é
 #==============================================================================
 # ** Mnu_Save
 #==============================================================================
@@ -10511,6 +10602,14 @@ class Mnu_Save < Mnu_Base
 	end
 
 	def update
+
+		# If anim in done, change state
+		if $input.cancel? || $input.rclick?
+			$scene.savequit = false
+			close_now
+			$scene.queue_menu("Main")
+		end
+
 		super
 
 
@@ -10772,7 +10871,7 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end"ÿ#==============================================================================
+end"V#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -10881,6 +10980,11 @@ class Mnu_Equip < Mnu_Base
 
 	# Grid
 	def choose(option)
+
+		if @char.id == 'mys' && !flag?('mys-can-equip')
+			sys('deny')
+			return
+		end
 
 
 		@slot = option
@@ -11016,7 +11120,7 @@ class Mnu_Equip < Mnu_Base
 
 	end
 
-end"Ì#==============================================================================
+end"/#==============================================================================
 # ** Mnu_Profile
 #==============================================================================
 
@@ -11035,7 +11139,7 @@ class Mnu_Profile < Mnu_Base
 		remove_menu
 		remove_info
 
-		@box = Box.new(vp,300,350)
+		@box = Box.new(vp,350,350)
 		@box.skin = $cache.menu_common("skin")
 		@box.wallpaper = $cache.menu_wallpaper("diamonds")
 		@box.move(15,115)
@@ -11049,7 +11153,7 @@ class Mnu_Profile < Mnu_Base
 		data.push(["faces/boy","Age: #{profile.age}"])
 		data.push(["faces/boy","Biography:"])
 
-		cx = 30
+		cx = 26
 		cy = 125
 
 		# Name
@@ -11097,12 +11201,13 @@ class Mnu_Profile < Mnu_Base
 	    cy += spacing
 
 	    area = Area.new(vp)
+	    area.fixed_width = 310
     	area.font = $fonts.pop_text
     	area.text = profile.bio
-    	area.move(cx+10,cy)
+    	area.move(cx+4,cy)
     	self.left.push(area)
 
-    	cy += area.height - 4
+    	cy += area.height - 2
 
     	# Hint
 	    lbl = Label.new(vp)
@@ -11116,12 +11221,13 @@ class Mnu_Profile < Mnu_Base
 	    cy += spacing
 
 	    area = Area.new(vp)
+	    area.fixed_width = 310
     	area.font = $fonts.pop_text
     	area.text = profile.tip
-    	area.move(cx+10,cy)
+    	area.move(cx+4,cy)
     	self.left.push(area)
 
-    	cy += area.height - 4
+    	cy += area.height - 2
 
     	# Fact
 	    lbl = Label.new(vp)
@@ -11135,13 +11241,15 @@ class Mnu_Profile < Mnu_Base
 	    cy += spacing
 
 	    area = Area.new(vp)
+	    area.fixed_width = 310
     	area.font = $fonts.pop_text
     	area.text = profile.fact
-    	area.move(cx+10,cy)
+    	area.move(cx+4,cy)
     	self.left.push(area)
 
 
 		@port = Port_Full.new(vp)
+		@port.happy
 		self.right.push(@port)
 
 		open
@@ -11175,7 +11283,7 @@ class Mnu_Profile < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end".#==============================================================================
 # ** Mnu_Skills
 #==============================================================================
 
@@ -11194,6 +11302,7 @@ class Mnu_Skills < Mnu_Base
 		@menu.list.setup($party.get($menu.char).all_skill_list)
 
 		@port = Port_Full.new(vp)
+		@port.angry
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
@@ -13092,130 +13201,113 @@ class Mnu_Potions < Mnu_Base
 		self.close_soon
 	end
 
-end"À#==============================================================================
+end"Í#==============================================================================
 # ** Mnu_GameOver
 #==============================================================================
 
-class Mnu_GameOver
+class Mnu_GameOver < Mnu_Base
 
 	def initialize(vp)
+		super(vp)
 
-		@vp = vp
-		@closing = false
-		@close_soon = false
-		@close_delay = 0
+		@title.change($menu.char)
+		@subtitle.text = "Master of deception"
 
-		@data = ['new','continue','quit']
-		cx = 135
-		cy = 110
+		@title.y = -500
+		@subtitle.y = -500
 
-		@buttons = []
+		remove_info
 
-		@data.each{ |item|
+		@menu.dispose
+		self.left.delete(@menu)
+		
+		@grid = Ui_Grid.new(vp)
+		@grid.move(45,143)
 
-			btn = Sprite.new(@vp)
-	     	btn.bitmap = $cache.title("btn-#{item}")
-	     	btn.ox = btn.bitmap.width / 2
-	     	btn.move(cx,cy)
-	     	@buttons.push(btn)
+		char = $party.get($menu.char)
+		
+		@grid.add_midwidth("Continue","Continue Autosave",char.weapon_icon)
+		@grid.add_midwidth("Load","Load Game","skills/sparkle")
+		@grid.add_midwidth("Quit","Quit Game","misc/primary")
 
-	     	cy += 40
+		#@grid.choose($menu.char_cursor)
 
-     	}
+		self.left.push(@grid)
 
-     	@selected = 0
-     	choose(0)
+		# Fade and slide in
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+
+		open
 
 	end
 
 	def dispose
-
-		@buttons.each{ |i| i.dispose }
-
+		super
+		@grid.dispose
 	end
 
 	def update
+		
 
-		if @close_soon && !@closing
-			@close_delay -= 1
-			if @close_delay <= 0
-				close
-			end
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
 		end
 
-		if $input.down?
-			choose(@selected + 1)
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
 		end
 
-		if $input.up?
-			choose(@selected - 1)
+		super
+
+		@grid.update	
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			close_now
 		end
 
-		if $input.action?
-			case @selected
-				when 0
-					$scene.next_menu = "New"
-					close_soon
-
-				when 1
-					$scene.hide_logo
-					$scene.hide_char
-					$scene.next_menu = "Continue"
-					close_soon
-
-				when 2
-					$scene.hide_logo
-					$scene.next_menu = "Options"
-					close_soon
-
-				when 3
-					$game.quit
-			end
+		# Get chosen grid option
+		if $input.action? || $input.click?
+			choose(@grid.get_chosen)
 		end
-
+		
 	end
 
-	def choose(idx)
-		if idx > @buttons.count - 1
-			idx = 0
-		end
-		if idx < 0
-			idx = @buttons.count - 1
-		end
-		@selected = idx
-		@buttons.each{ |b| b.opacity = 150 }
-		@buttons[@selected].opacity = 255
-	end
+	def choose(option)
 
-	def close_soon(delay=10)
-		@close_soon = true
-		@close_delay = delay
+		$scene.queue_menu(option)
+
+		$menu.char_cursor = option
+		@grid.selected_box.flash_heavy
+		self.close_soon
+
 	end
 
 	def close
+		super
 
-		@closing = true
+		@grid.hide_glow
 
-		# Everything fade out
-     	(@buttons).each{ |c|
-     		c.do(go("opacity",-255,200,:linear))
-     	}
-
-     	dist = 30
-     	(@buttons).each{ |c|
-     		c.do(go("x",-dist,200,:qio))
-     	}
-
-     	self.do(delay(200))
-
-	end
-
-	def closing?
-		return @closing
-	end
-
-	def done?
-		return @closing && $tweens.done?(self)
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		
 	end
 
 end"*
@@ -21533,7 +21625,7 @@ class Scene_Battle
   end
 
  end
-"#==============================================================================
+"Ë#==============================================================================
 # ** Scene_GameOver
 #==============================================================================
 
@@ -21572,8 +21664,8 @@ class Scene_GameOver
     @message.start("vn-mys: Now we'll never save my brother.")
 
 
-    @next_menu = nil
-    @menu = Mnu_GameOver.new(@vp)
+    @next_menu = "Title"
+    @menu = nil#Mnu_GameOver.new(@vp)
 
   end
   
@@ -21614,6 +21706,7 @@ class Scene_GameOver
 
     if @message.busy?
       @message.update
+      return
     else
       #@message.hide
     end
@@ -21679,19 +21772,15 @@ class Scene_GameOver
     # The current menu
     case @next_menu
 
-      when "Title"; @menu = Mnu_Title.new(@vp)
-
-      when "New";
-        $game.pop_scene
-        $game.push_scene Scene_Map.new()
+      when "Title"; @menu = Mnu_GameOver.new(@vp)
 
       when "Continue"; 
         @menu = Mnu_Load_Title.new(@vp)
 
-      when "Options";
-        @menu = Mnu_Options_Title.new(@vp)
+      when "Load";
+        @menu = Mnu_Load_Title.new(@vp)
 
-      when "Quit"; @menu = Mnu_Main.new(@vp)
+      when "Quit"; $game.quit
 
     end
 
@@ -21818,11 +21907,13 @@ class Scene_Map < Scene_Base
   end
 
 end
-"Î#==============================================================================
+"D#==============================================================================
 # ** Scene_Menu
 #==============================================================================
 
 class Scene_Menu
+
+  attr_accessor :savequit
   
   #--------------------------------------------------------------------------
   # * Set up the scene
@@ -21832,6 +21923,7 @@ class Scene_Menu
     #Graphics.freeze
 
     @closing = false
+    @savequit = false
 
     $mouse.change_cursor('Default')
     sys('open')
@@ -21887,7 +21979,11 @@ class Scene_Menu
 
     if @closing && $tweens.done?(self)
       $tweens.clear_all
-      $game.pop_scene
+      if @savequit
+        $game.quit 
+      else
+        $game.pop_scene
+      end
     end
 
     return if @closing
@@ -23049,7 +23145,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"W#==============================================================================
+end"V#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23132,7 +23228,7 @@ class AudioManager
 
   def music(file,vol=1.0)
 
-    #return if @music_file == file
+    return if @music_file == file
 
     @music.stop if @music
 
@@ -23488,7 +23584,7 @@ class CacheManager
       GC.start
     end
 
-  end"µ#==============================================================================
+  end"ò#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -23511,6 +23607,7 @@ class DataManager
   attr_reader :numbers
   attr_reader :potions
   attr_reader :profiles
+  attr_reader :help
 
   attr_reader :victories
   attr_reader :books
@@ -23556,6 +23653,7 @@ class DataManager
     @numbers = load_json("numbers",NumberData)
     @potions = load_json("potions",PotionData)
     @profiles = load_json("profiles",ProfileData)
+    @help = load_json("help",HelpData)
 
     @victories = load_json("victories",VictoryData)
     @books = load_json("books",BookData)
@@ -24843,7 +24941,7 @@ end"øclass Bitmap
 	end
 
 end
-"Ø
+"D
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -25012,6 +25110,13 @@ end
 class VictoryData
 	attr_reader :id
 	attr_reader :dialogue
+end
+
+class HelpData
+	attr_reader :id
+	attr_reader :name
+	attr_reader :description
+	attr_reader :icon
 end
 
 class BookData

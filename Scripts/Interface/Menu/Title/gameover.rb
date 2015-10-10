@@ -2,126 +2,109 @@
 # ** Mnu_GameOver
 #==============================================================================
 
-class Mnu_GameOver
+class Mnu_GameOver < Mnu_Base
 
 	def initialize(vp)
+		super(vp)
 
-		@vp = vp
-		@closing = false
-		@close_soon = false
-		@close_delay = 0
+		@title.change($menu.char)
+		@subtitle.text = "Master of deception"
 
-		@data = ['new','continue','quit']
-		cx = 135
-		cy = 110
+		@title.y = -500
+		@subtitle.y = -500
 
-		@buttons = []
+		remove_info
 
-		@data.each{ |item|
+		@menu.dispose
+		self.left.delete(@menu)
+		
+		@grid = Ui_Grid.new(vp)
+		@grid.move(45,143)
 
-			btn = Sprite.new(@vp)
-	     	btn.bitmap = $cache.title("btn-#{item}")
-	     	btn.ox = btn.bitmap.width / 2
-	     	btn.move(cx,cy)
-	     	@buttons.push(btn)
+		char = $party.get($menu.char)
+		
+		@grid.add_midwidth("Continue","Continue Autosave",char.weapon_icon)
+		@grid.add_midwidth("Load","Load Game","skills/sparkle")
+		@grid.add_midwidth("Quit","Quit Game","misc/primary")
 
-	     	cy += 40
+		#@grid.choose($menu.char_cursor)
 
-     	}
+		self.left.push(@grid)
 
-     	@selected = 0
-     	choose(0)
+		# Fade and slide in
+		dist = 30
+		@grid.all.each{ |b|
+			b.x -= dist
+			b.opacity = 0
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",255,200,:qio))
+		}
+
+		open
 
 	end
 
 	def dispose
-
-		@buttons.each{ |i| i.dispose }
-
+		super
+		@grid.dispose
 	end
 
 	def update
+		
 
-		if @close_soon && !@closing
-			@close_delay -= 1
-			if @close_delay <= 0
-				close
-			end
+		if $input.right? || $input.mclick?
+			$menu.char = $party.get_next($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
 		end
 
-		if $input.down?
-			choose(@selected + 1)
+		if $input.left?
+			$menu.char = $party.get_prev($menu.char)
+			$scene.queue_menu("Char")
+			close_soon(0)
 		end
 
-		if $input.up?
-			choose(@selected - 1)
+		super
+
+		@grid.update	
+
+		# Cancel out of grid
+		if $input.cancel? || $input.rclick?
+			@left.each{ |a| $tweens.clear(a) }
+			@right.each{ |a| $tweens.clear(a) }
+			@other.each{ |a| $tweens.clear(a) }
+			close_now
 		end
 
-		if $input.action?
-			case @selected
-				when 0
-					$scene.next_menu = "New"
-					close_soon
-
-				when 1
-					$scene.hide_logo
-					$scene.hide_char
-					$scene.next_menu = "Continue"
-					close_soon
-
-				when 2
-					$scene.hide_logo
-					$scene.next_menu = "Options"
-					close_soon
-
-				when 3
-					$game.quit
-			end
+		# Get chosen grid option
+		if $input.action? || $input.click?
+			choose(@grid.get_chosen)
 		end
-
+		
 	end
 
-	def choose(idx)
-		if idx > @buttons.count - 1
-			idx = 0
-		end
-		if idx < 0
-			idx = @buttons.count - 1
-		end
-		@selected = idx
-		@buttons.each{ |b| b.opacity = 150 }
-		@buttons[@selected].opacity = 255
-	end
+	def choose(option)
 
-	def close_soon(delay=10)
-		@close_soon = true
-		@close_delay = delay
+		$scene.queue_menu(option)
+
+		$menu.char_cursor = option
+		@grid.selected_box.flash_heavy
+		self.close_soon
+
 	end
 
 	def close
+		super
 
-		@closing = true
+		@grid.hide_glow
 
-		# Everything fade out
-     	(@buttons).each{ |c|
-     		c.do(go("opacity",-255,200,:linear))
-     	}
-
-     	dist = 30
-     	(@buttons).each{ |c|
-     		c.do(go("x",-dist,200,:qio))
-     	}
-
-     	self.do(delay(200))
-
-	end
-
-	def closing?
-		return @closing
-	end
-
-	def done?
-		return @closing && $tweens.done?(self)
+		# Fade and hide grid
+		dist = 30
+		@grid.all.each{ |b|
+     		b.do(go("x",-dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		
 	end
 
 end

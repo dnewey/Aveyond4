@@ -270,6 +270,31 @@ class Ui_Grid
 
 	end
 
+	def add_midwidth(name,text,icon)
+
+		# Create new things
+		btn = add_part_box(name,250,46)
+
+     	cont = Label.new(@vp)
+     	cont.font = $fonts.list
+     	cont.shadow = $fonts.list_shadow
+     	cont.icon = $cache.icon(icon)
+     	cont.gradient = true
+     	cont.text = text
+     	@contents.push(cont)
+
+     	# Position
+     	cont.move(@cx+10,@cy+7)
+
+     	choose(@boxes[0].name) if @boxes.count == 1
+
+     	# Next
+     	if @layout == :vertical
+     		@cy += btn.height + @spacing - 1
+     	end
+
+	end
+
 	def add_slot(slot,eq)
 
 		#log_info(slot)

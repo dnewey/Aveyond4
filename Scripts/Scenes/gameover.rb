@@ -37,8 +37,8 @@ class Scene_GameOver
     @message.start("vn-mys: Now we'll never save my brother.")
 
 
-    @next_menu = nil
-    @menu = Mnu_GameOver.new(@vp)
+    @next_menu = "Title"
+    @menu = nil#Mnu_GameOver.new(@vp)
 
   end
   
@@ -79,6 +79,7 @@ class Scene_GameOver
 
     if @message.busy?
       @message.update
+      return
     else
       #@message.hide
     end
@@ -144,19 +145,15 @@ class Scene_GameOver
     # The current menu
     case @next_menu
 
-      when "Title"; @menu = Mnu_Title.new(@vp)
-
-      when "New";
-        $game.pop_scene
-        $game.push_scene Scene_Map.new()
+      when "Title"; @menu = Mnu_GameOver.new(@vp)
 
       when "Continue"; 
         @menu = Mnu_Load_Title.new(@vp)
 
-      when "Options";
-        @menu = Mnu_Options_Title.new(@vp)
+      when "Load";
+        @menu = Mnu_Load_Title.new(@vp)
 
-      when "Quit"; @menu = Mnu_Main.new(@vp)
+      when "Quit"; $game.quit
 
     end
 

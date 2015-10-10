@@ -46,6 +46,7 @@ class Ui_Screen
 
 	def quickbars
 		@blackbars.opacity = 255
+		hide
 	end
 
 	def nobars
