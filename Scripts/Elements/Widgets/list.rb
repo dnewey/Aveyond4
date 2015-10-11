@@ -382,7 +382,7 @@ class List
 
   def draw_chester(data,row)
 
-    log_sys(data)
+    #log_sys(data)
 
     item = $data.skills[data]
 
@@ -514,16 +514,16 @@ class List
       name = "- Empty -"
       ico = $cache.icon('misc/dots') 
     else
-      if data == 0
-        name = "Autosave - #{header[:time]}"
-      else
+
         if header[:time].is_a?(String)
           time = header[:time]
         else
           time = build_time_string(header[:time])
         end
-        name = "Save #{data} - #{time}"
-      end
+        name = "Save #{data} - "
+        name = "Autosave - " if data == 0
+        name += time
+
       ico = $cache.icon("faces/"+header[:leader])
     end
     

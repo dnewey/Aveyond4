@@ -306,6 +306,7 @@ class Game_Map
   end
 
   def cache_push(x,y,ev)
+    return if ev == $player
     @ev_cache[[x,y]] = [] if !@ev_cache.has_key?([x,y])
     @ev_cache[[x,y]].push(ev)
   end
@@ -331,8 +332,6 @@ class Game_Map
 
     }
 
-    update_camera
-
     # If common event is queued, start it
     if $menu.common_event != nil
       @interpreter.common_event_id = $menu.common_event
@@ -350,6 +349,8 @@ class Game_Map
       @events.values.each{ |e| e.refresh }
       @need_refresh = false
     end
+
+    update_camera
 
     # Mouse update
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?

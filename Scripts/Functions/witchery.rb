@@ -44,8 +44,8 @@ def potion_chose_recipe
 end
 
 def potion_chose_secret?		
-	log_sys($menu.chosen)
-	log_ev(potion_current.ingredient)
+	#log_sys($menu.chosen)
+	#log_ev(potion_current.ingredient)
 	return potion_current.ingredient == $menu.chosen
 end
 
