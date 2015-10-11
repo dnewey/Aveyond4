@@ -16,8 +16,6 @@ class Game_Party
 
   attr_reader :items, :potions
 
-  attr_accessor :luck # For boyle? Could just be his stat
-
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
@@ -25,6 +23,10 @@ class Game_Party
   attr_accessor :passive_shop, :passive_scare, :passive_cheekis
 
   attr_accessor :difficulty
+
+  # HACKS
+  attr_accessor :boy_mp_bonus
+
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -72,6 +74,9 @@ class Game_Party
     @party_loc = nil
 
     @difficulty = 'normal'
+
+    # Hacks
+    @boy_mp_bonus = 0
 
     # Hardcode Party Init
     init_party
@@ -386,8 +391,6 @@ class Game_Party
     @actors["boy"].learn('staff')
     @actors["boy"].learn('contempt')
     #@actors["boy"].learn('flames')
-
-    @actors["boy"].learn('empower')
 
     @actors['ing'].learn('wand')
     @actors['ing'].learn('mudball')

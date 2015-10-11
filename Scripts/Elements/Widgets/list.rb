@@ -26,7 +26,7 @@ class List
 
     # Make own viewport
     @vp = Viewport.new(0,0,1000,1000)
-    @vp.z = 4500
+    @vp.z = 9500
 
     @font = Font.new
     @font.name = "Verdana"

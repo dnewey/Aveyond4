@@ -739,7 +739,7 @@ class Wave # Or just projectiles all spawned
 
 	end
 
-end"7
+end"m
 # Spawn and manage weather particles
 
 class Particle < Sprite
@@ -925,6 +925,123 @@ class Weather_DarkDots
 	        # end
 	        s.opac = 70 + rand(100)
 	        s.opacity = 0
+	      end		      
+		}
+
+	end
+
+def dispose
+		@stars.each{ |s| s.dispose }
+	end
+
+end
+
+class Weather_FireDots
+
+	def initialize(vp)
+
+		@stars = []
+	    (1..50).each{ |s|
+	      s = Particle.new(vp)
+	      s.bitmap = $cache.particle(['yellow','red'].sample)
+	      @stars.push(s)
+	      s.sx = $scene.map.display_x/4+ rand(640+220) - 320#-120+800)#rand(640)
+	      s.sy = $scene.map.display_y/4+ rand(480+240) - 240 #-140+700)#rand(480)
+	      s.mx = rand * 2.5
+	      s.my = rand * 2.5
+	      s.x = s.sx
+	      s.y = s.sy
+	   	  s.opac = 10 + rand(40)
+	      s.opacity = 0
+	      # z = 1 + rand
+	      # s.zoom_x = z
+	      # s.zoom_y = z
+
+	    }
+
+	end
+
+	def update
+
+		@stars.each{ |s|
+
+	      s.sx += s.mx * (4.3+rand)
+	      s.sy += s.my * (4.3+rand)
+	      s.x = s.sx
+	      s.y = s.sy
+
+	      s.opacity += 3 if s.opac > s.opacity
+	      
+	      if s.x > $scene.map.display_x/4 + 860 || s.y > $scene.map.display_y/4+720 || s.x < $scene.map.display_x/4 - 320 || s.y < $scene.map.display_y/4 - 240
+	        s.mx = rand
+	        s.my = rand
+	      	s.sx = $scene.map.display_x/4+ rand(640+320) - 320#-120+800)#rand(640)
+	      	s.sy = $scene.map.display_y/4+ rand(480+240) - 240 #-140+700)#rand(480)
+	        # if rand > 0.5
+	        #   s.sx = rand(-120+750)
+	        #   s.sy = -100 + rand(50)
+	        # else
+	        #   s.sx = -100 + rand(50)
+	        #   s.sy = rand(-140+560)
+	        # end
+	        s.opac = 70 + rand(100)
+	        s.opacity = 0
+	      end		      
+		}
+
+	end
+
+def dispose
+		@stars.each{ |s| s.dispose }
+	end
+
+end
+
+class Weather_LeafDots
+
+	def initialize(vp)
+
+		@stars = []
+	    (1..30).each{ |s|
+	      s = Particle.new(vp)
+	      s.bitmap = $cache.particle(['leaf-1','leaf-2','leaf-3'].sample)
+	      @stars.push(s)
+	      s.sx = $scene.map.display_x/4+ rand(220) - 320#-120+800)#rand(640)
+	      s.sy = $scene.map.display_y/4+ rand(240) - 240 #-140+700)#rand(480)
+	      s.mx = rand * 2.5
+	      s.my = rand * 2.5
+	      s.x = s.sx
+	      s.y = s.sy
+	      # z = 1 + rand
+	      # s.zoom_x = z
+	      # s.zoom_y = z
+
+	    }
+
+	end
+
+	def update
+
+		@stars.each{ |s|
+
+	      s.sx += s.mx * (7.3+rand)
+	      s.sy += s.my * (7.3+rand)
+	      s.x = s.sx
+	      s.y = s.sy
+
+	      
+	      if s.x > $scene.map.display_x/4 + 860 || s.y > $scene.map.display_y/4+720 || s.x < $scene.map.display_x/4 - 320 || s.y < $scene.map.display_y/4 - 240
+	        s.mx = rand
+	        s.my = rand
+	      	s.sx = $scene.map.display_x/4+ rand(640+320) - 320#-120+800)#rand(640)
+	      	s.sy = $scene.map.display_y/4+ rand(480+240) - 240 #-140+700)#rand(480)
+	        # if rand > 0.5
+	        #   s.sx = rand(-120+750)
+	        #   s.sy = -100 + rand(50)
+	        # else
+	        #   s.sx = -100 + rand(50)
+	        #   s.sy = rand(-140+560)
+	        # end
 	      end		      
 		}
 
@@ -1549,7 +1666,7 @@ class Label < Sprite
         
   end
   
-end"âF#==============================================================================
+end"ÈF#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1577,7 +1694,7 @@ class List
 
     # Make own viewport
     @vp = Viewport.new(0,0,1000,1000)
-    @vp.z = 4500
+    @vp.z = 9500
 
     @font = Font.new
     @font.name = "Verdana"
@@ -1933,7 +2050,7 @@ class List
 
   def draw_chester(data,row)
 
-    log_sys(data)
+    #log_sys(data)
 
     item = $data.skills[data]
 
@@ -2065,16 +2182,16 @@ class List
       name = "- Empty -"
       ico = $cache.icon('misc/dots') 
     else
-      if data == 0
-        name = "Autosave - #{header[:time]}"
-      else
+
         if header[:time].is_a?(String)
           time = header[:time]
         else
           time = build_time_string(header[:time])
         end
-        name = "Save #{data} - #{time}"
-      end
+        name = "Save #{data} - "
+        name = "Autosave - " if data == 0
+        name += time
+
       ico = $cache.icon("faces/"+header[:leader])
     end
     
@@ -4125,7 +4242,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end" 
+end"  
 
 def shop_choice
 
@@ -4520,15 +4637,15 @@ def buy_chester_skill(skill)
 		# Stat upgrades
 
 		when 'ug-mana-1'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 10
 		when 'ug-mana-2'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 20
 		when 'ug-mana-3'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 30
 		when 'ug-mana-4'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 40
 		when 'ug-mana-5'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 50
 
 
 		# Passives
@@ -4580,7 +4697,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"1
+"2
 
 def store_init
 
@@ -4621,7 +4738,7 @@ def store_next_customer
 end
 
 def store_say_request
-	log_sys($customer.request)
+	#log_sys($customer.request)
 	text("1: #{$customer.request}")
 end
 
@@ -5033,7 +5150,7 @@ def find_child_id(parent_id,name)
 
 	return 0
 
- end"þ
+ end" 
 
 
 
@@ -5079,8 +5196,8 @@ def potion_chose_recipe
 end
 
 def potion_chose_secret?		
-	log_sys($menu.chosen)
-	log_ev(potion_current.ingredient)
+	#log_sys($menu.chosen)
+	#log_ev(potion_current.ingredient)
 	return potion_current.ingredient == $menu.chosen
 end
 
@@ -5832,7 +5949,7 @@ class ActorCmd
 
 	end
 
-end"@
+end":
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -5911,7 +6028,7 @@ class CharView < SpriteGroup
 
 		# Show the right mana bar
 		case @battler.id
-			when 'boy','ing','hib','phy'
+			when 'boy','ing','phy'
 				@mp_bar.for(@battler.id)
 			else
 				@mp_label.hide
@@ -6295,7 +6412,7 @@ class TargetCmd
 	end
 
 end
-"#==============================================================================
+"#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6361,6 +6478,8 @@ class Ui_Screen
 	end
 
 	def update
+
+		return
 
 		if !$settings.bottombar
 			@info.move(0,447)
@@ -9116,7 +9235,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"³
+end"­
 #==============================================================================
 # ** Mnu_Char
 #==============================================================================
@@ -9144,8 +9263,8 @@ class Mnu_Char < Mnu_Base
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
 		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' #&& !$progress.creatures.empty?
-		@grid.add_wide("Ingrid","Witchery","items/potion-red") if $menu.char == 'ing'
-		@grid.add_wide("Nightwatch","Night Watch","items/potion-red") if $menu.char == 'mys' || $menu.char == 'rob'
+		@grid.add_wide("Ingrid","Witchery","misc/coven") if $menu.char == 'ing'
+		@grid.add_wide("Nightwatch","Night Watch","items/great-moon") if $menu.char == 'mys' || $menu.char == 'rob'
 		#@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
 		#@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
 		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'
@@ -9237,7 +9356,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end"L#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -9394,7 +9513,7 @@ class Mnu_Healing < Mnu_Base
 
 		#sys('quest')
 		first = $data.items[$menu.use_item].action.split("/n")[0]
-		log_info(first)
+		#log_info(first)
 		if first.include?('heal')
 			sys('eat')
 		elsif first.include?('mana')
@@ -9425,6 +9544,8 @@ class Mnu_Healing < Mnu_Base
 		end		
 		
 		$party.get(option).use_item($menu.use_item)	
+
+		setup_grid if $menu.use_item == 'cassia'
 		
 	end
 
@@ -9512,7 +9633,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"§#==============================================================================
+end"œ#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -9569,7 +9690,7 @@ class Mnu_Items < Mnu_Base
 		data = $party.items.keys
 
 		if option == 'all'
-			data = data.select{ |q| log_sys(q);$data.items[q].tab != 'gear' }
+			data = data.select{ |q| $data.items[q].tab != 'gear' }
 		end
 
 		if option == "usable"
@@ -11550,7 +11671,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"[#==============================================================================
+end"Ø#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -11622,7 +11743,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/heal")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max HP: #{@char.maxhp}  (#{@char.stat_pure('hp')} + #{@char.stat_gear('hp')})"
+	    lbl.text = "Max HP: #{@char.maxhp}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -11635,7 +11756,7 @@ class Mnu_Status < Mnu_Base
 		   	if @char.id == 'boy'
 				lbl.icon = $cache.icon("stats/darkness")
 				type = "DP"
-			elsif @char.id == 'ing' || @char.id == 'hib'
+			elsif @char.id == 'phy'
 				lbl.icon = $cache.icon("stats/rage")
 				type = "RP"
 			else
@@ -11643,7 +11764,7 @@ class Mnu_Status < Mnu_Base
 				type = "MP"
 			end
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "Max #{type}: #{@char.maxmp}  (#{@char.stat_pure('mp')} + #{@char.stat_gear('mp')})"
+		    lbl.text = "Max #{type}: #{@char.maxmp}"
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 
@@ -11828,8 +11949,7 @@ class Mnu_Boyle < Mnu_Base
 		
 	end
 
-end" "
-#==============================================================================
+end" "P#==============================================================================
 # ** Mnu_Ingrid
 #==============================================================================
 
@@ -11893,76 +12013,94 @@ class Mnu_Ingrid < Mnu_Base
 	    cx = 28
 		cy += 32
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("items/witch-hat")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Witch Coven"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		# In a guild
+		if $progress.guild_id != nil
 
-	    cx = 34
-	    cy += 30
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("items/witch-hat")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = "Witch Coven"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/level")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Coven In: Potioneers"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+		    cy += 30
 
-	   	cx = 34
-	    cy += spacing
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/level")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Coven In: Potioneers"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/level")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Guild Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		   	cx = 34
+		    cy += spacing
+
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/level")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Guild Level: #{@char.level}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
+
+		    cx = 28
+			cy += 32
+
+		end
 
 	    # Attraction
+	    if $progress.attract_boy > 0
 
-	    cx = 28
-		cy += 32
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/attract-get")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = "Attraction"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/attract-get")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Attraction"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+		    cy += 30
 
-	    cx = 34
-	    cy += 30
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("faces/boy")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Boyle: #{$progress.attract_boy}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("faces/boy")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Boyle: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+	    	cy += spacing
 
-	   	cx = 34
-	    cy += spacing
+		end
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("faces/hib")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Hi'beru: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		# Hi'beru joined
+		if flag?('ch5-dream-healing-complete')
 
-	    cx = 34
-	    cy += spacing
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("faces/hib")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Hi'beru: #{$progress.attract_hib}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("faces/phy")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Phye: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+		    cy += spacing
+
+		end
+
+		# Phye joined
+		if flag?('ulrock-phye-in-party')
+
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("faces/phy")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Phye: #{$progress.attract_phy}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
+
+		end
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -11986,7 +12124,7 @@ class Mnu_Ingrid < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end"ä#==============================================================================
 # ** Mnu_Nightwatch
 #==============================================================================
 
@@ -12032,12 +12170,16 @@ class Mnu_Nightwatch < Mnu_Base
 		    lbl = Label.new(vp)
 			lbl.icon = $cache.icon("stats/xp")
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "Progress: #{$progress.night_xp}%"
+		    if i == $progress.night_rank-1
+		    	lbl.text = "Progress: #{$progress.night_xp % 100}%"
+		    else
+				lbl.text = "Progress: 100%"
+		    end
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 
 		    cx = 28
-			cy += 24
+			cy += 28
 
 		}
 
@@ -12153,7 +12295,7 @@ class Mnu_Phye < Mnu_Base
 		
 	end
 
-end" "¨
+end" "¡
 
 class Char_Box_Large < SpriteGroup
 
@@ -12225,7 +12367,7 @@ class Char_Box_Large < SpriteGroup
 			when 'boy'
 				@mp_label.bitmap = $cache.menu_char("label-sp")
 				@mp_bar.for(char)
-			when 'ing', 'hib'
+			when 'ing'
 				@mp_bar.for(char)
 			when 'phy'
 				@mp_label.bitmap = $cache.menu_char("label-rp")
@@ -13686,7 +13828,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"E#==============================================================================
+end"‹#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -13874,13 +14016,38 @@ class Game_Battler
     return @type == :enemy
   end
 
-  def actions
+  def get_actions
     if !@transform
-      return @actions
+      if @id == 'hib'
+
+        case @equips['book']
+          when 'hib-book-ice'
+            return ['chant','bk-ice-1','bk-ice-2','items']
+          when 'hib-book-dmg'
+            return ['chant','bk-dmg-1','bk-dmg-2','items']
+          when 'hib-book-heal'
+            return ['chant','bk-heal-1','bk-heal-2','items']
+          when 'hib-book-help'
+            return ['chant','bk-help-1','bk-help-2','items']
+          when 'hib-book-sleep'
+            return ['chant','bk-sleep-1','bk-sleep-2','items']
+        end
+
+      else
+
+        return @actions
+
+      end
+
     else
+
       return $data.actors[@transform].actions.split(" | ")
+
     end
+
   end
+
+
 
   #--------------------------------------------------------------------------
   # * Transform into something
@@ -14030,7 +14197,7 @@ class Game_Battler
   end
 
 end
-"h
+"¹
 class Game_Battler
 
 
@@ -14069,7 +14236,11 @@ class Game_Battler
   end
 
   def maxmp
-    stat('mp')
+    if @id == 'boy'
+      return 20 + $party.boy_mp_bonus
+    else
+      stat('mp')
+    end
   end
 
   def str
@@ -14323,7 +14494,8 @@ class Game_Battler
 
   end
 
- end"<class Game_Battler
+ end"ø
+class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -14420,7 +14592,7 @@ class Game_Battler
 
     end
 
-    log_sys @skill_id
+    #log_sys @skill_id
     sk = $data.skills[@skill_id]
 
     @scope = sk.scope
@@ -14430,27 +14602,6 @@ class Game_Battler
     end
 
   end  
-
-  def get_actions
-
-    if @id == 'hib'
-
-      case @equips['book']
-        when 'hib-book-ice'
-          return ['chant','bk-ice-1','bk-ice-2','items']
-        when 'hib-book-dmg'
-          return ['chant','bk-dmg-1','bk-dmg-2','items']
-        when 'hib-book-heal'
-          return ['chant','bk-heal-1','bk-heal-2','items']
-        when 'hib-book-help'
-          return ['chant','bk-help-1','bk-help-2','items']
-        when 'hib-book-sleep'
-          return ['chant','bk-sleep-1','bk-sleep-2','items']
-      end
-    else
-      return @actions
-    end
-  end
 
   def set_action(skill)
     @action = 'attack'
@@ -14718,7 +14869,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"´¶#==============================================================================
+end"Î¶#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -15660,7 +15811,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_left(turn_enabled = true)
 
-@move_angle = 0
+    @move_angle = 0
 
     # Turn left
     if turn_enabled
@@ -15682,9 +15833,10 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    # If impassable
-    $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-    $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+
+      # If impassable
+      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
+      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x-1, @y)
@@ -15717,9 +15869,11 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    # If impassable
-    $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-    $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+    
+      # If impassable
+      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
+      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x+1, @y)
@@ -16323,7 +16477,7 @@ class Game_Character
 
 
 end
-"eW#==============================================================================
+"W#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -16484,8 +16638,8 @@ class Game_Event < Game_Character
     x,y = *$mouse.position
     #y += 8
     return false if x < screen_x - 16 #+ self.off_x
-    return false if x > screen_x + 16 #+ self.off_x
-    return false if y > screen_y #+ self.off_y
+    return false if x > screen_x + 16 + ((@width-1)*32) #+ self.off_x
+    return false if y > screen_y + ((@height-1)*32) #+ self.off_y
     return false if y < screen_y - 32 #+ self.off_y
     return true
   end
@@ -17148,9 +17302,9 @@ class Game_Event < Game_Character
     check_event_trigger_auto #if @starting == false
 
     # If parallel process is valid
-    if @interpreter != nil
-      @interpreter.update
-    end
+    # if @interpreter != nil
+    #   @interpreter.update
+    # end
 
   end
     
@@ -17737,7 +17891,7 @@ class Interpreter
   end
 
 end
-"¿B#==============================================================================
+"ãB#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -17805,7 +17959,7 @@ class Game_Map
 
   def nice_name
     name = @map_name
-    if ['Indoor','Indoor2','Cave','Cave2'].include?(@map_name.split("#")[0].split("@")[0])
+    if ['Indoor','Indoor2','Cave','Cave2'].include?(@map_name.split("#")[0].split("@")[0].rstrip)
       # Parent name
       name = find_parent_name(@id)
     end
@@ -18045,6 +18199,7 @@ class Game_Map
   end
 
   def cache_push(x,y,ev)
+    return if ev == $player
     @ev_cache[[x,y]] = [] if !@ev_cache.has_key?([x,y])
     @ev_cache[[x,y]].push(ev)
   end
@@ -18070,8 +18225,6 @@ class Game_Map
 
     }
 
-    update_camera
-
     # If common event is queued, start it
     if $menu.common_event != nil
       @interpreter.common_event_id = $menu.common_event
@@ -18089,6 +18242,8 @@ class Game_Map
       @events.values.each{ |e| e.refresh }
       @need_refresh = false
     end
+
+    update_camera
 
     # Mouse update
     # Check what's under, change cursor etc etc, maybe not every frame? only if moving?
@@ -19592,7 +19747,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end""*#==============================================================================
+end"*#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -19610,8 +19765,6 @@ class Game_Party
 
   attr_reader :items, :potions
 
-  attr_accessor :luck # For boyle? Could just be his stat
-
   # Potion making vars
   attr_accessor :potion_state, :potion_level, :potion_id, :potion_item
 
@@ -19619,6 +19772,10 @@ class Game_Party
   attr_accessor :passive_shop, :passive_scare, :passive_cheekis
 
   attr_accessor :difficulty
+
+  # HACKS
+  attr_accessor :boy_mp_bonus
+
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -19666,6 +19823,9 @@ class Game_Party
     @party_loc = nil
 
     @difficulty = 'normal'
+
+    # Hacks
+    @boy_mp_bonus = 0
 
     # Hardcode Party Init
     init_party
@@ -19981,8 +20141,6 @@ class Game_Party
     @actors["boy"].learn('contempt')
     #@actors["boy"].learn('flames')
 
-    @actors["boy"].learn('empower')
-
     @actors['ing'].learn('wand')
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
@@ -20041,7 +20199,7 @@ class Game_Party
 
   end
         
-end"cclass Progress
+end"bclass Progress
 
 	attr_accessor :quests, :complete
 
@@ -20066,7 +20224,7 @@ end"cclass Progress
 
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
-		@creatures['wyrmwood'] = 12
+		@creatures['wyrmwood'] = 0
 
 		# Boyle skills
 		@chester_level = 0
@@ -20087,7 +20245,7 @@ end"cclass Progress
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
-	    @store_level = 2
+	    @store_level = 0
 	    @store_xp = 0
 	    @store_done = []
 
@@ -20259,7 +20417,7 @@ end"class State
 	end
 
 end
-" #==============================================================================
+"+!#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -20469,6 +20627,10 @@ class Scene_Base
     case weather
       when 'dark-dots'
         @weather = Weather_DarkDots.new(@vp_weather)
+      when 'fire-dots'
+        @weather = Weather_FireDots.new(@vp_weather)
+      when 'leaf-dots'
+        @weather = Weather_LeafDots.new(@vp_weather)
       when 'rain'
         @weather = Weather_Rain.new(@vp_weather)
     end
@@ -21255,7 +21417,7 @@ class Scene_Battle
     
   end
 
-end"'
+end"‚'
 class Scene_Battle
 
   def phase_main_init
@@ -21577,7 +21739,7 @@ class Scene_Battle
 
       if result.state_remove
 
-        log_sys(result.state_remove)
+        #log_sys(result.state_remove)
 
           if result.target.state?(result.state_remove)
             result.target.remove_state(result.state_remove)            
@@ -21650,7 +21812,7 @@ class Scene_Battle
         else
           fade(result.target.ev)
         end
-        wait(60)
+        wait(30)
       end
 
     }
@@ -23408,7 +23570,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"„#==============================================================================
+end"Þ#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23485,6 +23647,7 @@ class AudioManager
     @environmental.each{ |e|
       e.stop
       e.dispose
+      e = nil
     }
     @environmental.clear
   end
@@ -23586,6 +23749,8 @@ class AudioManager
     src.play
     @sfx.push(src)
 
+    log_sys(@sfx.count)
+
   end
 
   def queue(file,vol=1.0,delay=0)
@@ -23602,6 +23767,10 @@ class AudioManager
 
   # Change mode between maps so clear sources also
   def change_mode(mode)
+
+    #return
+
+    log_sys(mode)
 
     @mode = mode
     preset = nil
@@ -23622,8 +23791,9 @@ class AudioManager
       @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
     end
 
-    #@sfx.each{ |s| s.dispose }
+    #@sfx.each{ |s| s = nil }
     @sfx = []
+    GC.start
    
   end
 
@@ -23848,7 +24018,7 @@ class CacheManager
       GC.start
     end
 
-  end"ò#==============================================================================
+  end"ó#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -23889,7 +24059,7 @@ class DataManager
 	def initialize
 
     # Create an icon list
-    create_icon_list if DEBUG
+    #create_icon_list if DEBUG
 
     # Load up json data
     usable = load_json("items",UsableData)

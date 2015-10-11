@@ -70,7 +70,7 @@ class Char_Box_Large < SpriteGroup
 			when 'boy'
 				@mp_label.bitmap = $cache.menu_char("label-sp")
 				@mp_bar.for(char)
-			when 'ing', 'hib'
+			when 'ing'
 				@mp_bar.for(char)
 			when 'phy'
 				@mp_label.bitmap = $cache.menu_char("label-rp")

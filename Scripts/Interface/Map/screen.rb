@@ -65,6 +65,8 @@ class Ui_Screen
 
 	def update
 
+		return
+
 		if !$settings.bottombar
 			@info.move(0,447)
 			@bar.move(0,480)

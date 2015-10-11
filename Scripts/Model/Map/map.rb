@@ -66,7 +66,7 @@ class Game_Map
 
   def nice_name
     name = @map_name
-    if ['Indoor','Indoor2','Cave','Cave2'].include?(@map_name.split("#")[0].split("@")[0])
+    if ['Indoor','Indoor2','Cave','Cave2'].include?(@map_name.split("#")[0].split("@")[0].rstrip)
       # Parent name
       name = find_parent_name(@id)
     end

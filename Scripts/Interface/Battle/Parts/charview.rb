@@ -77,7 +77,7 @@ class CharView < SpriteGroup
 
 		# Show the right mana bar
 		case @battler.id
-			when 'boy','ing','hib','phy'
+			when 'boy','ing','phy'
 				@mp_bar.for(@battler.id)
 			else
 				@mp_label.hide

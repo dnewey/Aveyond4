@@ -155,7 +155,7 @@ class Mnu_Healing < Mnu_Base
 
 		#sys('quest')
 		first = $data.items[$menu.use_item].action.split("/n")[0]
-		log_info(first)
+		#log_info(first)
 		if first.include?('heal')
 			sys('eat')
 		elsif first.include?('mana')
@@ -186,6 +186,8 @@ class Mnu_Healing < Mnu_Base
 		end		
 		
 		$party.get(option).use_item($menu.use_item)	
+
+		setup_grid if $menu.use_item == 'cassia'
 		
 	end
 

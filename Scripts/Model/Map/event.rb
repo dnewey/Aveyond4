@@ -159,8 +159,8 @@ class Game_Event < Game_Character
     x,y = *$mouse.position
     #y += 8
     return false if x < screen_x - 16 #+ self.off_x
-    return false if x > screen_x + 16 #+ self.off_x
-    return false if y > screen_y #+ self.off_y
+    return false if x > screen_x + 16 + ((@width-1)*32) #+ self.off_x
+    return false if y > screen_y + ((@height-1)*32) #+ self.off_y
     return false if y < screen_y - 32 #+ self.off_y
     return true
   end
@@ -823,9 +823,9 @@ class Game_Event < Game_Character
     check_event_trigger_auto #if @starting == false
 
     # If parallel process is valid
-    if @interpreter != nil
-      @interpreter.update
-    end
+    # if @interpreter != nil
+    #   @interpreter.update
+    # end
 
   end
     

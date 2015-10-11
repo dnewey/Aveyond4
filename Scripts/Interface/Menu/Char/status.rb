@@ -70,7 +70,7 @@ class Mnu_Status < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/heal")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Max HP: #{@char.maxhp}  (#{@char.stat_pure('hp')} + #{@char.stat_gear('hp')})"
+	    lbl.text = "Max HP: #{@char.maxhp}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -83,7 +83,7 @@ class Mnu_Status < Mnu_Base
 		   	if @char.id == 'boy'
 				lbl.icon = $cache.icon("stats/darkness")
 				type = "DP"
-			elsif @char.id == 'ing' || @char.id == 'hib'
+			elsif @char.id == 'phy'
 				lbl.icon = $cache.icon("stats/rage")
 				type = "RP"
 			else
@@ -91,7 +91,7 @@ class Mnu_Status < Mnu_Base
 				type = "MP"
 			end
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "Max #{type}: #{@char.maxmp}  (#{@char.stat_pure('mp')} + #{@char.stat_gear('mp')})"
+		    lbl.text = "Max #{type}: #{@char.maxmp}"
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 

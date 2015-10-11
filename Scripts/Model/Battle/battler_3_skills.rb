@@ -106,27 +106,6 @@ class Game_Battler
 
   end  
 
-  def get_actions
-
-    if @id == 'hib'
-
-      case @equips['book']
-        when 'hib-book-ice'
-          return ['chant','bk-ice-1','bk-ice-2','items']
-        when 'hib-book-dmg'
-          return ['chant','bk-dmg-1','bk-dmg-2','items']
-        when 'hib-book-heal'
-          return ['chant','bk-heal-1','bk-heal-2','items']
-        when 'hib-book-help'
-          return ['chant','bk-help-1','bk-help-2','items']
-        when 'hib-book-sleep'
-          return ['chant','bk-sleep-1','bk-sleep-2','items']
-      end
-    else
-      return @actions
-    end
-  end
-
   def set_action(skill)
     @action = 'attack'
     @skill_id = skill

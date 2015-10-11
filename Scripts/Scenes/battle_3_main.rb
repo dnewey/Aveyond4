@@ -393,7 +393,7 @@ class Scene_Battle
         else
           fade(result.target.ev)
         end
-        wait(60)
+        wait(30)
       end
 
     }

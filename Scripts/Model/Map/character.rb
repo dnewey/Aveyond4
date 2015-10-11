@@ -940,7 +940,7 @@ class Game_Character
   #--------------------------------------------------------------------------
   def move_left(turn_enabled = true)
 
-@move_angle = 0
+    @move_angle = 0
 
     # Turn left
     if turn_enabled
@@ -962,9 +962,10 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    # If impassable
-    $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-    $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+
+      # If impassable
+      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
+      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x-1, @y)
@@ -997,9 +998,11 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    # If impassable
-    $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-    $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+    
+      # If impassable
+      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
+      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x+1, @y)

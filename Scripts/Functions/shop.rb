@@ -393,15 +393,15 @@ def buy_chester_skill(skill)
 		# Stat upgrades
 
 		when 'ug-mana-1'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 10
 		when 'ug-mana-2'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 20
 		when 'ug-mana-3'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 30
 		when 'ug-mana-4'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 40
 		when 'ug-mana-5'
-			boy.grant_stat('mp',10)
+			$party.boy_mp_bonus = 50
 
 
 		# Passives

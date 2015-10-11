@@ -75,6 +75,7 @@ class AudioManager
     @environmental.each{ |e|
       e.stop
       e.dispose
+      e = nil
     }
     @environmental.clear
   end
@@ -176,6 +177,8 @@ class AudioManager
     src.play
     @sfx.push(src)
 
+    log_sys(@sfx.count)
+
   end
 
   def queue(file,vol=1.0,delay=0)
@@ -192,6 +195,10 @@ class AudioManager
 
   # Change mode between maps so clear sources also
   def change_mode(mode)
+
+    #return
+
+    log_sys(mode)
 
     @mode = mode
     preset = nil
@@ -212,8 +219,9 @@ class AudioManager
       @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
     end
 
-    #@sfx.each{ |s| s.dispose }
+    #@sfx.each{ |s| s = nil }
     @sfx = []
+    GC.start
    
   end
 

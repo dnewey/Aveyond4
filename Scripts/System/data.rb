@@ -39,7 +39,7 @@ class DataManager
 	def initialize
 
     # Create an icon list
-    create_icon_list if DEBUG
+    #create_icon_list if DEBUG
 
     # Load up json data
     usable = load_json("items",UsableData)
