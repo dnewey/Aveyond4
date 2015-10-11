@@ -49,7 +49,7 @@ class Mnu_Options < Mnu_Base
 		else
 			data.push(["bottombar","Bottom Bar: Off","misc/bottombar"])
 		end
-		data.push(["credits","View Credits >","misc/credits"])	
+		#data.push(["credits","View Credits >","misc/credits"])	
 
 		@menu.list.setup(data,idx)
 

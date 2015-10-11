@@ -362,10 +362,13 @@ class Game_Map
     # Keep track of starting events and always update those
     @events.values.each{ |e| e.update }
 
-    # x1 = ((display_x/128) - 2).to_i
-    # y1 = ((display_y/128) -2).to_i
-    # x2 = x1 + 20 + 4
-    # y2 = y1 + 15 + 4
+    #  bx = 0#1
+    #  by = 0#1
+
+    # x1 = ((display_x/128) - bx).to_i
+    # y1 = ((display_y/128) -by).to_i
+    # x2 = x1 + 20 + (bx*2)
+    # y2 = y1 + 15 + (by*2)
 
     # updaters = []
     # (x1..x2).each{ |x|

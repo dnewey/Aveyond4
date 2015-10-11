@@ -386,7 +386,12 @@ class Game_Battle
       result.critical = false if result.evade
 
       # Calc resist if state added and its a bad one?
-
+      if !result.state_add != nil
+        if !['minion-double','crit','protect'].include?(result.state_add)
+          result.resist = rand(100) < t.res
+          result.state_add = nil
+        end
+      end
 
       # --------------------------------------------
       # DAMAGE

@@ -9,6 +9,7 @@ class Attack_Result
 	attr_accessor :heal
 
 	attr_accessor :evade
+	attr_accessor :resist
 
 	attr_accessor :gain_mana
 

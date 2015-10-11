@@ -18,6 +18,7 @@ class ActorCmd
 		close
 
 		@battler = battler
+		@actions = @battler.get_actions
 
 		@icons.each{ |i| i.dispose }
 		@icons = []
@@ -26,7 +27,8 @@ class ActorCmd
 		@texts = []
 
 		# Read the categories for this guy
-		@battler.actions.each{ |action|
+		@actions.each{ |action|
+
 			# Add an icon?
 			spr = Sprite.new(@vp)
 			@icons.push(spr)
@@ -105,7 +107,7 @@ class ActorCmd
 	end
 
 	def get_action
-		return @battler.actions[@idx]
+		return @actions[@idx]
 	end
 
 	def reposition
@@ -213,7 +215,7 @@ class ActorCmd
 		@icons.each{ |i|
 			#$tweens.resolve(i)
 			
-			i.bitmap = $cache.icon("battle/#{@battler.actions[idx]}")
+			i.bitmap = $cache.icon("battle/#{@actions[idx]}")
 
 			i.ox = i.width/2
 			i.oy = i.height
@@ -225,7 +227,7 @@ class ActorCmd
 
 			i.opacity = 0
 			
-			i.bitmap = $cache.icon("texts/#{@battler.actions[idx]}")
+			i.bitmap = $cache.icon("texts/#{@actions[idx]}")
 
 			i.ox = i.width/2
 			i.oy = i.height
@@ -234,7 +236,7 @@ class ActorCmd
 
 		
 		#reposition
-		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.actions[@idx]}-on")
+		@icons[@idx].bitmap = $cache.icon("battle/#{@actions[@idx]}-on")
 		#seq = sequence(go("y",-3,400),go("y",3,400))
 		@icons[@idx].do(repeat(seq))
 		#$scene.hud.set_help(@battler.actions[@idx])

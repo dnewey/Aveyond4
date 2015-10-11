@@ -28,9 +28,9 @@ class Scene_GameOver
 
     # Char
     @char = Sprite.new(@vp)
-    @char.x += 50
+    #@char.x += 50
     @char.bitmap = $cache.gameover('char-mys')
-    @char.do(go('x',-50,700,:qo))
+    #@char.do(go('x',-50,700,:qo))
 
     @message = Ui_Message.new(@vp)
 

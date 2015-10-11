@@ -81,5 +81,16 @@ class Scene_Battle
     
   end
 
+  def phase_victory_lose
+
+          # Fade out show defeat screen etc
+      Graphics.freeze
+      $game.pop_scene
+      $game.push_scene(Scene_GameOver.new)
+      t = 'Graphics/Transitions/battle'
+      Graphics.transition(30,t) 
+
+  end
+
 
 end

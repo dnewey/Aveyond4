@@ -578,6 +578,10 @@ class Game_Event < Game_Character
       @direction_fix = true
     end
 
+    if @character_name.include?("Obj-Chests")
+      @save = true
+    end
+
   end
   
   def read_comment_data

@@ -37,7 +37,7 @@ class DebugManager
 		
 		# Prepare on screen log
 		@viewport = Viewport.new(0,0,640,480)
-		@viewport.z = 5000
+		@viewport.z = 9999
 		
 		@console = DebugConsole.new(@viewport)
 

@@ -19,7 +19,7 @@ class MouseManager
     @pos = [0,0]
     @hwnd = Findwindow.call(nil, "Aveyond")
     @sprite = Sprite.new()
-    @sprite.z = 6000
+    @sprite.z = 10000
     @sprite.ox = 32
     @sprite.oy = 32
     @mousing = true # Disabled when keys pressed

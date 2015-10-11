@@ -73,7 +73,7 @@ rescue StandardError => e
     log_err("#{loc_err}")
   } 
   
-end"r#==============================================================================
+end"è#==============================================================================
 # ** Sprite_Character
 #==============================================================================
 
@@ -128,14 +128,6 @@ class Sprite_Character < Sprite
   # Updates
 
   def update_bitmap
-
-      # Clear the helper graphics
-      # if !$settings.debug_draw_helpers
-      #   if @character_name == "!!!" || @character_name == 'Block'
-      #     return
-      #     self.bitmap.clear
-      #   end
-      # end
 
       @character_name = @character.character_name
 
@@ -5555,7 +5547,7 @@ class Popper < Sprite
 
 	end
 
-end"¢
+end"ü
 class ActorCmd
 
 	def initialize(vp)
@@ -5575,6 +5567,7 @@ class ActorCmd
 		close
 
 		@battler = battler
+		@actions = @battler.get_actions
 
 		@icons.each{ |i| i.dispose }
 		@icons = []
@@ -5583,7 +5576,8 @@ class ActorCmd
 		@texts = []
 
 		# Read the categories for this guy
-		@battler.actions.each{ |action|
+		@actions.each{ |action|
+
 			# Add an icon?
 			spr = Sprite.new(@vp)
 			@icons.push(spr)
@@ -5662,7 +5656,7 @@ class ActorCmd
 	end
 
 	def get_action
-		return @battler.actions[@idx]
+		return @actions[@idx]
 	end
 
 	def reposition
@@ -5770,7 +5764,7 @@ class ActorCmd
 		@icons.each{ |i|
 			#$tweens.resolve(i)
 			
-			i.bitmap = $cache.icon("battle/#{@battler.actions[idx]}")
+			i.bitmap = $cache.icon("battle/#{@actions[idx]}")
 
 			i.ox = i.width/2
 			i.oy = i.height
@@ -5782,7 +5776,7 @@ class ActorCmd
 
 			i.opacity = 0
 			
-			i.bitmap = $cache.icon("texts/#{@battler.actions[idx]}")
+			i.bitmap = $cache.icon("texts/#{@actions[idx]}")
 
 			i.ox = i.width/2
 			i.oy = i.height
@@ -5791,7 +5785,7 @@ class ActorCmd
 
 		
 		#reposition
-		@icons[@idx].bitmap = $cache.icon("battle/#{@battler.actions[@idx]}-on")
+		@icons[@idx].bitmap = $cache.icon("battle/#{@actions[@idx]}-on")
 		#seq = sequence(go("y",-3,400),go("y",3,400))
 		@icons[@idx].do(repeat(seq))
 		#$scene.hud.set_help(@battler.actions[@idx])
@@ -6171,7 +6165,7 @@ class SkillCmd < ItemCmd
 
 	end
 
-end"$
+end"H
 class TargetCmd
 
 	attr_reader :active
@@ -6216,6 +6210,8 @@ class TargetCmd
 	def point_at(char)
 		@arrow.center(char.ev.screen_x,char.ev.screen_y-($cache.get("Characters/"+char.ev.character_name).height/4)-6)
 		@active.ev.flash_dur = 15
+
+		$scene.hud.set_help(char.name)
 	end
 
 	def close
@@ -10159,7 +10155,7 @@ class Mnu_Main
 		return @closing && $tweens.done?(self)
 	end
 
-end")
+end"*
 class Mnu_Options < Mnu_Base
 
 	def initialize(vp)
@@ -10210,7 +10206,7 @@ class Mnu_Options < Mnu_Base
 		else
 			data.push(["bottombar","Bottom Bar: Off","misc/bottombar"])
 		end
-		data.push(["credits","View Credits >","misc/credits"])	
+		#data.push(["credits","View Credits >","misc/credits"])	
 
 		@menu.list.setup(data,idx)
 
@@ -14327,8 +14323,7 @@ class Game_Battler
 
   end
 
- end"˜
-class Game_Battler
+ end"<class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -14435,6 +14430,27 @@ class Game_Battler
     end
 
   end  
+
+  def get_actions
+
+    if @id == 'hib'
+
+      case @equips['book']
+        when 'hib-book-ice'
+          return ['chant','bk-ice-1','bk-ice-2','items']
+        when 'hib-book-dmg'
+          return ['chant','bk-dmg-1','bk-dmg-2','items']
+        when 'hib-book-heal'
+          return ['chant','bk-heal-1','bk-heal-2','items']
+        when 'hib-book-help'
+          return ['chant','bk-help-1','bk-help-2','items']
+        when 'hib-book-sleep'
+          return ['chant','bk-sleep-1','bk-sleep-2','items']
+      end
+    else
+      return @actions
+    end
+  end
 
   def set_action(skill)
     @action = 'attack'
@@ -14643,7 +14659,7 @@ class Game_Battler
 
   end
 
-end"¬
+end"⁄
 class Attack_Result
 
 	attr_accessor :target
@@ -14654,6 +14670,7 @@ class Attack_Result
 	attr_accessor :heal
 
 	attr_accessor :evade
+	attr_accessor :resist
 
 	attr_accessor :gain_mana
 
@@ -16306,7 +16323,7 @@ class Game_Character
 
 
 end
-"	W#==============================================================================
+"WW#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -16884,6 +16901,10 @@ class Game_Event < Game_Character
 
     if @character_name == "Common"
       @direction_fix = true
+    end
+
+    if @character_name.include?("Obj-Chests")
+      @save = true
     end
 
   end
@@ -17714,7 +17735,7 @@ class Interpreter
   end
 
 end
-"èB#==============================================================================
+"øB#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -18078,10 +18099,13 @@ class Game_Map
     # Keep track of starting events and always update those
     @events.values.each{ |e| e.update }
 
-    # x1 = ((display_x/128) - 2).to_i
-    # y1 = ((display_y/128) -2).to_i
-    # x2 = x1 + 20 + 4
-    # y2 = y1 + 15 + 4
+    #  bx = 0#1
+    #  by = 0#1
+
+    # x1 = ((display_x/128) - bx).to_i
+    # y1 = ((display_y/128) -by).to_i
+    # x2 = x1 + 20 + (bx*2)
+    # y2 = y1 + 15 + (by*2)
 
     # updaters = []
     # (x1..x2).each{ |x|
@@ -18920,7 +18944,7 @@ class Game_Player < Game_Character
   end
 
 end
-"w1
+"J2
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19308,7 +19332,12 @@ class Game_Battle
       result.critical = false if result.evade
 
       # Calc resist if state added and its a bad one?
-
+      if !result.state_add != nil
+        if !['minion-double','crit','protect'].include?(result.state_add)
+          result.resist = rand(100) < t.res
+          result.state_add = nil
+        end
+      end
 
       # --------------------------------------------
       # DAMAGE
@@ -20584,7 +20613,7 @@ class Scene_Base
   # end
 
 end
-"{#==============================================================================
+"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -20732,7 +20761,7 @@ class Scene_Battle < Scene_Base
     reload_map
 
     start_events
-            
+
   end
   
   def terminate
@@ -20757,6 +20786,10 @@ class Scene_Battle < Scene_Base
   def update
 
     super
+
+    # Force weather
+    @vp_weather.ox = 0#$map.display_x / 4
+    @vp_weather.oy = 0#$map.display_y / 4
 
     @hud.update
     @message.update
@@ -20865,6 +20898,8 @@ class Scene_Battle < Scene_Base
         phase_victory_level
       when :victory_end
         phase_victory_end
+      when :victory_lose
+        phase_victory_lose
 
       # Misc Phase
       when :misc_text
@@ -21218,7 +21253,7 @@ class Scene_Battle
     
   end
 
-end"®'
+end"Å'
 class Scene_Battle
 
   def phase_main_init
@@ -21627,9 +21662,9 @@ class Scene_Battle
 
     # If one side has been defeated, that's it
     if $party.defeated?
-      # Fade out show defeat screen etc
-      $game.push_scene(Scene_GameOver.new)
-      @phase = :LOSE
+      music_fadeout
+      wait(120)
+      @phase = :victory_lose
       return
     end
 
@@ -21677,7 +21712,7 @@ class Scene_Battle
 
   end
 
-end"x
+end"q
 class Scene_Battle
 
   def phase_victory_init
@@ -21760,6 +21795,17 @@ class Scene_Battle
     
   end
 
+  def phase_victory_lose
+
+          # Fade out show defeat screen etc
+      Graphics.freeze
+      $game.pop_scene
+      $game.push_scene(Scene_GameOver.new)
+      t = 'Graphics/Transitions/battle'
+      Graphics.transition(30,t) 
+
+  end
+
 
 end" 
 class Scene_Battle
@@ -21838,7 +21884,7 @@ class Scene_Battle
   end
 
  end
-"+#==============================================================================
+",#==============================================================================
 # ** Scene_GameOver
 #==============================================================================
 
@@ -21870,7 +21916,7 @@ class Scene_GameOver
     @char = Sprite.new(@vp)
     @char.x += 50
     @char.bitmap = $cache.gameover('char-mys')
-    @char.do(go('x',-50,700,:qo))
+    #@char.do(go('x',-50,700,:qo))
 
     @message = Ui_Message.new(@vp)
 
@@ -23360,7 +23406,7 @@ end"¬Cmodule Seal
 
     alias auto? auto
   end
-end"[#==============================================================================
+end"Ñ#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23444,9 +23490,10 @@ class AudioManager
   def music(file,vol=1.0)
 
     #return if @music_file == file
+    @music.stop if @music 
 
     if file == nil || file == ''   
-      @music.stop if @music 
+      
       return
     end
     
@@ -23472,8 +23519,10 @@ class AudioManager
 
     #return if @atmosphere_file == file    
 
+    @atmosphere.stop if @music
+
     if file == nil  || file == ''
-      @atmosphere.stop if @music
+      
       return
     end
 
@@ -23643,7 +23692,7 @@ class EnviroSource < Seal::Source
     self.play
 
     @short = 96 * 4 # *4 to convert to REAL coords
-    @long = 320 * 4
+    @long = 450 * 4
 
   end
 
@@ -23682,19 +23731,19 @@ class EnviroSource < Seal::Source
     dist = Math.sqrt(dist)
 
     # If under min, full volume
-    if dist < @short
-      self.gain = 1.0
+    if dist < @short #* @short
+      self.gain = 0.5
       return
     end
 
     # If over max, off
-    if dist > @long
+    if dist > @long #* @long
       self.gain = 0.0
       return
     end
 
     # Scale
-    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
+    self.gain = (1.0 - (dist - @short).to_f / (@long-@short).to_f) * 0.5
 
   end
 
@@ -24036,7 +24085,7 @@ class DebugManager
 		
 		# Prepare on screen log
 		@viewport = Viewport.new(0,0,640,480)
-		@viewport.z = 5000
+		@viewport.z = 9999
 		
 		@console = DebugConsole.new(@viewport)
 
@@ -24473,7 +24522,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"	#==============================================================================
+end"	#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -24572,7 +24621,7 @@ class GameManager
     $debug.update
     $tweens.update
     Graphics.update
-    Input.update
+    #Input.update
     @scenes[0].update
 
     if @queue
@@ -24778,7 +24827,7 @@ class KeyboardManager
 
   end
 
-end"<	#============================================================================== 
+end"=	#============================================================================== 
 # ** Modules.Mouse Input (7.0)   By Near Fantastica & SephirothSpawn
 #==============================================================================
 
@@ -24799,7 +24848,7 @@ class MouseManager
     @pos = [0,0]
     @hwnd = Findwindow.call(nil, "Aveyond")
     @sprite = Sprite.new()
-    @sprite.z = 6000
+    @sprite.z = 10000
     @sprite.ox = 32
     @sprite.oy = 32
     @mousing = true # Disabled when keys pressed
@@ -25729,71 +25778,71 @@ class DebugConsole
 		return chars
 	end
 
-end"Cmodule Graphics
+end"Ø# module Graphics
  
-  @fps, @fps_tmp = 0, []
+#   @fps, @fps_tmp = 0, []
  
-  class << self
+#   class << self
     
-    attr_reader :fps
+#     attr_reader :fps
     
-    alias fps_update update unless method_defined?(:fps_update)
-    def update
+#     alias fps_update update unless method_defined?(:fps_update)
+#     def update
 
-      if !$settings.debug_draw_fps
-      	fps_sprite.hide
-      	back_sprite.hide
-      	fps_update
-      	return
-      else
-		fps_sprite.show
-      	back_sprite.show
-      end
+#       if !$settings.debug_draw_fps
+#       	fps_sprite.hide
+#       	back_sprite.hide
+#       	fps_update
+#       	return
+#       else
+# 		fps_sprite.show
+#       	back_sprite.show
+#       end
 
-	  t = Time.now
-	  fps_update
-	  @fps_tmp[frame_count % frame_rate] = Time.now != t
-	  @fps = 0
-	  frame_rate.times {|i| @fps += 1 if @fps_tmp[i]}
-	  fps_sprite.src_rect.y = @fps * 30
+# 	  t = Time.now
+# 	  fps_update
+# 	  @fps_tmp[frame_count % frame_rate] = Time.now != t
+# 	  @fps = 0
+# 	  frame_rate.times {|i| @fps += 1 if @fps_tmp[i]}
+# 	  fps_sprite.src_rect.y = @fps * 30
 
-	  if @old_color != $debug.last_color
-	  	back_sprite.bitmap.fill($debug.last_color)
-	  	@old_color = $debug.last_color
-	  end
+# 	  if @old_color != $debug.last_color
+# 	  	back_sprite.bitmap.fill($debug.last_color)
+# 	  	@old_color = $debug.last_color
+# 	  end
 
-    end
+#     end
     
-    def fps_sprite
-	  if !@fps_sprite or @fps_sprite.disposed?
-	    @fps_sprite = Sprite.new
-	    @fps_sprite.z = 9999
-	    @fps_sprite.x = $game.width-45
-	    @fps_sprite.y = 16
-	    @fps_sprite.bitmap = Bitmap.new(30, 30*62)
-	    @fps_sprite.bitmap.font.size = 28
-	    @fps_sprite.bitmap.font.name = "Consolas"
-	    @fps_sprite.bitmap.font.color.set(255, 255, 255)
-	    61.times {|i| @fps_sprite.bitmap.draw_text(-2, i*30, 36, 30, "% 3d"%i)}
-	    @fps_sprite.bitmap.draw_text(-2, 61*30, 36, 30, "++")
-	    @fps_sprite.src_rect.height = 30
-	  end
-	  return @fps_sprite
-    end
+#     def fps_sprite
+# 	  if !@fps_sprite or @fps_sprite.disposed?
+# 	    @fps_sprite = Sprite.new
+# 	    @fps_sprite.z = 9999
+# 	    @fps_sprite.x = $game.width-45
+# 	    @fps_sprite.y = 16
+# 	    @fps_sprite.bitmap = Bitmap.new(30, 30*62)
+# 	    @fps_sprite.bitmap.font.size = 28
+# 	    @fps_sprite.bitmap.font.name = "Consolas"
+# 	    @fps_sprite.bitmap.font.color.set(255, 255, 255)
+# 	    61.times {|i| @fps_sprite.bitmap.draw_text(-2, i*30, 36, 30, "% 3d"%i)}
+# 	    @fps_sprite.bitmap.draw_text(-2, 61*30, 36, 30, "++")
+# 	    @fps_sprite.src_rect.height = 30
+# 	  end
+# 	  return @fps_sprite
+#     end
 
-    def back_sprite
-	  if !@back_sprite or @back_sprite.disposed?
-	    @back_sprite = Sprite.new
-	    @back_sprite.z = 9997
-	    @back_sprite.x = $game.width-40
-	    @back_sprite.y = 16
-	    @back_sprite.bitmap = Bitmap.new(30, 30)
-	  end
-	  return @back_sprite
-    end
+#     def back_sprite
+# 	  if !@back_sprite or @back_sprite.disposed?
+# 	    @back_sprite = Sprite.new
+# 	    @back_sprite.z = 9997
+# 	    @back_sprite.x = $game.width-40
+# 	    @back_sprite.y = 16
+# 	    @back_sprite.bitmap = Bitmap.new(30, 30)
+# 	  end
+# 	  return @back_sprite
+#     end
     
-  end
-end"≤#==============================================================================
+#   end
+# end"≤#==============================================================================
 # ** Actions
 #==============================================================================
 

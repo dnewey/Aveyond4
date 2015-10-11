@@ -146,7 +146,7 @@ class Scene_Battle < Scene_Base
     reload_map
 
     start_events
-            
+
   end
   
   def terminate
@@ -171,6 +171,10 @@ class Scene_Battle < Scene_Base
   def update
 
     super
+
+    # Force weather
+    @vp_weather.ox = 0#$map.display_x / 4
+    @vp_weather.oy = 0#$map.display_y / 4
 
     @hud.update
     @message.update
@@ -279,6 +283,8 @@ class Scene_Battle < Scene_Base
         phase_victory_level
       when :victory_end
         phase_victory_end
+      when :victory_lose
+        phase_victory_lose
 
       # Misc Phase
       when :misc_text

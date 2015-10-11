@@ -97,7 +97,7 @@ class GameManager
     $debug.update
     $tweens.update
     Graphics.update
-    Input.update
+    #Input.update
     @scenes[0].update
 
     if @queue

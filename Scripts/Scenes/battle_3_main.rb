@@ -407,9 +407,9 @@ class Scene_Battle
 
     # If one side has been defeated, that's it
     if $party.defeated?
-      # Fade out show defeat screen etc
-      $game.push_scene(Scene_GameOver.new)
-      @phase = :LOSE
+      music_fadeout
+      wait(120)
+      @phase = :victory_lose
       return
     end
 

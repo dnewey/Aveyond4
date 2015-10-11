@@ -82,9 +82,10 @@ class AudioManager
   def music(file,vol=1.0)
 
     #return if @music_file == file
+    @music.stop if @music 
 
     if file == nil || file == ''   
-      @music.stop if @music 
+      
       return
     end
     
@@ -110,8 +111,10 @@ class AudioManager
 
     #return if @atmosphere_file == file    
 
+    @atmosphere.stop if @music
+
     if file == nil  || file == ''
-      @atmosphere.stop if @music
+      
       return
     end
 
@@ -281,7 +284,7 @@ class EnviroSource < Seal::Source
     self.play
 
     @short = 96 * 4 # *4 to convert to REAL coords
-    @long = 320 * 4
+    @long = 450 * 4
 
   end
 
@@ -320,19 +323,19 @@ class EnviroSource < Seal::Source
     dist = Math.sqrt(dist)
 
     # If under min, full volume
-    if dist < @short
-      self.gain = 1.0
+    if dist < @short #* @short
+      self.gain = 0.5
       return
     end
 
     # If over max, off
-    if dist > @long
+    if dist > @long #* @long
       self.gain = 0.0
       return
     end
 
     # Scale
-    self.gain = 1.0 - (dist - @short).to_f / (@long-@short).to_f
+    self.gain = (1.0 - (dist - @short).to_f / (@long-@short).to_f) * 0.5
 
   end
 

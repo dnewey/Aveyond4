@@ -54,14 +54,6 @@ class Sprite_Character < Sprite
 
   def update_bitmap
 
-      # Clear the helper graphics
-      # if !$settings.debug_draw_helpers
-      #   if @character_name == "!!!" || @character_name == 'Block'
-      #     return
-      #     self.bitmap.clear
-      #   end
-      # end
-
       @character_name = @character.character_name
 
       if @character_name.include?("Icons")
