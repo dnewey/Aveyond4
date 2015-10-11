@@ -347,7 +347,9 @@ class Game_Event < Game_Character
 
   def label_applies?(label)
 
-    case label.gsub(' ',':').split(":")[0]
+    label.gsub!(' ',':')
+
+    case label.split(":")[0]
 
       when '@else'
         return true
