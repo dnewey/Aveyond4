@@ -44,12 +44,16 @@ class Mnu_Nightwatch < Mnu_Base
 		    lbl = Label.new(vp)
 			lbl.icon = $cache.icon("stats/xp")
 		    lbl.font = $fonts.pop_text
-		    lbl.text = "Progress: #{$progress.night_xp}%"
+		    if i == $progress.night_rank-1
+		    	lbl.text = "Progress: #{$progress.night_xp % 100}%"
+		    else
+				lbl.text = "Progress: 100%"
+		    end
 		    lbl.move(cx,cy)
 		    self.left.push(lbl)
 
 		    cx = 28
-			cy += 24
+			cy += 28
 
 		}
 

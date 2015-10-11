@@ -62,76 +62,94 @@ class Mnu_Ingrid < Mnu_Base
 	    cx = 28
 		cy += 32
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("items/witch-hat")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Witch Coven"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		# In a guild
+		if $progress.guild_id != nil
 
-	    cx = 34
-	    cy += 30
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("items/witch-hat")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = "Witch Coven"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/level")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Coven In: Potioneers"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+		    cy += 30
 
-	   	cx = 34
-	    cy += spacing
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/level")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Coven In: Potioneers"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/level")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Guild Level: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		   	cx = 34
+		    cy += spacing
+
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("stats/level")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Guild Level: #{@char.level}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
+
+		    cx = 28
+			cy += 32
+
+		end
 
 	    # Attraction
+	    if $progress.attract_boy > 0
 
-	    cx = 28
-		cy += 32
+			lbl = Label.new(vp)
+			lbl.icon = $cache.icon("misc/attract-get")
+		    lbl.font = $fonts.list
+		    lbl.shadow = $fonts.list_shadow
+		    lbl.text = "Attraction"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-		lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/attract-get")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Attraction"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+		    cy += 30
 
-	    cx = 34
-	    cy += 30
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("faces/boy")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Boyle: #{$progress.attract_boy}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("faces/boy")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Boyle: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+	    	cy += spacing
 
-	   	cx = 34
-	    cy += spacing
+		end
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("faces/hib")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Hi'beru: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		# Hi'beru joined
+		if flag?('ch5-dream-healing-complete')
 
-	    cx = 34
-	    cy += spacing
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("faces/hib")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Hi'beru: #{$progress.attract_hib}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
 
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("faces/phy")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Phye: #{@char.level}"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
+		    cx = 34
+		    cy += spacing
+
+		end
+
+		# Phye joined
+		if flag?('ulrock-phye-in-party')
+
+		    lbl = Label.new(vp)
+			lbl.icon = $cache.icon("faces/phy")
+		    lbl.font = $fonts.pop_text
+		    lbl.text = "Phye: #{$progress.attract_phy}"
+		    lbl.move(cx,cy)
+		    self.left.push(lbl)
+
+		end
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
