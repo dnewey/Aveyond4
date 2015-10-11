@@ -23,7 +23,7 @@ class Progress
 
 		# Boyle - creatures
 		@creatures = {} # Sorted by zone
-		@creatures['wyrmwood'] = 12
+		@creatures['wyrmwood'] = 0
 
 		# Boyle skills
 		@chester_level = 0
@@ -44,7 +44,7 @@ class Progress
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
-	    @store_level = 2
+	    @store_level = 0
 	    @store_xp = 0
 	    @store_done = []
 

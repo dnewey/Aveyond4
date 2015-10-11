@@ -320,7 +320,7 @@ class Scene_Battle
 
       if result.state_remove
 
-        log_sys(result.state_remove)
+        #log_sys(result.state_remove)
 
           if result.target.state?(result.state_remove)
             result.target.remove_state(result.state_remove)            

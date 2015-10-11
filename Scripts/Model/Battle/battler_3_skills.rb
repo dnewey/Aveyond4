@@ -95,7 +95,7 @@ class Game_Battler
 
     end
 
-    log_sys @skill_id
+    #log_sys @skill_id
     sk = $data.skills[@skill_id]
 
     @scope = sk.scope

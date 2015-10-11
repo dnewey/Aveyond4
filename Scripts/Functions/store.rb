@@ -39,7 +39,7 @@ def store_next_customer
 end
 
 def store_say_request
-	log_sys($customer.request)
+	#log_sys($customer.request)
 	text("1: #{$customer.request}")
 end
 
