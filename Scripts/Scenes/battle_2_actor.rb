@@ -56,7 +56,7 @@ class Scene_Battle
           @item_cmd.setup
           @phase = :actor_item
 
-        when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
+        when "skills", "spells", "witchery", "team", "transform", "demon", "dream", "sing"
 
           @skill_cmd.setup(@active_battler,action)
           
@@ -69,6 +69,11 @@ class Scene_Battle
           @phase = :actor_transform
 
         else
+
+          # Rowen gadget hack
+          if action == 'gadget'
+            action = 'gadget-'+(rand(4)+1).to_s
+          end
 
           @active_battler.skill_id = action
           @phase = :actor_strategize
@@ -97,7 +102,9 @@ class Scene_Battle
       if @active_battler.can_use_skill?(@skill_cmd.get_skill)
         @skill_cmd.close
         @active_battler.item_id = nil
-        @active_battler.skill_id = @skill_cmd.get_skill
+        skill = @skill_cmd.get_skill
+        skill = skillswap(skill)
+        @active_battler.skill_id = skill
         @phase = :actor_strategize
         sys 'action'
       else
@@ -105,6 +112,17 @@ class Scene_Battle
       end
     end
 
+  end
+
+  # Hack skill changes
+  def skillswap(skill)
+    case skill
+      when 'team-boy'
+        return ['tcf-mermaid','tcf-hercules','tcf-cyclops','tcf-gyendal'].sample
+      when 'team-hib'
+        return ['ntmr-ghost','ntmr-ing','ntmr-spider','ntmr-mutton'].sample
+    end
+    return skill
   end
 
   #==============================================================================

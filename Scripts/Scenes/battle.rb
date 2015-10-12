@@ -4,7 +4,7 @@
 
 class Scene_Battle < Scene_Base
 
-  attr_accessor :phase, :message
+  attr_accessor :phase, :message, :hud
 
   def initialize
     super
@@ -56,7 +56,7 @@ class Scene_Battle < Scene_Base
 
 
     # Find battler events
-    [0,1,2,3,4,5,6,7,8,9].each{ |i| 
+    [0,1,2,3].each{ |i| 
       
       ev = @map.event_by_evname("A.#{i}")
       
@@ -106,6 +106,20 @@ class Scene_Battle < Scene_Base
 
     }
 
+    # Do trinket actions
+    $party.active_battlers.each{ |b|
+      case b.slot('acc') 
+         when 'acc-frog-boots'
+          b.transform('frog')
+        when 'acc-snake-boots'
+          b.transform('snake')
+        when 'acc-bat-boots'
+          b.transform('bat')
+        #when 'acc-frog-boots'
+        #  @active_battler = b
+      end
+    }
+
     # Enemy setups
     [0,1,2,3,4,5,6,7,8,9].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
@@ -151,7 +165,12 @@ class Scene_Battle < Scene_Base
   
   def terminate
 
-    
+    @hud.dispose
+    @actor_cmd.dispose
+    @skill_cmd.dispose
+    @item_cmd.dispose
+    @target_cmd.dispose
+    @message.dispose
     
     super  
   end
@@ -205,6 +224,7 @@ class Scene_Battle < Scene_Base
 
     # Currently showing text
     return if @message.busy?
+    return if @hud.busy?
 
     # Currently interpreting
     return if @map.interpreter.running?

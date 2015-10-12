@@ -19,6 +19,8 @@ class FontManager
 
 	attr_reader :mini, :mini_b
 
+	attr_reader :save_tiny
+
 
 	def initialize
 
@@ -177,6 +179,11 @@ class FontManager
 	    @mini_b.bold = true
 	    @mini_b.color = Color.new(0,0,0)
 
+	    @save_tiny = Font.new
+	    @save_tiny.name = "Bitter"
+	    @save_tiny.size = 20 #30 good for big text
+	    #@message.gradient = true
+	    @save_tiny.color = Color.new(80,80,80)
 
 	end
 

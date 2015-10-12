@@ -18,7 +18,7 @@ class Scene_Battle
 
         act = $party.actor_by_index(i).id
         
-        if !$party.get(act).down?
+        if !$party.get(act).down? && !$party.get(act).get_transform
 
             ev = $party.actor_by_index(i).ev
             next if ev == nil

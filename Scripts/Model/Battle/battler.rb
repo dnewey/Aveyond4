@@ -13,6 +13,8 @@ class Game_Battler
 
   attr_reader :hp, :mp, :xp
 
+  attr_reader :gold # Enemy drop
+
   attr_reader :slots, :equips
 
   #-------------------------------------------------------------------------
@@ -107,6 +109,7 @@ class Game_Battler
     @name = data.name
 
     @xp = data.xp
+    @gold = data.gold
 
     @actions = data.actions.split(" | ")
 
@@ -187,33 +190,36 @@ class Game_Battler
   end
 
   def get_actions
-    if !@transform
-      if @id == 'hib'
+    if @transform
+      return $data.actors[@transform].actions.split(" | ")
+    end
 
-        case @equips['book']
-          when 'hib-book-ice'
-            return ['chant','bk-ice-1','bk-ice-2','items']
-          when 'hib-book-dmg'
-            return ['chant','bk-dmg-1','bk-dmg-2','items']
-          when 'hib-book-heal'
-            return ['chant','bk-heal-1','bk-heal-2','items']
-          when 'hib-book-help'
-            return ['chant','bk-help-1','bk-help-2','items']
-          when 'hib-book-sleep'
-            return ['chant','bk-sleep-1','bk-sleep-2','items']
-        end
+    if @id == 'hib'
 
-      else
-
-        return @actions
-
+      case @equips['book']
+        when 'hib-book-ice'
+          return ['chant','bk-ice-1','bk-ice-2','items']
+        when 'hib-book-dmg'
+          return ['chant','bk-dmg-1','bk-dmg-2','items']
+        when 'hib-book-heal'
+          return ['chant','bk-heal-1','bk-heal-2','items']
+        when 'hib-book-help'
+          return ['chant','bk-help-1','bk-help-2','items']
+        when 'hib-book-sleep'
+          return ['chant','bk-sleep-1','bk-sleep-2','items']
       end
+
+    elsif @id == 'row'
+
+      # If sword sing don't cut it
+      return @actions
 
     else
 
-      return $data.actors[@transform].actions.split(" | ")
+      return @actions
 
     end
+
 
   end
 
@@ -228,6 +234,12 @@ class Game_Battler
   end
 
   def transform(into)
+
+    # Robin Ing Team hack
+    if into == 'robin'
+      into = ['chicken','goat','goat','goat','bear','bear','squirrel'].sample
+    end
+
 
     @transform = 'x-'+into
 
@@ -292,7 +304,7 @@ class Game_Battler
   def can_attack?
 
     # Any states stopping this?
-    return false if !@states.select{ |s| s.stun }.empty?
+    return false if !@states.select{ |s| $data.state[s].stun }.empty?
 
     return !down?
 

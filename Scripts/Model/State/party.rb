@@ -339,8 +339,9 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    # set_active("ing")
-    # set_active("mys")
+    #set_active("rob")
+    set_active("ing")
+    #set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
@@ -396,7 +397,16 @@ class Game_Party
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
 
-    @actors["ing"].learn('xform-frog')
+    # @actors['ing'].learn('curse-life')    
+    # @actors['ing'].learn('curse-death')    
+    # @actors['ing'].learn('curse-pain')    
+
+    # @actors['ing'].learn('ens-escape')    
+    # @actors['ing'].learn('ens-enslave')    
+    # @actors['ing'].learn('ens-surrender')    
+
+    # @actors["ing"].learn('xform-frog')
+    # @actors["ing"].learn('xform-bug')
     # @actors["ing"].learn('xform-snake')
     # @actors["ing"].learn('xform-cat')
     # @actors["ing"].learn('xform-bear')
@@ -411,17 +421,18 @@ class Game_Party
     @actors['mys'].learn('two-legs')
 
     @actors['rob'].learn('bash')
-    @actors['rob'].learn('protect')
-    @actors["rob"].learn("team-boy")
-    @actors["rob"].learn("team-ing")
-    @actors["rob"].learn("team-mys")
-    @actors["rob"].learn("team-row")
-    @actors["rob"].learn("team-hib")
-    @actors["rob"].learn("team-phy")
+    # @actors["rob"].learn("team-boy")
+    # @actors["rob"].learn("team-ing")
+    # @actors["rob"].learn("team-mys")
+    # @actors["rob"].learn("team-row")
+    # @actors["rob"].learn("team-hib")
+    # @actors["rob"].learn("team-phy")
 
     @actors['hib'].learn('claw')
 
-    @actors['row'].learn('dagger')
+    @actors['row'].learn('clobber')
+    @actors['row'].learn('gadget')
+    @actors['row'].learn('blade-waltz')
 
 
     @actors['phy'].learn('strike')

@@ -488,7 +488,7 @@ class List
 
   def draw_misc(data,row)
 
-    log_info(data)
+    #log_info(data)
 
     ico = $cache.icon(data[2])
 
@@ -515,12 +515,14 @@ class List
       ico = $cache.icon('misc/dots') 
     else
 
+        header[:location] = "Wyrmwood" if !header.has_key?(:location)
+
         if header[:time].is_a?(String)
           time = header[:time]
         else
           time = build_time_string(header[:time])
         end
-        name = "Save #{data} - "
+        name = "#{header[:location]} - "
         name = "Autosave - " if data == 0
         name += time
 

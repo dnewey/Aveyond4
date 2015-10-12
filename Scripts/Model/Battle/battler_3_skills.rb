@@ -4,6 +4,10 @@ class Game_Battler
   	@skills.push(skill)
   end
 
+  def unlearn(skill)
+    @skills.delete(skill)
+  end
+
   def replace_skill(os,ns)
 
     # Find pretty close old skill
@@ -26,7 +30,7 @@ class Game_Battler
     result = @skills.select{ |s| $data.skills[s].book == action }
     if action == "team"
       result = result.select{ |s|
-        $party.active.include?(s.split("-")[1])
+        $party.active.include?(s.split("-")[1]) && !$party.get(s.split("-")[1]).down?
       }
     end
     return result

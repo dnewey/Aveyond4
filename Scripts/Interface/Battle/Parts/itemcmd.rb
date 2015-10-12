@@ -9,6 +9,11 @@ class ItemCmd
     	@window.color = Color.new(47,45,41)
     	@window.move(14,66)
 
+    	@box = Item_Box.new(vp)
+		@box.item('covey')
+		@box.move(326,100)
+		@box.opacity = 0
+
 		# Left side list
 		@list = List.new()
 		@list.move(20,72)
@@ -24,14 +29,16 @@ class ItemCmd
 		@list.setup([])
 		@list.refresh
 
-		@box = Item_Box.new(vp)
-		@box.item('covey')
-		@box.move(326,100)
-		@box.opacity = 0
 
 		@list.opacity = 0
 		@window.opacity = 0
 
+	end
+
+	def dispose
+		@window.dispose
+		@box.dispose
+		@list.dispose
 	end
 
 	def setup
@@ -85,7 +92,9 @@ class ItemCmd
 	end
 
 	def change(option)
+
 		@item = option
+
 		@box.item(option)
 		@box.move(326,100) if @box
 

@@ -50,20 +50,13 @@ class Right_Page < SpriteGroup
         @txt_desc.dispose
     end
 
-    def setup(save)
-
-        # Get save header
-
-        # Get the data
-        data = $data.potions[potion]
-        ings = data.ingredients.split("\n")
-        
+    def descript(txt)
 
         # Perhaps show a description here
-        @txt_desc.text = data.description
+        @txt_desc.text = txt
         @cy = @txt_desc.y + @txt_desc.height
 
-        move(0,0)
+        #move(0,0)
 
     end
 

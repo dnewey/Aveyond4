@@ -309,6 +309,21 @@ def pop_evade(ev)
 
 end
 
+def pop_resist(ev)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y + 5
+		
+	# Create the pop
+	pop = Pop.new(:blast,:fade,@vp_over)
+    pop.image('resist')
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
 def pop_state(ev,state)
 
 	# Position

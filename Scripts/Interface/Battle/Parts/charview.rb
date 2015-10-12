@@ -88,8 +88,7 @@ class CharView < SpriteGroup
 	end
 
 	def dispose
-		# BUILD THIS!!!!!!!!!!!!!!!!!!!!!!
-		log_err("MAKE A DISPOSE")
+		self.sprites.each{ |s| s[0].dispose }
 	end
 
 	def update
@@ -118,23 +117,25 @@ class CharView < SpriteGroup
 		end
 
 		# Has the state changed?
-		if !@battler.states.empty? && @battler.states[0] != @state
+		if !@battler.states.empty?
+
+			return if @battler.states[0] == @state
 
 			@state = @battler.states[0]
 
-			if @state == nil
+			@state_icon.bitmap = $cache.icon("big-states/#{@state}")
+			@box.wallpaper = $cache.menu_wallpaper(@state)
+			@box.scroll(0,0.2)
 
-				@state_icon.bitmap = nil
-				@box.wallpaper = $cache.menu_wallpaper(char.id)
-				@box.scroll(0,0)
+		else
 
-			else
+			return if @battler.states[0] == @state
 
-				@state_icon.bitmap = $cache.icon("states/#{@state}")
-				@box.wallpaper = $cache.menu_wallpaper(@state)
-				@box.scroll(0,0.2)
+			@state = nil
 
-			end
+			@state_icon.bitmap = nil
+			@box.wallpaper = $cache.menu_wallpaper(@battler.id)
+			@box.scroll(0,0)
 
 		end
 

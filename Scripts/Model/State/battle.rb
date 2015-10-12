@@ -367,9 +367,14 @@ class Game_Battle
           when 'half-armor'
             is_half_armor = true
           when 'empower'
-            empower = true
-
-
+            result.empower = true
+          when 'steal'
+            result.steal = true
+          when 'pocket'
+            result.pocket = true
+          when 'escape'
+            result.escape = true
+            
         end
       }
 
@@ -382,14 +387,16 @@ class Game_Battle
       result.evade = false if is_heal
 
       # Calc crit
-      result.critical = rand(100) < t.luk
+      result.critical = rand(100) < t.luk || attacker.state?('crit')
       result.critical = false if result.evade
 
       # Calc resist if state added and its a bad one?
-      if !result.state_add != nil
-        if !['minion-double','crit','protect'].include?(result.state_add)
+      if result.state_add != nil
+        if !['minion-double','crit','protect','curse-life'].include?(result.state_add)
           result.resist = rand(100) < t.res
-          result.state_add = nil
+          if result.resist
+            result.state_add = nil
+          end
         end
       end
 
@@ -436,8 +443,14 @@ class Game_Battle
       end
 
       # ---------------------------------------------
-      # CUSTOMS
+      # HACKS
       # ---------------------------------------------
+
+      if t.state?('curse-life')
+        if result.damage >= t.hp
+          result.damage = t.hp-1
+        end
+      end
 
       # Custom hacking
       if skill.id == 'pounce' 
@@ -446,10 +459,23 @@ class Game_Battle
         end
       end
 
-      if empower
-        result.empower = true
+      # If empowered, double the dmg
+      if attacker.state?('empower')
+        result.damage *= 2
       end
 
+      # Animal trinks
+      if ['acc-frog-boots'].include?(attacker.slot('acc'))
+        result.damage *= 1.3
+      end
+
+      if t.state?('protect')
+        result.damage *= 0.2
+      end
+
+      # ---------------------------------------------
+      # DONE HERE
+      # ---------------------------------------------
       results.push(result)
 
     }
@@ -492,6 +518,11 @@ class Game_Battle
 
       when 'rand' # Single random target
 
+        # Hack boyle bug
+        if attacker.skill_id == 'xform-bug'
+          return [$party.get('boy')]
+        end
+
         if attacker.is_good?
           return [@enemies.select{ |b| b.attackable? }.sample]
         else
@@ -525,6 +556,15 @@ class Game_Battle
           return $party.active_battlers.select{ |b| b.attackable? }
         end
 
+      when 'allies'
+
+        # All allies
+        if attacker.is_good?
+          return $party.active_battlers.select{ |b| b.attackable? && b != attacker }
+        else          
+          return @enemies.select{ |b| b.attackable? && b != attacker }
+        end
+
       when 'party'
 
         # All allies
@@ -533,6 +573,14 @@ class Game_Battle
         else          
           return @enemies.select{ |b| b.attackable? }
         end
+
+      when 'any'
+        targets = $party.active_battlers.select{ |b| b.attackable? }
+        targets.count.times{
+          targets += (@enemies.select{ |b| b.attackable? })
+        }
+
+        return [targets.sample]
 
       when 'self'
 

@@ -17,6 +17,7 @@ class Game_Battler
   def add_state(state_id)
     @states.push(state_id)
     @states_counter[state_id] = 0
+    ev.icons = @states if ev
   end
 
   def remove_state(id)
@@ -45,6 +46,8 @@ class Game_Battler
 
     # Remove states
     @states.delete_if{ |s| $data.states[s].rmv_battle }
+
+    ev.icons = @states if ev
     
   end
 
@@ -64,7 +67,11 @@ class Game_Battler
     @states_counter.values.each{ |v| v += 1 }
 
     # If done
-    #@states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
+    @states.delete_if{ |s| 
+      @states_counter[s] >= $data.states[s].rmv_turn 
+    }
+
+    ev.icons = @states if ev
 
   end
 

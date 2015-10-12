@@ -204,6 +204,7 @@ class Scene_Base
 
   def change_weather(weather)
     @weather.dispose if @weather
+    return if !$settings.effects
     @weather = nil
     case weather
       when 'dark-dots'

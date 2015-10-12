@@ -923,12 +923,20 @@ class Game_Character
       # Increase steps
       increase_steps
       # If impassable
-      $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 || terrain_tag == 5
-      $audio.queue('ladder/ladder2',24,0.15) if terrain_tag == 3
 
-       #$audio.queue('walk',4,0.5) if self == $player
-       $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-       $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+      if self == $player
+
+        tt = terrain_tag
+
+        $audio.queue('ladder/ladder1',10,0.15) if tt == 3 || tt == 5
+        $audio.queue('ladder/ladder2',24,0.15) if tt == 3
+
+         #$audio.queue('walk',4,0.5) if self == $player
+         $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+         $audio.queue('steps/foot5',12,0.6) if tt == 2
+
+      end
+
     else
       # Determine if touch event is triggered IF ENEMY ONLY
       check_event_trigger_touch(@x, @y+1)
@@ -963,9 +971,11 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      # If impassable
-      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+      if self == $player 
+        tt = terrain_tag
+        $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+        $audio.queue('steps/foot5',12,0.6) if tt == 2
+      end
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x-1, @y)
@@ -998,10 +1008,12 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    
-      # If impassable
-      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+
+      if self == $player 
+        tt = terrain_tag
+        $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+        $audio.queue('steps/foot5',12,0.6) if tt == 2
+      end
 
     else
       # Determine if touch event is triggered
@@ -1036,13 +1048,19 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    # If impassable
-      $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 && pt == 3
-      $audio.queue('ladder/ladder1',24,0.15) if terrain_tag == 4
-      $audio.queue('ladder/ladder1',24,0.15) if terrain_tag == 3
 
-      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+      if self == $player
+
+        tt = terrain_tag
+        $audio.queue('ladder/ladder1',10,0.15) if tt == 3 && pt == 3
+        $audio.queue('ladder/ladder1',24,0.15) if tt == 4
+        $audio.queue('ladder/ladder1',24,0.15) if tt == 3
+
+        $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+        $audio.queue('steps/foot5',12,0.6) if tt == 2
+
+      end
+
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x, @y-1)

@@ -19,6 +19,9 @@ class Attack_Result
 	attr_accessor :transform
 
 	attr_accessor :empower
+	attr_accessor :steal
+	attr_accessor :pocket
+	attr_accessor :escape
 
 end
 

@@ -106,7 +106,7 @@ class Ui_Bar < SpriteGroup
 	def update
 		super()
 
-		return
+		#return
 
 		# Update the bars
 		$party.active.each_index{ |i|

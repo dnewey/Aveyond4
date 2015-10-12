@@ -21,6 +21,10 @@ class TargetCmd
 
 	end
 
+	def dispose
+		@arrow.dispose
+	end
+
 	def setup(targets)
 
 		@arrow.show

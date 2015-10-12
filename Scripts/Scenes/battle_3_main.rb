@@ -157,9 +157,17 @@ class Scene_Battle
 
     if @attack_round.text
       $scene.message.force_name = @active_battler.name
-      $scene.message.start('A.0:'+@attack_round.text)
+      speaker = "A.#{$party.active.index(@active_battler.id)}"
+      $scene.message.start(speaker+': '+@attack_round.text)
       #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
     end
+
+    @attack_results.each{ |result|
+      if result.escape
+        @phase = :misc_escape
+        return
+      end
+    }
 
     @phase = :main_anim
     wait(15)
@@ -217,9 +225,12 @@ class Scene_Battle
 
     # Do damage or healing
     @attack_results.each{ |result|
-        
+
         # Damage
         if result.damage > 0
+
+          # Remove state by damage
+          result.target.remove_states_shock
 
           result.target.damage(result.damage)
           pop_dmg(result.target.ev,result.damage)
@@ -274,6 +285,15 @@ class Scene_Battle
 
       end
 
+      # Resist
+      if result.resist
+
+        # Play nice noise
+        sfx 'whoosh2'
+        pop_resist(result.target.ev)
+
+      end
+
     }
 
     # Onto the next
@@ -286,18 +306,25 @@ class Scene_Battle
 
     # Show gains of hp or mana or darkness
     @attack_results.each{ |result|
-        next if result.gain_mana == nil
-        @active_battler.gain_mana(result.gain_mana)
-        #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
 
-        # Flash blue
+        if result.steal
+          item('cheese',1,'rat')
+        end
 
+        if result.pocket
+          gold(result.target.gold.to_s.split("-")[-1].to_i,'row')
+        end
 
-        # Spark effect
-        x = @active_battler.ev.screen_x
-        y = @active_battler.ev.screen_y - 15
-        add_spark('mana-blue',x,y)
-        wait(15)
+        if result.gain_mana != nil
+          @active_battler.gain_mana(result.gain_mana)
+          #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
+
+          # Spark effect
+          x = @active_battler.ev.screen_x
+          y = @active_battler.ev.screen_y - 15
+          add_spark('mana-blue',x,y)
+          wait(15)
+        end
     }
 
     @phase = :main_state
@@ -339,9 +366,7 @@ class Scene_Battle
 
         result.target.add_state(result.state_add)
         #pop_state(result.target.ev,result.state_add)
-
-        # Show icon?
-        result.target.ev.icons.push(result.state_add)
+        
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
         #result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
 
@@ -357,16 +382,9 @@ class Scene_Battle
   def phase_main_tick
 
     # Take damage from poison states
+    # This would be after all attacks, then another fall?
 
 
-    # Remove states by shock
-    @attack_results.each{ |result|
-
-      if result.damage > 0
-        result.target.remove_states_shock
-      end
-
-    }
 
 
     @phase = :main_fall

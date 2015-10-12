@@ -98,13 +98,15 @@ def owl_exchange
 end
 
 def item(id,number=1,type='f')
+	log_scr("GIVING")
+	log_sys(id)
 	if !number.is_a?(Integer)
 		type = number
 		number = 1
 	end
 	sfx 'item'
 	$party.add_item(id,number)
-	return if !$scene.is_a?(Scene_Map)
+	return if !$scene.is_a?(Scene_Map) && !$scene.is_a?(Scene_Battle)
 	pop_item(id,number,type) if type != 's'
 end
 
@@ -261,4 +263,8 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
+end
+
+def unlearn_skill(who,skill)
+	$party.get(who).unlearn(skill)
 end

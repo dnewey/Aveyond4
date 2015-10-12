@@ -2,7 +2,7 @@
 # ** Save File Manager
 #==============================================================================
 
-SAVE_FILES = 99
+SAVE_FILES = 20
 
 def build_time_string(frames)
 
@@ -141,7 +141,9 @@ class FileManager
     header[:members] = $party.active
     header[:gold] = $party.gold
     header[:chars] = $party.all
-    header[:levels] = [1,2,3,4,5,6,7]
+    header[:levels] = $party.all.map{|p| $party.get(p).level }
+    header[:quest] = $data.quests[$progress.quests.reverse[0]].description
+    header[:location] = $map.nice_name
     return header
   end
   

@@ -82,11 +82,17 @@ class AudioManager
 
   def music(file,vol=1.0)
 
-    #return if @music_file == file
+    if @music_file == file
+        @music_gain = 1.0
+        @music_target = 1.0
+        @music.play if !@music.playing?
+      return
+    end
+
     @music.stop if @music 
 
-    if file == nil || file == ''   
-      
+    if file == nil || file == ''     
+      @music_file = nil    
       return
     end
     
@@ -110,12 +116,17 @@ class AudioManager
     # Nightwatch hack
     file = 'woods-night' if flag?('night-time')
 
-    #return if @atmosphere_file == file    
+      if @atmosphere_file == file
+        @atmosphere_gain = 1.0
+        @atmosphere_target = 1.0
+      return
+    end
+
 
     @atmosphere.stop if @music
 
     if file == nil  || file == ''
-      
+      @atmosphere_file = nil
       return
     end
 
@@ -177,8 +188,6 @@ class AudioManager
     src.play
     @sfx.push(src)
 
-    log_sys(@sfx.count)
-
   end
 
   def queue(file,vol=1.0,delay=0)
@@ -238,27 +247,31 @@ class AudioManager
 
   def update
 
-    if @atmosphere_target != @atmosphere_gain
-      if @atmosphere_target > @atmosphere.gain
-        @atmosphere_gain += 0.02
-        @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
-      else
-        @atmosphere_gain -= 0.02
-        @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
-      end      
+    if @atmosphere != nil
+      if @atmosphere_target != @atmosphere_gain
+        if @atmosphere_target > @atmosphere.gain
+          @atmosphere_gain += 0.02
+          @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
+        else
+          @atmosphere_gain -= 0.02
+          @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
+        end      
+      end
+      @atmosphere.gain = @atmosphere_gain * $settings.music_vol
     end
-    @atmosphere.gain = @atmosphere_gain * $settings.music_vol
 
-    if @music_target != @music_gain
-      if @music_target > @music.gain
-        @music_gain += 0.02
-        @music_gain = 1.0 if @music_gain > 1.0
-      else
-        @music_gain -= 0.02
-        @music_gain = 0.0 if @music_gain < 0.0
-      end      
+    if @music != nil
+      if @music_target != @music_gain
+        if @music_target > @music.gain
+          @music_gain += 0.02
+          @music_gain = 1.0 if @music_gain > 1.0
+        else
+          @music_gain -= 0.02
+          @music_gain = 0.0 if @music_gain < 0.0
+        end      
+      end
+      @music.gain = @music_gain * $settings.music_vol
     end
-    @music.gain = @music_gain * $settings.music_vol
 
     @environmental.each{ |e| e.update }
 

@@ -36,7 +36,7 @@ class Mnu_Save < Mnu_Base
 			spr.bitmap = $cache.character('Player/'+c)
 			spr.src_rect = Rect.new(0,0,32,48)
 			spr.x = cx
-			spr.y = 260
+			spr.y = 252
 			cx += 33
 
 			@chars.push(spr)
@@ -49,12 +49,13 @@ class Mnu_Save < Mnu_Base
 
 			lbl = Label.new(vp)
 			lbl.fixed_width = 30
-			lbl.font = $fonts.message_tiny
+			lbl.font = $fonts.save_tiny
 			lbl.align = 1
 			lbl.text = 23
 
 			lbl.x = cx
-			lbl.y = 297
+			lbl.y = 295
+			cx += 33
 
 			@levels.push(lbl)
 			@right.push(lbl)
@@ -95,12 +96,16 @@ class Mnu_Save < Mnu_Base
 		# Load up the header
 		header = $files.headers[option]
 
+
 		if header == nil
 
 			@page.title("- Empty -","misc/dots")
 			@pic.bitmap = nil
 
 		else
+
+			header[:quest] = "NONE" if !header.has_key?(:quest)
+			#header[:location] = "NONE"
 
 			if header[:time].is_a?(String)
 				time = header[:time]
@@ -110,14 +115,18 @@ class Mnu_Save < Mnu_Base
 
 			@page.title("Save #{option} - #{time}","faces/#{header[:leader]}")
 
+			# Find most recent main quest
+			@page.descript("\""+header[:quest]+"\"")
 
 			# Hide party members that don't exist
 			chars = ['boy','ing','mys','rob','hib','row','phy']
 			chars.each_index{ |c|
 				if header.has_key?(:chars) && header[:chars].include?(chars[c])
 					@chars[c].show
+					@levels[c].text = header[:levels][c]
 				else
 					@chars[c].hide
+					@levels[c].text = ''
 				end
 			}
 

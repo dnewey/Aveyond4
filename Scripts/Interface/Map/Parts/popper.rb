@@ -4,11 +4,14 @@
 class Ui_Popper < SpriteGroup
 
 	attr_accessor :title
+	attr_accessor :middle
 
 	def initialize(vp)
 		super()		
 
 		@vp = vp
+
+		@middle = false
 
 		# Resize to whatever is needed
 		@window = Box.new(vp,300,54)
@@ -64,7 +67,11 @@ class Ui_Popper < SpriteGroup
 		
 		change(@after,@before.x + @before.width+10,10)
 
-		center(320,230)
+		if @middle
+			center(320,130)
+		else
+			center(320,230)
+		end
 
 		# Launch sparks?
 		#sprk = $scene.add_spark("redstar",420,300,@vp)

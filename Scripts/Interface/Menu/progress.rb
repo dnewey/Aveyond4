@@ -39,7 +39,7 @@ class Mnu_Progress < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/level")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Main Quests: 10/15"
+	    lbl.text = "Main Quests: #{$progress.complete.count}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -74,83 +74,11 @@ class Mnu_Progress < Mnu_Base
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}  (#{@char.stat_pure('str')} + #{@char.stat_gear('str')})"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}  (#{@char.stat_pure('def')} + #{@char.stat_gear('def')})"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 28
-		cy += 28
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.luk}%"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.eva}%"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.res}%"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
 		open
 
 	end
-
-	# def update
-		
-	# 	# Cancel out of grid
-	# 	if $input.cancel? || $input.rclick?
-	# 		@left.each{ |a| $tweens.clear(a) }
-	# 		@right.each{ |a| $tweens.clear(a) }
-	# 		@other.each{ |a| $tweens.clear(a) }
-	# 		$scene.queue_menu("Main")
-	# 		close_now
-	# 	end
-		
-	# 	super
-		
-	# end
 
 end

@@ -50,7 +50,7 @@ class Item_Box < SpriteGroup
     	
     	move(0,0)
 
-    	item('unknown')
+    	#item('unknown')
 
 	end
 

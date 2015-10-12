@@ -38,6 +38,7 @@ class Game_Battler
 
   def maxmp
     if @id == 'boy'
+      $party.boy_mp_bonus = 0 if $party.boy_mp_bonus == nil
       return 20 + $party.boy_mp_bonus
     else
       stat('mp')

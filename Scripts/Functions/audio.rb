@@ -39,6 +39,7 @@ def music_fadeout
 end
 
 def music_fadein
+	$audio.unpause
 	$audio.music_target = 1.0
 end
 

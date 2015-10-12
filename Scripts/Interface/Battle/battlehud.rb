@@ -122,11 +122,12 @@ class BattleHud
 
 	def open_popper()
 		@popper = Ui_Popper.new(@vp)
+		@popper.middle = true
 		return @popper
 	end
 
 	def busy?
-		true
+		return @popper != nil
 	end
 
 end

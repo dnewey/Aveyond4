@@ -13,6 +13,11 @@ class ActorCmd
 
 	end
 
+	def dispose
+		@icons.each{ |i| i.dispose }
+		@texts.each{ |i| i.dispose }
+	end
+
 	def setup(battler)
 
 		close

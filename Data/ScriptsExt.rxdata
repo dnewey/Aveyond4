@@ -1666,7 +1666,7 @@ class Label < Sprite
         
   end
   
-end"»F#==============================================================================
+end"G#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -2156,7 +2156,7 @@ class List
 
   def draw_misc(data,row)
 
-    log_info(data)
+    #log_info(data)
 
     ico = $cache.icon(data[2])
 
@@ -2183,12 +2183,14 @@ class List
       ico = $cache.icon('misc/dots') 
     else
 
+        header[:location] = "Wyrmwood" if !header.has_key?(:location)
+
         if header[:time].is_a?(String)
           time = header[:time]
         else
           time = build_time_string(header[:time])
         end
-        name = "Save #{data} - "
+        name = "#{header[:location]} - "
         name = "Autosave - " if data == 0
         name += time
 
@@ -2479,7 +2481,7 @@ class SpriteGroup
 		self.opacity = 255
 	end
 
-end"Ç
+end"ì
 # Audio
 
 def sfx(file,vol=1.0,delay=0)
@@ -2520,6 +2522,7 @@ def music_fadeout
 end
 
 def music_fadein
+	$audio.unpause
 	$audio.music_target = 1.0
 end
 
@@ -2676,7 +2679,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"®
+end"ï
 def spark(ev,fx,ox=0,oy=0)
 
 	return if gev(ev) == nil
@@ -2981,6 +2984,21 @@ def pop_evade(ev)
 	# Create the pop
 	pop = Pop.new(:blast,:fade,@vp_over)
     pop.image('evade')
+    pop.move(x,y)
+    pop.start
+	$scene.add_pop(pop)
+
+end
+
+def pop_resist(ev)
+
+	# Position
+	x = gev(ev).screen_x
+	y = gev(ev).screen_y + 5
+		
+	# Create the pop
+	pop = Pop.new(:blast,:fade,@vp_over)
+    pop.image('resist')
     pop.move(x,y)
     pop.start
 	$scene.add_pop(pop)
@@ -3651,7 +3669,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"™#==============================================================================
+end"1#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3751,13 +3769,15 @@ def owl_exchange
 end
 
 def item(id,number=1,type='f')
+	log_scr("GIVING")
+	log_sys(id)
 	if !number.is_a?(Integer)
 		type = number
 		number = 1
 	end
 	sfx 'item'
 	$party.add_item(id,number)
-	return if !$scene.is_a?(Scene_Map)
+	return if !$scene.is_a?(Scene_Map) && !$scene.is_a?(Scene_Battle)
 	pop_item(id,number,type) if type != 's'
 end
 
@@ -3914,6 +3934,10 @@ def learn_skill(who,skill)
 	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
+end
+
+def unlearn_skill(who,skill)
+	$party.get(who).unlearn(skill)
 end"_
 def pop_item(item,number,type)
 
@@ -4242,7 +4266,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"  
+end"√!
 
 def shop_choice
 
@@ -4299,6 +4323,16 @@ def setup_item_shop
 			stock.push('bread')
 			stock.push('haunch')
 			stock.push('mutton')
+			stock.push('untrans')
+
+		when '@wyrmwood'	
+			stock.push('covey')
+			stock.push('gingerbread')
+			stock.push('cheese')
+			stock.push('haunch')
+			stock.push('cassia')
+			stock.push('untrans')
+			stock.push('toffee-apple')
 
 		when '@tor'	
 			stock.push('covey')
@@ -4307,6 +4341,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('kurry')
 			stock.push('cassia')
+			stock.push('untrans')
 
 		when '@royal-town'	
 			stock.push('covey')
@@ -4315,13 +4350,16 @@ def setup_item_shop
 			stock.push('cheese-round')
 			stock.push('haunch')
 			stock.push('cassia')
+			stock.push('untrans')
 
 		when '@weeville'	
+			stock.push('fruit-c')
 			stock.push('covey')
 			stock.push('cheese')
 			stock.push('bread')
 			stock.push('haunch')
 			stock.push('cassia')
+			stock.push('untrans')
 
 		when '@elf-town'	
 			stock.push('covey')
@@ -4330,6 +4368,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('cassia')
 			stock.push('elf-bread')
+			stock.push('untrans')
 
 		when '@dwarf-town'	
 			stock.push('covey')
@@ -4338,6 +4377,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('cassia')
 			stock.push('sausage')
+			stock.push('untrans')
 
 		when '@ravwyn'
 			stock.push('covey')
@@ -4346,6 +4386,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('cassia')
 			stock.push('biscuit')
+			stock.push('untrans')
 
 	end
 
@@ -4662,6 +4703,7 @@ def buy_chester_skill(skill)
 	end
 
 end
+
 "q#==============================================================================
 # ** State Functions
 #==============================================================================
@@ -5494,7 +5536,7 @@ def cauldron_graphic(ev)
 
 	end
 
-end"ä	
+end"¥	
 # Update self perhamps? Disregard else
 # Uses $battle and that's it
 
@@ -5618,11 +5660,12 @@ class BattleHud
 
 	def open_popper()
 		@popper = Ui_Popper.new(@vp)
+		@popper.middle = true
 		return @popper
 	end
 
 	def busy?
-		true
+		return @popper != nil
 	end
 
 end"÷
@@ -5664,7 +5707,7 @@ class Popper < Sprite
 
 	end
 
-end"ü
+end"ı
 class ActorCmd
 
 	def initialize(vp)
@@ -5677,6 +5720,11 @@ class ActorCmd
 
 		@idx = 0
 
+	end
+
+	def dispose
+		@icons.each{ |i| i.dispose }
+		@texts.each{ |i| i.dispose }
 	end
 
 	def setup(battler)
@@ -5949,7 +5997,7 @@ class ActorCmd
 
 	end
 
-end":
+end"M
 # Actor view, show portrait, hp etc
 
 class CharView < SpriteGroup
@@ -6039,8 +6087,7 @@ class CharView < SpriteGroup
 	end
 
 	def dispose
-		# BUILD THIS!!!!!!!!!!!!!!!!!!!!!!
-		log_err("MAKE A DISPOSE")
+		self.sprites.each{ |s| s[0].dispose }
 	end
 
 	def update
@@ -6069,23 +6116,25 @@ class CharView < SpriteGroup
 		end
 
 		# Has the state changed?
-		if !@battler.states.empty? && @battler.states[0] != @state
+		if !@battler.states.empty?
+
+			return if @battler.states[0] == @state
 
 			@state = @battler.states[0]
 
-			if @state == nil
+			@state_icon.bitmap = $cache.icon("big-states/#{@state}")
+			@box.wallpaper = $cache.menu_wallpaper(@state)
+			@box.scroll(0,0.2)
 
-				@state_icon.bitmap = nil
-				@box.wallpaper = $cache.menu_wallpaper(char.id)
-				@box.scroll(0,0)
+		else
 
-			else
+			return if @battler.states[0] == @state
 
-				@state_icon.bitmap = $cache.icon("states/#{@state}")
-				@box.wallpaper = $cache.menu_wallpaper(@state)
-				@box.scroll(0,0.2)
+			@state = nil
 
-			end
+			@state_icon.bitmap = nil
+			@box.wallpaper = $cache.menu_wallpaper(@battler.id)
+			@box.scroll(0,0)
 
 		end
 
@@ -6140,7 +6189,7 @@ class CharView < SpriteGroup
 		@port.do(to("oy",0,-2))
 	end
 
-end"=
+end"ê
 class ItemCmd
 
 	def initialize(vp)
@@ -6150,6 +6199,11 @@ class ItemCmd
     	@window.skin = $cache.menu_common("skin-plain")
     	@window.color = Color.new(47,45,41)
     	@window.move(14,66)
+
+    	@box = Item_Box.new(vp)
+		@box.item('covey')
+		@box.move(326,100)
+		@box.opacity = 0
 
 		# Left side list
 		@list = List.new()
@@ -6166,14 +6220,16 @@ class ItemCmd
 		@list.setup([])
 		@list.refresh
 
-		@box = Item_Box.new(vp)
-		@box.item('covey')
-		@box.move(326,100)
-		@box.opacity = 0
 
 		@list.opacity = 0
 		@window.opacity = 0
 
+	end
+
+	def dispose
+		@window.dispose
+		@box.dispose
+		@list.dispose
 	end
 
 	def setup
@@ -6227,7 +6283,9 @@ class ItemCmd
 	end
 
 	def change(option)
+
 		@item = option
+
 		@box.item(option)
 		@box.move(326,100) if @box
 
@@ -6282,7 +6340,7 @@ class SkillCmd < ItemCmd
 
 	end
 
-end"H
+end"p
 class TargetCmd
 
 	attr_reader :active
@@ -6303,6 +6361,10 @@ class TargetCmd
 
 		@idx = 0
 
+	end
+
+	def dispose
+		@arrow.dispose
 	end
 
 	def setup(targets)
@@ -6412,7 +6474,7 @@ class TargetCmd
 	end
 
 end
-"#==============================================================================
+"#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6479,7 +6541,7 @@ class Ui_Screen
 
 	def update
 
-		return
+		#return
 
 		if !$settings.bottombar
 			@info.move(0,447)
@@ -6636,7 +6698,7 @@ class Ui_Screen
     	return @message.busy? || @item || @popper || @grid || @book
     end
 
-end"å#==============================================================================
+end"ç#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -6744,7 +6806,7 @@ class Ui_Bar < SpriteGroup
 	def update
 		super()
 
-		return
+		#return
 
 		# Update the bars
 		$party.active.each_index{ |i|
@@ -7904,7 +7966,7 @@ class Ui_Grid
 		return @selected
 	end
 
-end"Ù#==============================================================================
+end"â#==============================================================================
 # Ui_Info
 #==============================================================================
 
@@ -7929,9 +7991,10 @@ class Ui_Info < SpriteGroup
 
 		@gold = Label.new(vp)
 		@gold.font = $fonts.pop_type
+		@gold.fixed_width = 200
 		@gold.align = 2
 		@gold.text = $party.gold.to_s
-		add(@gold,578,0)
+		add(@gold,410,0)
 
 		move(0,415)
 
@@ -7979,14 +8042,6 @@ class Ui_Info < SpriteGroup
 
 		@map.text = @visible_map
 		@gold.text = @visible_gold.to_s
-
-		if @visible_gold > 999
-			add(@gold,568,0)
-		elsif @visible_gold > 99
-			add(@gold,578,0)
-		else
-			add(@gold,588,0)
-		end
 
 	end
 
@@ -8952,17 +9007,20 @@ class Ui_Message
 
 end
 
-"
+"o
 
 
 class Ui_Popper < SpriteGroup
 
 	attr_accessor :title
+	attr_accessor :middle
 
 	def initialize(vp)
 		super()		
 
 		@vp = vp
+
+		@middle = false
 
 		# Resize to whatever is needed
 		@window = Box.new(vp,300,54)
@@ -9018,7 +9076,11 @@ class Ui_Popper < SpriteGroup
 		
 		change(@after,@before.x + @before.width+10,10)
 
-		center(320,230)
+		if @middle
+			center(320,130)
+		else
+			center(320,230)
+		end
 
 		# Launch sparks?
 		#sprk = $scene.add_spark("redstar",420,300,@vp)
@@ -10573,7 +10635,7 @@ class Mnu_Party < Mnu_Base
 
 	end
 
-end"È#==============================================================================
+end"U#==============================================================================
 # ** Mnu_Progress
 #==============================================================================
 
@@ -10614,7 +10676,7 @@ class Mnu_Progress < Mnu_Base
 	    lbl = Label.new(vp)
 		lbl.icon = $cache.icon("stats/level")
 	    lbl.font = $fonts.pop_text
-	    lbl.text = "Main Quests: 10/15"
+	    lbl.text = "Main Quests: #{$progress.complete.count}"
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
@@ -10649,84 +10711,12 @@ class Mnu_Progress < Mnu_Base
 	    lbl.move(cx,cy)
 	    self.left.push(lbl)
 
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/str")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Strength: #{@char.str}  (#{@char.stat_pure('str')} + #{@char.stat_gear('str')})"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	   	cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/def")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Defense: #{@char.def}  (#{@char.stat_pure('def')} + #{@char.stat_gear('def')})"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 28
-		cy += 28
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("misc/secondary")
-	    lbl.font = $fonts.list
-	    lbl.shadow = $fonts.list_shadow
-	    lbl.text = "Secondary Stats"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cx = 34
-	    cy += 30
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Luck: #{@char.luk}%"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/eva")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Evasion: #{@char.eva}%"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
-	    cy += 26
-
-	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/res")
-	    lbl.font = $fonts.pop_text
-	    lbl.text = "Resist: #{@char.res}%"
-	    lbl.move(cx,cy)
-	    self.left.push(lbl)
-
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
 		open
 
 	end
-
-	# def update
-		
-	# 	# Cancel out of grid
-	# 	if $input.cancel? || $input.rclick?
-	# 		@left.each{ |a| $tweens.clear(a) }
-	# 		@right.each{ |a| $tweens.clear(a) }
-	# 		@other.each{ |a| $tweens.clear(a) }
-	# 		$scene.queue_menu("Main")
-	# 		close_now
-	# 	end
-		
-	# 	super
-		
-	# end
 
 end"ú#==============================================================================
 # ** Mnu_Quit
@@ -10831,8 +10821,7 @@ class Mnu_Quit < Mnu_Base
 		
 	end
 
-end"È
-#==============================================================================
+end"‰#==============================================================================
 # ** Mnu_Save
 #==============================================================================
 
@@ -10870,7 +10859,7 @@ class Mnu_Save < Mnu_Base
 			spr.bitmap = $cache.character('Player/'+c)
 			spr.src_rect = Rect.new(0,0,32,48)
 			spr.x = cx
-			spr.y = 260
+			spr.y = 252
 			cx += 33
 
 			@chars.push(spr)
@@ -10883,12 +10872,13 @@ class Mnu_Save < Mnu_Base
 
 			lbl = Label.new(vp)
 			lbl.fixed_width = 30
-			lbl.font = $fonts.message_tiny
+			lbl.font = $fonts.save_tiny
 			lbl.align = 1
 			lbl.text = 23
 
 			lbl.x = cx
-			lbl.y = 297
+			lbl.y = 295
+			cx += 33
 
 			@levels.push(lbl)
 			@right.push(lbl)
@@ -10929,12 +10919,16 @@ class Mnu_Save < Mnu_Base
 		# Load up the header
 		header = $files.headers[option]
 
+
 		if header == nil
 
 			@page.title("- Empty -","misc/dots")
 			@pic.bitmap = nil
 
 		else
+
+			header[:quest] = "NONE" if !header.has_key?(:quest)
+			#header[:location] = "NONE"
 
 			if header[:time].is_a?(String)
 				time = header[:time]
@@ -10944,14 +10938,18 @@ class Mnu_Save < Mnu_Base
 
 			@page.title("Save #{option} - #{time}","faces/#{header[:leader]}")
 
+			# Find most recent main quest
+			@page.descript("\""+header[:quest]+"\"")
 
 			# Hide party members that don't exist
 			chars = ['boy','ing','mys','rob','hib','row','phy']
 			chars.each_index{ |c|
 				if header.has_key?(:chars) && header[:chars].include?(chars[c])
 					@chars[c].show
+					@levels[c].text = header[:levels][c]
 				else
 					@chars[c].hide
+					@levels[c].text = ''
 				end
 			}
 
@@ -12591,7 +12589,7 @@ class Info_Box < SpriteGroup
     end
 
 end
-">
+"?
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -12643,7 +12641,7 @@ class Item_Box < SpriteGroup
     	
     	move(0,0)
 
-    	item('unknown')
+    	#item('unknown')
 
 	end
 
@@ -13352,7 +13350,7 @@ class Right_Journal < SpriteGroup
     	@cy += @txt_zone.height
     end
 
-end".
+end"ê
 class Right_Page < SpriteGroup
 
 	def initialize(vp)
@@ -13404,20 +13402,13 @@ class Right_Page < SpriteGroup
         @txt_desc.dispose
     end
 
-    def setup(save)
-
-        # Get save header
-
-        # Get the data
-        data = $data.potions[potion]
-        ings = data.ingredients.split("\n")
-        
+    def descript(txt)
 
         # Perhaps show a description here
-        @txt_desc.text = data.description
+        @txt_desc.text = txt
         @cy = @txt_desc.y + @txt_desc.height
 
-        move(0,0)
+        #move(0,0)
 
     end
 
@@ -13828,7 +13819,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"ã#==============================================================================
+end"å#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -13842,6 +13833,8 @@ class Game_Battler
   attr_accessor :ev, :view
 
   attr_reader :hp, :mp, :xp
+
+  attr_reader :gold # Enemy drop
 
   attr_reader :slots, :equips
 
@@ -13937,6 +13930,7 @@ class Game_Battler
     @name = data.name
 
     @xp = data.xp
+    @gold = data.gold
 
     @actions = data.actions.split(" | ")
 
@@ -14017,33 +14011,36 @@ class Game_Battler
   end
 
   def get_actions
-    if !@transform
-      if @id == 'hib'
+    if @transform
+      return $data.actors[@transform].actions.split(" | ")
+    end
 
-        case @equips['book']
-          when 'hib-book-ice'
-            return ['chant','bk-ice-1','bk-ice-2','items']
-          when 'hib-book-dmg'
-            return ['chant','bk-dmg-1','bk-dmg-2','items']
-          when 'hib-book-heal'
-            return ['chant','bk-heal-1','bk-heal-2','items']
-          when 'hib-book-help'
-            return ['chant','bk-help-1','bk-help-2','items']
-          when 'hib-book-sleep'
-            return ['chant','bk-sleep-1','bk-sleep-2','items']
-        end
+    if @id == 'hib'
 
-      else
-
-        return @actions
-
+      case @equips['book']
+        when 'hib-book-ice'
+          return ['chant','bk-ice-1','bk-ice-2','items']
+        when 'hib-book-dmg'
+          return ['chant','bk-dmg-1','bk-dmg-2','items']
+        when 'hib-book-heal'
+          return ['chant','bk-heal-1','bk-heal-2','items']
+        when 'hib-book-help'
+          return ['chant','bk-help-1','bk-help-2','items']
+        when 'hib-book-sleep'
+          return ['chant','bk-sleep-1','bk-sleep-2','items']
       end
+
+    elsif @id == 'row'
+
+      # If sword sing don't cut it
+      return @actions
 
     else
 
-      return $data.actors[@transform].actions.split(" | ")
+      return @actions
 
     end
+
 
   end
 
@@ -14058,6 +14055,12 @@ class Game_Battler
   end
 
   def transform(into)
+
+    # Robin Ing Team hack
+    if into == 'robin'
+      into = ['chicken','goat','goat','goat','bear','bear','squirrel'].sample
+    end
+
 
     @transform = 'x-'+into
 
@@ -14122,7 +14125,7 @@ class Game_Battler
   def can_attack?
 
     # Any states stopping this?
-    return false if !@states.select{ |s| s.stun }.empty?
+    return false if !@states.select{ |s| $data.state[s].stun }.empty?
 
     return !down?
 
@@ -14197,7 +14200,7 @@ class Game_Battler
   end
 
 end
-"π
+"ˆ
 class Game_Battler
 
 
@@ -14237,6 +14240,7 @@ class Game_Battler
 
   def maxmp
     if @id == 'boy'
+      $party.boy_mp_bonus = 0 if $party.boy_mp_bonus == nil
       return 20 + $party.boy_mp_bonus
     else
       stat('mp')
@@ -14424,7 +14428,7 @@ class Game_Battler
     return 1.0
   end
 
-end"D
+end"¥
 class Game_Battler
 
 
@@ -14443,6 +14447,7 @@ class Game_Battler
   def add_state(state_id)
     @states.push(state_id)
     @states_counter[state_id] = 0
+    ev.icons = @states if ev
   end
 
   def remove_state(id)
@@ -14471,6 +14476,8 @@ class Game_Battler
 
     # Remove states
     @states.delete_if{ |s| $data.states[s].rmv_battle }
+
+    ev.icons = @states if ev
     
   end
 
@@ -14490,15 +14497,22 @@ class Game_Battler
     @states_counter.values.each{ |v| v += 1 }
 
     # If done
-    #@states.delete_if{ |s| @states_counter[s] >= $states[s].rmv_turn }
+    @states.delete_if{ |s| 
+      @states_counter[s] >= $data.states[s].rmv_turn 
+    }
+
+    ev.icons = @states if ev
 
   end
 
- end"¯
-class Game_Battler
+ end"Xclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
+  end
+
+  def unlearn(skill)
+    @skills.delete(skill)
   end
 
   def replace_skill(os,ns)
@@ -14523,7 +14537,7 @@ class Game_Battler
     result = @skills.select{ |s| $data.skills[s].book == action }
     if action == "team"
       result = result.select{ |s|
-        $party.active.include?(s.split("-")[1])
+        $party.active.include?(s.split("-")[1]) && !$party.get(s.split("-")[1]).down?
       }
     end
     return result
@@ -14810,7 +14824,7 @@ class Game_Battler
 
   end
 
-end"⁄
+end"!
 class Attack_Result
 
 	attr_accessor :target
@@ -14831,6 +14845,9 @@ class Attack_Result
 	attr_accessor :transform
 
 	attr_accessor :empower
+	attr_accessor :steal
+	attr_accessor :pocket
+	attr_accessor :escape
 
 end
 
@@ -14869,7 +14886,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"Œ∂#==============================================================================
+end"ù∂#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -15794,12 +15811,20 @@ class Game_Character
       # Increase steps
       increase_steps
       # If impassable
-      $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 || terrain_tag == 5
-      $audio.queue('ladder/ladder2',24,0.15) if terrain_tag == 3
 
-       #$audio.queue('walk',4,0.5) if self == $player
-       $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-       $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+      if self == $player
+
+        tt = terrain_tag
+
+        $audio.queue('ladder/ladder1',10,0.15) if tt == 3 || tt == 5
+        $audio.queue('ladder/ladder2',24,0.15) if tt == 3
+
+         #$audio.queue('walk',4,0.5) if self == $player
+         $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+         $audio.queue('steps/foot5',12,0.6) if tt == 2
+
+      end
+
     else
       # Determine if touch event is triggered IF ENEMY ONLY
       check_event_trigger_touch(@x, @y+1)
@@ -15834,9 +15859,11 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      # If impassable
-      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+      if self == $player 
+        tt = terrain_tag
+        $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+        $audio.queue('steps/foot5',12,0.6) if tt == 2
+      end
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x-1, @y)
@@ -15869,10 +15896,12 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    
-      # If impassable
-      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+
+      if self == $player 
+        tt = terrain_tag
+        $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+        $audio.queue('steps/foot5',12,0.6) if tt == 2
+      end
 
     else
       # Determine if touch event is triggered
@@ -15907,13 +15936,19 @@ class Game_Character
 
       # Increase steps
       increase_steps
-    # If impassable
-      $audio.queue('ladder/ladder1',10,0.15) if terrain_tag == 3 && pt == 3
-      $audio.queue('ladder/ladder1',24,0.15) if terrain_tag == 4
-      $audio.queue('ladder/ladder1',24,0.15) if terrain_tag == 3
 
-      $audio.queue("steps/foot#{rand(8)}",12,0.4) if self == $player && terrain_tag != 3
-      $audio.queue('steps/foot5',12,0.6) if self == $player && terrain_tag == 2
+      if self == $player
+
+        tt = terrain_tag
+        $audio.queue('ladder/ladder1',10,0.15) if tt == 3 && pt == 3
+        $audio.queue('ladder/ladder1',24,0.15) if tt == 4
+        $audio.queue('ladder/ladder1',24,0.15) if tt == 3
+
+        $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
+        $audio.queue('steps/foot5',12,0.6) if tt == 2
+
+      end
+
     else
       # Determine if touch event is triggered
       check_event_trigger_touch(@x, @y-1)
@@ -18608,7 +18643,7 @@ class Moblin
 
 	end
 
-end"ä3#==============================================================================
+end"#1#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -18675,81 +18710,75 @@ class Game_Player < Game_Character
   # * Same Position Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_here(triggers)
-    result = false
-    # If event is running
-    if $map.interpreter.running?
-      return result
-    end
-    # All event loops
-    for event in $map.events.values
-      # If event coordinates and triggers are consistent
-      if event.collide?(@x,@y) and triggers.include?(event.trigger)
-      #if event.x == @x and event.y == @y and triggers.include?(event.trigger)
+
+    return false if $map.interpreter.running?
+
+    ev = $map.event_at(@x,@y)
+    return false if ev == nil
+    if triggers.include?(ev.trigger)
         # If starting determinant is same position event (other than jumping)
-        if not event.jumping? and event.over_trigger?
-          event.start
-          result = true
+        if not ev.jumping? and ev.over_trigger?
+          ev.start
+          return true
         end
-      end
+
     end
-    return result
+
+    return false
+
   end
 
   #--------------------------------------------------------------------------
   # * Front Envent Starting Determinant
   #--------------------------------------------------------------------------
   def check_event_trigger_there(triggers)
-    result = false
-    # If event is running
-    if $map.interpreter.running?
-      return result
-    end
+   
+    return false if $map.interpreter.running?
 
     # Calculate front event coordinates
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
     
     # All event loops
-    for event in $map.events.values
-      # If event coordinates and triggers are consistent
-      if event.at?(new_x,new_y) &&
-         triggers.include?(event.trigger) and event.list.size > 1
+    ev = $map.event_at(new_x,new_y)
+    return false if ev == nil
 
+    if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
 
         # If starting determinant is front event (other than jumping)
-        if !event.jumping? and !event.over_trigger?
-          event.start
-          result = true
+        if !ev.jumping? and !ev.over_trigger?
+          ev.start
+          return true
         end
-      end
+
     end
-    # If fitting event is not found
+
 
     # COUNTER CHECK
-
-    if result == false
 
       # If front tile is a counter
       if $map.counter?(new_x, new_y)
         # Calculate 1 tile inside coordinates
         new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
         new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+
         # All event loops
-        for event in $map.events.values
-          # If event coordinates and triggers are consistent
-          if event.x == new_x and event.y == new_y and
-             triggers.include?(event.trigger) and event.list.size > 1
-            # If starting determinant is front event (other than jumping)
-            if not event.jumping? and not event.over_trigger?
-              event.start
-              result = true
-            end
+        ev = $map.event_at(new_x,new_y)
+        return false if ev == nil
+
+        # If event coordinates and triggers are consistent
+        if ev.x == new_x and ev.y == new_y and
+           triggers.include?(ev.trigger) and ev.list.size > 1
+          # If starting determinant is front event (other than jumping)
+          if not ev.jumping? and not ev.over_trigger?
+            ev.start
+            return true
           end
         end
       end
-    end
 
-    return result
+    return false
+
   end
 
   #--------------------------------------------------------------------------
@@ -18758,26 +18787,22 @@ class Game_Player < Game_Character
   def check_event_trigger_touch(x, y)
         
     return false if $map.interpreter.running?
-      
-    result = false
 
     # All event loops
-    for event in $map.events.values
+    ev = $map.event_at(x,y)
+    return false if ev == nil
       # If event coordinates and triggers are consistent
-      if event.at?(x,y) and [1,2].include?(event.trigger)
+      if ev.at?(x,y) and [1,2].include?(ev.trigger)
         # If starting determinant is front event (other than jumping)
-        if not event.jumping? and not event.over_trigger?
-          #if event.trigger == 2
-            #$battle.setup(event)
-            #return true
-          #else
-            event.start
-            result = true
-          #end
+        if !ev.jumping? and !ev.over_trigger?
+            ev.start
+            return true
         end
+
       end
-    end
-    return result
+
+    return false
+
   end
 
   #--------------------------------------------------------------------------
@@ -19101,7 +19126,7 @@ class Game_Player < Game_Character
   end
 
 end
-"J2
+"»7
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19470,9 +19495,14 @@ class Game_Battle
           when 'half-armor'
             is_half_armor = true
           when 'empower'
-            empower = true
-
-
+            result.empower = true
+          when 'steal'
+            result.steal = true
+          when 'pocket'
+            result.pocket = true
+          when 'escape'
+            result.escape = true
+            
         end
       }
 
@@ -19485,14 +19515,16 @@ class Game_Battle
       result.evade = false if is_heal
 
       # Calc crit
-      result.critical = rand(100) < t.luk
+      result.critical = rand(100) < t.luk || attacker.state?('crit')
       result.critical = false if result.evade
 
       # Calc resist if state added and its a bad one?
-      if !result.state_add != nil
-        if !['minion-double','crit','protect'].include?(result.state_add)
+      if result.state_add != nil
+        if !['minion-double','crit','protect','curse-life'].include?(result.state_add)
           result.resist = rand(100) < t.res
-          result.state_add = nil
+          if result.resist
+            result.state_add = nil
+          end
         end
       end
 
@@ -19539,8 +19571,14 @@ class Game_Battle
       end
 
       # ---------------------------------------------
-      # CUSTOMS
+      # HACKS
       # ---------------------------------------------
+
+      if t.state?('curse-life')
+        if result.damage >= t.hp
+          result.damage = t.hp-1
+        end
+      end
 
       # Custom hacking
       if skill.id == 'pounce' 
@@ -19549,10 +19587,23 @@ class Game_Battle
         end
       end
 
-      if empower
-        result.empower = true
+      # If empowered, double the dmg
+      if attacker.state?('empower')
+        result.damage *= 2
       end
 
+      # Animal trinks
+      if ['acc-frog-boots'].include?(attacker.slot('acc'))
+        result.damage *= 1.3
+      end
+
+      if t.state?('protect')
+        result.damage *= 0.2
+      end
+
+      # ---------------------------------------------
+      # DONE HERE
+      # ---------------------------------------------
       results.push(result)
 
     }
@@ -19595,6 +19646,11 @@ class Game_Battle
 
       when 'rand' # Single random target
 
+        # Hack boyle bug
+        if attacker.skill_id == 'xform-bug'
+          return [$party.get('boy')]
+        end
+
         if attacker.is_good?
           return [@enemies.select{ |b| b.attackable? }.sample]
         else
@@ -19628,6 +19684,15 @@ class Game_Battle
           return $party.active_battlers.select{ |b| b.attackable? }
         end
 
+      when 'allies'
+
+        # All allies
+        if attacker.is_good?
+          return $party.active_battlers.select{ |b| b.attackable? && b != attacker }
+        else          
+          return @enemies.select{ |b| b.attackable? && b != attacker }
+        end
+
       when 'party'
 
         # All allies
@@ -19636,6 +19701,14 @@ class Game_Battle
         else          
           return @enemies.select{ |b| b.attackable? }
         end
+
+      when 'any'
+        targets = $party.active_battlers.select{ |b| b.attackable? }
+        targets.count.times{
+          targets += (@enemies.select{ |b| b.attackable? })
+        }
+
+        return [targets.sample]
 
       when 'self'
 
@@ -19747,7 +19820,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"*#==============================================================================
+end"à+#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -20088,8 +20161,9 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    # set_active("ing")
-    # set_active("mys")
+    #set_active("rob")
+    set_active("ing")
+    #set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
     # set_reserve("row")
@@ -20145,7 +20219,16 @@ class Game_Party
     @actors['ing'].learn('mudball')
     @actors['ing'].learn('missiles')
 
+    @actors['ing'].learn('curse-life')    
+    @actors['ing'].learn('curse-death')    
+    @actors['ing'].learn('curse-pain')    
+
+    @actors['ing'].learn('ens-escape')    
+    @actors['ing'].learn('ens-enslave')    
+    @actors['ing'].learn('ens-surrender')    
+
     @actors["ing"].learn('xform-frog')
+    @actors["ing"].learn('xform-bug')
     # @actors["ing"].learn('xform-snake')
     # @actors["ing"].learn('xform-cat')
     # @actors["ing"].learn('xform-bear')
@@ -20160,7 +20243,6 @@ class Game_Party
     @actors['mys'].learn('two-legs')
 
     @actors['rob'].learn('bash')
-    @actors['rob'].learn('protect')
     @actors["rob"].learn("team-boy")
     @actors["rob"].learn("team-ing")
     @actors["rob"].learn("team-mys")
@@ -20170,7 +20252,9 @@ class Game_Party
 
     @actors['hib'].learn('claw')
 
-    @actors['row'].learn('dagger')
+    @actors['row'].learn('clobber')
+    @actors['row'].learn('gadget')
+    @actors['row'].learn('blade-waltz')
 
 
     @actors['phy'].learn('strike')
@@ -20417,7 +20501,7 @@ end"class State
 	end
 
 end
-"+!#==============================================================================
+"M!#==============================================================================
 # ** Scene_Base
 #==============================================================================
 
@@ -20623,6 +20707,7 @@ class Scene_Base
 
   def change_weather(weather)
     @weather.dispose if @weather
+    return if !$settings.effects
     @weather = nil
     case weather
       when 'dark-dots'
@@ -20777,13 +20862,13 @@ class Scene_Base
   # end
 
 end
-"#==============================================================================
+"#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
 class Scene_Battle < Scene_Base
 
-  attr_accessor :phase, :message
+  attr_accessor :phase, :message, :hud
 
   def initialize
     super
@@ -20835,7 +20920,7 @@ class Scene_Battle < Scene_Base
 
 
     # Find battler events
-    [0,1,2,3,4,5,6,7,8,9].each{ |i| 
+    [0,1,2,3].each{ |i| 
       
       ev = @map.event_by_evname("A.#{i}")
       
@@ -20885,6 +20970,20 @@ class Scene_Battle < Scene_Base
 
     }
 
+    # Do trinket actions
+    $party.active_battlers.each{ |b|
+      case b.slot('acc') 
+         when 'acc-frog-boots'
+          b.transform('frog')
+        when 'acc-snake-boots'
+          b.transform('snake')
+        when 'acc-bat-boots'
+          b.transform('bat')
+        #when 'acc-frog-boots'
+        #  @active_battler = b
+      end
+    }
+
     # Enemy setups
     [0,1,2,3,4,5,6,7,8,9].each{ |i| 
       ev = @map.event_by_evname("E.#{i}") 
@@ -20930,7 +21029,12 @@ class Scene_Battle < Scene_Base
   
   def terminate
 
-    
+    @hud.dispose
+    @actor_cmd.dispose
+    @skill_cmd.dispose
+    @item_cmd.dispose
+    @target_cmd.dispose
+    @message.dispose
     
     super  
   end
@@ -20984,6 +21088,7 @@ class Scene_Battle < Scene_Base
 
     # Currently showing text
     return if @message.busy?
+    return if @hud.busy?
 
     # Currently interpreting
     return if @map.interpreter.running?
@@ -21078,7 +21183,7 @@ class Scene_Battle < Scene_Base
 
   end
 
-end"„
+end"
 class Scene_Battle
 
   def phase_intro_init
@@ -21098,7 +21203,7 @@ class Scene_Battle
 
         act = $party.actor_by_index(i).id
         
-        if !$party.get(act).down?
+        if !$party.get(act).down? && !$party.get(act).get_transform
 
             ev = $party.actor_by_index(i).ev
             next if ev == nil
@@ -21177,7 +21282,7 @@ class Scene_Battle
 
   end
 
-end">
+end"2
 
 class Scene_Battle
 
@@ -21235,7 +21340,7 @@ class Scene_Battle
           @item_cmd.setup
           @phase = :actor_item
 
-        when "skills", "spells", "witchery", "team", "transform", "demon", "dream"
+        when "skills", "spells", "witchery", "team", "transform", "demon", "dream", "sing"
 
           @skill_cmd.setup(@active_battler,action)
           
@@ -21248,6 +21353,11 @@ class Scene_Battle
           @phase = :actor_transform
 
         else
+
+          # Rowen gadget hack
+          if action == 'gadget'
+            action = 'gadget-'+(rand(4)+1).to_s
+          end
 
           @active_battler.skill_id = action
           @phase = :actor_strategize
@@ -21276,7 +21386,9 @@ class Scene_Battle
       if @active_battler.can_use_skill?(@skill_cmd.get_skill)
         @skill_cmd.close
         @active_battler.item_id = nil
-        @active_battler.skill_id = @skill_cmd.get_skill
+        skill = @skill_cmd.get_skill
+        skill = skillswap(skill)
+        @active_battler.skill_id = skill
         @phase = :actor_strategize
         sys 'action'
       else
@@ -21284,6 +21396,17 @@ class Scene_Battle
       end
     end
 
+  end
+
+  # Hack skill changes
+  def skillswap(skill)
+    case skill
+      when 'team-boy'
+        return ['tcf-mermaid','tcf-hercules','tcf-cyclops','tcf-gyendal'].sample
+      when 'team-hib'
+        return ['ntmr-ghost','ntmr-ing','ntmr-spider','ntmr-mutton'].sample
+    end
+    return skill
   end
 
   #==============================================================================
@@ -21417,7 +21540,7 @@ class Scene_Battle
     
   end
 
-end"Ç'
+end".)
 class Scene_Battle
 
   def phase_main_init
@@ -21576,9 +21699,17 @@ class Scene_Battle
 
     if @attack_round.text
       $scene.message.force_name = @active_battler.name
-      $scene.message.start('A.0:'+@attack_round.text)
+      speaker = "A.#{$party.active.index(@active_battler.id)}"
+      $scene.message.start(speaker+': '+@attack_round.text)
       #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
     end
+
+    @attack_results.each{ |result|
+      if result.escape
+        @phase = :misc_escape
+        return
+      end
+    }
 
     @phase = :main_anim
     wait(15)
@@ -21636,9 +21767,12 @@ class Scene_Battle
 
     # Do damage or healing
     @attack_results.each{ |result|
-        
+
         # Damage
         if result.damage > 0
+
+          # Remove state by damage
+          result.target.remove_states_shock
 
           result.target.damage(result.damage)
           pop_dmg(result.target.ev,result.damage)
@@ -21693,6 +21827,15 @@ class Scene_Battle
 
       end
 
+      # Resist
+      if result.resist
+
+        # Play nice noise
+        sfx 'whoosh2'
+        pop_resist(result.target.ev)
+
+      end
+
     }
 
     # Onto the next
@@ -21705,18 +21848,25 @@ class Scene_Battle
 
     # Show gains of hp or mana or darkness
     @attack_results.each{ |result|
-        next if result.gain_mana == nil
-        @active_battler.gain_mana(result.gain_mana)
-        #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
 
-        # Flash blue
+        if result.steal
+          item('cheese',1,'rat')
+        end
 
+        if result.pocket
+          gold(result.target.gold.to_s.split("-")[-1].to_i,'row')
+        end
 
-        # Spark effect
-        x = @active_battler.ev.screen_x
-        y = @active_battler.ev.screen_y - 15
-        add_spark('mana-blue',x,y)
-        wait(15)
+        if result.gain_mana != nil
+          @active_battler.gain_mana(result.gain_mana)
+          #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
+
+          # Spark effect
+          x = @active_battler.ev.screen_x
+          y = @active_battler.ev.screen_y - 15
+          add_spark('mana-blue',x,y)
+          wait(15)
+        end
     }
 
     @phase = :main_state
@@ -21758,9 +21908,7 @@ class Scene_Battle
 
         result.target.add_state(result.state_add)
         #pop_state(result.target.ev,result.state_add)
-
-        # Show icon?
-        result.target.ev.icons.push(result.state_add)
+        
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
         #result.target.ev.pulse_colors.push(Color.new(0,240,0,120))
 
@@ -21776,16 +21924,9 @@ class Scene_Battle
   def phase_main_tick
 
     # Take damage from poison states
+    # This would be after all attacks, then another fall?
 
 
-    # Remove states by shock
-    @attack_results.each{ |result|
-
-      if result.damage > 0
-        result.target.remove_states_shock
-      end
-
-    }
 
 
     @phase = :main_fall
@@ -23570,7 +23711,7 @@ end"¬Cmodule Seal
 
     alias auto? auto
   end
-end"ﬁ#==============================================================================
+end"#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23654,11 +23795,17 @@ class AudioManager
 
   def music(file,vol=1.0)
 
-    #return if @music_file == file
+    if @music_file == file
+        @music_gain = 1.0
+        @music_target = 1.0
+        @music.play if !@music.playing?
+      return
+    end
+
     @music.stop if @music 
 
-    if file == nil || file == ''   
-      
+    if file == nil || file == ''     
+      @music_file = nil    
       return
     end
     
@@ -23682,12 +23829,17 @@ class AudioManager
     # Nightwatch hack
     file = 'woods-night' if flag?('night-time')
 
-    #return if @atmosphere_file == file    
+      if @atmosphere_file == file
+        @atmosphere_gain = 1.0
+        @atmosphere_target = 1.0
+      return
+    end
+
 
     @atmosphere.stop if @music
 
     if file == nil  || file == ''
-      
+      @atmosphere_file = nil
       return
     end
 
@@ -23749,8 +23901,6 @@ class AudioManager
     src.play
     @sfx.push(src)
 
-    log_sys(@sfx.count)
-
   end
 
   def queue(file,vol=1.0,delay=0)
@@ -23810,27 +23960,31 @@ class AudioManager
 
   def update
 
-    if @atmosphere_target != @atmosphere_gain
-      if @atmosphere_target > @atmosphere.gain
-        @atmosphere_gain += 0.02
-        @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
-      else
-        @atmosphere_gain -= 0.02
-        @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
-      end      
+    if @atmosphere != nil
+      if @atmosphere_target != @atmosphere_gain
+        if @atmosphere_target > @atmosphere.gain
+          @atmosphere_gain += 0.02
+          @atmosphere_gain = 1.0 if @atmosphere_gain > 1.0
+        else
+          @atmosphere_gain -= 0.02
+          @atmosphere_gain = 0.0 if @atmosphere_gain < 0.0
+        end      
+      end
+      @atmosphere.gain = @atmosphere_gain * $settings.music_vol
     end
-    @atmosphere.gain = @atmosphere_gain * $settings.music_vol
 
-    if @music_target != @music_gain
-      if @music_target > @music.gain
-        @music_gain += 0.02
-        @music_gain = 1.0 if @music_gain > 1.0
-      else
-        @music_gain -= 0.02
-        @music_gain = 0.0 if @music_gain < 0.0
-      end      
+    if @music != nil
+      if @music_target != @music_gain
+        if @music_target > @music.gain
+          @music_gain += 0.02
+          @music_gain = 1.0 if @music_gain > 1.0
+        else
+          @music_gain -= 0.02
+          @music_gain = 0.0 if @music_gain < 0.0
+        end      
+      end
+      @music.gain = @music_gain * $settings.music_vol
     end
-    @music.gain = @music_gain * $settings.music_vol
 
     @environmental.each{ |e| e.update }
 
@@ -24325,11 +24479,11 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"7#==============================================================================
+end"ƒ#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
-SAVE_FILES = 99
+SAVE_FILES = 20
 
 def build_time_string(frames)
 
@@ -24468,7 +24622,9 @@ class FileManager
     header[:members] = $party.active
     header[:gold] = $party.gold
     header[:chars] = $party.all
-    header[:levels] = [1,2,3,4,5,6,7]
+    header[:levels] = $party.all.map{|p| $party.get(p).level }
+    header[:quest] = $data.quests[$progress.quests.reverse[0]].description
+    header[:location] = $map.nice_name
     return header
   end
   
@@ -24507,7 +24663,7 @@ class FileManager
   end
   
 end
-"
+"Ó
 class FontManager
 
 	attr_reader :debug, :debug_min, :debug_ttl
@@ -24527,6 +24683,8 @@ class FontManager
 	attr_reader :hud_hp, :hud_hp_b
 
 	attr_reader :mini, :mini_b
+
+	attr_reader :save_tiny
 
 
 	def initialize
@@ -24686,6 +24844,11 @@ class FontManager
 	    @mini_b.bold = true
 	    @mini_b.color = Color.new(0,0,0)
 
+	    @save_tiny = Font.new
+	    @save_tiny.name = "Bitter"
+	    @save_tiny.size = 20 #30 good for big text
+	    #@message.gradient = true
+	    @save_tiny.color = Color.new(80,80,80)
 
 	end
 
