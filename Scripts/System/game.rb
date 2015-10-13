@@ -45,9 +45,9 @@ class GameManager
   def do_reload
     Graphics.freeze
     @need_reload = false
-    $scene = nil
     @scenes.each{ |s| s.terminate }
     @scenes = []
+    $scene = nil
     push_scene(Scene_Map.new($map,$player))
     $map.resetup
     $scene.update

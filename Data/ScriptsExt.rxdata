@@ -3385,7 +3385,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"¢
+"‰
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3597,6 +3597,12 @@ def party_gossip
 
 	# Choose a gossip
 	$player.next_common = 31 + rand(gossips)
+
+end
+
+def witch_gossip
+
+	$player.next_common = 51 + rand(7)
 
 end
 
@@ -6475,7 +6481,7 @@ class TargetCmd
 	end
 
 end
-"#==============================================================================
+"#==============================================================================
 # Ui_Screen
 #==============================================================================
 
@@ -6542,7 +6548,7 @@ class Ui_Screen
 
 	def update
 
-		return
+		#return
 
 		if !$settings.bottombar
 			@info.move(0,447)
@@ -6699,7 +6705,7 @@ class Ui_Screen
     	return @message.busy? || @item || @popper || @grid || @book
     end
 
-end"ç#==============================================================================
+end"¬#==============================================================================
 # Ui_Bar
 #==============================================================================
 
@@ -6808,6 +6814,8 @@ class Ui_Bar < SpriteGroup
 		super()
 
 		#return
+
+		refresh if @hp_bars.count < $party.active.count
 
 		# Update the bars
 		$party.active.each_index{ |i|
@@ -7017,7 +7025,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"–K#==============================================================================
+end"L#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7936,6 +7944,9 @@ class Ui_Grid
 	def choose(target,mute=false)
 
 		sys('select') if !mute #if @selected != target
+
+		res = @boxes.find{ |b| b.name == target }
+		return if res == nil
 
 		@selected = target
 		@selected_box = @boxes.find{ |b| b.name == target }
@@ -9298,7 +9309,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"≠
+end"≤
 #==============================================================================
 # ** Mnu_Char
 #==============================================================================
@@ -9332,7 +9343,7 @@ class Mnu_Char < Mnu_Base
 		#@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
 		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'
 
-		@grid.choose($menu.char_cursor)
+		@grid.choose($menu.char_cursor,true)
 
 		self.left.push(@grid)
 
@@ -17951,7 +17962,7 @@ class Interpreter
   end
 
 end
-"„B#==============================================================================
+"C#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -18027,7 +18038,6 @@ class Game_Map
   end
 
   def resetup
-    update_camera
     @zone = nil
     setup(@id)
     setup_audio
@@ -18204,12 +18214,13 @@ class Game_Map
   end
 
   def display_y
+    
     # cam_y = @cam_y
     # cam_y = 0 if cam_y < 0
     # h = ($map.height * 128) - ($game.height * 4)
     # cam_y = h if cam_y > h
-    @cam_hy = 0 if @cam_hy == nil
-    return (@cam_y + (@cam_oy*4) - @cam_hy).to_i
+    #log_sys (@cam_y + (@cam_oy*4)).to_i if rand(10) == 4
+    return (@cam_y + (@cam_oy*4)).to_i
   end
 
   #--------------------------------------------------------------------------
@@ -18340,7 +18351,7 @@ class Game_Map
 
   def update_mouse
 
-    if $scene.hud.busy?
+    if $scene.is_a?(Scene_GameOver) || $scene.hud.busy?
       $mouse.change_cursor('Default')
       return
     end
@@ -18668,7 +18679,7 @@ class Moblin
 
 	end
 
-end"#1#==============================================================================
+end"Ë3#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -18690,9 +18701,16 @@ class Game_Player < Game_Character
     @static = false
     @next_common = nil
 
-    self.move_speed = 3.3
+    @move_speed = 3.3
 
     @faceoff = 0 # Here to match event, possibly could have both in char
+  end
+
+  def move_speed=(v)
+    if v == 3
+      v = 3.3
+    end
+    @move_speed = v
   end
 
   def transfer(map,x,y,dir)
@@ -18766,15 +18784,17 @@ class Game_Player < Game_Character
     
     # All event loops
     ev = $map.event_at(new_x,new_y)
-    return false if ev == nil
+    if ev != nil
 
-    if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
+      if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
 
-        # If starting determinant is front event (other than jumping)
-        if !ev.jumping? and !ev.over_trigger?
-          ev.start
-          return true
-        end
+          # If starting determinant is front event (other than jumping)
+          if !ev.jumping? and !ev.over_trigger?
+            ev.start
+            return true
+          end
+
+      end
 
     end
 
@@ -18783,6 +18803,7 @@ class Game_Player < Game_Character
 
       # If front tile is a counter
       if $map.counter?(new_x, new_y)
+
         # Calculate 1 tile inside coordinates
         new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
         new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
@@ -18843,6 +18864,14 @@ class Game_Player < Game_Character
     transfer_player if @transferring 
 
     return super(true) if $map.interpreter.running? # Still finish turn anim
+
+      if @next_common != nil
+
+        $map.start_common(@next_common)
+        @next_common = nil
+
+      end
+
 
     if @character_name != "Player/#{$party.leader}"
       self.character_name = "Player/#{$party.leader}"
@@ -18938,7 +18967,16 @@ class Game_Player < Game_Character
                 @turn_after_path = 'd'
               end
             end
+          end
 
+          # NOTHING, try counter
+          if $map.counter?(x,y-1)
+            find_path(@event_at_path.x, @event_at_path.y-2)
+            @turn_after_path = 'd'
+          end
+          if $map.counter?(x,y+1)
+            find_path(@event_at_path.x, @event_at_path.y+2)
+            @turn_after_path = 'u'
           end
 
         end
@@ -19002,11 +19040,16 @@ class Game_Player < Game_Character
               @direction = 8
           end
 
-          # Check if event is adjacent
+          # Check if event is adjacent OR counter between
           dx = (self.x - @event_at_path.x).abs
           dy = (self.y - @event_at_path.y).abs
           if dx + dy == 1
             @event_at_path.start
+          end
+          if @direction == 8
+            if $map.counter?(@x,@y-1)
+              @event_at_path.start
+            end
           end
           @event_at_path = nil
 
@@ -19124,11 +19167,11 @@ class Game_Player < Game_Character
       camera_snap
 
       # Start common event if there is a queue
-      if @next_common != nil
+      # if @next_common != nil
 
-        $map.start_common(@next_common)
+      #   $map.start_common(@next_common)
 
-      end
+      # end
 
     #end
 
@@ -22212,7 +22255,7 @@ class Scene_Battle
   end
 
  end
-"-#==============================================================================
+" #==============================================================================
 # ** Scene_GameOver
 #==============================================================================
 
@@ -22230,6 +22273,9 @@ class Scene_GameOver
  
     music('sad')
 
+    char = 'mys' 
+    char = 'boy' if !$party.active.include?('mys')
+
     $scene = self
 
     # Make viewports - Also in the scene
@@ -22243,12 +22289,16 @@ class Scene_GameOver
     # Char
     @char = Sprite.new(@vp)
     #@char.x += 50
-    @char.bitmap = $cache.gameover('char-mys')
+    @char.bitmap = $cache.gameover('char-'+char)
     #@char.do(go('x',-50,700,:qo))
 
     @message = Ui_Message.new(@vp)
 
-    @message.start("vn-mys: Now we'll never save my brother.")
+    if char == 'mys'
+      @message.start("vn-mys: Now we'll never save my brother.")
+    elsif char == 'boy'
+      @message.start("vn-boy: I really am a terrible excuse for a villain.")
+    end
 
 
     @next_menu = "Title"
@@ -24918,9 +24968,9 @@ class GameManager
   def do_reload
     Graphics.freeze
     @need_reload = false
-    $scene = nil
     @scenes.each{ |s| s.terminate }
     @scenes = []
+    $scene = nil
     push_scene(Scene_Map.new($map,$player))
     $map.resetup
     $scene.update

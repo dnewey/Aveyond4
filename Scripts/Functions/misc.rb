@@ -213,6 +213,12 @@ def party_gossip
 
 end
 
+def witch_gossip
+
+	$player.next_common = 51 + rand(7)
+
+end
+
 def vault_card_refresh
 
 	# MAIN ROOM MAIN ROOM

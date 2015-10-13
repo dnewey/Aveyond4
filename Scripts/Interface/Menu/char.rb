@@ -31,7 +31,7 @@ class Mnu_Char < Mnu_Base
 		#@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
 		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'
 
-		@grid.choose($menu.char_cursor)
+		@grid.choose($menu.char_cursor,true)
 
 		self.left.push(@grid)
 

@@ -16,6 +16,9 @@ class Scene_GameOver
  
     music('sad')
 
+    char = 'mys' 
+    char = 'boy' if !$party.active.include?('mys')
+
     $scene = self
 
     # Make viewports - Also in the scene
@@ -29,12 +32,16 @@ class Scene_GameOver
     # Char
     @char = Sprite.new(@vp)
     #@char.x += 50
-    @char.bitmap = $cache.gameover('char-mys')
+    @char.bitmap = $cache.gameover('char-'+char)
     #@char.do(go('x',-50,700,:qo))
 
     @message = Ui_Message.new(@vp)
 
-    @message.start("vn-mys: Now we'll never save my brother.")
+    if char == 'mys'
+      @message.start("vn-mys: Now we'll never save my brother.")
+    elsif char == 'boy'
+      @message.start("vn-boy: I really am a terrible excuse for a villain.")
+    end
 
 
     @next_menu = "Title"

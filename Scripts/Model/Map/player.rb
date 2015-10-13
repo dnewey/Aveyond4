@@ -20,9 +20,16 @@ class Game_Player < Game_Character
     @static = false
     @next_common = nil
 
-    self.move_speed = 3.3
+    @move_speed = 3.3
 
     @faceoff = 0 # Here to match event, possibly could have both in char
+  end
+
+  def move_speed=(v)
+    if v == 3
+      v = 3.3
+    end
+    @move_speed = v
   end
 
   def transfer(map,x,y,dir)
@@ -96,15 +103,17 @@ class Game_Player < Game_Character
     
     # All event loops
     ev = $map.event_at(new_x,new_y)
-    return false if ev == nil
+    if ev != nil
 
-    if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
+      if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
 
-        # If starting determinant is front event (other than jumping)
-        if !ev.jumping? and !ev.over_trigger?
-          ev.start
-          return true
-        end
+          # If starting determinant is front event (other than jumping)
+          if !ev.jumping? and !ev.over_trigger?
+            ev.start
+            return true
+          end
+
+      end
 
     end
 
@@ -113,6 +122,7 @@ class Game_Player < Game_Character
 
       # If front tile is a counter
       if $map.counter?(new_x, new_y)
+
         # Calculate 1 tile inside coordinates
         new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
         new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
@@ -173,6 +183,14 @@ class Game_Player < Game_Character
     transfer_player if @transferring 
 
     return super(true) if $map.interpreter.running? # Still finish turn anim
+
+      if @next_common != nil
+
+        $map.start_common(@next_common)
+        @next_common = nil
+
+      end
+
 
     if @character_name != "Player/#{$party.leader}"
       self.character_name = "Player/#{$party.leader}"
@@ -268,7 +286,16 @@ class Game_Player < Game_Character
                 @turn_after_path = 'd'
               end
             end
+          end
 
+          # NOTHING, try counter
+          if $map.counter?(x,y-1)
+            find_path(@event_at_path.x, @event_at_path.y-2)
+            @turn_after_path = 'd'
+          end
+          if $map.counter?(x,y+1)
+            find_path(@event_at_path.x, @event_at_path.y+2)
+            @turn_after_path = 'u'
           end
 
         end
@@ -332,11 +359,17 @@ class Game_Player < Game_Character
               @direction = 8
           end
 
-          # Check if event is adjacent
+          # Check if event is adjacent OR counter between
           dx = (self.x - @event_at_path.x).abs
           dy = (self.y - @event_at_path.y).abs
           if dx + dy == 1
             @event_at_path.start
+          end
+          if @direction == 8 && $map.counter?(@x,@y-1)
+              @event_at_path.start
+          end
+          if @direction == 2 && $map.counter?(@x,@y+1)
+              @event_at_path.start
           end
           @event_at_path = nil
 
@@ -454,11 +487,11 @@ class Game_Player < Game_Character
       camera_snap
 
       # Start common event if there is a queue
-      if @next_common != nil
+      # if @next_common != nil
 
-        $map.start_common(@next_common)
+      #   $map.start_common(@next_common)
 
-      end
+      # end
 
     #end
 

@@ -918,6 +918,9 @@ class Ui_Grid
 
 		sys('select') if !mute #if @selected != target
 
+		res = @boxes.find{ |b| b.name == target }
+		return if res == nil
+
 		@selected = target
 		@selected_box = @boxes.find{ |b| b.name == target }
 

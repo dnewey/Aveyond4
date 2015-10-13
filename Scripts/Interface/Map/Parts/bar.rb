@@ -108,6 +108,8 @@ class Ui_Bar < SpriteGroup
 
 		#return
 
+		refresh if @hp_bars.count < $party.active.count
+
 		# Update the bars
 		$party.active.each_index{ |i|
 			@hp_bars[i].value = $party.get($party.active[i]).hp

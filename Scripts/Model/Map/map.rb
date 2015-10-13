@@ -74,7 +74,6 @@ class Game_Map
   end
 
   def resetup
-    update_camera
     @zone = nil
     setup(@id)
     setup_audio
@@ -251,12 +250,13 @@ class Game_Map
   end
 
   def display_y
+    
     # cam_y = @cam_y
     # cam_y = 0 if cam_y < 0
     # h = ($map.height * 128) - ($game.height * 4)
     # cam_y = h if cam_y > h
-    @cam_hy = 0 if @cam_hy == nil
-    return (@cam_y + (@cam_oy*4) - @cam_hy).to_i
+    #log_sys (@cam_y + (@cam_oy*4)).to_i if rand(10) == 4
+    return (@cam_y + (@cam_oy*4)).to_i
   end
 
   #--------------------------------------------------------------------------
@@ -387,7 +387,7 @@ class Game_Map
 
   def update_mouse
 
-    if $scene.hud.busy?
+    if $scene.is_a?(Scene_GameOver) || $scene.hud.busy?
       $mouse.change_cursor('Default')
       return
     end
