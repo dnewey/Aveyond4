@@ -39,7 +39,7 @@ class Scene_Battle
   def phase_main_prep
 
     # Apply the cooldown for this skill
-    if @active_battler.action == :skill
+    if @active_battler.action != 'items'
       @active_battler.apply_cooldown(@active_battler.skill_id)
     end
 

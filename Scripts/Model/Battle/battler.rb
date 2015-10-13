@@ -240,9 +240,7 @@ class Game_Battler
       into = ['chicken','goat','goat','goat','bear','bear','squirrel'].sample
     end
 
-
     @transform = 'x-'+into
-
     @transform = nil if into == 'nil'
 
     if @transform != nil

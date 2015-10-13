@@ -205,12 +205,7 @@ class AudioManager
   # Change mode between maps so clear sources also
   def change_mode(mode)
 
-    #return
-
-    log_sys(mode)
-
     @mode = mode
-    preset = nil
 
     # Create new effect and volume modifier
     case mode
@@ -220,15 +215,11 @@ class AudioManager
 
       when 'cave'
         preset = Seal::Reverb::Preset::CAVE
+        @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
         
     end
 
-    # Prepare the effect to be added to each newly created source
-    if preset != nil
-      @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
-    end
-
-    #@sfx.each{ |s| s = nil }
+    @sfx.each{ |s| s = nil }
     @sfx = []
     GC.start
    

@@ -26,6 +26,10 @@
     "default": "1"
   },
   {
+    "field": "cooldown",
+    "default": "0"
+  },
+  {
     "field": "priority",
     "default": "3"
   },

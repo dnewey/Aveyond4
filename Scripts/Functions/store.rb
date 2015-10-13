@@ -19,7 +19,7 @@ def store_init
 	# Choose 3
 	possible.sort_by { rand }
 
-	$store_customers = possible[0,3]
+	$store_customers = possible[0,1]
 
 end
 

@@ -132,6 +132,15 @@ class Game_Battler
   end
 
   def apply_cooldown(skill_id)
+
+    # Revert to source attack
+    if ['tcf-mermaid','tcf-gyendal','tcf-hercules','tcf-cyclops'].include?(skill_id)
+      skill_id = 'team-boy'
+    end
+    if ['ntmr-ghost','ntmr-ing','ntmr-spider','ntmr-mutton'].include?(skill_id)
+      skill_id = 'team-hib'
+    end
+
     return if $data.skills[skill_id].cooldown == nil
     @cooldowns[skill_id] = $data.skills[skill_id].cooldown
   end

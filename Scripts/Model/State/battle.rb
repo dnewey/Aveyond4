@@ -246,10 +246,8 @@ class Game_Battle
       queue.push($party.get(minion))
     end
 
-    queue.sort_by{ rand }
-
     # Sort by priority, random within same
-    return queue.sort_by{ |battler| battler.attack_priority }
+    return queue.sort_by{ |battler| [battler.attack_priority,rand] }
 
 
   end

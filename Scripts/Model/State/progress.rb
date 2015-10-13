@@ -44,7 +44,7 @@ class Progress
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
-	    @store_level = 0
+	    @store_level = 1
 	    @store_xp = 0
 	    @store_done = []
 

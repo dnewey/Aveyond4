@@ -339,7 +339,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("rob")
+    set_active("rob")
     #set_active("ing")
     #set_active("mys")
     # set_active("rob")
@@ -421,7 +421,7 @@ class Game_Party
     @actors['mys'].learn('two-legs')
 
     @actors['rob'].learn('bash')
-    # @actors["rob"].learn("team-boy")
+    @actors["rob"].learn("team-boy")
     # @actors["rob"].learn("team-ing")
     # @actors["rob"].learn("team-mys")
     # @actors["rob"].learn("team-row")

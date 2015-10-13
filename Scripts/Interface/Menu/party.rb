@@ -54,6 +54,7 @@ class Mnu_Party < Mnu_Base
 		@grid.move(30,138)
 
 		@grid.add_party_mem('a.0',$party.active[0])
+		@grid.get_box('a.0').wallpaper = $cache.menu_wallpaper('red')
 		if $party.active.count > 1
 			@grid.add_party_mem('a.1',$party.active[1])
 		end
@@ -97,10 +98,17 @@ class Mnu_Party < Mnu_Base
 	end
 
 	def choose(option)
+
+		if option == 'a.0'
+			sys('deny')
+			return
+		end
 		if @first == nil
+			sys('action')
 			@first = option
 			@grid.get_box(option).wallpaper = $cache.menu_wallpaper('blue')
 		else
+			sys('tab')
 			$party.swap(@first,option)
 			@first = nil			
 			@grid.clear

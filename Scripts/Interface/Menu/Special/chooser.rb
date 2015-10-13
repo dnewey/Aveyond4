@@ -23,11 +23,18 @@ class Mnu_Chooser < Mnu_Base
 
 		@menu.setup_items($menu.choose_cat)
 
+		$menu.chosen = 'none'
+
 		open
 
 	end
 
 	def update
+
+		if $input.cancel? || $input.rclick?
+			#absorb escape attempts
+		end
+		
 		super
 		# Keep checking if item box changed
 		
@@ -51,6 +58,7 @@ class Mnu_Chooser < Mnu_Base
 	end
 
 	def select(option)	
+		option = 'none' if option == nil
 		$menu.chosen = option
 		$map.need_refresh = true
 		#flag('have-chosen')

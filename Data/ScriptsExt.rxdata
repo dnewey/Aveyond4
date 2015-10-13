@@ -4760,7 +4760,7 @@ def store_init
 	# Choose 3
 	possible.sort_by { rand }
 
-	$store_customers = possible[0,3]
+	$store_customers = possible[0,1]
 
 end
 
@@ -4802,7 +4802,7 @@ end
 def store_say_deny
 	text("1: #{$customer.deny}")
 end
-"
+"
 
 # Misc
 
@@ -4887,10 +4887,11 @@ end
 
 def open_chooser_menu(cat=nil)
 	menu_snapshot
+	log_info(me)
+	$menu.chosen_ev = me
 	$menu.sub_only = true
 	$menu.choose_cat = cat
-	$menu.menu_page = "Chooser"
-	$menu.chosen_ev = me
+	$menu.menu_page = "Chooser"	
 end
 
 def open_potions_book
@@ -10496,7 +10497,8 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end"d	
+end" 
+
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
@@ -10552,6 +10554,7 @@ class Mnu_Party < Mnu_Base
 		@grid.move(30,138)
 
 		@grid.add_party_mem('a.0',$party.active[0])
+		@grid.get_box('a.0').wallpaper = $cache.menu_wallpaper('red')
 		if $party.active.count > 1
 			@grid.add_party_mem('a.1',$party.active[1])
 		end
@@ -10595,10 +10598,17 @@ class Mnu_Party < Mnu_Base
 	end
 
 	def choose(option)
+
+		if option == 'a.0'
+			sys('deny')
+			return
+		end
 		if @first == nil
+			sys('action')
 			@first = option
 			@grid.get_box(option).wallpaper = $cache.menu_wallpaper('blue')
 		else
+			sys('tab')
 			$party.swap(@first,option)
 			@first = nil			
 			@grid.clear
@@ -13417,7 +13427,7 @@ class Right_Page < SpriteGroup
         @page_title.text = text
     end
 
-end"o#==============================================================================
+end"þ#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -13442,11 +13452,18 @@ class Mnu_Chooser < Mnu_Base
 
 		@menu.setup_items($menu.choose_cat)
 
+		$menu.chosen = 'none'
+
 		open
 
 	end
 
 	def update
+
+		if $input.cancel? || $input.rclick?
+			#absorb escape attempts
+		end
+		
 		super
 		# Keep checking if item box changed
 		
@@ -13470,6 +13487,7 @@ class Mnu_Chooser < Mnu_Base
 	end
 
 	def select(option)	
+		option = 'none' if option == nil
 		$menu.chosen = option
 		$map.need_refresh = true
 		#flag('have-chosen')
@@ -14505,7 +14523,7 @@ class Game_Battler
 
   end
 
- end"Xclass Game_Battler
+ end"nclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -14639,6 +14657,15 @@ class Game_Battler
   end
 
   def apply_cooldown(skill_id)
+
+    # Revert to source attack
+    if ['tcf-mermaid','tcf-gyendal','tcf-hercules','tcf-cyclops'].include?(skill_id)
+      skill_id = 'team-boy'
+    end
+    if ['ntmr-ghost','ntmr-ing','ntmr-spider','ntmr-mutton'].include?(skill_id)
+      skill_id = 'team-hib'
+    end
+
     return if $data.skills[skill_id].cooldown == nil
     @cooldowns[skill_id] = $data.skills[skill_id].cooldown
   end
@@ -19126,7 +19153,7 @@ class Game_Player < Game_Character
   end
 
 end
-"È7
+"²7
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19374,10 +19401,8 @@ class Game_Battle
       queue.push($party.get(minion))
     end
 
-    queue.sort_by{ rand }
-
     # Sort by priority, random within same
-    return queue.sort_by{ |battler| battler.attack_priority }
+    return queue.sort_by{ |battler| [battler.attack_priority,rand] }
 
 
   end
@@ -19820,7 +19845,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"¤+#==============================================================================
+end"¢+#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -20161,8 +20186,8 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    #set_active("rob")
-    set_active("ing")
+    set_active("rob")
+    #set_active("ing")
     #set_active("mys")
     # set_active("rob")
     # set_reserve("hib")
@@ -20243,7 +20268,7 @@ class Game_Party
     @actors['mys'].learn('two-legs')
 
     @actors['rob'].learn('bash')
-    # @actors["rob"].learn("team-boy")
+    @actors["rob"].learn("team-boy")
     # @actors["rob"].learn("team-ing")
     # @actors["rob"].learn("team-mys")
     # @actors["rob"].learn("team-row")
@@ -20329,7 +20354,7 @@ end"bclass Progress
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
-	    @store_level = 0
+	    @store_level = 1
 	    @store_xp = 0
 	    @store_done = []
 
@@ -21540,7 +21565,7 @@ class Scene_Battle
     
   end
 
-end".)
+end"/)
 class Scene_Battle
 
   def phase_main_init
@@ -21581,7 +21606,7 @@ class Scene_Battle
   def phase_main_prep
 
     # Apply the cooldown for this skill
-    if @active_battler.action == :skill
+    if @active_battler.action != 'items'
       @active_battler.apply_cooldown(@active_battler.skill_id)
     end
 
@@ -23711,7 +23736,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"#==============================================================================
+end"…#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -23918,12 +23943,7 @@ class AudioManager
   # Change mode between maps so clear sources also
   def change_mode(mode)
 
-    #return
-
-    log_sys(mode)
-
     @mode = mode
-    preset = nil
 
     # Create new effect and volume modifier
     case mode
@@ -23933,15 +23953,11 @@ class AudioManager
 
       when 'cave'
         preset = Seal::Reverb::Preset::CAVE
+        @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
         
     end
 
-    # Prepare the effect to be added to each newly created source
-    if preset != nil
-      @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
-    end
-
-    #@sfx.each{ |s| s = nil }
+    @sfx.each{ |s| s = nil }
     @sfx = []
     GC.start
    
@@ -25538,7 +25554,7 @@ end"øclass Bitmap
 	end
 
 end
-"D
+"\
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -25598,6 +25614,7 @@ class SkillData
 	attr_reader :icon
 	attr_reader :cost
 	attr_reader :hits
+	attr_reader :cooldown
 	attr_reader :priority
 	attr_reader :scope
 	attr_reader :text
