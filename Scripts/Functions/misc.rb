@@ -197,15 +197,15 @@ def party_gossip
 
 	# Check who is in the party
 	if $party.all.include?('phy')
-		gossips = 10
+		gossips = 12
 	elsif $party.all.include?('row')
-		gossips = 8
+		gossips = 10
 	elsif $party.all.include?('hib')
-		gossips = 6
+		gossips = 8
 	elsif $party.all.include?('rob')
-		gossips = 4
+		gossips = 6
 	else
-		gossips = 2
+		gossips = 4
 	end
 
 	# Choose a gossip

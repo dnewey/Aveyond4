@@ -55,16 +55,16 @@ def setup_item_shop
 			stock.push('bread')
 			stock.push('haunch')
 			stock.push('mutton')
-			stock.push('untrans')
+			stock.push('pepper')
 
 		when '@wyrmwood'	
 			stock.push('covey')
 			stock.push('gingerbread')
+			stock.push('toffee-apple')
 			stock.push('cheese')
 			stock.push('haunch')
 			stock.push('cassia')
-			stock.push('untrans')
-			stock.push('toffee-apple')
+			stock.push('pepper')			
 
 		when '@tor'	
 			stock.push('covey')
@@ -73,7 +73,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('kurry')
 			stock.push('cassia')
-			stock.push('untrans')
+			stock.push('pepper')
 
 		when '@royal-town'	
 			stock.push('covey')
@@ -82,7 +82,7 @@ def setup_item_shop
 			stock.push('cheese-round')
 			stock.push('haunch')
 			stock.push('cassia')
-			stock.push('untrans')
+			stock.push('pepper')
 
 		when '@weeville'	
 			stock.push('fruit-c')
@@ -91,7 +91,7 @@ def setup_item_shop
 			stock.push('bread')
 			stock.push('haunch')
 			stock.push('cassia')
-			stock.push('untrans')
+			stock.push('pepper')
 
 		when '@elf-town'	
 			stock.push('covey')
@@ -100,7 +100,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('cassia')
 			stock.push('elf-bread')
-			stock.push('untrans')
+			stock.push('pepper')
 
 		when '@dwarf-town'	
 			stock.push('covey')
@@ -109,7 +109,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('cassia')
 			stock.push('sausage')
-			stock.push('untrans')
+			stock.push('pepper')
 
 		when '@ravwyn'
 			stock.push('covey')
@@ -118,7 +118,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('cassia')
 			stock.push('biscuit')
-			stock.push('untrans')
+			stock.push('pepper')
 
 	end
 
