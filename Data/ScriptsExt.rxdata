@@ -12625,7 +12625,7 @@ class Info_Box < SpriteGroup
     end
 
 end
-"‹
+" 
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -12839,26 +12839,15 @@ class Item_Box < SpriteGroup
             case dta[0]
 
                 when "hp"
-                    stat("hp","#{(dta[1].to_f-1.0)*10}% Health")
+                    stat("hp","#{(dta[1].to_f-1.0)*100}% Health")
 
                 when "str"
-                    stat("str","#{(dta[1].to_f-1.0)*10}% Strength")
+                    stat("str","#{(dta[1].to_f-1.0)*100}% Strength")
 
                 when "def"
-                    stat("def","#{(dta[1].to_f-1.0)*10}% Defense")
-
-                when "luk"
-                    stat("luk","#{(dta[1].to_f-1.0)*10}% Luck")
-
-                when "eva"
-                    stat("eva","#{(dta[1].to_f-1.0)*10}% Evasion")
-
-                when "res"
-                    stat("res","#{(dta[1].to_f-1.0)*10}% Resist")
+                    stat("def","#{(dta[1].to_f-1.0)*100}% Defense")
 
             end
-            #return if data == nil
-            #stat("targets","Hit ALL")
 
         }
 
