@@ -56,6 +56,7 @@ def setup_item_shop
 			stock.push('haunch')
 			stock.push('mutton')
 			stock.push('pepper')
+			stock.push('cassia')
 
 		when '@wyrmwood'	
 			stock.push('covey')
