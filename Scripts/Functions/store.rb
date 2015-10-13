@@ -45,6 +45,7 @@ end
 
 def store_test_item
 	if $menu.chosen == $customer.id
+		unitem($menu.chosen)
 		flag('store-accept')
 	else
 		flag('store-deny')
@@ -56,6 +57,14 @@ def store_say_accept
 	text("1: #{$customer.accept}")
 	$progress.store_done.push($customer.id)
 	$progress.store_xp += 1
+end
+
+def store_level_up?
+	if $progress.store_xp >= 5
+		$progress.store_level += 1
+		$progress.store_xp -= 5
+		text("sys: WE DID IT!!!!!!!")
+	end
 end
 
 def store_say_deny

@@ -3675,7 +3675,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"1#==============================================================================
+end"|#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3775,8 +3775,6 @@ def owl_exchange
 end
 
 def item(id,number=1,type='f')
-	log_scr("GIVING")
-	log_sys(id)
 	if !number.is_a?(Integer)
 		type = number
 		number = 1
@@ -3799,6 +3797,14 @@ def grant_items
 	$data.items.each{ |k,v|
 		#log_scr(v.id)
 		item(v.id,99,'s')
+	}
+end
+
+def grant_shop_items
+	$data.items.each{ |k,v|
+		if v.tab == 'shop'
+			item(v.id,1,'s')
+		end
 	}
 end
 
@@ -4745,7 +4751,7 @@ def delete(e) gev(e).delete end
 def disable(e) gev(e).disable end
 
 def enable(e) gev(e).enable end
-"2
+"ã
 
 def store_init
 
@@ -4792,6 +4798,7 @@ end
 
 def store_test_item
 	if $menu.chosen == $customer.id
+		unitem($menu.chosen)
 		flag('store-accept')
 	else
 		flag('store-deny')
@@ -4803,6 +4810,14 @@ def store_say_accept
 	text("1: #{$customer.accept}")
 	$progress.store_done.push($customer.id)
 	$progress.store_xp += 1
+end
+
+def store_level_up?
+	if $progress.store_xp >= 5
+		$progress.store_level += 1
+		$progress.store_xp -= 5
+		text("sys: WE DID IT!!!!!!!")
+	end
 end
 
 def store_say_deny
@@ -12610,7 +12625,7 @@ class Info_Box < SpriteGroup
     end
 
 end
-"?
+"‹
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -12815,6 +12830,40 @@ class Item_Box < SpriteGroup
 
     end
 
+    def mods(list)
+
+        list.split("\n").each{ |action|
+            
+            dta = action.split("=>")
+
+            case dta[0]
+
+                when "hp"
+                    stat("hp","#{(dta[1].to_f-1.0)*10}% Health")
+
+                when "str"
+                    stat("str","#{(dta[1].to_f-1.0)*10}% Strength")
+
+                when "def"
+                    stat("def","#{(dta[1].to_f-1.0)*10}% Defense")
+
+                when "luk"
+                    stat("luk","#{(dta[1].to_f-1.0)*10}% Luck")
+
+                when "eva"
+                    stat("eva","#{(dta[1].to_f-1.0)*10}% Evasion")
+
+                when "res"
+                    stat("res","#{(dta[1].to_f-1.0)*10}% Resist")
+
+            end
+            #return if data == nil
+            #stat("targets","Hit ALL")
+
+        }
+
+    end
+
     # Shop display of items
 	def item(id)
 
@@ -12828,7 +12877,7 @@ class Item_Box < SpriteGroup
 
         if data.is_a?(GearData)
             stats(data.stats)
-            stats(data.mods)
+            mods(data.mods)
             #gains(data.stats,$party.get('boy'))
         elsif data.is_a?(KeyItemData)
             # Draw secret ingredient
@@ -14227,7 +14276,7 @@ class Game_Battler
   end
 
 end
-"ö
+"
 class Game_Battler
 
 
@@ -14431,7 +14480,19 @@ class Game_Battler
   end
 
   def stat_mod_from_equip(stat)
-    return 1.0
+    total = 1.0
+    @equips.values.each{ |e|
+      #log_info(e)
+      next if e == nil
+      $data.items[e].mods.split("/n").each{ |s|
+        log_info(s)
+        dta = s.split("=>")
+        if dta[0] == stat
+          total *= dta[1].to_f
+        end
+      }
+    }
+    return total
   end
 
   def stat_from_states(stat)
@@ -18679,7 +18740,7 @@ class Moblin
 
 	end
 
-end"è3#==============================================================================
+end"54#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -19046,10 +19107,11 @@ class Game_Player < Game_Character
           if dx + dy == 1
             @event_at_path.start
           end
-          if @direction == 8
-            if $map.counter?(@x,@y-1)
+          if @direction == 8 && $map.counter?(@x,@y-1)
               @event_at_path.start
-            end
+          end
+          if @direction == 2 && $map.counter?(@x,@y+1)
+              @event_at_path.start
           end
           @event_at_path = nil
 
@@ -20395,7 +20457,7 @@ end"bclass Progress
 	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
-	    @store_level = 1
+	    @store_level = 2
 	    @store_xp = 0
 	    @store_done = []
 

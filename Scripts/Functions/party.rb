@@ -98,8 +98,6 @@ def owl_exchange
 end
 
 def item(id,number=1,type='f')
-	log_scr("GIVING")
-	log_sys(id)
 	if !number.is_a?(Integer)
 		type = number
 		number = 1
@@ -122,6 +120,14 @@ def grant_items
 	$data.items.each{ |k,v|
 		#log_scr(v.id)
 		item(v.id,99,'s')
+	}
+end
+
+def grant_shop_items
+	$data.items.each{ |k,v|
+		if v.tab == 'shop'
+			item(v.id,1,'s')
+		end
 	}
 end
 

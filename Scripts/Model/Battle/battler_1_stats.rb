@@ -202,7 +202,19 @@ class Game_Battler
   end
 
   def stat_mod_from_equip(stat)
-    return 1.0
+    total = 1.0
+    @equips.values.each{ |e|
+      #log_info(e)
+      next if e == nil
+      $data.items[e].mods.split("/n").each{ |s|
+        log_info(s)
+        dta = s.split("=>")
+        if dta[0] == stat
+          total *= dta[1].to_f
+        end
+      }
+    }
+    return total
   end
 
   def stat_from_states(stat)

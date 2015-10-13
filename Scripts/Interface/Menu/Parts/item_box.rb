@@ -203,6 +203,29 @@ class Item_Box < SpriteGroup
 
     end
 
+    def mods(list)
+
+        list.split("\n").each{ |action|
+            
+            dta = action.split("=>")
+
+            case dta[0]
+
+                when "hp"
+                    stat("hp","#{(dta[1].to_f-1.0)*100}% Health")
+
+                when "str"
+                    stat("str","#{(dta[1].to_f-1.0)*100}% Strength")
+
+                when "def"
+                    stat("def","#{(dta[1].to_f-1.0)*100}% Defense")
+
+            end
+
+        }
+
+    end
+
     # Shop display of items
 	def item(id)
 
@@ -216,7 +239,7 @@ class Item_Box < SpriteGroup
 
         if data.is_a?(GearData)
             stats(data.stats)
-            stats(data.mods)
+            mods(data.mods)
             #gains(data.stats,$party.get('boy'))
         elsif data.is_a?(KeyItemData)
             # Draw secret ingredient
