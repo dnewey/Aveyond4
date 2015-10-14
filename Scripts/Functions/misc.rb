@@ -38,14 +38,14 @@ def biscuit_investigate
 	# Check the item, do the flag
 	case $menu.chosen
 
-		when 'honey'
-			flag("biscuit-honey")
+		when 'ginger'
+			flag("biscuit-ginger")
 
 		when 'jam-2'
 			flag("biscuit-jam")
 
-		when 'chocolate'
-			flag("biscuit-chocolate")
+		when 'honey'
+			flag("biscuit-honey")
 
 		else
 			item($menu.chosen,1,'s')

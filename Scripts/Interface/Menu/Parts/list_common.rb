@@ -60,6 +60,11 @@ class List_Common < SpriteGroup
 					$data.items[i].is_a?(ShopData) # &&
 				}
 
+			when 'usable'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].is_a?(UsableData) # &&
+				}
+
 			else
 				items = $party.items.keys.select{ |i|
 					$data.items[i].is_a?(KeyItemData) # &&

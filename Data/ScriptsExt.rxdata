@@ -3385,7 +3385,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"<
+"6
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3425,14 +3425,14 @@ def biscuit_investigate
 	# Check the item, do the flag
 	case $menu.chosen
 
-		when 'honey'
-			flag("biscuit-honey")
+		when 'ginger'
+			flag("biscuit-ginger")
 
 		when 'jam-2'
 			flag("biscuit-jam")
 
-		when 'chocolate'
-			flag("biscuit-chocolate")
+		when 'honey'
+			flag("biscuit-honey")
 
 		else
 			item($menu.chosen,1,'s')
@@ -12970,7 +12970,7 @@ class Item_Box < SpriteGroup
 
     end
 
-end"Ï
+end"A
 class List_Common < SpriteGroup
 
 	attr_accessor :list, :window
@@ -13030,6 +13030,11 @@ class List_Common < SpriteGroup
 			when 'goods'
 				items = $party.items.keys.select{ |i|
 					$data.items[i].is_a?(ShopData) # &&
+				}
+
+			when 'usable'
+				items = $party.items.keys.select{ |i|
+					$data.items[i].is_a?(UsableData) # &&
 				}
 
 			else
