@@ -3385,7 +3385,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"ä
+"<
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3412,6 +3412,31 @@ def arch_investigate
 		else
 			item($menu.chosen,1,'s')
 			flag("arch-void")
+
+	end
+
+	unitem($menu.chosen)
+	$menu.chosen = nil
+
+end
+
+def biscuit_investigate
+
+	# Check the item, do the flag
+	case $menu.chosen
+
+		when 'honey'
+			flag("biscuit-honey")
+
+		when 'jam-2'
+			flag("biscuit-jam")
+
+		when 'chocolate'
+			flag("biscuit-chocolate")
+
+		else
+			item($menu.chosen,1,'s')
+			flag("biscuit-void")
 
 	end
 
@@ -4486,7 +4511,7 @@ def setup_smith_shop
 			stock.push('rob-shield-tor')
 
 		when '@tor'	
-			stock.push('mid-arm-thorn')
+			stock.push('boy-arm-briar')
 			stock.push('acc-arena')
 
 		when '@royal-town'	

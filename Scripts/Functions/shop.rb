@@ -206,7 +206,7 @@ def setup_smith_shop
 			stock.push('rob-shield-tor')
 
 		when '@tor'	
-			stock.push('mid-arm-thorn')
+			stock.push('boy-arm-briar')
 			stock.push('acc-arena')
 
 		when '@royal-town'	

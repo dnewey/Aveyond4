@@ -33,6 +33,31 @@ def arch_investigate
 
 end
 
+def biscuit_investigate
+
+	# Check the item, do the flag
+	case $menu.chosen
+
+		when 'honey'
+			flag("biscuit-honey")
+
+		when 'jam-2'
+			flag("biscuit-jam")
+
+		when 'chocolate'
+			flag("biscuit-chocolate")
+
+		else
+			item($menu.chosen,1,'s')
+			flag("biscuit-void")
+
+	end
+
+	unitem($menu.chosen)
+	$menu.chosen = nil
+
+end
+
 def test_riddle_answer
 
 	win = false
