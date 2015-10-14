@@ -46,6 +46,7 @@ end
 def store_test_item
 	if $menu.chosen == $customer.id
 		unitem($menu.chosen)
+		$reward = $data.items[$menu.chosen].price
 		flag('store-accept')
 	else
 		flag('store-deny')
@@ -54,6 +55,7 @@ def store_test_item
 end
 
 def store_say_accept
+	sfx 'shop-buy'
 	text("1: #{$customer.accept}")
 	$progress.store_done.push($customer.id)
 	$progress.store_xp += 1
@@ -61,9 +63,10 @@ end
 
 def store_level_up?
 	if $progress.store_xp >= 5
+		sfx 'shop-level'
 		$progress.store_level += 1
 		$progress.store_xp -= 5
-		text("sys: WE DID IT!!!!!!!")
+		text("sys: News of your store has spread! Richer customers will now visit.")
 	end
 end
 
