@@ -22,6 +22,17 @@ def shop_choice
 
 			case gev(me).name
 
+				#Windshire
+
+			when 'level-egg'
+				text("#{$shopkeep}: That'll help you.")
+
+			when 'mutton-bag'
+				text("#{$shopkeep}: They're fine, I just couldn't eat them all. They're not THAT old.")
+
+			when 'p-kit'
+				text("#{$shopkeep}: Use that to start over if you make a mistake with a potion. Personally, I feel that any potion is a mistake.")
+
 				#Royal Town
 
 				when 'helm-royal'

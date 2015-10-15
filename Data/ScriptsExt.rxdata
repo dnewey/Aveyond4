@@ -4303,7 +4303,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"◊!
+end"=#
 
 def shop_choice
 
@@ -4326,6 +4326,17 @@ def shop_choice
 		when 'Info'
 
 			case gev(me).name
+
+				#Windshire
+
+			when 'level-egg'
+				text("#{$shopkeep}: That'll help you.")
+
+			when 'mutton-bag'
+				text("#{$shopkeep}: They're fine, I just couldn't eat them all. They're not THAT old.")
+
+			when 'p-kit'
+				text("#{$shopkeep}: Use that to start over if you make a mistake with a potion. Personally, I feel that any potion is a mistake.")
 
 				#Royal Town
 
@@ -16640,7 +16651,7 @@ class Game_Character
 
 
 end
-"êW#==============================================================================
+"ìW#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -17043,7 +17054,7 @@ class Game_Event < Game_Character
         return false if !$party.has_member?('phy')
 
       when '@ingonly'
-        return false if $party.active.count == 1 && $party.active[0] == 'ing'
+        return false if !($party.active.count == 1 && $party.active[0] == 'ing')
 
 
       # Choices
