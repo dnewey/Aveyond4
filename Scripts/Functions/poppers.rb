@@ -198,7 +198,7 @@ end
 def pop_level_all
 
 	a = "Everybody gains a level!"
-	ia = $cache.icon("faces/attract")
+	ia = $cache.icon("misc/attract-heart")
 
 	b = nil
 	ib = nil
@@ -210,7 +210,7 @@ end
 
 def pop_stat_bonus(who,stat,amount)
 
-	stat_text case stat
+	stat_text = case stat
 		when 'hp'; "Max Hp"
 		when 'mp'; "Max Mp"
 		when 'str'; "Strength"
@@ -233,7 +233,7 @@ end
 
 def pop_stat_unbonus(who,stat,amount)
 
-	stat_text case stat
+	stat_text = case stat
 		when 'hp'; "Max Hp"
 		when 'mp'; "Max Mp"
 		when 'str'; "Strength"

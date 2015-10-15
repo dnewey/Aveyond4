@@ -406,6 +406,7 @@ class Scene_Battle
             add_spark("myst",x,y)
           end
           result.target.fall
+          result.clear_states
           result.target.view.down if result.target.view
           #fade(result.target.ev)
         else

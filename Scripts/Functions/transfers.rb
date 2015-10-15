@@ -114,6 +114,7 @@ def transfer_map(dir=nil)
 end
 
 def transfer_chester_in(dir=nil)
+	party_of_boy
 	transfer(48,1,dir)
 	$player.trans_type = :cave
 end

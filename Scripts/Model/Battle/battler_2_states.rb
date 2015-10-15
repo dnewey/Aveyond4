@@ -24,6 +24,11 @@ class Game_Battler
     @states.delete(id)
   end
 
+  def clear_states
+    @states = []
+    ev.icons = @states if ev
+  end
+
   #--------------------------------------------------------------------------
   # * Determine [Slip Damage] States
   #--------------------------------------------------------------------------

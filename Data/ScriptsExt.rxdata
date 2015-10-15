@@ -3975,7 +3975,7 @@ end
 
 def unlearn_skill(who,skill)
 	$party.get(who).unlearn(skill)
-end"_
+end"h
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -4175,7 +4175,7 @@ end
 def pop_level_all
 
 	a = "Everybody gains a level!"
-	ia = $cache.icon("faces/attract")
+	ia = $cache.icon("misc/attract-heart")
 
 	b = nil
 	ib = nil
@@ -4187,7 +4187,7 @@ end
 
 def pop_stat_bonus(who,stat,amount)
 
-	stat_text case stat
+	stat_text = case stat
 		when 'hp'; "Max Hp"
 		when 'mp'; "Max Mp"
 		when 'str'; "Strength"
@@ -4210,7 +4210,7 @@ end
 
 def pop_stat_unbonus(who,stat,amount)
 
-	stat_text case stat
+	stat_text = case stat
 		when 'hp'; "Max Hp"
 		when 'mp'; "Max Mp"
 		when 'str'; "Strength"
@@ -5018,7 +5018,7 @@ def noverlay(f=30)
 	end
 	$scene.overlay.do(to("opacity",0,-255/f))
 	w f
-end"HWORLD_MAP_ID = 146
+end"WWORLD_MAP_ID = 146
 
 def start_transfer(map,room=nil,dir=nil)
 
@@ -5134,6 +5134,7 @@ def transfer_map(dir=nil)
 end
 
 def transfer_chester_in(dir=nil)
+	party_of_boy
 	transfer(48,1,dir)
 	$player.trans_type = :cave
 end
@@ -14539,7 +14540,7 @@ class Game_Battler
     return 1.0
   end
 
-end"´
+end"
 class Game_Battler
 
 
@@ -14563,6 +14564,11 @@ class Game_Battler
 
   def remove_state(id)
     @states.delete(id)
+  end
+
+  def clear_states
+    @states = []
+    ev.icons = @states if ev
   end
 
   #--------------------------------------------------------------------------
@@ -21691,7 +21697,7 @@ class Scene_Battle
     
   end
 
-end"/)
+end"N)
 class Scene_Battle
 
   def phase_main_init
@@ -22099,6 +22105,7 @@ class Scene_Battle
             add_spark("myst",x,y)
           end
           result.target.fall
+          result.clear_states
           result.target.view.down if result.target.view
           #fade(result.target.ev)
         else
