@@ -4303,7 +4303,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"=#
+end"s2
 
 def shop_choice
 
@@ -4327,27 +4327,162 @@ def shop_choice
 
 			case gev(me).name
 
-				#Windshire
+			# Windshire
 
 			when 'level-egg'
-				text("#{$shopkeep}: That'll help you.")
+				text("#{$shopkeep}: Eggs contain the essence of life.")
 
 			when 'mutton-bag'
-				text("#{$shopkeep}: They're fine, I just couldn't eat them all. They're not THAT old.")
+				text("#{$shopkeep}: They're fine, I just couldn't finish them all. They're not THAT old.")
 
 			when 'p-kit'
 				text("#{$shopkeep}: Use that to start over if you make a mistake with a potion. Personally, I feel that any potion is a mistake.")
 
-				#Royal Town
+			when 'acc-ghost'
+				text("#{$shopkeep}: There's something spooky about that thing.")
 
-				when 'helm-royal'
-					text("#{$shopkeep}: Royal Helm.")
+			when 'cheeki'
+				text("#{$shopkeep}: I found it creeping around. Probably worth 500 gold.")
 
-				when 'mutton'
-					text("#{$shopkeep}: I made these in the blacksmith's oven ... hee hee.")
+			when 'junk-bandana-blue'
+				text("#{$shopkeep}: That washed up on the shore facing Whisper Woods.")
 
-				when 'fruit-c'
-					text("#{$shopkeep}: Remove the skin before eating that.")
+				#Wyrmwood
+
+			when 'soda-ash'
+					text("#{$shopkeep}: That's used in potion making, isn't it?")
+
+			when 'haunch'
+					text("#{$shopkeep}: I have a haunch you'd enjoy that.")
+
+			when 'covey'
+					text("#{$shopkeep}: I don't use mana.")
+
+			when 'vamp-teeth'
+					text("#{$shopkeep}: If you want them, you should get them before Vic Venom wakes up.")
+
+			# Goblin Cave
+
+			when 'doll-vamp'
+					text("#{$shopkeep}: People trade and collect these types of things.")
+
+			when 'acc-frog-boots'
+					text("#{$shopkeep}: Be careful with that.")
+
+			#Tor
+
+			when 'super-balm'
+					text("#{$shopkeep}: I think I've been trying to sell that to the wrong crowd. Maybe you'd have more luck.")
+
+			when 'spider-eyes'
+					text("#{$shopkeep}: Witches sometimes buy this sort of stuff.")
+
+			when 'spell-zit'
+					text("#{$shopkeep}: I won that in a game of two-card flip.")
+
+			# Royal Town Outdoor
+
+			when 'helm-royal'
+				text("#{$shopkeep}: A paladin gave it to me.")
+
+			when 'mutton'
+				text("#{$shopkeep}: Straight from Windshire.")
+
+			when 'tinctura'
+				text("#{$shopkeep}: That is a good item! Well worth it!")
+
+			when 'pine-drink'
+				text("#{$shopkeep}: That'll give you a real boost.")
+
+			when 'grape-drink'
+				text("#{$shopkeep}: That'll give you a real boost.")
+
+			when 'apple-drink'
+				text("#{$shopkeep}: That'll give you a real boost.")
+
+			# Fruit Shop
+
+			when 'fruit-a'
+				text("#{$shopkeep}: I eat five of those a day.")
+
+			when 'fruit-b'
+				text("#{$shopkeep}: Remove the skin before eating that.")
+
+			when 'fruit-c'
+				text("#{$shopkeep}: Remove the skin before eating that.")
+
+			when 'fruit-d'
+				text("#{$shopkeep}: Remove the skin before eating that.")
+
+			# Crete Street
+
+			when 'mineral-man'
+				text("#{$shopkeep}: Those things grow into the weirdest shapes.")
+
+			when 'juniper'
+				text("#{$shopkeep}: That's a very ^mysterious item that will sell out soon.")
+
+			when 'magic-scroll-summon'
+				text("#{$shopkeep}: Don't be using that in town, the guards will come after me.")
+
+			when 'brightsword-potion'
+				text("#{$shopkeep}: I was once bitten by a drakefang, very painful.")
+
+			# Royal Town Indoor
+
+			when 'recipe-blabber'
+				text("#{$shopkeep}: It's all gibberish to me.")
+
+			when 'fan'
+				text("#{$shopkeep}: Keep yourself cool and look cool doing it.")
+
+			when 'spell-pig'
+				text("#{$shopkeep}: I tried to master the skill myself but I failed.")
+
+			when 'acc-snake-boots'
+				text("#{$shopkeep}: Be careful when you wear that, they can see you.")
+
+			# Weeville
+
+			when 'god-food'
+				text("#{$shopkeep}: The Dark God just loves this stuff.")			
+
+			when 'tonic'
+				text("#{$shopkeep}: The recipe has been handed down through generations.")			
+
+			when 'spell-pie'
+				text("#{$shopkeep}: I don't accept refunds if you are unable to use the spell.")			
+
+			# Delamere
+
+			when 'book-hib-help'
+				text("#{$shopkeep}: I don't care for reading, too boring.")			
+
+			when 'wine'
+				text("#{$shopkeep}: Tether your steed for the eveing and indulge.")			
+
+			when 'spell-mud'
+				text("#{$shopkeep}: I recommended this to only the best witches.")			
+
+			when 'elf-cloth'
+				text("#{$shopkeep}: It's so soft. Feel how soft it is.")			
+
+			# Dwarf Town
+
+			when 'secret-recipe'
+				text("#{$shopkeep}: Shhh, that's only for my most special customers.")			
+
+			when 'hib-book-heal'
+				text("#{$shopkeep}: That one of those heebie-jeebie books.")			
+
+			when 'acc-bat-boots'
+				text("#{$shopkeep}: It doesn't take echolocation to see this is a good deal.")			
+
+			when 'crab-hammer'
+				text("#{$shopkeep}: A might hammer indeed, use it wisely.")			
+
+			when 'recipe-calming'
+				text("#{$shopkeep}: Get your cauldron ready, this is a good one.")			
 
 			end
 
@@ -21710,7 +21845,7 @@ class Scene_Battle
     
   end
 
-end"N)
+end"U)
 class Scene_Battle
 
   def phase_main_init
@@ -22118,7 +22253,7 @@ class Scene_Battle
             add_spark("myst",x,y)
           end
           result.target.fall
-          result.clear_states
+          result.target.clear_states
           result.target.view.down if result.target.view
           #fade(result.target.ev)
         else
