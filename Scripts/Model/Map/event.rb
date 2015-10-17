@@ -509,7 +509,7 @@ class Game_Event < Game_Character
     clear_starting
     
     # Auto event start determinant
-    check_event_trigger_auto
+    #check_event_trigger_auto
 
   end
   
@@ -820,7 +820,7 @@ class Game_Event < Game_Character
     super
 
     # Automatic event starting determinant
-    check_event_trigger_auto #if @starting == false
+    check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
     # if @interpreter != nil

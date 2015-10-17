@@ -198,7 +198,43 @@ end
 def pop_level_all
 
 	a = "Everybody gains a level!"
-	ia = $cache.icon("misc/attract-heart")
+	ia = $cache.icon("misc/exclaim")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_stat_all(stat,amount)
+
+	stat_text = case stat
+		when 'hp'; "Max Hp"
+		when 'mp'; "Max Mp"
+		when 'str'; "Strength"
+		when 'def'; "Defense"
+		when 'eva'; "Evasion"
+		when 'luk'; "Luck"
+		when 'res'; "Resist"
+	end
+
+	a = "Everybody gains #{amount} #{stat_text}"
+	ia = $cache.icon("misc/exclaim")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_xp_all(amount)
+
+	a = "Everybody gains #{amount} xp"
+	ia = $cache.icon("misc/exclaim")
 
 	b = nil
 	ib = nil

@@ -494,8 +494,10 @@ class Game_Battle
 
     if data.scope == 'one'
       return $battle.attackable_enemies
-    elsif data.scope == 'ally' || data.scope == 'down'
+    elsif data.scope == 'ally'
       return $party.attackable_battlers
+    elsif data.scope == 'down'
+      return $party.active_battlers
     end
 
   end

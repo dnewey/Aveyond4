@@ -153,7 +153,7 @@ class Game_Battler
     end
 
     # Currently on cooldown
-    if @cooldowns.has_key?(skill_id)
+    if @cooldowns.has_key?(skill_id) && @cooldowns[skill_id] > 0
       return false
     end
     

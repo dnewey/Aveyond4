@@ -87,10 +87,6 @@ def test_riddle_answer
 		win = ($menu.chosen == 'doll-witch')			
 	end
 
-	if $progress.quest_active?('rq-riddle-7')
-		win = ($menu.chosen == 'mist-food')			
-	end
-
 	if win
 		state(me,'riddle-win')
 	else
@@ -125,10 +121,6 @@ def complete_riddle
 
 	if $progress.quest_active?('rq-riddle-6')
 		unquest('rq-riddle-6')	
-	end
-
-	if $progress.quest_active?('rq-riddle-7')
-		unquest('rq-riddle-7')	
 	end
 
 end
@@ -166,21 +158,13 @@ def text_riddle
 		text('this:'+txt)
 	end
 
-	if $progress.quest_active?('rq-riddle-7')
-		txt = $data.quests['rq-riddle-7'].description
-		text('this:'+txt)
-	end
-
 end
 
 def next_riddle
 
-	if $progress.quest_complete?('rq-riddle-7')
-		
-	end
 
 	if $progress.quest_complete?('rq-riddle-6')
-		quest('rq-riddle-7')	
+		state me,'riddle-done'
 		return
 	end
 

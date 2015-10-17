@@ -75,18 +75,24 @@ class Game_Player < Game_Character
 
     return false if $map.interpreter.running?
 
-    ev = $map.event_at(@x,@y)
-    return false if ev == nil
-    if triggers.include?(ev.trigger)
-        # If starting determinant is same position event (other than jumping)
-        if not ev.jumping? and ev.over_trigger?
-          ev.start
-          return true
-        end
+    evs = $map.events_at(@x,@y)
+    return false if evs == nil || evs.empty?
+    #return false if evs == nil
 
-    end
+    action = false
 
-    return false
+    evs.each{ |ev|
+      if triggers.include?(ev.trigger)
+          # If starting determinant is same position event (other than jumping)
+          if not ev.jumping? and ev.over_trigger?
+            ev.start
+            action = true
+          end
+
+      end
+    }
+
+    return action
 
   end
 
@@ -101,22 +107,32 @@ class Game_Player < Game_Character
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
     
+    evs = $map.events_at(new_x,new_y)
+    return false if evs == nil || evs.empty?
+
+    action = false
+
+    evs.each{ |ev|
+
     # All event loops
-    ev = $map.event_at(new_x,new_y)
+    #ev = $map.event_at(new_x,new_y)
     if ev != nil
 
-      if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
+      if triggers.include?(ev.trigger) and ev.list.size > 1
 
           # If starting determinant is front event (other than jumping)
           if !ev.jumping? and !ev.over_trigger?
             ev.start
-            return true
+            action = true
           end
 
       end
 
     end
 
+  }
+
+  return true if action == true
 
     # COUNTER CHECK
 
@@ -154,19 +170,25 @@ class Game_Player < Game_Character
     return false if $map.interpreter.running?
 
     # All event loops
-    ev = $map.event_at(x,y)
-    return false if ev == nil
+    evs = $map.events_at(x,y)
+    return false if evs == nil || evs.empty?
+
+    action = false
+
+    evs.each{ |ev|
+
       # If event coordinates and triggers are consistent
       if ev.at?(x,y) and [1,2].include?(ev.trigger)
         # If starting determinant is front event (other than jumping)
         if !ev.jumping? and !ev.over_trigger?
             ev.start
-            return true
+            action = true
         end
 
       end
+    }
 
-    return false
+    return action
 
   end
 
@@ -190,7 +212,6 @@ class Game_Player < Game_Character
         @next_common = nil
 
       end
-
 
     if @character_name != "Player/#{$party.leader}"
       self.character_name = "Player/#{$party.leader}"
@@ -343,6 +364,7 @@ class Game_Player < Game_Character
         # Same position and front event determinant
         check_event_trigger_here([0])
         check_event_trigger_there([0,1,2])
+        return
       end
 
       unless @runpath == true

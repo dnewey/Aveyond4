@@ -823,7 +823,7 @@ class Ui_Message
 
   def force_close
 
-    @state = :closing
+      @state = :closing
       @textbox.bitmap.clear
       $tweens.clear(@sprites)
       @sprites.opacity = 0

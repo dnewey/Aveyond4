@@ -123,11 +123,12 @@ class Interpreter
     $scene.map.starting_events.each{ |e| 
 
         # If not auto run
-        #if e.trigger < 3
-          
+        #log_sys(e.trigger)
+        # MAKES AUTORUN LOOP
+        #if e.trigger < 3          
           e.clear_starting
           e.lock          
-       # end
+        #end
         
         # Set up event
 

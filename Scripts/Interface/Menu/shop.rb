@@ -59,6 +59,8 @@ class Mnu_Shop < Mnu_Base
 	def sellmode
 		@sellmode = true
 
+		@menu.list.type = :sell
+
 		# Show tabs
 		@subtitle.hide
 		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
@@ -69,6 +71,8 @@ class Mnu_Shop < Mnu_Base
 
 		# Put all sellable items?
 		change_tab("usable")
+
+
 
 	end
 
@@ -147,7 +151,7 @@ class Mnu_Shop < Mnu_Base
 
 				# Buy
 				$party.add_item(option,-1)
-				$party.add_gold(item.price)
+				$party.add_gold(item.price/2)
 				sys('coins')
 				@info.refresh
 				@menu.list.refresh

@@ -41,7 +41,7 @@ class Progress
 	    @attract_phy = 0
 
 	    # Guild info
-	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
+	    @guild_id = 'n' #nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
 	    @store_level = 2

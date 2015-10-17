@@ -1666,7 +1666,7 @@ class Label < Sprite
         
   end
   
-end"G#==============================================================================
+end"‚J#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1941,6 +1941,8 @@ class List
         draw_potion(data,row)
       when :shop
         draw_shop(data,row)
+      when :sell
+        draw_sell(data,row)
       when :chester
         draw_chester(data,row)
       when :equip
@@ -2038,6 +2040,34 @@ class List
     @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
     @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.font = @font_inactive if !$party.has_gold?(price)
+    @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
+    if price > 0
+      @content_sprite.bitmap.font = $fonts.pop_type
+      ico = $cache.icon("misc/coins")
+      @content_sprite.bitmap.blt(220,(row*row_height)+5,ico,ico.rect)
+      @content_sprite.bitmap.draw_text(245,row*row_height,@item_width,@item_height,price.to_s,0)
+    end
+
+  end
+
+  def draw_sell(data,row)
+
+    return if !$data.items.has_key?(data)
+
+    item = $data.items[data]
+
+    if item != nil
+      name = item.name
+      ico = $cache.icon(item.icon)
+      price = item.price.to_i/2
+    else
+      name = "Remove"
+      ico = $cache.icon("misc/unknown")
+      price = 0
+    end
+    
+    @content_sprite.bitmap.blt(8,(row*row_height)+5,ico,ico.rect)
+    @content_sprite.bitmap.font = @font 
     @content_sprite.bitmap.draw_text(18+21,row*row_height,@item_width,@item_height,name,0)
     if price > 0
       @content_sprite.bitmap.font = $fonts.pop_type
@@ -3385,7 +3415,7 @@ def route(ev,move)
 	#$map.interpreter.command_210
 
 end
-"6
+"Ø
 def arch_investigate
 
 	# Check the item, do the flag
@@ -3474,10 +3504,6 @@ def test_riddle_answer
 		win = ($menu.chosen == 'doll-witch')			
 	end
 
-	if $progress.quest_active?('rq-riddle-7')
-		win = ($menu.chosen == 'mist-food')			
-	end
-
 	if win
 		state(me,'riddle-win')
 	else
@@ -3512,10 +3538,6 @@ def complete_riddle
 
 	if $progress.quest_active?('rq-riddle-6')
 		unquest('rq-riddle-6')	
-	end
-
-	if $progress.quest_active?('rq-riddle-7')
-		unquest('rq-riddle-7')	
 	end
 
 end
@@ -3553,21 +3575,13 @@ def text_riddle
 		text('this:'+txt)
 	end
 
-	if $progress.quest_active?('rq-riddle-7')
-		txt = $data.quests['rq-riddle-7'].description
-		text('this:'+txt)
-	end
-
 end
 
 def next_riddle
 
-	if $progress.quest_complete?('rq-riddle-7')
-		
-	end
 
 	if $progress.quest_complete?('rq-riddle-6')
-		quest('rq-riddle-7')	
+		state me,'riddle-done'
 		return
 	end
 
@@ -3700,7 +3714,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"|#==============================================================================
+end"Í#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3928,28 +3942,35 @@ def grant_stat(who,stat,amount)
 	pop_stat_bonus(who,stat,amount)
 end
 
+def grant_stat_all(stat,amount)
+	($party.active+$party.reserve).each{ |m|
+		$party.get(m).grant_stat(stat,amount)
+	}
+	pop_stat_all(stat,amount)
+end
+
 def ungrant_stat(who,stat,amount)
 	$party.get(who).ungrant_stat(stat,amount)
 	pop_stat_unbonus(who,stat,amount)
 end
 
-def grant_xp(who,amount)
+def grant_xp_all(amount)
 
-	# Need to show level ups
-	$party.get(who).gain_xp(amount)
-	if $party.get(who).level_up?
-		pop_level(who)
-	end
+	($party.active+$party.reserve).each{ |m|
+		$party.get(m).gain_xp(amount)
+		if $party.get(m).level_up?
+			pop_level(m)
+		end
+	}
+
+	pop_xp_all(amount)
 
 end
 
 def grant_level_all
-	$party.get('boy').grant_level
-	$party.get('ing').grant_level
-	$party.get('rob').grant_level
-	$party.get('mys').grant_level
-	$party.get('hib').grant_level
-	$party.get('row').grant_level
+	($party.active+$party.reserve).each{ |m|
+		$party.get(m).grant_level
+	}
 	pop_level_all
 end
 
@@ -3975,7 +3996,7 @@ end
 
 def unlearn_skill(who,skill)
 	$party.get(who).unlearn(skill)
-end"h
+end"»
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -4175,7 +4196,43 @@ end
 def pop_level_all
 
 	a = "Everybody gains a level!"
-	ia = $cache.icon("misc/attract-heart")
+	ia = $cache.icon("misc/exclaim")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_stat_all(stat,amount)
+
+	stat_text = case stat
+		when 'hp'; "Max Hp"
+		when 'mp'; "Max Mp"
+		when 'str'; "Strength"
+		when 'def'; "Defense"
+		when 'eva'; "Evasion"
+		when 'luk'; "Luck"
+		when 'res'; "Resist"
+	end
+
+	a = "Everybody gains #{amount} #{stat_text}"
+	ia = $cache.icon("misc/exclaim")
+
+	b = nil
+	ib = nil
+
+	popper = $scene.hud.open_popper
+	popper.setup(a,ia,b,ib)
+
+end
+
+def pop_xp_all(amount)
+
+	a = "Everybody gains #{amount} xp"
+	ia = $cache.icon("misc/exclaim")
 
 	b = nil
 	ib = nil
@@ -5687,11 +5744,11 @@ def cauldron_graphic(ev)
 
 		when 'sour' # moon tear
 			ev.character_name = 'Objects/cauldron-problem-b'
-			ev.direction = 6
+			ev.direction = 8
 
 		when 'volatile' # MUSIC
 			ev.character_name = 'Objects/cauldron-problem-b'
-			ev.direction = 8
+			ev.direction = 6
 
 		when 'done'
 
@@ -7216,7 +7273,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"L#==============================================================================
+end"aL#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7629,7 +7686,11 @@ class Ui_Grid
 		@cy += 2
 
 		# Find all users
-		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot.delete('12')) }
+		users = $party.all_battlers.select{ |b| 
+			b.slots.include?(data.slot) ||
+			b.slots.include?(data.slot+'1') ||
+			b.slots.include?(data.slot+'2') 
+		}
 
 		# If too many users, need rows
 		if users.count > 6
@@ -8248,7 +8309,7 @@ class Ui_Info < SpriteGroup
 
 	end
 
-end"_#==============================================================================
+end"_#==============================================================================
 # Ui_Message
 #==============================================================================
 
@@ -9073,7 +9134,7 @@ class Ui_Message
 
   def force_close
 
-    @state = :closing
+      @state = :closing
       @textbox.bitmap.clear
       $tweens.clear(@sprites)
       @sprites.opacity = 0
@@ -11195,7 +11256,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"k#==============================================================================
+end"Ž#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -11256,6 +11317,8 @@ class Mnu_Shop < Mnu_Base
 	def sellmode
 		@sellmode = true
 
+		@menu.list.type = :sell
+
 		# Show tabs
 		@subtitle.hide
 		@tabs.change = Proc.new{ |tab| self.change_tab(tab) }
@@ -11266,6 +11329,8 @@ class Mnu_Shop < Mnu_Base
 
 		# Put all sellable items?
 		change_tab("usable")
+
+
 
 	end
 
@@ -11344,7 +11409,7 @@ class Mnu_Shop < Mnu_Base
 
 				# Buy
 				$party.add_item(option,-1)
-				$party.add_gold(item.price)
+				$party.add_gold(item.price/2)
 				sys('coins')
 				@info.refresh
 				@menu.list.refresh
@@ -14770,7 +14835,7 @@ class Game_Battler
 
   end
 
- end"nclass Game_Battler
+ end"Šclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -14925,7 +14990,7 @@ class Game_Battler
     end
 
     # Currently on cooldown
-    if @cooldowns.has_key?(skill_id)
+    if @cooldowns.has_key?(skill_id) && @cooldowns[skill_id] > 0
       return false
     end
     
@@ -17297,7 +17362,7 @@ class Game_Event < Game_Character
     clear_starting
     
     # Auto event start determinant
-    check_event_trigger_auto
+    #check_event_trigger_auto
 
   end
   
@@ -17608,7 +17673,7 @@ class Game_Event < Game_Character
     super
 
     # Automatic event starting determinant
-    check_event_trigger_auto #if @starting == false
+    check_event_trigger_auto if @starting == false
 
     # If parallel process is valid
     # if @interpreter != nil
@@ -17654,7 +17719,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end":#==============================================================================
+end">:#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -17779,11 +17844,12 @@ class Interpreter
     $scene.map.starting_events.each{ |e| 
 
         # If not auto run
-        #if e.trigger < 3
-          
+        #log_sys(e.trigger)
+        # MAKES AUTORUN LOOP
+        #if e.trigger < 3          
           e.clear_starting
           e.lock          
-       # end
+        #end
         
         # Set up event
 
@@ -18917,7 +18983,7 @@ class Moblin
 
 	end
 
-end"54#==============================================================================
+end"™5#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -18994,18 +19060,24 @@ class Game_Player < Game_Character
 
     return false if $map.interpreter.running?
 
-    ev = $map.event_at(@x,@y)
-    return false if ev == nil
-    if triggers.include?(ev.trigger)
-        # If starting determinant is same position event (other than jumping)
-        if not ev.jumping? and ev.over_trigger?
-          ev.start
-          return true
-        end
+    evs = $map.events_at(@x,@y)
+    return false if evs == nil || evs.empty?
+    #return false if evs == nil
 
-    end
+    action = false
 
-    return false
+    evs.each{ |ev|
+      if triggers.include?(ev.trigger)
+          # If starting determinant is same position event (other than jumping)
+          if not ev.jumping? and ev.over_trigger?
+            ev.start
+            action = true
+          end
+
+      end
+    }
+
+    return action
 
   end
 
@@ -19020,22 +19092,32 @@ class Game_Player < Game_Character
     new_x = @x + (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
     
+    evs = $map.events_at(new_x,new_y)
+    return false if evs == nil || evs.empty?
+
+    action = false
+
+    evs.each{ |ev|
+
     # All event loops
-    ev = $map.event_at(new_x,new_y)
+    #ev = $map.event_at(new_x,new_y)
     if ev != nil
 
-      if ev.at?(new_x,new_y) && triggers.include?(ev.trigger) and ev.list.size > 1
+      if triggers.include?(ev.trigger) and ev.list.size > 1
 
           # If starting determinant is front event (other than jumping)
           if !ev.jumping? and !ev.over_trigger?
             ev.start
-            return true
+            action = true
           end
 
       end
 
     end
 
+  }
+
+  return true if action == true
 
     # COUNTER CHECK
 
@@ -19073,19 +19155,25 @@ class Game_Player < Game_Character
     return false if $map.interpreter.running?
 
     # All event loops
-    ev = $map.event_at(x,y)
-    return false if ev == nil
+    evs = $map.events_at(x,y)
+    return false if evs == nil || evs.empty?
+
+    action = false
+
+    evs.each{ |ev|
+
       # If event coordinates and triggers are consistent
       if ev.at?(x,y) and [1,2].include?(ev.trigger)
         # If starting determinant is front event (other than jumping)
         if !ev.jumping? and !ev.over_trigger?
             ev.start
-            return true
+            action = true
         end
 
       end
+    }
 
-    return false
+    return action
 
   end
 
@@ -19109,7 +19197,6 @@ class Game_Player < Game_Character
         @next_common = nil
 
       end
-
 
     if @character_name != "Player/#{$party.leader}"
       self.character_name = "Player/#{$party.leader}"
@@ -19262,6 +19349,7 @@ class Game_Player < Game_Character
         # Same position and front event determinant
         check_event_trigger_here([0])
         check_event_trigger_there([0,1,2])
+        return
       end
 
       unless @runpath == true
@@ -19433,7 +19521,7 @@ class Game_Player < Game_Character
   end
 
 end
-"²7
+"ß7
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19929,8 +20017,10 @@ class Game_Battle
 
     if data.scope == 'one'
       return $battle.attackable_enemies
-    elsif data.scope == 'ally' || data.scope == 'down'
+    elsif data.scope == 'ally'
       return $party.attackable_battlers
+    elsif data.scope == 'down'
+      return $party.active_battlers
     end
 
   end
@@ -20588,7 +20678,7 @@ class Game_Party
 
   end
         
-end"bclass Progress
+end"gclass Progress
 
 	attr_accessor :quests, :complete
 
@@ -20631,7 +20721,7 @@ end"bclass Progress
 	    @attract_phy = 0
 
 	    # Guild info
-	    @guild_id = nil # will be one letter, b, c, or s, or "" for none
+	    @guild_id = 'n' #nil # will be one letter, b, c, or s, or "" for none
 
 	    # Robin Shop
 	    @store_level = 2
@@ -24377,7 +24467,7 @@ class EnviroSource < Seal::Source
 
   end
 
-end"Õ
+end"Ö
 class CacheManager
 
     def initialize
@@ -24425,7 +24515,7 @@ class CacheManager
     def face_battle(filename) face_file("Faces/Battle/", filename) end
 
     def face_file(folder,filename)
-      filename += "."+$progress.guild_id if filename.include?("ing")&& $progress.guild_id != nil
+      filename += "."+$progress.guild_id if filename.include?("ing") && $progress.guild_id != nil
       load(folder,filename)
     end
     

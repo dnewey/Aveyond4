@@ -46,7 +46,7 @@ class CacheManager
     def face_battle(filename) face_file("Faces/Battle/", filename) end
 
     def face_file(folder,filename)
-      filename += "."+$progress.guild_id if filename.include?("ing")&& $progress.guild_id != nil
+      filename += "."+$progress.guild_id if filename.include?("ing") && $progress.guild_id != nil
       load(folder,filename)
     end
     

@@ -411,7 +411,11 @@ class Ui_Grid
 		@cy += 2
 
 		# Find all users
-		users = $party.all_battlers.select{ |b| b.slots.include?(data.slot.delete('12')) }
+		users = $party.all_battlers.select{ |b| 
+			b.slots.include?(data.slot) ||
+			b.slots.include?(data.slot+'1') ||
+			b.slots.include?(data.slot+'2') 
+		}
 
 		# If too many users, need rows
 		if users.count > 6

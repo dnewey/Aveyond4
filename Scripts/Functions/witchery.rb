@@ -295,11 +295,11 @@ def cauldron_graphic(ev)
 
 		when 'sour' # moon tear
 			ev.character_name = 'Objects/cauldron-problem-b'
-			ev.direction = 6
+			ev.direction = 8
 
 		when 'volatile' # MUSIC
 			ev.character_name = 'Objects/cauldron-problem-b'
-			ev.direction = 8
+			ev.direction = 6
 
 		when 'done'
 

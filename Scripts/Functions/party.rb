@@ -226,28 +226,35 @@ def grant_stat(who,stat,amount)
 	pop_stat_bonus(who,stat,amount)
 end
 
+def grant_stat_all(stat,amount)
+	($party.active+$party.reserve).each{ |m|
+		$party.get(m).grant_stat(stat,amount)
+	}
+	pop_stat_all(stat,amount)
+end
+
 def ungrant_stat(who,stat,amount)
 	$party.get(who).ungrant_stat(stat,amount)
 	pop_stat_unbonus(who,stat,amount)
 end
 
-def grant_xp(who,amount)
+def grant_xp_all(amount)
 
-	# Need to show level ups
-	$party.get(who).gain_xp(amount)
-	if $party.get(who).level_up?
-		pop_level(who)
-	end
+	($party.active+$party.reserve).each{ |m|
+		$party.get(m).gain_xp(amount)
+		if $party.get(m).level_up?
+			pop_level(m)
+		end
+	}
+
+	pop_xp_all(amount)
 
 end
 
 def grant_level_all
-	$party.get('boy').grant_level
-	$party.get('ing').grant_level
-	$party.get('rob').grant_level
-	$party.get('mys').grant_level
-	$party.get('hib').grant_level
-	$party.get('row').grant_level
+	($party.active+$party.reserve).each{ |m|
+		$party.get(m).grant_level
+	}
 	pop_level_all
 end
 
