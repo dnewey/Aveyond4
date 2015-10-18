@@ -12,7 +12,7 @@ class Game_Party
 
   attr_accessor :all_actors
 
-  attr_accessor :leader
+  attr_accessor :leader, :landleader
 
   attr_reader :items, :potions
 
@@ -333,6 +333,7 @@ class Game_Party
   def init_party
 
     @leader = 'boy'
+    @landleader = 'boy'
 
     # -----------------------------------
     # Initial Party Members

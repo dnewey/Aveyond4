@@ -222,11 +222,17 @@ end
 
 
 def grant_stat(who,stat,amount)
+
+	sfx 'stat'
+
 	$party.get(who).grant_stat(stat,amount)
 	pop_stat_bonus(who,stat,amount)
 end
 
 def grant_stat_all(stat,amount)
+
+	sfx 'stat'
+
 	($party.active+$party.reserve).each{ |m|
 		$party.get(m).grant_stat(stat,amount)
 	}
@@ -234,11 +240,16 @@ def grant_stat_all(stat,amount)
 end
 
 def ungrant_stat(who,stat,amount)
+
+	sfx 'unstat'
+
 	$party.get(who).ungrant_stat(stat,amount)
 	pop_stat_unbonus(who,stat,amount)
 end
 
 def grant_xp_all(amount)
+
+	sfx 'stat'
 
 	($party.active+$party.reserve).each{ |m|
 		$party.get(m).gain_xp(amount)
@@ -252,6 +263,9 @@ def grant_xp_all(amount)
 end
 
 def grant_level_all
+
+	sys 'join2'
+
 	($party.active+$party.reserve).each{ |m|
 		$party.get(m).grant_level
 	}
@@ -259,6 +273,9 @@ def grant_level_all
 end
 
 def grant_level(who)
+
+	sys 'join2'
+
 	$party.get(who).grant_level
 	pop_level(who)
 end
@@ -268,6 +285,9 @@ def grant_level_s(who)
 end
 
 def grant_level_free(who)
+
+	sys 'join2'
+
 	$party.get(who).grant_level(false)
 	pop_level(who)
 end

@@ -3716,7 +3716,7 @@ def vault_card_refresh
 		cards.push(card_from_ev(e))
 	}
 
-	if cards.sort == ['','beggar','king']
+	if cards.sort == ['','begger','king']
 		flag('vaughn-side-king')
 	end
 
@@ -3741,7 +3741,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"Í#==============================================================================
+end"G#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -3965,11 +3965,17 @@ end
 
 
 def grant_stat(who,stat,amount)
+
+	sfx 'stat'
+
 	$party.get(who).grant_stat(stat,amount)
 	pop_stat_bonus(who,stat,amount)
 end
 
 def grant_stat_all(stat,amount)
+
+	sfx 'stat'
+
 	($party.active+$party.reserve).each{ |m|
 		$party.get(m).grant_stat(stat,amount)
 	}
@@ -3977,11 +3983,16 @@ def grant_stat_all(stat,amount)
 end
 
 def ungrant_stat(who,stat,amount)
+
+	sfx 'unstat'
+
 	$party.get(who).ungrant_stat(stat,amount)
 	pop_stat_unbonus(who,stat,amount)
 end
 
 def grant_xp_all(amount)
+
+	sfx 'stat'
 
 	($party.active+$party.reserve).each{ |m|
 		$party.get(m).gain_xp(amount)
@@ -3995,6 +4006,9 @@ def grant_xp_all(amount)
 end
 
 def grant_level_all
+
+	sys 'join2'
+
 	($party.active+$party.reserve).each{ |m|
 		$party.get(m).grant_level
 	}
@@ -4002,6 +4016,9 @@ def grant_level_all
 end
 
 def grant_level(who)
+
+	sys 'join2'
+
 	$party.get(who).grant_level
 	pop_level(who)
 end
@@ -4011,6 +4028,9 @@ def grant_level_s(who)
 end
 
 def grant_level_free(who)
+
+	sys 'join2'
+
 	$party.get(who).grant_level(false)
 	pop_level(who)
 end
@@ -9730,7 +9750,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"`#==============================================================================
+end"w#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -9894,6 +9914,8 @@ class Mnu_Healing < Mnu_Base
 			sys('eat')
 		elsif first.include?('mana')
 			sys('drink')
+		else
+			sfx 'heal'
 		end
 
 		# If cassia, do special sound
@@ -10009,7 +10031,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"b#==============================================================================
+end"u#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -10150,7 +10172,7 @@ class Mnu_Items < Mnu_Base
 				close_soon
 
 			when 'common'
-				if option == 'witch-teleport' && $map.id == 94
+				if option == 'witch-teleport' && ($map.id == 94 || $map.id == 74)
 					sys('deny')
 					return
 				end
@@ -19586,7 +19608,7 @@ class Game_Player < Game_Character
   end
 
 end
-""8
+"°;
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19871,12 +19893,42 @@ class Game_Battle
       plan.add(round)
     }
 
-    # Add followup attacks
+    follow = nil
 
+    # Add followup attack
+    skill.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        if data[0] == 'followup'
+          log_info data[1]
+          follow = $data.skills[data[1]]
+          hits = calc_hits(follow)
+          hits.times{ |t|
+            round = Attack_Round.new
+            #round.text = follow.text if follow.text && follow.text.length > 0
+            round.anim = follow.anim
+            round.skill = follow
 
-    # Use up the item or mana for the skill used
-    # Put it in the attack plan probably
+            plan.add(round)
+          }
+        end
+    }
 
+    # Double followup
+    if follow != nil
+      follow.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        if data[0] == 'followup'
+          follow = $data.skills[data[1]]
+          log_info data[1]
+          round = Attack_Round.new
+          #round.text = follow.text if follow.text && follow.text.length > 0
+          round.anim = follow.anim
+          round.skill = follow
+
+          plan.add(round)
+        end
+    }
+    end
 
     return plan
 
@@ -20287,7 +20339,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"¢+#==============================================================================
+end"È+#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -20301,7 +20353,7 @@ class Game_Party
 
   attr_accessor :all_actors
 
-  attr_accessor :leader
+  attr_accessor :leader, :landleader
 
   attr_reader :items, :potions
 
@@ -20622,6 +20674,7 @@ class Game_Party
   def init_party
 
     @leader = 'boy'
+    @landleader = 'boy'
 
     # -----------------------------------
     # Initial Party Members

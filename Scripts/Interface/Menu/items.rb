@@ -139,7 +139,7 @@ class Mnu_Items < Mnu_Base
 				close_soon
 
 			when 'common'
-				if option == 'witch-teleport' && $map.id == 94
+				if option == 'witch-teleport' && ($map.id == 94 || $map.id == 74)
 					sys('deny')
 					return
 				end

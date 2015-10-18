@@ -283,12 +283,42 @@ class Game_Battle
       plan.add(round)
     }
 
-    # Add followup attacks
+    follow = nil
 
+    # Add followup attack
+    skill.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        if data[0] == 'followup'
+          log_info data[1]
+          follow = $data.skills[data[1]]
+          hits = calc_hits(follow)
+          hits.times{ |t|
+            round = Attack_Round.new
+            #round.text = follow.text if follow.text && follow.text.length > 0
+            round.anim = follow.anim
+            round.skill = follow
 
-    # Use up the item or mana for the skill used
-    # Put it in the attack plan probably
+            plan.add(round)
+          }
+        end
+    }
 
+    # Double followup
+    if follow != nil
+      follow.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        if data[0] == 'followup'
+          follow = $data.skills[data[1]]
+          log_info data[1]
+          round = Attack_Round.new
+          #round.text = follow.text if follow.text && follow.text.length > 0
+          round.anim = follow.anim
+          round.skill = follow
+
+          plan.add(round)
+        end
+    }
+    end
 
     return plan
 

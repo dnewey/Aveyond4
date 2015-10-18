@@ -272,7 +272,7 @@ def vault_card_refresh
 		cards.push(card_from_ev(e))
 	}
 
-	if cards.sort == ['','beggar','king']
+	if cards.sort == ['','begger','king']
 		flag('vaughn-side-king')
 	end
 

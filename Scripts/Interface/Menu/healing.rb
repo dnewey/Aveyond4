@@ -162,6 +162,8 @@ class Mnu_Healing < Mnu_Base
 			sys('eat')
 		elsif first.include?('mana')
 			sys('drink')
+		else
+			sfx 'heal'
 		end
 
 		# If cassia, do special sound
