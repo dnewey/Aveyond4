@@ -76,18 +76,22 @@ class List
     @scroll_box.z = 5000
 
     @scroll_down = Button.new()
+    @scroll_down.shrink = 4
     @scroll_down.bitmap = $cache.menu_common('scroll-down')
     @scroll_down.bmp_up = $cache.menu_common('scroll-down')
     @scroll_down.bmp_over = $cache.menu_common('scroll-down-red')
+    @scroll_down.bmp_disable = $cache.menu_common('scroll-down-off')
     @scroll_down.x = 239
     @scroll_down.y = 408
     @scroll_down.z = 5000
     @scroll_down.press = Proc.new{ self.scrollbar_down }
 
     @scroll_up = Button.new()
+    @scroll_up.shrink = 4
     @scroll_up.bitmap = $cache.menu_common('scroll-up')
     @scroll_up.bmp_up = $cache.menu_common('scroll-up')
     @scroll_up.bmp_over = $cache.menu_common('scroll-up-red')
+    @scroll_up.bmp_disable = $cache.menu_common('scroll-up-off')
     @scroll_up.x = 262
     @scroll_up.y = 408
     @scroll_up.z = 5000
@@ -214,6 +218,11 @@ class List
     @select_sprite.y = @page_idx * row_height
     @select_sprite.show
 
+    # Disable arrows
+    #@scroll_down.disabled = can_scroll_down?
+    #@scroll_up.disabled = can_scroll_up?
+
+
     src = $cache.menu_common('list-bar')
 
     i = 0
@@ -230,6 +239,17 @@ class List
 
     call_change if ch
 
+  end
+
+  def can_scroll_down?
+    return false if !can_scroll? || @scroll_idx >= (@data.count - @per_page)
+    return true    
+  end
+
+  def can_scroll_up?
+    return false if !can_scroll?
+    return false if @scroll_idx <= 0
+    return true
   end
 
   # ADD THIS MOUSE CONTROL
@@ -673,8 +693,10 @@ class List
       if $input.action?
         @select.call(current)
       end
-      if $input.click?
-        @select.call(current)
+      if $input.click? 
+        if pos[0] < @vp.rect.width && pos[1] < @vp.rect.height
+          @select.call(current)
+        end
       end
     end
 
@@ -721,7 +743,7 @@ class List
     @scroll_idx -= 1    
     #      @pagemod = 1
 
-    dur = 180
+    dur = 110
     ease = :quad_in_out
 
     @back_sprite.do(go("y",row_height,dur,ease))
@@ -746,7 +768,7 @@ class List
 
          
 
-    dur = 180
+    dur = 110
     ease = :quad_in_out
 
   	#draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)

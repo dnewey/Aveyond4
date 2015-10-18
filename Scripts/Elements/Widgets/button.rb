@@ -6,7 +6,9 @@ class Button < Sprite
   
   # accessors
   attr_accessor :select, :deselect, :press
-  attr_accessor :bmp_up, :bmp_over
+  attr_accessor :bmp_up, :bmp_over, :bmp_disable
+
+  attr_accessor :shrink
     
   #--------------------------------------------------------------------------
   # * Init
@@ -24,13 +26,23 @@ class Button < Sprite
     @press = nil#Proc.new{self.do(pingpong("y",-30,300,:quad_in_out));}
 
     @state = :idle # :over
+    @disabled = false
+
+    @shrink = 0
     
+  end
+
+  def disabled=(v)
+    @disabled = v
+    self.bitmap = @bmp_disable if @disabled
   end
   
   #--------------------------------------------------------------------------
   # * Update inputs
   #--------------------------------------------------------------------------
   def update
+
+    return if @disabled
 
     # Check inputs if active?
     if @state == :idle
@@ -49,14 +61,6 @@ class Button < Sprite
       end
     end
 
-    if @state == :active
-      # check key presses to change to another
-      #if Input.trigger?(Input.right)
-        # check hover of all neighbours
-      #  self.viewport.sprites.each{ |s| s.check_hover(x+100)}
-      #end
-    end
-
   end
 
   # check from mouse or pressing leftright
@@ -64,10 +68,10 @@ class Button < Sprite
     #log_append "CHECKHOVER"
     #log_append pos
     #log_append [self.x,self.y]
-    return if pos[0] < self.x
-    return if pos[1] < self.y
-    return if pos[0] > self.x + self.width
-    return if pos[1] > self.y + self.height
+    return if pos[0] < self.x + @shrink
+    return if pos[1] < self.y + @shrink
+    return if pos[0] > self.x + self.width - @shrink
+    return if pos[1] > self.y + self.height - @shrink
     @state = :active
     self.bitmap = @bmp_over if @bmp_over
     @select.call() if @select
@@ -78,10 +82,10 @@ class Button < Sprite
     #log_append pos
     #log_append [self.x,self.y]
     w = false
-    w = true if pos[0] < self.x
-    w = true if pos[1] < self.y
-    w = true if pos[0] > self.x + self.width
-    w = true if pos[1] > self.y + self.height
+    w = true if pos[0] < self.x + @shrink
+    w = true if pos[1] < self.y + @shrink
+    w = true if pos[0] > self.x + self.width - @shrink
+    w = true if pos[1] > self.y + self.height - @shrink
     return if w == false
     @state = :idle
     self.bitmap = @bmp_up if @bmp_up

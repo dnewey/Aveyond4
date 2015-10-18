@@ -137,18 +137,27 @@ class Game_Battle
 
   def loot_for(src_event)
 
-    data = $data.enemies[src_event.monster]
+    drop_loot($data.enemies[src_event.monster])
+
+  end
+
+  def drop(a)
+    drop_loot($data.enemies[a])
+  end
+
+  def drop_loot(data)
 
     # Check drops first
     if data.drops != nil
-      data.drops.split("/n").each{ |item|
+      data.drops.split("\n").each{ |item|
 
         # If possible, give it
         dta = item.split("=>")
+        log_info(dta)
         type = dta[1]
         req = dta[2]
-        chance = dta[3].to_f
-        next if rand > chance
+        #chance = dta[3].to_f
+        next if rand > 0.4
         pass = case type
             when 'q'
               $progress.quest_active?(req)
@@ -175,13 +184,12 @@ class Game_Battle
 
     if chance < 0.6 && data.loot != nil && data.loot != ''
       possible = []
-      data.loot.split("/n").each{ |item| 
+      data.loot.split("\n").each{ |item| 
         dta = item.split("=>")
         dta[1].to_i.times{
           possible.push(dta[0])
         }
       }
-      log_info(possible)
       return item(possible.sample)
     end
 

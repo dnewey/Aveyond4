@@ -1461,7 +1461,8 @@ class Box
 
 	end
 
-end"ä	#==============================================================================
+end"
+#==============================================================================
 # Button
 #==============================================================================
 
@@ -1469,7 +1470,9 @@ class Button < Sprite
   
   # accessors
   attr_accessor :select, :deselect, :press
-  attr_accessor :bmp_up, :bmp_over
+  attr_accessor :bmp_up, :bmp_over, :bmp_disable
+
+  attr_accessor :shrink
     
   #--------------------------------------------------------------------------
   # * Init
@@ -1487,13 +1490,23 @@ class Button < Sprite
     @press = nil#Proc.new{self.do(pingpong("y",-30,300,:quad_in_out));}
 
     @state = :idle # :over
+    @disabled = false
+
+    @shrink = 0
     
+  end
+
+  def disabled=(v)
+    @disabled = v
+    self.bitmap = @bmp_disable if @disabled
   end
   
   #--------------------------------------------------------------------------
   # * Update inputs
   #--------------------------------------------------------------------------
   def update
+
+    return if @disabled
 
     # Check inputs if active?
     if @state == :idle
@@ -1512,14 +1525,6 @@ class Button < Sprite
       end
     end
 
-    if @state == :active
-      # check key presses to change to another
-      #if Input.trigger?(Input.right)
-        # check hover of all neighbours
-      #  self.viewport.sprites.each{ |s| s.check_hover(x+100)}
-      #end
-    end
-
   end
 
   # check from mouse or pressing leftright
@@ -1527,10 +1532,10 @@ class Button < Sprite
     #log_append "CHECKHOVER"
     #log_append pos
     #log_append [self.x,self.y]
-    return if pos[0] < self.x
-    return if pos[1] < self.y
-    return if pos[0] > self.x + self.width
-    return if pos[1] > self.y + self.height
+    return if pos[0] < self.x + @shrink
+    return if pos[1] < self.y + @shrink
+    return if pos[0] > self.x + self.width - @shrink
+    return if pos[1] > self.y + self.height - @shrink
     @state = :active
     self.bitmap = @bmp_over if @bmp_over
     @select.call() if @select
@@ -1541,10 +1546,10 @@ class Button < Sprite
     #log_append pos
     #log_append [self.x,self.y]
     w = false
-    w = true if pos[0] < self.x
-    w = true if pos[1] < self.y
-    w = true if pos[0] > self.x + self.width
-    w = true if pos[1] > self.y + self.height
+    w = true if pos[0] < self.x + @shrink
+    w = true if pos[1] < self.y + @shrink
+    w = true if pos[0] > self.x + self.width - @shrink
+    w = true if pos[1] > self.y + self.height - @shrink
     return if w == false
     @state = :idle
     self.bitmap = @bmp_up if @bmp_up
@@ -1666,7 +1671,7 @@ class Label < Sprite
         
   end
   
-end"‚J#==============================================================================
+end"M#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1744,18 +1749,22 @@ class List
     @scroll_box.z = 5000
 
     @scroll_down = Button.new()
+    @scroll_down.shrink = 4
     @scroll_down.bitmap = $cache.menu_common('scroll-down')
     @scroll_down.bmp_up = $cache.menu_common('scroll-down')
     @scroll_down.bmp_over = $cache.menu_common('scroll-down-red')
+    @scroll_down.bmp_disable = $cache.menu_common('scroll-down-off')
     @scroll_down.x = 239
     @scroll_down.y = 408
     @scroll_down.z = 5000
     @scroll_down.press = Proc.new{ self.scrollbar_down }
 
     @scroll_up = Button.new()
+    @scroll_up.shrink = 4
     @scroll_up.bitmap = $cache.menu_common('scroll-up')
     @scroll_up.bmp_up = $cache.menu_common('scroll-up')
     @scroll_up.bmp_over = $cache.menu_common('scroll-up-red')
+    @scroll_up.bmp_disable = $cache.menu_common('scroll-up-off')
     @scroll_up.x = 262
     @scroll_up.y = 408
     @scroll_up.z = 5000
@@ -1882,6 +1891,11 @@ class List
     @select_sprite.y = @page_idx * row_height
     @select_sprite.show
 
+    # Disable arrows
+    #@scroll_down.disabled = can_scroll_down?
+    #@scroll_up.disabled = can_scroll_up?
+
+
     src = $cache.menu_common('list-bar')
 
     i = 0
@@ -1898,6 +1912,17 @@ class List
 
     call_change if ch
 
+  end
+
+  def can_scroll_down?
+    return false if !can_scroll? || @scroll_idx >= (@data.count - @per_page)
+    return true    
+  end
+
+  def can_scroll_up?
+    return false if !can_scroll?
+    return false if @scroll_idx <= 0
+    return true
   end
 
   # ADD THIS MOUSE CONTROL
@@ -2341,8 +2366,10 @@ class List
       if $input.action?
         @select.call(current)
       end
-      if $input.click?
-        @select.call(current)
+      if $input.click? 
+        if pos[0] < @vp.rect.width && pos[1] < @vp.rect.height
+          @select.call(current)
+        end
       end
     end
 
@@ -2389,7 +2416,7 @@ class List
     @scroll_idx -= 1    
     #      @pagemod = 1
 
-    dur = 180
+    dur = 110
     ease = :quad_in_out
 
     @back_sprite.do(go("y",row_height,dur,ease))
@@ -2414,7 +2441,7 @@ class List
 
          
 
-    dur = 180
+    dur = 110
     ease = :quad_in_out
 
   	#draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)
@@ -4360,7 +4387,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"s2
+end"6
 
 def shop_choice
 
@@ -4814,23 +4841,22 @@ def setup_chester_shop
 
 	# Skills to add at level five - RAVWYN
 	if $progress.chester_level >= 6
-		stock.push('ug-staff-7')
+		stock.push('ug-staff-7') if boy.has_skill?('ug-staff-6')
 	end
 
 	# Skills to add at level five - DWARVES
-	if $progress.chester_level >= 5
-		
-		stock.push('ug-mana-5')
-		stock.push('ug-staff-6')
-		stock.push('flames-4')
+	if $progress.chester_level >= 5		
+		stock.push('ug-mana-5') if boy.has_skill?('ug-mana-4')
+		stock.push('ug-staff-6') if boy.has_skill?('ug-staff-5')
+		stock.push('flames-4') if boy.has_skill?('ug-flames-3')
 		stock.push('ug-passive-scare')
 	end
 
 	# Skills to add at level 4 - ELVES
 	if $progress.chester_level >= 4
-		stock.push('ug-mana-4')
-		stock.push('staff-4')
-		stock.push('ug-staff-5')
+		stock.push('ug-mana-4') if boy.has_skill?('ug-mana-3')
+		stock.push('staff-4') if boy.has_skill?('staff-3')
+		stock.push('ug-staff-5') if boy.has_skill?('ug-staff-4')
 		stock.push('ug-passive-cheeki')
 		stock.push('ug-magic-minion')
 		stock.push('triumph-2')
@@ -4839,19 +4865,19 @@ def setup_chester_shop
 	# Skills to add at level 3 - WEE
 	if $progress.chester_level >= 3
 		stock.push('levitate')
-		stock.push('flames-3')
-		stock.push('ug-mana-3')
-		stock.push('ug-staff-4')
+		stock.push('flames-3') if boy.has_skill?('ug-flames-2')
+		stock.push('ug-mana-3') if boy.has_skill?('ug-mana-2')
+		stock.push('ug-staff-4') if boy.has_skill?('ug-staff-3')
 		stock.push('ug-passive-shop')
 	end
 
 	# Skills to add at level 2 - ROYAL
 	if $progress.chester_level >= 2
 		stock.push('sacrifice')
-		stock.push('contempt-3')
-		stock.push('ug-mana-2')
-		stock.push('staff-3')
-		stock.push('ug-staff-3')
+		stock.push('contempt-3') if boy.has_skill?('contempt-2')
+		stock.push('ug-mana-2') if boy.has_skill?('ug-mana-1')
+		stock.push('staff-3') if boy.has_skill?('staff-2')
+		stock.push('ug-staff-3') if boy.has_skill?('ug-staff-2')
 	end
 
 	# Skills to add at level 1 - TOR
@@ -4859,7 +4885,7 @@ def setup_chester_shop
 		stock.push('triumph')
 		stock.push('flames-2')
 		stock.push('ug-mana-1')
-		stock.push('ug-staff-2')
+		stock.push('ug-staff-2') if boy.has_skill?('ug-staff-1')
 	end
 
 	# Skills to add ALWAYS - WINSHIRE
@@ -4875,6 +4901,7 @@ def setup_chester_shop
 
 	# Don't include multiple of the same types, only use lowest
 
+
 	# Add skills to shop
 	stock.each{ |s| $menu.shop_add(s) }
 	open_shop_chester
@@ -4885,61 +4912,78 @@ def buy_chester_skill(skill)
 
 	boy = $party.get('boy')
 
+	$skill = skill
+
 	case skill
 
 		# New skills
 
-		when 'sacrifice','empower','triumph'
+		when 'sacrifice','empower','triumph', 'levitate'
 			boy.learn(skill)
+			flag('chester-new-skill')
 
 		# Skill upgrades
 
 		when 'contempt-2','contempt-3'
 			boy.replace_skill('contempt',skill)
+			flag('chester-new-skill')
 
 		when 'flames-2','flames-3'
 			boy.replace_skill('flames',skill)
+			flag('chester-new-skill')
 
 		when 'staff-2','staff-3','staff-4','staff-5','staff-6'
 			boy.replace_skill('staff',skill)	
+			flag('chester-new-skill')
 
 		when 'triumph-2'
 			boy.replace_skill('triumph',skill)		
-
+			flag('chester-new-skill')
 
 		# Staff upgrades
 
 		when 'ug-staff-1','ug-staff-2','ug-staff-3','ug-staff-4','ug-staff-5','ug-staff-6','ug-staff-7'
 
+			log_sys("GET NEW STAFF")
+
 			# Replace boy equip with new
+			boy.learn(skill)
 			eq = skill.sub('ug','boy')
 			boy.force_equip('staff',eq)
-
+			$staff = eq
+			flag('chester-new-staff')
 
 		# Stat upgrades
 
 		when 'ug-mana-1'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 10
 		when 'ug-mana-2'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 20
 		when 'ug-mana-3'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 30
 		when 'ug-mana-4'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 40
 		when 'ug-mana-5'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 50
 
 
 		# Passives
 		when 'ug-passive-shop'
+			boy.learn(skill)
 			$party.passive_shop = true
 
 		when 'ug-passive-cheeki'
+			boy.learn(skill)
 			$party.passive_cheekis = true
 
 		when 'ug-passive-scare'
+			boy.learn(skill)
 			$party.passive_scare = true
-
 
 	end
 
@@ -7242,7 +7286,7 @@ class Ui_Book < SpriteGroup
 			sfx('page')
 		end
 
-		if @page_idx != 5 && $input.right?
+		if @page_idx != 4 && $input.right?
 			@page_idx += 1
 			@turn_step = 20
 			@turn_dir = 1
@@ -7253,7 +7297,7 @@ class Ui_Book < SpriteGroup
 		if $input.click?
 
 			# If to the right
-			if @page_idx != 5 && $mouse.x > 420
+			if @page_idx != 4 && $mouse.x > 420
 				@page_idx += 1
 				@turn_step = 20
 				@turn_dir = 1
@@ -9432,7 +9476,7 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end"©
+end"á
 #==============================================================================
 # ** Mnu_Base
 #==============================================================================
@@ -9494,7 +9538,10 @@ class Mnu_Base
 	end
 
 	def update
-		(@left + @right + @other).each{ |i| i.update }
+
+		if !@close_soon
+			(@left + @right + @other).each{ |i| i.update }
+		end
 
 		if @close_soon && !@closing
 			@close_delay -= 1
@@ -9502,6 +9549,8 @@ class Mnu_Base
 				close
 			end
 		end
+
+		return if @close_soon
 
 		# If anim in done, change state
 		if $input.cancel? || $input.rclick?
@@ -9682,7 +9731,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"L#==============================================================================
+end"`#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -9827,7 +9876,9 @@ class Mnu_Healing < Mnu_Base
 
 	def choose(option)	
 
-		# ADD GETTING PERMANENT STAT UPGRADES
+		@grid.bars.each{ |b|
+			return if !$tweens.done?(b)
+		}
 
 		# Is it even going to do anything?
 		if $party.get(option).mp_from_item($menu.use_item) == 0
@@ -9959,7 +10010,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"œ#==============================================================================
+end"b#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -10100,6 +10151,14 @@ class Mnu_Items < Mnu_Base
 				close_soon
 
 			when 'common'
+				if option == 'witch-teleport' && $map.id == 94
+					sys('deny')
+					return
+				end
+				if option == 'witch-teleport' && !$party.all.include?('ing')
+					sys('deny')
+					return
+				end
 				$menu.common_event = $data.items[option].action.split("=>")[1].to_i
 				close_soon
 
@@ -11256,7 +11315,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"Ž#==============================================================================
+end"Ä#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -11399,6 +11458,8 @@ class Mnu_Shop < Mnu_Base
 				@info.refresh
 				@menu.list.refresh
 				close_soon
+			else
+				sys("deny")
 			end
 
 		else
@@ -11425,6 +11486,8 @@ class Mnu_Shop < Mnu_Base
 					sys("coins")
 					@info.refresh
 					@menu.list.refresh
+				else
+					sys("deny")
 				end
 
 			end
@@ -13455,7 +13518,7 @@ class Port_Full < Sprite
 	def confused() self.bitmap = $cache.face_menu("#{$menu.char}-c") end
 	def xtra() self.bitmap = $cache.face_menu("#{$menu.char}-x") end
 
-end"H
+end"L
 class Right_Journal < SpriteGroup
 
 	def initialize(vp)
@@ -13520,7 +13583,7 @@ class Right_Journal < SpriteGroup
 
     	@txt_zone = Label.new(vp)
     	@txt_zone.font = $fonts.page_text
-        add(@txt_zone)
+        add(@txt_zone,340)
 
     	# cy += 30
 
@@ -16851,7 +16914,7 @@ class Game_Character
 
 
 end
-"“W#==============================================================================
+"ŸW#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -17254,7 +17317,7 @@ class Game_Event < Game_Character
         return false if !$party.has_member?('phy')
 
       when '@ingonly'
-        return false if !($party.active.count == 1 && $party.active[0] == 'ing')
+        return false if !($party.active.count == 1)# && $party.active[0] == 'ing')
 
 
       # Choices
@@ -17638,11 +17701,11 @@ class Game_Event < Game_Character
     # end
 
     # If trigger is [parallel process]
-    if @trigger == 4
-      @interpreter = Interpreter.new()
-      @interpreter.setup(@list, @event.id)
-      @interpreter.special = true
-    end
+    # if @trigger == 4
+    #   @interpreter = Interpreter.new()
+    #   @interpreter.setup(@list, @event.id)
+    #   @interpreter.special = true
+    # end
 
 
     # If trigger is [auto run]
@@ -17719,7 +17782,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end">:#==============================================================================
+end"<:#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -17846,10 +17909,10 @@ class Interpreter
         # If not auto run
         #log_sys(e.trigger)
         # MAKES AUTORUN LOOP
-        #if e.trigger < 3          
+        if e.trigger < 3          
           e.clear_starting
           e.lock          
-        #end
+        end
         
         # Set up event
 
@@ -19521,7 +19584,7 @@ class Game_Player < Game_Character
   end
 
 end
-"ß7
+"98
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19660,18 +19723,27 @@ class Game_Battle
 
   def loot_for(src_event)
 
-    data = $data.enemies[src_event.monster]
+    drop_loot($data.enemies[src_event.monster])
+
+  end
+
+  def drop(a)
+    drop_loot($data.enemies[a])
+  end
+
+  def drop_loot(data)
 
     # Check drops first
     if data.drops != nil
-      data.drops.split("/n").each{ |item|
+      data.drops.split("\n").each{ |item|
 
         # If possible, give it
         dta = item.split("=>")
+        log_info(dta)
         type = dta[1]
         req = dta[2]
-        chance = dta[3].to_f
-        next if rand > chance
+        #chance = dta[3].to_f
+        next if rand > 0.4
         pass = case type
             when 'q'
               $progress.quest_active?(req)
@@ -19698,13 +19770,12 @@ class Game_Battle
 
     if chance < 0.6 && data.loot != nil && data.loot != ''
       possible = []
-      data.loot.split("/n").each{ |item| 
+      data.loot.split("\n").each{ |item| 
         dta = item.split("=>")
         dta[1].to_i.times{
           possible.push(dta[0])
         }
       }
-      log_info(possible)
       return item(possible.sample)
     end
 
@@ -25436,7 +25507,7 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"=	#==============================================================================
+end"H	#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
 
@@ -25481,7 +25552,7 @@ class KeyboardManager
 		check = KeyState.call(key) #& 0x80 == 128
     result = !(check == 1 || check == 0)
     # Disable mouse on keyboard input
-    $mouse.mousing = false if result
+    $mouse.mousing = false if key > 4 && result
 		return result
 	end
 

@@ -139,6 +139,14 @@ class Mnu_Items < Mnu_Base
 				close_soon
 
 			when 'common'
+				if option == 'witch-teleport' && $map.id == 94
+					sys('deny')
+					return
+				end
+				if option == 'witch-teleport' && !$party.all.include?('ing')
+					sys('deny')
+					return
+				end
 				$menu.common_event = $data.items[option].action.split("=>")[1].to_i
 				close_soon
 

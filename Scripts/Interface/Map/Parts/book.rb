@@ -105,7 +105,7 @@ class Ui_Book < SpriteGroup
 			sfx('page')
 		end
 
-		if @page_idx != 5 && $input.right?
+		if @page_idx != 4 && $input.right?
 			@page_idx += 1
 			@turn_step = 20
 			@turn_dir = 1
@@ -116,7 +116,7 @@ class Ui_Book < SpriteGroup
 		if $input.click?
 
 			# If to the right
-			if @page_idx != 5 && $mouse.x > 420
+			if @page_idx != 4 && $mouse.x > 420
 				@page_idx += 1
 				@turn_step = 20
 				@turn_dir = 1

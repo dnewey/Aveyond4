@@ -59,7 +59,10 @@ class Mnu_Base
 	end
 
 	def update
-		(@left + @right + @other).each{ |i| i.update }
+
+		if !@close_soon
+			(@left + @right + @other).each{ |i| i.update }
+		end
 
 		if @close_soon && !@closing
 			@close_delay -= 1
@@ -67,6 +70,8 @@ class Mnu_Base
 				close
 			end
 		end
+
+		return if @close_soon
 
 		# If anim in done, change state
 		if $input.cancel? || $input.rclick?

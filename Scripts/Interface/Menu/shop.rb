@@ -141,6 +141,8 @@ class Mnu_Shop < Mnu_Base
 				@info.refresh
 				@menu.list.refresh
 				close_soon
+			else
+				sys("deny")
 			end
 
 		else
@@ -167,6 +169,8 @@ class Mnu_Shop < Mnu_Base
 					sys("coins")
 					@info.refresh
 					@menu.list.refresh
+				else
+					sys("deny")
 				end
 
 			end

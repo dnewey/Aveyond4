@@ -452,23 +452,22 @@ def setup_chester_shop
 
 	# Skills to add at level five - RAVWYN
 	if $progress.chester_level >= 6
-		stock.push('ug-staff-7')
+		stock.push('ug-staff-7') if boy.has_skill?('ug-staff-6')
 	end
 
 	# Skills to add at level five - DWARVES
-	if $progress.chester_level >= 5
-		
-		stock.push('ug-mana-5')
-		stock.push('ug-staff-6')
-		stock.push('flames-4')
+	if $progress.chester_level >= 5		
+		stock.push('ug-mana-5') if boy.has_skill?('ug-mana-4')
+		stock.push('ug-staff-6') if boy.has_skill?('ug-staff-5')
+		stock.push('flames-4') if boy.has_skill?('ug-flames-3')
 		stock.push('ug-passive-scare')
 	end
 
 	# Skills to add at level 4 - ELVES
 	if $progress.chester_level >= 4
-		stock.push('ug-mana-4')
-		stock.push('staff-4')
-		stock.push('ug-staff-5')
+		stock.push('ug-mana-4') if boy.has_skill?('ug-mana-3')
+		stock.push('staff-4') if boy.has_skill?('staff-3')
+		stock.push('ug-staff-5') if boy.has_skill?('ug-staff-4')
 		stock.push('ug-passive-cheeki')
 		stock.push('ug-magic-minion')
 		stock.push('triumph-2')
@@ -477,19 +476,19 @@ def setup_chester_shop
 	# Skills to add at level 3 - WEE
 	if $progress.chester_level >= 3
 		stock.push('levitate')
-		stock.push('flames-3')
-		stock.push('ug-mana-3')
-		stock.push('ug-staff-4')
+		stock.push('flames-3') if boy.has_skill?('ug-flames-2')
+		stock.push('ug-mana-3') if boy.has_skill?('ug-mana-2')
+		stock.push('ug-staff-4') if boy.has_skill?('ug-staff-3')
 		stock.push('ug-passive-shop')
 	end
 
 	# Skills to add at level 2 - ROYAL
 	if $progress.chester_level >= 2
 		stock.push('sacrifice')
-		stock.push('contempt-3')
-		stock.push('ug-mana-2')
-		stock.push('staff-3')
-		stock.push('ug-staff-3')
+		stock.push('contempt-3') if boy.has_skill?('contempt-2')
+		stock.push('ug-mana-2') if boy.has_skill?('ug-mana-1')
+		stock.push('staff-3') if boy.has_skill?('staff-2')
+		stock.push('ug-staff-3') if boy.has_skill?('ug-staff-2')
 	end
 
 	# Skills to add at level 1 - TOR
@@ -497,7 +496,7 @@ def setup_chester_shop
 		stock.push('triumph')
 		stock.push('flames-2')
 		stock.push('ug-mana-1')
-		stock.push('ug-staff-2')
+		stock.push('ug-staff-2') if boy.has_skill?('ug-staff-1')
 	end
 
 	# Skills to add ALWAYS - WINSHIRE
@@ -513,6 +512,7 @@ def setup_chester_shop
 
 	# Don't include multiple of the same types, only use lowest
 
+
 	# Add skills to shop
 	stock.each{ |s| $menu.shop_add(s) }
 	open_shop_chester
@@ -523,61 +523,77 @@ def buy_chester_skill(skill)
 
 	boy = $party.get('boy')
 
+	$skill = skill
+
 	case skill
 
 		# New skills
-
-		when 'sacrifice','empower','triumph'
+		when 'sacrifice','empower','triumph', 'levitate'
 			boy.learn(skill)
+			flag('chester-new-skill')
 
 		# Skill upgrades
-
 		when 'contempt-2','contempt-3'
 			boy.replace_skill('contempt',skill)
+			flag('chester-new-skill')
 
 		when 'flames-2','flames-3'
 			boy.replace_skill('flames',skill)
+			flag('chester-new-skill')
 
 		when 'staff-2','staff-3','staff-4','staff-5','staff-6'
 			boy.replace_skill('staff',skill)	
+			flag('chester-new-skill')
 
 		when 'triumph-2'
 			boy.replace_skill('triumph',skill)		
-
+			flag('chester-new-skill')
 
 		# Staff upgrades
 
 		when 'ug-staff-1','ug-staff-2','ug-staff-3','ug-staff-4','ug-staff-5','ug-staff-6','ug-staff-7'
 
+			log_sys("GET NEW STAFF")
+
 			# Replace boy equip with new
+			boy.learn(skill)
 			eq = skill.sub('ug','boy')
 			boy.force_equip('staff',eq)
 
+			$staff = eq
+			flag('chester-new-staff')
 
 		# Stat upgrades
 
 		when 'ug-mana-1'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 10
 		when 'ug-mana-2'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 20
 		when 'ug-mana-3'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 30
 		when 'ug-mana-4'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 40
 		when 'ug-mana-5'
+			boy.learn(skill)
 			$party.boy_mp_bonus = 50
 
 
 		# Passives
 		when 'ug-passive-shop'
+			boy.learn(skill)
 			$party.passive_shop = true
 
 		when 'ug-passive-cheeki'
+			boy.learn(skill)
 			$party.passive_cheekis = true
 
 		when 'ug-passive-scare'
+			boy.learn(skill)
 			$party.passive_scare = true
-
 
 	end
 

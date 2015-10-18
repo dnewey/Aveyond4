@@ -63,7 +63,7 @@ class Right_Journal < SpriteGroup
 
     	@txt_zone = Label.new(vp)
     	@txt_zone.font = $fonts.page_text
-        add(@txt_zone)
+        add(@txt_zone,340)
 
     	# cy += 30
 

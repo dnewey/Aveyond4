@@ -401,7 +401,7 @@ class Game_Event < Game_Character
         return false if !$party.has_member?('phy')
 
       when '@ingonly'
-        return false if !($party.active.count == 1 && $party.active[0] == 'ing')
+        return false if !($party.active.count == 1)# && $party.active[0] == 'ing')
 
 
       # Choices
@@ -785,11 +785,11 @@ class Game_Event < Game_Character
     # end
 
     # If trigger is [parallel process]
-    if @trigger == 4
-      @interpreter = Interpreter.new()
-      @interpreter.setup(@list, @event.id)
-      @interpreter.special = true
-    end
+    # if @trigger == 4
+    #   @interpreter = Interpreter.new()
+    #   @interpreter.setup(@list, @event.id)
+    #   @interpreter.special = true
+    # end
 
 
     # If trigger is [auto run]

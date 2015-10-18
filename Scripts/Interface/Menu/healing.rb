@@ -143,7 +143,9 @@ class Mnu_Healing < Mnu_Base
 
 	def choose(option)	
 
-		# ADD GETTING PERMANENT STAT UPGRADES
+		@grid.bars.each{ |b|
+			return if !$tweens.done?(b)
+		}
 
 		# Is it even going to do anything?
 		if $party.get(option).mp_from_item($menu.use_item) == 0

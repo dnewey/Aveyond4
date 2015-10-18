@@ -125,10 +125,10 @@ class Interpreter
         # If not auto run
         #log_sys(e.trigger)
         # MAKES AUTORUN LOOP
-        #if e.trigger < 3          
+        if e.trigger < 3          
           e.clear_starting
           e.lock          
-        #end
+        end
         
         # Set up event
 
