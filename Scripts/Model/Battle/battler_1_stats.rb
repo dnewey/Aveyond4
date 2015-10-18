@@ -207,7 +207,7 @@ class Game_Battler
       #log_info(e)
       next if e == nil
       $data.items[e].mods.split("/n").each{ |s|
-        log_info(s)
+        #log_info(s)
         dta = s.split("=>")
         if dta[0] == stat
           total *= dta[1].to_f

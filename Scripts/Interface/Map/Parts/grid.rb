@@ -572,7 +572,7 @@ class Ui_Grid
 		row = Label.new(@vp)
         row.icon = $cache.icon("misc/items")
         row.font = $fonts.pop_text
-	    row.text = "Stock: #{$party.item_number(id)}"
+	    row.text = "Inventory: #{$party.item_number(id)}"
         @extra.push(row)
      	row.move(@cx+10,@cy+9)
 

@@ -176,8 +176,10 @@ class Mnu_Equip < Mnu_Base
 			end
 		}
 
-		if result[2] == [0,0,0,0,0,0,0]
-			@users.add_nochange
+		if @slot != 'minion'
+			if result[2] == [0,0,0,0,0,0,0]
+				@users.add_nochange
+			end
 		end
 		
 		

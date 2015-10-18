@@ -153,7 +153,6 @@ class Game_Battle
 
         # If possible, give it
         dta = item.split("=>")
-        log_info(dta)
         type = dta[1]
         req = dta[2]
         #chance = dta[3].to_f

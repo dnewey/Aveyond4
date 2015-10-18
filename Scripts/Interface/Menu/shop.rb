@@ -103,7 +103,7 @@ class Mnu_Shop < Mnu_Base
 			#}
 		end
 
-		if @sellmode
+		if !@magic
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
 			@users.add_stock(option)

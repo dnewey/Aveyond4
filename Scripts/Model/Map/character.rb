@@ -924,7 +924,7 @@ class Game_Character
       increase_steps
       # If impassable
 
-      if self == $player
+      if self == $player && $party.leader != 'ship'
 
         tt = terrain_tag
 
@@ -971,7 +971,7 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      if self == $player 
+      if self == $player && $party.leader != 'ship'
         tt = terrain_tag
         $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
         $audio.queue('steps/foot5',12,0.6) if tt == 2
@@ -1009,7 +1009,7 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      if self == $player 
+      if self == $player && $party.leader != 'ship'
         tt = terrain_tag
         $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
         $audio.queue('steps/foot5',12,0.6) if tt == 2
@@ -1049,7 +1049,7 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      if self == $player
+      if self == $player && $party.leader != 'ship'
 
         tt = terrain_tag
         $audio.queue('ladder/ladder1',10,0.15) if tt == 3 && pt == 3

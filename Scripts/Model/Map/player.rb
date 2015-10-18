@@ -108,55 +108,56 @@ class Game_Player < Game_Character
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
     
     evs = $map.events_at(new_x,new_y)
-    return false if evs == nil || evs.empty?
-
+    
     action = false
 
-    evs.each{ |ev|
+    if evs != nil
+      evs.each{ |ev|
 
-    # All event loops
-    #ev = $map.event_at(new_x,new_y)
-    if ev != nil
+      # All event loops
+      #ev = $map.event_at(new_x,new_y)
+      if ev != nil
 
-      if triggers.include?(ev.trigger) and ev.list.size > 1
+        if triggers.include?(ev.trigger) and ev.list.size > 1
 
-          # If starting determinant is front event (other than jumping)
-          if !ev.jumping? and !ev.over_trigger?
-            ev.start
-            action = true
-          end
+            # If starting determinant is front event (other than jumping)
+            if !ev.jumping? and !ev.over_trigger?
+              ev.start
+              action = true
+            end
+
+        end
 
       end
 
-    end
-
-  }
+    }
+  end
 
   return true if action == true
 
     # COUNTER CHECK
 
-      # If front tile is a counter
-      if $map.counter?(new_x, new_y)
+    # If front tile is a counter
+    if $map.counter?(new_x, new_y)
 
-        # Calculate 1 tile inside coordinates
-        new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
-        new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+      # Calculate 1 tile inside coordinates
+      new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
+      new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
 
-        # All event loops
-        ev = $map.event_at(new_x,new_y)
-        return false if ev == nil
+      # All event loops
+      ev = $map.event_at(new_x,new_y)
+      return false if ev == nil
 
-        # If event coordinates and triggers are consistent
-        if ev.x == new_x and ev.y == new_y and
-           triggers.include?(ev.trigger) and ev.list.size > 1
-          # If starting determinant is front event (other than jumping)
-          if not ev.jumping? and not ev.over_trigger?
-            ev.start
-            return true
-          end
+      # If event coordinates and triggers are consistent
+      if ev.x == new_x and ev.y == new_y and
+         triggers.include?(ev.trigger) and ev.list.size > 1
+        # If starting determinant is front event (other than jumping)
+        if not ev.jumping? and not ev.over_trigger?
+          ev.start
+          return true
         end
       end
+    end
 
     return false
 

@@ -4387,7 +4387,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"6
+end"6
 
 def shop_choice
 
@@ -4917,13 +4917,11 @@ def buy_chester_skill(skill)
 	case skill
 
 		# New skills
-
 		when 'sacrifice','empower','triumph', 'levitate'
 			boy.learn(skill)
 			flag('chester-new-skill')
 
 		# Skill upgrades
-
 		when 'contempt-2','contempt-3'
 			boy.replace_skill('contempt',skill)
 			flag('chester-new-skill')
@@ -4950,6 +4948,7 @@ def buy_chester_skill(skill)
 			boy.learn(skill)
 			eq = skill.sub('ug','boy')
 			boy.force_equip('staff',eq)
+
 			$staff = eq
 			flag('chester-new-staff')
 
@@ -7317,7 +7316,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"aL#==============================================================================
+end"eL#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7891,7 +7890,7 @@ class Ui_Grid
 		row = Label.new(@vp)
         row.icon = $cache.icon("misc/items")
         row.font = $fonts.pop_text
-	    row.text = "Stock: #{$party.item_number(id)}"
+	    row.text = "Inventory: #{$party.item_number(id)}"
         @extra.push(row)
      	row.move(@cx+10,@cy+9)
 
@@ -11315,7 +11314,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"ƒ#==============================================================================
+end"¬#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -11420,7 +11419,7 @@ class Mnu_Shop < Mnu_Base
 			#}
 		end
 
-		if @sellmode
+		if !@magic
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
 			@users.add_stock(option)
@@ -11518,7 +11517,7 @@ class Mnu_Shop < Mnu_Base
 
 	end
 
-end"V#==============================================================================
+end"x#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -11696,8 +11695,10 @@ class Mnu_Equip < Mnu_Base
 			end
 		}
 
-		if result[2] == [0,0,0,0,0,0,0]
-			@users.add_nochange
+		if @slot != 'minion'
+			if result[2] == [0,0,0,0,0,0,0]
+				@users.add_nochange
+			end
 		end
 		
 		
@@ -14576,7 +14577,7 @@ class Game_Battler
   end
 
 end
-"
+"
 class Game_Battler
 
 
@@ -14785,7 +14786,7 @@ class Game_Battler
       #log_info(e)
       next if e == nil
       $data.items[e].mods.split("/n").each{ |s|
-        log_info(s)
+        #log_info(s)
         dta = s.split("=>")
         if dta[0] == stat
           total *= dta[1].to_f
@@ -15288,7 +15289,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"ù∂#==============================================================================
+end"∑#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -16214,7 +16215,7 @@ class Game_Character
       increase_steps
       # If impassable
 
-      if self == $player
+      if self == $player && $party.leader != 'ship'
 
         tt = terrain_tag
 
@@ -16261,7 +16262,7 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      if self == $player 
+      if self == $player && $party.leader != 'ship'
         tt = terrain_tag
         $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
         $audio.queue('steps/foot5',12,0.6) if tt == 2
@@ -16299,7 +16300,7 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      if self == $player 
+      if self == $player && $party.leader != 'ship'
         tt = terrain_tag
         $audio.queue("steps/foot#{rand(8)}",12,0.4) if tt != 3
         $audio.queue('steps/foot5',12,0.6) if tt == 2
@@ -16339,7 +16340,7 @@ class Game_Character
       # Increase steps
       increase_steps
 
-      if self == $player
+      if self == $player && $party.leader != 'ship'
 
         tt = terrain_tag
         $audio.queue('ladder/ladder1',10,0.15) if tt == 3 && pt == 3
@@ -19046,7 +19047,7 @@ class Moblin
 
 	end
 
-end"ô5#==============================================================================
+end"5#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -19156,55 +19157,56 @@ class Game_Player < Game_Character
     new_y = @y + (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
     
     evs = $map.events_at(new_x,new_y)
-    return false if evs == nil || evs.empty?
-
+    
     action = false
 
-    evs.each{ |ev|
+    if evs != nil
+      evs.each{ |ev|
 
-    # All event loops
-    #ev = $map.event_at(new_x,new_y)
-    if ev != nil
+      # All event loops
+      #ev = $map.event_at(new_x,new_y)
+      if ev != nil
 
-      if triggers.include?(ev.trigger) and ev.list.size > 1
+        if triggers.include?(ev.trigger) and ev.list.size > 1
 
-          # If starting determinant is front event (other than jumping)
-          if !ev.jumping? and !ev.over_trigger?
-            ev.start
-            action = true
-          end
+            # If starting determinant is front event (other than jumping)
+            if !ev.jumping? and !ev.over_trigger?
+              ev.start
+              action = true
+            end
+
+        end
 
       end
 
-    end
-
-  }
+    }
+  end
 
   return true if action == true
 
     # COUNTER CHECK
 
-      # If front tile is a counter
-      if $map.counter?(new_x, new_y)
+    # If front tile is a counter
+    if $map.counter?(new_x, new_y)
 
-        # Calculate 1 tile inside coordinates
-        new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
-        new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
+      # Calculate 1 tile inside coordinates
+      new_x += (@direction == 6 ? 1 : @direction == 4 ? -1 : 0)
+      new_y += (@direction == 2 ? 1 : @direction == 8 ? -1 : 0)
 
-        # All event loops
-        ev = $map.event_at(new_x,new_y)
-        return false if ev == nil
+      # All event loops
+      ev = $map.event_at(new_x,new_y)
+      return false if ev == nil
 
-        # If event coordinates and triggers are consistent
-        if ev.x == new_x and ev.y == new_y and
-           triggers.include?(ev.trigger) and ev.list.size > 1
-          # If starting determinant is front event (other than jumping)
-          if not ev.jumping? and not ev.over_trigger?
-            ev.start
-            return true
-          end
+      # If event coordinates and triggers are consistent
+      if ev.x == new_x and ev.y == new_y and
+         triggers.include?(ev.trigger) and ev.list.size > 1
+        # If starting determinant is front event (other than jumping)
+        if not ev.jumping? and not ev.over_trigger?
+          ev.start
+          return true
         end
       end
+    end
 
     return false
 
@@ -19584,7 +19586,7 @@ class Game_Player < Game_Character
   end
 
 end
-"98
+""8
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19739,7 +19741,6 @@ class Game_Battle
 
         # If possible, give it
         dta = item.split("=>")
-        log_info(dta)
         type = dta[1]
         req = dta[2]
         #chance = dta[3].to_f
@@ -22006,7 +22007,7 @@ class Scene_Battle
     
   end
 
-end"U)
+end"é)
 class Scene_Battle
 
   def phase_main_init
@@ -22477,6 +22478,7 @@ class Scene_Battle
     sys 'open'
 
     # Remove states and that before next turn starts
+    $battle.all_battlers.each{ |b| b.reduce_cooldowns }
     $battle.all_battlers.each{ |b| b.remove_states_turn }
 
     # Go to next turn
@@ -25322,7 +25324,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"	#==============================================================================
+end"	#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -25374,6 +25376,7 @@ class GameManager
     $scene = nil
     push_scene(Scene_Map.new($map,$player))
     $map.resetup
+    $map.camera_snap
     $scene.update
     t = 'Graphics/Transitions/battle'
     Graphics.transition(30,t) 

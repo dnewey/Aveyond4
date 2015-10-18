@@ -469,6 +469,7 @@ class Scene_Battle
     sys 'open'
 
     # Remove states and that before next turn starts
+    $battle.all_battlers.each{ |b| b.reduce_cooldowns }
     $battle.all_battlers.each{ |b| b.remove_states_turn }
 
     # Go to next turn

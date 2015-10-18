@@ -50,6 +50,7 @@ class GameManager
     $scene = nil
     push_scene(Scene_Map.new($map,$player))
     $map.resetup
+    $map.camera_snap
     $scene.update
     t = 'Graphics/Transitions/battle'
     Graphics.transition(30,t) 
