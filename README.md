@@ -53,6 +53,10 @@ hiddenone on RpgMakerWeb
 http://forums.rpgmakerweb.com/index.php?/topic/35845-hiddenones-sprite-shop/
 
 Additional Character Sprites
+Artist: VexedEnigma
+[Copyright](C) 2014 DEGICA Co., LTD; 
+
+Additional Character Sprites
 Sithjester
 http://untamed.wild-refuge.net/rmxpresources.php?characters
 
