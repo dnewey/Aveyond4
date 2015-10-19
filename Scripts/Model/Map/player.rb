@@ -238,7 +238,7 @@ class Game_Player < Game_Character
         
         # Run Pathfinding
         @event_at_path = $map.event_at(mx, my)
-        @event_at_path = nil if @event_at_path && @event_at_path.through
+        @event_at_path = nil if @event_at_path && @event_at_path.through && @event_at_path.character_name != 'Obj-Loot'
         if @event_at_path == nil
 
           # If walk to empty pos, show fx
@@ -249,6 +249,11 @@ class Game_Player < Game_Character
 
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil
+        elsif @event_at_path.through
+            if @event_at_path.trigger == 0
+              find_path(@event_at_path.x, @event_at_path.y)
+              @turn_after_path = nil
+            end
         else
 
           # Flash target event
@@ -385,7 +390,7 @@ class Game_Player < Game_Character
           # Check if event is adjacent OR counter between
           dx = (self.x - @event_at_path.x).abs
           dy = (self.y - @event_at_path.y).abs
-          if dx + dy == 1
+          if dx + dy <= 1
             @event_at_path.start
           end
           if @direction == 8 && $map.counter?(@x,@y-1)

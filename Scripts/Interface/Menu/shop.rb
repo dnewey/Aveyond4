@@ -151,7 +151,7 @@ class Mnu_Shop < Mnu_Base
 
 			if @sellmode
 
-				# Buy
+				# Sell
 				$party.add_item(option,-1)
 				$party.add_gold(item.price/2)
 				sys('coins')
@@ -181,6 +181,7 @@ class Mnu_Shop < Mnu_Base
 	def change_tab(tab)
 
 		page_idx = @menu.list.page_idx
+		scroll_idx = @menu.list.scroll_idx
 
 		# Change list to certain items only
 		# This is for selling
@@ -193,7 +194,7 @@ class Mnu_Shop < Mnu_Base
 		@menu.list.setup(list)
 
 		if tab == @tab
-			@menu.list.set_idx(page_idx,0)
+			@menu.list.set_idx(page_idx,scroll_idx)
 		end
 		@tab = tab
 

@@ -19,7 +19,7 @@ class Mnu_Char < Mnu_Base
 		char = $party.get($menu.char)
 		
 		@grid.add_wide("Equip","Change Equipment",char.weapon_icon)
-		@grid.add_wide("Skills","Use Skills","skills/sparkle")
+		@grid.add_wide("Skills","View Skills","skills/sparkle")
 		@grid.add_wide("Status","View Status","misc/primary")
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")

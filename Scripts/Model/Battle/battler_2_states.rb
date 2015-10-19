@@ -67,12 +67,14 @@ class Game_Battler
   # * Natural Removal of States
   #--------------------------------------------------------------------------
   def remove_states_turn
+
     
     # Add a turn to the counter
     @states_counter.values.each{ |v| v += 1 }
 
     # If done
     @states.delete_if{ |s| 
+      next if $data.states[s].rmv_turn == 0
       @states_counter[s] >= $data.states[s].rmv_turn 
     }
 

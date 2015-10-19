@@ -32,6 +32,7 @@ class Scene_Battle < Scene_Base
     # Init player and camera 
     @player.moveto(0,0)
     @player.static
+    @player.opacity = 0
     @map.camera_to(@player)
 
     # Slide camera up

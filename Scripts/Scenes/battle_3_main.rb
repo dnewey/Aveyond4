@@ -103,22 +103,6 @@ class Scene_Battle
 
     end
 
-    # If rez, random if up, or cancel
-    # NO JUST USE UP THE CASSIA
-    # if ['down'].include?(@active_battler.scope)
-
-    #   # Check if target is down
-    #   if !@active.battler.target.down?
-
-    #     # Try to find an alternate target, else cancel
-
-    #   end
-
-    #   #@attack_plan.cancel
-    #   #@phase = :main_next
-    #   #return
-    # end
-
     # -----------------------------
 
     # Calculate damage here and now
@@ -442,7 +426,7 @@ class Scene_Battle
 
       # End multi stage attacks early if user is incapable of attack
 
-      @active_attack = @attack_plan.next_attack
+      @attack_round = @attack_plan.next_attack
       @phase = :main_start
       return
 

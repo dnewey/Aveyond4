@@ -338,6 +338,15 @@ class Game_Event < Game_Character
       when '?partyloc'
         return false if !$party.party_loc_saved?
 
+      when '?attract-boy'
+        return false if $progress.attract_boy >= 6
+
+      when '?attract-hib'
+        return false if $progress.attract_hib >= 4
+
+      when '?attract-phy'
+        return false if $progress.attract_phy >= 4
+
 
     end
 

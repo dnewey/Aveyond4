@@ -613,9 +613,10 @@ class Game_Battle
 
       when 'any'
         targets = $party.active_battlers.select{ |b| b.attackable? }
-        targets.count.times{
-          targets += (@enemies.select{ |b| b.attackable? })
-        }
+        targets += (@enemies.select{ |b| b.attackable? })
+        targets += (@enemies.select{ |b| b.attackable? })
+        targets += (@enemies.select{ |b| b.attackable? })
+        targets += (@enemies.select{ |b| b.attackable? })
 
         return [targets.sample]
 

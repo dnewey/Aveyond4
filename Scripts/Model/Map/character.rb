@@ -830,7 +830,7 @@ class Game_Character
         case command.code
         
         when 29  # Change speed
-          @move_speed = command.parameters[0]
+          self.move_speed = command.parameters[0]
         when 30  # Change freq
           @move_frequency = command.parameters[0]
         when 31  # Move animation ON

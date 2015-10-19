@@ -214,7 +214,11 @@ class Game_Battler
     elsif @id == 'row'
 
       # If sword sing don't cut it
-      return @actions
+      if !flag?('row-sword-singer')
+        return ['clobber','gadget','items']
+      else
+        return @actions
+      end
 
     else
 
@@ -304,7 +308,7 @@ class Game_Battler
   def can_attack?
 
     # Any states stopping this?
-    return false if !@states.select{ |s| $data.state[s].stun }.empty?
+    return false if !@states.select{ |s| $data.states[s].stun }.empty?
 
     return !down?
 
