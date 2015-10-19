@@ -1,6 +1,10 @@
 
-def bqs(skill,turn)
-	$battle.queue_sill(skill,turn)
+def bqs(id,skill,turn)
+	$battle.queue_skill(id,skill,turn)
+end
+
+def bqas(id,skill,turn)
+	$battle.queue_ally_skill(id,skill,turn)
 end
 
 def bqt(text,turn)

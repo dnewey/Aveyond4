@@ -80,6 +80,16 @@ class Scene_Battle
           @active_battler = $battle.enemies[action[1]]
           @phase = :main_prep
 
+        when :ally
+
+          @skill = true
+
+          $battle.allies[0].set_action(action[2])
+
+          @battle_queue = []
+          @active_battler = $battle.allies[action[1]]
+          @phase = :main_prep
+
         when :escape      
 
           @phase = :misc_escape

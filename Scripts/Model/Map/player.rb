@@ -531,6 +531,9 @@ class Game_Player < Game_Character
     $game.snapshot = Graphics.snap_to_bitmap
 
     # Force camera on player after xfer
+    $map.cam_oy = 0
+    $map.cam_ox = 0
+    camera 'plr'
     camera_snap
 
     $files.autosave

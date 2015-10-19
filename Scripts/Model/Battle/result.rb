@@ -22,6 +22,7 @@ class Attack_Result
 	attr_accessor :steal
 	attr_accessor :pocket
 	attr_accessor :escape
+	attr_accessor :revive
 
 end
 

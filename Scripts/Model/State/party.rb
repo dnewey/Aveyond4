@@ -340,7 +340,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("rob")
+    # set_active("rob")
     #set_active("ing")
     #set_active("mys")
     # set_active("rob")

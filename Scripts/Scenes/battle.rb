@@ -215,7 +215,7 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
-    #$debug.track(self,"phase")
+    $debug.track(self,"phase")
 
     # Wait count here
     if @wait_frames > 0

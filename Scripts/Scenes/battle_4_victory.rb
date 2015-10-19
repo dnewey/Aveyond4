@@ -22,7 +22,7 @@ class Scene_Battle
       speaker = $party.alive_members.sample.id
 
       # What will they say?
-      idx = 1#rand(1)
+      idx = rand(3) + 1
       text = $data.victories["#{speaker}-#{idx}"].dialogue
 
     end

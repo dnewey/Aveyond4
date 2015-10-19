@@ -86,6 +86,12 @@ class Game_Battle
     @queue[turn].push([:skill,enemy_id,skill_id])
   end
 
+  # Queue up skills to use before battle starts
+  def queue_ally_skill(enemy_id,skill_id,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:ally,enemy_id,skill_id])
+  end
+
   # Queue up text for scene before battle
   def queue_text(txt,turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
@@ -253,6 +259,8 @@ class Game_Battle
       queue.push($party.get(minion))
     end
 
+    queue.delete_if{ |b| !b.can_attack? }
+
     # Sort by priority, random within same
     return queue.sort_by{ |battler| [battler.attack_priority,rand] }
 
@@ -283,6 +291,8 @@ class Game_Battle
       plan.add(round)
     }
 
+    return plan if attacker.action == 'items'
+
     follow = nil
 
     # Add followup attack
@@ -304,6 +314,23 @@ class Game_Battle
     }
 
     # Double followup
+    if follow != nil
+      follow.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        if data[0] == 'followup'
+          follow = $data.skills[data[1]]
+          log_info data[1]
+          round = Attack_Round.new
+          #round.text = follow.text if follow.text && follow.text.length > 0
+          round.anim = follow.anim
+          round.skill = follow
+
+          plan.add(round)
+        end
+    }
+    end
+
+    # Triple followup
     if follow != nil
       follow.effects.split("\n").each{ |effect|
         data = effect.split("=>")      
@@ -409,6 +436,8 @@ class Game_Battle
             result.pocket = true
           when 'escape'
             result.escape = true
+          when 'revive'
+            result.revive = true
             
         end
       }
@@ -427,7 +456,7 @@ class Game_Battle
 
       # Calc resist if state added and its a bad one?
       if result.state_add != nil
-        if !['minion-double','crit','protect','curse-life'].include?(result.state_add)
+        if !['minion-double','crit','protect','curse-life','galahad'].include?(result.state_add)
           result.resist = rand(100) < t.res
           if result.resist
             result.state_add = nil
@@ -463,6 +492,7 @@ class Game_Battle
       result.heal = heal_base
       result.heal += t.maxhp * heal_p
       result.heal *= 1.5 if result.critical
+      result.heal = 1 if result.revive
 
       # ---------------------------------------------
       # TIDY
@@ -549,8 +579,10 @@ class Game_Battle
         # Will be in attacker, already chosen
         targets = [attacker.target]
 
-        # If the target is not attackable, do somethingelse
-        # TODO TODO
+        if attacker.skill_id == 'fury-heal'
+          return [@enemies.select{ |b| b.attackable? }.sample]
+        end
+
         return targets
 
       when 'rand' # Single random target
@@ -605,7 +637,7 @@ class Game_Battle
       when 'party'
 
         # All allies
-        if attacker.is_good?
+        if attacker.is_good? || attacker.is_ally?
           return $party.active_battlers.select{ |b| b.attackable? }
         else          
           return @enemies.select{ |b| b.attackable? }

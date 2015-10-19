@@ -74,6 +74,7 @@ class GameManager
     @scenes.shift.terminate
     $scene = @scenes[0]
     $scene.viz if $scene != nil
+    $scene.map.need_refresh = true if $scene.is_a?(Scene_Map)
   end
 
   def sub_scene

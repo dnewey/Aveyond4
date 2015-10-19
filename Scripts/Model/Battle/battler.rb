@@ -191,6 +191,10 @@ class Game_Battler
     return @type == :enemy
   end
 
+  def is_ally?
+    return @type == :ally
+  end
+
   def get_actions
     if @transform
       return $data.actors[@transform].actions.split(" | ")
@@ -261,6 +265,10 @@ class Game_Battler
     ev.character_name = "Player/#{@id}-down"
   end
 
+  def revive
+    ev.character_name = "Player/#{@id}-idle"
+  end
+
   #--------------------------------------------------------------------------
   # * Recover All
   #--------------------------------------------------------------------------
@@ -308,7 +316,7 @@ class Game_Battler
   def can_attack?
 
     # Any states stopping this?
-    return false if !@states.select{ |s| $data.states[s].stun }.empty?
+    return false if !@states.select{ |s| $data.states[s].stun == 'true' }.empty?
 
     return !down?
 
@@ -337,6 +345,7 @@ class Game_Battler
     if @action == "items"
       return $data.items[@item_id].priority
     else
+      return 3 if @skill_id == nil
       return $data.skills[@skill_id].priority
     end
 

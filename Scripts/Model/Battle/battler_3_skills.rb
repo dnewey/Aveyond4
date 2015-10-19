@@ -113,6 +113,7 @@ class Game_Battler
   def set_action(skill)
     @action = 'attack'
     @skill_id = skill
+    @scope = $data.skills[skill].scope
   end
 
   def reduce_cooldowns

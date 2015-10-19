@@ -40,6 +40,8 @@ end
 
 def pop_learn(s,w)
 
+	sys 'join'
+
 	b = $data.skills[s].name.sub("=>",":")
 	ib = $cache.icon($data.skills[s].icon)
 

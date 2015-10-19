@@ -50,7 +50,8 @@ class Game_Battler
     @transform = nil
 
     # Remove states
-    @states.delete_if{ |s| $data.states[s].rmv_battle }
+    #@states.delete_if{ |s| $data.states[s].rmv_battle == 'true' }
+    @states = []
 
     ev.icons = @states if ev
     
@@ -60,7 +61,7 @@ class Game_Battler
   # * State Removed by Shock
   #--------------------------------------------------------------------------
   def remove_states_shock
-    @states.delete_if{ |s| $data.states[s].rmv_shock }
+    @states.delete_if{ |s| $data.states[s].rmv_shock == 'true' }
   end
 
   #--------------------------------------------------------------------------

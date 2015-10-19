@@ -232,6 +232,11 @@ class Scene_Battle
         # Heal
         if result.heal > 0
 
+          if result.revive
+            result.target.revive
+            result.target.view.revive if result.target.view
+          end
+
           result.target.heal(result.heal)
           pop_dmg(result.target.ev,result.heal)
 

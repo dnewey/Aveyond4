@@ -43,8 +43,7 @@ class ActorCmd
 		}
 
 		# Position the things
-		#@idx = 1
-		
+		@idx = 0		
 
 		reposition
 		select

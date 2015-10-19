@@ -376,6 +376,7 @@ def setup_smith_shop
 			stock.push('helm-dwarf')
 			stock.push('heavy-arm-dwarf')
 			stock.push('rob-shield-dwarf')
+			stock.push('row-wrench-dwarf')
 
 		when '@ravwyn'	
 			stock.push('mid-arm-shadow')
@@ -515,7 +516,11 @@ def setup_chester_shop
 
 	# Add skills to shop
 	stock.each{ |s| $menu.shop_add(s) }
-	open_shop_chester
+	if stock.empty?
+		text('Chester: I have nothing to teach you at this moment.')
+	else
+		open_shop_chester
+	end
 
 end
 

@@ -244,9 +244,11 @@ class Scene_Battle
       @phase = :main_init
     else
       @active_battler = $party.actor_by_index(@actor_idx)
-      if @active_battler.down?
+      if @active_battler.down? || @active_battler == nil
         return # Get the next one, this actor is done
       else
+        log_scr @active_battler
+        log_scr @active_battler.id
         $scene.hud.deselect_all
         @actor_cmd.setup(@active_battler)
         @active_battler.view.select

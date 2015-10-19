@@ -2603,9 +2603,13 @@ end
 def atmosphere_restore
 	# Restore the zone music
 	$map.setup_audio
-end"â
-def bqs(skill,turn)
-	$battle.queue_sill(skill,turn)
+end"3
+def bqs(id,skill,turn)
+	$battle.queue_skill(id,skill,turn)
+end
+
+def bqas(id,skill,turn)
+	$battle.queue_ally_skill(id,skill,turn)
 end
 
 def bqt(text,turn)
@@ -3741,7 +3745,7 @@ def gogogo
 	log_sys("Refreshing stat mods")
 	$party.all_battlers.each{ |b| b.refresh_stat_mods }
 
-end"G#==============================================================================
+end":#==============================================================================
 # ** Item Functions
 #==============================================================================
 
@@ -4036,14 +4040,13 @@ def grant_level_free(who)
 end
 
 def learn_skill(who,skill)
-	sys 'join'
 	pop_learn(skill,who)
 	$party.get(who).learn(skill)
 end
 
 def unlearn_skill(who,skill)
 	$party.get(who).unlearn(skill)
-end"»
+end"Ê
 def pop_item(item,number,type)
 
 	data = $data.items[item]
@@ -4084,6 +4087,8 @@ def pop_ing_pickup(i)
 end
 
 def pop_learn(s,w)
+
+	sys 'join'
 
 	b = $data.skills[s].name.sub("=>",":")
 	ib = $cache.icon($data.skills[s].icon)
@@ -4407,7 +4412,7 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"6
+end"…6
 
 def shop_choice
 
@@ -4785,6 +4790,7 @@ def setup_smith_shop
 			stock.push('helm-dwarf')
 			stock.push('heavy-arm-dwarf')
 			stock.push('rob-shield-dwarf')
+			stock.push('row-wrench-dwarf')
 
 		when '@ravwyn'	
 			stock.push('mid-arm-shadow')
@@ -4924,7 +4930,11 @@ def setup_chester_shop
 
 	# Add skills to shop
 	stock.each{ |s| $menu.shop_add(s) }
-	open_shop_chester
+	if stock.empty?
+		text('Chester: I have nothing to teach you at this moment.')
+	else
+		open_shop_chester
+	end
 
 end
 
@@ -6025,7 +6035,7 @@ class Popper < Sprite
 
 	end
 
-end"õ
+end"ò
 class ActorCmd
 
 	def initialize(vp)
@@ -6070,8 +6080,7 @@ class ActorCmd
 		}
 
 		# Position the things
-		#@idx = 1
-		
+		@idx = 0		
 
 		reposition
 		select
@@ -9629,7 +9638,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"²
+end"³
 #==============================================================================
 # ** Mnu_Char
 #==============================================================================
@@ -9651,7 +9660,7 @@ class Mnu_Char < Mnu_Base
 		char = $party.get($menu.char)
 		
 		@grid.add_wide("Equip","Change Equipment",char.weapon_icon)
-		@grid.add_wide("Skills","Use Skills","skills/sparkle")
+		@grid.add_wide("Skills","View Skills","skills/sparkle")
 		@grid.add_wide("Status","View Status","misc/primary")
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
@@ -11336,7 +11345,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"Â#==============================================================================
+end"ò#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -11489,7 +11498,7 @@ class Mnu_Shop < Mnu_Base
 
 			if @sellmode
 
-				# Buy
+				# Sell
 				$party.add_item(option,-1)
 				$party.add_gold(item.price/2)
 				sys('coins')
@@ -11519,6 +11528,7 @@ class Mnu_Shop < Mnu_Base
 	def change_tab(tab)
 
 		page_idx = @menu.list.page_idx
+		scroll_idx = @menu.list.scroll_idx
 
 		# Change list to certain items only
 		# This is for selling
@@ -11531,7 +11541,7 @@ class Mnu_Shop < Mnu_Base
 		@menu.list.setup(list)
 
 		if tab == @tab
-			@menu.list.set_idx(page_idx,0)
+			@menu.list.set_idx(page_idx,scroll_idx)
 		end
 		@tab = tab
 
@@ -14218,7 +14228,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end" #==============================================================================
+end"³#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -14411,6 +14421,10 @@ class Game_Battler
     return @type == :enemy
   end
 
+  def is_ally?
+    return @type == :ally
+  end
+
   def get_actions
     if @transform
       return $data.actors[@transform].actions.split(" | ")
@@ -14434,7 +14448,11 @@ class Game_Battler
     elsif @id == 'row'
 
       # If sword sing don't cut it
-      return @actions
+      if !flag?('row-sword-singer')
+        return ['clobber','gadget','items']
+      else
+        return @actions
+      end
 
     else
 
@@ -14475,6 +14493,10 @@ class Game_Battler
 
   def fall
     ev.character_name = "Player/#{@id}-down"
+  end
+
+  def revive
+    ev.character_name = "Player/#{@id}-idle"
   end
 
   #--------------------------------------------------------------------------
@@ -14524,7 +14546,7 @@ class Game_Battler
   def can_attack?
 
     # Any states stopping this?
-    return false if !@states.select{ |s| $data.state[s].stun }.empty?
+    return false if !@states.select{ |s| $data.states[s].stun == 'true' }.empty?
 
     return !down?
 
@@ -14553,6 +14575,7 @@ class Game_Battler
     if @action == "items"
       return $data.items[@item_id].priority
     else
+      return 3 if @skill_id == nil
       return $data.skills[@skill_id].priority
     end
 
@@ -14599,7 +14622,7 @@ class Game_Battler
   end
 
 end
-"
+"ø
 class Game_Battler
 
 
@@ -14827,7 +14850,17 @@ class Game_Battler
   end
 
   def stat_mod_from_states(stat)
-    return 1.0
+    total = 1.0
+    @states.each{ |e|
+        $data.states[e].mods.split("/n").each{ |s|
+        #log_info(s)
+        dta = s.split("=>")
+        if dta[0] == stat
+          total *= dta[1].to_f
+        end
+      }
+    }
+    return total
   end
 
   # MAYBE
@@ -14839,7 +14872,7 @@ class Game_Battler
     return 1.0
   end
 
-end"
+end"W
 class Game_Battler
 
 
@@ -14891,7 +14924,8 @@ class Game_Battler
     @transform = nil
 
     # Remove states
-    @states.delete_if{ |s| $data.states[s].rmv_battle }
+    #@states.delete_if{ |s| $data.states[s].rmv_battle == 'true' }
+    @states = []
 
     ev.icons = @states if ev
     
@@ -14901,19 +14935,21 @@ class Game_Battler
   # * State Removed by Shock
   #--------------------------------------------------------------------------
   def remove_states_shock
-    @states.delete_if{ |s| $data.states[s].rmv_shock }
+    @states.delete_if{ |s| $data.states[s].rmv_shock == 'true' }
   end
 
   #--------------------------------------------------------------------------
   # * Natural Removal of States
   #--------------------------------------------------------------------------
   def remove_states_turn
+
     
     # Add a turn to the counter
     @states_counter.values.each{ |v| v += 1 }
 
     # If done
     @states.delete_if{ |s| 
+      next if $data.states[s].rmv_turn == 0
       @states_counter[s] >= $data.states[s].rmv_turn 
     }
 
@@ -14921,7 +14957,7 @@ class Game_Battler
 
   end
 
- end"Šclass Game_Battler
+ end"²class Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -15036,6 +15072,7 @@ class Game_Battler
   def set_action(skill)
     @action = 'attack'
     @skill_id = skill
+    @scope = $data.skills[skill].scope
   end
 
   def reduce_cooldowns
@@ -15249,7 +15286,7 @@ class Game_Battler
 
   end
 
-end"!
+end"9
 class Attack_Result
 
 	attr_accessor :target
@@ -15273,6 +15310,7 @@ class Attack_Result
 	attr_accessor :steal
 	attr_accessor :pocket
 	attr_accessor :escape
+	attr_accessor :revive
 
 end
 
@@ -15311,7 +15349,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"·#==============================================================================
+end"·#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -16143,7 +16181,7 @@ class Game_Character
         case command.code
         
         when 29  # Change speed
-          @move_speed = command.parameters[0]
+          self.move_speed = command.parameters[0]
         when 30  # Change freq
           @move_frequency = command.parameters[0]
         when 31  # Move animation ON
@@ -16937,7 +16975,7 @@ class Game_Character
 
 
 end
-"ŸW#==============================================================================
+"’X#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -17276,6 +17314,15 @@ class Game_Event < Game_Character
 
       when '?partyloc'
         return false if !$party.party_loc_saved?
+
+      when '?attract-boy'
+        return false if $progress.attract_boy >= 6
+
+      when '?attract-hib'
+        return false if $progress.attract_hib >= 4
+
+      when '?attract-phy'
+        return false if $progress.attract_phy >= 4
 
 
     end
@@ -19069,7 +19116,7 @@ class Moblin
 
 	end
 
-end"5#==============================================================================
+end"°6#==============================================================================
 # ** Game_Player
 #==============================================================================
 
@@ -19309,7 +19356,7 @@ class Game_Player < Game_Character
         
         # Run Pathfinding
         @event_at_path = $map.event_at(mx, my)
-        @event_at_path = nil if @event_at_path && @event_at_path.through
+        @event_at_path = nil if @event_at_path && @event_at_path.through && @event_at_path.character_name != 'Obj-Loot'
         if @event_at_path == nil
 
           # If walk to empty pos, show fx
@@ -19320,6 +19367,11 @@ class Game_Player < Game_Character
 
           find_path(mx, my)
           #@eventarray = @runpath ? $map.events_at(mx, my) : nil
+        elsif @event_at_path.through
+            if @event_at_path.trigger == 0
+              find_path(@event_at_path.x, @event_at_path.y)
+              @turn_after_path = nil
+            end
         else
 
           # Flash target event
@@ -19456,7 +19508,7 @@ class Game_Player < Game_Character
           # Check if event is adjacent OR counter between
           dx = (self.x - @event_at_path.x).abs
           dy = (self.y - @event_at_path.y).abs
-          if dx + dy == 1
+          if dx + dy <= 1
             @event_at_path.start
           end
           if @direction == 8 && $map.counter?(@x,@y-1)
@@ -19597,6 +19649,9 @@ class Game_Player < Game_Character
     $game.snapshot = Graphics.snap_to_bitmap
 
     # Force camera on player after xfer
+    $map.cam_oy = 0
+    $map.cam_ox = 0
+    camera 'plr'
     camera_snap
 
     $files.autosave
@@ -19608,7 +19663,7 @@ class Game_Player < Game_Character
   end
 
 end
-"°;
+"ð?
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -19694,6 +19749,12 @@ class Game_Battle
   def queue_skill(enemy_id,skill_id,turn=1)
     @queue[turn] = [] if !@queue.has_key?(turn)
     @queue[turn].push([:skill,enemy_id,skill_id])
+  end
+
+  # Queue up skills to use before battle starts
+  def queue_ally_skill(enemy_id,skill_id,turn=1)
+    @queue[turn] = [] if !@queue.has_key?(turn)
+    @queue[turn].push([:ally,enemy_id,skill_id])
   end
 
   # Queue up text for scene before battle
@@ -19863,6 +19924,8 @@ class Game_Battle
       queue.push($party.get(minion))
     end
 
+    queue.delete_if{ |b| !b.can_attack? }
+
     # Sort by priority, random within same
     return queue.sort_by{ |battler| [battler.attack_priority,rand] }
 
@@ -19893,6 +19956,8 @@ class Game_Battle
       plan.add(round)
     }
 
+    return plan if attacker.action == 'items'
+
     follow = nil
 
     # Add followup attack
@@ -19914,6 +19979,23 @@ class Game_Battle
     }
 
     # Double followup
+    if follow != nil
+      follow.effects.split("\n").each{ |effect|
+        data = effect.split("=>")      
+        if data[0] == 'followup'
+          follow = $data.skills[data[1]]
+          log_info data[1]
+          round = Attack_Round.new
+          #round.text = follow.text if follow.text && follow.text.length > 0
+          round.anim = follow.anim
+          round.skill = follow
+
+          plan.add(round)
+        end
+    }
+    end
+
+    # Triple followup
     if follow != nil
       follow.effects.split("\n").each{ |effect|
         data = effect.split("=>")      
@@ -20019,6 +20101,8 @@ class Game_Battle
             result.pocket = true
           when 'escape'
             result.escape = true
+          when 'revive'
+            result.revive = true
             
         end
       }
@@ -20037,7 +20121,7 @@ class Game_Battle
 
       # Calc resist if state added and its a bad one?
       if result.state_add != nil
-        if !['minion-double','crit','protect','curse-life'].include?(result.state_add)
+        if !['minion-double','crit','protect','curse-life','galahad'].include?(result.state_add)
           result.resist = rand(100) < t.res
           if result.resist
             result.state_add = nil
@@ -20073,6 +20157,7 @@ class Game_Battle
       result.heal = heal_base
       result.heal += t.maxhp * heal_p
       result.heal *= 1.5 if result.critical
+      result.heal = 1 if result.revive
 
       # ---------------------------------------------
       # TIDY
@@ -20159,8 +20244,10 @@ class Game_Battle
         # Will be in attacker, already chosen
         targets = [attacker.target]
 
-        # If the target is not attackable, do somethingelse
-        # TODO TODO
+        if attacker.skill_id == 'fury-heal'
+          return [@enemies.select{ |b| b.attackable? }.sample]
+        end
+
         return targets
 
       when 'rand' # Single random target
@@ -20215,7 +20302,7 @@ class Game_Battle
       when 'party'
 
         # All allies
-        if attacker.is_good?
+        if attacker.is_good? || attacker.is_ally?
           return $party.active_battlers.select{ |b| b.attackable? }
         else          
           return @enemies.select{ |b| b.attackable? }
@@ -20223,9 +20310,10 @@ class Game_Battle
 
       when 'any'
         targets = $party.active_battlers.select{ |b| b.attackable? }
-        targets.count.times{
-          targets += (@enemies.select{ |b| b.attackable? })
-        }
+        targets += (@enemies.select{ |b| b.attackable? })
+        targets += (@enemies.select{ |b| b.attackable? })
+        targets += (@enemies.select{ |b| b.attackable? })
+        targets += (@enemies.select{ |b| b.attackable? })
 
         return [targets.sample]
 
@@ -20339,7 +20427,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"È+#==============================================================================
+end"Ê+#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -20681,7 +20769,7 @@ class Game_Party
     # -----------------------------------
 
     set_active("boy")
-    set_active("rob")
+    # set_active("rob")
     #set_active("ing")
     #set_active("mys")
     # set_active("rob")
@@ -21382,7 +21470,7 @@ class Scene_Base
   # end
 
 end
-"#==============================================================================
+"*#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -21416,6 +21504,7 @@ class Scene_Battle < Scene_Base
     # Init player and camera 
     @player.moveto(0,0)
     @player.static
+    @player.opacity = 0
     @map.camera_to(@player)
 
     # Slide camera up
@@ -21598,7 +21687,7 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
-    #$debug.track(self,"phase")
+    $debug.track(self,"phase")
 
     # Wait count here
     if @wait_frames > 0
@@ -21703,7 +21792,7 @@ class Scene_Battle < Scene_Base
 
   end
 
-end"
+end"á
 class Scene_Battle
 
   def phase_intro_init
@@ -21785,6 +21874,16 @@ class Scene_Battle
           @active_battler = $battle.enemies[action[1]]
           @phase = :main_prep
 
+        when :ally
+
+          @skill = true
+
+          $battle.allies[0].set_action(action[2])
+
+          @battle_queue = []
+          @active_battler = $battle.allies[action[1]]
+          @phase = :main_prep
+
         when :escape      
 
           @phase = :misc_escape
@@ -21802,7 +21901,7 @@ class Scene_Battle
 
   end
 
-end"2
+end"‘
 
 class Scene_Battle
 
@@ -22048,9 +22147,11 @@ class Scene_Battle
       @phase = :main_init
     else
       @active_battler = $party.actor_by_index(@actor_idx)
-      if @active_battler.down?
+      if @active_battler.down? || @active_battler == nil
         return # Get the next one, this actor is done
       else
+        log_scr @active_battler
+        log_scr @active_battler.id
         $scene.hud.deselect_all
         @actor_cmd.setup(@active_battler)
         @active_battler.view.select
@@ -22060,7 +22161,7 @@ class Scene_Battle
     
   end
 
-end"Ž)
+end"¨(
 class Scene_Battle
 
   def phase_main_init
@@ -22164,22 +22265,6 @@ class Scene_Battle
       end
 
     end
-
-    # If rez, random if up, or cancel
-    # NO JUST USE UP THE CASSIA
-    # if ['down'].include?(@active_battler.scope)
-
-    #   # Check if target is down
-    #   if !@active.battler.target.down?
-
-    #     # Try to find an alternate target, else cancel
-
-    #   end
-
-    #   #@attack_plan.cancel
-    #   #@phase = :main_next
-    #   #return
-    # end
 
     # -----------------------------
 
@@ -22309,6 +22394,11 @@ class Scene_Battle
 
         # Heal
         if result.heal > 0
+
+          if result.revive
+            result.target.revive
+            result.target.view.revive if result.target.view
+          end
 
           result.target.heal(result.heal)
           pop_dmg(result.target.ev,result.heal)
@@ -22504,7 +22594,7 @@ class Scene_Battle
 
       # End multi stage attacks early if user is incapable of attack
 
-      @active_attack = @attack_plan.next_attack
+      @attack_round = @attack_plan.next_attack
       @phase = :main_start
       return
 
@@ -22539,7 +22629,7 @@ class Scene_Battle
 
   end
 
-end"q
+end"s
 class Scene_Battle
 
   def phase_victory_init
@@ -22563,7 +22653,7 @@ class Scene_Battle
       speaker = $party.alive_members.sample.id
 
       # What will they say?
-      idx = 1#rand(1)
+      idx = rand(3) + 1
       text = $data.victories["#{speaker}-#{idx}"].dialogue
 
     end
@@ -25377,7 +25467,7 @@ class FontManager
 		return @scratch.text_size(text)
 	end
 
-end"	#==============================================================================
+end"[	#==============================================================================
 # ** Game Manager
 #==============================================================================
 
@@ -25453,6 +25543,7 @@ class GameManager
     @scenes.shift.terminate
     $scene = @scenes[0]
     $scene.viz if $scene != nil
+    $scene.map.need_refresh = true if $scene.is_a?(Scene_Map)
   end
 
   def sub_scene
