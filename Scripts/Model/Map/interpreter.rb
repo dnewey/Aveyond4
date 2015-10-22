@@ -133,7 +133,7 @@ class Interpreter
         # Set up event
 
         # Make sure autoruns don't run a second time if disabled
-        return if e.disabled || e.deleted || e.erased
+        next if e.disabled || e.deleted || e.erased
 
         setup(e.list, e.id) 
         
