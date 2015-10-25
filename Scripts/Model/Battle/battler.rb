@@ -39,7 +39,7 @@ class Game_Battler
     @stat_mods = {}
    
     @xp = 0
-    @level = 1
+    @level = 150
 
     @equips = {}
 

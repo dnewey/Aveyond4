@@ -12,6 +12,8 @@ class Interpreter
   
   attr_accessor :battlemap
 
+  attr_reader :move_route_waiting
+
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     depth : nest depth

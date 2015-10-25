@@ -7,6 +7,13 @@ class Scene_Battle
   #==============================================================================
 
   def phase_actor_init
+
+    # If party can't attack
+    if $party.all_battlers.select{ | b| b.can_attack? }.empty?
+      @phase = :main_init
+      return
+    end
+
     @actor_idx = -1  
     @phase = :actor_next
   end
@@ -247,8 +254,6 @@ class Scene_Battle
       if @active_battler.down? || @active_battler == nil
         return # Get the next one, this actor is done
       else
-        log_scr @active_battler
-        log_scr @active_battler.id
         $scene.hud.deselect_all
         @actor_cmd.setup(@active_battler)
         @active_battler.view.select

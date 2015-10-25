@@ -48,7 +48,7 @@ class Scene_Battle
     @attack_round = @attack_plan.next_attack
 
     # If this player has been defeated, skip
-    if @active_battler.down?
+    if !@active_battler.can_attack?
       @attack_plan.cancel
       @phase = :main_next
       return
@@ -125,7 +125,7 @@ class Scene_Battle
       @last_attack = @attack_round.skill
 
     else
-      wait(3)
+      wait(5)
     end
 
     @active_battler.attack_sfx
@@ -144,6 +144,7 @@ class Scene_Battle
       speaker = "A.#{$party.active.index(@active_battler.id)}"
       $scene.message.start(speaker+': '+@attack_round.text)
       #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
+      wait(15)
     end
 
     @attack_results.each{ |result|
@@ -154,7 +155,7 @@ class Scene_Battle
     }
 
     @phase = :main_anim
-    wait(15)
+    
 
   end
 
@@ -250,7 +251,7 @@ class Scene_Battle
 
     # Onto the next
     @phase = :main_crit
-    wait(1)
+    #wait(1)
 
   end
 
@@ -262,6 +263,7 @@ class Scene_Battle
         # Play nice noise
         sys 'attack'
         pop_crit(result.target.ev)
+        wait(10)
 
       end
 
@@ -271,6 +273,7 @@ class Scene_Battle
         # Play nice noise
         sfx 'whoosh2'
         pop_evade(result.target.ev)
+        wait(10)
 
       end
 
@@ -280,6 +283,7 @@ class Scene_Battle
         # Play nice noise
         sfx 'whoosh2'
         pop_resist(result.target.ev)
+        wait(10)
 
       end
 
@@ -287,7 +291,7 @@ class Scene_Battle
 
     # Onto the next
     @phase = :main_gain
-    wait(1)
+    #wait(1)
 
   end
 
@@ -317,7 +321,7 @@ class Scene_Battle
     }
 
     @phase = :main_state
-    wait(1)
+    #wait(1)
 
   end
 
@@ -332,6 +336,7 @@ class Scene_Battle
         x = $battle.minion.ev.screen_x
         y = $battle.minion.ev.screen_y - 16
         add_spark('redstar',x,y)
+        wait(20) # Might wait only if a state was aded
       end
 
       if result.state_remove
@@ -340,20 +345,16 @@ class Scene_Battle
 
           if result.target.state?(result.state_remove)
             result.target.remove_state(result.state_remove)            
-            result.target.ev.icons.delete(result.state_remove)
+            wait(20) # Might wait only if a state was aded
+            #result.target.ev.icons.delete(result.state_remove)
           end
 
       end
 
       if result.state_add
 
-        # Only if a new state, else refresh
-        if result.target.state?(result.state_add)
-          # refresh it
-          next
-        end
-
         result.target.add_state(result.state_add)
+        wait(20) # Might wait only if a state was aded
         #pop_state(result.target.ev,result.state_add)
         
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
@@ -364,7 +365,7 @@ class Scene_Battle
     }
 
     @phase = :main_tick
-    wait(20) # Might wait only if a state was aded
+    
 
   end
 

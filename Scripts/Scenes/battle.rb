@@ -128,6 +128,7 @@ class Scene_Battle < Scene_Base
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
         ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+        @target_cmd.serpent = true if $battle.enemy_list[i] == "boss-demon-3"
       else
         hide(ev)
       end
@@ -215,7 +216,7 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
-    $debug.track(self,"phase")
+    #$debug.track(self,"phase")
 
     # Wait count here
     if @wait_frames > 0

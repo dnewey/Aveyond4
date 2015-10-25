@@ -15,8 +15,10 @@ class Game_Battler
   end
 
   def add_state(state_id)
-    @states.push(state_id)
+    @states.push(state_id) if !@states.include?(state_id)
     @states_counter[state_id] = 0
+    log_info(@states_counter.keys)
+    log_info(@states_counter.values)
     ev.icons = @states if ev
   end
 
@@ -71,11 +73,13 @@ class Game_Battler
 
     
     # Add a turn to the counter
-    @states_counter.values.each{ |v| v += 1 }
+    @states_counter.each{ |k,v| 
+      @states_counter[k] = v + 1
+    }
 
     # If done
     @states.delete_if{ |s| 
-      next if $data.states[s].rmv_turn == 0
+      next if $data.states[s].rmv_turn == 0 # Don't remove if 0
       @states_counter[s] >= $data.states[s].rmv_turn 
     }
 

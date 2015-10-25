@@ -2,6 +2,7 @@
 class TargetCmd
 
 	attr_reader :active
+	attr_accessor :serpent
 
 	def initialize(vp)
 
@@ -18,6 +19,9 @@ class TargetCmd
 		@active = nil
 
 		@idx = 0
+
+		# Fighting serpent
+		@serpent = false
 
 	end
 
@@ -38,14 +42,26 @@ class TargetCmd
 
 		@arrow.do(pingpong("oy",7,400,:qio))
 
-		# Arrow pos
-		@active = targets[0]
-		point_at(targets[0])
+		# Special if fighting serpent
+		if @serpent
+
+			# Arrow pos
+			t = rand(3)
+			@active = targets[t]
+			point_at(targets[t])
+
+		else
+
+			# Arrow pos
+			@active = targets[0]
+			point_at(targets[0])
+
+		end
 
 	end
 
 	def point_at(char)
-		@arrow.center(char.ev.screen_x,char.ev.screen_y-($cache.get("Characters/"+char.ev.character_name).height/4)-6)
+		@arrow.center(char.ev.screen_x,char.ev.screen_y-char.ev.gfx_height-6)
 		@active.ev.flash_dur = 15
 
 		$scene.hud.set_help(char.name)
@@ -123,7 +139,7 @@ class TargetCmd
 			next if i == @active
 			next if pos[0] < i.ev.screen_x - 20
 			next if pos[0] > i.ev.screen_x + 20
-			next if pos[1] < i.ev.screen_y - 64
+			next if pos[1] < i.ev.screen_y - i.ev.gfx_height
 			next if pos[1] > i.ev.screen_y
 			@active = i
 			point_at(@active)

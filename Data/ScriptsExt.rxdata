@@ -6667,10 +6667,11 @@ class SkillCmd < ItemCmd
 
 	end
 
-end"p
+end"5	
 class TargetCmd
 
 	attr_reader :active
+	attr_accessor :serpent
 
 	def initialize(vp)
 
@@ -6687,6 +6688,9 @@ class TargetCmd
 		@active = nil
 
 		@idx = 0
+
+		# Fighting serpent
+		@serpent = false
 
 	end
 
@@ -6707,14 +6711,26 @@ class TargetCmd
 
 		@arrow.do(pingpong("oy",7,400,:qio))
 
-		# Arrow pos
-		@active = targets[0]
-		point_at(targets[0])
+		# Special if fighting serpent
+		if @serpent
+
+			# Arrow pos
+			t = rand(3)
+			@active = targets[t]
+			point_at(targets[t])
+
+		else
+
+			# Arrow pos
+			@active = targets[0]
+			point_at(targets[0])
+
+		end
 
 	end
 
 	def point_at(char)
-		@arrow.center(char.ev.screen_x,char.ev.screen_y-($cache.get("Characters/"+char.ev.character_name).height/4)-6)
+		@arrow.center(char.ev.screen_x,char.ev.screen_y-char.ev.gfx_height-6)
 		@active.ev.flash_dur = 15
 
 		$scene.hud.set_help(char.name)
@@ -6792,7 +6808,7 @@ class TargetCmd
 			next if i == @active
 			next if pos[0] < i.ev.screen_x - 20
 			next if pos[0] > i.ev.screen_x + 20
-			next if pos[1] < i.ev.screen_y - 64
+			next if pos[1] < i.ev.screen_y - i.ev.gfx_height
 			next if pos[1] > i.ev.screen_y
 			@active = i
 			point_at(@active)
@@ -14228,7 +14244,7 @@ class Mnu_Title
 		return @closing && $tweens.done?(self)
 	end
 
-end"³#==============================================================================
+end"µ#==============================================================================
 # ** Game_Battler (part 1)
 #==============================================================================
 
@@ -14269,7 +14285,7 @@ class Game_Battler
     @stat_mods = {}
    
     @xp = 0
-    @level = 1
+    @level = 150
 
     @equips = {}
 
@@ -14872,7 +14888,7 @@ class Game_Battler
     return 1.0
   end
 
-end"W
+end"ð
 class Game_Battler
 
 
@@ -14889,8 +14905,10 @@ class Game_Battler
   end
 
   def add_state(state_id)
-    @states.push(state_id)
+    @states.push(state_id) if !@states.include?(state_id)
     @states_counter[state_id] = 0
+    log_info(@states_counter.keys)
+    log_info(@states_counter.values)
     ev.icons = @states if ev
   end
 
@@ -14945,11 +14963,13 @@ class Game_Battler
 
     
     # Add a turn to the counter
-    @states_counter.values.each{ |v| v += 1 }
+    @states_counter.each{ |k,v| 
+      @states_counter[k] = v + 1
+    }
 
     # If done
     @states.delete_if{ |s| 
-      next if $data.states[s].rmv_turn == 0
+      next if $data.states[s].rmv_turn == 0 # Don't remove if 0
       @states_counter[s] >= $data.states[s].rmv_turn 
     }
 
@@ -17852,7 +17872,7 @@ class Game_Event < Game_Character
     refresh
   end
 
-end"::#==============================================================================
+end"_:#==============================================================================
 # ** Interpreter
 #==============================================================================
 
@@ -17865,6 +17885,8 @@ class Interpreter
   attr_accessor :event_id
   
   attr_accessor :battlemap
+
+  attr_reader :move_route_waiting
 
   #--------------------------------------------------------------------------
   # * Object Initialization
@@ -21470,7 +21492,7 @@ class Scene_Base
   # end
 
 end
-"*#==============================================================================
+"z#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -21600,6 +21622,7 @@ class Scene_Battle < Scene_Base
       if $battle.enemies.count > i
         $battle.enemies[i].ev = ev
         ev.character_name = "Monsters/#{$battle.enemy_list[i]}"
+        @target_cmd.serpent = true if $battle.enemy_list[i] == "boss-demon-3"
       else
         hide(ev)
       end
@@ -21687,7 +21710,7 @@ class Scene_Battle < Scene_Base
 
   def update_phase
 
-    $debug.track(self,"phase")
+    #$debug.track(self,"phase")
 
     # Wait count here
     if @wait_frames > 0
@@ -21901,7 +21924,7 @@ class Scene_Battle
 
   end
 
-end"‘
+end"ß
 
 class Scene_Battle
 
@@ -21910,6 +21933,13 @@ class Scene_Battle
   #==============================================================================
 
   def phase_actor_init
+
+    # If party can't attack
+    if $party.all_battlers.select{ | b| b.can_attack? }.empty?
+      @phase = :main_init
+      return
+    end
+
     @actor_idx = -1  
     @phase = :actor_next
   end
@@ -22150,8 +22180,6 @@ class Scene_Battle
       if @active_battler.down? || @active_battler == nil
         return # Get the next one, this actor is done
       else
-        log_scr @active_battler
-        log_scr @active_battler.id
         $scene.hud.deselect_all
         @actor_cmd.setup(@active_battler)
         @active_battler.view.select
@@ -22161,7 +22189,7 @@ class Scene_Battle
     
   end
 
-end"¨(
+end"Ø(
 class Scene_Battle
 
   def phase_main_init
@@ -22211,7 +22239,7 @@ class Scene_Battle
     @attack_round = @attack_plan.next_attack
 
     # If this player has been defeated, skip
-    if @active_battler.down?
+    if !@active_battler.can_attack?
       @attack_plan.cancel
       @phase = :main_next
       return
@@ -22288,7 +22316,7 @@ class Scene_Battle
       @last_attack = @attack_round.skill
 
     else
-      wait(3)
+      wait(5)
     end
 
     @active_battler.attack_sfx
@@ -22307,6 +22335,7 @@ class Scene_Battle
       speaker = "A.#{$party.active.index(@active_battler.id)}"
       $scene.message.start(speaker+': '+@attack_round.text)
       #$scene.message.start(@active_battler.ev.name+':'+@attack_round.text)
+      wait(15)
     end
 
     @attack_results.each{ |result|
@@ -22317,7 +22346,7 @@ class Scene_Battle
     }
 
     @phase = :main_anim
-    wait(15)
+    
 
   end
 
@@ -22413,7 +22442,7 @@ class Scene_Battle
 
     # Onto the next
     @phase = :main_crit
-    wait(1)
+    #wait(1)
 
   end
 
@@ -22425,6 +22454,7 @@ class Scene_Battle
         # Play nice noise
         sys 'attack'
         pop_crit(result.target.ev)
+        wait(10)
 
       end
 
@@ -22434,6 +22464,7 @@ class Scene_Battle
         # Play nice noise
         sfx 'whoosh2'
         pop_evade(result.target.ev)
+        wait(10)
 
       end
 
@@ -22443,6 +22474,7 @@ class Scene_Battle
         # Play nice noise
         sfx 'whoosh2'
         pop_resist(result.target.ev)
+        wait(10)
 
       end
 
@@ -22450,7 +22482,7 @@ class Scene_Battle
 
     # Onto the next
     @phase = :main_gain
-    wait(1)
+    #wait(1)
 
   end
 
@@ -22480,7 +22512,7 @@ class Scene_Battle
     }
 
     @phase = :main_state
-    wait(1)
+    #wait(1)
 
   end
 
@@ -22495,6 +22527,7 @@ class Scene_Battle
         x = $battle.minion.ev.screen_x
         y = $battle.minion.ev.screen_y - 16
         add_spark('redstar',x,y)
+        wait(20) # Might wait only if a state was aded
       end
 
       if result.state_remove
@@ -22503,20 +22536,16 @@ class Scene_Battle
 
           if result.target.state?(result.state_remove)
             result.target.remove_state(result.state_remove)            
-            result.target.ev.icons.delete(result.state_remove)
+            wait(20) # Might wait only if a state was aded
+            #result.target.ev.icons.delete(result.state_remove)
           end
 
       end
 
       if result.state_add
 
-        # Only if a new state, else refresh
-        if result.target.state?(result.state_add)
-          # refresh it
-          next
-        end
-
         result.target.add_state(result.state_add)
+        wait(20) # Might wait only if a state was aded
         #pop_state(result.target.ev,result.state_add)
         
         #result.target.ev.pulse_colors.push($data.states[result.state_add].color)
@@ -22527,7 +22556,7 @@ class Scene_Battle
     }
 
     @phase = :main_tick
-    wait(20) # Might wait only if a state was aded
+    
 
   end
 
