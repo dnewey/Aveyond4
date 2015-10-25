@@ -5,8 +5,7 @@
 class MouseManager
 
   attr_reader :hwnd, :wheel
-  attr_accessor :mousing
-
+  
   #--------------------------------------------------------------------------
   # * API Declaration
   #--------------------------------------------------------------------------
@@ -39,6 +38,16 @@ class MouseManager
     return [x.to_i,y.to_i]
   end
   def on_screen?() !(@pos[0] < 0 || @pos[1] < 0 || @pos[0] >= 640 || @pos[1] >= 480); end
+
+  def unmouse
+    @mousing = false
+    hide_cursor
+  end
+
+  def remouse
+    @mousing = true
+    show_cursor
+  end
         
   #--------------------------------------------------------------------------
   # * Update Mouse Position
@@ -64,7 +73,7 @@ class MouseManager
       @pos = pos2
       @sprite.x = @pos[0]
       @sprite.y = @pos[1]
-      @mousing = true
+      remouse
     end
 
     #on_screen?.to_i) # on_screen && mouse_mode

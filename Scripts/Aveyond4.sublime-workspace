@@ -136,6 +136,14 @@
 			}
 		},
 		{
+			"file": "System/mouse.rb",
+			"settings":
+			{
+				"buffer_size": 2366,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "Scenes/battle_2_actor.rb",
 			"settings":
 			{
@@ -152,13 +160,21 @@
 			}
 		},
 		{
-			"contents": "Searching 237 files for \"next_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\result.rb:\n   48  	end\n   49  \n   50: 	def next_attack\n   51  		return @attacks.shift\n   52  	end\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n   46    	# Calculate results now, then play out the anims\n   47    	@attack_plan = $battle.build_attack_plan(@active_battler)\n   48:     @attack_round = @attack_plan.next_attack\n   49  \n   50      # If this player has been defeated, skip\n   ..\n  447        # End multi stage attacks early if user is incapable of attack\n  448  \n  449:       @active_attack = @attack_plan.next_attack\n  450        @phase = :main_start\n  451        return\n\n3 matches across 2 files\n\n\nSearching 237 files for \"bqs\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\battle.rb:\n    1  \n    2: def bqs(skill,turn)\n    3  	$battle.queue_sill(skill,turn)\n    4  end\n\n1 match in 1 file\n\n\nSearching 238 files for \"can_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  314    end\n  315  \n  316:   def can_attack?\n  317  \n  318      # Any states stopping this?\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  260      end\n  261  \n  262:     queue.delete_if{ |b| !b.can_attack? }\n  263  \n  264      # Sort by priority, random within same\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n   18    def phase_actor_action\n   19  \n   20:     if !@active_battler.can_attack?\n   21        @phase = :actor_next\n   22        return\n\n3 matches across 3 files\n\n\nSearching 238 files for \"rmv_turn\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   76      # If done\n   77      @states.delete_if{ |s| \n   78:       next if $data.states[s].rmv_turn == 0\n   79:       @states_counter[s] >= $data.states[s].rmv_turn \n   80      }\n   81  \n\nC:\\Aveyond4\\Scripts\\Utils\\data_types.rb:\n   78  	attr_reader :rmv_battle\n   79  	attr_reader :rmv_shock\n   80: 	attr_reader :rmv_turn	\n   81  end\n   82  \n\nC:\\Aveyond4\\Editor\\json\\states.json:\n    1: [{\"id\":\"poison\",\"name\":\"Poison\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1437746720404\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"web\",\"name\":\"Webbed\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542961612\",\"remove\":\"\",\"color\":\"\",\"stun\":\"true\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"1\"},{\"id\":\"stun\",\"name\":\"Stunned\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542961775\",\"remove\":\"\",\"color\":\"\",\"stun\":\"true\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"2\"},{\"id\":\"sleep\",\"name\":\"Asleep\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542962044\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"cursed\",\"name\":\"Cursed\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542962197\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"empower\",\"name\":\"Empower Minion\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1440827776386\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"bleed\",\"name\":\"Bleed\",\"stats\":\"\",\"mods\":\"\",\"remove\":\"\",\"color\":\"\",\"modified\":\"1440982186030\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"protect\",\"name\":\"Protect\",\"stats\":\"\",\"mods\":\"\",\"remove\":\"\",\"color\":\"\",\"modified\":\"1440982186030\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"crit\",\"name\":\"Critical\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"1\",\"modified\":\"1444435040650\"},{\"id\":\"protect\",\"name\":\"Protect\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"1\",\"modified\":\"1444631327835\"},{\"id\":\"curse-life\",\"name\":\"Curse of Life\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"2\",\"modified\":\"1444642896628\"},{\"id\":\"curse-pain\",\"name\":\"Curse of Pain\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"0\",\"modified\":\"1444642896628\"},{\"id\":\"confuse\",\"name\":\"Confuse\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"0\",\"modified\":\"1444642896628\"},{\"id\":\"galahad\",\"name\":\"Galahad\",\"color\":\"\",\"stats\":\"\",\"mods\":\"def:4.0\\nstr:5.0\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"0\",\"modified\":\"1445251029754\"}]\n\nC:\\Aveyond4\\Editor\\meta\\states.json:\n   31    },\n   32    {\n   33:     \"field\": \"rmv_turn\",\n   34      \"default\": \"0\"\n   35    }\n\n18 matches across 4 files\n\n\nSearching 239 files for \"can_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  314    end\n  315  \n  316:   def can_attack?\n  317  \n  318      # Any states stopping this?\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  260      end\n  261  \n  262:     queue.delete_if{ |b| !b.can_attack? }\n  263  \n  264      # Sort by priority, random within same\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n   18    def phase_actor_action\n   19  \n   20:     if !@active_battler.can_attack?\n   21        @phase = :actor_next\n   22        return\n\n3 matches across 3 files\n\n\nSearching 239 files for \"can_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  314    end\n  315  \n  316:   def can_attack?\n  317  \n  318      # Any states stopping this?\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  260      end\n  261  \n  262:     queue.delete_if{ |b| !b.can_attack? }\n  263  \n  264      # Sort by priority, random within same\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n   18    def phase_actor_action\n   19  \n   20:     if !@active_battler.can_attack?\n   21        @phase = :actor_next\n   22        return\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n   49  \n   50      # If this player has been defeated, skip\n   51:     if !@active_battler.can_attack?\n   52        @attack_plan.cancel\n   53        @phase = :main_next\n\n4 matches across 4 files\n\n\nSearching 238 files for \"add_state\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   15    end\n   16  \n   17:   def add_state(state_id)\n   18      @states.push(state_id) if !@states.include?(state_id)\n   19      @states_counter[state_id] = 0\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n  328        # Empower minion\n  329        if result.empower\n  330:         $battle.minion.add_state('empower')\n  331          $battle.minion.ev.character_name = $battle.minion.ev.character_name + '-wild'\n  332          x = $battle.minion.ev.screen_x\n  ...\n  354          end\n  355  \n  356:         result.target.add_state(result.state_add)\n  357          #pop_state(result.target.ev,result.state_add)\n  358          \n\n3 matches across 2 files\n\n\nSearching 238 files for \"add_state\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   15    end\n   16  \n   17:   def add_state(state_id)\n   18      @states.push(state_id) if !@states.include?(state_id)\n   19      @states_counter[state_id] = 0\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n  328        # Empower minion\n  329        if result.empower\n  330:         $battle.minion.add_state('empower')\n  331          $battle.minion.ev.character_name = $battle.minion.ev.character_name + '-wild'\n  332          x = $battle.minion.ev.screen_x\n  ...\n  354          end\n  355  \n  356:         result.target.add_state(result.state_add)\n  357          #pop_state(result.target.ev,result.state_add)\n  358          \n\n3 matches across 2 files\n\n\nSearching 238 files for \"get_height\" (case sensitive)\n\n0 matches\n\nSearching 238 files for \"char_height\" (case sensitive)\n\n0 matches",
+			"contents": "Searching 237 files for \"next_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\result.rb:\n   48  	end\n   49  \n   50: 	def next_attack\n   51  		return @attacks.shift\n   52  	end\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n   46    	# Calculate results now, then play out the anims\n   47    	@attack_plan = $battle.build_attack_plan(@active_battler)\n   48:     @attack_round = @attack_plan.next_attack\n   49  \n   50      # If this player has been defeated, skip\n   ..\n  447        # End multi stage attacks early if user is incapable of attack\n  448  \n  449:       @active_attack = @attack_plan.next_attack\n  450        @phase = :main_start\n  451        return\n\n3 matches across 2 files\n\n\nSearching 237 files for \"bqs\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Functions\\battle.rb:\n    1  \n    2: def bqs(skill,turn)\n    3  	$battle.queue_sill(skill,turn)\n    4  end\n\n1 match in 1 file\n\n\nSearching 238 files for \"can_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  314    end\n  315  \n  316:   def can_attack?\n  317  \n  318      # Any states stopping this?\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  260      end\n  261  \n  262:     queue.delete_if{ |b| !b.can_attack? }\n  263  \n  264      # Sort by priority, random within same\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n   18    def phase_actor_action\n   19  \n   20:     if !@active_battler.can_attack?\n   21        @phase = :actor_next\n   22        return\n\n3 matches across 3 files\n\n\nSearching 238 files for \"rmv_turn\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   76      # If done\n   77      @states.delete_if{ |s| \n   78:       next if $data.states[s].rmv_turn == 0\n   79:       @states_counter[s] >= $data.states[s].rmv_turn \n   80      }\n   81  \n\nC:\\Aveyond4\\Scripts\\Utils\\data_types.rb:\n   78  	attr_reader :rmv_battle\n   79  	attr_reader :rmv_shock\n   80: 	attr_reader :rmv_turn	\n   81  end\n   82  \n\nC:\\Aveyond4\\Editor\\json\\states.json:\n    1: [{\"id\":\"poison\",\"name\":\"Poison\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1437746720404\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"web\",\"name\":\"Webbed\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542961612\",\"remove\":\"\",\"color\":\"\",\"stun\":\"true\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"1\"},{\"id\":\"stun\",\"name\":\"Stunned\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542961775\",\"remove\":\"\",\"color\":\"\",\"stun\":\"true\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"2\"},{\"id\":\"sleep\",\"name\":\"Asleep\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542962044\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"cursed\",\"name\":\"Cursed\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1439542962197\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"empower\",\"name\":\"Empower Minion\",\"stats\":\"\",\"mods\":\"\",\"modified\":\"1440827776386\",\"remove\":\"\",\"color\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"bleed\",\"name\":\"Bleed\",\"stats\":\"\",\"mods\":\"\",\"remove\":\"\",\"color\":\"\",\"modified\":\"1440982186030\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"protect\",\"name\":\"Protect\",\"stats\":\"\",\"mods\":\"\",\"remove\":\"\",\"color\":\"\",\"modified\":\"1440982186030\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"0\"},{\"id\":\"crit\",\"name\":\"Critical\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"1\",\"modified\":\"1444435040650\"},{\"id\":\"protect\",\"name\":\"Protect\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"true\",\"rmv_turn\":\"1\",\"modified\":\"1444631327835\"},{\"id\":\"curse-life\",\"name\":\"Curse of Life\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"2\",\"modified\":\"1444642896628\"},{\"id\":\"curse-pain\",\"name\":\"Curse of Pain\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"0\",\"modified\":\"1444642896628\"},{\"id\":\"confuse\",\"name\":\"Confuse\",\"color\":\"\",\"stats\":\"\",\"mods\":\"\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"0\",\"modified\":\"1444642896628\"},{\"id\":\"galahad\",\"name\":\"Galahad\",\"color\":\"\",\"stats\":\"\",\"mods\":\"def:4.0\\nstr:5.0\",\"stun\":\"false\",\"rmv_battle\":\"true\",\"rmv_shock\":\"false\",\"rmv_turn\":\"0\",\"modified\":\"1445251029754\"}]\n\nC:\\Aveyond4\\Editor\\meta\\states.json:\n   31    },\n   32    {\n   33:     \"field\": \"rmv_turn\",\n   34      \"default\": \"0\"\n   35    }\n\n18 matches across 4 files\n\n\nSearching 239 files for \"can_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  314    end\n  315  \n  316:   def can_attack?\n  317  \n  318      # Any states stopping this?\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  260      end\n  261  \n  262:     queue.delete_if{ |b| !b.can_attack? }\n  263  \n  264      # Sort by priority, random within same\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n   18    def phase_actor_action\n   19  \n   20:     if !@active_battler.can_attack?\n   21        @phase = :actor_next\n   22        return\n\n3 matches across 3 files\n\n\nSearching 239 files for \"can_attack\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler.rb:\n  314    end\n  315  \n  316:   def can_attack?\n  317  \n  318      # Any states stopping this?\n\nC:\\Aveyond4\\Scripts\\Model\\State\\battle.rb:\n  260      end\n  261  \n  262:     queue.delete_if{ |b| !b.can_attack? }\n  263  \n  264      # Sort by priority, random within same\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_2_actor.rb:\n   18    def phase_actor_action\n   19  \n   20:     if !@active_battler.can_attack?\n   21        @phase = :actor_next\n   22        return\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n   49  \n   50      # If this player has been defeated, skip\n   51:     if !@active_battler.can_attack?\n   52        @attack_plan.cancel\n   53        @phase = :main_next\n\n4 matches across 4 files\n\n\nSearching 238 files for \"add_state\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   15    end\n   16  \n   17:   def add_state(state_id)\n   18      @states.push(state_id) if !@states.include?(state_id)\n   19      @states_counter[state_id] = 0\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n  328        # Empower minion\n  329        if result.empower\n  330:         $battle.minion.add_state('empower')\n  331          $battle.minion.ev.character_name = $battle.minion.ev.character_name + '-wild'\n  332          x = $battle.minion.ev.screen_x\n  ...\n  354          end\n  355  \n  356:         result.target.add_state(result.state_add)\n  357          #pop_state(result.target.ev,result.state_add)\n  358          \n\n3 matches across 2 files\n\n\nSearching 238 files for \"add_state\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\Model\\Battle\\battler_2_states.rb:\n   15    end\n   16  \n   17:   def add_state(state_id)\n   18      @states.push(state_id) if !@states.include?(state_id)\n   19      @states_counter[state_id] = 0\n\nC:\\Aveyond4\\Scripts\\Scenes\\battle_3_main.rb:\n  328        # Empower minion\n  329        if result.empower\n  330:         $battle.minion.add_state('empower')\n  331          $battle.minion.ev.character_name = $battle.minion.ev.character_name + '-wild'\n  332          x = $battle.minion.ev.screen_x\n  ...\n  354          end\n  355  \n  356:         result.target.add_state(result.state_add)\n  357          #pop_state(result.target.ev,result.state_add)\n  358          \n\n3 matches across 2 files\n\n\nSearching 238 files for \"get_height\" (case sensitive)\n\n0 matches\n\nSearching 238 files for \"char_height\" (case sensitive)\n\n0 matches\n\nSearching 238 files for \"mousing\" (case sensitive)\n\nC:\\Aveyond4\\Scripts\\System\\keyboard.rb:\n   44      result = !(check == 1 || check == 0)\n   45      # Disable mouse on keyboard input\n   46:     $mouse.mousing = false if key > 4 && result\n   47  		return result\n   48  	end\n\nC:\\Aveyond4\\Scripts\\System\\mouse.rb:\n   22      @sprite.ox = 32\n   23      @sprite.oy = 32\n   24:     @mousing = true # Disabled when keys pressed\n   25      @cursor = nil    \n   26      change_cursor(\"Default\")\n   ..\n   31    \n   32    def position() \n   33:     $settings.mouse && @mousing ? @pos : [-777,-777]\n   34    end\n   35    def grid() \n   ..\n   41  \n   42    def unmouse\n   43:     @mousing = false\n   44      hide_cursor\n   45    end\n   46  \n   47    def remouse\n   48:     @mousing = true\n   49      show_cursor\n   50    end\n\n5 matches across 2 files\n",
 			"settings":
 			{
-				"buffer_size": 7542,
+				"buffer_size": 8384,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
+			}
+		},
+		{
+			"file": "System/keyboard.rb",
+			"settings":
+			{
+				"buffer_size": 2248,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -409,6 +425,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"mousing",
 			"step",
 			"move_route_waiting",
 			"running",
@@ -535,8 +552,7 @@
 			"update_mouse",
 			"@grid.choose",
 			"choose",
-			"update_mouse",
-			"next_common"
+			"update_mouse"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -555,7 +571,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -645,7 +661,7 @@
 						"translation.y": 5026.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -735,7 +751,7 @@
 						"translation.y": 2109.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -823,7 +839,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -913,7 +929,7 @@
 						"translation.y": 3381.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1003,7 +1019,7 @@
 						"translation.y": 1321.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1093,7 +1109,7 @@
 						"translation.y": 4890.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1109,8 +1125,8 @@
 						"selection":
 						[
 							[
-								26085,
-								26085
+								26578,
+								26578
 							]
 						],
 						"settings":
@@ -1119,26 +1135,31 @@
 							"auto_complete": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -1149,11 +1170,6 @@
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
@@ -1164,16 +1180,16 @@
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content"
 							],
 							"syntax": "Packages/Ruby/Ruby.tmLanguage",
 							"tab_size": 2,
@@ -1183,11 +1199,101 @@
 						"translation.y": 17555.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 7,
+					"file": "System/mouse.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2366,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								281,
+								281
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
 					"file": "Scenes/battle_2_actor.rb",
 					"semi_transient": false,
 					"settings":
@@ -1273,11 +1379,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
 					"file": "Interface/Battle/Parts/targetcmd.rb",
 					"semi_transient": false,
 					"settings":
@@ -1362,15 +1468,15 @@
 						"translation.y": 513.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 10,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7542,
+						"buffer_size": 8384,
 						"regions":
 						{
 							"match":
@@ -1529,6 +1635,26 @@
 									[
 										7278,
 										7287
+									],
+									[
+										7747,
+										7754
+									],
+									[
+										7923,
+										7930
+									],
+									[
+										8104,
+										8111
+									],
+									[
+										8214,
+										8221
+									],
+									[
+										8307,
+										8314
 									]
 								],
 								"scope": ""
@@ -1537,8 +1663,8 @@
 						"selection":
 						[
 							[
-								7477,
-								7477
+								7749,
+								7749
 							]
 						],
 						"settings":
@@ -1546,26 +1672,31 @@
 							"BracketHighlighterBusy": false,
 							"bh_regions":
 							[
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
@@ -1576,11 +1707,6 @@
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
@@ -1591,20 +1717,20 @@
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content"
 							],
 							"detect_indentation": false,
 							"line_numbers": false,
-							"output_tag": 10,
+							"output_tag": 11,
 							"result_base_dir": "",
 							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
 							"result_line_regex": "^ +([0-9]+):",
@@ -1612,14 +1738,104 @@
 							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 4214.0,
+						"translation.y": 4256.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 11,
+					"file": "System/keyboard.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2248,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								753,
+								753
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"auto_complete": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content"
+							],
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 394.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
 					"file": "Model/Battle/battler_2_states.rb",
 					"semi_transient": false,
 					"settings":
@@ -1705,11 +1921,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 13,
 					"file": "Model/Battle/battler.rb",
 					"semi_transient": false,
 					"settings":
@@ -1795,11 +2011,11 @@
 						"translation.y": 5080.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 14,
 					"file": "Functions/battle.rb",
 					"semi_transient": false,
 					"settings":
@@ -1882,11 +2098,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 15,
 					"file": "/C/Aveyond4/README.md",
 					"semi_transient": false,
 					"settings":
@@ -1970,11 +2186,11 @@
 						"translation.y": 2622.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 16,
 					"file": "Model/Battle/result.rb",
 					"semi_transient": false,
 					"settings":
@@ -2059,7 +2275,7 @@
 						"translation.y": 477.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 16,
 					"type": "text"
 				}
 			]
@@ -2117,6 +2333,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"mouse",
+				"Scripts\\System\\mouse.rb"
+			],
 			[
 				"character",
 				"Scripts\\Model\\Map\\character.rb"
@@ -2180,10 +2400,6 @@
 			[
 				"list",
 				"Scripts\\Elements\\Widgets\\list.rb"
-			],
-			[
-				"mouse",
-				"Scripts\\System\\mouse.rb"
 			],
 			[
 				"input",

@@ -43,7 +43,7 @@ class KeyboardManager
 		check = KeyState.call(key) #& 0x80 == 128
     result = !(check == 1 || check == 0)
     # Disable mouse on keyboard input
-    $mouse.mousing = false if key > 4 && result
+    $mouse.unmouse if key > 4 && result
 		return result
 	end
 
