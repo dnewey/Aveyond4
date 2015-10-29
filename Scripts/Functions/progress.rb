@@ -16,6 +16,10 @@ def unquest(id)
 	pop_unquest(id)
 end
 
+def unquest_s(id)
+	$progress.end_quest(id)
+end
+
 def quest?(id)
 	return active?(id) || complete?(id)
 end

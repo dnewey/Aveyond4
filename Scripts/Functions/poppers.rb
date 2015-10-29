@@ -56,6 +56,9 @@ end
 
 def pop_use_skill(s,w)
 
+	# Take half cost
+	$party.get(w).lose_mana($data.skills[s].cost/2)
+
 	b = $data.skills[s].name
 	ib = $cache.icon($data.skills[s].icon)
 

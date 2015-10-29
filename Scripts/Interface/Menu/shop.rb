@@ -103,7 +103,7 @@ class Mnu_Shop < Mnu_Base
 			#}
 		end
 
-		if !@magic
+		if !@magic && @sellmode
 			@users.clear
 			@users.move(@item_box.x,@item_box.y + @item_box.height)
 			@users.add_stock(option)
@@ -200,6 +200,20 @@ class Mnu_Shop < Mnu_Base
 
 		change(list[@menu.list.idx])
 
+	end
+
+	def close
+
+		super
+
+		# Fade and hide grid
+		dist = 30
+		@users.all.each{ |b|
+			next if b.disposed?
+     		b.do(go("x",dist,200,:qio))
+     		b.do(go("opacity",-255,200,:qio))
+		}
+		
 	end
 
 end

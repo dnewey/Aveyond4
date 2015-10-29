@@ -135,6 +135,7 @@ class Scene_Menu
       when "Journal"; @menu = Mnu_Journal.new(@vp)
       when "Items"; @menu = Mnu_Items.new(@vp)
       when "Healing"; @menu = Mnu_Healing.new(@vp)
+      when "Equipping"; @menu = Mnu_Equipping.new(@vp)
       when "Party"; @menu = Mnu_Party.new(@vp)
       when "Progress"; @menu = Mnu_Progress.new(@vp)
       when "Options"; @menu = Mnu_Options.new(@vp)

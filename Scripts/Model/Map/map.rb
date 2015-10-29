@@ -70,6 +70,14 @@ class Game_Map
       # Parent name
       name = find_parent_name(@id)
     end
+
+    # Force rename from zone
+    if @zone.rename != '' && @zone.rename != nil
+      name = @zone.rename
+    end
+
+    log_sys name
+
     return name.split("#")[0].split("@")[0]
   end
 

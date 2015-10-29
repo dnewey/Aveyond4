@@ -31,5 +31,8 @@
   },
   {
     "field": "battles"
+  },
+  {
+    "field": "rename"
   }
 ]

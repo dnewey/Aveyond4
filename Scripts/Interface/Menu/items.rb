@@ -13,7 +13,7 @@ class Mnu_Items < Mnu_Base
 		@tabs.push("all")
 		@tabs.push("usable")
 		@tabs.push("keys")
-		@tabs.push("shop")
+		@tabs.push("gear")
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -55,7 +55,7 @@ class Mnu_Items < Mnu_Base
 		data = $party.items.keys
 
 		if option == 'all'
-			data = data.select{ |q| $data.items[q].tab != 'gear' }
+			#data = data.select{ |q| $data.items[q].tab != 'gear' }
 		end
 
 		if option == "usable"
@@ -63,11 +63,11 @@ class Mnu_Items < Mnu_Base
 		end
 
 		if option == "keys"
-			data = data.select{ |q| $data.items[q].tab == 'keys' }
+			data = data.select{ |q| $data.items[q].tab == 'keys' || $data.items[q].tab == 'shop' }
 		end
 
-		if option == "shop"
-			data = data.select{ |q| $data.items[q].tab == 'shop' }
+		if option == "gear"
+			data = data.select{ |q| $data.items[q].tab == 'gear' }
 		end
 
 		@menu.list.setup(data)
@@ -125,6 +125,12 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def select(option)	
+
+		if $data.items[option].is_a?(GearData)
+			$menu.use_item = option
+			$scene.queue_menu("Equipping")
+			close_soon
+		end
 
 		return if !$data.items[option].is_a?(UsableData)
 

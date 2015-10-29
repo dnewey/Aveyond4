@@ -130,7 +130,7 @@ class Mnu_Status < Mnu_Base
 	    cy += 30
 
 	    lbl = Label.new(vp)
-		lbl.icon = $cache.icon("stats/luck")
+		lbl.icon = $cache.icon("stats/luk")
 	    lbl.font = $fonts.pop_text
 	    lbl.text = "Luck: #{@char.luk}%"
 	    lbl.move(cx,cy)

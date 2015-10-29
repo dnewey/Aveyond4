@@ -33,6 +33,8 @@ class Ui_Info < SpriteGroup
 		@visible_gold = $party.gold
 		@visible_map = $map.nice_name
 
+		@visible_id = $map.id
+
 		refresh
 
 	end
@@ -65,12 +67,13 @@ class Ui_Info < SpriteGroup
 			@map.opacity += 5
 		end
 
-		refresh if @visible_gold != $party.gold || @visible_map != $map.name
+		refresh if @visible_gold != $party.gold || @visible_id != $map.id
 	end
 
 	def refresh
 		@visible_gold = $party.gold
 		@visible_map = $map.nice_name
+		@visible_id = $map.id
 
 		@map.text = @visible_map
 		@gold.text = @visible_gold.to_s

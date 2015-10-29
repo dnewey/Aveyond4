@@ -25,6 +25,8 @@ class MenuState
 	attr_accessor :chosen_ev
 	attr_accessor :choose_cat
 
+	attr_accessor :auto_slot
+
 
 	# Player position for saving
 	attr_accessor :player_x
@@ -52,6 +54,8 @@ class MenuState
 		@chosen = nil
 		@chosen_ev = nil
 		@choose_cat = nil
+
+		@auto_slot = nil # for going to equip from items
 		
 	end
 

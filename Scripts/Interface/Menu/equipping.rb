@@ -1,13 +1,13 @@
 #==============================================================================
-# ** Mnu_Healing
+# ** Mnu_Equipping
 #==============================================================================
 
-class Mnu_Healing < Mnu_Base
+class Mnu_Equipping < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
 
-		@title.change('items')
+		@title.change('equip')
 		@subtitle.text = "Choose target of item"
 
 		remove_menu
@@ -60,53 +60,61 @@ class Mnu_Healing < Mnu_Base
 		sx = 151
 		sy = 90
 
+		slot = $data.items[$menu.use_item].slot
+
+		users = $party.all_battlers.select{ |b| 
+			b.slots.include?(slot) ||
+			b.slots.include?(slot+'1') ||
+			b.slots.include?(slot+'2') 
+		}
+
 		@grid.move(cx,cy)
 
-		@grid.add_item_eater($party.active[0],$menu.use_item)
+		@grid.add_item_eq(users[0].id)
 
 		cx += sx
 		@grid.move(cx,cy)
 
-		if $party.active.count > 1
-			@grid.add_item_eater($party.active[1],$menu.use_item)
+		if users.count > 1
+			@grid.add_item_eq(users[1].id)
 		end
 
 		cx = 12
 		cy += sy
 		@grid.move(cx,cy)
 
-		if $party.active.count > 2
-			@grid.add_item_eater($party.active[2],$menu.use_item)
+		if users.count > 2
+			@grid.add_item_eq(users[2].id)
 		end
 
 		cx += sx
 		@grid.move(cx,cy)
 
-		if $party.active.count > 3
-			@grid.add_item_eater($party.active[3],$menu.use_item)
+		if users.count > 3
+			@grid.add_item_eq(users[3].id)
 		end
 
 		cx = 12
 		cy += sy
 		@grid.move(cx,cy)
 
-		if $party.reserve.count > 0
-			@grid.add_item_eater($party.reserve[0],$menu.use_item)
+		if users.count > 4
+			@grid.add_item_eq(users[4].id)
 		end
 
 		cx += sx
 		@grid.move(cx,cy)
 
-		if $party.reserve.count > 1
-			@grid.add_item_eater($party.reserve[1],$menu.use_item)
+		if users.count > 5
+			@grid.add_item_eq(users[5].id)
 		end
 
 		cx = 89
 		cy += sy
 		@grid.move(cx,cy)
 
-		if $party.reserve.count > 2
-			@grid.add_item_eater($party.reserve[2],$menu.use_item)
+		if users.count > 6
+			@grid.add_item_eq(users[6].id)
 		end
 
 	end
@@ -117,11 +125,6 @@ class Mnu_Healing < Mnu_Base
 		@grid.bars.each{ |b|
 			ex = false if !$tweens.done?(b)
 		}
-
-		if ex && $party.item_number($menu.use_item) == 0
-			$scene.queue_menu("Items")
-			close_now
-		end
 
 		# Cancel out of grid
 		if $input.cancel? || $input.rclick?
@@ -147,51 +150,13 @@ class Mnu_Healing < Mnu_Base
 			return if !$tweens.done?(b)
 		}
 
-		# Is it even going to do anything?
-		if $party.get(option).mp_from_item($menu.use_item) == 0
-			if $party.get(option).hp_from_item($menu.use_item) == 0
-				sys('deny')
-				return
-			end
-		end
+		$menu.auto_slot = $data.items[$menu.use_item].slot
+		$menu.use_item = nil
 
-		#sys('quest')
-		first = $data.items[$menu.use_item].action.split("\n")[0]
-		#log_info(first)
-		if first.include?('heal')
-			sys('eat')
-		elsif first.include?('mana')
-			sys('drink')
-		else
-			sfx 'heal'
-		end
-
-		# If cassia, do special sound
-
-		$party.lose_item($menu.use_item)
-		@item_grid.clear
-		@item_grid.move(@item_box.x,@item_box.y + @item_box.height)
-		@item_grid.add_stock($menu.use_item)
-
-		# Heal mana
-		if $party.get(option).mp_from_item($menu.use_item) > 0
-			idx = $party.all.index(option)*2
-			change = $party.get(option).mp_from_item($menu.use_item)
-			@grid.bars[idx].do(go("value",change,250,:qio))	
-			@grid.bars[idx].do(go("target",change,250,:qio))		
-		end
-
-		# Heal hp
-		if $party.get(option).hp_from_item($menu.use_item) > 0
-			idx = $party.all.index(option)*2+1
-			change = $party.get(option).hp_from_item($menu.use_item)
-			@grid.bars[idx].do(go("value",change,250,:qio))		
-			@grid.bars[idx].do(go("target",change,250,:qio))		
-		end		
-		
-		$party.get(option).use_item($menu.use_item)	
-
-		setup_grid if $menu.use_item == 'cassia'
+		# Jump to equip menu?
+		$menu.char = option
+		$scene.queue_menu("Equip")
+		close_soon
 		
 	end
 

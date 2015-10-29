@@ -28,7 +28,7 @@ class Page_Tabs < Sprite
     # Proc
     @change = nil
 
-    move(116,75)
+    move(116,78)
 
   end
 

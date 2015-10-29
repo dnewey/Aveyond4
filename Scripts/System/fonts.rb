@@ -104,10 +104,17 @@ class FontManager
 	    @message_big_shadow.color = Color.new(0,0,0,90)
 
 	    @namebox = Font.new
-	    @namebox.name = "Bitter"
-	    @namebox.size = 30
+	    @namebox.name = "Georgia"
+	    @namebox.size = 28
+	    #@namebox.bold = true
 	    @namebox.italic = true
 	    @namebox.gradient = true
+
+	   	# @namebox = Font.new
+	    # @namebox.name = "Bitter"
+	    # @namebox.size = 30
+	    # @namebox.italic = true
+	    # @namebox.gradient = true
 
 
 	    # Menus
@@ -137,8 +144,9 @@ class FontManager
 	    #@page_ttl.bold = true
 	    @page_ttl.color = Color.new(44,44,44)
 
+	    # UNUSED
 	   	@page_sub = Font.new
-		@page_sub.name = "Bitter"
+		@page_sub.name = "Georgia"
 	    @page_sub.size = 20
 	    #@page_ttl.bold = true
 	    @page_sub.color = Color.new(99,99,99)
@@ -161,8 +169,9 @@ class FontManager
 	    @hud_hp.size = 16
 	    @hud_hp.color = Color.new(255,255,255)
 
+	    # Might be unused
 	    @hud_hp_b = Font.new
-		@hud_hp_b.name = "Bitter"
+		@hud_hp_b.name = "Georgia"
 		@hud_hp_b.bold = true
 	    @hud_hp_b.size = 16
 	    @hud_hp_b.color = Color.new(99,99,99)
@@ -180,8 +189,8 @@ class FontManager
 	    @mini_b.color = Color.new(0,0,0)
 
 	    @save_tiny = Font.new
-	    @save_tiny.name = "Bitter"
-	    @save_tiny.size = 20 #30 good for big text
+	    @save_tiny.name = "Georgia"
+	    @save_tiny.size = 18 #30 good for big text
 	    #@message.gradient = true
 	    @save_tiny.color = Color.new(80,80,80)
 

@@ -191,7 +191,7 @@ class Game_Battler
     @equips.values.each{ |e|
       #log_info(e)
       next if e == nil
-      $data.items[e].stats.split("/n").each{ |s|
+      $data.items[e].stats.split("\n").each{ |s|
         dta = s.split("=>")
         if dta[0] == stat
           total += dta[1].to_i
@@ -206,7 +206,7 @@ class Game_Battler
     @equips.values.each{ |e|
       #log_info(e)
       next if e == nil
-      $data.items[e].mods.split("/n").each{ |s|
+      $data.items[e].mods.split("\n").each{ |s|
         #log_info(s)
         dta = s.split("=>")
         if dta[0] == stat
@@ -228,7 +228,7 @@ class Game_Battler
   def stat_mod_from_states(stat)
     total = 1.0
     @states.each{ |e|
-        $data.states[e].mods.split("/n").each{ |s|
+        $data.states[e].mods.split("\n").each{ |s|
         #log_info(s)
         dta = s.split("=>")
         if dta[0] == stat

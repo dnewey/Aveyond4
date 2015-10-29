@@ -69,13 +69,11 @@ class Game_Battler
 	def equip_result(new_equip)
 		# What is the stat
 		return ' ' if new_equip.stats == nil || new_equip.stats == ''
-		type = new_equip.stats.split("\n")[0].split("=>")[0]
+		#type = new_equip.stats.split("\n")[0].split("=>")[0]
 		slot = new_equip.slot
-		old = @equips[slot]
-		before = stat(type)
-		@equips[slot] = new_equip.id
-		after = stat(type)
-		@equips[slot] = old
+		
+		before, after = before_and_after(new_equip,slot)
+
 		res = (after - before).to_i.to_s
 		if after-before >= 0
 			res = "+#{res}"
@@ -87,13 +85,9 @@ class Game_Battler
 		
 		# What is the stat
 		# Check old and new
-		type = new_equip.stats.split("\n")[0].split("=>")[0]
+		#type = new_equip.stats.split("\n")[0].split("=>")[0]
 
-		old = @equips[slot]
-		before = stat(type)
-		@equips[slot] = new_equip.id
-		after = stat(type)
-		@equips[slot] = old
+		before, after = before_and_after(new_equip,slot)
 		
 		res = (after - before).to_i.to_s
 		if after-before >= 0
@@ -101,6 +95,17 @@ class Game_Battler
 		end
 		return [before,after,res]
 		
+	end
+
+	def before_and_after(new_equip,slot)
+
+		old = @equips[slot]
+		before = stat_list.inject{|sum,x| sum + x } #stat(type)
+		@equips[slot] = new_equip.id
+		after = stat_list.inject{|sum,x| sum + x } #stat(type)
+		@equips[slot] = old
+		return before,after
+
 	end
 
 end

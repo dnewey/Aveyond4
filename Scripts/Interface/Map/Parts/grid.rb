@@ -590,31 +590,59 @@ class Ui_Grid
      	cont.shadow = $fonts.list_shadow
      	cont.icon = $cache.icon("misc/diff-#{diff}")
      	cont.gradient = true
-     	cont.text = diff_name(diff)
+     	cont.text = case diff
+			when 'easy'
+				"Misunderstood - Easy Mode"
+			when 'mid'
+				"Villain - Normal Mode"
+			when 'hard'
+				"Super Villain - Expert Mode"
+		end
      	@contents.push(cont)
      	cont.move(@cx+10,@cy+7)
 
      	stat = Label.new(@vp)
         #stat.fixed_width = 250
-        stat.icon = $cache.icon("stats/attack")
+        stat.icon = $cache.icon("stats/str")
         stat.font = $fonts.pop_text
-        stat.text = "Enemies do 25% less damage"
+        stat.text = case diff
+			when 'easy'
+				"Enemies do 20% less damage"
+			when 'mid'
+				"Enemies do normal damage"
+			when 'hard'
+				"Enemies do 20% more damage"
+		end
         @extra.push(stat)
         stat.move(@cx+22,@cy+34)
 
         stat = Label.new(@vp)
         #stat.fixed_width = 250
-        stat.icon = $cache.icon("stats/targets")
+        stat.icon = $cache.icon("stats/phy-done")
         stat.font = $fonts.pop_text
-        stat.text = "Enemies respawn"
+        stat.text = case diff
+			when 'easy'
+				"Few enemies respawn"
+			when 'mid'
+				"Few enemies respawn"
+			when 'hard'
+				"Most enemies respawn"
+		end
         @extra.push(stat)
         stat.move(@cx+22,@cy+57)
 
         stat = Label.new(@vp)
         #stat.fixed_width = 250
-        stat.icon = $cache.icon("stats/restore")
+        stat.icon = $cache.icon("stats/heal")
         stat.font = $fonts.pop_text
-        stat.text = "Health is not restored when gaining levels"
+        stat.text = case diff
+			when 'easy'
+				"Health is restored when gaining levels"
+			when 'mid'
+				"Health is restored when gaining levels"
+			when 'hard'
+				"Health is not restored when gaining levels"
+		end
         @extra.push(stat)
         stat.move(@cx+22,@cy+80)
 
@@ -796,6 +824,97 @@ class Ui_Grid
 
 	end
 
+	def add_item_eq(id)
+
+		char = $party.get(id)
+
+		name = char.name
+
+		# Create new things
+		btn = add_part_box(id,145,83)
+
+		cont = Label.new(@vp)
+	    cont.font = $fonts.list
+	    cont.shadow = $fonts.list_shadow
+	    cont.gradient = true
+	    cont.text = name
+	    @contents.push(cont)
+	    cont.move(@cx+10,@cy+7)
+
+		if char == nil
+
+
+
+		else
+
+	     	port = Sprite.new(@vp)
+			port.bitmap = $cache.face_small(id)
+			port.bitmap = $cache.face_small(id+'-d') if char.down?
+			port.src_rect.height = port.height() 
+			@extra.push(port)
+			port.move(@cx+btn.width-port.width-9,@cy+70-port.height)
+			port.z += 50
+
+			mp_bar = Bar.new(@vp,121,9)
+			@bars.push(mp_bar)
+			mp_bar.opacity = 200
+			mp_bar.for('boy')
+			case char.id 
+				when 'boy','phy','ing'
+					mp_bar.for(char.id)
+				else
+					mp_bar.hide
+			end
+			mp_bar.max = char.maxmp
+			mp_bar.value = char.mp
+			#mp_bar.target = char.mp + char.mp_from_item(item)
+			mp_bar.move(@cx+12,@cy+46)
+			mp_bar.update
+			mp_bar.z += 52
+
+			mp_label = Sprite.new(@vp)
+			@extra.push(mp_label)
+			mp_label.opacity = 200
+			case char.id 
+				when 'boy'
+					mp_label.bitmap = $cache.menu_char("label-sp")
+				when 'phy'
+					mp_label.bitmap = $cache.menu_char("label-rp")
+				when 'ing'
+					mp_label.bitmap = $cache.menu_char("label-mp")
+				else
+					mp_label.hide
+			end			
+			mp_label.move(@cx+13,@cy + 39)
+			mp_label.z += 53
+
+			hp_bar = Bar.new(@vp,121,9)
+			@bars.push(hp_bar)
+			hp_bar.opacity = 200
+			hp_bar.for(:hp)
+			hp_bar.max = char.maxhp
+			hp_bar.value = char.hp
+			#hp_bar.target = char.hp + char.hp_from_item(item)
+			hp_bar.move(@cx+12,@cy+61)
+			hp_bar.update
+			hp_bar.z += 52
+
+			hp_label = Sprite.new(@vp)
+			@extra.push(hp_label)
+			hp_label.bitmap = $cache.menu_char("label-hp")
+			hp_label.opacity = 200
+			hp_label.move(@cx+13,@cy + 54)
+			hp_label.z += 53
+			
+	     	choose(@boxes[0].name) if @boxes.count == 1
+
+	     end
+
+     	# Next
+		@cy += btn.height + @spacing + 5
+
+	end
+
 	def add_part_box(name,w,h)
 		btn = Box.new(@vp,w,h)
      	btn.skin = $cache.menu_common("skin-plain")
@@ -805,17 +924,6 @@ class Ui_Grid
      	@boxes.push(btn)
      	btn.move(@cx,@cy)
      	return btn
-	end
-
-	def diff_name(diff)
-		case diff
-			when 'easy'
-				return "Bunny Protector - Easy Mode"
-			when 'mid'
-				return "Villain - Normal Mode"
-			when 'hard'
-				return "Super Villain - Expert Mode"
-		end
 	end
 
 	def get_box(option)

@@ -37,7 +37,7 @@ class Mnu_Equip < Mnu_Base
 		self.right.push(@port)
 
 		@item_box = Item_Box.new(vp)
-		@item_box.center(472,290)
+		@item_box.center(472,260)
 		@item_box.hide
 		#self.right.push(@item_box)
 
@@ -63,7 +63,13 @@ class Mnu_Equip < Mnu_Base
      		b.do(go("opacity",255,200,:qio))
 		}
 
+		if $menu.auto_slot != nil
+			$tweens.clear_all
+			choose($menu.auto_slot)
+		end
+
 		open
+
 
 	end
 
@@ -112,6 +118,8 @@ class Mnu_Equip < Mnu_Base
 			sys('deny')
 			return
 		end
+
+		$menu.auto_slot = nil
 
 
 		@slot = option
