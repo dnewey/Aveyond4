@@ -12,7 +12,7 @@ class Mnu_Equip < Mnu_Base
 
 		@char = $party.get($menu.char)
 
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "What will you wear?"
 
 		@menu.opacity = 0
 		@menu.move(15,192)

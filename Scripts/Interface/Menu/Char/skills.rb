@@ -10,7 +10,7 @@ class Mnu_Skills < Mnu_Base
 		@title.change('Skills')
 		@title.icon($menu.char)
 
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Hone your techniques"
 
 		@menu.list.type = :skill
 		@menu.list.user = $menu.char

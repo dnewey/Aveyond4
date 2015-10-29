@@ -4,7 +4,7 @@
 
 class Mnu_Title
 
-	def initialize(vp)
+	def initialize(vp,idx)
 
 		@vp = vp
 		@closing = false
@@ -12,8 +12,8 @@ class Mnu_Title
 		@close_delay = 0
 
 		@data = ['new','continue','options','quit']
-		cx = 135
-		cy = 110
+		cx = 150
+		cy = 135
 
 		@buttons = []
 
@@ -29,8 +29,8 @@ class Mnu_Title
 
      	}
 
-     	@selected = 0
-     	choose(0)
+     	@selected = nil
+     	choose(idx,false)
 
 	end
 
@@ -65,6 +65,9 @@ class Mnu_Title
 		}
 
 		if $input.action? || $input.click?
+
+			sys('action')
+
 			case @selected
 				when 0
 					$scene.next_menu = "New"
@@ -88,16 +91,27 @@ class Mnu_Title
 
 	end
 
-	def choose(idx)
+	def choose(idx,snd=true)
+		return if idx == @selected
 		if idx > @buttons.count - 1
 			idx = 0
 		end
 		if idx < 0
 			idx = @buttons.count - 1
 		end
+		sys('select') if snd
 		@selected = idx
 		@buttons.each{ |b| b.opacity = 150 }
 		@buttons[@selected].opacity = 255
+
+		@buttons[@selected].zoom_x = 1.0
+		@buttons[@selected].zoom_y = 1.0
+		a = go("zoom_x",0.2,100)
+		b = go("zoom_x",-0.2,120)
+		@buttons[@selected].do(seq(a,b))
+		a = go("zoom_y",0.2,100)
+		b = go("zoom_y",-0.2,120)
+		@buttons[@selected].do(seq(a,b))
 	end
 
 	def close_soon(delay=10)

@@ -8,7 +8,7 @@ class Mnu_Healing < Mnu_Base
 		super(vp)
 
 		@title.change('items')
-		@subtitle.text = "Choose target of item"
+		@subtitle.text = "Who will use it?"
 
 		remove_menu
 		remove_info

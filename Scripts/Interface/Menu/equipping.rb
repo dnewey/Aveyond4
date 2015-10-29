@@ -8,7 +8,7 @@ class Mnu_Equipping < Mnu_Base
 		super(vp)
 
 		@title.change('equip')
-		@subtitle.text = "Choose target of item"
+		@subtitle.text = "Who will wear it?"
 
 		remove_menu
 		remove_info

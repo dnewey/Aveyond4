@@ -41,14 +41,14 @@ class Mnu_Shop < Mnu_Base
 		@title.change(type)
 		case type
 			when "Shop"
-				@subtitle.text = "General Goods"
+				@subtitle.text = "Buy general items"
 			when "Smith"
-				@subtitle.text = "Armors and Weapons"
+				@subtitle.text = "Buy crafted items"
 			when "Magic"
-				@subtitle.text = "Enchantments"
+				@subtitle.text = "Buy magical items"
 			when "Chester"
 				@magic = true
-				@subtitle.text = "Learn Skills and Abilities"
+				@subtitle.text = "Learn skills and abilities"
 				@menu.list.type = :chester
 				@menu.list.refresh
 				@item_box.type = :skill

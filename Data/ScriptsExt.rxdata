@@ -739,7 +739,7 @@ class Wave # Or just projectiles all spawned
 
 	end
 
-end"m
+end"Å!
 # Spawn and manage weather particles
 
 class Particle < Sprite
@@ -1042,6 +1042,67 @@ class Weather_LeafDots
 	        #   s.sx = -100 + rand(50)
 	        #   s.sy = rand(-140+560)
 	        # end
+	      end		      
+		}
+
+	end
+
+def dispose
+		@stars.each{ |s| s.dispose }
+	end
+
+end
+
+class Weather_MenuDots
+
+	def initialize(vp)
+
+		@stars = []
+	    (1..30).each{ |s|
+	      s = Particle.new(vp)
+	      s.bitmap = $cache.particle(['yellow','blue'].sample)
+	      @stars.push(s)
+	      s.sx = rand(640+220) - 320#-120+800)#rand(640)
+	      s.sy = rand(480+240) - 240 #-140+700)#rand(480)
+	      s.mx = rand * 0.5
+	      s.my = rand * 0.5
+	      s.x = s.sx
+	      s.y = s.sy
+	   	  s.opac = 10 + rand(40)
+	      s.opacity = 0
+	      # z = 1 + rand
+	      # s.zoom_x = z
+	      # s.zoom_y = z
+
+	    }
+
+	end
+
+	def update
+
+		@stars.each{ |s|
+
+	      s.sx += s.mx * (0.3+rand)
+	      s.sy += s.my * (0.3+rand)
+	      s.x = s.sx
+	      s.y = s.sy
+
+	      s.opacity += 3 if s.opac > s.opacity
+	      
+	      if s.x > 640 || s.y > 480 #|| s.x < $scene.map.display_x/4 - 320 || s.y < $scene.map.display_y/4 - 240
+	        s.mx = rand
+	        s.my = rand
+	      	s.sx = rand(640+220) - 320#-120+800)#rand(640)
+	     	s.sy = rand(480+240) - 240 #-140+700)#rand(480)
+	        # if rand > 0.5
+	        #   s.sx = rand(-120+750)
+	        #   s.sy = -100 + rand(50)
+	        # else
+	        #   s.sx = -100 + rand(50)
+	        #   s.sy = rand(-140+560)
+	        # end
+	        s.opac = 70 + rand(100)
+	        s.opacity = 0
 	      end		      
 		}
 
@@ -9638,8 +9699,7 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end"á
-#==============================================================================
+end" #==============================================================================
 # ** Mnu_Base
 #==============================================================================
 
@@ -9665,6 +9725,7 @@ class Mnu_Base
 		@left.push(@tabs)
 
 		@subtitle = Label.new(vp)
+		@subtitle.fixed_width = 500
 		@subtitle.font = $fonts.subtitle
 		@subtitle.move(116,72)
 		@left.push(@subtitle)
@@ -9772,7 +9833,7 @@ class Mnu_Base
 		return @closing && $tweens.done?(self)
 	end
 
-end"³
+end"´
 #==============================================================================
 # ** Mnu_Char
 #==============================================================================
@@ -9783,7 +9844,7 @@ class Mnu_Char < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Character devlopment"
 
 		@menu.dispose
 		self.left.delete(@menu)
@@ -9893,7 +9954,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"•#==============================================================================
+end"‘#==============================================================================
 # ** Mnu_Equipping
 #==============================================================================
 
@@ -9903,7 +9964,7 @@ class Mnu_Equipping < Mnu_Base
 		super(vp)
 
 		@title.change('equip')
-		@subtitle.text = "Choose target of item"
+		@subtitle.text = "Who will wear it?"
 
 		remove_menu
 		remove_info
@@ -10076,7 +10137,7 @@ class Mnu_Equipping < Mnu_Base
 		
 	end
 
-end"w#==============================================================================
+end"r#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -10086,7 +10147,7 @@ class Mnu_Healing < Mnu_Base
 		super(vp)
 
 		@title.change('items')
-		@subtitle.text = "Choose target of item"
+		@subtitle.text = "Who will use it?"
 
 		remove_menu
 		remove_info
@@ -10294,7 +10355,7 @@ class Mnu_Healing < Mnu_Base
 		
 	end
 
-end"#==============================================================================
+end"#==============================================================================
 # ** Mnu_Help
 #==============================================================================
 
@@ -10304,7 +10365,7 @@ class Mnu_Help < Mnu_Base
 		super(vp)
 
 		@title.change('help')
-		@subtitle.text = "HELP HELP"
+		@subtitle.text = "How to play the game"
 
 		@menu.list.type = :misc
 
@@ -11172,15 +11233,14 @@ class Mnu_Options < Mnu_Base
 
 	end
 
-end" 
-
+end"þ	
 class Mnu_Party < Mnu_Base
 
 	def initialize(vp)
 		super(vp)
 
 		@title.change('party')
-		@subtitle.text = "Change up your party members"
+		@subtitle.text = "Who's coming to the party?"
 
 		remove_menu
 		remove_info
@@ -11320,7 +11380,7 @@ class Mnu_Party < Mnu_Base
 
 	end
 
-end"U#==============================================================================
+end"P#==============================================================================
 # ** Mnu_Progress
 #==============================================================================
 
@@ -11331,7 +11391,7 @@ class Mnu_Progress < Mnu_Base
 
 		@title.change('Progress')
 		@title.icon($menu.char)
-		@subtitle.text = "1 MILLION PERCENT!"
+		@subtitle.text = "So much to do"
 
 		@char = $party.get($menu.char)
 
@@ -11506,7 +11566,7 @@ class Mnu_Quit < Mnu_Base
 		
 	end
 
-end"ä#==============================================================================
+end"÷#==============================================================================
 # ** Mnu_Save
 #==============================================================================
 
@@ -11518,7 +11578,7 @@ class Mnu_Save < Mnu_Base
 		@load = false
 
 		@title.change('save')
-		@subtitle.text = "Choose a file to save!"
+		@subtitle.text = "Select a file"
 
 		#@tabs.push("recent") # Could keep 10 auto saves?
 		#@tabs.push("saves")
@@ -11653,6 +11713,7 @@ class Mnu_Save < Mnu_Base
 		#log_info(option)
 		if @load
 			if $files.save_exists?(option)
+				@menu.list.opacity = 0
 				$files.load_game(option)
 			else
 				sys('deny')
@@ -11668,7 +11729,7 @@ class Mnu_Save < Mnu_Base
 		end
 		
 	end
-end"Ì#==============================================================================
+end"Ô#==============================================================================
 # ** Mnu_Shop
 #==============================================================================
 
@@ -11711,14 +11772,14 @@ class Mnu_Shop < Mnu_Base
 		@title.change(type)
 		case type
 			when "Shop"
-				@subtitle.text = "General Goods"
+				@subtitle.text = "Buy general items"
 			when "Smith"
-				@subtitle.text = "Armors and Weapons"
+				@subtitle.text = "Buy crafted items"
 			when "Magic"
-				@subtitle.text = "Enchantments"
+				@subtitle.text = "Buy magical items"
 			when "Chester"
 				@magic = true
-				@subtitle.text = "Learn Skills and Abilities"
+				@subtitle.text = "Learn skills and abilities"
 				@menu.list.type = :chester
 				@menu.list.refresh
 				@item_box.type = :skill
@@ -11900,7 +11961,7 @@ class Mnu_Equip < Mnu_Base
 
 		@char = $party.get($menu.char)
 
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "What will you wear?"
 
 		@menu.opacity = 0
 		@menu.move(15,192)
@@ -12145,7 +12206,7 @@ class Mnu_Equip < Mnu_Base
 
 	end
 
-end"/#==============================================================================
+end"0#==============================================================================
 # ** Mnu_Profile
 #==============================================================================
 
@@ -12156,7 +12217,7 @@ class Mnu_Profile < Mnu_Base
 
 		@title.change('Profile')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Get to know yourself"
 
 		@char = $party.get($menu.char)
 		profile = $data.profiles[$menu.char]
@@ -12308,7 +12369,7 @@ class Mnu_Profile < Mnu_Base
 		
 	end
 
-end".#==============================================================================
+end"/#==============================================================================
 # ** Mnu_Skills
 #==============================================================================
 
@@ -12320,7 +12381,7 @@ class Mnu_Skills < Mnu_Base
 		@title.change('Skills')
 		@title.icon($menu.char)
 
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Hone your techniques"
 
 		@menu.list.type = :skill
 		@menu.list.user = $menu.char
@@ -12387,7 +12448,7 @@ class Mnu_Skills < Mnu_Base
 		
 	end
 
-end"×#==============================================================================
+end"Ú#==============================================================================
 # ** Mnu_Status
 #==============================================================================
 
@@ -12398,7 +12459,7 @@ class Mnu_Status < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Know your capabilities"
 
 		@char = $party.get($menu.char)
 
@@ -12577,7 +12638,7 @@ class Mnu_Status < Mnu_Base
 		
 	end
 
-end"q#==============================================================================
+end"t#==============================================================================
 # ** Mnu_Boyle
 #==============================================================================
 
@@ -12588,7 +12649,7 @@ class Mnu_Boyle < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Gotta catch em"
+		@subtitle.text = "Collect them all!"
 
 		@char = $party.get($menu.char)
 
@@ -12665,7 +12726,7 @@ class Mnu_Boyle < Mnu_Base
 		
 	end
 
-end" "P#==============================================================================
+end" "S#==============================================================================
 # ** Mnu_Ingrid
 #==============================================================================
 
@@ -12676,7 +12737,7 @@ class Mnu_Ingrid < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "The Witching Hour"
+		@subtitle.text = "Accolades of a witch"
 
 		@char = $party.get($menu.char)
 
@@ -12840,7 +12901,7 @@ class Mnu_Ingrid < Mnu_Base
 		
 	end
 
-end"ä#==============================================================================
+end"è#==============================================================================
 # ** Mnu_Nightwatch
 #==============================================================================
 
@@ -12851,7 +12912,7 @@ class Mnu_Nightwatch < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Protectors of the night"
 
 		@char = $party.get($menu.char)
 
@@ -12921,7 +12982,7 @@ class Mnu_Nightwatch < Mnu_Base
 		
 	end
 
-end"Š#==============================================================================
+end"#==============================================================================
 # ** Mnu_Phye
 #==============================================================================
 
@@ -12932,7 +12993,7 @@ class Mnu_Phye < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Demon hunting progress"
 
 		@char = $party.get($menu.char)
 
@@ -14163,7 +14224,7 @@ class Right_Page < SpriteGroup
         @page_title.text = text
     end
 
-end"þ#==============================================================================
+end"ÿ#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -14174,7 +14235,7 @@ class Mnu_Chooser < Mnu_Base
 
 		@title.change('choose')
 		#@title.change_icon("items")
-		@subtitle.text = "Pick & Choose"
+		@subtitle.text = "Select an item"
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -14231,7 +14292,7 @@ class Mnu_Chooser < Mnu_Base
 		self.close_soon
 	end
 
-end"Í#==============================================================================
+end"Î#==============================================================================
 # ** Mnu_Potions
 #==============================================================================
 
@@ -14241,7 +14302,7 @@ class Mnu_Potions < Mnu_Base
 		super(vp)
 
 		@title.change('potions')
-		@subtitle.text = "Making potions"		
+		@subtitle.text = "Select a recipe"		
 
 		@menu.list.type = :potion
 		@menu.list.setup($party.potions)
@@ -14282,7 +14343,7 @@ class Mnu_Potions < Mnu_Base
 		self.close_soon
 	end
 
-end"õ#==============================================================================
+end"é#==============================================================================
 # ** Mnu_GameOver
 #==============================================================================
 
@@ -14292,7 +14353,7 @@ class Mnu_GameOver < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Ye wimp"
 
 		@title.y = -500
 		@subtitle.y = -500
@@ -14440,13 +14501,13 @@ class Mnu_Options_Title < Mnu_Options
 
 	end
 
-end"y#==============================================================================
+end"à	#==============================================================================
 # ** Mnu_Title
 #==============================================================================
 
 class Mnu_Title
 
-	def initialize(vp)
+	def initialize(vp,idx)
 
 		@vp = vp
 		@closing = false
@@ -14454,8 +14515,8 @@ class Mnu_Title
 		@close_delay = 0
 
 		@data = ['new','continue','options','quit']
-		cx = 135
-		cy = 110
+		cx = 150
+		cy = 135
 
 		@buttons = []
 
@@ -14471,8 +14532,8 @@ class Mnu_Title
 
      	}
 
-     	@selected = 0
-     	choose(0)
+     	@selected = nil
+     	choose(idx,false)
 
 	end
 
@@ -14507,6 +14568,9 @@ class Mnu_Title
 		}
 
 		if $input.action? || $input.click?
+
+			sys('action')
+
 			case @selected
 				when 0
 					$scene.next_menu = "New"
@@ -14530,16 +14594,27 @@ class Mnu_Title
 
 	end
 
-	def choose(idx)
+	def choose(idx,snd=true)
+		return if idx == @selected
 		if idx > @buttons.count - 1
 			idx = 0
 		end
 		if idx < 0
 			idx = @buttons.count - 1
 		end
+		sys('select') if snd
 		@selected = idx
 		@buttons.each{ |b| b.opacity = 150 }
 		@buttons[@selected].opacity = 255
+
+		@buttons[@selected].zoom_x = 1.0
+		@buttons[@selected].zoom_y = 1.0
+		a = go("zoom_x",0.2,100)
+		b = go("zoom_x",-0.2,120)
+		@buttons[@selected].do(seq(a,b))
+		a = go("zoom_y",0.2,100)
+		b = go("zoom_y",-0.2,120)
+		@buttons[@selected].do(seq(a,b))
 	end
 
 	def close_soon(delay=10)
@@ -22535,7 +22610,7 @@ class Scene_Battle
     
   end
 
-end"Ø(
+end"í(
 class Scene_Battle
 
   def phase_main_init
@@ -22648,7 +22723,7 @@ class Scene_Battle
     # For multi hits, only flash and wait the first time
     if @attack_round.skill != @last_attack
       @active_battler.ev.flash_dur = 15
-      wait(15)
+      wait(35)
       
 
       # Mana cost
@@ -22915,7 +22990,6 @@ class Scene_Battle
 
 
     @phase = :main_fall
-    wait(1)
 
   end
 
@@ -22964,11 +23038,13 @@ class Scene_Battle
       return
     end
 
+
+
   	# If a multi stage, go back to attack
     if !@attack_plan.done?
 
       # End multi stage attacks early if user is incapable of attack
-
+          wait(10)
       @attack_round = @attack_plan.next_attack
       @phase = :main_start
       return
@@ -22977,7 +23053,7 @@ class Scene_Battle
 
   	# Onto the next battler
 	  if !@battle_queue.empty?
-		
+		    wait(10)
   		# Good place to check for end of battle also
 	 	  @active_battler = @battle_queue.shift
 	   	@phase = :main_prep
@@ -23788,7 +23864,7 @@ class Scene_Splash
 
 	end
 
-end"è#==============================================================================
+end"d#==============================================================================
 # ** Scene_Title
 #==============================================================================
 
@@ -23804,17 +23880,20 @@ class Scene_Title
     @closing = false
 
     # Vp
+    @vp_base = Viewport.new(0,0,$game.width,$game.height)
+    @vp_mid = Viewport.new(0,0,$game.width,$game.height)
     @vp = Viewport.new(0,0,$game.width,$game.height)
     #@vp.z = 3500
 
     # Sprites
-    @sky = Sprite.new(@vp)
+    @sky = Sprite.new(@vp_base)
     @sky.z = -2
+    @weather = Weather_MenuDots.new(@vp_mid)
     @clouds = Sprite.new(@vp)
     @clouds.z = -2
     @wall = Sprite.new(@vp)
     @wall.z = -2
-    @wall.opacity = 0
+    #@wall.opacity = 0
 
     @sparks = [] # Update all
 
@@ -23831,13 +23910,18 @@ class Scene_Title
     # Init 
     init_boy
 
+    @idx = 0
+    @idx = 1 if $files.any_save_files?
+
+    @next_menu = nil
+    @menu = Mnu_Title.new(@vp,@idx)
+
     Graphics.freeze
     @mist.opacity = 0
     src = "Graphics/Transitions/Cave_inv"
         Graphics.transition(20,src)
  
-    @next_menu = nil
-    @menu = Mnu_Title.new(@vp)
+
 
   end
   
@@ -23848,19 +23932,27 @@ class Scene_Title
   end
 
   def hide_logo
-    @title.opacity = 0
+    @title.opacity = 255
+    @title.do(go('opacity',-255,500,:qio))
+    @title.do(go('y',25,500,:qio))
   end
 
   def show_logo
-    @title.opacity = 255
+    @title.opacity = 0
+    @title.do(go('opacity',255,700,:qio))
+    @title.do(go('y',-25,700,:qio))
   end
 
   def hide_char
-    @char.opacity = 0
+    @char.opacity = 255
+    @char.do(go('opacity',-255,500,:qio))
+    @char.do(go('x',25,500,:qio))
   end
 
   def show_char
-    @char.opacity = 255
+    @char.opacity = 0
+    @char.do(go('opacity',255,700,:qio))
+    @char.do(go('x',-25,700,:qio))
   end
 
 
@@ -23877,6 +23969,7 @@ class Scene_Title
   #--------------------------------------------------------------------------
   def update
 
+    @weather.update
     @sparks.each{ |s| s.update }
 
     #@bg.do(go("opacity",255,300)) if @bg.opacity == 0
@@ -23938,16 +24031,19 @@ class Scene_Title
     # The current menu
     case @next_menu
 
-      when "Title"; @menu = Mnu_Title.new(@vp)
+      when "Title"; 
+        @menu = Mnu_Title.new(@vp,@idx)
 
       when "New";
         $game.pop_scene
         $game.push_scene Scene_Map.new()
 
       when "Continue"; 
+        @idx = 1
         @menu = Mnu_Load_Title.new(@vp)
 
       when "Options";
+        @idx = 2
         @menu = Mnu_Options_Title.new(@vp)
 
       when "Quit"; @menu = Mnu_Main.new(@vp)
@@ -23995,17 +24091,18 @@ class Scene_Title
   def init_boy
 
     # Sky
-    @sky.bitmap = $cache.title("test-sky")
+    @sky.bitmap = $cache.title("sky")
     #@sky.opacity = 0
 
     # Clouds
-    @clouds.bitmap = $cache.title("test-clouds")
-    @clouds.x -= 50
-    #@clouds.opacity = 0
-    @clouds.do(pingpong("x",100,6000,:qio))
+    @clouds.bitmap = $cache.title("clouds")
+    #@clouds.y = 220
+    @clouds.x -= 800
+    @clouds.opacity = 220
+    @clouds.do(pingpong("x",800,26000,:sine_io))
 
     # Wall
-    @wall.bitmap = $cache.title("test-wall")
+    @wall.bitmap = $cache.title("wall")
     #@wall.opacity = 0
 
     sprk = Spark.new('evil-aura',270,60,@vp)
@@ -25465,7 +25562,7 @@ class DebugManager
 	def busy?
 		return @console.active? || @menu.active?
 	end
-end"Ä#==============================================================================
+end"Í#==============================================================================
 # ** Save File Manager
 #==============================================================================
 
@@ -25521,7 +25618,7 @@ class FileManager
   end
   
   def any_save_files?
-    !Dir.glob('Av4-*.save').empty?
+    !@headers.select{ |f| f != nil }.empty?
   end
 
   def save_exists?(i)

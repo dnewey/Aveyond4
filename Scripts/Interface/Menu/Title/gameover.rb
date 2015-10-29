@@ -8,7 +8,7 @@ class Mnu_GameOver < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Ye wimp"
 
 		@title.y = -500
 		@subtitle.y = -500

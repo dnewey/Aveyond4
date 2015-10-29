@@ -9,7 +9,7 @@ class Mnu_Ingrid < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "The Witching Hour"
+		@subtitle.text = "Accolades of a witch"
 
 		@char = $party.get($menu.char)
 

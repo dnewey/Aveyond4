@@ -9,7 +9,7 @@ class Mnu_Phye < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Demon hunting progress"
 
 		@char = $party.get($menu.char)
 

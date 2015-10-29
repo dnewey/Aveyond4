@@ -5,7 +5,7 @@ class Mnu_Party < Mnu_Base
 		super(vp)
 
 		@title.change('party')
-		@subtitle.text = "Change up your party members"
+		@subtitle.text = "Who's coming to the party?"
 
 		remove_menu
 		remove_info

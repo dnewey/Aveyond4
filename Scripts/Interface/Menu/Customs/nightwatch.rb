@@ -9,7 +9,7 @@ class Mnu_Nightwatch < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Protectors of the night"
 
 		@char = $party.get($menu.char)
 

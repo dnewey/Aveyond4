@@ -14,17 +14,20 @@ class Scene_Title
     @closing = false
 
     # Vp
+    @vp_base = Viewport.new(0,0,$game.width,$game.height)
+    @vp_mid = Viewport.new(0,0,$game.width,$game.height)
     @vp = Viewport.new(0,0,$game.width,$game.height)
     #@vp.z = 3500
 
     # Sprites
-    @sky = Sprite.new(@vp)
+    @sky = Sprite.new(@vp_base)
     @sky.z = -2
+    @weather = Weather_MenuDots.new(@vp_mid)
     @clouds = Sprite.new(@vp)
     @clouds.z = -2
     @wall = Sprite.new(@vp)
     @wall.z = -2
-    @wall.opacity = 0
+    #@wall.opacity = 0
 
     @sparks = [] # Update all
 
@@ -41,13 +44,18 @@ class Scene_Title
     # Init 
     init_boy
 
+    @idx = 0
+    @idx = 1 if $files.any_save_files?
+
+    @next_menu = nil
+    @menu = Mnu_Title.new(@vp,@idx)
+
     Graphics.freeze
     @mist.opacity = 0
     src = "Graphics/Transitions/Cave_inv"
         Graphics.transition(20,src)
  
-    @next_menu = nil
-    @menu = Mnu_Title.new(@vp)
+
 
   end
   
@@ -58,19 +66,27 @@ class Scene_Title
   end
 
   def hide_logo
-    @title.opacity = 0
+    @title.opacity = 255
+    @title.do(go('opacity',-255,500,:qio))
+    @title.do(go('y',25,500,:qio))
   end
 
   def show_logo
-    @title.opacity = 255
+    @title.opacity = 0
+    @title.do(go('opacity',255,700,:qio))
+    @title.do(go('y',-25,700,:qio))
   end
 
   def hide_char
-    @char.opacity = 0
+    @char.opacity = 255
+    @char.do(go('opacity',-255,500,:qio))
+    @char.do(go('x',25,500,:qio))
   end
 
   def show_char
-    @char.opacity = 255
+    @char.opacity = 0
+    @char.do(go('opacity',255,700,:qio))
+    @char.do(go('x',-25,700,:qio))
   end
 
 
@@ -87,6 +103,7 @@ class Scene_Title
   #--------------------------------------------------------------------------
   def update
 
+    @weather.update
     @sparks.each{ |s| s.update }
 
     #@bg.do(go("opacity",255,300)) if @bg.opacity == 0
@@ -148,16 +165,19 @@ class Scene_Title
     # The current menu
     case @next_menu
 
-      when "Title"; @menu = Mnu_Title.new(@vp)
+      when "Title"; 
+        @menu = Mnu_Title.new(@vp,@idx)
 
       when "New";
         $game.pop_scene
         $game.push_scene Scene_Map.new()
 
       when "Continue"; 
+        @idx = 1
         @menu = Mnu_Load_Title.new(@vp)
 
       when "Options";
+        @idx = 2
         @menu = Mnu_Options_Title.new(@vp)
 
       when "Quit"; @menu = Mnu_Main.new(@vp)
@@ -205,17 +225,18 @@ class Scene_Title
   def init_boy
 
     # Sky
-    @sky.bitmap = $cache.title("test-sky")
+    @sky.bitmap = $cache.title("sky")
     #@sky.opacity = 0
 
     # Clouds
-    @clouds.bitmap = $cache.title("test-clouds")
-    @clouds.x -= 50
-    #@clouds.opacity = 0
-    @clouds.do(pingpong("x",100,6000,:qio))
+    @clouds.bitmap = $cache.title("clouds")
+    #@clouds.y = 220
+    @clouds.x -= 800
+    @clouds.opacity = 220
+    @clouds.do(pingpong("x",800,26000,:sine_io))
 
     # Wall
-    @wall.bitmap = $cache.title("test-wall")
+    @wall.bitmap = $cache.title("wall")
     #@wall.opacity = 0
 
     sprk = Spark.new('evil-aura',270,60,@vp)

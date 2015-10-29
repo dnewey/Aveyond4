@@ -8,7 +8,7 @@ class Mnu_Char < Mnu_Base
 		super(vp)
 
 		@title.change($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Character devlopment"
 
 		@menu.dispose
 		self.left.delete(@menu)

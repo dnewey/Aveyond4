@@ -8,7 +8,7 @@ class Mnu_Potions < Mnu_Base
 		super(vp)
 
 		@title.change('potions')
-		@subtitle.text = "Making potions"		
+		@subtitle.text = "Select a recipe"		
 
 		@menu.list.type = :potion
 		@menu.list.setup($party.potions)

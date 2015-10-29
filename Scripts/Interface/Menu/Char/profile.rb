@@ -9,7 +9,7 @@ class Mnu_Profile < Mnu_Base
 
 		@title.change('Profile')
 		@title.icon($menu.char)
-		@subtitle.text = "Master of deception"
+		@subtitle.text = "Get to know yourself"
 
 		@char = $party.get($menu.char)
 		profile = $data.profiles[$menu.char]

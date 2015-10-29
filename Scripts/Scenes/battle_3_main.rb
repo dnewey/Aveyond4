@@ -111,7 +111,7 @@ class Scene_Battle
     # For multi hits, only flash and wait the first time
     if @attack_round.skill != @last_attack
       @active_battler.ev.flash_dur = 15
-      wait(15)
+      wait(35)
       
 
       # Mana cost
@@ -378,7 +378,6 @@ class Scene_Battle
 
 
     @phase = :main_fall
-    wait(1)
 
   end
 
@@ -427,11 +426,13 @@ class Scene_Battle
       return
     end
 
+
+
   	# If a multi stage, go back to attack
     if !@attack_plan.done?
 
       # End multi stage attacks early if user is incapable of attack
-
+          wait(10)
       @attack_round = @attack_plan.next_attack
       @phase = :main_start
       return
@@ -440,7 +441,7 @@ class Scene_Battle
 
   	# Onto the next battler
 	  if !@battle_queue.empty?
-		
+		    wait(10)
   		# Good place to check for end of battle also
 	 	  @active_battler = @battle_queue.shift
 	   	@phase = :main_prep

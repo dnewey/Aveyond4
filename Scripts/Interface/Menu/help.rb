@@ -8,7 +8,7 @@ class Mnu_Help < Mnu_Base
 		super(vp)
 
 		@title.change('help')
-		@subtitle.text = "HELP HELP"
+		@subtitle.text = "How to play the game"
 
 		@menu.list.type = :misc
 

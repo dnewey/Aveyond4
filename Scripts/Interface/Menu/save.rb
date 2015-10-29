@@ -10,7 +10,7 @@ class Mnu_Save < Mnu_Base
 		@load = false
 
 		@title.change('save')
-		@subtitle.text = "Choose a file to save!"
+		@subtitle.text = "Select a file"
 
 		#@tabs.push("recent") # Could keep 10 auto saves?
 		#@tabs.push("saves")
@@ -145,6 +145,7 @@ class Mnu_Save < Mnu_Base
 		#log_info(option)
 		if @load
 			if $files.save_exists?(option)
+				@menu.list.opacity = 0
 				$files.load_game(option)
 			else
 				sys('deny')

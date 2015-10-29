@@ -104,15 +104,44 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Map/Parts/info.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/save.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/System/game.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/gameover.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/System/files.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Title/title.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/title.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/Battle/battler.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/battle_3_main.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Functions/events.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/main.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Elements/Map/weather.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Utils/Tweens/lib.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Elements/Widgets/list.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/shop.rb",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/State/menu.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/progress.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/party.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/options.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/help.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/healing.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/equipping.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/char.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Title/gameover.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Special/potions.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Special/chooser.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Customs/phye.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Customs/nightwatch.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Customs/ingrid.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Customs/boyle.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Char/status.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Char/skills.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Char/profile.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Char/equip.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/base.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Title/load_title.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Map/Parts/info.rb",
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/State/menu.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/base.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Parts/page_tabs.rb",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Char/equip.rb",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/healing.rb",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/base.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/items.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/menu.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/Map/map.rb",
@@ -120,19 +149,16 @@
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Map/Parts/grid.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/Battle/battler_4_equips.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/equipping",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/Char/status.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Functions/shop.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Utils/data_types.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/battle.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/System/fonts.rb",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/Battle/battler.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Functions/party.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Editor/meta/zones.json",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Functions/poppers.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Functions/progress.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Map/Parts/bar.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/README.md",
-		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/battle_3_main.rb",
 		"/C/Aveyond4/README.md",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Model/Battle/result.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Functions/battle.rb",
@@ -205,33 +231,7 @@
 		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/charview.rb",
 		"/C/Aveyond4/Scripts/System/audio.rb",
-		"/C/Aveyond4/Editor/meta/skills.json",
-		"/C/Aveyond4/Scripts/Elements/Widgets/spritegroup.rb",
-		"/C/Aveyond4/Scripts/Functions/effects.rb",
-		"/C/Aveyond4/Scripts/Interface/Battle/Parts/targetcmd.rb",
-		"/C/Aveyond4/Scripts/Interface/Battle/Parts/itemcmd.rb",
-		"/C/Aveyond4/Scripts/Interface/Battle/Parts/actorcmd.rb",
-		"/C/Aveyond4/Scripts/Functions/audio.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/progress.rb",
-		"/C/Aveyond4/Scripts/Scenes/base.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/Parts/popper.rb",
-		"/C/Aveyond4/Scripts/Interface/Battle/battlehud.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/options.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/right_page.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/journal.rb",
-		"/C/Aveyond4/Scripts/System/files.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/save.rb",
-		"/C/Aveyond4/Scripts/Interface/Map/Parts/info.rb",
-		"/C/Aveyond4/Scripts/System/fonts.rb",
-		"/C/Aveyond4/Scripts/main.rb",
-		"/C/Aveyond4/Scripts/Scenes/battle_1_intro.rb",
-		"/C/Aveyond4/Scripts/Functions/battle.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_small.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Parts/char_box_large.rb",
-		"/C/Aveyond4/Scripts/Interface/Menu/Char/status.rb",
-		"/C/Aveyond4/Scripts/Elements/Map/weather.rb",
-		"/C/Aveyond4/Scripts/Utils/group.rb",
-		"/C/Aveyond4/Editor/json/zones.json"
+		"/C/Aveyond4/Editor/meta/skills.json"
 	],
 	"find":
 	{
@@ -250,6 +250,15 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"reload",
+			"load",
+			"blast",
+			"sys",
+			"sys('select') ",
+			"@wall",
+			"@subtitle.text = ",
+			"@subtitle",
+			"@subtitle = ",
 			"log_sys",
 			"add_item_eq",
 			"add_users",
@@ -368,16 +377,7 @@
 			"witch_go",
 			"pop_stat_b",
 			"grant_st",
-			"setup_smith",
-			"pop_level_all",
-			"grant_level_",
-			"setup_smi",
-			"old",
-			"p-ki",
-			"ingonly",
-			"shop",
-			"smit",
-			"info"
+			"setup_smith"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -451,6 +451,42 @@
 		"selected_items":
 		[
 			[
+				"game",
+				"System/game.rb"
+			],
+			[
+				"files",
+				"System/files.rb"
+			],
+			[
+				"main",
+				"Interface/Menu/main.rb"
+			],
+			[
+				"list",
+				"Elements/Widgets/list.rb"
+			],
+			[
+				"tweens",
+				"Utils/Tweens/lib.rb"
+			],
+			[
+				"title",
+				"Interface/Menu/Title/title.rb"
+			],
+			[
+				"battler",
+				"Model/Battle/battler.rb"
+			],
+			[
+				"battle",
+				"Scenes/battle_3_main.rb"
+			],
+			[
+				"load_",
+				"Interface/Menu/Title/load_title.rb"
+			],
+			[
 				"info",
 				"Interface/Map/Parts/info.rb"
 			],
@@ -507,20 +543,12 @@
 				"Interface/Map/Parts/grid.rb"
 			],
 			[
-				"battle",
-				"Scenes/battle_3_main.rb"
-			],
-			[
 				"data",
 				"Utils/data_types.rb"
 			],
 			[
 				"fonts",
 				"Scripts/System/fonts.rb"
-			],
-			[
-				"battler",
-				"Scripts/Model/Battle/battler.rb"
 			],
 			[
 				"party",
@@ -551,20 +579,12 @@
 				"Scripts\\Interface\\Menu\\Char\\equip.rb"
 			],
 			[
-				"game",
-				"Scripts\\System\\game.rb"
-			],
-			[
 				"map",
 				"Scripts\\Model\\Map\\map.rb"
 			],
 			[
 				"book",
 				"Scripts\\Interface\\Map\\Parts\\book.rb"
-			],
-			[
-				"list",
-				"Scripts\\Elements\\Widgets\\list.rb"
 			],
 			[
 				"input",
@@ -639,10 +659,6 @@
 				"Scripts\\Utils\\data_types.rb"
 			],
 			[
-				"main",
-				"Scripts\\Scenes\\battle_3_main.rb"
-			],
-			[
 				"spritegr",
 				"Scripts\\Elements\\Widgets\\spritegroup.rb"
 			],
@@ -669,10 +685,6 @@
 			[
 				"item",
 				"Scripts\\Interface\\Battle\\Parts\\itemcmd.rb"
-			],
-			[
-				"files",
-				"Scripts\\System\\files.rb"
 			],
 			[
 				"battler_1",
@@ -795,10 +807,6 @@
 				"Scripts\\Utils\\sprite.rb"
 			],
 			[
-				"title",
-				"Scripts\\Interface\\Menu\\Title\\title.rb"
-			],
-			[
 				"key",
 				"Scripts\\System\\keyboard.rb"
 			],
@@ -845,10 +853,6 @@
 			[
 				"box",
 				"Scripts\\Elements\\Widgets\\box.rb"
-			],
-			[
-				"tweens",
-				"Scripts\\System\\tweens.rb"
 			],
 			[
 				"choos",
@@ -957,10 +961,6 @@
 			[
 				"twee",
 				"Scripts\\System\\tweens.rb"
-			],
-			[
-				"char_box_",
-				"Scripts\\Interface\\Menu\\Parts\\char_box_large.rb"
 			]
 		],
 		"width": 0.0

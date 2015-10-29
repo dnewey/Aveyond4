@@ -9,7 +9,7 @@ class Mnu_Chooser < Mnu_Base
 
 		@title.change('choose')
 		#@title.change_icon("items")
-		@subtitle.text = "Pick & Choose"
+		@subtitle.text = "Select an item"
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)

@@ -9,7 +9,7 @@ class Mnu_Progress < Mnu_Base
 
 		@title.change('Progress')
 		@title.icon($menu.char)
-		@subtitle.text = "1 MILLION PERCENT!"
+		@subtitle.text = "So much to do"
 
 		@char = $party.get($menu.char)
 

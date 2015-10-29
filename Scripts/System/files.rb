@@ -54,7 +54,7 @@ class FileManager
   end
   
   def any_save_files?
-    !Dir.glob('Av4-*.save').empty?
+    !@headers.select{ |f| f != nil }.empty?
   end
 
   def save_exists?(i)

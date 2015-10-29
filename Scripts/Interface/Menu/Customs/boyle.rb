@@ -9,7 +9,7 @@ class Mnu_Boyle < Mnu_Base
 
 		@title.change('Status')
 		@title.icon($menu.char)
-		@subtitle.text = "Gotta catch em"
+		@subtitle.text = "Collect them all!"
 
 		@char = $party.get($menu.char)
 
