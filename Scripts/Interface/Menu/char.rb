@@ -24,9 +24,9 @@ class Mnu_Char < Mnu_Base
 		@grid.add_wide("Profile","View Profile","misc/profile")
 		@grid.add_wide("Leader","Set as Leader","faces/#{$menu.char}")
 		
-		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' #&& !$progress.creatures.empty?
+		@grid.add_wide("Boyle","Cheeki Chasing","items/creature") if $menu.char == 'boy' && !$progress.creatures.empty?
 		@grid.add_wide("Ingrid","Witchery","misc/coven") if $menu.char == 'ing'
-		@grid.add_wide("Nightwatch","Night Watch","items/great-moon") if $menu.char == 'mys' || $menu.char == 'rob'
+		@grid.add_wide("Nightwatch","Night Watch","items/great-moon") if flag?('nightwatch-saved-banana') && ($menu.char == 'mys' || $menu.char == 'rob')
 		#@grid.add_wide("Hiberu","Dream Books","items/potion-red") if $menu.char == 'hib'
 		#@grid.add_wide("Rowen","Gadget Building","items/potion-red") if $menu.char == 'row'
 		@grid.add_wide("Phye","Demon Hunting","misc/phy-baal") if $menu.char == 'phy'

@@ -72,7 +72,43 @@ class Progress
 		return @complete.include?(q)
 	end
 
-	def catch_creature(zone)
+	def catch_creature()
+
+		zone = $map.zone.id
+
+		# Auto convert zone to overall zone
+		case zone
+
+			when '@wyrmwood','@mir-woods','@fangder-cave','@mist-mountain'
+				zone = 'wyrmwood'
+
+			when '@windshire','@wind-hills','@wind-caves','@windmill','@briar-woods','@briar-caves','@whisper','@aveyond','@wind-valley','@endworld'
+				zone = 'windshire'
+
+			when '@wastelands','@tor','@dwarf-town','@firedeep','@firedeep-2','@arena'
+				zone = 'wasteland'
+
+			when '@royal-woods','@royal-town','@woods-boppity','@woods-ginger','@ginger-cave','@woods-swamp','@woods-hills','@royal-castle','@royal-dungeon','@royal-crusade','@royal-crabs','@weeville'
+				zone = 'royal'
+
+			when '@elvaria','@vault','@petrified-plains','@elf-town'
+				zone = 'elvaria'
+
+			when '@shadow','@shadow-lands','@skull-mountain','@shadow-cave','@ravwyn'
+				zone = 'shadow'
+
+			when '@snow-island','@crab-island','@wind-tower','@dream-zone','@dream-zone-2','@mist-realm'
+				zone = 'other'
+
+		end
+
+		if zone == $map.zone.id
+			log_err 'Invalid Cheeki location: '+zone
+			$game.quit
+		end
+
+		#src = ["wyrmwood",'windshire','wasteland','royal','elvaria','shadow','other']
+
 		if !@creatures.has_key?(zone)
 			@creatures[zone] = 1
 		else
