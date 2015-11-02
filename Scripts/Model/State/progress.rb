@@ -10,6 +10,7 @@ class Progress
   	attr_reader :creatures, :chester_level
 
   	attr_reader :demons
+  	attr_accessor :potions
 
   	attr_accessor :store_level, :store_xp, :store_done
 
@@ -30,6 +31,7 @@ class Progress
 
 		# Phy
 		@demons = [] # Demons defeated
+		@potions = 0
 
 		# Nightwatch rank
 	    @night_rank = 1
@@ -126,6 +128,26 @@ class Progress
 
 	def add_night_xp(amount)
 		@night_xp += amount	
+	end
+
+	def main_quests_complete
+		total = 0
+		@complete.each{ |q|
+			if $data.quests[q].type == 'main'
+				total += 1
+			end
+		}
+		return total
+	end
+
+	def side_quests_complete
+		total = 0
+		@complete.each{ |q|
+			if $data.quests[q].type != 'main'
+				total += 1
+			end
+		}
+		return total
 	end
 
 end
