@@ -39,6 +39,11 @@ class Page_Tabs < Sprite
     refresh
   end
 
+  def idx(name)
+    @idx = @names.index(name)
+    refresh
+  end
+
   def refresh
 
     return if @gfx.empty?

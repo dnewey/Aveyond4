@@ -12,9 +12,11 @@ class Mnu_Skills < Mnu_Base
 
 		@subtitle.text = "Hone your techniques"
 
+		data = $party.get($menu.char).all_skill_list
+
 		@menu.list.type = :skill
 		@menu.list.user = $menu.char
-		@menu.list.setup($party.get($menu.char).all_skill_list)
+		@menu.list.setup(data)
 
 		@port = Port_Full.new(vp)
 		@port.angry
@@ -27,6 +29,8 @@ class Mnu_Skills < Mnu_Base
 		self.right.push(@item_box)
 
 		@last_option = nil
+
+		change(data[0])
 
 		open
 

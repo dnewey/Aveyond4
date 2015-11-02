@@ -66,6 +66,7 @@ class SkillData
 	attr_reader :stats
 	attr_reader :effects
 	attr_reader :price
+	attr_reader :user
 end
 
 class StateData

@@ -20,7 +20,7 @@ class Item_Box < SpriteGroup
     	@title.fixed_width = 250
     	@title.icon = $cache.icon("items/map")
     	@title.font = $fonts.pop_ttl
-    	@title.text = "Active Quests:"
+    	@title.text = ""
     	add(@title,16,10)
 
     	# @cat = Label.new(vp)
@@ -42,13 +42,15 @@ class Item_Box < SpriteGroup
 
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
-    	@desc.text = "Missing Descriptor"
+    	@desc.text = ""
     	add(@desc,16,42)
 
         @stats = []
         @cy = 42    	
     	
     	move(0,0)
+
+        hide
 
     	#item('unknown')
 
@@ -229,6 +231,13 @@ class Item_Box < SpriteGroup
     # Shop display of items
 	def item(id)
 
+        if id == nil
+            self.opacity = 0
+            return
+        else
+            self.opacity = 255
+        end
+
         return skill(id) if @type == :skill
 
         id = 'mid-arm-windshire' if id == "unknown"
@@ -259,6 +268,7 @@ class Item_Box < SpriteGroup
 		
 		#@type.text = item.type
 
+        show
         newsize
         remove
 
@@ -308,6 +318,7 @@ class Item_Box < SpriteGroup
                 stat("targets","Targets All Allies")
         end
 
+        show
         newsize
         remove
 

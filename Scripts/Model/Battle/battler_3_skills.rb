@@ -37,7 +37,7 @@ class Game_Battler
   end
 
   def all_skill_list
-    result = @skills
+    result = @skills.select{ |s| $data.skills[s].user != 'boy-s' }
     return result
   end
 

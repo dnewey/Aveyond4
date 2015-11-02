@@ -14,6 +14,8 @@ class MenuState
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
 
+	attr_accessor :menu_tab
+
 	# Item chosen from item list
 	attr_accessor :use_item
 	attr_accessor :common_event
@@ -45,6 +47,8 @@ class MenuState
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
+
+		@menu_tab = 'all'
 
 		@use_item = nil
 		@common_event = nil

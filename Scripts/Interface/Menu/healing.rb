@@ -119,8 +119,10 @@ class Mnu_Healing < Mnu_Base
 		}
 
 		if ex && $party.item_number($menu.use_item) == 0
+			$menu.use_item = nil
 			$scene.queue_menu("Items")
 			close_now
+			return
 		end
 
 		# Cancel out of grid
@@ -128,6 +130,7 @@ class Mnu_Healing < Mnu_Base
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
+			$menu.use_item = nil
 			$scene.queue_menu("Items")
 			close_now
 		end

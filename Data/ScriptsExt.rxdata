@@ -1732,7 +1732,7 @@ class Label < Sprite
         
   end
   
-end"M#==============================================================================
+end"ýL#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1955,7 +1955,6 @@ class List
     # Disable arrows
     #@scroll_down.disabled = can_scroll_down?
     #@scroll_up.disabled = can_scroll_up?
-
 
     src = $cache.menu_common('list-bar')
 
@@ -2477,7 +2476,7 @@ class List
     @scroll_idx -= 1    
     #      @pagemod = 1
 
-    dur = 110
+    dur = 150
     ease = :quad_in_out
 
     @back_sprite.do(go("y",row_height,dur,ease))
@@ -2497,12 +2496,12 @@ class List
 
      @change.call(current) if !@change.nil?
 
-    @scroll_idx += 1    
+     @scroll_idx += 1    
           #@pagemod = -1
 
          
 
-    dur = 110
+    dur = 150
     ease = :quad_in_out
 
   	#draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)
@@ -2514,7 +2513,7 @@ class List
   	@back_sprite.do(proc(Proc.new{
 
       @page_idx -= 1
-      refresh      
+      refresh  
 
     },dur+1))
 
@@ -7429,7 +7428,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"»U#==============================================================================
+end"÷U#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7487,7 +7486,7 @@ class Ui_Grid
 
 	def enable
 		@active = true
-		choose(@selected)
+		choose(@selected,true)
 	end
 
 	def disable
@@ -7577,7 +7576,7 @@ class Ui_Grid
      	hp_bar.move(@cx + 42,@cy+14)
      	mp_bar.move(@cx + 42,@cy+14+12)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @boxes.count % 2 == 0
@@ -7615,7 +7614,7 @@ class Ui_Grid
      	hp_bar.move(@cx + 42,@cy+14)
      	mp_bar.move(@cx + 42,@cy+14+12)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
 		@cx += btn.width + @spacing - 1
@@ -7638,7 +7637,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx+10,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	#if @layout == :vertical
@@ -7667,7 +7666,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -7692,7 +7691,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx+10,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -7717,7 +7716,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx+10,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -7821,7 +7820,7 @@ class Ui_Grid
      	stat.move(@cx+25,@cy+32)
      	cat.move(@cx+188,@cy+8)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -8081,7 +8080,7 @@ class Ui_Grid
      	
      	
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -8153,7 +8152,7 @@ class Ui_Grid
 			hp_label.z += 50
 
 			
-	     	choose(@boxes[0].name) if @boxes.count == 1
+	     	choose(@boxes[0].name,true) if @boxes.count == 1
 
 	     end
 
@@ -8246,7 +8245,7 @@ class Ui_Grid
 			hp_label.move(@cx+13,@cy + 54)
 			hp_label.z += 53
 			
-	     	choose(@boxes[0].name) if @boxes.count == 1
+	     	choose(@boxes[0].name,true) if @boxes.count == 1
 
 	     end
 
@@ -8337,7 +8336,7 @@ class Ui_Grid
 			hp_label.move(@cx+13,@cy + 54)
 			hp_label.z += 53
 			
-	     	choose(@boxes[0].name) if @boxes.count == 1
+	     	choose(@boxes[0].name,true) if @boxes.count == 1
 
 	     end
 
@@ -9699,7 +9698,7 @@ class Ui_Shop < SpriteGroup
 	end
 
 
-end" #==============================================================================
+end"k#==============================================================================
 # ** Mnu_Base
 #==============================================================================
 
@@ -9818,13 +9817,18 @@ class Mnu_Base
 	end
 
 	def close_soon(d=10)
-		sys('cancel')
+		sys('cancel') if !@close_soon
+		@close_soon = true
+		@close_delay = d
+	end
+
+	def close_silent(d=10)
 		@close_soon = true
 		@close_delay = d
 	end
 
 	def close_now
-		sys('cancel')
+		sys('cancel') if !@close_soon
 		@close_soon = true
 		@close_delay = 0
 	end
@@ -10137,7 +10141,7 @@ class Mnu_Equipping < Mnu_Base
 		
 	end
 
-end"r#==============================================================================
+end"¯#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -10258,8 +10262,10 @@ class Mnu_Healing < Mnu_Base
 		}
 
 		if ex && $party.item_number($menu.use_item) == 0
+			$menu.use_item = nil
 			$scene.queue_menu("Items")
 			close_now
+			return
 		end
 
 		# Cancel out of grid
@@ -10267,6 +10273,7 @@ class Mnu_Healing < Mnu_Base
 			@left.each{ |a| $tweens.clear(a) }
 			@right.each{ |a| $tweens.clear(a) }
 			@other.each{ |a| $tweens.clear(a) }
+			$menu.use_item = nil
 			$scene.queue_menu("Items")
 			close_now
 		end
@@ -10418,7 +10425,7 @@ class Mnu_Help < Mnu_Base
 	end
 
 
-end"#==============================================================================
+end"¤#==============================================================================
 # ** Mnu_Items
 #==============================================================================
 
@@ -10430,10 +10437,13 @@ class Mnu_Items < Mnu_Base
 		@title.change('items')
 		#@subtitle.text = "Various items of collection"
 
+		$menu.menu_tab = 'all' if $menu.menu_tab == nil
+
 		@tabs.push("all")
 		@tabs.push("usable")
 		@tabs.push("keys")
 		@tabs.push("gear")
+		@tabs.idx($menu.menu_tab)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -10457,7 +10467,7 @@ class Mnu_Items < Mnu_Base
 		#@grid.hide
 		self.right.push(@grid)
 
-		tab('all')
+		tab($menu.menu_tab)
 
 		open
 
@@ -10470,6 +10480,8 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def tab(option)
+
+		$menu.menu_tab = option
 
 		# Reload the quest list limited to this tab
 		data = $party.items.keys
@@ -10562,7 +10574,8 @@ class Mnu_Items < Mnu_Base
 			when 'ally', 'down'
 				$menu.use_item = option
 				$scene.queue_menu("Healing")
-				close_soon
+				close_silent
+				sys('action')
 
 			when 'common'
 				if option == 'witch-teleport' && ($map.id == 94 || $map.id == 74)
@@ -11947,7 +11960,7 @@ class Mnu_Shop < Mnu_Base
 		
 	end
 
-end"í#==============================================================================
+end"#==============================================================================
 # ** Mnu_Equip
 #==============================================================================
 
@@ -12019,7 +12032,6 @@ class Mnu_Equip < Mnu_Base
 
 		open
 
-
 	end
 
 	def dispose
@@ -12067,6 +12079,8 @@ class Mnu_Equip < Mnu_Base
 			sys('deny')
 			return
 		end
+
+		sys('action')
 
 		$menu.auto_slot = nil
 
@@ -12161,6 +12175,7 @@ class Mnu_Equip < Mnu_Base
 	 		#close_now
 	 		start_close
 	 	else
+	 		sys('cancel')
 	 		back_to_slots
 	 	end
 	end
@@ -12369,7 +12384,7 @@ class Mnu_Profile < Mnu_Base
 		
 	end
 
-end"/#==============================================================================
+end"U#==============================================================================
 # ** Mnu_Skills
 #==============================================================================
 
@@ -12383,9 +12398,11 @@ class Mnu_Skills < Mnu_Base
 
 		@subtitle.text = "Hone your techniques"
 
+		data = $party.get($menu.char).all_skill_list
+
 		@menu.list.type = :skill
 		@menu.list.user = $menu.char
-		@menu.list.setup($party.get($menu.char).all_skill_list)
+		@menu.list.setup(data)
 
 		@port = Port_Full.new(vp)
 		@port.angry
@@ -12398,6 +12415,8 @@ class Mnu_Skills < Mnu_Base
 		self.right.push(@item_box)
 
 		@last_option = nil
+
+		change(data[0])
 
 		open
 
@@ -13368,7 +13387,7 @@ class Info_Box < SpriteGroup
     end
 
 end
-" 
+"±
 class Item_Box < SpriteGroup
 
 	attr_accessor :title
@@ -13390,7 +13409,7 @@ class Item_Box < SpriteGroup
     	@title.fixed_width = 250
     	@title.icon = $cache.icon("items/map")
     	@title.font = $fonts.pop_ttl
-    	@title.text = "Active Quests:"
+    	@title.text = ""
     	add(@title,16,10)
 
     	# @cat = Label.new(vp)
@@ -13412,13 +13431,15 @@ class Item_Box < SpriteGroup
 
     	@desc = Area.new(vp)
     	@desc.font = $fonts.pop_text
-    	@desc.text = "Missing Descriptor"
+    	@desc.text = ""
     	add(@desc,16,42)
 
         @stats = []
         @cy = 42    	
     	
     	move(0,0)
+
+        hide
 
     	#item('unknown')
 
@@ -13599,6 +13620,13 @@ class Item_Box < SpriteGroup
     # Shop display of items
 	def item(id)
 
+        if id == nil
+            self.opacity = 0
+            return
+        else
+            self.opacity = 255
+        end
+
         return skill(id) if @type == :skill
 
         id = 'mid-arm-windshire' if id == "unknown"
@@ -13629,6 +13657,7 @@ class Item_Box < SpriteGroup
 		
 		#@type.text = item.type
 
+        show
         newsize
         remove
 
@@ -13678,6 +13707,7 @@ class Item_Box < SpriteGroup
                 stat("targets","Targets All Allies")
         end
 
+        show
         newsize
         remove
 
@@ -13767,7 +13797,7 @@ class List_Common < SpriteGroup
 
 	end
 
-end"0	#==============================================================================
+end"v	#==============================================================================
 # Tabs
 #==============================================================================
 
@@ -13805,6 +13835,11 @@ class Page_Tabs < Sprite
     @names.push(name)
     @gfx.push($cache.menu_tab(name))
     @gfx_on.push($cache.menu_tab(name+"-on"))
+    refresh
+  end
+
+  def idx(name)
+    @idx = @names.index(name)
     refresh
   end
 
@@ -15381,7 +15416,7 @@ class Game_Battler
 
   end
 
- end"²class Game_Battler
+ end"àclass Game_Battler
 
   def learn(skill)
   	@skills.push(skill)
@@ -15420,7 +15455,7 @@ class Game_Battler
   end
 
   def all_skill_list
-    result = @skills
+    result = @skills.select{ |s| $data.skills[s].user != 'boy-s' }
     return result
   end
 
@@ -20801,7 +20836,7 @@ class Game_Battle
     return @enemies + $party.all_battlers
   end
   
-end"z
+end"­
 # Menu state
 # Hold cursor positions, current character etc etc etc
 
@@ -20816,6 +20851,8 @@ class MenuState
 
 	attr_accessor :menu_cursor
 	attr_accessor :char_cursor
+
+	attr_accessor :menu_tab
 
 	# Item chosen from item list
 	attr_accessor :use_item
@@ -20848,6 +20885,8 @@ class MenuState
 
 		@menu_cursor = "Journal"
 		@char_cursor = 'Equip'
+
+		@menu_tab = 'all'
 
 		@use_item = nil
 		@common_event = nil
@@ -21335,7 +21374,7 @@ class Game_Party
 
   end
         
-end"à
+end"å
 class Progress
 
 	attr_accessor :quests, :complete
@@ -21423,7 +21462,7 @@ class Progress
 			when '@windshire','@wind-hills','@wind-caves','@windmill','@briar-woods','@briar-caves','@whisper','@aveyond','@wind-valley','@endworld'
 				zone = 'windshire'
 
-			when '@wastelands','tor','dwarf-town','firedeep','firedeep-2','arena'
+			when '@wastelands','@tor','@dwarf-town','@firedeep','@firedeep-2','@arena'
 				zone = 'wasteland'
 
 			when '@royal-woods','@royal-town','@woods-boppity','@woods-ginger','@ginger-cave','@woods-swamp','@woods-hills','@royal-castle','@royal-dungeon','@royal-crusade','@royal-crabs','@weeville'
@@ -26679,7 +26718,7 @@ end"øclass Bitmap
 	end
 
 end
-"r
+"†
 class UsableData
 	attr_reader :id
 	attr_reader :name
@@ -26747,6 +26786,7 @@ class SkillData
 	attr_reader :stats
 	attr_reader :effects
 	attr_reader :price
+	attr_reader :user
 end
 
 class StateData

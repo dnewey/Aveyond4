@@ -56,7 +56,7 @@ class Ui_Grid
 
 	def enable
 		@active = true
-		choose(@selected)
+		choose(@selected,true)
 	end
 
 	def disable
@@ -146,7 +146,7 @@ class Ui_Grid
      	hp_bar.move(@cx + 42,@cy+14)
      	mp_bar.move(@cx + 42,@cy+14+12)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @boxes.count % 2 == 0
@@ -184,7 +184,7 @@ class Ui_Grid
      	hp_bar.move(@cx + 42,@cy+14)
      	mp_bar.move(@cx + 42,@cy+14+12)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
 		@cx += btn.width + @spacing - 1
@@ -207,7 +207,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx+10,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	#if @layout == :vertical
@@ -236,7 +236,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -261,7 +261,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx+10,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -286,7 +286,7 @@ class Ui_Grid
      	# Position
      	cont.move(@cx+10,@cy+7)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -390,7 +390,7 @@ class Ui_Grid
      	stat.move(@cx+25,@cy+32)
      	cat.move(@cx+188,@cy+8)
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -650,7 +650,7 @@ class Ui_Grid
      	
      	
 
-     	choose(@boxes[0].name) if @boxes.count == 1
+     	choose(@boxes[0].name,true) if @boxes.count == 1
 
      	# Next
      	if @layout == :vertical
@@ -722,7 +722,7 @@ class Ui_Grid
 			hp_label.z += 50
 
 			
-	     	choose(@boxes[0].name) if @boxes.count == 1
+	     	choose(@boxes[0].name,true) if @boxes.count == 1
 
 	     end
 
@@ -815,7 +815,7 @@ class Ui_Grid
 			hp_label.move(@cx+13,@cy + 54)
 			hp_label.z += 53
 			
-	     	choose(@boxes[0].name) if @boxes.count == 1
+	     	choose(@boxes[0].name,true) if @boxes.count == 1
 
 	     end
 
@@ -906,7 +906,7 @@ class Ui_Grid
 			hp_label.move(@cx+13,@cy + 54)
 			hp_label.z += 53
 			
-	     	choose(@boxes[0].name) if @boxes.count == 1
+	     	choose(@boxes[0].name,true) if @boxes.count == 1
 
 	     end
 

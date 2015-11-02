@@ -81,9 +81,14 @@
 	[
 	],
 	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
 	"command_palette":
 	{
 		"height": 375.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],
@@ -91,7 +96,11 @@
 	},
 	"console":
 	{
-		"height": 0.0
+		"height": 0.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
 	},
 	"distraction_free":
 	{
@@ -102,8 +111,13 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts"
+	],
 	"file_history":
 	[
+		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Aveyond4.sublime-workspace",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Interface/Menu/save.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/System/game.rb",
 		"/C/Users/Dan/Aveyond/Aveyond4/Scripts/Scenes/gameover.rb",
@@ -230,8 +244,7 @@
 		"/C/Aveyond4/Scripts/Utils/data_types.rb",
 		"/C/Aveyond4/Scripts/Model/State/battle.rb",
 		"/C/Aveyond4/Scripts/Interface/Battle/Parts/charview.rb",
-		"/C/Aveyond4/Scripts/System/audio.rb",
-		"/C/Aveyond4/Editor/meta/skills.json"
+		"/C/Aveyond4/Scripts/System/audio.rb"
 	],
 	"find":
 	{
@@ -440,6 +453,8 @@
 	{
 		"height": 0.0
 	},
+	"pinned_build_system": "",
+	"project": "Aveyond4.sublime-project",
 	"replace":
 	{
 		"height": 50.0
@@ -448,6 +463,7 @@
 	"select_file":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 			[
@@ -968,15 +984,32 @@
 	"select_project":
 	{
 		"height": 0.0,
+		"last_filter": "",
 		"selected_items":
 		[
 		],
 		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
 	},
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
 	"side_bar_width": 218.0,
-	"status_bar_visible": true
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
 }

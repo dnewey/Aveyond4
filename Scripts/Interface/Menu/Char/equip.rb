@@ -70,7 +70,6 @@ class Mnu_Equip < Mnu_Base
 
 		open
 
-
 	end
 
 	def dispose
@@ -118,6 +117,8 @@ class Mnu_Equip < Mnu_Base
 			sys('deny')
 			return
 		end
+
+		sys('action')
 
 		$menu.auto_slot = nil
 
@@ -212,6 +213,7 @@ class Mnu_Equip < Mnu_Base
 	 		#close_now
 	 		start_close
 	 	else
+	 		sys('cancel')
 	 		back_to_slots
 	 	end
 	end

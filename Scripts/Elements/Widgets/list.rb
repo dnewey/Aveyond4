@@ -222,7 +222,6 @@ class List
     #@scroll_down.disabled = can_scroll_down?
     #@scroll_up.disabled = can_scroll_up?
 
-
     src = $cache.menu_common('list-bar')
 
     i = 0
@@ -743,7 +742,7 @@ class List
     @scroll_idx -= 1    
     #      @pagemod = 1
 
-    dur = 110
+    dur = 150
     ease = :quad_in_out
 
     @back_sprite.do(go("y",row_height,dur,ease))
@@ -763,12 +762,12 @@ class List
 
      @change.call(current) if !@change.nil?
 
-    @scroll_idx += 1    
+     @scroll_idx += 1    
           #@pagemod = -1
 
          
 
-    dur = 110
+    dur = 150
     ease = :quad_in_out
 
   	#draw_item(@data[@scroll_idx + @per_page-1],@dynamo,@page_idx == @per_page)
@@ -780,7 +779,7 @@ class List
   	@back_sprite.do(proc(Proc.new{
 
       @page_idx -= 1
-      refresh      
+      refresh  
 
     },dur+1))
 

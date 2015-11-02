@@ -10,10 +10,13 @@ class Mnu_Items < Mnu_Base
 		@title.change('items')
 		#@subtitle.text = "Various items of collection"
 
+		$menu.menu_tab = 'all' if $menu.menu_tab == nil
+
 		@tabs.push("all")
 		@tabs.push("usable")
 		@tabs.push("keys")
 		@tabs.push("gear")
+		@tabs.idx($menu.menu_tab)
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
@@ -37,7 +40,7 @@ class Mnu_Items < Mnu_Base
 		#@grid.hide
 		self.right.push(@grid)
 
-		tab('all')
+		tab($menu.menu_tab)
 
 		open
 
@@ -50,6 +53,8 @@ class Mnu_Items < Mnu_Base
 	end
 
 	def tab(option)
+
+		$menu.menu_tab = option
 
 		# Reload the quest list limited to this tab
 		data = $party.items.keys
@@ -129,7 +134,8 @@ class Mnu_Items < Mnu_Base
 		if $data.items[option].is_a?(GearData)
 			$menu.use_item = option
 			$scene.queue_menu("Equipping")
-			close_soon
+			close_silent
+			sys('action')
 		end
 
 		return if !$data.items[option].is_a?(UsableData)
@@ -142,7 +148,8 @@ class Mnu_Items < Mnu_Base
 			when 'ally', 'down'
 				$menu.use_item = option
 				$scene.queue_menu("Healing")
-				close_soon
+				close_silent
+				sys('action')
 
 			when 'common'
 				if option == 'witch-teleport' && ($map.id == 94 || $map.id == 74)
