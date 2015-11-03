@@ -45,6 +45,14 @@ class AudioManager
     @sfx_vol = 1.0 # Set by mode
 
     #change_mode(:cave)
+
+    preset = Seal::Reverb::Preset::CAVE
+    @fx_cave = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+
+    @fx_nil = Seal::EffectSlot.new()
+
+    @effect = @fx_nil
+        
     
   end
 
@@ -150,6 +158,7 @@ class AudioManager
     # Check through sources, if empty, use, if none, add
     @sys.each{ |src|
       if !src.playing?
+        src.buffer = nil
         src.buffer = Seal::Buffer.new("Audio/Sys/#{file}.ogg")
         src.gain = vol * $settings.sound_vol
         src.play
@@ -172,6 +181,7 @@ class AudioManager
     # Check through sources, if empty, use, if none, add
     @sfx.each{ |src|
       if !src.playing?
+        src.buffer = nil
         src.buffer = Seal::Buffer.new("Audio/Sounds/#{file}.ogg")
         src.gain = vol * $settings.sound_vol
         src.play
@@ -187,6 +197,8 @@ class AudioManager
     src.feed(@effect, 0) if @effect != nil
     src.play
     @sfx.push(src)
+
+    log_sys("SFX MAX: #{@sfx.count}")
 
   end
 
@@ -210,18 +222,18 @@ class AudioManager
     # Create new effect and volume modifier
     case mode
       when 'normal', ''
-        preset = nil
-        @effect = nil        
+        @effect = @fx_nil
 
       when 'cave'
-        preset = Seal::Reverb::Preset::CAVE
-        @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+        @effect = @fx_cave
         
     end
 
-    @sfx.each{ |s| s = nil }
-    @sfx = []
-    GC.start
+    #@sfx.each{ |s| s = nil }
+    #@sfx = []
+    #GC.start
+
+    @sfx.each{ |e| e.feed(@effect,0) }
    
   end
 

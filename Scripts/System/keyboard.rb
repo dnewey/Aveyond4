@@ -78,7 +78,7 @@ class KeyboardManager
 		@keys_held.delete_if { |k,v| !state?(k)}
 	end
 
-	  # http://www.mods.com.au/budapi_docs/Virtual%20Key%20Codes.htm
+	 # http://www.mods.com.au/budapi_docs/Virtual%20Key%20Codes.htm
 
   def to_char(key)
 

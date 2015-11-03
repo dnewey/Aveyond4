@@ -122,6 +122,7 @@ class Mnu_Healing < Mnu_Base
 			$menu.use_item = nil
 			$scene.queue_menu("Items")
 			close_now
+			super
 			return
 		end
 

@@ -31,7 +31,7 @@ class Area < Sprite
     super
     #redraw
   end
-  
+    
   #--------------------------------------------------------------------------
   # * Manage
   #--------------------------------------------------------------------------
@@ -53,7 +53,10 @@ class Area < Sprite
   	@text.split(" ").each{ |word|
   		w = $fonts.size(word,@font)
   		cx += w.width
-  		if cx < @fixed_width
+      if word == "$n"
+        lines.push('')
+        cx = 0
+  		elsif cx < @fixed_width
   			lines[-1] += word + ' '
   			cx += @spacing
   		else
@@ -75,8 +78,18 @@ class Area < Sprite
 
     cy = 0
     lines.each{ |line|
-    	self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
-    	cy += height
+      if line.include?('=>')
+        self.bitmap.font.bold = true
+        self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
+        self.bitmap.font.bold = false
+      else
+        self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
+      end
+      if line == ''
+        cy += height/2
+      else
+    	 cy += height
+      end
     }
     
     

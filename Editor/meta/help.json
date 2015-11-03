@@ -6,7 +6,8 @@
     "field": "name"
   },
   {
-    "field": "description"
+    "field": "description",
+    "edit": "area"
   },
   {
     "field": "icon"
