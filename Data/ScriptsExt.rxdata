@@ -1112,7 +1112,7 @@ def dispose
 		@stars.each{ |s| s.dispose }
 	end
 
-end"^#==============================================================================
+end"±#==============================================================================
 # Widget_Label
 #==============================================================================
 
@@ -1145,7 +1145,7 @@ class Area < Sprite
     super
     #redraw
   end
-  
+    
   #--------------------------------------------------------------------------
   # * Manage
   #--------------------------------------------------------------------------
@@ -1167,7 +1167,10 @@ class Area < Sprite
   	@text.split(" ").each{ |word|
   		w = $fonts.size(word,@font)
   		cx += w.width
-  		if cx < @fixed_width
+      if word == "$n"
+        lines.push('')
+        cx = 0
+  		elsif cx < @fixed_width
   			lines[-1] += word + ' '
   			cx += @spacing
   		else
@@ -1189,8 +1192,18 @@ class Area < Sprite
 
     cy = 0
     lines.each{ |line|
-    	self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
-    	cy += height
+      if line.include?('=>')
+        self.bitmap.font.bold = true
+        self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
+        self.bitmap.font.bold = false
+      else
+        self.bitmap.draw_text(@padding,@padding+cy,w*2,height,line)
+      end
+      if line == ''
+        cy += height/2
+      else
+    	 cy += height
+      end
     }
     
     
@@ -10141,7 +10154,7 @@ class Mnu_Equipping < Mnu_Base
 		
 	end
 
-end"¯#==============================================================================
+end"¹#==============================================================================
 # ** Mnu_Healing
 #==============================================================================
 
@@ -10265,6 +10278,7 @@ class Mnu_Healing < Mnu_Base
 			$menu.use_item = nil
 			$scene.queue_menu("Items")
 			close_now
+			super
 			return
 		end
 
@@ -21024,7 +21038,7 @@ class MenuState
 		@shop.push(item)
 	end
 
-end"ú+#==============================================================================
+end",#==============================================================================
 # ** Game_Party
 #==============================================================================
 
@@ -21283,7 +21297,7 @@ class Game_Party
     @items.has_key?(id) ? @items[id] += n : @items[id] = n
     @items.delete(id) if @items[id] <= 0 
     $map.need_refresh = true if $map
-    $progress.catch_creature if id == 'cheeki'
+    $progress.catch_creature if id == 'cheeki' && n > 0
   end
 
   def lose_item(id,n=1) add_item(id,-n) end
@@ -25016,7 +25030,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"…#==============================================================================
+end"W#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -25063,6 +25077,14 @@ class AudioManager
     @sfx_vol = 1.0 # Set by mode
 
     #change_mode(:cave)
+
+    preset = Seal::Reverb::Preset::CAVE
+    @fx_cave = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+
+    @fx_nil = Seal::EffectSlot.new()
+
+    @effect = @fx_nil
+        
     
   end
 
@@ -25168,6 +25190,7 @@ class AudioManager
     # Check through sources, if empty, use, if none, add
     @sys.each{ |src|
       if !src.playing?
+        src.buffer = nil
         src.buffer = Seal::Buffer.new("Audio/Sys/#{file}.ogg")
         src.gain = vol * $settings.sound_vol
         src.play
@@ -25190,6 +25213,7 @@ class AudioManager
     # Check through sources, if empty, use, if none, add
     @sfx.each{ |src|
       if !src.playing?
+        src.buffer = nil
         src.buffer = Seal::Buffer.new("Audio/Sounds/#{file}.ogg")
         src.gain = vol * $settings.sound_vol
         src.play
@@ -25205,6 +25229,8 @@ class AudioManager
     src.feed(@effect, 0) if @effect != nil
     src.play
     @sfx.push(src)
+
+    log_sys("SFX MAX: #{@sfx.count}")
 
   end
 
@@ -25228,18 +25254,18 @@ class AudioManager
     # Create new effect and volume modifier
     case mode
       when 'normal', ''
-        preset = nil
-        @effect = nil        
+        @effect = @fx_nil
 
       when 'cave'
-        preset = Seal::Reverb::Preset::CAVE
-        @effect = Seal::EffectSlot.new(Seal::Reverb.new(preset))
+        @effect = @fx_cave
         
     end
 
-    @sfx.each{ |s| s = nil }
-    @sfx = []
-    GC.start
+    #@sfx.each{ |s| s = nil }
+    #@sfx = []
+    #GC.start
+
+    @sfx.each{ |e| e.feed(@effect,0) }
    
   end
 
@@ -26349,7 +26375,7 @@ class InputManager
 		return $keyboard.state?(VK_SHIFT)
 	end
 
-end"@	#==============================================================================
+end"?	#==============================================================================
 # ** Keyboard Manager
 #==============================================================================
 
@@ -26429,7 +26455,7 @@ class KeyboardManager
 		@keys_held.delete_if { |k,v| !state?(k)}
 	end
 
-	  # http://www.mods.com.au/budapi_docs/Virtual%20Key%20Codes.htm
+	 # http://www.mods.com.au/budapi_docs/Virtual%20Key%20Codes.htm
 
   def to_char(key)
 

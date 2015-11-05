@@ -257,7 +257,7 @@ class Game_Party
     @items.has_key?(id) ? @items[id] += n : @items[id] = n
     @items.delete(id) if @items[id] <= 0 
     $map.need_refresh = true if $map
-    $progress.catch_creature if id == 'cheeki'
+    $progress.catch_creature if id == 'cheeki' && n > 0
   end
 
   def lose_item(id,n=1) add_item(id,-n) end
