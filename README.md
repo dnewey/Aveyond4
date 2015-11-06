@@ -9,6 +9,9 @@ Gfx
 Character and Title Art
 Ben Resnick
 
+Character Art
+Ian Schlaepfer
+
 Tile Art
 Alexander Zavrin
 
@@ -45,9 +48,6 @@ Additional Tiles
 Crazy Crab
 http://forums.rpgmakerweb.com/index.php?/topic/37167-crazy-crabs-tiles/
 
-Additional Tiles
-Kalez
-
 Main Character Sprites & Additional Sprites
 hiddenone on RpgMakerWeb
 http://forums.rpgmakerweb.com/index.php?/topic/35845-hiddenones-sprite-shop/
@@ -68,6 +68,22 @@ Additional Icons + Tiles
 Ying
 http://forums.rpgmakerweb.com/index.php?/topic/35360-yings-things
 
+Additional Art
+Charlesthehursts
+http://www.rpgmakervxace.net/topic/16280-charlesthehursts-resources/
+
+Cait
+http://www.rpgmakervxace.net/topic/13901-caits-graphical-world/
+
+Kalez
+http://www.rpgmakervxace.net/topic/1701-kalezs-art-table-newest-rockets/
+
+Indrah
+http://forums.rpgmakerweb.com/index.php?/topic/710-indrahs-tileset-closet/
+
+Nanokan
+http://forums.rpgmakerweb.com/index.php?/topic/26562-nanokan-vxace-stuff/
+
 Wild West Resource Pack
 [Copyright](C) 2013 ENTERBRAIN, INC
 creator: Sherman3D
@@ -87,7 +103,6 @@ artist Celianna
 Old School Modern Resource Pack
 [Copyright](C) 2012 ENTERBRAIN, INC
 artist Jason Perry.
-
 
 
 16x16 RPG Icons

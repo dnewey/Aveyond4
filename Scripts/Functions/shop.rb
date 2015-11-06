@@ -1,6 +1,6 @@
 
 
-def shop_choice
+def shop_choice(x = nil)
 
 	case $menu.grid_action
 
@@ -8,8 +8,11 @@ def shop_choice
 
 			# Have money, buy it
 			data = $data.items[gev(me).name]
+			data = $data.items[x] if x != nil
+			
 			if $party.gold >= data.price
-				item(gev(me).name,'b')
+				item(gev(me).name,'b') if x == nil
+				item(x,'b') if x != nil
 				state(me,'sold')
 				state(me,'on')
 				ungold(data.price)
@@ -351,7 +354,7 @@ def setup_smith_shop
 			stock.push('helm-tor')
 			stock.push('rob-shield-tor')
 
-		when '@tor'	
+		when '@arena'	
 			stock.push('boy-arm-briar')
 			stock.push('acc-arena')
 

@@ -140,6 +140,14 @@ def pop_dots(ev)
 	sfx('dots')
 end
 
+def pop_dots2(ev)
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 40
+	$scene.add_icon('misc/dots',x,y,:blast,:fade)
+
+	sfx('dots')
+end
+
 def pop_bulb(ev)
 	pop_icon(ev,"misc/bulb","bulb")
 end

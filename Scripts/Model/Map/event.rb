@@ -633,6 +633,9 @@ class Game_Event < Game_Character
           g = pingpong('off_y',8,1500,:qio)
           self.do(g)
 
+        when '#notfloating'
+          $tweens.clear(self)
+
         when '#floating-rock'
           g = go('off_y',6,600,:qio)
           self.do(repeat(seq(g,g.reverse)))
@@ -806,6 +809,9 @@ class Game_Event < Game_Character
     if @trigger == 3
 
       start
+      log_info @character_name
+      log_info self.x
+      log_info self.y
       
     end
 

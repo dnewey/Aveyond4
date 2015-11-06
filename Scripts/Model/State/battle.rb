@@ -414,8 +414,10 @@ class Game_Battle
             is_heal = true
 
           # Mana
-          when 'gain-mana'
+          when 'mana'
             result.gain_mana = data[1].to_i
+          when 'mana-p'
+            result.gain_mana = data[1].to_f * attacker.stat('mp')
 
           # States
           when 'state-add'

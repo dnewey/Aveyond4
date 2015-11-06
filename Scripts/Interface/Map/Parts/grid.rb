@@ -346,6 +346,7 @@ class Ui_Grid
 	    end
 
 	    if item != nil && slot == 'minion'
+	    	text = ''
     		data = $data.actors[item.id.sub('boy-','')]
     		actions = data.actions.split(' | ')
     		actions.each{ |a|

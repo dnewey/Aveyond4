@@ -157,6 +157,10 @@ class List
 
   end
 
+  def data
+    return @data
+  end
+
   def slide
     @content_sprite.opacity = 0
     @content_sprite.do(go("opacity",255,300,:qio))

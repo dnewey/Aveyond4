@@ -20,10 +20,10 @@ class Mnu_Chooser < Mnu_Base
 		self.right.push(@item_box)
 
 		#grant_items
-
 		@menu.setup_items($menu.choose_cat)
 
 		$menu.chosen = 'none'
+		change(@menu.list.data[0])
 
 		open
 
@@ -31,9 +31,9 @@ class Mnu_Chooser < Mnu_Base
 
 	def update
 
-		if $input.cancel? || $input.rclick?
-			#absorb escape attempts
-		end
+		# if $input.cancel? || $input.rclick?
+		# 	#absorb escape attempts
+		# end
 		
 		super
 		# Keep checking if item box changed

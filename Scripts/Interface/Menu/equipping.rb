@@ -151,6 +151,9 @@ class Mnu_Equipping < Mnu_Base
 		}
 
 		$menu.auto_slot = $data.items[$menu.use_item].slot
+		if option == 'mys'
+			$menu.auto_slot += '1'
+		end
 		$menu.use_item = nil
 
 		# Jump to equip menu?

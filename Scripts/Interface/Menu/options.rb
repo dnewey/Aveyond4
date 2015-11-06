@@ -13,6 +13,12 @@ class Mnu_Options < Mnu_Base
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
 
+
+		@credits = Sprite.new()
+		@credits.bitmap = $cache.menu_common('credits')
+		@credits.opacity = 0
+		@credits.z = 10000
+
 		open
 
 	end
@@ -39,19 +45,27 @@ class Mnu_Options < Mnu_Base
 		else
 			data.push(["mouse","Mouse Control: Off","misc/mouse"])
 		end
-		if $settings.tutorial
-			data.push(["tutorial","Tutorial: On","misc/tuto"])
-		else
-			data.push(["tutorial","Tutorial: Off","misc/tuto"])
-		end
+		# if $settings.tutorial
+		# 	data.push(["tutorial","Tutorial: On","misc/tuto"])
+		# else
+		# 	data.push(["tutorial","Tutorial: Off","misc/tuto"])
+		# end
 		if $settings.bottombar
 			data.push(["bottombar","Bottom Bar: On","misc/bottombar"])
 		else
 			data.push(["bottombar","Bottom Bar: Off","misc/bottombar"])
 		end
-		#data.push(["credits","View Credits >","misc/credits"])	
+		data.push(["credits","View Credits >","misc/credits"])	
 
 		@menu.list.setup(data,idx)
+
+	end
+
+	def close
+
+		@credits.dispose
+
+		super
 
 	end
 
@@ -111,6 +125,8 @@ class Mnu_Options < Mnu_Base
 	end
 
 	def change(option)
+
+		@credits.opacity = 0
 	end
 
 	def select(option)	
@@ -149,6 +165,11 @@ class Mnu_Options < Mnu_Base
 			when "bottombar"
 				$settings.bottombar = !$settings.bottombar
 			when "credits"
+				if @credits.opacity == 0
+					@credits.opacity = 255
+				else
+					@credits.opacity = 0
+				end
 
 		end
 

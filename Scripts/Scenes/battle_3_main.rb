@@ -309,7 +309,8 @@ class Scene_Battle
         end
 
         if result.gain_mana != nil
-          @active_battler.gain_mana(result.gain_mana)
+
+          result.target.gain_mana(result.gain_mana)
           #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
 
           # Spark effect
@@ -317,6 +318,7 @@ class Scene_Battle
           y = @active_battler.ev.screen_y - 15
           add_spark('mana-blue',x,y)
           wait(15)
+
         end
     }
 

@@ -1745,7 +1745,7 @@ class Label < Sprite
         
   end
   
-end"ýL#==============================================================================
+end"$M#==============================================================================
 # The magical list REDUX
 #==============================================================================
 
@@ -1902,6 +1902,10 @@ class List
 
   	refresh(false) #if !data.empty?
 
+  end
+
+  def data
+    return @data
   end
 
   def slide
@@ -2813,7 +2817,7 @@ def moblin(ev,delay=1)
 
 	$scene.add_moblin(ev,delay)
 
-end"•
+end"$
 def spark(ev,fx,ox=0,oy=0)
 
 	return if gev(ev) == nil
@@ -2950,6 +2954,14 @@ end
 def pop_dots(ev)
 	x = gev(ev).screen_x+2
 	y = gev(ev).screen_y - 70
+	$scene.add_icon('misc/dots',x,y,:blast,:fade)
+
+	sfx('dots')
+end
+
+def pop_dots2(ev)
+	x = gev(ev).screen_x+2
+	y = gev(ev).screen_y - 40
 	$scene.add_icon('misc/dots',x,y,:blast,:fade)
 
 	sfx('dots')
@@ -4492,9 +4504,9 @@ def attract(who)
 	end
 	sys('attract')
 	pop_attract(who)
-end"…6
+end"ä6
 
-def shop_choice
+def shop_choice(x = nil)
 
 	case $menu.grid_action
 
@@ -4502,8 +4514,11 @@ def shop_choice
 
 			# Have money, buy it
 			data = $data.items[gev(me).name]
+			data = $data.items[x] if x != nil
+			
 			if $party.gold >= data.price
-				item(gev(me).name,'b')
+				item(gev(me).name,'b') if x == nil
+				item(x,'b') if x != nil
 				state(me,'sold')
 				state(me,'on')
 				ungold(data.price)
@@ -4845,7 +4860,7 @@ def setup_smith_shop
 			stock.push('helm-tor')
 			stock.push('rob-shield-tor')
 
-		when '@tor'	
+		when '@arena'	
 			stock.push('boy-arm-briar')
 			stock.push('acc-arena')
 
@@ -7441,7 +7456,7 @@ class Ui_Book < SpriteGroup
 
 	end
 
-end"÷U#==============================================================================
+end"V#==============================================================================
 # ** Ui_Grid
 #==============================================================================
 
@@ -7789,6 +7804,7 @@ class Ui_Grid
 	    end
 
 	    if item != nil && slot == 'minion'
+	    	text = ''
     		data = $data.actors[item.id.sub('boy-','')]
     		actions = data.actions.split(' | ')
     		actions.each{ |a|
@@ -9971,7 +9987,7 @@ class Mnu_Char < Mnu_Base
 		
 	end
 
-end"‘#==============================================================================
+end"É#==============================================================================
 # ** Mnu_Equipping
 #==============================================================================
 
@@ -10124,6 +10140,9 @@ class Mnu_Equipping < Mnu_Base
 		}
 
 		$menu.auto_slot = $data.items[$menu.use_item].slot
+		if option == 'mys'
+			$menu.auto_slot += '1'
+		end
 		$menu.use_item = nil
 
 		# Jump to equip menu?
@@ -11103,7 +11122,7 @@ class Mnu_Main
 		return @closing && $tweens.done?(self)
 	end
 
-end"*
+end"m
 class Mnu_Options < Mnu_Base
 
 	def initialize(vp)
@@ -11117,6 +11136,12 @@ class Mnu_Options < Mnu_Base
 
 		@port = Port_Full.new(vp)
 		self.right.push(@port)
+
+
+		@credits = Sprite.new()
+		@credits.bitmap = $cache.menu_common('credits')
+		@credits.opacity = 0
+		@credits.z = 10000
 
 		open
 
@@ -11144,19 +11169,27 @@ class Mnu_Options < Mnu_Base
 		else
 			data.push(["mouse","Mouse Control: Off","misc/mouse"])
 		end
-		if $settings.tutorial
-			data.push(["tutorial","Tutorial: On","misc/tuto"])
-		else
-			data.push(["tutorial","Tutorial: Off","misc/tuto"])
-		end
+		# if $settings.tutorial
+		# 	data.push(["tutorial","Tutorial: On","misc/tuto"])
+		# else
+		# 	data.push(["tutorial","Tutorial: Off","misc/tuto"])
+		# end
 		if $settings.bottombar
 			data.push(["bottombar","Bottom Bar: On","misc/bottombar"])
 		else
 			data.push(["bottombar","Bottom Bar: Off","misc/bottombar"])
 		end
-		#data.push(["credits","View Credits >","misc/credits"])	
+		data.push(["credits","View Credits >","misc/credits"])	
 
 		@menu.list.setup(data,idx)
+
+	end
+
+	def close
+
+		@credits.dispose
+
+		super
 
 	end
 
@@ -11216,6 +11249,8 @@ class Mnu_Options < Mnu_Base
 	end
 
 	def change(option)
+
+		@credits.opacity = 0
 	end
 
 	def select(option)	
@@ -11254,6 +11289,11 @@ class Mnu_Options < Mnu_Base
 			when "bottombar"
 				$settings.bottombar = !$settings.bottombar
 			when "credits"
+				if @credits.opacity == 0
+					@credits.opacity = 255
+				else
+					@credits.opacity = 0
+				end
 
 		end
 
@@ -14388,7 +14428,7 @@ class Right_Page < SpriteGroup
         @page_title.text = text
     end
 
-end"ÿ#==============================================================================
+end"!#==============================================================================
 # ** Mnu_Chooser
 #==============================================================================
 
@@ -14410,10 +14450,10 @@ class Mnu_Chooser < Mnu_Base
 		self.right.push(@item_box)
 
 		#grant_items
-
 		@menu.setup_items($menu.choose_cat)
 
 		$menu.chosen = 'none'
+		change(@menu.list.data[0])
 
 		open
 
@@ -14421,9 +14461,9 @@ class Mnu_Chooser < Mnu_Base
 
 	def update
 
-		if $input.cancel? || $input.rclick?
-			#absorb escape attempts
-		end
+		# if $input.cancel? || $input.rclick?
+		# 	#absorb escape attempts
+		# end
 		
 		super
 		# Keep checking if item box changed
@@ -17568,7 +17608,7 @@ class Game_Character
 
 
 end
-"’X#==============================================================================
+"Y#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -18203,6 +18243,9 @@ class Game_Event < Game_Character
           g = pingpong('off_y',8,1500,:qio)
           self.do(g)
 
+        when '#notfloating'
+          $tweens.clear(self)
+
         when '#floating-rock'
           g = go('off_y',6,600,:qio)
           self.do(repeat(seq(g,g.reverse)))
@@ -18376,6 +18419,9 @@ class Game_Event < Game_Character
     if @trigger == 3
 
       start
+      log_info @character_name
+      log_info self.x
+      log_info self.y
       
     end
 
@@ -20266,7 +20312,7 @@ class Game_Player < Game_Character
   end
 
 end
-"ð?
+"G@
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -20682,8 +20728,10 @@ class Game_Battle
             is_heal = true
 
           # Mana
-          when 'gain-mana'
+          when 'mana'
             result.gain_mana = data[1].to_i
+          when 'mana-p'
+            result.gain_mana = data[1].to_f * attacker.stat('mp')
 
           # States
           when 'state-add'
@@ -22837,7 +22885,7 @@ class Scene_Battle
     
   end
 
-end"í(
+end"ï(
 class Scene_Battle
 
   def phase_main_init
@@ -23148,7 +23196,8 @@ class Scene_Battle
         end
 
         if result.gain_mana != nil
-          @active_battler.gain_mana(result.gain_mana)
+
+          result.target.gain_mana(result.gain_mana)
           #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
 
           # Spark effect
@@ -23156,6 +23205,7 @@ class Scene_Battle
           y = @active_battler.ev.screen_y - 15
           add_spark('mana-blue',x,y)
           wait(15)
+
         end
     }
 
