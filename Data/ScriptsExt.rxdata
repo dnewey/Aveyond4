@@ -3172,7 +3172,7 @@ end
 
 
 
-"Á#==============================================================================
+"Ã#==============================================================================
 # ** Event Functions
 #==============================================================================
 
@@ -3366,7 +3366,7 @@ def path(ev,tx,ty,after=nil)
 	result = char.setup_map(sx,sy,tx,ty)
 
 	if !result[0]
-		log_err("CANNOT FIND PATH")
+		# log_err("CANNOT FIND PATH")
 		return
 	end
 	map = result[1]
@@ -15861,7 +15861,7 @@ class Game_Battler
 
 	end
 
-end"Ú
+end"%
 class Game_Battler
 
   #--------------------------------------------------------------------------
@@ -15883,6 +15883,9 @@ class Game_Battler
           }
         end
 	  	end
+      if $party.difficulty != 'hard'
+        self.recover_all
+      end
   		return true
   	end
   	return false
@@ -15919,7 +15922,7 @@ class Game_Battler
 
   end
 
-end"9
+end"O
 class Attack_Result
 
 	attr_accessor :target
@@ -15933,6 +15936,7 @@ class Attack_Result
 	attr_accessor :resist
 
 	attr_accessor :gain_mana
+	attr_accessor :mana
 
 	attr_accessor :state_add
 	attr_accessor :state_remove
@@ -15982,7 +15986,7 @@ class Attack_Plan
 		return @attacks.empty?
 	end
 
-end"·#==============================================================================
+end"·#==============================================================================
 # ** Game_Character (part 1)
 #------------------------------------------------------------------------------
 #  This class deals with characters. It's used as a superclass for the
@@ -17601,14 +17605,14 @@ class Game_Character
       #log_info (old_positions)
     }
       
-    log_err "No Path Found"
+    # log_err "No Path Found"
     return [false, nil, nil]     
 
   end
 
 
 end
-"Y#==============================================================================
+"KY#==============================================================================
 # ** Game_Event
 #==============================================================================
 
@@ -18416,12 +18420,12 @@ class Game_Event < Game_Character
 
     # If trigger is [auto run]
 
-    if @trigger == 3
+    if !@disabled && !@deleted && !@erased && @trigger == 3
 
       start
-      log_info @character_name
-      log_info self.x
-      log_info self.y
+      # log_info @character_name
+      # log_info self.x
+      # log_info self.y
       
     end
 
@@ -19040,7 +19044,7 @@ class Interpreter
   end
 
 end
-"C#==============================================================================
+"|C#==============================================================================
 # ** Game_Map
 #==============================================================================
 
@@ -19117,8 +19121,6 @@ class Game_Map
     if @zone.rename != '' && @zone.rename != nil
       name = @zone.rename
     end
-
-    log_sys name
 
     return name.split("#")[0].split("@")[0]
   end
@@ -20312,7 +20314,7 @@ class Game_Player < Game_Character
   end
 
 end
-"G@
+"–A
 class Game_Battle
 
   attr_accessor :map, :weather
@@ -20729,9 +20731,13 @@ class Game_Battle
 
           # Mana
           when 'mana'
-            result.gain_mana = data[1].to_i
+            result.mana = data[1].to_i
           when 'mana-p'
-            result.gain_mana = data[1].to_f * attacker.stat('mp')
+            result.mana = data[1].to_f * attacker.stat('mp')
+
+          # Self mana
+          when 'gain-mana'
+            result.gain_mana = data[1].to_i
 
           # States
           when 'state-add'
@@ -20765,10 +20771,16 @@ class Game_Battle
       # Calc evade
       result.evade = rand(100) < t.eva
       result.evade = false if is_heal
+      result.evade = false if result.mana != nil
+      result.evade = false if result.gain_mana != nil
 
       # Calc crit
       result.critical = rand(100) < t.luk || attacker.state?('crit')
       result.critical = false if result.evade
+      result.critical = false if result.mana != nil
+      result.critical = false if result.gain_mana != nil
+
+      result.resist = false
 
       # Calc resist if state added and its a bad one?
       if result.state_add != nil
@@ -22188,7 +22200,7 @@ class Scene_Base
   # end
 
 end
-"z#==============================================================================
+"|#==============================================================================
 # ** Scene_Map
 #==============================================================================
 
@@ -22252,7 +22264,7 @@ class Scene_Battle < Scene_Base
       ev = @map.event_by_evname("A.#{i}")
       
       if ev == nil # Shouldn't happen
-        log_err("No event for actor A.#{i}")
+        # log_err("No event for actor A.#{i}")
         next
       end
 
@@ -22885,7 +22897,7 @@ class Scene_Battle
     
   end
 
-end"ï(
+end"S*
 class Scene_Battle
 
   def phase_main_init
@@ -23197,12 +23209,25 @@ class Scene_Battle
 
         if result.gain_mana != nil
 
-          result.target.gain_mana(result.gain_mana)
+          @active_battler.gain_mana(result.gain_mana)
           #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
 
           # Spark effect
           x = @active_battler.ev.screen_x
           y = @active_battler.ev.screen_y - 15
+          add_spark('mana-blue',x,y)
+          wait(15)
+
+        end
+
+        if result.mana != nil
+
+          result.target.gain_mana(result.mana)
+          #pop_gain(@active_battler.ev,result.gain_mana,@active_battler.resource)
+
+          # Spark effect
+          x = result.target.ev.screen_x
+          y = result.target.ev.screen_y - 15
           add_spark('mana-blue',x,y)
           wait(15)
 
@@ -24141,7 +24166,7 @@ class Scene_Splash
 
 	end
 
-end"d#==============================================================================
+end"ñ#==============================================================================
 # ** Scene_Title
 #==============================================================================
 
@@ -24182,6 +24207,20 @@ class Scene_Title
     @mist = Sprite.new(@vp)
     @mist.bitmap = $cache.overlay('mist-portal')
     @mist.z = 9999
+
+    @beta = Sprite.new(@vp)
+    @beta.bitmap = $cache.menu_common('beta-1')
+    @beta.x = 320
+    @beta.y = 220
+    @beta.ox = 320
+    @beta.oy = 240
+
+    @beta.do(repeat(seq(go("zoom_x",0.3,700,:qio),go("zoom_x",-0.3,700,:qio))))
+    @beta.do(repeat(seq(go("zoom_y",-0.5,800,:qio),go("zoom_y",0.5,800,:qio))))
+
+    @beta.do(repeat(seq(go("y",-50,600,:qio),go("y",50,600,:qio))))
+
+
 
 
     # Init 
@@ -25080,7 +25119,7 @@ end"ÂCmodule Seal
 
     alias auto? auto
   end
-end"W#==============================================================================
+end"Y#==============================================================================
 # ** Audio Manager
 #==============================================================================
 
@@ -25280,7 +25319,7 @@ class AudioManager
     src.play
     @sfx.push(src)
 
-    log_sys("SFX MAX: #{@sfx.count}")
+    # log_sys("SFX MAX: #{@sfx.count}")
 
   end
 
@@ -25544,7 +25583,7 @@ class CacheManager
       GC.start
     end
 
-  end"ó#==============================================================================
+  end"ò#==============================================================================
 # ** Data Manager
 #==============================================================================
 
@@ -25713,7 +25752,7 @@ class DataManager
 
     # Export to rxdata for later
     # Disabled for now to not crowd up github commits
-    #save_data(data,"Data/Json/#{file}.rxdata")
+    save_data(data,"Data/Json/#{file}.rxdata")
 
     return data
 

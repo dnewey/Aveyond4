@@ -40,6 +40,20 @@ class Scene_Title
     @mist.bitmap = $cache.overlay('mist-portal')
     @mist.z = 9999
 
+    @beta = Sprite.new(@vp)
+    @beta.bitmap = $cache.menu_common('beta-1')
+    @beta.x = 320
+    @beta.y = 220
+    @beta.ox = 320
+    @beta.oy = 240
+
+    @beta.do(repeat(seq(go("zoom_x",0.3,700,:qio),go("zoom_x",-0.3,700,:qio))))
+    @beta.do(repeat(seq(go("zoom_y",-0.5,800,:qio),go("zoom_y",0.5,800,:qio))))
+
+    @beta.do(repeat(seq(go("y",-50,600,:qio),go("y",50,600,:qio))))
+
+
+
 
     # Init 
     init_boy

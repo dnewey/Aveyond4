@@ -192,7 +192,7 @@ def path(ev,tx,ty,after=nil)
 	result = char.setup_map(sx,sy,tx,ty)
 
 	if !result[0]
-		log_err("CANNOT FIND PATH")
+		# log_err("CANNOT FIND PATH")
 		return
 	end
 	map = result[1]

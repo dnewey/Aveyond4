@@ -76,8 +76,6 @@ class Game_Map
       name = @zone.rename
     end
 
-    log_sys name
-
     return name.split("#")[0].split("@")[0]
   end
 

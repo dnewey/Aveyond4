@@ -62,7 +62,7 @@ class Scene_Battle < Scene_Base
       ev = @map.event_by_evname("A.#{i}")
       
       if ev == nil # Shouldn't happen
-        log_err("No event for actor A.#{i}")
+        # log_err("No event for actor A.#{i}")
         next
       end
 

@@ -1617,7 +1617,7 @@ class Game_Character
       #log_info (old_positions)
     }
       
-    log_err "No Path Found"
+    # log_err "No Path Found"
     return [false, nil, nil]     
 
   end

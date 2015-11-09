@@ -415,9 +415,13 @@ class Game_Battle
 
           # Mana
           when 'mana'
-            result.gain_mana = data[1].to_i
+            result.mana = data[1].to_i
           when 'mana-p'
-            result.gain_mana = data[1].to_f * attacker.stat('mp')
+            result.mana = data[1].to_f * attacker.stat('mp')
+
+          # Self mana
+          when 'gain-mana'
+            result.gain_mana = data[1].to_i
 
           # States
           when 'state-add'
@@ -451,10 +455,16 @@ class Game_Battle
       # Calc evade
       result.evade = rand(100) < t.eva
       result.evade = false if is_heal
+      result.evade = false if result.mana != nil
+      result.evade = false if result.gain_mana != nil
 
       # Calc crit
       result.critical = rand(100) < t.luk || attacker.state?('crit')
       result.critical = false if result.evade
+      result.critical = false if result.mana != nil
+      result.critical = false if result.gain_mana != nil
+
+      result.resist = false
 
       # Calc resist if state added and its a bad one?
       if result.state_add != nil

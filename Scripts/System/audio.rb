@@ -198,7 +198,7 @@ class AudioManager
     src.play
     @sfx.push(src)
 
-    log_sys("SFX MAX: #{@sfx.count}")
+    # log_sys("SFX MAX: #{@sfx.count}")
 
   end
 

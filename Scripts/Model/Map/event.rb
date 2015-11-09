@@ -806,12 +806,12 @@ class Game_Event < Game_Character
 
     # If trigger is [auto run]
 
-    if @trigger == 3
+    if !@disabled && !@deleted && !@erased && @trigger == 3
 
       start
-      log_info @character_name
-      log_info self.x
-      log_info self.y
+      # log_info @character_name
+      # log_info self.x
+      # log_info self.y
       
     end
 

@@ -12,6 +12,7 @@ class Attack_Result
 	attr_accessor :resist
 
 	attr_accessor :gain_mana
+	attr_accessor :mana
 
 	attr_accessor :state_add
 	attr_accessor :state_remove

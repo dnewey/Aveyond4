@@ -20,6 +20,9 @@ class Game_Battler
           }
         end
 	  	end
+      if $party.difficulty != 'hard'
+        self.recover_all
+      end
   		return true
   	end
   	return false
